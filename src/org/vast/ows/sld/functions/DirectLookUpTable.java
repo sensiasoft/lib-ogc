@@ -1,0 +1,72 @@
+/***************************** BEGIN LICENSE BLOCK ***************************
+
+ The contents of this file are subject to the Mozilla Public License Version
+ 1.1 (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ http://www.mozilla.org/MPL/MPL-1.1.html
+ 
+ Software distributed under the License is distributed on an "AS IS" basis,
+ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ for the specific language governing rights and limitations under the License.
+ 
+ The Original Code is the "SensorML DataProcessing Engine".
+ 
+ The Initial Developer of the Original Code is the
+ University of Alabama in Huntsville (UAH).
+ Portions created by the Initial Developer are Copyright (C) 2006
+ the Initial Developer. All Rights Reserved.
+ 
+ Contributor(s): 
+    Alexandre Robin <robin@nsstc.uah.edu>
+ 
+******************************* END LICENSE BLOCK ***************************/
+
+package org.vast.ows.sld.functions;
+
+import org.vast.ows.sld.MappingFunction;
+
+
+/**
+ * <p><b>Title:</b><br/>
+ * Direct LookUp Table
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * This uses the input value as a direct index into an
+ * array of values to compute the output.
+ * </p>
+ *
+ * <p>Copyright (c) 2005</p>
+ * @author Alexandre Robin
+ * @date Apr 3, 2006
+ * @version 1.0
+ */
+public class DirectLookUpTable implements MappingFunction
+{
+    protected double[] tableData;
+    
+    
+    public DirectLookUpTable(double[] tableData)
+    {
+        this.tableData = tableData;
+    }
+    
+    
+    public double compute(double indexVal)
+    {
+        int index = (int)indexVal;
+        return tableData[index];        
+    }
+
+
+    public double[] getTableData()
+    {
+        return tableData;
+    }
+
+
+    public void setTableData(double[] tableData)
+    {
+        this.tableData = tableData;
+    }
+}
