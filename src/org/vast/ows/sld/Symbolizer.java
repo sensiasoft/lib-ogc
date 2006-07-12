@@ -40,7 +40,8 @@ package org.vast.ows.sld;
  */
 public abstract class Symbolizer
 {
-	protected Geometry geometry;
+	protected boolean enabled;
+    protected Geometry geometry;
 
 
 	public Geometry getGeometry()
@@ -53,4 +54,16 @@ public abstract class Symbolizer
 	{
 		this.geometry = geometry;
 	}
+
+
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
+    }
 }
