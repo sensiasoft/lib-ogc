@@ -40,7 +40,8 @@ package org.vast.ows.sld;
  */
 public abstract class Symbolizer
 {
-	protected boolean enabled;
+	protected String name;
+    protected boolean enabled;
     protected Geometry geometry;
 
 
@@ -65,5 +66,17 @@ public abstract class Symbolizer
     public void setEnabled(boolean enabled)
     {
         this.enabled = enabled;
+    }
+
+
+    public String getName()
+    {
+        return name;
+    }
+
+
+    public void setName(String name)
+    {
+        this.name = name;
     }
 }
