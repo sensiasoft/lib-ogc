@@ -77,6 +77,8 @@ public abstract class Symbolizer
 
     public void setName(String name)
     {
+        if (name == null)
+            name = this.getClass().getSimpleName();
         this.name = name;
     }
 }
