@@ -30,7 +30,7 @@ package org.vast.ows.sld;
  *
  * <p><b>Description:</b><br/>
  * SLD-X Texture Mapping Symbolizer object.
- * Allows to specify grid geometry + texture data.
+ * Allows to use data as a 3D mapped texture.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -38,47 +38,19 @@ package org.vast.ows.sld;
  * @date Nov 10, 2005
  * @version 1.0
  */
-public class TextureSymbolizer extends Symbolizer
+public class TextureSymbolizer extends RasterSymbolizer
 {
-    protected RasterSymbolizer imagery;
-    protected GridSymbolizer grid;
-
-
-    public GridSymbolizer getGrid()
-    {
-        return grid;
-    }
-
-
-    public void setGrid(GridSymbolizer grid)
-    {
-        this.grid = grid;
-    }
-
-
-    public RasterSymbolizer getImagery()
-    {
-        return imagery;
-    }
-
-
-    public void setImagery(RasterSymbolizer imagery)
-    {
-        this.imagery = imagery;
-    }
+    protected Dimensions gridDimensions;
     
+
+    public Dimensions getGridDimensions()
+    {
+        return gridDimensions;
+    }
+
     
-    @Override
-    public Geometry getGeometry()
+    public void setGridDimensions(Dimensions gridDimensions)
     {
-        throw new UnsupportedOperationException();
+        this.gridDimensions = gridDimensions;
     }
-
-
-    @Override
-    public void setGeometry(Geometry geometry)
-    {
-        throw new UnsupportedOperationException();
-    }
-
 }

@@ -23,63 +23,34 @@
 
 package org.vast.ows.sld;
 
-
 /**
  * <p><b>Title:</b><br/>
- * Symbolizer
+ * Grid Mesh Symbolizer
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Abstract Base Symbolizer
+ * SLD-X Grid Mesh Symbolizer object.
+ * To render data as a mesh with the given Stroke parameters.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 11, 2005
+ * @date Aug 02, 2006
  * @version 1.0
  */
-public abstract class Symbolizer
+public class GridMeshSymbolizer extends GridSymbolizer
 {
-	protected String name;
-    protected boolean enabled;
-    protected Geometry geometry;
+	protected Stroke stroke;
 
-    
-	public Geometry getGeometry()
+
+	public Stroke getStroke()
 	{
-		return geometry;
+		return stroke;
 	}
 
 
-	public void setGeometry(Geometry geometry)
+	public void setStroke(Stroke stroke)
 	{
-		this.geometry = geometry;
+		this.stroke = stroke;
 	}
-
-
-    public boolean isEnabled()
-    {
-        return enabled;
-    }
-
-
-    public void setEnabled(boolean enabled)
-    {
-        this.enabled = enabled;
-    }
-
-
-    public String getName()
-    {
-        if (name == null)
-            return this.getClass().getSimpleName();
-        else
-            return name;
-    }
-
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
 }

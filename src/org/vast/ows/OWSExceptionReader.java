@@ -48,13 +48,22 @@ public class OWSExceptionReader
             exceptionText = dom.getAttributeValue("ServiceException/code");
 		
         if (exceptionText != null)
-        	throw new OWSException(exceptionText);
+        	throw new OWSException("ServiceException: " + exceptionText);
 	}
 	
 	
 	public void parseException(InputStream in) throws OWSException
 	{
-		// TODO parseException method
+		try
+        {
+            DOMReader dom = new DOMReader(in, false);
+            checkException(dom);
+        }
+        catch (DOMReaderException e)
+        {
+            e.printStackTrace();
+        }
+        
 		return;
 	}
 }

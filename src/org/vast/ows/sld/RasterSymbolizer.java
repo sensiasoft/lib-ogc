@@ -45,7 +45,7 @@ public class RasterSymbolizer extends Symbolizer
     protected RasterChannel alphaChannel;
     protected RasterChannel grayChannel;
     protected ScalarParameter opacity;
-    protected Dimensions dimensions;
+    protected Dimensions rasterDimensions;
 
 
     public RasterChannel getAlphaChannel()
@@ -120,14 +120,14 @@ public class RasterSymbolizer extends Symbolizer
     }
 
 
-    public Dimensions getDimensions()
+    public Dimensions getRasterDimensions()
     {
-        return dimensions;
+        return rasterDimensions;
     }
 
 
-    public void setDimensions(Dimensions dimensions)
+    public void setRasterDimensions(Dimensions dimensions)
     {
-        this.dimensions = dimensions;
+        this.rasterDimensions = dimensions;
     }
 }

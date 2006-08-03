@@ -30,7 +30,7 @@ package org.vast.ows.sld;
  *
  * <p><b>Description:</b><br/>
  * SLD-X Grid Symbolizer object.
- * Allows to specify grid geometry, fill and stroke.
+ * Allows to specify grid geometry.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -40,33 +40,7 @@ package org.vast.ows.sld;
  */
 public class GridSymbolizer extends Symbolizer
 {
-	protected Stroke stroke;
-	protected Fill fill;
     protected Dimensions dimensions;
-
-
-	public Fill getFill()
-	{
-		return fill;
-	}
-
-
-	public void setFill(Fill fill)
-	{
-		this.fill = fill;
-	}
-
-
-	public Stroke getStroke()
-	{
-		return stroke;
-	}
-
-
-	public void setStroke(Stroke stroke)
-	{
-		this.stroke = stroke;
-	}
 
 
     public Dimensions getDimensions()

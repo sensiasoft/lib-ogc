@@ -23,63 +23,33 @@
 
 package org.vast.ows.sld;
 
-
 /**
  * <p><b>Title:</b><br/>
- * Symbolizer
+ * Grid Fill Symbolizer
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Abstract Base Symbolizer
+ * SLD-X Grid Fill Symbolizer object.
+ * To render data as filled polygons with the given Fill parameters.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 11, 2005
+ * @date Aug 02, 2006
  * @version 1.0
  */
-public abstract class Symbolizer
+public class GridFillSymbolizer extends GridSymbolizer
 {
-	protected String name;
-    protected boolean enabled;
-    protected Geometry geometry;
+	protected Fill fill;
 
     
-	public Geometry getGeometry()
-	{
-		return geometry;
-	}
-
-
-	public void setGeometry(Geometry geometry)
-	{
-		this.geometry = geometry;
-	}
-
-
-    public boolean isEnabled()
+    public Fill getFill()
     {
-        return enabled;
+        return fill;
     }
 
-
-    public void setEnabled(boolean enabled)
+    public void setFill(Fill fill)
     {
-        this.enabled = enabled;
-    }
-
-
-    public String getName()
-    {
-        if (name == null)
-            return this.getClass().getSimpleName();
-        else
-            return name;
-    }
-
-
-    public void setName(String name)
-    {
-        this.name = name;
+        this.fill = fill;
     }
 }

@@ -24,6 +24,7 @@
 package org.vast.ows.sld;
 
 import org.vast.io.xml.DOMReader;
+import org.vast.util.MessageSystem;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -66,78 +67,84 @@ public class SLDReader
 			sym = readPolygon(dom, symElt);
         else if (symElt.getLocalName().equals("TextSymbolizer"))
             sym = readText(dom, symElt);
-        else if (symElt.getLocalName().equals("GridSymbolizer"))
-            sym = readGrid(dom, symElt);
+        else if (symElt.getLocalName().equals("GridMeshSymbolizer"))
+            sym = readGridMesh(dom, symElt);
+        else if (symElt.getLocalName().equals("GridFillSymbolizer"))
+            sym = readGridFill(dom, symElt);
+        else if (symElt.getLocalName().equals("GridBorderSymbolizer"))
+            sym = readGridBorder(dom, symElt);
 		else if (symElt.getLocalName().equals("RasterSymbolizer"))
 			sym = readRaster(dom, symElt);
         else if (symElt.getLocalName().equals("TextureSymbolizer"))
             sym = readTexture(dom, symElt);
-		
+        else
+            MessageSystem.display("Unknown Symbolizer: " + symElt.getLocalName(), true);
+        
 		return sym;
 	}
 	
 	
 	public PointSymbolizer readPoint(DOMReader dom, Element symElt)
 	{
-		PointSymbolizer point = new PointSymbolizer();		
-		readGeometryElt(point, dom, symElt);
+		PointSymbolizer pointSym = new PointSymbolizer();		
+		readGeometryElt(pointSym, dom, symElt);
 		
 		// read graphic
 		Element graphicElt = dom.getElement(symElt, "Graphic");
 		Graphic graphic = readGraphic(dom, graphicElt);
-		point.setGraphic(graphic);
+		pointSym.setGraphic(graphic);
 		
-		return point;
+		return pointSym;
 	}
 	
 	
 	public LineSymbolizer readLine(DOMReader dom, Element symElt)
 	{
-		LineSymbolizer line = new LineSymbolizer();
-		readGeometryElt(line, dom, symElt);
+		LineSymbolizer lineSym = new LineSymbolizer();
+		readGeometryElt(lineSym, dom, symElt);
 		
 		// read stroke
 		Element strokeElt = dom.getElement(symElt, "Stroke");
 		Stroke stroke = readStroke(dom, strokeElt);
-		line.setStroke(stroke);
+		lineSym.setStroke(stroke);
 		
-		return line;
+		return lineSym;
 	}
 	
 	
 	public PolygonSymbolizer readPolygon(DOMReader dom, Element symElt)
 	{
-		PolygonSymbolizer polygon = new PolygonSymbolizer();
-		readGeometryElt(polygon, dom, symElt);
+		PolygonSymbolizer polygonSym = new PolygonSymbolizer();
+		readGeometryElt(polygonSym, dom, symElt);
 		
 		// read stroke
 		Element strokeElt = dom.getElement(symElt, "Stroke");
 		Stroke stroke = readStroke(dom, strokeElt);
-		polygon.setStroke(stroke);
+		polygonSym.setStroke(stroke);
 		
 		// read fill
 		Element fillElt = dom.getElement(symElt, "Fill");
 		Fill fill = readFill(dom, fillElt);
-		polygon.setFill(fill);
+		polygonSym.setFill(fill);
 		
-		return polygon;
+		return polygonSym;
 	}
 	
 	
 	public TextSymbolizer readText(DOMReader dom, Element symElt)
 	{
-		TextSymbolizer text = new TextSymbolizer();
-        readGeometryElt(text, dom, symElt);
+		TextSymbolizer textSym = new TextSymbolizer();
+        readGeometryElt(textSym, dom, symElt);
         
         // read label text
         Element labelElt = dom.getElement(symElt, "Label"); 
         ScalarParameter labelParam = cssReader.readCssParameter(dom, labelElt);
-        text.setLabel(labelParam);
+        textSym.setLabel(labelParam);
         
         // read Font
         Element fontElt = dom.getElement(symElt, "Font");
         Font font = readFont(dom, fontElt);
-        text.setFont(font);
+        textSym.setFont(font);
         
         // read label placement
         //TODO read label placement
@@ -145,110 +152,108 @@ public class SLDReader
         // read fill
         Element fillElt = dom.getElement(symElt, "Fill");
         Fill fill = readFill(dom, fillElt);
-        text.setFill(fill);
+        textSym.setFill(fill);
 		
-		return text;
+		return textSym;
 	}
     
     
-    public GridSymbolizer readGrid(DOMReader dom, Element symElt)
+    public GridFillSymbolizer readGridFill(DOMReader dom, Element symElt)
     {
-        GridSymbolizer grid = new GridSymbolizer();
-        readGeometryElt(grid, dom, symElt);
+        GridFillSymbolizer gridSym = new GridFillSymbolizer();
+        readGeometryElt(gridSym, dom, symElt);
         
-        // read grid dimensions
+        // read dimensions
         Element dimElt = dom.getElement(symElt, "Dimensions");
-        Dimensions dim = readDimensions(dom, dimElt);
-        grid.setDimensions(dim);
+        Dimensions dims = readDimensions(dom, dimElt);
+        gridSym.setDimensions(dims);
+               
+        // read fill
+        Element fillElt = dom.getElement(symElt, "Fill");
+        Fill fill = readFill(dom, fillElt);
+        gridSym.setFill(fill);
         
-        // read stroke if present
-        if (dom.existElement(symElt, "Stroke"))
-        {
-            Element strokeElt = dom.getElement(symElt, "Stroke");
-            Stroke stroke = readStroke(dom, strokeElt);
-            grid.setStroke(stroke);
-        }
-        
-        // read fill if present
-        if (dom.existElement(symElt, "Fill"))
-        {
-            Element fillElt = dom.getElement(symElt, "Fill");
-            Fill fill = readFill(dom, fillElt);
-            grid.setFill(fill);
-        }
-        
-        return grid;
+        return gridSym;
     }
     
     
-    public Dimensions readDimensions(DOMReader dom, Element dimElt)
+    public GridMeshSymbolizer readGridMesh(DOMReader dom, Element symElt)
     {
-        Dimensions dim = new Dimensions();
+        GridMeshSymbolizer gridSym = new GridMeshSymbolizer();
+        readGeometryElt(gridSym, dom, symElt);
         
-        // read all css parameters
-        NodeList cssElts = dom.getElements(dimElt, "CssParameter");
-        for (int i=0; i<cssElts.getLength(); i++)
-        {
-            Element cssElt = (Element)cssElts.item(i);
-            String paramName = dom.getAttributeValue(cssElt, "name");
-            
-            if (paramName.equalsIgnoreCase("width"))
-            {
-                ScalarParameter widthData = cssReader.readCssParameter(dom, cssElt);
-                dim.setWidth(widthData);
-            }
-            else if (paramName.equalsIgnoreCase("length"))
-            {
-                ScalarParameter lengthData = cssReader.readCssParameter(dom, cssElt);
-                dim.setLength(lengthData);
-            }
-            else if (paramName.equalsIgnoreCase("depth"))
-            {
-                ScalarParameter depthData = cssReader.readCssParameter(dom, cssElt);
-                dim.setDepth(depthData);
-            }
-        }
+        // read dimensions
+        Element dimElt = dom.getElement(symElt, "Dimensions");
+        Dimensions dims = readDimensions(dom, dimElt);
+        gridSym.setDimensions(dims);
+               
+        // read stroke
+        Element strokeElt = dom.getElement(symElt, "Stroke");
+        Stroke stroke = readStroke(dom, strokeElt);
+        gridSym.setStroke(stroke);
         
-        return dim;
+        return gridSym;
     }
+    
+    
+    public GridBorderSymbolizer readGridBorder(DOMReader dom, Element symElt)
+    {
+        GridBorderSymbolizer gridSym = new GridBorderSymbolizer();
+        readGeometryElt(gridSym, dom, symElt);
+        
+        // read dimensions
+        Element dimElt = dom.getElement(symElt, "Dimensions");
+        Dimensions dims = readDimensions(dom, dimElt);
+        gridSym.setDimensions(dims);
+        
+        // read stroke
+        Element strokeElt = dom.getElement(symElt, "Stroke");
+        Stroke stroke = readStroke(dom, strokeElt);
+        gridSym.setStroke(stroke);
+        
+        return gridSym;
+    }    
 	
 	
 	public RasterSymbolizer readRaster(DOMReader dom, Element symElt)
 	{
-		RasterSymbolizer raster = new RasterSymbolizer();
-        //readGeometryElt(raster, dom, symElt);
-        
-        // read red channel
+        RasterSymbolizer rasterSym = new RasterSymbolizer();
+        readRasterParameters(rasterSym, dom, symElt);
+        return rasterSym;
+    }
+    
+    
+    public void readRasterParameters(RasterSymbolizer rasterSym, DOMReader dom, Element symElt)
+    {
+		// read red channel
         Element redElt = dom.getElement(symElt, "ChannelSelection/RedChannel");
-        raster.setRedChannel(readRasterChannel(dom, redElt));
+        rasterSym.setRedChannel(readRasterChannel(dom, redElt));
         
         // read green channel
         Element greenElt = dom.getElement(symElt, "ChannelSelection/GreenChannel");
-        raster.setGreenChannel(readRasterChannel(dom, greenElt));
+        rasterSym.setGreenChannel(readRasterChannel(dom, greenElt));
         
         // read blue channel
         Element blueElt = dom.getElement(symElt, "ChannelSelection/BlueChannel");
-        raster.setBlueChannel(readRasterChannel(dom, blueElt));
+        rasterSym.setBlueChannel(readRasterChannel(dom, blueElt));
         
         // read alpha channel
         Element alphaElt = dom.getElement(symElt, "ChannelSelection/AlphaChannel");
-        raster.setAlphaChannel(readRasterChannel(dom, alphaElt));
+        rasterSym.setAlphaChannel(readRasterChannel(dom, alphaElt));
         
         // read gray channel
         Element grayElt = dom.getElement(symElt, "ChannelSelection/GrayChannel");
-        raster.setGrayChannel(readRasterChannel(dom, grayElt));        
+        rasterSym.setGrayChannel(readRasterChannel(dom, grayElt));        
         
         // read raster global opacity
         Element opacityElt = dom.getElement(symElt, "Opacity");
         ScalarParameter opacity = cssReader.readCssParameter(dom, opacityElt);
-        raster.setOpacity(opacity);
+        rasterSym.setOpacity(opacity);
         
         // read raster dimensions
-        Element dimElt = dom.getElement(symElt, "Dimensions");
+        Element dimElt = dom.getElement(symElt, "RasterDimensions");
         Dimensions dim = readDimensions(dom, dimElt);
-        raster.setDimensions(dim);
-		
-		return raster;
+        rasterSym.setRasterDimensions(dim);
 	}
     
     
@@ -285,17 +290,16 @@ public class SLDReader
     }
     
     
-    protected TextureSymbolizer readTexture(DOMReader dom, Element symElt)
+    public TextureSymbolizer readTexture(DOMReader dom, Element symElt)
     {
         TextureSymbolizer texSym = new TextureSymbolizer();
+        readGeometryElt(texSym, dom, symElt);
+        readRasterParameters(texSym, dom, symElt);
         
-        // read raster symbolizer
-        Element rasterElt = dom.getElement(symElt, "RasterSymbolizer");
-        texSym.setImagery(readRaster(dom, rasterElt));
-        
-        // read grid symbolizer
-        Element gridElt = dom.getElement(symElt, "GridSymbolizer");
-        texSym.setGrid(readGrid(dom, gridElt));
+        // read grid dimensions
+        Element dimElt = dom.getElement(symElt, "GridDimensions");
+        Dimensions dim = readDimensions(dom, dimElt);
+        texSym.setGridDimensions(dim);
         
         return texSym;
     }
@@ -370,6 +374,49 @@ public class SLDReader
 		
 		return geometry;
 	}
+    
+    
+    /**
+     * Reads a sldx:Dimensions element and fill up the corresponding object
+     * @param dom
+     * @param symElt
+     * @return
+     */
+    public Dimensions readDimensions(DOMReader dom, Element dimElt)
+    {
+        Dimensions dim = new Dimensions();
+        
+        // read all css parameters
+        NodeList cssElts = dom.getElements(dimElt, "CssParameter");
+        for (int i=0; i<cssElts.getLength(); i++)
+        {
+            Element cssElt = (Element)cssElts.item(i);
+            String paramName = dom.getAttributeValue(cssElt, "name");
+            
+            if (paramName.equalsIgnoreCase("width"))
+            {
+                ScalarParameter widthData = cssReader.readCssParameter(dom, cssElt);
+                dim.setWidth(widthData);
+            }
+            else if (paramName.equalsIgnoreCase("length"))
+            {
+                ScalarParameter lengthData = cssReader.readCssParameter(dom, cssElt);
+                dim.setLength(lengthData);
+            }
+            else if (paramName.equalsIgnoreCase("depth"))
+            {
+                ScalarParameter depthData = cssReader.readCssParameter(dom, cssElt);
+                dim.setDepth(depthData);
+            }
+            else if (paramName.equalsIgnoreCase("time"))
+            {
+                ScalarParameter timeData = cssReader.readCssParameter(dom, cssElt);
+                dim.setTime(timeData);
+            }
+        }
+        
+        return dim;
+    }
 	
 	
 	/**
