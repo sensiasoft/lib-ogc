@@ -44,6 +44,7 @@ public class ScalarParameter
 	protected String propertyName;
 	protected Object constantValue;
 	protected MappingFunction mappingFunction;
+    protected boolean constant = true;
 	
 	
 	public Object getValue()
@@ -54,13 +55,13 @@ public class ScalarParameter
     
     public boolean isConstant()
     {
-        return (propertyName == null);
+        return constant;
     }
     
     
-    public boolean isMapped()
+    public void setConstant(boolean constant)
     {
-        return (mappingFunction != null);
+        this.constant = constant;
     }
 	
 	
@@ -79,6 +80,7 @@ public class ScalarParameter
 	public void setConstantValue(Object constantValue)
 	{
 		this.constantValue = constantValue;
+        this.constant = true;
 	}
 
 
@@ -91,6 +93,7 @@ public class ScalarParameter
 	public void setMappingFunction(MappingFunction mappingFunction)
 	{
 		this.mappingFunction = mappingFunction;
+        this.constant = false;
 	}
 
 
@@ -103,5 +106,6 @@ public class ScalarParameter
 	public void setPropertyName(String propertyName)
 	{
 		this.propertyName = propertyName;
+        this.constant = false;
 	}
 }
