@@ -37,35 +37,19 @@ package org.vast.ows.sld;
  * @date Nov 11, 2005
  * @version 1.0
  */
-public class RasterChannel
+public class RasterChannel extends ScalarParameter
 {
-    protected ScalarParameter channelName;
     protected boolean normalize;
     protected boolean histogram;
     protected double gamma = 1.0;
 
 
-    public RasterChannel(ScalarParameter channelName)
-    {
-        this.channelName = channelName;        
-    }
-    
-    
-    public RasterChannel()
-    {
-        channelName = new ScalarParameter();
-    }
-    
-    
-    public ScalarParameter getChannelName()
-    {
-        return channelName;
-    }
-
-
-    public void setChannelName(ScalarParameter channelData)
-    {
-        this.channelName = channelData;
+    public RasterChannel(ScalarParameter param)
+    {       
+        this.constant = param.constant;
+        this.constantValue = param.constantValue;
+        this.mappingFunction = param.mappingFunction;
+        this.propertyName = param.propertyName;
     }
 
 

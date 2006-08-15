@@ -268,13 +268,13 @@ public class SLDReader
         if (dom.existElement(channelElt, "SourceChannelName"))
         {
             Element channelNameElt = dom.getElement(channelElt, "SourceChannelName");
-            ScalarParameter channelName = cssReader.readPropertyName(dom, channelNameElt);
-            channel = new RasterChannel(channelName);
+            ScalarParameter param = cssReader.readPropertyName(dom, channelNameElt);
+            channel = new RasterChannel(param);
         }
         else
         {
-            ScalarParameter channelParam = cssReader.readCssParameter(dom, channelElt);
-            channel = new RasterChannel(channelParam);
+            ScalarParameter param = cssReader.readCssParameter(dom, channelElt);
+            channel = new RasterChannel(param);
         }
         
         // read normalize and histogram
