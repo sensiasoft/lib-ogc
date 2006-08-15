@@ -259,19 +259,23 @@ public class SLDReader
     
     public RasterChannel readRasterChannel(DOMReader dom, Element channelElt)
     {
-        RasterChannel channel;
+        RasterChannel channel = null;
         
         if (channelElt == null)
             return null;
-        
-        // if no name return null (name is mandatory)
-        if (!dom.existElement(channelElt, "SourceChannelName"))
-            return null;
-        
+                
         // read source channel name
-        Element channelNameElt = dom.getElement(channelElt, "SourceChannelName");
-        ScalarParameter channelName = cssReader.readPropertyName(dom, channelNameElt);
-        channel = new RasterChannel(channelName);
+        if (dom.existElement(channelElt, "SourceChannelName"))
+        {
+            Element channelNameElt = dom.getElement(channelElt, "SourceChannelName");
+            ScalarParameter channelName = cssReader.readPropertyName(dom, channelNameElt);
+            channel = new RasterChannel(channelName);
+        }
+        else
+        {
+            ScalarParameter channelParam = cssReader.readCssParameter(dom, channelElt);
+            channel = new RasterChannel(channelParam);
+        }
         
         // read normalize and histogram
         if (dom.existElement(channelElt, "ContrastEhancement/Normalize"))
