@@ -203,7 +203,10 @@ public abstract class SOSServlet extends OWSServlet
 			if (stopAtt != null)
 			{
 				if (stopAtt.equals("now"))
+                {
 					stopTime = (new DateTime()).getJulianTime();
+                    isoStopTime = DateTimeFormat.formatIso(stopTime, 0); 
+                }
 			}
 			else
 				stopTime = DateTimeFormat.parseIso(isoStopTime);
