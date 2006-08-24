@@ -126,7 +126,7 @@ public class SOSObservationSerializer extends SweResponseSerializer
 			
             dataWriter.write();
 			
-			this._printer.printText("</om:result>");
+			this._printer.printText("\n</om:result>");
 			this._printer.flush();
 			this._format.setIndenting(true);
 		}
