@@ -29,6 +29,7 @@ import java.io.IOException;
 import org.vast.ows.SweDataWriter;
 import org.vast.ows.SweResponseSerializer;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 
 /**
@@ -80,7 +81,20 @@ public class WCSResponseSerializer extends SweResponseSerializer
 			blElt.setAttribute("byteLength", "" + (dim*bytesPerPoint));
 	}
 	
-	
+	//  Just like setGridDim, but gets the second occurence of the dimension elements
+	public void setImageDimension(int width, int height){
+		// set numRows
+		NodeList nl = respXML.getElements("result/Data/definition/DataDefinition/dataComponents/" +
+										  "DataGroup/component/DataArray");
+		Element elt = (Element)nl.item(1);
+		elt.setAttribute("arraySize", "" + height);
+		// set numCols
+		nl = respXML.getElements("result/Data/definition/DataDefinition/dataComponents/" + 
+							     "DataGroup/component/DataArray/component/DataArray");
+		elt = (Element)nl.item(1);
+		elt.setAttribute("arraySize", "" + width);
+	}
+		
 	public void setDataWriter(SweDataWriter dataWriter)
 	{
 		this.resultWriter = dataWriter;
