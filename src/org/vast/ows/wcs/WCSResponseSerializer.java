@@ -43,12 +43,12 @@ import org.w3c.dom.Element;
  * @since Aug 9, 2005
  * @version 1.0
  */
-public class WCSResponseWriter extends SweResponseSerializer
+public class WCSResponseSerializer extends SweResponseSerializer
 {
 	SweDataWriter resultWriter;	
 	int bytesPerPoint;  //  used only by BinaryBlock encoding?
 	
-	public WCSResponseWriter()
+	public WCSResponseSerializer()
 	{		
 	}
 	

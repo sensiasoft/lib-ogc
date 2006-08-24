@@ -45,7 +45,8 @@ import org.w3c.dom.*;
  */
 public abstract class OWSServlet extends HttpServlet
 {
-	protected Document capsDoc;
+    protected final static String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
+    protected Document capsDoc;
     protected Logger logger = Logger.getRootLogger();
 
 

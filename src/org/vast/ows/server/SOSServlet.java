@@ -49,8 +49,6 @@ import org.vast.io.xml.*;
  */
 public abstract class SOSServlet extends OWSServlet
 {
-    protected final static String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
-    
     // Table of SOS handlers: 1 for each ObservationSet
 	protected Hashtable<String, SOSHandler> dataSetHandlers = new Hashtable<String, SOSHandler>();
 

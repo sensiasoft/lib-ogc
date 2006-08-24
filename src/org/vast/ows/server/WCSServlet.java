@@ -17,10 +17,10 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
-    Tony Cook <tcook@nsstc.uah.edu>
+ Alexandre Robin <robin@nsstc.uah.edu>
+ Tony Cook <tcook@nsstc.uah.edu>
  
-******************************* END LICENSE BLOCK ***************************/
+ ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.server;
 
@@ -37,8 +37,9 @@ import org.vast.ows.util.TimeInfo;
 import org.vast.ows.wcs.WCSException;
 import org.vast.ows.wcs.WCSQuery;
 import org.vast.util.*;
-//import org.vast.io.xml.*;
 
+
+//import org.vast.io.xml.*;
 
 /**
  * <p>Title: WCSServlet</p>
@@ -51,187 +52,243 @@ import org.vast.util.*;
  * @author Alexandre Robin, Tony Cook
  * @version 1.0
  */
-public abstract class WCSServlet extends OWSServlet {
-	// Table of WCS handlers: 1 for each ObservationSet
-	protected Hashtable<String, WCSHandler> dataSetHandlers = new Hashtable<String, WCSHandler>();
+public abstract class WCSServlet extends OWSServlet
+{
+    // Table of WCS handlers: 1 for each ObservationSet
+    protected Hashtable<String, WCSHandler> dataSetHandlers = new Hashtable<String, WCSHandler>();
 
-	// Sends an XML Exception to the user
-	protected void sendErrorMessage(OutputStream resp, String message) {
-		PrintWriter buffer = new PrintWriter(resp);
-		buffer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		buffer.println("<ServiceException>");
-		buffer.println("\t" + message);
-		buffer.println("</ServiceException>");
-		buffer.flush();
-		buffer.close();
-		//this.log(message);
-	}
 
-	protected void processQuery(WCSQuery query) throws WCSException{
-		String requestName = query.getRequest();
-		
-		// GetCapabilities request
-		if (requestName.equalsIgnoreCase("GetCapabilities")) {
-			sendCapabilities("ALL", query.getResponseStream());
-			return;
-		}
+    // Sends an XML Exception to the user
+    protected void sendErrorMessage(OutputStream resp, String message)
+    {
+        PrintWriter buffer = new PrintWriter(resp);
+        buffer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        buffer.println("<ServiceException>");
+        buffer.println("\t" + message);
+        buffer.println("</ServiceException>");
+        buffer.flush();
+        buffer.close();
+        //this.log(message);
+    }
 
-		// GetObservation request
-		else if (requestName.equalsIgnoreCase("GetCoverage")) {
-			//DOMReader capsReader = new DOMReader(this.capsDoc);
-			String layer = query.getLayer();
-			
-			if (layer == null)
-				throw new WCSException("WCS request missing LAYER.");
 
-			WCSHandler handler = dataSetHandlers.get(layer);
+    protected void processQuery(WCSQuery query) throws Exception
+    {
+        String requestName = query.getRequest();
 
-			if (handler != null) {
-				/*
-				Iterator<TimeInfo> it;
+        // GetCapabilities request
+        if (requestName.equalsIgnoreCase("GetCapabilities"))
+        {
+            sendCapabilities("ALL", query.getResponseStream());
+            return;
+        }
 
-				// first check all requested times
-				it = query.times.iterator();
-				while (it.hasNext()) {
-					query.time = it.next();
-					checkQueryTime(query, capsReader);
-				}
-				
-				// check query format
-				//checkQueryFormat(query, capsReader);
+        // GetObservation request
+        else if (requestName.equalsIgnoreCase("GetCoverage"))
+        {
+            //DOMReader capsReader = new DOMReader(this.capsDoc);
+            String layer = query.getLayer();
 
-				// then retrieve observation for each time or period
-				it = query.times.iterator();
-				while (it.hasNext()) {
-					query.time = it.next();
-					handler.getCoverage(query);
-				}*/
-				
-				handler.getCoverage(query);
-			} else
-				throw new WCSException("LAYER " + layer
-						+ " is unavailable on this server");
-		}
+            if (layer == null)
+                throw new WCSException("WCS request missing LAYER.");
 
-		// Unrecognized request type
-		else {
-			throw new WCSException(
-					"Invalid request: Use GetCapabilities or GetCoverage");
-		}
-	}
+            WCSHandler handler = dataSetHandlers.get(layer);
 
-	/**
-	 * Parse and process HTTP GET request
-	 */
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException {
-		String invalidQuery = "Invalid WCS GET request";
-		TimeInfo time = new TimeInfo();
+            if (handler != null)
+            {
+                /*
+                 Iterator<TimeInfo> it;
 
-		// parse query arguments
-		WCSQuery queryInfo = new WCSQuery();
-		String query = req.getQueryString();
-		//this.log("GET REQUEST: " + query + " from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
+                 // first check all requested times
+                 it = query.times.iterator();
+                 while (it.hasNext()) {
+                 query.time = it.next();
+                 checkQueryTime(query, capsReader);
+                 }
+                 
+                 // check query format
+                 //checkQueryFormat(query, capsReader);
 
-		try {
-			if (query == null)
-				sendErrorMessage(resp.getOutputStream(), invalidQuery);
+                 // then retrieve observation for each time or period
+                 it = query.times.iterator();
+                 while (it.hasNext()) {
+                 query.time = it.next();
+                 handler.getCoverage(query);
+                 }*/
 
-			StringTokenizer st = new StringTokenizer(query, "&");
-			queryInfo.setResponseStream(resp.getOutputStream());
+                handler.getCoverage(query);
+            }
+            else
+                throw new WCSException("LAYER " + layer + " is unavailable on this server");
+        }
 
-			while (st.hasMoreTokens()) {
-				String argName = null;
-				String argValue = null;
-				String nextArg = st.nextToken();
+        // Unrecognized request type
+        else
+        {
+            throw new WCSException("Invalid request: Use GetCapabilities or GetCoverage");
+        }
+    }
 
-				// separate argument name and value
-				try {
-					int sepIndex = nextArg.indexOf('=');
-					argName = nextArg.substring(0, sepIndex);
-					argValue = nextArg.substring(sepIndex + 1);
-				} catch (IndexOutOfBoundsException e) {
-					throw new SOSException(invalidQuery);
-				}
 
-				// parse args into WCSQuery object
-				if (argName.equalsIgnoreCase("request")) {
-					queryInfo.setRequest(argValue);
-				}
-				else if (argName.equalsIgnoreCase("layers") || argName.equalsIgnoreCase("layer")) {
-					queryInfo.setLayer(argValue);
-				}
-				else if (argName.equalsIgnoreCase("format")) {
-					queryInfo.setFormat(argValue);
-				}
-				else if (argName.equalsIgnoreCase("skipX")) {
-					queryInfo.setSkipX(Integer.parseInt(argValue));
-				}
-				else if (argName.equalsIgnoreCase("skipY")) {
-					queryInfo.setSkipY(Integer.parseInt(argValue));
-				}
-				else if (argName.equalsIgnoreCase("bbox")) {
-					String[] bbStr = argValue.split(",");
-					Bbox bbox = new Bbox();
-					queryInfo.setBbox(bbox);
-					bbox.setMinX(Double.parseDouble(bbStr[0]));
-					bbox.setMinY(Double.parseDouble(bbStr[1]));
-					bbox.setMaxX(Double.parseDouble(bbStr[2]));
-					bbox.setMaxY(Double.parseDouble(bbStr[3]));
-//					bbox.westLon = bbox.minX;
-//					bbox.eastLon = bbox.maxX;
-//					bbox.northLat = bbox.maxY;
-//					bbox.southLat = bbox.minY;
-				}
+    /**
+     * Parse and process HTTP GET request
+     */
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException
+    {
+        String invalidQuery = "Invalid WCS GET request";
+        TimeInfo time = new TimeInfo();
 
-				// singleTime
-				else if (argName.equalsIgnoreCase("time")) {
-					time = new TimeInfo();
-					time.setStartTime(DateTimeFormat.parseIso(argValue));
-					time.setStopTime(time.getStartTime());
-					queryInfo.getTimes().add(time);
-				}
+        // parse query arguments
+        WCSQuery queryInfo = new WCSQuery();
+        String query = req.getQueryString();
+        //this.log("GET REQUEST: " + query + " from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
 
-				//  Don't throw exception- just ignore any args we don't understand for now
-//				else
-//					throw new WCSException(invalidQuery);
-			}
+        try
+        {
+            if (query == null)
+                sendErrorMessage(resp.getOutputStream(), invalidQuery);
 
-			resp.setContentType("text/xml");
-			this.processQuery(queryInfo);
-		} catch (WCSException e) {
-			sendErrorMessage(queryInfo.getResponseStream(), e.getMessage());
-		} catch (ParseException e) {
-			sendErrorMessage(queryInfo.getResponseStream(),
-					"Invalid time format: use ISO8601");
-		} catch (Exception e) {
-			throw new ServletException(e);
-		}
-	}
+            StringTokenizer st = new StringTokenizer(query, "&");
+            queryInfo.setResponseStream(resp.getOutputStream());
 
-	/**
-	 * Parse and process HTTP POST request
-	 */
-	public void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException {
-		//WCSQuery queryInfo = new WCSQuery();
-		this.log("POST REQUEST from IP " + req.getRemoteAddr() + " ("
-				+ req.getRemoteHost() + ")");
+            while (st.hasMoreTokens())
+            {
+                String argName = null;
+                String argValue = null;
+                String nextArg = st.nextToken();
 
-		/** Your code **/
-		/** Should parse request and call processQuery(queryInfo) **/
-	}
+                // separate argument name and value
+                try
+                {
+                    int sepIndex = nextArg.indexOf('=');
+                    argName = nextArg.substring(0, sepIndex);
+                    argValue = nextArg.substring(sepIndex + 1);
+                }
+                catch (IndexOutOfBoundsException e)
+                {
+                    throw new SOSException(invalidQuery);
+                }
 
-	/**
-	 * Adds a new handler for the given coverage ID
-	 * @param coverageID
-	 * @param handlerClass
-	 */
-	public void addDataSetHandler(String coverageID, WCSHandler handlerClass) {
-		dataSetHandlers.put(coverageID, handlerClass);
-	}
+                // parse args into WCSQuery object
+                if (argName.equalsIgnoreCase("request"))
+                {
+                    queryInfo.setRequest(argValue);
+                }
+                else if (argName.equalsIgnoreCase("layers") || argName.equalsIgnoreCase("layer"))
+                {
+                    queryInfo.setLayer(argValue);
+                }
+                else if (argName.equalsIgnoreCase("format"))
+                {
+                    queryInfo.setFormat(argValue);
+                }
+                else if (argName.equalsIgnoreCase("skipX"))
+                {
+                    queryInfo.setSkipX(Integer.parseInt(argValue));
+                }
+                else if (argName.equalsIgnoreCase("skipY"))
+                {
+                    queryInfo.setSkipY(Integer.parseInt(argValue));
+                }
+                else if (argName.equalsIgnoreCase("bbox"))
+                {
+                    String[] bbStr = argValue.split(",");
+                    Bbox bbox = new Bbox();
+                    queryInfo.setBbox(bbox);
+                    bbox.setMinX(Double.parseDouble(bbStr[0]));
+                    bbox.setMinY(Double.parseDouble(bbStr[1]));
+                    bbox.setMaxX(Double.parseDouble(bbStr[2]));
+                    bbox.setMaxY(Double.parseDouble(bbStr[3]));
+                    //					bbox.westLon = bbox.minX;
+                    //					bbox.eastLon = bbox.maxX;
+                    //					bbox.northLat = bbox.maxY;
+                    //					bbox.southLat = bbox.minY;
+                }
 
-	public void removeDataSetHandler(String dataSetID) {
-		dataSetHandlers.remove(dataSetID);
-	}
+                // singleTime
+                else if (argName.equalsIgnoreCase("time"))
+                {
+                    time = new TimeInfo();
+                    time.setStartTime(DateTimeFormat.parseIso(argValue));
+                    time.setStopTime(time.getStartTime());
+                    queryInfo.getTimes().add(time);
+                }
+
+                //  Don't throw exception- just ignore any args we don't understand for now
+                //				else
+                //					throw new WCSException(invalidQuery);
+            }
+
+            resp.setContentType("text/xml");
+            this.processQuery(queryInfo);
+        }
+        catch (WCSException e)
+        {
+            try
+            {
+                sendErrorMessage(resp.getOutputStream(), e.getMessage());
+            }
+            catch (IOException e1)
+            {
+                e.printStackTrace();
+            }
+        }
+        catch (ParseException e)
+        {
+            
+            try
+            {
+                sendErrorMessage(resp.getOutputStream(), "Invalid time format: use ISO8601");
+            }
+            catch (IOException e1)
+            {
+                e.printStackTrace();
+            }
+        }
+        catch (Exception e)
+        {
+            throw new ServletException(internalErrorMsg, e);
+        }
+        finally
+        {
+            try
+            {
+                resp.getOutputStream().close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    /**
+     * Parse and process HTTP POST request
+     */
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
+    {
+        //WCSQuery queryInfo = new WCSQuery();
+        this.log("POST REQUEST from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
+
+        /** Your code **/
+        /** Should parse request and call processQuery(queryInfo) **/
+    }
+
+
+    /**
+     * Adds a new handler for the given coverage ID
+     * @param coverageID
+     * @param handlerClass
+     */
+    public void addDataSetHandler(String coverageID, WCSHandler handlerClass)
+    {
+        dataSetHandlers.put(coverageID, handlerClass);
+    }
+
+
+    public void removeDataSetHandler(String dataSetID)
+    {
+        dataSetHandlers.remove(dataSetID);
+    }
 }
