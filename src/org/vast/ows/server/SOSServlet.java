@@ -259,7 +259,7 @@ public abstract class SOSServlet extends OWSServlet
 		try
 		{
 			//  parse query arguments
-			String queryString = req.getQueryString();		
+			String queryString = req.getQueryString();
             logger.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
 
 			SOSRequestReader reader = new SOSRequestReader();
@@ -270,7 +270,14 @@ public abstract class SOSServlet extends OWSServlet
 		}
 		catch (SOSException e)
 		{
-			sendErrorMessage(query.getResponseStream(), e.getMessage());
+			try
+            {
+                sendErrorMessage(resp.getOutputStream(), e.getMessage());
+            }
+            catch (IOException e1)
+            {
+                throw new ServletException(internalErrorMsg, e);
+            }
 		}
 		catch (Exception e)
 		{
@@ -311,11 +318,25 @@ public abstract class SOSServlet extends OWSServlet
 		}
 		catch (SOSException e)
 		{
-			sendErrorMessage(queryInfo.getResponseStream(), e.getMessage());
+            try
+            {
+                sendErrorMessage(resp.getOutputStream(), e.getMessage());
+            }
+            catch (IOException e1)
+            {
+                e.printStackTrace();
+            }
 		}
 		catch (DOMReaderException e)
 		{
-			sendErrorMessage(queryInfo.getResponseStream(), "Invalid XML request. Please check request format");
+            try
+            {
+                sendErrorMessage(resp.getOutputStream(), "Invalid XML request. Please check request format");
+            }
+            catch (IOException e1)
+            {
+                e.printStackTrace();
+            }
 		}
 		catch (Exception e)
 		{
