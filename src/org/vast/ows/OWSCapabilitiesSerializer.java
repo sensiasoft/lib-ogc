@@ -25,24 +25,49 @@ package org.vast.ows;
 
 import java.io.IOException;
 
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.w3c.dom.Element;
+
 
 /**
- * <p><b>Title:</b><br/> DataWriter</p>
+ * <p><b>Title:</b><br/>
+ * OWS Capabilities Serializer
+ * </p>
  *
  * <p><b>Description:</b><br/>
- * Interface for a SWE data values writer
- * Concrete implementation are used to write data within the data element,
- * a MIME content object or to an out of band stream.
- * Implementations can support different formats like XML Tuple, Base64, Raw Binary etc...
+ * Seializes a Capabilities document to the given
+ * output stream. This will also skip elements called
+ * internalInfo that are used internally by our servlets.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @since Aug 9, 2005
+ * @date Aug 22, 2006
  * @version 1.0
  */
-public interface SweDataWriter
+public class OWSCapabilitiesSerializer extends XMLSerializer
 {
-	public void write() throws IOException;
-	public void setQuery(OWSQuery query);
+    
+    public OWSCapabilitiesSerializer()
+    {
+        this._format = new OutputFormat();
+        this._format.setMethod("xml");
+        this._format.setIndenting(true);
+        this._format.setLineWidth(0);
+    }
+    
+    
+    @Override
+    protected void serializeElement(Element elt) throws IOException
+    {
+        if (elt.getLocalName().equals("internalInfo"))
+        {
+            // do nothing (skip serialization of this element!)
+        }
+        else
+        {
+            super.serializeElement(elt);
+        }
+    }
 }

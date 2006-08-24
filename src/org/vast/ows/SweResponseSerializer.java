@@ -24,17 +24,18 @@
 package org.vast.ows;
 
 import java.io.*;
-
-import org.w3c.dom.*;
 import org.vast.io.xml.*;
 import org.apache.xml.serialize.*;
 
 
 /**
- * <p><b>Title:</b><br/> SweResultWriter</p>
+ * <p><b>Title:</b><br/>
+ * Swe Response Serializer
+ * </p>
  *
  * <p><b>Description:</b><br/>
- * Base class handling the SWE XML response writing in the given OutputStream 
+ * Helper class to handle serialization of SWE XML responses
+ * based on a template document obtained from an input stream.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -42,13 +43,13 @@ import org.apache.xml.serialize.*;
  * @since Aug 9, 2005
  * @version 1.0
  */
-public abstract class SweResultWriter extends XMLSerializer
+public abstract class SweResponseSerializer extends XMLSerializer
 {
 	protected DOMReader respXML;
-	protected Document respDocument;
+    protected SweDataWriter dataWriter; 
 	
 	
-	public SweResultWriter()
+	public SweResponseSerializer()
 	{
 		OutputFormat outFormat = new OutputFormat();
 		outFormat.setMethod("xml");
@@ -58,11 +59,27 @@ public abstract class SweResultWriter extends XMLSerializer
 	}
 	
 	
-	public abstract void setDataWriter(SweDataWriter dataWriter);
+    /**
+     * Assign the DataWriter to use for the raw data content.
+     * @param dataWriter
+     */
+    public void setDataWriter(SweDataWriter dataWriter)
+    {
+        this.dataWriter = dataWriter;
+    }
 	
+    
+    /**
+     * Assign the template as a DOMReader
+     */
+    public void setDOMReader(DOMReader dom)
+    {
+        this.respXML = dom;
+    }
+    
 	
 	/**
-	 * Assign the template xml stream
+	 * Assign the template as an xml stream
 	 * @param baseXML
 	 */
 	public void setTemplate(InputStream baseXML)
@@ -71,7 +88,6 @@ public abstract class SweResultWriter extends XMLSerializer
 		{
 			// preload base observation document
 			this.respXML = new DOMReader(baseXML, false);
-			this.respDocument = respXML.getXmlFragment().getParentDocument().getDocument();
 		}
 		catch (DOMReaderException e)
 		{
@@ -83,15 +99,8 @@ public abstract class SweResultWriter extends XMLSerializer
 	/**
 	 * Write xml to outputStream
 	 */
-	public void writeResult() throws IOException
+	public void writeResponse() throws IOException
 	{
-		serialize(this.respDocument.getDocumentElement());
+		serialize(respXML.getRootElement());
 	}
-	
-	
-	protected abstract void writeResultDefinition(Element elt) throws IOException;
-	protected abstract void writeResultEncoding(Element elt) throws IOException;
-	protected abstract void writeResultData(Element elt) throws IOException;
-	
-	//protected abstract void serializeElement(Element elt) throws IOException;
 }

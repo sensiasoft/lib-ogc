@@ -84,8 +84,7 @@ public abstract class OWSRequestWriter
 			domWriter.createDocument("Request");
 			Element requestElt = buildRequestXML(owsQuery, domWriter);
 			ByteArrayOutputStream charArray = new ByteArrayOutputStream();
-			domWriter.setOutputStream(charArray);
-			domWriter.writeDOM(requestElt);
+			domWriter.writeDOM(requestElt, charArray, null);
 			//System.out.println(charArray.toString());
 			return charArray.toString();
 		}

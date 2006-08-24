@@ -49,7 +49,9 @@ import org.vast.io.xml.*;
  */
 public abstract class SOSServlet extends OWSServlet
 {
-	// Table of SOS handlers: 1 for each ObservationSet
+    protected final static String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
+    
+    // Table of SOS handlers: 1 for each ObservationSet
 	protected Hashtable<String, SOSHandler> dataSetHandlers = new Hashtable<String, SOSHandler>();
 
 
@@ -57,7 +59,7 @@ public abstract class SOSServlet extends OWSServlet
 	 * Decode the query, check validity and call the right handler
 	 * @param query
 	 */
-	protected void processQuery(SOSQuery query) throws SOSException
+	protected void processQuery(SOSQuery query) throws Exception
 	{
 		// GetCapabilities request
 		if (query.getRequest().equalsIgnoreCase("GetCapabilities"))
@@ -101,7 +103,7 @@ public abstract class SOSServlet extends OWSServlet
 				checkQueryTime(query, capsReader);
 				
 				// then retrieve observation data
-				handler.getObservation(query);				
+                handler.getObservation(query);				
 			}
 			else
 				throw new SOSException("Data for observation " + query.getOffering() + " is unavailable on this server");				
@@ -258,8 +260,8 @@ public abstract class SOSServlet extends OWSServlet
 		{
 			//  parse query arguments
 			String queryString = req.getQueryString();		
-			this.log("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
-			
+            logger.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
+
 			SOSRequestReader reader = new SOSRequestReader();
 			query = reader.readGetRequest(queryString);
 			
@@ -272,7 +274,7 @@ public abstract class SOSServlet extends OWSServlet
 		}
 		catch (Exception e)
 		{
-			throw new ServletException("Problem while processing the request", e);
+			throw new ServletException(internalErrorMsg, e);
 		}
         finally
         {
@@ -294,7 +296,7 @@ public abstract class SOSServlet extends OWSServlet
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
 	{
 		SOSQuery queryInfo = null;
-		this.log("POST REQUEST from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
+		logger.info("POST REQUEST from IP " + req.getRemoteAddr());
 		
 		try
 		{
@@ -317,7 +319,7 @@ public abstract class SOSServlet extends OWSServlet
 		}
 		catch (Exception e)
 		{
-			throw new ServletException("Problem while processing the request", e);
+			throw new ServletException(internalErrorMsg, e);
 		}
         finally
         {

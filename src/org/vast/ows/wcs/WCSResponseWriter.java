@@ -27,7 +27,7 @@ package org.vast.ows.wcs;
 import java.io.IOException;
 
 import org.vast.ows.SweDataWriter;
-import org.vast.ows.SweResultWriter;
+import org.vast.ows.SweResponseSerializer;
 import org.w3c.dom.Element;
 
 
@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
  * @since Aug 9, 2005
  * @version 1.0
  */
-public class WCSResponseWriter extends SweResultWriter
+public class WCSResponseWriter extends SweResponseSerializer
 {
 	SweDataWriter resultWriter;	
 	int bytesPerPoint;  //  used only by BinaryBlock encoding?
@@ -99,10 +99,6 @@ public class WCSResponseWriter extends SweResultWriter
 	}
 	
 	
-	protected void writeResultData(Element elt)
-	{
-		resultWriter.write();
-	}
 	/**
 	 * Called every time an XML element is serialized
 	 * Override to set up new hooks
@@ -115,9 +111,9 @@ public class WCSResponseWriter extends SweResultWriter
 			this._printer.printText("\n<swe:value>");
 			this._printer.flush();
 			
-			this.writeResultData(elt);
+            resultWriter.write();
 			
-			this._printer.printText("</swe:value>");
+			this._printer.printText("\n</swe:value>");
 			this._printer.flush();
 			this._format.setIndenting(true);
 		}

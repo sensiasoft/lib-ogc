@@ -25,8 +25,9 @@ package org.vast.ows.server;
 
 import javax.servlet.http.*;
 import java.io.*;
-
+import org.apache.log4j.Logger;
 import org.vast.io.xml.*;
+import org.vast.ows.OWSCapabilitiesSerializer;
 import org.w3c.dom.*;
 
 
@@ -45,6 +46,7 @@ import org.w3c.dom.*;
 public abstract class OWSServlet extends HttpServlet
 {
 	protected Document capsDoc;
+    protected Logger logger = Logger.getRootLogger();
 
 
 	// Sends an OWS Service Exception to the user
@@ -59,7 +61,6 @@ public abstract class OWSServlet extends HttpServlet
 		buffer.println("</ServiceExceptionReport>");
 		buffer.flush();
 		buffer.close();
-		//this.log(message);
 	}
 
 
@@ -86,9 +87,9 @@ public abstract class OWSServlet extends HttpServlet
 	{
 		try
 		{
-			DOMWriter domWriter = new DOMWriter();
-			domWriter.setOutputStream(resp);
-			domWriter.writeDOM(capsDoc.getDocumentElement());
+			OWSCapabilitiesSerializer serializer = new OWSCapabilitiesSerializer();
+            serializer.setOutputByteStream(resp);
+            serializer.serialize(capsDoc.getDocumentElement());
 		}
 		catch (IOException e)
 		{

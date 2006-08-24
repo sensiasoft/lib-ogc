@@ -29,27 +29,29 @@ import org.w3c.dom.*;
 //import org.vast.io.xml.*;
 //import org.vast.util.*;
 import org.vast.ows.SweDataWriter;
-import org.vast.ows.SweResultWriter;
+import org.vast.ows.SweResponseSerializer;
 import org.vast.ows.util.TimeInfo;
 
 
 /**
- * <p><b>Title:</b><br/> ObservationWriter</p>
+ * <p><b>Title:</b><br/>
+ * TML Writer
+ * </p>
  *
  * <p><b>Description:</b><br/>
- * TODO ObservationWriter type description
+ * TODO TMLWriter type description
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
  * @version 1.0
  */
-public class TMLWriter extends SweResultWriter
+public class TMLSerializer extends SweResponseSerializer
 {
 	SweDataWriter resultWriter;
 	
 	
-	public TMLWriter()
+	public TMLSerializer()
 	{		
 	}
 	
@@ -64,7 +66,7 @@ public class TMLWriter extends SweResultWriter
 	 * Change eventTime element in the DOM to contain the request times
 	 * @param time
 	 */
-	public void setTime(TimeInfo time)
+	public void setTime(TimeInfo time, int zone)
 	{
 		/*
 		DOMReader templates = null;
@@ -122,7 +124,7 @@ public class TMLWriter extends SweResultWriter
 			this._printer.printText("\n<tmlData>");
 			this._printer.flush();
 			
-			this.writeResultData(elt);
+            resultWriter.write();
 			
 			this._printer.printText("</tmlData>");
 			this._printer.flush();
@@ -131,23 +133,5 @@ public class TMLWriter extends SweResultWriter
 		{
 			super.serializeElement(elt);
 		}
-	}
-	
-	
-	protected void writeResultDefinition(Element elt)
-	{
-		
-	}
-	
-	
-	protected void writeResultEncoding(Element elt)
-	{
-		
-	}
-	
-	
-	protected void writeResultData(Element elt) throws IOException
-	{
-		resultWriter.write();
 	}
 }

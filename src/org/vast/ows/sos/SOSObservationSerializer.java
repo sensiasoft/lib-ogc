@@ -24,39 +24,37 @@
 package org.vast.ows.sos;
 
 import java.io.*;
-
 import org.w3c.dom.*;
 import org.vast.io.xml.*;
-import org.vast.ows.SweDataWriter;
-import org.vast.ows.SweResultWriter;
+import org.vast.ows.SweResponseSerializer;
 import org.vast.ows.util.TimeInfo;
 import org.vast.util.*;
 
 
 /**
- * <p><b>Title:</b><br/> ObservationWriter</p>
+ * <p><b>Title:</b><br/>
+ * SOS Observation Serializer
+ * </p>
  *
  * <p><b>Description:</b><br/>
- * TODO ObservationWriter type description
+ * This class is a specific serializer used to output
+ * Common Observations. It provides an additional setTime
+ * method to easily change the time in the XML response and
+ * overrides the <swe:result> element serialization by calling
+ * the attached DataWriter to handle the job. 
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
+ * @date Feb 10, 2006
  * @version 1.0
  */
-public class SOSObservationWriter extends SweResultWriter
+public class SOSObservationSerializer extends SweResponseSerializer
 {
-	SweDataWriter dataWriter;
 	
 	
-	public SOSObservationWriter()
+	public SOSObservationSerializer()
 	{		
-	}
-	
-	
-	public void setDataWriter(SweDataWriter dataWriter)
-	{
-		this.dataWriter = dataWriter;
 	}
 	
 	
@@ -71,7 +69,7 @@ public class SOSObservationWriter extends SweResultWriter
 		try
 		{
 			// preload templates doc
-			InputStream templateFile = SOSObservationWriter.class.getResourceAsStream("templates.xml");
+			InputStream templateFile = SOSObservationSerializer.class.getResourceAsStream("templates.xml");
 			templates = new DOMReader(templateFile, false);
 		}
 		catch (DOMReaderException e)
@@ -81,7 +79,8 @@ public class SOSObservationWriter extends SweResultWriter
 		
 		// keep pointers to needed nodes
 		NodeList eventTimes = respXML.getRootElement().getElementsByTagName("om:eventTime");//eventTime");
-		
+		Document respDocument = respXML.getRootElement().getOwnerDocument();
+        
 		for (int i=0; i<eventTimes.getLength(); i++)
 		{
 			Element eventTime = (Element)eventTimes.item(i);
@@ -113,26 +112,9 @@ public class SOSObservationWriter extends SweResultWriter
 	}
 	
 	
-	protected void writeResultDefinition(Element elt)
-	{
-		
-	}
-	
-	
-	protected void writeResultEncoding(Element elt)
-	{
-		
-	}
-	
-	
-	protected void writeResultData(Element elt) throws IOException
-	{
-		dataWriter.write();
-	}
-	
-	
 	/**
-	 * Adds a hook on result
+	 * Adds a hook to override serialization of the result element
+     * Uses the DataWriter to write the content of the element.
 	 */
 	protected void serializeElement(Element elt) throws IOException
 	{
@@ -142,7 +124,7 @@ public class SOSObservationWriter extends SweResultWriter
 			this._printer.printText("\n<om:result>");
 			this._printer.flush();
 			
-			this.writeResultData(elt);
+            dataWriter.write();
 			
 			this._printer.printText("</om:result>");
 			this._printer.flush();

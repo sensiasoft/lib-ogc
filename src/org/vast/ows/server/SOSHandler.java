@@ -23,7 +23,6 @@
 
 package org.vast.ows.server;
 
-import org.vast.ows.sos.SOSException;
 import org.vast.ows.sos.SOSQuery;
 
 
@@ -42,7 +41,7 @@ import org.vast.ows.sos.SOSQuery;
  */
 public interface SOSHandler
 {
-	public abstract void getObservation(SOSQuery query) throws SOSException;
-	public abstract void getResult(SOSQuery query) throws SOSException;
-	public abstract void describeSensor(SOSQuery query) throws SOSException;
+	public abstract void getObservation(SOSQuery query) throws Exception;
+	public abstract void getResult(SOSQuery query) throws Exception;
+	public abstract void describeSensor(SOSQuery query) throws Exception;
 }
