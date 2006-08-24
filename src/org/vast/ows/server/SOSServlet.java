@@ -191,27 +191,56 @@ public abstract class SOSServlet extends OWSServlet
 		
 		double startTime = 0.0;
 		double stopTime = 0.0;
-		
+		boolean startUnknown = false;
+        boolean stopUnknown = false;
+        
 		try
 		{
-			if (startAtt != null)
+			// read beginPosition intederminatePosition attribute
+            if (startAtt != null)
 			{
 				if (startAtt.equals("now"))
+                {
 					startTime = (new DateTime()).getJulianTime()-1;
+                    isoStartTime = DateTimeFormat.formatIso(startTime, 0);
+                }
+                else if (startAtt.equals("unknown"))
+                    startUnknown = true;
 			}
 			else
 				startTime = DateTimeFormat.parseIso(isoStartTime);
 			
+            // read endPosition intederminatePosition attribute
 			if (stopAtt != null)
 			{
 				if (stopAtt.equals("now"))
                 {
 					stopTime = (new DateTime()).getJulianTime();
-                    isoStopTime = DateTimeFormat.formatIso(stopTime, 0); 
+                    isoStopTime = DateTimeFormat.formatIso(stopTime, 0);
                 }
+                else if (startAtt.equals("unknown"))
+                    stopUnknown = true;
 			}
 			else
 				stopTime = DateTimeFormat.parseIso(isoStopTime);
+            
+            // handle case of period specified with unknown start or stop time
+            if (startUnknown || stopUnknown)
+            {
+                String period = capsReader.getElementValue(offeringElt, "eventTime/TimePeriod/timeInterval");
+                double dT = DateTimeFormat.parseIsoPeriod(period);
+                
+                if (startUnknown)
+                {
+                    startTime = stopTime - dT;
+                    isoStartTime = DateTimeFormat.formatIso(startTime, 0);
+                }
+                else
+                {
+                    stopTime = startTime + dT;
+                    isoStopTime = DateTimeFormat.formatIso(stopTime, 0);
+                }
+            }
 		}
 		catch (ParseException e)
 		{
