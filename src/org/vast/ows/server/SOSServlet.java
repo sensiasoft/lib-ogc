@@ -276,7 +276,7 @@ public abstract class SOSServlet extends OWSServlet
             }
             catch (IOException e1)
             {
-                throw new ServletException(internalErrorMsg, e);
+                e.printStackTrace();
             }
 		}
 		catch (Exception e)
