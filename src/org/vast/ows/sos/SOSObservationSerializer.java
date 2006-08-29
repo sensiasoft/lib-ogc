@@ -78,17 +78,17 @@ public class SOSObservationSerializer extends SweResponseSerializer
 		}
 		
 		// keep pointers to needed nodes
-		NodeList eventTimes = respXML.getRootElement().getElementsByTagName("om:eventTime");//eventTime");
-		Document respDocument = respXML.getRootElement().getOwnerDocument();
+		NodeList eventTimes = domReader.getRootElement().getElementsByTagName("om:eventTime");//eventTime");
+		Document respDocument = domReader.getRootElement().getOwnerDocument();
         
 		for (int i=0; i<eventTimes.getLength(); i++)
 		{
 			Element eventTime = (Element)eventTimes.item(i);
 			Element timeInstantElt = (Element)respDocument.importNode(templates.getElement("TimeInstant"), true);
 			Element timePeriodElt = (Element)respDocument.importNode(templates.getElement("TimePeriod"), true);
-			Text timeText = (Text)respXML.getElement(timeInstantElt, "timePosition").getFirstChild();
-			Text beginText = (Text)respXML.getElement(timePeriodElt, "beginPosition").getFirstChild();
-			Text endText = (Text)respXML.getElement(timePeriodElt, "endPosition").getFirstChild();
+			Text timeText = (Text)domReader.getElement(timeInstantElt, "timePosition").getFirstChild();
+			Text beginText = (Text)domReader.getElement(timePeriodElt, "beginPosition").getFirstChild();
+			Text endText = (Text)domReader.getElement(timePeriodElt, "endPosition").getFirstChild();
 						
 			// erase old time parameters
 			if (eventTime.hasChildNodes())

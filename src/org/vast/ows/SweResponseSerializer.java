@@ -45,7 +45,7 @@ import org.apache.xml.serialize.*;
  */
 public abstract class SweResponseSerializer extends XMLSerializer
 {
-	protected DOMReader respXML;
+	protected DOMReader domReader;
     protected SweDataWriter dataWriter; 
 	
 	
@@ -67,15 +67,6 @@ public abstract class SweResponseSerializer extends XMLSerializer
     {
         this.dataWriter = dataWriter;
     }
-	
-    
-    /**
-     * Assign the template as a DOMReader
-     */
-    public void setDOMReader(DOMReader dom)
-    {
-        this.respXML = dom;
-    }
     
 	
 	/**
@@ -87,7 +78,7 @@ public abstract class SweResponseSerializer extends XMLSerializer
 		try
 		{
 			// preload base observation document
-			this.respXML = new DOMReader(baseXML, false);
+			this.domReader = new DOMReader(baseXML, false);
 		}
 		catch (DOMReaderException e)
 		{
@@ -101,6 +92,18 @@ public abstract class SweResponseSerializer extends XMLSerializer
 	 */
 	public void writeResponse() throws IOException
 	{
-		serialize(respXML.getRootElement());
+		serialize(domReader.getRootElement());
 	}
+
+
+    public DOMReader getDomReader()
+    {
+        return domReader;
+    }
+
+
+    public void setDomReader(DOMReader respXML)
+    {
+        this.domReader = respXML;
+    }
 }

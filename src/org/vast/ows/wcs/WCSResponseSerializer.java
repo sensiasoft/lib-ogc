@@ -67,16 +67,16 @@ public class WCSResponseSerializer extends SweResponseSerializer
 	//  Leaving it now.  SRTMHandler is the only class still calling this.  TC 6/13/06
 	public void setGridDimension(int xdim, int ydim, int zdim){
 		// set numRows
-		Element elt = respXML.getElement("result/Data/definition/DataDefinition/dataComponents/DataArray");
+		Element elt = domReader.getElement("result/Data/definition/DataDefinition/dataComponents/DataArray");
 		elt.setAttribute("arraySize", "" + ydim);
 		// set numCols
-		Element ncElt = respXML.getElement("result/Data/definition/DataDefinition/dataComponents/DataArray/" + 
+		Element ncElt = domReader.getElement("result/Data/definition/DataDefinition/dataComponents/DataArray/" + 
 											"component/DataArray");		
 		ncElt.setAttribute("arraySize", "" + xdim);
 		
 		//  TODO:  support zdim
 		int dim = xdim*ydim*zdim;
-		Element blElt = respXML.getElement("result/Data/definition/DataDefinition/encoding/BinaryBlock"); 
+		Element blElt = domReader.getElement("result/Data/definition/DataDefinition/encoding/BinaryBlock"); 
 		if(blElt != null)
 			blElt.setAttribute("byteLength", "" + (dim*bytesPerPoint));
 	}
@@ -84,12 +84,12 @@ public class WCSResponseSerializer extends SweResponseSerializer
 	//  Just like setGridDim, but gets the second occurence of the dimension elements
 	public void setImageDimension(int width, int height){
 		// set numRows
-		NodeList nl = respXML.getElements("result/Data/definition/DataDefinition/dataComponents/" +
+		NodeList nl = domReader.getElements("result/Data/definition/DataDefinition/dataComponents/" +
 										  "DataGroup/component/DataArray");
 		Element elt = (Element)nl.item(1);
 		elt.setAttribute("arraySize", "" + height);
 		// set numCols
-		nl = respXML.getElements("result/Data/definition/DataDefinition/dataComponents/" + 
+		nl = domReader.getElements("result/Data/definition/DataDefinition/dataComponents/" + 
 							     "DataGroup/component/DataArray/component/DataArray");
 		elt = (Element)nl.item(1);
 		elt.setAttribute("arraySize", "" + width);
