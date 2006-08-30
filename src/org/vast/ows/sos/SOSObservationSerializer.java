@@ -56,10 +56,22 @@ public class SOSObservationSerializer extends SweResponseSerializer
 	public SOSObservationSerializer()
 	{		
 	}
+    
+    
+    /**
+     * Changes Id attribute in the Observation XML
+     * @param id
+     */
+    public void setID(String id)
+    {
+        DOMWriter domWriter = new DOMWriter(xmlDocument);
+        Element obsElt = xmlDocument.getDocumentElement();
+        domWriter.setAttributeValue(obsElt, "gml:id", id);
+    }
 	
 	
 	/**
-	 * Change eventTime element in the DOM to contain the request times
+	 * Changes eventTime element in the DOM to contain the request times
 	 * @param time
 	 */
 	public void setTime(TimeInfo time, int zone)
@@ -78,6 +90,7 @@ public class SOSObservationSerializer extends SweResponseSerializer
 		}
 		
 		// keep pointers to needed nodes
+        DOMReader domReader = new DOMReader(xmlDocument);
 		NodeList eventTimes = domReader.getRootElement().getElementsByTagName("om:eventTime");//eventTime");
 		Document respDocument = domReader.getRootElement().getOwnerDocument();
         

@@ -49,6 +49,7 @@ public abstract class OWSQuery
 	protected String version;
 	protected String request;
 	protected String section;
+    protected String exceptionType;
 
 	
 	public static String checkServer(String url)
@@ -149,4 +150,16 @@ public abstract class OWSQuery
 	{
 		this.section = section;
 	}
+
+
+    public String getExceptionType()
+    {
+        return exceptionType;
+    }
+
+
+    public void setExceptionType(String exceptionType)
+    {
+        this.exceptionType = exceptionType;
+    }
 }

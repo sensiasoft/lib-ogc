@@ -25,6 +25,7 @@ package org.vast.ows;
 
 import java.io.*;
 import org.vast.io.xml.*;
+import org.w3c.dom.Document;
 import org.apache.xml.serialize.*;
 
 
@@ -45,7 +46,7 @@ import org.apache.xml.serialize.*;
  */
 public abstract class SweResponseSerializer extends XMLSerializer
 {
-	protected DOMReader domReader;
+	protected Document xmlDocument;
     protected SweDataWriter dataWriter; 
 	
 	
@@ -78,7 +79,8 @@ public abstract class SweResponseSerializer extends XMLSerializer
 		try
 		{
 			// preload base observation document
-			this.domReader = new DOMReader(baseXML, false);
+			DOMReader domReader = new DOMReader(baseXML, false);
+            xmlDocument = domReader.getXmlFragment().getParentDocument().getDocument();
 		}
 		catch (DOMReaderException e)
 		{
@@ -92,18 +94,18 @@ public abstract class SweResponseSerializer extends XMLSerializer
 	 */
 	public void writeResponse() throws IOException
 	{
-		serialize(domReader.getRootElement());
+		serialize(xmlDocument.getDocumentElement());
 	}
 
 
-    public DOMReader getDomReader()
+    public Document getXmlDocument()
     {
-        return domReader;
+        return xmlDocument;
     }
 
 
-    public void setDomReader(DOMReader respXML)
+    public void setXmlDocument(Document xmlDocument)
     {
-        this.domReader = respXML;
+        this.xmlDocument = xmlDocument;
     }
 }

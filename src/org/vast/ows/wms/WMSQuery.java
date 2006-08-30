@@ -50,8 +50,7 @@ public class WMSQuery extends OWSQuery
 	protected TimeInfo time;
 	protected Bbox bbox;
 	protected String srs;
-	protected String format;
-	protected String exceptionType;
+	protected String format;	
 	protected int width;
 	protected int height;
 	protected boolean transparent;
@@ -175,17 +174,5 @@ public class WMSQuery extends OWSQuery
 	public void setWidth(int width)
 	{
 		this.width = width;
-	}
-
-
-	public String getExceptionType()
-	{
-		return exceptionType;
-	}
-
-
-	public void setExceptionType(String exceptionType)
-	{
-		this.exceptionType = exceptionType;
 	}
 }

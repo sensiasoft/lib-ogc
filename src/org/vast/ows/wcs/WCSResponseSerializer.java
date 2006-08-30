@@ -26,6 +26,7 @@ package org.vast.ows.wcs;
 
 import java.io.IOException;
 
+import org.vast.io.xml.DOMReader;
 import org.vast.ows.SweDataWriter;
 import org.vast.ows.SweResponseSerializer;
 import org.w3c.dom.Element;
@@ -48,7 +49,7 @@ public class WCSResponseSerializer extends SweResponseSerializer
 {
 	SweDataWriter resultWriter;	
 	int bytesPerPoint;  //  used only by BinaryBlock encoding?
-	
+    
 	public WCSResponseSerializer()
 	{		
 	}
@@ -66,7 +67,8 @@ public class WCSResponseSerializer extends SweResponseSerializer
 	//  between Goes and SRTM
 	//  Leaving it now.  SRTMHandler is the only class still calling this.  TC 6/13/06
 	public void setGridDimension(int xdim, int ydim, int zdim){
-		// set numRows
+		DOMReader domReader = new DOMReader(xmlDocument);
+        // set numRows
 		Element elt = domReader.getElement("result/Data/definition/DataDefinition/dataComponents/DataArray");
 		elt.setAttribute("arraySize", "" + ydim);
 		// set numCols
@@ -83,7 +85,8 @@ public class WCSResponseSerializer extends SweResponseSerializer
 	
 	//  Just like setGridDim, but gets the second occurence of the dimension elements
 	public void setImageDimension(int width, int height){
-		// set numRows
+        DOMReader domReader = new DOMReader(xmlDocument);
+        // set numRows
 		NodeList nl = domReader.getElements("result/Data/definition/DataDefinition/dataComponents/" +
 										  "DataGroup/component/DataArray");
 		Element elt = (Element)nl.item(1);
