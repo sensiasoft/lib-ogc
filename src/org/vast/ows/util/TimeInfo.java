@@ -58,13 +58,21 @@ public class TimeInfo extends TimeExtent
     public void setStartTime(double startTime)
     {
         if (Double.isNaN(baseTime))
+        {
             baseTime = startTime;
+            lagTimeDelta = 0.0;
+        }
         
         else if (startTime > baseTime)
+        {
             timeBias = startTime - baseTime;
+            lagTimeDelta = 0.0;
+        }
         
         else
+        {
             lagTimeDelta = baseTime - startTime;
+        }
     }
 
 
@@ -81,10 +89,16 @@ public class TimeInfo extends TimeExtent
     public void setStopTime(double stopTime)
     {
         if (Double.isNaN(baseTime))
+        {
             baseTime = stopTime;
+            leadTimeDelta = 0.0;
+        }
         
         else if (stopTime < baseTime)
-            timeBias = baseTime - stopTime;
+        {
+            timeBias = stopTime - baseTime;
+            leadTimeDelta = 0.0;
+        }
         
         else
             leadTimeDelta = stopTime - baseTime;

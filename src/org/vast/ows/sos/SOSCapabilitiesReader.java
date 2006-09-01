@@ -152,7 +152,7 @@ public class SOSCapabilitiesReader extends OWSCapabilitiesReader
      */
     protected void getTimeList(Element parentElement, SOSLayerCapabilities layerCaps) throws GMLException
     {
-    	NodeList timeElts = dom.getElements(parentElement, "eventTime");
+    	NodeList timeElts = dom.getElements(parentElement, "eventTime/*");
         int listSize = timeElts.getLength();
         ArrayList<TimeInfo> timeList = new ArrayList<TimeInfo>(listSize);
         layerCaps.setTimeList(timeList);
