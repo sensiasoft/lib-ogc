@@ -51,8 +51,7 @@ import org.vast.util.*;
  */
 public class SOSObservationSerializer extends SweResponseSerializer
 {
-	
-	
+		
 	public SOSObservationSerializer()
 	{		
 	}
