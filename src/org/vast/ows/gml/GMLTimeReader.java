@@ -88,7 +88,7 @@ public class GMLTimeReader
         String att = dom.getAttributeValue(timeElt, "timePosition/indeterminatePosition");
         String isoTime = dom.getElementValue(timeElt, "timePosition");
         
-        if (att.equals("now"))
+        if (att != null && att.equals("now"))
         {
             time.setBaseAtNow(true);
         }
