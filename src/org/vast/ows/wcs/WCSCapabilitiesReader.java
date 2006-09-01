@@ -28,6 +28,7 @@ import java.text.ParseException;
 import java.util.*;
 
 import org.w3c.dom.*;
+import org.vast.io.xml.DOMReader;
 import org.vast.ows.OWSCapabilitiesReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.util.Bbox;
@@ -71,6 +72,12 @@ public class WCSCapabilitiesReader extends OWSCapabilitiesReader
 
     public WCSCapabilitiesReader()
     {
+    }
+    
+    
+    public WCSCapabilitiesReader(DOMReader dom)
+    {
+        this.dom = dom;
     }
     
     

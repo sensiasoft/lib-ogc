@@ -23,13 +23,14 @@
 
 package org.vast.ows.sos;
 
-import java.text.ParseException;
 import java.util.*;
-
 import org.w3c.dom.*;
 import org.vast.util.*;
+import org.vast.io.xml.DOMReader;
 import org.vast.ows.OWSCapabilitiesReader;
 import org.vast.ows.OWSException;
+import org.vast.ows.gml.GMLException;
+import org.vast.ows.gml.GMLTimeReader;
 import org.vast.ows.util.TimeInfo;
 
 
@@ -51,9 +52,15 @@ import org.vast.ows.util.TimeInfo;
  */
 public class SOSCapabilitiesReader extends OWSCapabilitiesReader
 {
-
+   
     public SOSCapabilitiesReader()
     {
+    }
+    
+    
+    public SOSCapabilitiesReader(DOMReader dom)
+    {
+        this.dom = dom;
     }
     
     
@@ -100,7 +107,7 @@ public class SOSCapabilitiesReader extends OWSCapabilitiesReader
 
     
     @Override
-    protected void readContents(Element contentElt)
+    protected void readContents(Element contentElt) throws SOSException
     {
         NodeList offeringList = dom.getElements(contentElt, "ObservationOfferingList/ObservationOffering");
         
@@ -126,10 +133,10 @@ public class SOSCapabilitiesReader extends OWSCapabilitiesReader
 	            getTimeList(offeringElt, layerCaps);
 	            layerCaps.setParent(serviceCaps);
             }
-            catch (ParseException e)
+            catch (GMLException e)
             {
-            	System.err.println("SOSCapabilitiesReader.readOfferings():  ParseException parsing:\n"); 
-            	System.err.println("\t" + layerCaps.getName() + ":" + layerCaps.getId()); 
+            	String message = parsingError + " in offering " + layerCaps.getId();
+                ExceptionSystem.display(new SOSException(message, e));
 				continue;
             }
             
@@ -143,49 +150,20 @@ public class SOSCapabilitiesReader extends OWSCapabilitiesReader
      * @param parentElement
      * @return
      */
-    protected void getTimeList(Element parentElement, SOSLayerCapabilities layerCaps) throws ParseException
+    protected void getTimeList(Element parentElement, SOSLayerCapabilities layerCaps) throws GMLException
     {
     	NodeList timeElts = dom.getElements(parentElement, "eventTime");
         int listSize = timeElts.getLength();
         ArrayList<TimeInfo> timeList = new ArrayList<TimeInfo>(listSize);
         layerCaps.setTimeList(timeList);
-    	
-    	try
-		{
-			for(int i = 0; i < listSize; i++)
-			{
-				Element timeElt = (Element)timeElts.item(i);
-				TimeInfo time = new TimeInfo();
-				
-				// case of TimePeriod
-				if (dom.existElement(timeElt, "TimePeriod"))
-				{
-					String begin = dom.getElementValue(timeElt, "TimePeriod/beginPosition");
-					time.setStartTime(DateTimeFormat.parseIso(begin));
-					
-					String end = dom.getElementValue(timeElt, "TimePeriod/endPosition");
-					
-					if (end == null)
-						time.setStopTime((new DateTime()).getJulianTime());
-					else
-						time.setStopTime(DateTimeFormat.parseIso(end));
-				}
-				// case of TimePeriod
-				else
-				{
-					String timePos = dom.getElementValue(timeElt, "TimeInstant/timePosition");
-					time.setStopTime(DateTimeFormat.parseIso(timePos));
-					time.setStartTime(time.getStopTime());
-				}
-				
-				timeList.add(time);
-			}
-		}
-		catch (ParseException e)
-		{
-			e.printStackTrace();
-			throw(e);
-		}
+    	GMLTimeReader timeReader = new GMLTimeReader();
+        
+        for(int i = 0; i < listSize; i++)
+        {
+            Element timeElt = (Element)timeElts.item(i);
+            TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);         
+            timeList.add(time);
+        }
     }
     
     
@@ -194,7 +172,7 @@ public class SOSCapabilitiesReader extends OWSCapabilitiesReader
      * @param parentElement
      * @return
      */
-    protected void getFormatList(Element parentElement, SOSLayerCapabilities layerCaps)
+    protected void getFormatList(Element parentElement, SOSLayerCapabilities layerCaps) throws SOSException
     {
     	NodeList formatElts = dom.getElements(parentElement, "resultFormat");
         int listSize = formatElts.getLength();
@@ -215,7 +193,7 @@ public class SOSCapabilitiesReader extends OWSCapabilitiesReader
      * @param parentElement
      * @return
      */
-    protected void getObservableList(Element parentElement, SOSLayerCapabilities layerCaps)
+    protected void getObservableList(Element parentElement, SOSLayerCapabilities layerCaps) throws SOSException
     {
         NodeList obsElts = dom.getElements(parentElement, "observedProperty");
         int listSize = obsElts.getLength();
@@ -248,7 +226,7 @@ public class SOSCapabilitiesReader extends OWSCapabilitiesReader
      * @param parentElement
      * @return
      */
-    protected void getProcedureList(Element parentElement, SOSLayerCapabilities layerCaps)
+    protected void getProcedureList(Element parentElement, SOSLayerCapabilities layerCaps) throws SOSException
     {
         NodeList procElts = dom.getElements(parentElement, "procedure");
         int listSize = procElts.getLength();

@@ -24,6 +24,9 @@
 
 package org.vast.ows.util;
 
+import org.vast.physics.TimeExtent;
+import org.vast.util.DateTimeFormat;
+
 
 /**
  * <p><b>Title:</b><br/>
@@ -39,54 +42,78 @@ package org.vast.ows.util;
  * @since Aug 9, 2005
  * @version 1.0
  */
-public class TimeInfo
+public class TimeInfo extends TimeExtent
 {
-	protected double startTime;
-	protected double stopTime;
-	protected double stepTime;
-	
-	
-	public double getStartTime()
-	{
-		return startTime;
-	}
+        
+    public double getStartTime()
+    {
+        return getAdjustedLagTime();
+    }
+    
+    
+    /**
+     * Helper method to set start time
+     * @param startTime
+     */
+    public void setStartTime(double startTime)
+    {
+        if (Double.isNaN(baseTime))
+            baseTime = startTime;
+        
+        else if (startTime > baseTime)
+            timeBias = startTime - baseTime;
+        
+        else
+            lagTimeDelta = baseTime - startTime;
+    }
 
 
-	public void setStartTime(double startTime)
-	{
-		this.startTime = startTime;
-	}
-
-
-	public double getStepTime()
-	{
-		return stepTime;
-	}
-
-
-	public void setStepTime(double stepTime)
-	{
-		this.stepTime = stepTime;
-	}
-
-
-	public double getStopTime()
-	{
-		return stopTime;
-	}
-
-
-	public void setStopTime(double stopTime)
-	{
-		this.stopTime = stopTime;
-	}
+    public double getStopTime()
+    {
+        return getAdjustedLeadTime();
+    }
+    
+    
+    /**
+     * Helper method to set stop time
+     * @param stopTime
+     */
+    public void setStopTime(double stopTime)
+    {
+        if (Double.isNaN(baseTime))
+            baseTime = stopTime;
+        
+        else if (stopTime < baseTime)
+            timeBias = baseTime - stopTime;
+        
+        else
+            leadTimeDelta = stopTime - baseTime;
+    }
 	
 	
 	public boolean isTimeInstant()
 	{
-		if (startTime == stopTime)
+        if (leadTimeDelta == 0 && lagTimeDelta == 0)
 			return true;
 		else
 			return false; 
 	}
+    
+    
+    public String getIsoString(int zone)
+    {
+        if (baseAtNow)
+        {
+            String start = beginNow ? "now" : "unknown";
+            String stop = endNow ? "now" : "unknown";
+            String duration = DateTimeFormat.formatIsoPeriod(getTimeRange());
+            return start + "/" + stop + "/" + duration;
+        }
+        else
+        {
+            String start = beginNow ? "now" : DateTimeFormat.formatIso(getStartTime(), zone);
+            String stop = endNow ? "now" : DateTimeFormat.formatIso(getStopTime(), zone);
+            return start + "/" + stop;
+        }
+    }
 }

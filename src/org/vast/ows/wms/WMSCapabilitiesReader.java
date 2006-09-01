@@ -26,6 +26,7 @@ package org.vast.ows.wms;
 import java.util.*;
 
 import org.w3c.dom.*;
+import org.vast.io.xml.DOMReader;
 import org.vast.ows.OWSCapabilitiesReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.util.Bbox;
@@ -54,6 +55,12 @@ public class WMSCapabilitiesReader extends OWSCapabilitiesReader
 	
     public WMSCapabilitiesReader()
     {
+    }
+    
+    
+    public WMSCapabilitiesReader(DOMReader dom)
+    {
+        this.dom = dom;
     }
     
     

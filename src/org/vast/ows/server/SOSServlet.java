@@ -27,11 +27,11 @@ import javax.servlet.http.*;
 import javax.servlet.*;
 import java.io.*;
 import java.util.*;
-import java.text.*;
-
+import org.vast.ows.gml.GMLException;
+import org.vast.ows.gml.GMLTimeReader;
 import org.vast.ows.sos.*;
 import org.vast.ows.util.PostRequestFilter;
-import org.vast.util.*;
+import org.vast.ows.util.TimeInfo;
 import org.w3c.dom.*;
 import org.vast.io.xml.*;
 
@@ -180,76 +180,24 @@ public abstract class SOSServlet extends OWSServlet
 	protected void checkQueryTime(SOSQuery query, DOMReader capsReader) throws SOSException
 	{
 		Element offeringElt = getOffering(query.getOffering(), capsReader);
-				
-		// check if requested time period is valid
-		String startAtt = capsReader.getAttributeValue(offeringElt, "eventTime/TimePeriod/beginPosition/indeterminatePosition");
-		String isoStartTime = capsReader.getElementValue(offeringElt, "eventTime/TimePeriod/beginPosition");
-		String stopAtt = capsReader.getAttributeValue(offeringElt, "eventTime/TimePeriod/endPosition/indeterminatePosition");
-		String isoStopTime = capsReader.getElementValue(offeringElt, "eventTime/TimePeriod/endPosition");
-		
-		double startTime = 0.0;
-		double stopTime = 0.0;
-		boolean startUnknown = false;
-        boolean stopUnknown = false;
+        Element timeElt = capsReader.getElement(offeringElt, "eventTime/*");
+        TimeInfo capsTime = null;
         
-		try
-		{
-			// read beginPosition intederminatePosition attribute
-            if (startAtt != null)
-			{
-				if (startAtt.equals("now"))
-                {
-					startTime = (new DateTime()).getJulianTime()-1;
-                    isoStartTime = DateTimeFormat.formatIso(startTime, 0);
-                }
-                else if (startAtt.equals("unknown"))
-                    startUnknown = true;
-			}
-			else
-				startTime = DateTimeFormat.parseIso(isoStartTime);
-			
-            // read endPosition intederminatePosition attribute
-			if (stopAtt != null)
-			{
-				if (stopAtt.equals("now"))
-                {
-					stopTime = (new DateTime()).getJulianTime();
-                    isoStopTime = DateTimeFormat.formatIso(stopTime, 0);
-                }
-                else if (startAtt.equals("unknown"))
-                    stopUnknown = true;
-			}
-			else
-				stopTime = DateTimeFormat.parseIso(isoStopTime);
-            
-            // handle case of period specified with unknown start or stop time
-            if (startUnknown || stopUnknown)
-            {
-                String period = capsReader.getElementValue(offeringElt, "eventTime/TimePeriod/timeInterval");
-                double dT = DateTimeFormat.parseIsoPeriod(period);
-                
-                if (startUnknown)
-                {
-                    startTime = stopTime - dT;
-                    isoStartTime = DateTimeFormat.formatIso(startTime, 0);
-                }
-                else
-                {
-                    stopTime = startTime + dT;
-                    isoStopTime = DateTimeFormat.formatIso(stopTime, 0);
-                }
-            }
-		}
-		catch (ParseException e)
-		{
-			throw new SOSException("Internal Error: Invalid Time Period in Capabilities Document.");
-		}
-		
-		if (query.getTime().getStartTime() > query.getTime().getStopTime())
-			throw new SOSException("The requested period must begin before the it ends");
-		
-		if ((query.getTime().getStartTime() < startTime) || (query.getTime().getStopTime() > stopTime))
-			throw new SOSException("The requested period must be contained in " + isoStartTime + "/" + isoStopTime);
+        try
+        {
+            GMLTimeReader timeReader = new GMLTimeReader();
+            capsTime = timeReader.readTimePrimitive(capsReader, timeElt);
+        }
+        catch (GMLException e)
+        {
+            throw new SOSException("Internal Error: Invalid Time in Capabilities Document", e);
+        } 
+        
+        if (query.getTime().getStartTime() > query.getTime().getStopTime())
+            throw new SOSException("The requested period must begin before the it ends");
+        
+		if (!capsTime.contains(query.getTime()))
+            throw new SOSException("The requested period must be contained in " + capsTime.getIsoString(0));			
 	}
 	
 	

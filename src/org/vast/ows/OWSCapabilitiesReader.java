@@ -46,10 +46,11 @@ import org.vast.io.xml.*;
  */
 public abstract class OWSCapabilitiesReader
 {
-    final static protected int GROUP1 = 1;
-    final static protected int GROUP2 = 2;
-    final static protected int GROUP3 = 3;
-    final static protected int GROUP4 = 4;
+    protected final static String parsingError = "Error while parsing capabilities document";
+    protected final static int GROUP1 = 1;
+    protected final static int GROUP2 = 2;
+    protected final static int GROUP3 = 3;
+    protected final static int GROUP4 = 4;
 
     protected String version;
     protected int versionGroup = GROUP1;
@@ -100,6 +101,13 @@ public abstract class OWSCapabilitiesReader
     }
     
     
+    /**
+     * Read Capabilities from the given DOM document
+     * @param dom
+     * @param capabilitiesElt
+     * @return
+     * @throws OWSException
+     */
     public OWSServiceCapabilities readCapabilities(DOMReader dom, Element capabilitiesElt) throws OWSException
     {
         this.dom = dom;

@@ -25,13 +25,13 @@ package org.vast.ows.sos;
 
 import java.text.ParseException;
 import java.util.StringTokenizer;
-
 import org.vast.io.xml.DOMReader;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.vast.ows.*;
+import org.vast.ows.gml.GMLException;
+import org.vast.ows.gml.GMLTimeReader;
 import org.vast.ows.util.TimeInfo;
-import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 
 
@@ -52,9 +52,14 @@ import org.vast.util.DateTimeFormat;
  */
 public class SOSRequestReader extends OWSRequestReader
 {
-	
-	public SOSRequestReader()
-	{	
+    protected final static String invalidGet = "Invalid SOS GET Request";
+    protected final static String invalidPost = "Invalid SOS POST Request";
+    protected GMLTimeReader timeReader;
+    
+    
+    public SOSRequestReader()
+	{
+        timeReader = new GMLTimeReader();
 	}
 
 	
@@ -62,7 +67,6 @@ public class SOSRequestReader extends OWSRequestReader
 	public SOSQuery readGetRequest(String queryString) throws SOSException
 	{
 		SOSQuery query = new SOSQuery();
-		String invalidQuery = "Invalid SOS GET request";
 		StringTokenizer st = new StringTokenizer(queryString, "&");
 		
 		while (st.hasMoreTokens())
@@ -80,7 +84,7 @@ public class SOSRequestReader extends OWSRequestReader
 			}
 			catch (IndexOutOfBoundsException e)
 			{
-				throw new SOSException(invalidQuery);
+				throw new SOSException(invalidGet);
 			}
 			
 			// service ID
@@ -116,30 +120,34 @@ public class SOSRequestReader extends OWSRequestReader
 			// time
 			else if (argName.equalsIgnoreCase("time"))
 			{
-				TimeInfo time = query.getTime();
+				TimeInfo timeInfo = query.getTime();
 				String[] timeRange = argValue.split("/");
 				
-				if (timeRange[0].equalsIgnoreCase("now"))
-				{
-					time.setStartTime((new DateTime()).getJulianTime());
-					time.setStopTime(time.getStartTime());
-				}
-				else
-				{
-					try
-					{
-						time.setStartTime(DateTimeFormat.parseIso(timeRange[0]));
-						
-						if (timeRange.length == 1)
-							time.setStopTime(time.getStartTime());
-						else
-							time.setStopTime(DateTimeFormat.parseIso(timeRange[1]));
-					}
-					catch (ParseException e)
-					{
-						throw new SOSException(invalidQuery + ": Invalid time range " + timeRange[0] + "/" + timeRange[1]);
-					}
-				}					
+				try
+                {
+                    for (int i=0; i<timeRange.length; i++)
+                    {
+                        double time;
+                        
+                        if (timeRange[i].equalsIgnoreCase("now"))
+                            time = System.currentTimeMillis() / 1000;
+                        else
+                            time = DateTimeFormat.parseIso(timeRange[i]);
+                        
+                        if (i == 0)
+                            timeInfo.setStartTime(time);
+                        else
+                            timeInfo.setStopTime(time);
+                    }
+                }
+                catch (ParseException e)
+                {
+                    throw new SOSException(invalidGet + ": Invalid Time Argument: " + argValue);
+                }
+                
+                // copy start to stop
+                if (timeRange.length == 1)
+                    timeInfo.setStopTime(timeInfo.getStartTime());                					
 			}
 			
 			// observables
@@ -152,9 +160,7 @@ public class SOSRequestReader extends OWSRequestReader
 			}
 			
 			// sensor Ids
-			//else if (argName.equalsIgnoreCase("sensors"))
-			//  modded to accept SensorID- that's what it is in the current spec.  TC 6/3/06
-			else if (argName.equalsIgnoreCase("sensors") || argName.equalsIgnoreCase("SensorID"))
+			else if (argName.equalsIgnoreCase("sensorID"))
 			{
 				String[] sensorList = argValue.split(",");
 				query.getProcedures().clear();					
@@ -162,8 +168,8 @@ public class SOSRequestReader extends OWSRequestReader
 					query.getProcedures().add(sensorList[i]);
 			}
 
-			//else
-			//	throw new SOSException(invalidQuery + ": Unknown argument " + argName);
+			else
+				throw new SOSException(invalidGet + ": Unknown Argument " + argName);
 		}
 
 		return query;
@@ -173,7 +179,7 @@ public class SOSRequestReader extends OWSRequestReader
 	@Override
 	public SOSQuery readRequestXML(DOMReader domReader, Element requestElt) throws SOSException
 	{
-		String opName = requestElt.getLocalName();
+        String opName = requestElt.getLocalName();
 		SOSQuery query;
 		
 		if (opName.equalsIgnoreCase("GetCapabilities"))
@@ -213,7 +219,14 @@ public class SOSRequestReader extends OWSRequestReader
 		query.setFormat(domReader.getElementValue(requestElt, "resultFormat"));
 
 		// read time values
-		readEventTime(domReader, requestElt, query);
+		try
+        {
+            readEventTime(domReader, requestElt, query);
+        }
+        catch (GMLException e)
+        {
+            throw new SOSException(invalidPost + ": " + e.getMessage());
+        }
 		
 		// read observables
 		NodeList obsList = domReader.getElements(requestElt, "observedProperty");
@@ -257,58 +270,19 @@ public class SOSRequestReader extends OWSRequestReader
 	}
 	
 	
-	protected void readEventTime(DOMReader domReader, Element requestElt, SOSQuery query) throws SOSException
+    /**
+     * Reads a GML time
+     * TODO readEventTime method description
+     * @param domReader
+     * @param requestElt
+     * @param query
+     * @throws GMLException
+     */
+	protected void readEventTime(DOMReader domReader, Element requestElt, SOSQuery query) throws GMLException
 	{
-		try
-		{
-			Element eventTimeElt = domReader.getElement(requestElt, "eventTime/*");
-			TimeInfo time = query.getTime();
-			
-			// TODO support more time operators
-			// right now i am assuming ogc:During for period and ogc:TContains for instant 
-			
-			if (domReader.existElement(eventTimeElt, "TimeInstant"))
-			{
-				String timeString = domReader.getElementValue(eventTimeElt, "TimeInstant/timePosition");
-				String timeAtt = domReader.getAttributeValue(eventTimeElt, "TimeInstant/timePosition/indeterminatePosition");
-				
-				if (timeAtt != null)
-				{
-					if (timeAtt.equals("now"))
-						time.setStartTime((new DateTime()).getJulianTime());
-				}
-				else
-					time.setStartTime(DateTimeFormat.parseIso(timeString));
-				
-				time.setStopTime(time.getStartTime());
-			}
-			else if (domReader.existElement(eventTimeElt, "TimePeriod"))
-			{
-				String startTimeString = domReader.getElementValue(eventTimeElt, "TimePeriod/beginPosition");
-				String startAtt = domReader.getAttributeValue(eventTimeElt, "TimePeriod/beginPosition/indeterminatePosition");
-				String stopTimeString = domReader.getElementValue(eventTimeElt, "TimePeriod/endPosition");
-				String stopAtt = domReader.getAttributeValue(eventTimeElt, "TimePeriod/endPosition/indeterminatePosition");
-				
-				if (startAtt != null)
-				{
-					if (startAtt.equals("now"))
-						time.setStartTime((new DateTime()).getJulianTime());
-				}
-				else
-					time.setStartTime(DateTimeFormat.parseIso(startTimeString));
-				
-				if (stopAtt != null)
-				{
-					if (stopAtt.equals("now"))
-						time.setStopTime((new DateTime()).getJulianTime());
-				}
-				else
-					time.setStopTime(DateTimeFormat.parseIso(stopTimeString));
-			}
-		}
-		catch (ParseException e)
-		{
-			throw new SOSException("Error while parsing SOS request time section", e);
-		}
+		//TODO support other time operators...
+        Element timeElt = domReader.getElement(requestElt, "eventTime/*/*");
+		TimeInfo time = timeReader.readTimePrimitive(domReader, timeElt);
+        query.setTime(time);
 	}
 }
