@@ -17,63 +17,41 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Tony Cook <tcook@nsstc.uah.edu>
+ Tony Cook <tcook@nsstc.uah.edu>
+ Alex Robin <robin@nsstc.uah.edu>
  
-******************************* END LICENSE BLOCK ***************************/
+ ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.util;
 
-/**
-* <p>Title: Bbox</p>
-*
-* <p>Description:
-* Simple structure for OGC-style bbox info.  This avoids the need to import 
-* stt.Data.Geographically) BoundedRegion (and stt.jar)
-* </p>
-*
-* <p>Copyright: Copyright (c) 2005</p>
-* @author Tony Cook
-* @since Aug 16, 2005
-* @version 1.0
-*/
-public class Bbox {
-	protected double minX;
-	protected double maxX;
-	protected double minY;
-	protected double maxY;
+import org.vast.physics.SpatialExtent;
 
-	public double getMaxX() {
-		return maxX;
-	}
-	public void setMaxX(double maxX) {
-		this.maxX = maxX;
-	}
-	public double getMaxY() {
-		return maxY;
-	}
-	public void setMaxY(double maxY) {
-		this.maxY = maxY;
-	}
-	public double getMinX() {
-		return minX;
-	}
-	public void setMinX(double minX) {
-		this.minX = minX;
-	}
-	public double getMinY() {
-		return minY;
-	}
-	public void setMinY(double minY) {
-		this.minY = minY;
-	}
-	
-	public Bbox copy()
-	{
-		Bbox bbox = new Bbox();
-		bbox.setMinX(this.minX);
-		bbox.setMinY(this.minY);
-		bbox.setMaxX(this.maxX);
-		bbox.setMaxY(this.maxY);
-		return bbox;
-	}
+/**
+ * <p>Title:
+ * Bbox
+ * </p>
+ *
+ * <p>Description:
+ * Simple structure for OGC-style bbox info.
+ * </p>
+ *
+ * <p>Copyright: Copyright (c) 2005</p>
+ * @author Tony Cook, Alex Robin
+ * @since Aug 16, 2005
+ * @version 1.0
+ */
+public class Bbox extends SpatialExtent
+{
+    @Override
+    public Bbox copy()
+    {
+        Bbox bbox = new Bbox();
+        bbox.setMinX(this.minX);
+        bbox.setMinY(this.minY);
+        bbox.setMinZ(this.minZ);
+        bbox.setMaxX(this.maxX);
+        bbox.setMaxY(this.maxY);
+        bbox.setMaxZ(this.maxZ);
+        return bbox;
+    }
 }
