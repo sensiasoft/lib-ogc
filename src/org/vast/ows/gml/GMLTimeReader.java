@@ -47,8 +47,12 @@ import org.w3c.dom.Element;
 public class GMLTimeReader
 {
     protected final static String invalidISO = "Invalid ISO time: ";
+    protected double now;
+    
+    
     public GMLTimeReader()
     {
+        now = System.currentTimeMillis() / 1000;
     }
     
     
@@ -91,6 +95,7 @@ public class GMLTimeReader
         if (att != null && att.equals("now"))
         {
             time.setBaseAtNow(true);
+            time.setBaseTime(now);
         }
         else
         {
@@ -125,8 +130,6 @@ public class GMLTimeReader
         String isoStopTime = dom.getElementValue(timePeriodElt, "endPosition");
         String duration = dom.getElementValue(timePeriodElt, "timeInterval");
         
-        double startTime = 0.0;
-        double stopTime = 0.0;
         boolean startUnknown = false;
         boolean stopUnknown = false;
         
@@ -138,6 +141,7 @@ public class GMLTimeReader
                 if (startAtt.equals("now"))
                 {
                     timeInfo.setBeginNow(true);
+                    timeInfo.setStartTime(now);
                 }
                 else if (startAtt.equals("unknown"))
                     startUnknown = true;
@@ -151,6 +155,7 @@ public class GMLTimeReader
                 if (stopAtt.equals("now"))
                 {
                     timeInfo.setEndNow(true);
+                    timeInfo.setStopTime(now);
                 }
                 else if (startAtt.equals("unknown"))
                     stopUnknown = true;
@@ -165,13 +170,11 @@ public class GMLTimeReader
                 
                 if (startUnknown)
                 {
-                    startTime = stopTime - dT;
-                    isoStartTime = DateTimeFormat.formatIso(startTime, 0);
+                    timeInfo.setStartTime(timeInfo.getStopTime() - dT);
                 }
                 else
                 {
-                    stopTime = startTime + dT;
-                    isoStopTime = DateTimeFormat.formatIso(stopTime, 0);
+                    timeInfo.setStopTime(timeInfo.getStartTime() + dT);
                 }
             }
         }
@@ -199,5 +202,17 @@ public class GMLTimeReader
     public TimeInfo readTimeGrid(DOMReader dom, Element timePeriodElt) throws GMLException
     {
         return null;
+    }
+
+
+    public double getNow()
+    {
+        return now;
+    }
+
+
+    public void setNow(double now)
+    {
+        this.now = now;
     }
 }

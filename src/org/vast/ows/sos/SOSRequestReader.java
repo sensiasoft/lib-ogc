@@ -122,22 +122,35 @@ public class SOSRequestReader extends OWSRequestReader
 			{
 				TimeInfo timeInfo = query.getTime();
 				String[] timeRange = argValue.split("/");
-				
+				double now = System.currentTimeMillis() / 1000;
+                
 				try
                 {
-                    for (int i=0; i<timeRange.length; i++)
+                    // parse start time
+                    if (timeRange[0].equalsIgnoreCase("now"))
                     {
-                        double time;
-                        
-                        if (timeRange[i].equalsIgnoreCase("now"))
-                            time = System.currentTimeMillis() / 1000;
+                        timeInfo.setBeginNow(true);
+                        timeInfo.setStartTime(now);
+                    }
+                    else
+                        timeInfo.setStartTime(DateTimeFormat.parseIso(timeRange[0]));
+                    
+                    // parse stop time if present
+                    if (timeRange.length > 1)
+                    {
+                        if (timeRange[1].equalsIgnoreCase("now"))
+                        {
+                            timeInfo.setEndNow(true);
+                            timeInfo.setStopTime(now);
+                        }
                         else
-                            time = DateTimeFormat.parseIso(timeRange[i]);
-                        
-                        if (i == 0)
-                            timeInfo.setStartTime(time);
-                        else
-                            timeInfo.setStopTime(time);
+                            timeInfo.setStopTime(DateTimeFormat.parseIso(timeRange[1]));
+                    }
+                    
+                    // parse step time if present
+                    if (timeRange.length > 2)
+                    {
+                        timeInfo.setTimeStep(Double.parseDouble(timeRange[2]));
                     }
                 }
                 catch (ParseException e)

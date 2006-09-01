@@ -157,11 +157,11 @@ public class SOSCapabilitiesReader extends OWSCapabilitiesReader
         ArrayList<TimeInfo> timeList = new ArrayList<TimeInfo>(listSize);
         layerCaps.setTimeList(timeList);
     	GMLTimeReader timeReader = new GMLTimeReader();
-        
+            
         for(int i = 0; i < listSize; i++)
         {
             Element timeElt = (Element)timeElts.item(i);
-            TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);         
+            TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);            
             timeList.add(time);
         }
     }
