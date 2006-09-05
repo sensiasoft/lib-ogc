@@ -150,7 +150,7 @@ public class SOSRequestReader extends OWSRequestReader
                     // parse step time if present
                     if (timeRange.length > 2)
                     {
-                        timeInfo.setTimeStep(Double.parseDouble(timeRange[2]));
+                        timeInfo.setTimeStep(DateTimeFormat.parseIsoPeriod(timeRange[2]));
                     }
                 }
                 catch (ParseException e)
