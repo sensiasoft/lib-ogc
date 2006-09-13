@@ -313,8 +313,12 @@ public class SLDReader
 	{
 		// read geometry
 		Element geomElt = dom.getElement(symElt, "Geometry");
-		Geometry geometry = readGeometry(dom, geomElt);
-		symbolizer.setGeometry(geometry);
+		
+        if (geomElt != null)
+        {
+            Geometry geometry = readGeometry(dom, geomElt);
+            symbolizer.setGeometry(geometry);
+        }
 	}
 	
 	
