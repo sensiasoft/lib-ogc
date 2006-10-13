@@ -251,7 +251,7 @@ public class SLDReader
         rasterSym.setOpacity(opacity);
         
         // read raster dimensions
-        Element dimElt = dom.getElement(symElt, "RasterDimensions");
+        Element dimElt = dom.getElement(symElt, "Dimensions");
         Dimensions dim = readDimensions(dom, dimElt);
         rasterSym.setRasterDimensions(dim);
 	}
@@ -297,13 +297,17 @@ public class SLDReader
     public TextureSymbolizer readTexture(DOMReader dom, Element symElt)
     {
         TextureSymbolizer texSym = new TextureSymbolizer();
-        readGeometryElt(texSym, dom, symElt);
-        readRasterParameters(texSym, dom, symElt);
         
-        // read grid dimensions
-        Element dimElt = dom.getElement(symElt, "GridDimensions");
+        // read grid info
+        Element gridElt = dom.getElement(symElt, "Grid");
+        readGeometryElt(texSym, dom, gridElt);
+        Element dimElt = dom.getElement(gridElt, "Dimensions");
         Dimensions dim = readDimensions(dom, dimElt);
         texSym.setGridDimensions(dim);
+        
+        // read raster info
+        Element rasterElt = dom.getElement(symElt, "Raster");
+        readRasterParameters(texSym, dom, rasterElt);
         
         return texSym;
     }
@@ -395,32 +399,13 @@ public class SLDReader
         Dimensions dim = new Dimensions();
         
         // read all css parameters
-        NodeList cssElts = dom.getElements(dimElt, "CssParameter");
-        for (int i=0; i<cssElts.getLength(); i++)
+        NodeList axisElts = dom.getElements(dimElt, "Axis");
+        for (int i=0; i<axisElts.getLength(); i++)
         {
-            Element cssElt = (Element)cssElts.item(i);
-            String paramName = dom.getAttributeValue(cssElt, "name");
-            
-            if (paramName.equalsIgnoreCase("width"))
-            {
-                ScalarParameter widthData = cssReader.readCssParameter(dom, cssElt);
-                dim.setWidth(widthData);
-            }
-            else if (paramName.equalsIgnoreCase("length"))
-            {
-                ScalarParameter lengthData = cssReader.readCssParameter(dom, cssElt);
-                dim.setLength(lengthData);
-            }
-            else if (paramName.equalsIgnoreCase("depth"))
-            {
-                ScalarParameter depthData = cssReader.readCssParameter(dom, cssElt);
-                dim.setDepth(depthData);
-            }
-            else if (paramName.equalsIgnoreCase("time"))
-            {
-                ScalarParameter timeData = cssReader.readCssParameter(dom, cssElt);
-                dim.setTime(timeData);
-            }
+            Element axisElt = (Element)axisElts.item(i);
+            String axisName = dom.getAttributeValue(axisElt, "name");
+            String axisMapping = dom.getElementValue(axisElt, "PropertyName");
+            dim.put(axisName, axisMapping);
         }
         
         return dim;

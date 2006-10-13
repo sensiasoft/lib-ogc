@@ -23,6 +23,8 @@
 
 package org.vast.ows.sld;
 
+import java.util.Hashtable;
+
 /**
  * <p><b>Title:</b><br/>
  * Dimensions
@@ -30,8 +32,8 @@ package org.vast.ows.sld;
  *
  * <p><b>Description:</b><br/>
  * SLD-X Dimensions object.
- * Allows to define mappings or fixed values for grid dimensions
- * along all 3 spatial coordinates and one temporal coordinate.
+ * Allows to define mappings to Arrays for grid dimensions
+ * along all any number of coordinates.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -39,58 +41,19 @@ package org.vast.ows.sld;
  * @date Nov 11, 2005
  * @version 1.0
  */
-public class Dimensions
+public class Dimensions extends Hashtable<String, String>
 {
-	protected ScalarParameter width;
-	protected ScalarParameter length;
-	protected ScalarParameter depth;
-	protected ScalarParameter time;
+	private final static long serialVersionUID = 0;
 
 
-    public ScalarParameter getTime()
-	{
-		return time;
-	}
-
-
-    public void setTime(ScalarParameter t)
-	{
-		this.time = t;
-	}
-
-
-    public ScalarParameter getWidth()
-	{
-		return width;
-	}
-
-
-    public void setWidth(ScalarParameter x)
-	{
-		this.width = x;
-	}
-
-
-    public ScalarParameter getLength()
-	{
-		return length;
-	}
-
-
-    public void setLength(ScalarParameter y)
-	{
-		this.length = y;
-	}
-
-
-    public ScalarParameter getDepth()
-	{
-		return depth;
-	}
-
-
-    public void setDepth(ScalarParameter z)
-	{
-		this.depth = z;
-	}
+    public Dimensions()
+    {
+        super(3);
+    }
+    
+    
+    public int getDimensionCount()
+    {
+        return this.size();
+    }
 }
