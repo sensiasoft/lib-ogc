@@ -129,6 +129,7 @@ public class GMLTimeReader
         String stopAtt = dom.getAttributeValue(timePeriodElt, "endPosition/indeterminatePosition");
         String isoStopTime = dom.getElementValue(timePeriodElt, "endPosition");
         String duration = dom.getElementValue(timePeriodElt, "timeInterval");
+        String timeStep = dom.getElementValue(timePeriodElt, "timeStep");
         
         boolean startUnknown = false;
         boolean stopUnknown = false;
@@ -177,6 +178,10 @@ public class GMLTimeReader
                     timeInfo.setStopTime(timeInfo.getStartTime() + dT);
                 }
             }
+            
+            // also parse step time
+            if (timeStep != null)
+                timeInfo.setTimeStep(DateTimeFormat.parseIsoPeriod(timeStep));
         }
         catch (ParseException e)
         {

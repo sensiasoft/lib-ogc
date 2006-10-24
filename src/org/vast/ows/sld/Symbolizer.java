@@ -45,6 +45,12 @@ public abstract class Symbolizer
     protected Geometry geometry;
 
     
+    public Symbolizer()
+    {
+        geometry = new Geometry();
+    }
+    
+    
 	public Geometry getGeometry()
 	{
 		return geometry;
