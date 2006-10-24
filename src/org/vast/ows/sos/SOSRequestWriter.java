@@ -26,6 +26,7 @@ package org.vast.ows.sos;
 import org.vast.io.xml.DOMWriter;
 import org.vast.ows.OWSQuery;
 import org.vast.ows.OWSRequestWriter;
+import org.vast.ows.util.TimeInfo;
 import org.vast.util.*;
 import org.w3c.dom.Element;
 
@@ -64,8 +65,13 @@ public class SOSRequestWriter extends OWSRequestWriter
 		urlBuff.append("&version=" + query.getVersion());
 		urlBuff.append("&request=" + query.getRequest());
 		urlBuff.append("&offering=" + query.getOffering());
-		urlBuff.append("&time=" + DateTimeFormat.formatIso(query.getTime().getStartTime(), 0));
-		urlBuff.append("/" + DateTimeFormat.formatIso(query.getTime().getStopTime(), 0));
+        
+        TimeInfo timeInfo = query.getTime();
+		urlBuff.append("&time=" + DateTimeFormat.formatIso(timeInfo.getStartTime(), 0));
+		urlBuff.append("/" + DateTimeFormat.formatIso(timeInfo.getStopTime(), 0));        
+        if (timeInfo.getTimeStep() != 0)
+            urlBuff.append("/" + DateTimeFormat.formatIsoPeriod(timeInfo.getTimeStep()));
+        
 		urlBuff.append("&format=" + query.getFormat());
 		
 		// add observable list
@@ -107,17 +113,24 @@ public class SOSRequestWriter extends OWSRequestWriter
 		domWriter.setElementValue(rootElt, "sos:offering", query.getOffering());
 		
 		// time period
-		if (query.getTime().isTimeInstant())
+        TimeInfo timeInfo = query.getTime();
+		if (timeInfo.isTimeInstant())
 		{
 			elt = domWriter.addElement(rootElt, "sos:eventTime/ogc:During/gml:TimeInstant/gml:timePosition");
-			domWriter.setElementValue(elt, "", DateTimeFormat.formatIso(query.getTime().getStartTime(), 0));
+			domWriter.setElementValue(elt, "", DateTimeFormat.formatIso(timeInfo.getStartTime(), 0));
 		}
 		else
 		{
 			elt = domWriter.addElement(rootElt, "sos:eventTime/ogc:During/gml:TimePeriod/gml:beginPosition");
-			domWriter.setElementValue(elt, "", DateTimeFormat.formatIso(query.getTime().getStartTime(), 0));
+			domWriter.setElementValue(elt, "", DateTimeFormat.formatIso(timeInfo.getStartTime(), 0));
 			elt = domWriter.addElement(rootElt, "sos:eventTime/ogc:During/gml:TimePeriod/gml:endPosition");
-			domWriter.setElementValue(elt, "", DateTimeFormat.formatIso(query.getTime().getStopTime(), 0));
+			domWriter.setElementValue(elt, "", DateTimeFormat.formatIso(timeInfo.getStopTime(), 0));
+            
+            if (timeInfo.getTimeStep() != 0)
+            {
+                elt = domWriter.addElement(rootElt, "sos:eventTime/ogc:During/gml:TimePeriod/sos:timeStep");
+                domWriter.setElementValue(elt, "", DateTimeFormat.formatIsoPeriod(timeInfo.getTimeStep()));
+            }
 		}
 		
 		// procedures
