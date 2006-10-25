@@ -26,8 +26,11 @@ package org.vast.ows.sos;
 import org.vast.io.xml.DOMWriter;
 import org.vast.ows.OWSQuery;
 import org.vast.ows.OWSRequestWriter;
+import org.vast.ows.gml.GMLEnvelopeWriter;
+import org.vast.ows.gml.GMLException;
+import org.vast.ows.gml.GMLTimeWriter;
+import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
-import org.vast.util.*;
 import org.w3c.dom.Element;
 
 
@@ -48,9 +51,14 @@ import org.w3c.dom.Element;
  */
 public class SOSRequestWriter extends OWSRequestWriter
 {
-	
+	protected GMLEnvelopeWriter bboxWriter;
+    protected GMLTimeWriter timeWriter;
+    
+    
 	public SOSRequestWriter()
-	{	
+	{
+        bboxWriter = new GMLEnvelopeWriter();
+        timeWriter = new GMLTimeWriter();
 	}
 
 	
@@ -117,25 +125,36 @@ public class SOSRequestWriter extends OWSRequestWriter
 		domWriter.setElementValue(rootElt, "sos:offering", query.getOffering());
 		
 		// time period
-        TimeInfo timeInfo = query.getTime();
-		if (timeInfo.isTimeInstant())
-		{
-			elt = domWriter.addElement(rootElt, "sos:eventTime/ogc:During/gml:TimeInstant/gml:timePosition");
-			domWriter.setElementValue(elt, "", DateTimeFormat.formatIso(timeInfo.getStartTime(), 0));
-		}
-		else
-		{
-			elt = domWriter.addElement(rootElt, "sos:eventTime/ogc:During/gml:TimePeriod/gml:beginPosition");
-			domWriter.setElementValue(elt, "", DateTimeFormat.formatIso(timeInfo.getStartTime(), 0));
-			elt = domWriter.addElement(rootElt, "sos:eventTime/ogc:During/gml:TimePeriod/gml:endPosition");
-			domWriter.setElementValue(elt, "", DateTimeFormat.formatIso(timeInfo.getStopTime(), 0));
-            
-            if (timeInfo.getTimeStep() != 0)
+        try
+        {
+            TimeInfo timeInfo = query.getTime();
+            if (timeInfo != null)
             {
-                elt = domWriter.addElement(rootElt, "sos:eventTime/ogc:During/gml:TimePeriod/sos:timeStep");
-                domWriter.setElementValue(elt, "", DateTimeFormat.formatIsoPeriod(timeInfo.getTimeStep()));
+                Element timeElt = timeWriter.writeTime(domWriter, timeInfo);
+                elt = domWriter.addElement(rootElt, "sos:eventTime/ogc:During");
+                elt.appendChild(timeElt);
             }
-		}
+        }
+        catch (GMLException e)
+        {
+            throw new SOSException("Error while writing time", e);
+        }
+        
+        // bbox
+        try
+        {
+            Bbox bbox = query.getBbox();
+            if (bbox != null && !bbox.isNull())
+            {
+                Element envelopeElt = bboxWriter.writeEnvelope(domWriter, bbox);
+                elt = domWriter.addElement(rootElt, "sos:featureOfInterest/ogc:BBOX");
+                elt.appendChild(envelopeElt);
+            }
+        }
+        catch (GMLException e)
+        {
+            throw new SOSException("Error while writing bbox", e);
+        }
 		
 		// procedures
 		int procCount = query.getProcedures().size();
