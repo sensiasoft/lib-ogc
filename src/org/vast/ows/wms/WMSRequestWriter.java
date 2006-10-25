@@ -96,15 +96,24 @@ public class WMSRequestWriter extends OWSRequestWriter
 		}
 		
 		urlBuff.append("&layers=" + query.getLayers().get(0));
+        
 		urlBuff.append("&styles=");
 		if (!query.getStyles().isEmpty())
 			urlBuff.append(query.getStyles().get(0));
+        
 		urlBuff.append("&srs=" + query.getSrs());
-		urlBuff.append("&bbox=" + getBboxList(query).replace(' ', ','));
+        
+		urlBuff.append("&bbox=");
+        this.writeBboxArgument(urlBuff, query.getBbox());
+        
 		urlBuff.append("&width=" + query.getWidth());
+        
 		urlBuff.append("&height=" + query.getHeight());
+        
 		urlBuff.append("&format=" + query.getFormat());
+        
 		urlBuff.append("&transparent=" + (query.isTransparent() ? "TRUE" : "FALSE"));
+        
 		urlBuff.append("&exceptions=" + query.getExceptionType());
 		
 		// display request

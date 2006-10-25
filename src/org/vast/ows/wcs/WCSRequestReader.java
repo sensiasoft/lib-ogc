@@ -24,9 +24,12 @@
 
 package org.vast.ows.wcs;
 
+import java.util.StringTokenizer;
+
 import org.vast.io.xml.DOMReader;
 import org.w3c.dom.*;
 import org.vast.ows.*;
+import org.vast.ows.sos.SOSException;
 
 
 /**
@@ -46,18 +49,76 @@ import org.vast.ows.*;
  */
 public class WCSRequestReader extends OWSRequestReader
 {
-//	 TODO WCSRequestReader THIS VERSION IS JUST A COPY OF WMS
 	public WCSRequestReader()
 	{	
 	}
 
 	
 	@Override
-	public WCSQuery readGetRequest(String queryString)
+	public WCSQuery readGetRequest(String queryString) throws OWSException
 	{
 		WCSQuery query = new WCSQuery();
-		
-		return query;
+		StringTokenizer st = new StringTokenizer(queryString, "&");
+        
+        while (st.hasMoreTokens())
+        {
+            String argName = null;
+            String argValue = null;
+            String nextArg = st.nextToken();
+
+            // separate argument name and value
+            try
+            {
+                int sepIndex = nextArg.indexOf('=');
+                argName = nextArg.substring(0, sepIndex);
+                argValue = nextArg.substring(sepIndex + 1);
+            }
+            catch (IndexOutOfBoundsException e)
+            {
+                throw new WCSException(invalidGet);
+            }
+            
+            // service ID
+            if (argName.equalsIgnoreCase("service"))
+            {
+                query.setService(argValue);
+            }
+            
+            // service version
+            else if (argName.equalsIgnoreCase("version"))
+            {
+                query.setVersion(argValue);
+            }
+
+            // request argument
+            else if (argName.equalsIgnoreCase("request"))
+            {
+                query.setRequest(argValue);
+            }
+
+            // format argument
+            else if (argName.equalsIgnoreCase("format"))
+            {
+                query.setFormat(argValue);
+            }
+            
+            // time
+            else if (argName.equalsIgnoreCase("time"))
+            {
+                this.parseTimeArg(query.getTime(), argValue);
+            }
+            
+            // bbox
+            else if (argName.equalsIgnoreCase("bbox"))
+            {
+                this.parseBboxArg(query.getBbox(), argValue);
+            }
+
+            else
+                throw new SOSException(invalidGet + ": Unknown Argument " + argName);
+        }
+
+        return query;
 	}
 	
 	
@@ -96,21 +157,8 @@ public class WCSRequestReader extends OWSRequestReader
 	{
 		WCSQuery query = new WCSQuery();
 		
+        // TODO read GetCoverage XML
+        
 		return query;
-	}
-	
-	
-	/**
-	 * Parses comma separated BBOX coordinates and set corresponding fields in WCQuery
-	 * @param query
-	 * @param coordText
-	 */
-	protected void parseBbox(WCSQuery query, String coordText)
-	{
-		String[] coords = coordText.split("[ ,]");
-		query.getBbox().setMinX(Double.parseDouble(coords[0]));
-		query.getBbox().setMinY(Double.parseDouble(coords[1]));
-		query.getBbox().setMaxX(Double.parseDouble(coords[2]));
-		query.getBbox().setMaxY(Double.parseDouble(coords[3]));
 	}
 }

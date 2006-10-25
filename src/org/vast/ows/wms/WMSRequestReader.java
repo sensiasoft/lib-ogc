@@ -23,9 +23,13 @@
 
 package org.vast.ows.wms;
 
+import java.util.StringTokenizer;
+
 import org.vast.io.xml.DOMReader;
 import org.w3c.dom.*;
 import org.vast.ows.*;
+import org.vast.ows.sos.SOSException;
+import org.vast.ows.wcs.WCSException;
 
 
 /**
@@ -52,10 +56,101 @@ public class WMSRequestReader extends OWSRequestReader
 
 	
 	@Override
-	public WMSQuery readGetRequest(String queryString)
+	public WMSQuery readGetRequest(String queryString) throws OWSException
 	{
 		WMSQuery query = new WMSQuery();
-		
+		StringTokenizer st = new StringTokenizer(queryString, "&");
+        
+        while (st.hasMoreTokens())
+        {
+            String argName = null;
+            String argValue = null;
+            String nextArg = st.nextToken();
+
+            // separate argument name and value
+            try
+            {
+                int sepIndex = nextArg.indexOf('=');
+                argName = nextArg.substring(0, sepIndex);
+                argValue = nextArg.substring(sepIndex + 1);
+            }
+            catch (IndexOutOfBoundsException e)
+            {
+                throw new WCSException(invalidGet);
+            }
+            
+            // service ID
+            if (argName.equalsIgnoreCase("service"))
+            {
+                query.setService(argValue);
+            }
+            
+            // service version
+            else if (argName.equalsIgnoreCase("version"))
+            {
+                query.setVersion(argValue);
+            }
+
+            // request argument
+            else if (argName.equalsIgnoreCase("request"))
+            {
+                query.setRequest(argValue);
+            }
+            
+            // layers argument
+            else if (argName.equalsIgnoreCase("layers"))
+            {
+                String[] layerList = argValue.split(",");
+                query.getLayers().clear();                 
+                for (int i=0; i<layerList.length; i++)
+                    query.getLayers().add(layerList[i]);
+            }
+            
+            // styles argument
+            else if (argName.equalsIgnoreCase("styles"))
+            {
+                String[] styleList = argValue.split(",");
+                query.getStyles().clear();                 
+                for (int i=0; i<styleList.length; i++)
+                    query.getStyles().add(styleList[i]);
+            }
+            
+            // time
+            else if (argName.equalsIgnoreCase("time"))
+            {
+                this.parseTimeArg(query.getTime(), argValue);
+            }
+            
+            // bbox
+            else if (argName.equalsIgnoreCase("bbox"))
+            {
+                this.parseBboxArg(query.getBbox(), argValue);
+            }
+            
+            // width
+            else if (argName.equalsIgnoreCase("width"))
+            {
+                try {query.setWidth(Integer.parseInt(argValue));}
+                catch (NumberFormatException e) {throw new WMSException(invalidGet + "Width should be an integer value");}
+            }
+            
+            // height
+            else if (argName.equalsIgnoreCase("height"))
+            {
+                try {query.setHeight(Integer.parseInt(argValue));}
+                catch (NumberFormatException e) {throw new WMSException(invalidGet + "Height should be an integer value");}
+            }
+            
+            // format argument
+            else if (argName.equalsIgnoreCase("format"))
+            {
+                query.setFormat(argValue);
+            }
+
+            else
+                throw new SOSException(invalidGet + ": Unknown Argument " + argName);
+        }
+        
 		return query;
 	}
 	

@@ -23,16 +23,16 @@
 
 package org.vast.ows.sos;
 
-import java.text.ParseException;
 import java.util.StringTokenizer;
 import org.vast.io.xml.DOMReader;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.vast.ows.*;
+import org.vast.ows.gml.GMLEnvelopeReader;
 import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLTimeReader;
+import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
-import org.vast.util.DateTimeFormat;
 
 
 /**
@@ -52,19 +52,19 @@ import org.vast.util.DateTimeFormat;
  */
 public class SOSRequestReader extends OWSRequestReader
 {
-    protected final static String invalidGet = "Invalid SOS GET Request";
-    protected final static String invalidPost = "Invalid SOS POST Request";
     protected GMLTimeReader timeReader;
+    protected GMLEnvelopeReader bboxReader;
     
     
     public SOSRequestReader()
 	{
         timeReader = new GMLTimeReader();
+        bboxReader = new GMLEnvelopeReader();
 	}
 
 	
 	@Override
-	public SOSQuery readGetRequest(String queryString) throws SOSException
+	public SOSQuery readGetRequest(String queryString) throws OWSException
 	{
 		SOSQuery query = new SOSQuery();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
@@ -120,48 +120,14 @@ public class SOSRequestReader extends OWSRequestReader
 			// time
 			else if (argName.equalsIgnoreCase("time"))
 			{
-				TimeInfo timeInfo = query.getTime();
-				String[] timeRange = argValue.split("/");
-				double now = System.currentTimeMillis() / 1000;
-                
-				try
-                {
-                    // parse start time
-                    if (timeRange[0].equalsIgnoreCase("now"))
-                    {
-                        timeInfo.setBeginNow(true);
-                        timeInfo.setStartTime(now);
-                    }
-                    else
-                        timeInfo.setStartTime(DateTimeFormat.parseIso(timeRange[0]));
-                    
-                    // parse stop time if present
-                    if (timeRange.length > 1)
-                    {
-                        if (timeRange[1].equalsIgnoreCase("now"))
-                        {
-                            timeInfo.setEndNow(true);
-                            timeInfo.setStopTime(now);
-                        }
-                        else
-                            timeInfo.setStopTime(DateTimeFormat.parseIso(timeRange[1]));
-                    }
-                    
-                    // parse step time if present
-                    if (timeRange.length > 2)
-                    {
-                        timeInfo.setTimeStep(DateTimeFormat.parseIsoPeriod(timeRange[2]));
-                    }
-                }
-                catch (ParseException e)
-                {
-                    throw new SOSException(invalidGet + ": Invalid Time Argument: " + argValue);
-                }
-                
-                // copy start to stop
-                if (timeRange.length == 1)
-                    timeInfo.setStopTime(timeInfo.getStartTime());                					
+			    this.parseTimeArg(query.getTime(), argValue);
 			}
+            
+            // bbox
+            else if (argName.equalsIgnoreCase("bbox"))
+            {
+                this.parseBboxArg(query.getBbox(), argValue);
+            }
 			
 			// observables
 			else if (argName.equalsIgnoreCase("observables"))
@@ -231,10 +197,20 @@ public class SOSRequestReader extends OWSRequestReader
 		query.setOffering(domReader.getElementValue(requestElt, "offering"));
 		query.setFormat(domReader.getElementValue(requestElt, "resultFormat"));
 
-		// read time values
+		// read time instant or period
 		try
         {
-            readEventTime(domReader, requestElt, query);
+            readTemporalOps(domReader, requestElt, query);
+        }
+        catch (GMLException e)
+        {
+            throw new SOSException(invalidPost + ": " + e.getMessage());
+        }
+        
+        // read bbox
+        try
+        {
+            readSpatialOps(domReader, requestElt, query);
         }
         catch (GMLException e)
         {
@@ -284,18 +260,41 @@ public class SOSRequestReader extends OWSRequestReader
 	
 	
     /**
-     * Reads a GML time
-     * TODO readEventTime method description
+     * Reads the temporalOps section
+     * TODO support other time operators... (currently supporting only During)
      * @param domReader
      * @param requestElt
      * @param query
      * @throws GMLException
      */
-	protected void readEventTime(DOMReader domReader, Element requestElt, SOSQuery query) throws GMLException
+	protected void readTemporalOps(DOMReader domReader, Element requestElt, SOSQuery query) throws GMLException
 	{
-		//TODO support other time operators...
         Element timeElt = domReader.getElement(requestElt, "eventTime/*/*");
-		TimeInfo time = timeReader.readTimePrimitive(domReader, timeElt);
-        query.setTime(time);
+        
+        if (timeElt != null)
+        {
+    		TimeInfo time = timeReader.readTimePrimitive(domReader, timeElt);
+            query.setTime(time);
+        }
 	}
+    
+    
+    /**
+     * Reads the spatialOps section
+     * TODO support more spatial operators... (currently supporting only BBOX)
+     * @param domReader
+     * @param requestElt
+     * @param query
+     * @throws GMLException
+     */
+    protected void readSpatialOps(DOMReader domReader, Element requestElt, SOSQuery query) throws GMLException
+    {
+        Element envelopeElt = domReader.getElement(requestElt, "featureOfInterest/BBOX/Envelope");
+        
+        if (envelopeElt != null)
+        {
+            Bbox bbox = bboxReader.readEnvelope(domReader, envelopeElt);
+            query.setBbox(bbox);
+        }
+    }
 }

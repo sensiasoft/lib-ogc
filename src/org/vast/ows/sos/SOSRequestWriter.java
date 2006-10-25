@@ -66,11 +66,15 @@ public class SOSRequestWriter extends OWSRequestWriter
 		urlBuff.append("&request=" + query.getRequest());
 		urlBuff.append("&offering=" + query.getOffering());
         
-        TimeInfo timeInfo = query.getTime();
-		urlBuff.append("&time=" + DateTimeFormat.formatIso(timeInfo.getStartTime(), 0));
-		urlBuff.append("/" + DateTimeFormat.formatIso(timeInfo.getStopTime(), 0));        
-        if (timeInfo.getTimeStep() != 0)
-            urlBuff.append("/" + DateTimeFormat.formatIsoPeriod(timeInfo.getTimeStep()));
+		urlBuff.append("&time=");
+        this.writeTimeArgument(urlBuff, query.getTime());
+        
+        // add bbox only if specified
+        if (query.getBbox() != null && !query.getBbox().isNull())
+        {
+            urlBuff.append("&bbox=");
+            this.writeBboxArgument(urlBuff, query.getBbox());
+        }        
         
 		urlBuff.append("&format=" + query.getFormat());
 		

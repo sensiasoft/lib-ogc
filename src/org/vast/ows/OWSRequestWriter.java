@@ -29,6 +29,9 @@ import java.net.URL;
 import org.w3c.dom.*;
 
 import org.vast.io.xml.DOMWriter;
+import org.vast.ows.util.Bbox;
+import org.vast.ows.util.TimeInfo;
+import org.vast.util.DateTimeFormat;
 
 
 /**
@@ -94,6 +97,56 @@ public abstract class OWSRequestWriter
 		}
 	}
 	
+    
+    /**
+     * Utility method to add time argument to a GET request
+     * Format is YYYY-MM-DDTHH:MM:SS.sss/YYYY-MM-DDTHH:MM:SS.sss/PYMDTHMS
+     * @param buffer
+     * @param time
+     */
+    protected void writeTimeArgument(StringBuffer buffer, TimeInfo time)
+    {
+        // add start time
+        if (time.isBeginNow())
+            buffer.append("now");
+        else
+            buffer.append(DateTimeFormat.formatIso(time.getStartTime(), 0));
+        
+        // add stop and step time if it's a period
+        if (!time.isTimeInstant())
+        {
+            buffer.append('/');
+            
+            if (time.isEndNow())
+                buffer.append("now");
+            else
+                buffer.append(DateTimeFormat.formatIso(time.getStopTime(), 0));
+            
+            // add time step if specified
+            if (time.getTimeStep() > 0)
+            {
+                buffer.append('/');
+                buffer.append(DateTimeFormat.formatIsoPeriod(time.getTimeStep()));
+            }
+        }
+    }
+    
+    
+    /**
+     * Utility method to add bbox argument to a GET request
+     * Format is minY,minX,maxY,maxX
+     * @param buffer
+     * @param bbox
+     */
+    protected void writeBboxArgument(StringBuffer buffer, Bbox bbox)
+    {
+        buffer.append(bbox.getMinX());
+        buffer.append("," + bbox.getMinY());
+        buffer.append("," + bbox.getMaxX());
+        buffer.append("," + bbox.getMaxY());
+    }
+    
+    
 	
 	/**
 	 * Sends the request using either GET or POST
