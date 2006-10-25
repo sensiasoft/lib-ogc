@@ -89,7 +89,8 @@ public class WCSRequestWriter extends OWSRequestWriter
         urlBuff.append("&request=GetCoverage");          
         urlBuff.append("&layers=" + query.getLayer());
         urlBuff.append("&crs=" + query.getSrs());
-        urlBuff.append("&bbox=" + getBboxList(query).replace(' ', ','));
+        urlBuff.append("&bbox=");
+        this.writeBboxArgument(urlBuff, query.getBbox());
         urlBuff.append("&skipX=" + query.getSkipX());
         urlBuff.append("&skipY=" + query.getSkipY());
         urlBuff.append("&format=" + query.getFormat());
