@@ -132,11 +132,11 @@ public abstract class WCSServlet extends OWSServlet
 
     /**
      * Parse and process HTTP GET request
+     * TODO  Modify to use WCSRequestReader
      */
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException
     {
         String invalidQuery = "Invalid WCS GET request";
-        TimeInfo time = new TimeInfo();
 
         // parse query arguments
         WCSQuery queryInfo = new WCSQuery();
@@ -206,12 +206,18 @@ public abstract class WCSServlet extends OWSServlet
                 }
 
                 // singleTime
+                //  
                 else if (argName.equalsIgnoreCase("time"))
                 {
-                    time = new TimeInfo();
-                    time.setStartTime(DateTimeFormat.parseIso(argValue));
-                    time.setStopTime(time.getStartTime());
-                    queryInfo.getTimes().add(time);
+                    TimeInfo timeInfo = new TimeInfo();
+                	if(argValue.equalsIgnoreCase("now")){
+                		timeInfo.setBeginNow(true);
+                        timeInfo.setStartTime(System.currentTimeMillis() / 1000);
+                    } else {
+                    	timeInfo.setStartTime(DateTimeFormat.parseIso(argValue));
+                    	timeInfo.setStopTime(timeInfo.getStartTime());
+                    }
+                    queryInfo.getTimes().add(timeInfo);
                 }
 
                 //  Don't throw exception- just ignore any args we don't understand for now
