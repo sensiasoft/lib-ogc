@@ -33,6 +33,7 @@ import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLTimeReader;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
+import org.vast.ows.sos.SOSQuery.ResponseMode;
 
 
 /**
@@ -116,6 +117,12 @@ public class SOSRequestReader extends OWSRequestReader
 			{
 				query.setFormat(argValue);
 			}
+            
+			// responseMode argument
+            else if (argName.equalsIgnoreCase("responseMode"))
+            {
+                parseResponseMode(argValue, query);
+            }
 			
 			// time
 			else if (argName.equalsIgnoreCase("time"))
@@ -196,6 +203,10 @@ public class SOSRequestReader extends OWSRequestReader
 		// read main request parameters
 		query.setOffering(domReader.getElementValue(requestElt, "offering"));
 		query.setFormat(domReader.getElementValue(requestElt, "resultFormat"));
+        
+        // read responseMode
+        String mode = domReader.getElementValue(requestElt, "responseMode");
+        parseResponseMode(mode, query);
 
 		// read time instant or period
 		try
@@ -257,6 +268,25 @@ public class SOSRequestReader extends OWSRequestReader
 
 		return query;
 	}
+    
+    
+    protected void parseResponseMode(String mode, SOSQuery query) throws SOSException
+    {
+        if (mode == null)
+            query.setResponseMode(null);
+        else if (mode.equalsIgnoreCase("inline"))
+            query.setResponseMode(ResponseMode.INLINE);
+        else if (mode.equalsIgnoreCase("attached"))
+            query.setResponseMode(ResponseMode.ATTACHED);
+        else if (mode.equalsIgnoreCase("out-of-band"))
+            query.setResponseMode(ResponseMode.OUT_OF_BAND);
+        else if (mode.equalsIgnoreCase("resultTemplate"))
+            query.setResponseMode(ResponseMode.RESULT_TEMPLATE);
+        else if (mode.equalsIgnoreCase("resultOnly"))
+            query.setResponseMode(ResponseMode.RESULT_ONLY);
+        else
+            throw new SOSException("Invalid response mode: " + mode);
+    }
 	
 	
     /**

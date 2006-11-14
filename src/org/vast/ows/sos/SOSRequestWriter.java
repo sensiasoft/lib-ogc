@@ -84,8 +84,13 @@ public class SOSRequestWriter extends OWSRequestWriter
             this.writeBboxArgument(urlBuff, query.getBbox());
         }        
         
+        // format
 		urlBuff.append("&format=" + query.getFormat());
-		
+        
+        // response mode
+        if (query.getResponseMode() != null)
+            urlBuff.append("&responseMode=" + this.getResponseMode(query));
+        
 		// add observable list
 		int obsCount = query.getObservables().size();
 		for (int i=0; i<obsCount; i++)
@@ -166,10 +171,30 @@ public class SOSRequestWriter extends OWSRequestWriter
 		for (int i=0; i<obsCount; i++)
 			domWriter.setElementValue(rootElt, "+sos:observedProperty", query.getObservables().get(i));
 		
-		// result
+		// format
 		domWriter.setElementValue(rootElt, "sos:resultFormat", query.getFormat());
+        
+        // response mode (inline, attached, etc...)
+        if (query.getResponseMode() != null)
+            domWriter.setElementValue(rootElt, "sos:responseMode", this.getResponseMode(query));
+        
+        // result model for XML results
 		domWriter.setElementValue(rootElt, "sos:resultModel", "swe:DataValueType");
 		
 		return rootElt;
 	}
+    
+    
+    protected String getResponseMode(SOSQuery query)
+    {
+        switch (query.getResponseMode())
+        {
+            case INLINE: return "inline";
+            case ATTACHED: return "attached";
+            case OUT_OF_BAND: return "out-of-band";
+            case RESULT_TEMPLATE: return "resultTemplate";
+            case RESULT_ONLY: return "resultOnly";
+            default: return null;
+        }
+    }
 }

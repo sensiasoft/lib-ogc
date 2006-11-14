@@ -46,8 +46,14 @@ import org.vast.ows.util.TimeInfo;
  */
 public class SOSQuery extends OWSQuery
 {
-	protected String offering;
+	public enum ResponseMode
+    {
+        INLINE, ATTACHED, OUT_OF_BAND, RESULT_TEMPLATE, RESULT_ONLY
+    }
+    
+    protected String offering;
 	protected String format;
+    protected ResponseMode responseMode;
 	protected TimeInfo time;
 	protected Bbox bbox;
 
@@ -135,4 +141,16 @@ public class SOSQuery extends OWSQuery
 	{
 		this.bbox = bbox;
 	}
+
+
+    public ResponseMode getResponseMode()
+    {
+        return responseMode;
+    }
+
+
+    public void setResponseMode(ResponseMode responseMode)
+    {
+        this.responseMode = responseMode;
+    }
 }

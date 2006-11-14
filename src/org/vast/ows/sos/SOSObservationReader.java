@@ -27,17 +27,28 @@ import java.io.*;
 
 import org.ogc.cdm.common.CDMException;
 import org.vast.cdm.reader.*;
+import org.vast.math.Vector3d;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReader;
+import org.vast.ows.gml.GMLGeometryReader;
 import org.vast.io.xml.*;
 import org.w3c.dom.*;
 
 
 public class SOSObservationReader extends CDMReader
 {
-	String resultUri;
-	CDMFilter streamFilter;
-	
+	protected String resultUri;
+	protected CDMFilter streamFilter;
+	protected Vector3d foiLocation;
+    protected String procedure;
+    protected String observationName;
+    
+    
+    public SOSObservationReader()
+    {
+        foiLocation = new Vector3d();
+    }
+    
 	
 	public void parse(InputStream inputStream) throws CDMException
 	{
@@ -59,22 +70,31 @@ public class SOSObservationReader extends CDMReader
 //			catch (IOException e){}
 //			System.exit(0);
 			
-			// parse xml header using DataComponent and DataEncoding readers
+			// parse xml header using DOMReader
 			DOMReader domReader = new DOMReader(streamFilter, false);			
 			OWSExceptionReader.checkException(domReader);
 			
 			// find first observation element
 			Element rootElement = domReader.getRootElement();
 			NodeList elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om", "CommonObservation");
-			Element obsElt = (Element)elts.item(0);
-			
+			Element obsElt = (Element)elts.item(0);			
 			if (obsElt == null)
 				throw new CDMException("XML Response doesn't contain any Observation");
 			
+            // read FOI location
+            GMLGeometryReader geometryReader = new GMLGeometryReader();
+            Element pointElt = domReader.getElement(obsElt, "featureOfInterest/*/location/Point");
+            if (pointElt != null)
+                foiLocation = geometryReader.readPoint(domReader, pointElt);
+            
+            // read procedure ID and observation name
+            procedure = domReader.getAttributeValue(obsElt, "procedure/@href");
+            observationName = domReader.getElementValue(obsElt, "name");
+            
+            // read resultDefinition
 			Element defElt = domReader.getElement(obsElt, "resultDefinition/DataDefinition");
 			Element dataElt = domReader.getElement(defElt, "dataComponents");
-			Element encElt = domReader.getElement(defElt, "encoding/*");
-			
+			Element encElt = domReader.getElement(defElt, "encoding/*");			
 			DataComponentsReader infReader = new DataComponentsReader(domReader);
 			EncodingReader encReader = new EncodingReader(domReader);	
 			this.dataComponents = infReader.readComponentProperty(dataElt);
@@ -116,4 +136,22 @@ public class SOSObservationReader extends CDMReader
 			return streamFilter;
 		}
 	}
+
+
+    public Vector3d getFoiLocation()
+    {
+        return foiLocation;
+    }
+
+
+    public String getObservationName()
+    {
+        return observationName;
+    }
+
+
+    public String getProcedure()
+    {
+        return procedure;
+    }
 }
