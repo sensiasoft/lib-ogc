@@ -116,10 +116,10 @@ public class SOSRequestWriter extends OWSRequestWriter
 	{
 		Element elt;
 		SOSQuery query = (SOSQuery)owsQuery;
-		domWriter.addNS("http://www.opengis.net/sos", "sos");
+		domWriter.addNS("http://www.opengeospatial.net/sos", "sos");
 		domWriter.addNS("http://www.opengis.net/ogc", "ogc");
 		domWriter.addNS("http://www.opengis.net/gml", "gml");
-		domWriter.addNS("http://www.opengis.net/swe", "swe");
+		domWriter.addNS("http://www.opengeospatial.net/swe", "swe");
 		
 		// root element
 		Element rootElt = domWriter.createElement("sos:GetObservation");
@@ -179,8 +179,12 @@ public class SOSRequestWriter extends OWSRequestWriter
             domWriter.setElementValue(rootElt, "sos:responseMode", this.getResponseMode(query));
         
         // result model for XML results
-		domWriter.setElementValue(rootElt, "sos:resultModel", "swe:DataValueType");
+		//domWriter.setElementValue(rootElt, "sos:resultModel", "swe:DataValueType");
 		
+		// display request
+        //try {domWriter.writeDOM(rootElt, System.out, null);}
+        //catch (Exception e) {e.printStackTrace();}        
+        
 		return rootElt;
 	}
     

@@ -26,6 +26,7 @@ package org.vast.ows;
 import java.io.InputStream;
 
 import org.vast.io.xml.*;
+import org.w3c.dom.Element;
 
 
 public class OWSExceptionReader
@@ -34,18 +35,22 @@ public class OWSExceptionReader
 	public static void checkException(DOMReader dom) throws OWSException
 	{
 		String exceptionText = null;
-
-		if (exceptionText == null)
-            exceptionText = dom.getElementValue("Exception");
+		Element rootElt = dom.getRootElement();
+               
+        if (exceptionText == null)
+            exceptionText = dom.getElementValue(rootElt, "Exception");
+        
+        if (exceptionText == null || exceptionText.equals(""))
+            exceptionText = dom.getElementValue(rootElt, "Exception/ExceptionText");
 		
         if (exceptionText == null)
-            exceptionText = dom.getElementValue("ServiceException");
+            exceptionText = dom.getElementValue(rootElt, "ServiceException");
 		
 		if (exceptionText == null)
-            exceptionText = dom.getElementValue("ServiceException/Locator");
+            exceptionText = dom.getElementValue(rootElt, "ServiceException/Locator");
 
-        if (exceptionText == null)
-            exceptionText = dom.getAttributeValue("ServiceException/code");
+        if (exceptionText == null || exceptionText.equals(""))
+            exceptionText = dom.getAttributeValue(rootElt, "ServiceException/code");
 		
         if (exceptionText != null)
         	throw new OWSException("ServiceException: " + exceptionText);
