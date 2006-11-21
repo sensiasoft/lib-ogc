@@ -68,8 +68,9 @@ public class GMLGeometryReader
             coordsText = dom.getElementValue(pointElt, "coordinates");
             coords = coordsText.split(" ");
             point.x = Double.parseDouble(coords[0]);
-            point.y = Double.parseDouble(coords[1]);
-            point.z = Double.parseDouble(coords[2]);
+            point.y = Double.parseDouble(coords[1]);            
+            if (coords.length > 2)
+                point.z = Double.parseDouble(coords[2]);
         }
         catch (Exception e)
         {
