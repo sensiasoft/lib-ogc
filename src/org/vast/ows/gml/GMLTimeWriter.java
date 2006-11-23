@@ -59,13 +59,25 @@ public class GMLTimeWriter
         if (timeInfo.isTimeInstant())
         {
             timeElt = dom.createElement("gml:TimeInstant");
-            dom.setElementValue(timeElt, "gml:timePosition", DateTimeFormat.formatIso(timeInfo.getStartTime(), 0));
+            
+            if (timeInfo.isBeginNow() || timeInfo.isEndNow() || timeInfo.isBaseAtNow())
+                dom.setAttributeValue(timeElt, "gml:timePosition/@indeterminatePosition", "now");
+            else
+                dom.setElementValue(timeElt, "gml:timePosition", DateTimeFormat.formatIso(timeInfo.getStartTime(), 0));
         }
         else
         {
             timeElt = dom.createElement("gml:TimePeriod");
-            dom.setElementValue(timeElt, "gml:beginPosition", DateTimeFormat.formatIso(timeInfo.getStartTime(), 0));
-            dom.setElementValue(timeElt, "gml:endPosition", DateTimeFormat.formatIso(timeInfo.getStopTime(), 0));
+            
+            if (timeInfo.isBeginNow())
+                dom.setAttributeValue(timeElt, "gml:beginPosition/@indeterminatePosition", "now");
+            else
+                dom.setElementValue(timeElt, "gml:beginPosition", DateTimeFormat.formatIso(timeInfo.getStartTime(), 0));
+            
+            if (timeInfo.isEndNow())
+                dom.setAttributeValue(timeElt, "gml:endPosition/@indeterminatePosition", "now");
+            else
+                dom.setElementValue(timeElt, "gml:endPosition", DateTimeFormat.formatIso(timeInfo.getStopTime(), 0));
             
             if (timeInfo.getTimeStep() != 0)
             {
