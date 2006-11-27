@@ -51,7 +51,10 @@ import org.vast.util.DateTimeFormat;
  */
 public abstract class OWSRequestWriter
 {
-	
+	public boolean showPostOutput = false;
+    public boolean showGetOutput = true;
+    
+    
 	public OWSRequestWriter()
 	{	
 	}
@@ -86,9 +89,8 @@ public abstract class OWSRequestWriter
 			DOMWriter domWriter = new DOMWriter();
 			domWriter.createDocument("Request");
 			Element requestElt = buildRequestXML(owsQuery, domWriter);
-			ByteArrayOutputStream charArray = new ByteArrayOutputStream();
-			domWriter.writeDOM(requestElt, charArray, null);
-			System.out.println(charArray.toString());
+            ByteArrayOutputStream charArray = new ByteArrayOutputStream();
+            domWriter.writeDOM(requestElt, charArray, null);                   
 			return charArray.toString();
 		}
 		catch (IOException e)
@@ -190,6 +192,13 @@ public abstract class OWSRequestWriter
 				out.flush();
 				connection.connect();
 				out.close();
+                
+                // print request if desired
+                if (showPostOutput)
+                {
+                    System.out.println(query.getService() + " Request:");
+                    System.out.println(requestString);
+                }
 				
 				// return server response stream
 				return connection.getInputStream();
@@ -197,6 +206,11 @@ public abstract class OWSRequestWriter
 			else if (canDoGet)
 			{
 				requestString = buildGetRequest(query);
+                
+				// print request if desired
+                if (showGetOutput)
+                    System.out.println(query.getService() + " Request: " + requestString);
+                
 				URL url = new URL(requestString);
 				return url.openStream();
 			}

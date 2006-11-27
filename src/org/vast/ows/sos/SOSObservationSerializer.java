@@ -26,6 +26,7 @@ package org.vast.ows.sos;
 import java.io.*;
 import org.w3c.dom.*;
 import org.vast.io.xml.*;
+import org.vast.math.Vector3d;
 import org.vast.ows.SweResponseSerializer;
 import org.vast.ows.util.TimeInfo;
 import org.vast.util.*;
@@ -122,6 +123,15 @@ public class SOSObservationSerializer extends SweResponseSerializer
 			}
 		}
 	}
+    
+    
+    public void setFoiLocation(Vector3d location)
+    {
+        DOMWriter domWriter = new DOMWriter(xmlDocument);
+        Element pointElt = domWriter.addElement("om:featureOfInterest/sos:GeoReferenceableFeature/gml:location/gml:Point");
+        domWriter.setAttributeValue(pointElt, "srs", "urn:ogc:def:crs:EPSG:6.1:4329");
+        domWriter.setElementValue(pointElt, "", location.x + " " + location.y + " " + location.z);
+    }
 	
 	
 	/**

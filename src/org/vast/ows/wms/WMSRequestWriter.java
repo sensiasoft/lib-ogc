@@ -115,10 +115,7 @@ public class WMSRequestWriter extends OWSRequestWriter
 		urlBuff.append("&transparent=" + (query.isTransparent() ? "TRUE" : "FALSE"));
         
 		urlBuff.append("&exceptions=" + query.getExceptionType());
-		
-		// display request
-		System.out.println("WMS Request: " + urlBuff);
-		
+				
 		String url = urlBuff.toString();
 		url.replaceAll(" ","%20");
 		return url;

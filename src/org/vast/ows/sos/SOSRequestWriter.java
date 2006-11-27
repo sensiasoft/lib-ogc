@@ -104,9 +104,6 @@ public class SOSRequestWriter extends OWSRequestWriter
 				urlBuff.append(',');				
 		}
 		
-		// display request
-		System.out.println("SOS Request: " + urlBuff);
-		
 		return urlBuff.toString();
 	}
 	
@@ -180,10 +177,6 @@ public class SOSRequestWriter extends OWSRequestWriter
         
         // result model for XML results
 		//domWriter.setElementValue(rootElt, "sos:resultModel", "swe:DataValueType");
-		
-		// display request
-        //try {domWriter.writeDOM(rootElt, System.out, null);}
-        //catch (Exception e) {e.printStackTrace();}        
         
 		return rootElt;
 	}

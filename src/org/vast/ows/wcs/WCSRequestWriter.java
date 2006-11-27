@@ -94,9 +94,6 @@ public class WCSRequestWriter extends OWSRequestWriter
         urlBuff.append("&skipX=" + query.getSkipX());
         urlBuff.append("&skipY=" + query.getSkipY());
         urlBuff.append("&format=" + query.getFormat());
-        
-        // display request
-        System.out.println("WCS Request: " + urlBuff);
 		
 		String url = urlBuff.toString();
 		url.replaceAll(" ","%20");
