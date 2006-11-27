@@ -88,7 +88,7 @@ public abstract class OWSRequestWriter
 			Element requestElt = buildRequestXML(owsQuery, domWriter);
 			ByteArrayOutputStream charArray = new ByteArrayOutputStream();
 			domWriter.writeDOM(requestElt, charArray, null);
-			//System.out.println(charArray.toString());
+			System.out.println(charArray.toString());
 			return charArray.toString();
 		}
 		catch (IOException e)
@@ -180,7 +180,8 @@ public abstract class OWSRequestWriter
 				connection.setDoInput(true);
 				connection.setDoOutput(true);
 				connection.setRequestMethod("POST");
-				connection.setRequestProperty( "Content-type", "text/plain" );
+				//  Some servers don't like "text/plain" for POST type, changed to "text/xml"
+				connection.setRequestProperty( "Content-type", "text/xml" );
 				PrintStream out = new PrintStream(connection.getOutputStream());
 				
 				// send post data
