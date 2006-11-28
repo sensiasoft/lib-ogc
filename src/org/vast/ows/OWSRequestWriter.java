@@ -108,15 +108,22 @@ public abstract class OWSRequestWriter
      */
     protected void writeTimeArgument(StringBuffer buffer, TimeInfo time)
     {
-        // add start time
-        if (time.isBeginNow())
-            buffer.append("now");
-        else
-            buffer.append(DateTimeFormat.formatIso(time.getStartTime(), 0));
-        
-        // add stop and step time if it's a period
-        if (!time.isTimeInstant())
+        if (time.isTimeInstant())
         {
+            if (time.isBaseAtNow())
+                buffer.append("now");
+            else
+                buffer.append(DateTimeFormat.formatIso(time.getBaseTime(), 0));
+        }
+        else
+        {
+            // add start time
+            if (time.isBeginNow())
+                buffer.append("now");
+            else
+                buffer.append(DateTimeFormat.formatIso(time.getStartTime(), 0));
+        
+            // add stop and step time
             buffer.append('/');
             
             if (time.isEndNow())
