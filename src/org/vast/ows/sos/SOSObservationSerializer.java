@@ -96,13 +96,16 @@ public class SOSObservationSerializer extends SweResponseSerializer
 	}
     
     
-    public void setFoiLocation(Vector3d location)
+    public void setFoi(String name, Vector3d location)
     {
         try
         {
             DOMWriter domWriter = new DOMWriter(xmlDocument);
-            //domWriter.addNS("http://www.opengeospatial.net/sos", "sos");
-            Element pointElt = domWriter.addElement("om:featureOfInterest/swe:GeoReferenceableFeature/gml:location/gml:Point");
+            
+            Element foiElt = domWriter.addElement("om:featureOfInterest/swe:GeoReferenceableFeature");
+            domWriter.setElementValue(foiElt, "gml:name", name);
+            
+            Element pointElt = domWriter.addElement(foiElt, "gml:location/gml:Point/gml:coordinates");
             domWriter.setAttributeValue(pointElt, "srs", "urn:ogc:def:crs:EPSG:6.1:4329");
             domWriter.setElementValue(pointElt, "", location.x + " " + location.y + " " + location.z);
         }
