@@ -28,8 +28,8 @@ import org.w3c.dom.*;
 import org.vast.io.xml.*;
 import org.vast.math.Vector3d;
 import org.vast.ows.SweResponseSerializer;
+import org.vast.ows.gml.GMLTimeWriter;
 import org.vast.ows.util.TimeInfo;
-import org.vast.util.*;
 
 
 /**
@@ -76,61 +76,35 @@ public class SOSObservationSerializer extends SweResponseSerializer
 	 */
 	public void setTime(TimeInfo time, int zone)
 	{
-		DOMReader templates = null;
-		
-		try
-		{
-			// preload templates doc
-			InputStream templateFile = SOSObservationSerializer.class.getResourceAsStream("templates.xml");
-			templates = new DOMReader(templateFile, false);
-		}
-		catch (DOMReaderException e)
-		{
-			e.printStackTrace();
-		}
-		
-		// keep pointers to needed nodes
-        DOMReader domReader = new DOMReader(xmlDocument);
-		NodeList eventTimes = domReader.getRootElement().getElementsByTagName("om:eventTime");//eventTime");
-		Document respDocument = domReader.getRootElement().getOwnerDocument();
-        
-		for (int i=0; i<eventTimes.getLength(); i++)
-		{
-			Element eventTime = (Element)eventTimes.item(i);
-			Element timeInstantElt = (Element)respDocument.importNode(templates.getElement("TimeInstant"), true);
-			Element timePeriodElt = (Element)respDocument.importNode(templates.getElement("TimePeriod"), true);
-			Text timeText = (Text)domReader.getElement(timeInstantElt, "timePosition").getFirstChild();
-			Text beginText = (Text)domReader.getElement(timePeriodElt, "beginPosition").getFirstChild();
-			Text endText = (Text)domReader.getElement(timePeriodElt, "endPosition").getFirstChild();
-						
-			// erase old time parameters
-			if (eventTime.hasChildNodes())
-				eventTime.removeChild(eventTime.getFirstChild());	
-			
-			// TimeInstant case
-			if (time.getStartTime() == time.getStopTime())
-			{
-				timeText.setData(DateTimeFormat.formatIso(time.getStartTime(), zone));
-				eventTime.appendChild(timeInstantElt);
-			}
-			
-			// TimePeriod case
-			else
-			{
-				beginText.setData(DateTimeFormat.formatIso(time.getStartTime(), zone));
-				endText.setData(DateTimeFormat.formatIso(time.getStopTime(), zone));
-				eventTime.appendChild(timePeriodElt);
-			}
-		}
+        try
+        {
+            time.setTimeZone(zone);
+            DOMWriter domWriter = new DOMWriter(xmlDocument);
+            Element obsTimeElt = domWriter.addElement("om:eventTime");
+            GMLTimeWriter timeWriter = new GMLTimeWriter();
+            Element timeElt = timeWriter.writeTime(domWriter, time);
+            obsTimeElt.appendChild(timeElt);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 	}
     
     
     public void setFoiLocation(Vector3d location)
     {
-        DOMWriter domWriter = new DOMWriter(xmlDocument);
-        Element pointElt = domWriter.addElement("om:featureOfInterest/sos:GeoReferenceableFeature/gml:location/gml:Point");
-        domWriter.setAttributeValue(pointElt, "srs", "urn:ogc:def:crs:EPSG:6.1:4329");
-        domWriter.setElementValue(pointElt, "", location.x + " " + location.y + " " + location.z);
+        try
+        {
+            DOMWriter domWriter = new DOMWriter(xmlDocument);
+            Element pointElt = domWriter.addElement("om:featureOfInterest/sos:GeoReferenceableFeature/gml:location/gml:Point");
+            domWriter.setAttributeValue(pointElt, "srs", "urn:ogc:def:crs:EPSG:6.1:4329");
+            domWriter.setElementValue(pointElt, "", location.x + " " + location.y + " " + location.z);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 	
 	

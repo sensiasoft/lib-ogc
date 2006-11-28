@@ -93,7 +93,7 @@ public abstract class OWSRequestReader
             // parse start time
             if (timeRange[0].equalsIgnoreCase("now"))
             {
-                timeInfo.setBeginNow(true);
+                //timeInfo.setBeginNow(true);
                 timeInfo.setStartTime(now);
             }
             else
@@ -104,7 +104,7 @@ public abstract class OWSRequestReader
             {
                 if (timeRange[1].equalsIgnoreCase("now"))
                 {
-                    timeInfo.setEndNow(true);
+                    //timeInfo.setEndNow(true);
                     timeInfo.setStopTime(now);
                 }
                 else
@@ -122,9 +122,9 @@ public abstract class OWSRequestReader
             throw new OWSException(invalidGet + ": Invalid Time: " + argValue);
         }
         
-        // copy start to stop
+        // make sure deltas are null for time instant
         if (timeRange.length == 1)
-            timeInfo.setStopTime(timeInfo.getStartTime());  
+            timeInfo.setDeltaTimes(0, 0);
     }
     
     

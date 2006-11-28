@@ -44,7 +44,9 @@ import org.vast.util.DateTimeFormat;
  */
 public class TimeInfo extends TimeExtent
 {
-        
+    protected int timeZone = 0;
+    
+    
     public double getStartTime()
     {
         return getAdjustedLagTime();
@@ -129,5 +131,17 @@ public class TimeInfo extends TimeExtent
             String stop = endNow ? "now" : DateTimeFormat.formatIso(getStopTime(), zone);
             return start + "/" + stop;
         }
+    }
+
+
+    public int getTimeZone()
+    {
+        return timeZone;
+    }
+
+
+    public void setTimeZone(int timeZone)
+    {
+        this.timeZone = timeZone;
     }
 }
