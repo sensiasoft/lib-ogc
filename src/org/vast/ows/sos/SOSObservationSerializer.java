@@ -79,6 +79,9 @@ public class SOSObservationSerializer extends SweResponseSerializer
         try
         {
             time.setTimeZone(zone);
+            time.setBeginNow(false);
+            time.setEndNow(false);
+            time.setBaseAtNow(false);
             DOMWriter domWriter = new DOMWriter(xmlDocument);
             Element obsTimeElt = domWriter.addElement("om:eventTime");
             GMLTimeWriter timeWriter = new GMLTimeWriter();
