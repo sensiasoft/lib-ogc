@@ -105,9 +105,10 @@ public class SOSObservationSerializer extends SweResponseSerializer
             Element foiElt = domWriter.addElement("om:featureOfInterest/swe:GeoReferenceableFeature");
             domWriter.setElementValue(foiElt, "gml:name", name);
             
-            Element pointElt = domWriter.addElement(foiElt, "gml:location/gml:Point/gml:coordinates");
-            domWriter.setAttributeValue(pointElt, "srs", "urn:ogc:def:crs:EPSG:6.1:4329");
-            domWriter.setElementValue(pointElt, "", location.x + " " + location.y + " " + location.z);
+            Element pointElt = domWriter.addElement(foiElt, "gml:location/gml:Point");
+            domWriter.setAttributeValue(pointElt, "srsName", "urn:ogc:def:crs:EPSG:6.1:4329");
+            
+            domWriter.setElementValue(pointElt, "gml:coordinates", location.x + " " + location.y + " " + location.z);
         }
         catch (Exception e)
         {
