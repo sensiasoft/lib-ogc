@@ -164,7 +164,7 @@ public abstract class OWSRequestWriter
 	 * @return Server Response InputStream
 	 * @throws OWSException
 	 */
-	public InputStream sendRequest(OWSQuery query, boolean usePost) throws OWSException
+	public HttpURLConnection sendRequest(OWSQuery query, boolean usePost) throws OWSException
 	{
 		String requestString = null;
 		
@@ -208,7 +208,7 @@ public abstract class OWSRequestWriter
                 }
 				
 				// return server response stream
-				return connection.getInputStream();
+				return connection;
 			}
 			else if (canDoGet)
 			{
@@ -219,7 +219,7 @@ public abstract class OWSRequestWriter
                     System.out.println(query.getService() + " Request: " + requestString);
                 
 				URL url = new URL(requestString);
-				return url.openStream();
+				return (HttpURLConnection)url.openConnection();
 			}
             else
                 throw new OWSException("No GET or POST endpoint URL specified in request");

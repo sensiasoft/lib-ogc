@@ -61,8 +61,9 @@ public class WCSQuery extends OWSQuery
     
     public WCSQuery()
     {
+        service = "WCS";
         bbox = new Bbox();
-        time = new TimeInfo();    
+        time = new TimeInfo();
     }
     
 	
