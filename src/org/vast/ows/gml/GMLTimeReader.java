@@ -171,11 +171,11 @@ public class GMLTimeReader
                 
                 if (startUnknown)
                 {
-                    timeInfo.setStartTime(timeInfo.getStopTime() - dT);
+                    timeInfo.setLagTimeDelta(dT);
                 }
                 else
                 {
-                    timeInfo.setStopTime(timeInfo.getStartTime() + dT);
+                    timeInfo.setLeadTimeDelta(dT);
                 }
             }
             
