@@ -93,7 +93,7 @@ public abstract class OWSRequestReader
             // parse start time
             if (timeRange[0].equalsIgnoreCase("now"))
             {
-                //timeInfo.setBeginNow(true);
+                timeInfo.setBeginNow(true);
                 timeInfo.setStartTime(now);
             }
             else
@@ -104,7 +104,7 @@ public abstract class OWSRequestReader
             {
                 if (timeRange[1].equalsIgnoreCase("now"))
                 {
-                    //timeInfo.setEndNow(true);
+                    timeInfo.setEndNow(true);
                     timeInfo.setStopTime(now);
                 }
                 else
