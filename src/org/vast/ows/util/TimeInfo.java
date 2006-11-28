@@ -47,6 +47,25 @@ public class TimeInfo extends TimeExtent
     protected int timeZone = 0;
     
     
+    @Override
+    public TimeInfo copy()
+    {
+        TimeInfo timeInfo = new TimeInfo();
+        
+        timeInfo.baseTime = this.getBaseTime();
+        timeInfo.timeBias = this.timeBias;
+        timeInfo.timeStep = this.timeStep;
+        timeInfo.leadTimeDelta = this.leadTimeDelta;
+        timeInfo.lagTimeDelta = this.lagTimeDelta;
+        timeInfo.baseAtNow = this.baseAtNow;
+        timeInfo.endNow = this.endNow;
+        timeInfo.beginNow = this.beginNow;
+        timeInfo.timeZone = this.timeZone;
+        
+        return timeInfo;
+    }
+    
+    
     public double getStartTime()
     {
         return getAdjustedLagTime();

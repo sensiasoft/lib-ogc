@@ -78,6 +78,7 @@ public class SOSObservationSerializer extends SweResponseSerializer
 	{
         try
         {
+            time = time.copy();
             time.setTimeZone(zone);
             time.setBeginNow(false);
             time.setEndNow(false);
