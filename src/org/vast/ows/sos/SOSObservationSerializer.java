@@ -97,7 +97,8 @@ public class SOSObservationSerializer extends SweResponseSerializer
         try
         {
             DOMWriter domWriter = new DOMWriter(xmlDocument);
-            Element pointElt = domWriter.addElement("om:featureOfInterest/sos:GeoReferenceableFeature/gml:location/gml:Point");
+            //domWriter.addNS("http://www.opengeospatial.net/sos", "sos");
+            Element pointElt = domWriter.addElement("om:featureOfInterest/swe:GeoReferenceableFeature/gml:location/gml:Point");
             domWriter.setAttributeValue(pointElt, "srs", "urn:ogc:def:crs:EPSG:6.1:4329");
             domWriter.setElementValue(pointElt, "", location.x + " " + location.y + " " + location.z);
         }
