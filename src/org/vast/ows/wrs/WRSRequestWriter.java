@@ -32,6 +32,7 @@ import org.vast.io.xml.DOMWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSQuery;
 import org.vast.ows.OWSRequestWriter;
+import org.vast.ows.util.Bbox;
 import org.w3c.dom.Element;
 
 public class WRSRequestWriter extends OWSRequestWriter
@@ -50,39 +51,92 @@ public class WRSRequestWriter extends OWSRequestWriter
 	public WRSRequestWriter(){
 	}
 	
-	//  TODO  Modify to filter on keywd, layerName and bbox
-	public Element buildRequestXML(OWSQuery owsQuery, DOMWriter domWriter) throws OWSException
-	{
-		WRSQuery query = (WRSQuery)owsQuery;
+	protected Element buildQueryRootElement(DOMWriter domWriter) throws OWSException {
 		domWriter.addNS("http://www.opengis.net/cat/csw", "csw");
 		domWriter.addNS("http://www.opengis.net/ogc", "ogc");
-//		domWriter.addNS("http://www.opengis.net/gml", "gml");
-//		domWriter.addNS("urn:oasis:names:tc:ebxml-regrep:rim:xsd:2.5", "ebxml");
+		domWriter.addNS("http://www.opengis.net/gml", "gml");
 		
 		// root element
 		Element rootElt = domWriter.createElement("csw:GetRecords");
 		domWriter.setAttributeValue(rootElt, "version", "2.0.0");
 //		domWriter.setAttributeValue(rootElt, "maxRecords", "10");
 		domWriter.setAttributeValue(rootElt, "outputSchema", "EBRIM");
-//		domWriter.setAttributeValue(rootElt, "outputFormat", "application/xml");
-//		domWriter.setAttributeValue(rootElt, "charset", "UTF-8");
 		
-		//  Query element
+		return rootElt;
+	}
+	
+	protected Element buildQueryAllSosElement(DOMWriter domWriter, Element rootElt) throws OWSException {
 		Element queryElt = domWriter.addElement(rootElt, "csw:Query");
 		queryElt.setAttribute("typeNames", "Service Concept Classification");
 		domWriter.setElementValue(queryElt,"csw:ElementName","/Service");
 		Element constraintElt = domWriter.addElement(queryElt, "csw:Constraint");
-		Element filterElt = domWriter.addElement(constraintElt,"ogc:Filter/ogc:And");
 		constraintElt.setAttribute("version", "1.0.0");
+		Element filterElt = domWriter.addElement(constraintElt,"ogc:Filter/ogc:And");
 		Element propElt = domWriter.addElement(filterElt, "ogc:PropertyIsEqualTo");
 		domWriter.setElementValue(propElt,"ogc:PropertyName", "/Concept/Name/LocalizedString/@value");
 		domWriter.setElementValue(propElt,"ogc:Literal", "SOS");
-//		propElt = domWriter.addElement(filterElt, "+ogc:PropertyIsEqualTo");
-//		domWriter.setElementValue(propElt,"ogc:PropertyName", "/Concept/@id");
-//		domWriter.setElementValue(propElt,"+ogc:PropertyName", "/Classification/@classificationNode");
 		propElt = domWriter.addElement(filterElt, "+ogc:PropertyIsEqualTo");
 		domWriter.setElementValue(propElt,"ogc:PropertyName", "/Service/@id");
 		domWriter.setElementValue(propElt,"+ogc:PropertyName", "/Classification/@classifiedObject");
+		
+		return queryElt;
+	}
+	
+	protected Element buildQueryBboxElement(DOMWriter domWriter, Element rootElt, WRSQuery query) 
+			throws OWSException {
+		Element queryElt = domWriter.addElement(rootElt, "csw:Query");
+		queryElt.setAttribute("typeNames", "ExtrinsicObject");
+		domWriter.setElementValue(queryElt,"csw:ElementName","/ExtrinsicObject");
+		Element constraintElt = domWriter.addElement(queryElt, "csw:Constraint");
+		constraintElt.setAttribute("version", "1.0.0");
+		Element filterElt = domWriter.addElement(constraintElt,"ogc:Filter/ogc:And");
+		Element propElt = domWriter.addElement(filterElt, "ogc:PropertyIsEqualTo");
+		domWriter.setElementValue(propElt,"ogc:PropertyName", "/ExtrinsicObject/@objectType");
+		domWriter.setElementValue(propElt,"ogc:Literal", "ObservationOffering");
+		Element intersectsElt = domWriter.addElement(filterElt, "ogc:Intersects");
+		domWriter.setElementValue(intersectsElt,"ogc:PropertyName", 
+				"/ExtrinsicObject/Slot[@name=\"FootPrint\"]/ValueList/Value[1]");
+		Element gmlBoxElt = domWriter.addElement(intersectsElt,"gml:Box");
+		gmlBoxElt.setAttribute("srsName","EPSG:4326");
+		//String boxStr = query.getMinX() + ","...
+		Bbox bb = query.getBbox();
+		String bboxStr = bb.getMinX() + "," + bb.getMinY() + "," + bb.getMaxX() + "," + bb.getMaxY();
+		domWriter.setElementValue(gmlBoxElt, "gml:coordinates", bboxStr);
+		
+		return queryElt;
+	}
+	
+	protected Element buildTargetObjectSearchElement(DOMWriter domWriter, Element rootElt, 
+													 String targetId){
+		Element targetElt = domWriter.addElement(rootElt, "csw:Query");
+		targetElt.setAttribute("typeNames", "ServiceAssociation");
+		Element constraintElt = domWriter.addElement(targetElt, "csw:Constraint");
+		constraintElt.setAttribute("version", "1.0.0");
+		Element filterElt = domWriter.addElement(constraintElt,"ogc:Filter/ogc:And");
+		Element propElt = domWriter.addElement(filterElt, "ogc:PropertyIsEqualTo");
+		domWriter.setElementValue(propElt,"ogc:PropertyName", "/Association/@sourceObject");
+		domWriter.setElementValue(propElt,"+ogc:PropertyName", "/Service/@id");
+		propElt = domWriter.addElement(filterElt, "+ogc:PropertyIsEqualTo");
+		domWriter.setElementValue(propElt,"ogc:PropertyName", "/Association/@targetObject");
+		targetId = "urn:uuid:407d31fb-236e-437a-b19b-ab4aaad1bc68";
+		domWriter.setElementValue(propElt,"ogc:Literal",targetId);
+		
+		return targetElt;
+	}
+	
+	//  TODO  Modify to filter on keywd, layerName and bbox
+	public Element buildRequestXML(OWSQuery owsQuery, DOMWriter domWriter) throws OWSException {
+		WRSQuery query = (WRSQuery)owsQuery;
+		Element rootElt = buildQueryRootElement(domWriter);
+//		if(keyword)
+//			buildQueryKeywordElement(domWriter, rootElt, query);
+		Bbox bbox = query.getBbox();
+		//if(bbox != null)
+		//	buildQueryBboxElement(domWriter, rootElt, query);
+		//else
+		//	buildTargetObjectSearchElement(domWriter, rootElt, "");
+		//else
+			buildQueryAllSosElement(domWriter, rootElt);
 
 		return rootElt;
 	}

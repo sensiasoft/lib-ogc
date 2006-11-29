@@ -23,11 +23,10 @@
 
 package org.vast.ows.wrs;
 
-import java.util.*;
+import java.util.List;
 
 import org.vast.ows.OWSQuery;
 import org.vast.ows.util.Bbox;
-import org.vast.ows.util.TimeInfo;
 
 
 /**
@@ -45,15 +44,20 @@ import org.vast.ows.util.TimeInfo;
  */
 public class WRSQuery extends OWSQuery
 {
-	protected String serviceId;
-	protected String keyword;
-	protected String layerName;
-	protected String srs;
-	protected String format;
 	protected String serverUrl = "http://dev.ionicsoft.com:8082/ows4catalog/wrs/WRS";
+	protected List<String> keyword;
+	protected Bbox bbox;
 	
 	public WRSQuery()
 	{
 		service = "WRS";
+	}
+
+	public Bbox getBbox() {
+		return bbox;
+	}
+
+	public void setBbox(Bbox bbox) {
+		this.bbox = bbox;
 	}
 }
