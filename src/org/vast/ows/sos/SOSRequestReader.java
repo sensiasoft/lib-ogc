@@ -202,7 +202,10 @@ public class SOSRequestReader extends OWSRequestReader
 		
 		// read main request parameters
 		query.setOffering(domReader.getElementValue(requestElt, "offering"));
-		query.setFormat(domReader.getElementValue(requestElt, "resultFormat"));
+		String resFormat = domReader.getElementValue(requestElt, "resultFormat");
+		if(resFormat == null)
+			resFormat = domReader.getElementValue(requestElt, "responseFormat");
+		query.setFormat(resFormat);
         
         // read responseMode
         String mode = domReader.getElementValue(requestElt, "responseMode");

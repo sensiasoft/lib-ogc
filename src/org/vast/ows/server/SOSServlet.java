@@ -158,7 +158,10 @@ public abstract class SOSServlet extends OWSServlet
 	{
 		Element offeringElt = getOffering(query.getOffering(), capsReader);		
 		NodeList formatElts = capsReader.getElements(offeringElt, "resultFormat");
-		
+    	if(formatElts.getLength()==0) {
+    		formatElts =  capsReader.getElements(offeringElt, "responseFormat");
+    	}
+        int listSize = formatElts.getLength();
 		for (int i=0; i<formatElts.getLength(); i++)
 		{
 			String formatString = capsReader.getElementValue((Element)formatElts.item(i), "");
@@ -181,6 +184,11 @@ public abstract class SOSServlet extends OWSServlet
 	{
 		Element offeringElt = getOffering(query.getOffering(), capsReader);
         Element timeElt = capsReader.getElement(offeringElt, "eventTime/*");
+        if(timeElt == null) {
+        	timeElt = capsReader.getElement(offeringElt, "time/*");
+        	if(timeElt == null)
+        		throw new SOSException("Internal Error: Invalid Time in Capabilities Document");
+        }
         TimeInfo capsTime = null;
         
         try

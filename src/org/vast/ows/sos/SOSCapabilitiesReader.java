@@ -153,7 +153,12 @@ public class SOSCapabilitiesReader extends OWSCapabilitiesReader
     protected void getTimeList(Element parentElement, SOSLayerCapabilities layerCaps) throws GMLException
     {
     	NodeList timeElts = dom.getElements(parentElement, "eventTime/*");
-        int listSize = timeElts.getLength();
+       	if(timeElts.getLength()==0) {
+    		timeElts = dom.getElements(parentElement, "time/*");
+    		if(timeElts.getLength()==0)
+    			throw new GMLException("SOS Servlet Error:  GML Time is invalid");
+    	}
+       	int listSize = timeElts.getLength();
         ArrayList<TimeInfo> timeList = new ArrayList<TimeInfo>(listSize);
         layerCaps.setTimeList(timeList);
     	GMLTimeReader timeReader = new GMLTimeReader();
@@ -175,7 +180,11 @@ public class SOSCapabilitiesReader extends OWSCapabilitiesReader
     protected void getFormatList(Element parentElement, SOSLayerCapabilities layerCaps) throws SOSException
     {
     	NodeList formatElts = dom.getElements(parentElement, "resultFormat");
+    	if(formatElts.getLength()==0) {
+    		formatElts = dom.getElements(parentElement, "responseFormat");
+    	}
         int listSize = formatElts.getLength();
+
         ArrayList<String> formatList = new ArrayList<String>(listSize);
         layerCaps.setFormatList(formatList);
         
