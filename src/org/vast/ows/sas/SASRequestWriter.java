@@ -68,9 +68,9 @@ public class SASRequestWriter extends OWSRequestWriter
 	{
 		Element elt;
 		SASQuery query = (SASQuery)owsQuery;
-		domWriter.addNS("http://www.opengeospatial.net/sas", "sas");
+		domWriter.addNS("http://www.opengis.net/sas", "sas");
 		domWriter.addNS("http://www.opengis.net/ogc", "ogc");
-		domWriter.addNS("http://www.opengeospatial.net/swe", "swe");
+//		domWriter.addNS("http://www.opengeospatial.net/swe", "swe");
 		
 		// root element
 		Element rootElt = domWriter.createElement("sas:Subscribe");
@@ -85,8 +85,8 @@ public class SASRequestWriter extends OWSRequestWriter
 		if(query.getFeatureOfInterest() != null)
 			domWriter.setElementValue(rootElt, "sas:FeatureOfInterestName", query.getFeatureOfInterest());
 		// display request
-        try {domWriter.writeDOM(rootElt, System.out, null);}
-        catch (Exception e) {e.printStackTrace();}        
+       // try {domWriter.writeDOM(rootElt, System.out, null);}
+       // catch (Exception e) {e.printStackTrace();}        
         
 		return rootElt;
 	}
