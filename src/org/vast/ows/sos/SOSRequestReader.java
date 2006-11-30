@@ -123,6 +123,12 @@ public class SOSRequestReader extends OWSRequestReader
             {
                 parseResponseMode(argValue, query);
             }
+            
+			// resultModel argument
+            else if (argName.equalsIgnoreCase("resultModel"))
+            {
+                query.setResultModel(argValue);
+            }
 			
 			// time
 			else if (argName.equalsIgnoreCase("time"))
@@ -206,6 +212,7 @@ public class SOSRequestReader extends OWSRequestReader
 		if(resFormat == null)
 			resFormat = domReader.getElementValue(requestElt, "responseFormat");
 		query.setFormat(resFormat);
+        query.setResultModel(domReader.getElementValue(requestElt, "resultModel"));
         
         // read responseMode
         String mode = domReader.getElementValue(requestElt, "responseMode");

@@ -51,11 +51,12 @@ public class SOSQuery extends OWSQuery
         INLINE, ATTACHED, OUT_OF_BAND, RESULT_TEMPLATE, RESULT_ONLY
     }
     
-    protected String offering;
-	protected String format;
-    protected ResponseMode responseMode;
+    protected String offering;	
 	protected TimeInfo time;
 	protected Bbox bbox;
+    protected String format;
+    protected String resultModel;
+    protected ResponseMode responseMode;
 
 	protected List<String> observables;
 	protected List<String> procedures;
@@ -152,5 +153,17 @@ public class SOSQuery extends OWSQuery
     public void setResponseMode(ResponseMode responseMode)
     {
         this.responseMode = responseMode;
+    }
+
+
+    public String getResultModel()
+    {
+        return resultModel;
+    }
+
+
+    public void setResultModel(String resultModel)
+    {
+        this.resultModel = resultModel;
     }
 }

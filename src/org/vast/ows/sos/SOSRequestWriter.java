@@ -91,6 +91,10 @@ public class SOSRequestWriter extends OWSRequestWriter
         if (query.getResponseMode() != null)
             urlBuff.append("&responseMode=" + this.getResponseMode(query));
         
+        // result model
+        if (query.getResultModel() != null)
+            urlBuff.append("&resultModel=" + query.getResultModel());
+        
 		// add observable list
 		int obsCount = query.getObservables().size();
 		for (int i=0; i<obsCount; i++)
@@ -168,15 +172,16 @@ public class SOSRequestWriter extends OWSRequestWriter
 		for (int i=0; i<obsCount; i++)
 			domWriter.setElementValue(rootElt, "+sos:observedProperty", query.getObservables().get(i));
 		
-		// format
+		// result format
 		domWriter.setElementValue(rootElt, "sos:resultFormat", query.getFormat());
+        
+		// result model
+        if (query.getResultModel() != null)
+            domWriter.setElementValue(rootElt, "sos:resultModel", query.getResultModel());
         
         // response mode (inline, attached, etc...)
         if (query.getResponseMode() != null)
             domWriter.setElementValue(rootElt, "sos:responseMode", this.getResponseMode(query));
-        
-        // result model for XML results
-		//domWriter.setElementValue(rootElt, "sos:resultModel", "swe:DataValueType");
         
 		return rootElt;
 	}
