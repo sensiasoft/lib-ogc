@@ -86,7 +86,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 			throws OWSException {
 		Element queryElt = domWriter.addElement(rootElt, "csw:Query");
 		queryElt.setAttribute("typeNames", "ExtrinsicObject");
-		domWriter.setElementValue(queryElt,"csw:ElementName","/ExtrinsicObject");
+		domWriter.setElementValue(queryElt,"csw:ElementName","/Service");
 		Element constraintElt = domWriter.addElement(queryElt, "csw:Constraint");
 		constraintElt.setAttribute("version", "1.0.0");
 		Element filterElt = domWriter.addElement(constraintElt,"ogc:Filter/ogc:And");
@@ -110,6 +110,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 													 String targetId){
 		Element targetElt = domWriter.addElement(rootElt, "csw:Query");
 		targetElt.setAttribute("typeNames", "ServiceAssociation");
+		domWriter.setElementValue(targetElt,"csw:ElementName","/Service");
 		Element constraintElt = domWriter.addElement(targetElt, "csw:Constraint");
 		constraintElt.setAttribute("version", "1.0.0");
 		Element filterElt = domWriter.addElement(constraintElt,"ogc:Filter/ogc:And");
@@ -131,12 +132,12 @@ public class WRSRequestWriter extends OWSRequestWriter
 //		if(keyword)
 //			buildQueryKeywordElement(domWriter, rootElt, query);
 		Bbox bbox = query.getBbox();
-		//if(bbox != null)
-		//	buildQueryBboxElement(domWriter, rootElt, query);
-		//else
-		//	buildTargetObjectSearchElement(domWriter, rootElt, "");
-		//else
+		if(bbox != null)
+			buildQueryBboxElement(domWriter, rootElt, query);
+		else
 			buildQueryAllSosElement(domWriter, rootElt);
+
+//		buildTargetObjectSearchElement(domWriter, rootElt, "");
 
 		return rootElt;
 	}
