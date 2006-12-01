@@ -23,6 +23,7 @@
 
 package org.vast.ows.wrs;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import org.vast.ows.OWSQuery;
@@ -45,8 +46,12 @@ import org.vast.ows.util.Bbox;
 public class WRSQuery extends OWSQuery
 {
 	protected String serverUrl = "http://dev.ionicsoft.com:8082/ows4catalog/wrs/WRS";
-	protected List<String> keyword;
+	protected String [] keyword;
 	protected Bbox bbox;
+	protected List<QueryType> queryTypeList;
+	public enum QueryType { 
+		BBOX_SOS, KEYWORD_SOS, PROVIDER_SOS, LAYER_SOS
+	};
 	
 	public WRSQuery()
 	{
@@ -60,4 +65,21 @@ public class WRSQuery extends OWSQuery
 	public void setBbox(Bbox bbox) {
 		this.bbox = bbox;
 	}
+
+	public String[] getKeyword() {
+		return keyword;
+	}
+
+	public void setKeyword(String[] keyword) {
+		this.keyword = keyword;
+	}
+
+	public List<QueryType> getQueryTypeList() {
+		return queryTypeList;
+	}
+
+	public void setQueryTypeList(List<QueryType> queryType) {
+		this.queryTypeList = queryType;
+	}
+
 }

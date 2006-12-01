@@ -106,7 +106,8 @@ public class WRSRequestWriter extends OWSRequestWriter
 		return queryElt;
 	}
 	
-	protected Element buildTargetObjectSearchElement(DOMWriter domWriter, Element rootElt, 
+	//  Get the service associated with the targetId
+	protected Element buildServiceSearchElement(DOMWriter domWriter, Element rootElt, 
 													 String targetId){
 		Element targetElt = domWriter.addElement(rootElt, "csw:Query");
 		targetElt.setAttribute("typeNames", "ServiceAssociation");

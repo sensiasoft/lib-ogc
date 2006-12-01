@@ -51,7 +51,7 @@ import org.w3c.dom.NodeList;
 
 public class WRSResponseReader {
 	
-	public List<String> parseAllSOS(InputStream inputStream) throws IOException, DOMReaderException {
+	public List<String> parseSOSEndpoint(InputStream inputStream) throws IOException, DOMReaderException {
 		List<String> sosUri = new ArrayList<String>();
 		
 		DOMReader reader = new DOMReader(inputStream, false);
