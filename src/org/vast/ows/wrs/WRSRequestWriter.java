@@ -25,28 +25,19 @@
 
 package org.vast.ows.wrs;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import org.vast.io.xml.DOMReader;
 import org.vast.io.xml.DOMWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSQuery;
 import org.vast.ows.OWSRequestWriter;
 import org.vast.ows.util.Bbox;
+import org.vast.ows.wrs.WRSQuery.QueryType;
 import org.w3c.dom.Element;
 
 public class WRSRequestWriter extends OWSRequestWriter
 {
-	protected String serviceId;
-	protected String keyword;
-	protected String layerName;
-	protected float minX, minY, maxX, maxY;
-	protected String srs;
-	protected String format;
 	//  TODO  hardwired for ionic catalog (move to resource file eventually)
-	protected String serverUrl = "http://dev.ionicsoft.com:8082/ows4catalog/wrs/WRS";
-	DOMReader dom;
-	ArrayList<String> serviceList;
 	
 	public WRSRequestWriter(){
 	}
@@ -65,6 +56,13 @@ public class WRSRequestWriter extends OWSRequestWriter
 		return rootElt;
 	}
 	
+	/**
+	 * 
+	 * @param domWriter
+	 * @param rootElt
+	 * @return A CSW XML Query for getting all SOS instances from a Catalog
+	 * @throws OWSException
+	 */
 	protected Element buildQueryAllSosElement(DOMWriter domWriter, Element rootElt) throws OWSException {
 		Element queryElt = domWriter.addElement(rootElt, "csw:Query");
 		queryElt.setAttribute("typeNames", "Service Concept Classification");
@@ -72,171 +70,142 @@ public class WRSRequestWriter extends OWSRequestWriter
 		Element constraintElt = domWriter.addElement(queryElt, "csw:Constraint");
 		constraintElt.setAttribute("version", "1.0.0");
 		Element filterElt = domWriter.addElement(constraintElt,"ogc:Filter/ogc:And");
-		Element propElt = domWriter.addElement(filterElt, "ogc:PropertyIsEqualTo");
-		domWriter.setElementValue(propElt,"ogc:PropertyName", "/Concept/Name/LocalizedString/@value");
-		domWriter.setElementValue(propElt,"ogc:Literal", "SOS");
-		propElt = domWriter.addElement(filterElt, "+ogc:PropertyIsEqualTo");
-		domWriter.setElementValue(propElt,"ogc:PropertyName", "/Service/@id");
-		domWriter.setElementValue(propElt,"+ogc:PropertyName", "/Classification/@classifiedObject");
-		
+		addPropertyIsEqualToLiteral(domWriter, filterElt, "/Concept/Name/LocalizedString/@value", "SOS");
+		addPropertyIsEqualToProperty(domWriter, filterElt, "/Service/@id", "/Classification/@classifiedObject");
+				
 		return queryElt;
 	}
 	
-	protected Element buildQueryBboxElement(DOMWriter domWriter, Element rootElt, WRSQuery query) 
+	/**
+	 * 
+	 * @param domWriter
+	 * @param rootElt
+	 * @param bbox
+	 * @return a CSW XML Query for finding all ExtrinsicObjects within the requested BBOX of the query
+	 * @throws OWSException
+	 */
+	protected Element buildQueryBboxElement(DOMWriter domWriter, Element rootElt, Bbox bbox) 
 			throws OWSException {
 		Element queryElt = domWriter.addElement(rootElt, "csw:Query");
 		queryElt.setAttribute("typeNames", "ExtrinsicObject");
-		domWriter.setElementValue(queryElt,"csw:ElementName","/Service");
+		domWriter.setElementValue(queryElt,"csw:ElementName","/ExtrinsicObject");
 		Element constraintElt = domWriter.addElement(queryElt, "csw:Constraint");
 		constraintElt.setAttribute("version", "1.0.0");
 		Element filterElt = domWriter.addElement(constraintElt,"ogc:Filter/ogc:And");
-		Element propElt = domWriter.addElement(filterElt, "ogc:PropertyIsEqualTo");
-		domWriter.setElementValue(propElt,"ogc:PropertyName", "/ExtrinsicObject/@objectType");
-		domWriter.setElementValue(propElt,"ogc:Literal", "ObservationOffering");
+		addPropertyIsEqualToLiteral( domWriter, filterElt, "/ExtrinsicObject/@objectType", "ObservationOffering");
 		Element intersectsElt = domWriter.addElement(filterElt, "ogc:Intersects");
 		domWriter.setElementValue(intersectsElt,"ogc:PropertyName", 
 				"/ExtrinsicObject/Slot[@name=\"FootPrint\"]/ValueList/Value[1]");
 		Element gmlBoxElt = domWriter.addElement(intersectsElt,"gml:Box");
 		gmlBoxElt.setAttribute("srsName","EPSG:4326");
-		//String boxStr = query.getMinX() + ","...
-		Bbox bb = query.getBbox();
-		String bboxStr = bb.getMinX() + "," + bb.getMinY() + "," + bb.getMaxX() + "," + bb.getMaxY();
+		String bboxStr = bbox.getMinX() + "," + bbox.getMinY() + "," + bbox.getMaxX() + "," + bbox.getMaxY();
 		domWriter.setElementValue(gmlBoxElt, "gml:coordinates", bboxStr);
 		
 		return queryElt;
 	}
 	
-	//  Get the service associated with the targetId
+	/**
+	 * 
+	 * @param domWriter
+	 * @param rootElt
+	 * @param targetId
+	 * @return  a CSW XML Query for finding the Service assocaited extrinsicObject targetId
+	 */
 	protected Element buildServiceSearchElement(DOMWriter domWriter, Element rootElt, 
 													 String targetId){
 		Element targetElt = domWriter.addElement(rootElt, "csw:Query");
-		targetElt.setAttribute("typeNames", "ServiceAssociation");
+		targetElt.setAttribute("typeNames", "Service Association");
 		domWriter.setElementValue(targetElt,"csw:ElementName","/Service");
 		Element constraintElt = domWriter.addElement(targetElt, "csw:Constraint");
 		constraintElt.setAttribute("version", "1.0.0");
 		Element filterElt = domWriter.addElement(constraintElt,"ogc:Filter/ogc:And");
-		Element propElt = domWriter.addElement(filterElt, "ogc:PropertyIsEqualTo");
-		domWriter.setElementValue(propElt,"ogc:PropertyName", "/Association/@sourceObject");
-		domWriter.setElementValue(propElt,"+ogc:PropertyName", "/Service/@id");
-		propElt = domWriter.addElement(filterElt, "+ogc:PropertyIsEqualTo");
-		domWriter.setElementValue(propElt,"ogc:PropertyName", "/Association/@targetObject");
-		targetId = "urn:uuid:407d31fb-236e-437a-b19b-ab4aaad1bc68";
-		domWriter.setElementValue(propElt,"ogc:Literal",targetId);
+		addPropertyIsEqualToProperty(domWriter, filterElt, "/Association/@sourceObject", "/Service/@id");
+		addPropertyIsEqualToLiteral(domWriter, filterElt, "/Association/@targetObject", targetId);
 		
+		//  missing one prop I think...
 		return targetElt;
 	}
+
+	protected Element buildQueryKeywordElement(DOMWriter domWriter, Element rootElt, String keyword) 
+		throws OWSException {
+		String kws = "%" + keyword + "%";
+		Element queryElt = domWriter.addElement(rootElt, "csw:Query");
+		queryElt.setAttribute("typeNames", "ExtrinsicObject ExtrinsicObject__A Association");
+		domWriter.setElementValue(queryElt,"csw:ElementName","/ExtrinsicObject");
+		Element constraintElt = domWriter.addElement(queryElt, "csw:Constraint");
+		constraintElt.setAttribute("version", "1.0.0");
+		Element filterElt = domWriter.addElement(constraintElt,"ogc:Filter/ogc:And");
+		addPropertyIsEqualToLiteral(domWriter, filterElt, "/ExtrinsicObject/@objectType", "ObservationOffering");
+		Element orElt = domWriter.addElement(filterElt, "ogc:Or");
+		addPropertyIsLikeLiteral(domWriter, orElt, "/ExtrinsicObject/Name/LocalizedString/@value", kws);
+		addPropertyIsLikeLiteral(domWriter, orElt, "/ExtrinsicObject/Description/LocalizedString/@value", kws);
+		addPropertyIsLikeLiteral(domWriter, orElt, "/ExtrinsicObject/Slot[@name=\"ResultFormats\"]/ValueList/Value[1]", kws);
+		addPropertyIsLikeLiteral(domWriter, orElt, "/ExtrinsicObject/Slot[@name=\"Procedures\"]/ValueList/Value[1]", kws);
+		addPropertyIsLikeLiteral(domWriter, orElt, "/ExtrinsicObject/Slot[@name=\"ResultModels\"]/ValueList/Value[1]", kws);
+		addPropertyIsLikeLiteral(domWriter, orElt, "/ExtrinsicObject/Slot[@name=\"ObservedProperties\"]/ValueList/Value[1]", kws);
+		Element andElt = domWriter.addElement(orElt, "ogc:And");
+		addPropertyIsEqualToProperty(domWriter, andElt, "/Association/@sourceObject", "/ExtrinsicObject/@id");
+		addPropertyIsEqualToProperty(domWriter, andElt, "/Association/@targetObject", "/A/@id");
+		addPropertyIsEqualToLiteral(domWriter, andElt, "/Association/@associationType", "HasFeatureOfInterest");
+		Element or2Elt = domWriter.addElement(andElt, "ogc:Or");
+		addPropertyIsLikeLiteral(domWriter, or2Elt, "/A/Name/LocalizedString/@value", kws);
+		addPropertyIsLikeLiteral(domWriter, or2Elt, "/A/Description/LocalizedString/@value", kws);
+		
+		return queryElt;
+	}
 	
-	//  TODO  Modify to filter on keywd, layerName and bbox
+	protected Element addPropertyIsEqualToProperty(DOMWriter domWriter, Element parentElt, 
+			String propName, String targetProp){
+		Element propElt = domWriter.addElement(parentElt, "+ogc:PropertyIsEqualTo");
+		domWriter.setElementValue(propElt,"ogc:PropertyName", propName);
+		domWriter.setElementValue(propElt,"+ogc:PropertyName", targetProp);
+
+		return propElt;
+	}
+
+	protected Element addPropertyIsEqualToLiteral(DOMWriter domWriter, Element parentElt, 
+			String propName, String literal){
+		Element propElt = domWriter.addElement(parentElt, "+ogc:PropertyIsEqualTo");
+		domWriter.setElementValue(propElt,"ogc:PropertyName", propName);
+		domWriter.setElementValue(propElt,"ogc:Literal", literal);
+		
+		return propElt;
+	}
+
+	protected Element addPropertyIsLikeLiteral(DOMWriter domWriter, Element parentElt, 
+			String propName, String literal){
+		Element propElt = domWriter.addElement(parentElt, "+ogc:PropertyIsLike");
+		domWriter.setElementValue(propElt,"ogc:PropertyName", propName);
+		domWriter.setElementValue(propElt,"ogc:Literal", literal);
+		
+		return propElt;
+	}
+
+	//  TODO  Modify to filter on keywd, layerName 
 	public Element buildRequestXML(OWSQuery owsQuery, DOMWriter domWriter) throws OWSException {
 		WRSQuery query = (WRSQuery)owsQuery;
 		Element rootElt = buildQueryRootElement(domWriter);
-//		if(keyword)
-//			buildQueryKeywordElement(domWriter, rootElt, query);
-		Bbox bbox = query.getBbox();
-		if(bbox != null)
-			buildQueryBboxElement(domWriter, rootElt, query);
-		else
+		List<QueryType> queryTypes = query.getQueryTypeList();
+		
+		if(queryTypes.isEmpty()) {
 			buildQueryAllSosElement(domWriter, rootElt);
-
-//		buildTargetObjectSearchElement(domWriter, rootElt, "");
+			return rootElt;
+		}
+		if(queryTypes.contains(QueryType.SERVICE_SOS)) {
+			buildServiceSearchElement(domWriter, rootElt, query.getServiceSearchId());
+			return rootElt;
+		}
+		//  Filter elements- should be able to be combined
+		if(queryTypes.contains(QueryType.KEYWORD_SOS)) {
+		    buildQueryKeywordElement(domWriter, rootElt, query.getKeyword() );
+		    return rootElt;
+		}
+		if(queryTypes.contains(QueryType.BBOX_SOS))
+			buildQueryBboxElement(domWriter, rootElt, query.getBbox());
 
 		return rootElt;
 	}
 	
-	public String oldBuildRequest()
-	{
-		//Beginnings XML
-		String request = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-				"<GetRecords maxRecords=\"\" outputFormat=\"application/xml; "+
-				"	charset=UTF-8\" outputSchema=\"EBRIM\" version=\"2.0.0\" "+
-				"	xmlns=\"http://www.opengis.net/cat/csw\"> "+
-				"	<Query typeNames=\"ExtrinsicObject\"> "+
-				"		<ElementName>/ExtrinsicObject</ElementName> "+
-				"		<Constraint version=\"1.0.0\"> "+
-				"			<ogc:Filter xmlns:ebxml=\"urn:oasis:names:tc:ebxml-regrep:rim:xsd:2.5\" "+
-				"				xmlns:gml=\"http://www.opengis.net/gml\" "+
-				"				xmlns:ogc=\"http://www.opengis.net/ogc\" "+
-				"				xmlns:csw=\"http://www.opengis.net/csw\"> ";
-
-		//Add Service XML
-		boolean addService=false;
-		if (serviceId.trim().length()!=0)
-		{
-			addService = true;
-			request = request + "<ogc:And> "+
-								"	<ogc:PropertyIsEqualTo> "+
-	                    		"		<ogc:PropertyName>/ExtrinsicObject/@objectType</ogc:PropertyName> "+
-	                    		"		<ogc:Literal>"+ serviceId +"</ogc:Literal> "+
-	                			"	</ogc:PropertyIsEqualTo> ";
-		}
-
-		//Add Name&Keyword XML
-		if (layerName.trim().length()!=0 || keyword.trim().length()!=0)
-        {
-        	//For Maximum Results:
-			//If LayerName is empty,
-			//Keyword in put in LayerName field.
-			String variableName=layerName;
-        	String variableKeyword=keyword;
-        	if(layerName.equalsIgnoreCase(""))
-        	    variableName=keyword;
-
-        	request = request + "<ogc:Or> "+
-        						"	<ogc:PropertyIsLike escape=\"\\\" singleChar=\"_\" wildCard=\"%\"> "+
-        						"		<ogc:PropertyName> "+
-                    			"			/ExtrinsicObject/Name/LocalizedString/@value "+
-                                "        </ogc:PropertyName> "+
-                				"		<ogc:Literal>%"+ variableName +"%</ogc:Literal> "+
-            					"	</ogc:PropertyIsLike> "+
-        						"	<ogc:PropertyIsLike escape=\"\\\" singleChar=\"_\" wildCard=\"%\"> "+
-        						"		<ogc:PropertyName> "+
-                				"			/ExtrinsicObject/Description/LocalizedString/@value "+
-                                "        </ogc:PropertyName> "+
-                				"	<ogc:Literal>%"+ variableKeyword +"%</ogc:Literal> "+
-               					"	</ogc:PropertyIsLike> "+	
-        						"	<ogc:PropertyIsLike> "+
-            					"		<ogc:Function name=\"CATALOG_TOOLS.SLOT_AS_STRING\"> "+
-            					"			<ogc:PropertyName>/ExtrinsicObject/Slot/Phenomenas</ogc:PropertyName> "+
-                                "        </ogc:Function> "+
-                                "        <ogc:Literal>%"+ variableKeyword +"%</ogc:Literal> "+
-                                "    </ogc:PropertyIsLike> "+
-                                "    <ogc:PropertyIsLike> "+
-                                "        <ogc:Function name=\"CATALOG_TOOLS.SLOT_AS_STRING\"> "+
-                                "            <ogc:PropertyName>/ExtrinsicObject/Slot/Identifier</ogc:PropertyName> "+
-                                "        </ogc:Function> "+
-                                "        <ogc:Literal>%"+ variableKeyword +"%</ogc:Literal> "+
-                                "    </ogc:PropertyIsLike> "+
-        						"</ogc:Or> ";
-        }
-
-		//Add Bounded XML
-        if (minX!=-180 || minY!=-90 || maxX!= 180 || maxY!=90)
-        {
-        	if(!addService) request = request + "<ogc:And>";
-        	request = request + "<ogc:Contains> "+
-            					"	<ogc:PropertyName>/ExtrinsicObject/Slot/FootPrint</ogc:PropertyName>" +
-            					"	<gml:Box srsName=\"EPSG:"+ srs +"\"> "+
-            					"		<gml:coordinates>"+ minX +","+ minY +" "+ maxX +","+ maxY +"</gml:coordinates> "+
-                                "    </gml:Box> "+
-                                "</ogc:Contains> ";
-        	if(!addService) request = request + "</ogc:And>";
-        }
-		//Add Endings
-		if(addService)
-		{
-			request = request + "</ogc:And> ";
-		}
-		request = request + "            </ogc:Filter> "+
-        					"		</Constraint> "+
-							"	</Query> "+
-							"</GetRecords> ";
-		
-		return request;
-	}
-	
-	
-
-
 	public static void main(String [] args) throws OWSException{
 		WRSRequestWriter req = new WRSRequestWriter();
 		OWSQuery query = new WRSQuery();
@@ -244,6 +213,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 	}
 
 	@Override
+	//  WRS does not support KVP request
 	public String buildGetRequest(OWSQuery query) throws OWSException {
 		// TODO Auto-generated method stub
 		return null;
