@@ -89,7 +89,7 @@ public class SOSObservationReader extends CDMReader
             
             // read procedure ID and observation name
             procedure = domReader.getAttributeValue(obsElt, "procedure/@href");
-            observationName = domReader.getElementValue(obsElt, "name");
+            observationName = domReader.getElementValue(obsElt, "featureOfInterest/*/name");
             
             // read resultDefinition
 			Element defElt = domReader.getElement(obsElt, "resultDefinition/DataDefinition");
