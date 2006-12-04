@@ -156,13 +156,18 @@ public abstract class SOSServlet extends OWSServlet
 	 */
 	protected void checkQueryFormat(SOSQuery query, DOMReader capsReader) throws SOSException
 	{
-		Element offeringElt = getOffering(query.getOffering(), capsReader);		
+		Element offeringElt = getOffering(query.getOffering(), capsReader);
+        
+        // get format lists from either resultFormat or responseFormat elts
 		NodeList formatElts = capsReader.getElements(offeringElt, "resultFormat");
-    	if(formatElts.getLength()==0) {
+    	if(formatElts.getLength() == 0)
+        {
     		formatElts =  capsReader.getElements(offeringElt, "responseFormat");
     	}
+        
+        // check query format vs. each supported format in the capabilities
         int listSize = formatElts.getLength();
-		for (int i=0; i<formatElts.getLength(); i++)
+		for (int i=0; i<listSize; i++)
 		{
 			String formatString = capsReader.getElementValue((Element)formatElts.item(i), "");
 			
