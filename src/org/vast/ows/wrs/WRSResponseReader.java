@@ -60,8 +60,10 @@ public class WRSResponseReader {
 			Element svcElt = (Element)svcList.item(i);
 			Element svcBindingElt = reader.getElement(svcElt, "ServiceBinding");
 			String accessUri = svcBindingElt.getAttribute("accessURI");
-			if(accessUri != null)
-				sosUri.add(accessUri);
+			if(accessUri != null) {
+				if(!sosUri.contains(accessUri))
+					sosUri.add(accessUri);
+			}
 		}
 		return sosUri;
 	}
@@ -73,12 +75,27 @@ public class WRSResponseReader {
 		NodeList objList = reader.getElements("SearchResults/ExtrinsicObject");
 		for(int i=0; i<objList.getLength(); i++) {
 			Element objElt = (Element)objList.item(i);
+			if(skipHyperion(reader, objElt))
+				continue;
 			String id = objElt.getAttribute("id");
 			if(id != null)
 				extObjIds.add(id);
 		}
 		
 		return extObjIds;
+	}
+	
+	private boolean skipHyperion(DOMReader reader, Element objElt){
+		Element nameElt = reader.getElement(objElt, "Name");
+		if(nameElt!=null){
+			Element lsElt = reader.getElement(nameElt, "LocalizedString");
+			if(lsElt != null) {
+				String nameAtt = lsElt.getAttribute("value");
+				if(nameAtt.contains("EO1"))
+					return true;
+			}
+		}
+		return false;
 	}
 }
 

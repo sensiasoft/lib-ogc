@@ -76,7 +76,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 		// root element
 		Element rootElt = domWriter.createElement("csw:GetRecords");
 		domWriter.setAttributeValue(rootElt, "version", "2.0.0");
-		domWriter.setAttributeValue(rootElt, "maxRecords", "20");
+		domWriter.setAttributeValue(rootElt, "maxRecords", "80");
 		domWriter.setAttributeValue(rootElt, "outputSchema", "EBRIM");
 		
 		return rootElt;
