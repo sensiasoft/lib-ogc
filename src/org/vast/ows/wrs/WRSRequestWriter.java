@@ -99,7 +99,6 @@ public class WRSRequestWriter extends OWSRequestWriter
 		addPropertyIsEqualToLiteral(domWriter, filterElt, "/Concept/Name/LocalizedString/@value", "SOS");
 		addPropertyIsEqualToProperty(domWriter, filterElt, "/Concept/@id", "/Classification/@classificationNode");
 		addPropertyIsEqualToProperty(domWriter, filterElt, "/Service/@id", "/Classification/@classifiedObject");
-
 		
 		return queryElt;
 	}

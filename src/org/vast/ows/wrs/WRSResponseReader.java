@@ -75,8 +75,8 @@ public class WRSResponseReader {
 		NodeList objList = reader.getElements("SearchResults/ExtrinsicObject");
 		for(int i=0; i<objList.getLength(); i++) {
 			Element objElt = (Element)objList.item(i);
-			if(skipHyperion(reader, objElt))
-				continue;
+			//if(skipHyperion(reader, objElt))
+			//	continue;
 			String id = objElt.getAttribute("id");
 			if(id != null)
 				extObjIds.add(id);
