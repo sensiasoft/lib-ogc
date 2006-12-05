@@ -42,6 +42,32 @@ public class WRSRequestWriter extends OWSRequestWriter
 	public WRSRequestWriter(){
 	}
 	
+	//  TODO  Modify to filter on keywd, layerName 
+	public Element buildRequestXML(OWSQuery owsQuery, DOMWriter domWriter) throws OWSException {
+		WRSQuery query = (WRSQuery)owsQuery;
+		Element rootElt = buildQueryRootElement(domWriter);
+		List<QueryType> queryTypes = query.getQueryTypeList();
+		
+		if(queryTypes.isEmpty()) {
+			buildQueryAllSosElement(domWriter, rootElt);
+			return rootElt;
+		}
+		if(queryTypes.contains(QueryType.SERVICE_SOS)) {
+			buildServiceSearchElement(domWriter, rootElt, query.getServiceSearchId());
+			return rootElt;
+		}
+		//  Filter elements- should be able to be combined, but right now, it's either
+		//  keyword OR bbox
+		if(queryTypes.contains(QueryType.KEYWORD_SOS)) {
+		    buildQueryKeywordElement(domWriter, rootElt, query.getKeyword() );
+		    return rootElt;
+		}
+		if(queryTypes.contains(QueryType.BBOX_SOS))
+			buildQueryBboxElement(domWriter, rootElt, query.getBbox());
+
+		return rootElt;
+	}
+	
 	protected Element buildQueryRootElement(DOMWriter domWriter) throws OWSException {
 		domWriter.addNS("http://www.opengis.net/cat/csw", "csw");
 		domWriter.addNS("http://www.opengis.net/ogc", "ogc");
@@ -50,7 +76,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 		// root element
 		Element rootElt = domWriter.createElement("csw:GetRecords");
 		domWriter.setAttributeValue(rootElt, "version", "2.0.0");
-//		domWriter.setAttributeValue(rootElt, "maxRecords", "10");
+		domWriter.setAttributeValue(rootElt, "maxRecords", "20");
 		domWriter.setAttributeValue(rootElt, "outputSchema", "EBRIM");
 		
 		return rootElt;
@@ -71,8 +97,10 @@ public class WRSRequestWriter extends OWSRequestWriter
 		constraintElt.setAttribute("version", "1.0.0");
 		Element filterElt = domWriter.addElement(constraintElt,"ogc:Filter/ogc:And");
 		addPropertyIsEqualToLiteral(domWriter, filterElt, "/Concept/Name/LocalizedString/@value", "SOS");
+		addPropertyIsEqualToProperty(domWriter, filterElt, "/Concept/@id", "/Classification/@classificationNode");
 		addPropertyIsEqualToProperty(domWriter, filterElt, "/Service/@id", "/Classification/@classifiedObject");
-				
+
+		
 		return queryElt;
 	}
 	
@@ -98,7 +126,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 				"/ExtrinsicObject/Slot[@name=\"FootPrint\"]/ValueList/Value[1]");
 		Element gmlBoxElt = domWriter.addElement(intersectsElt,"gml:Box");
 		gmlBoxElt.setAttribute("srsName","EPSG:4326");
-		String bboxStr = bbox.getMinX() + "," + bbox.getMinY() + "," + bbox.getMaxX() + "," + bbox.getMaxY();
+		String bboxStr = bbox.getMinX() + "," + bbox.getMinY()+ " " + bbox.getMaxX() + "," + bbox.getMaxY();
 		domWriter.setElementValue(gmlBoxElt, "gml:coordinates", bboxStr);
 		
 		return queryElt;
@@ -181,31 +209,6 @@ public class WRSRequestWriter extends OWSRequestWriter
 		return propElt;
 	}
 
-	//  TODO  Modify to filter on keywd, layerName 
-	public Element buildRequestXML(OWSQuery owsQuery, DOMWriter domWriter) throws OWSException {
-		WRSQuery query = (WRSQuery)owsQuery;
-		Element rootElt = buildQueryRootElement(domWriter);
-		List<QueryType> queryTypes = query.getQueryTypeList();
-		
-		if(queryTypes.isEmpty()) {
-			buildQueryAllSosElement(domWriter, rootElt);
-			return rootElt;
-		}
-		if(queryTypes.contains(QueryType.SERVICE_SOS)) {
-			buildServiceSearchElement(domWriter, rootElt, query.getServiceSearchId());
-			return rootElt;
-		}
-		//  Filter elements- should be able to be combined
-		if(queryTypes.contains(QueryType.KEYWORD_SOS)) {
-		    buildQueryKeywordElement(domWriter, rootElt, query.getKeyword() );
-		    return rootElt;
-		}
-		if(queryTypes.contains(QueryType.BBOX_SOS))
-			buildQueryBboxElement(domWriter, rootElt, query.getBbox());
-
-		return rootElt;
-	}
-	
 	public static void main(String [] args) throws OWSException{
 		WRSRequestWriter req = new WRSRequestWriter();
 		OWSQuery query = new WRSQuery();
