@@ -117,7 +117,11 @@ public class SOSRequestWriter extends OWSRequestWriter
 	{
 		Element elt;
 		SOSQuery query = (SOSQuery)owsQuery;
-		domWriter.addNS("http://www.opengeospatial.net/sos", "sos");
+        
+        if (owsQuery.getVersion().equals("0.0.31"))
+            domWriter.addNS("http://www.opengeospatial.net/sos", "sos");
+        else
+            domWriter.addNS("http://www.opengis.net/sos", "sos");
 		domWriter.addNS("http://www.opengis.net/ogc", "ogc");
 		domWriter.addNS("http://www.opengis.net/gml", "gml");
 		domWriter.addNS("http://www.opengeospatial.net/swe", "swe");
