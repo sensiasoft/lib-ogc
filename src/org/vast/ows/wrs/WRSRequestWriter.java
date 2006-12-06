@@ -157,7 +157,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 		throws OWSException {
 		String kws = "%" + keyword + "%";
 		Element queryElt = domWriter.addElement(rootElt, "csw:Query");
-		queryElt.setAttribute("typeNames", "ExtrinsicObject ExtrinsicObject__A Association");
+		queryElt.setAttribute("typeNames", "ExtrinsicObject");
 		domWriter.setElementValue(queryElt,"csw:ElementName","/ExtrinsicObject");
 		Element constraintElt = domWriter.addElement(queryElt, "csw:Constraint");
 		constraintElt.setAttribute("version", "1.0.0");
@@ -170,13 +170,13 @@ public class WRSRequestWriter extends OWSRequestWriter
 		addPropertyIsLikeLiteral(domWriter, orElt, "/ExtrinsicObject/Slot[@name=\"Procedures\"]/ValueList/Value[1]", kws);
 		addPropertyIsLikeLiteral(domWriter, orElt, "/ExtrinsicObject/Slot[@name=\"ResultModels\"]/ValueList/Value[1]", kws);
 		addPropertyIsLikeLiteral(domWriter, orElt, "/ExtrinsicObject/Slot[@name=\"ObservedProperties\"]/ValueList/Value[1]", kws);
-		Element andElt = domWriter.addElement(orElt, "ogc:And");
-		addPropertyIsEqualToProperty(domWriter, andElt, "/Association/@sourceObject", "/ExtrinsicObject/@id");
-		addPropertyIsEqualToProperty(domWriter, andElt, "/Association/@targetObject", "/A/@id");
-		addPropertyIsEqualToLiteral(domWriter, andElt, "/Association/@associationType", "HasFeatureOfInterest");
-		Element or2Elt = domWriter.addElement(andElt, "ogc:Or");
-		addPropertyIsLikeLiteral(domWriter, or2Elt, "/A/Name/LocalizedString/@value", kws);
-		addPropertyIsLikeLiteral(domWriter, or2Elt, "/A/Description/LocalizedString/@value", kws);
+//		Element andElt = domWriter.addElement(orElt, "ogc:And");
+//		addPropertyIsEqualToProperty(domWriter, andElt, "/Association/@sourceObject", "/ExtrinsicObject/@id");
+//		addPropertyIsEqualToProperty(domWriter, andElt, "/Association/@targetObject", "/A/@id");
+//		addPropertyIsEqualToLiteral(domWriter, andElt, "/Association/@associationType", "HasFeatureOfInterest");
+//		Element or2Elt = domWriter.addElement(andElt, "ogc:Or");
+//		addPropertyIsLikeLiteral(domWriter, or2Elt, "/A/Name/LocalizedString/@value", kws);
+//		addPropertyIsLikeLiteral(domWriter, or2Elt, "/A/Description/LocalizedString/@value", kws);
 		
 		return queryElt;
 	}
