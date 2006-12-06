@@ -229,7 +229,12 @@ public class SLDReader
     
     public void readRasterParameters(RasterSymbolizer rasterSym, DOMReader dom, Element symElt)
     {
-		// read red channel
+        // read normalizedColors attribute
+        String normColors = dom.getAttributeValue(symElt, "ChannelSelection/@normalizedColors");
+        if (normColors != null && normColors.equalsIgnoreCase("true"))
+            rasterSym.setNormalizedColors(true);
+        
+        // read red channel
         Element redElt = dom.getElement(symElt, "ChannelSelection/RedChannel");
         rasterSym.setRedChannel(readRasterChannel(dom, redElt));
         
