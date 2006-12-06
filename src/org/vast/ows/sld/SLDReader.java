@@ -23,8 +23,12 @@
 
 package org.vast.ows.sld;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.vast.io.xml.DOMReader;
 import org.vast.util.MessageSystem;
+import org.vast.util.URIResolver;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -452,8 +456,27 @@ public class SLDReader
 		{
 			GraphicImage img = new GraphicImage();
 			
-			img.setFormat(dom.getAttributeValue(graphicElt, "ExternalGraphic/Format"));
-			//img.setUrl();
+            // image format
+			img.setFormat(dom.getElementValue(graphicElt, "ExternalGraphic/Format"));
+            
+            // image url
+            Element urlElt = dom.getElement(graphicElt, "ExternalGraphic/OnlineResource");
+            ScalarParameter url = cssReader.readCssParameter(dom, urlElt);            
+            img.setUrl(url);
+            
+            // set base folder
+            String baseFolder = dom.getElementValue(graphicElt, "ExternalGraphic/Base");
+            if (baseFolder != null)
+                img.setBaseFolder(baseFolder);
+            else
+            {
+                try
+                {
+                    URIResolver resolver = new URIResolver(new URI("./"), dom.getXmlFragment().getParentDocument().getUri());
+                    img.setBaseFolder(resolver.getResolvedUri().toString());
+                }
+                catch (URISyntaxException e){}
+            }
 			
 			graphic.getGlyphs().add(img);
 		}

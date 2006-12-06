@@ -41,6 +41,7 @@ public class GraphicImage implements GraphicSource
 {
 	protected ScalarParameter url;
 	protected String format;
+    protected String baseFolder;
 
 
 	public String getFormat()
@@ -65,4 +66,16 @@ public class GraphicImage implements GraphicSource
 	{
 		this.url = url;
 	}
+
+
+    public String getBaseFolder()
+    {
+        return baseFolder;
+    }
+
+
+    public void setBaseFolder(String baseFolder)
+    {
+        this.baseFolder = baseFolder;
+    }
 }
