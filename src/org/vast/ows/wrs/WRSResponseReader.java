@@ -28,6 +28,7 @@ package org.vast.ows.wrs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.vast.io.xml.DOMReader;
@@ -68,8 +69,8 @@ public class WRSResponseReader {
 		return sosUri;
 	}
 	
-	public List<String> parseExtrinsicObjects(InputStream inputStream) throws IOException, DOMReaderException {
-		List<String> extObjIds = new ArrayList<String>();
+	public HashMap<String,String> parseExtrinsicObjects(InputStream inputStream) throws IOException, DOMReaderException {
+		HashMap<String,String> eoMap = new HashMap<String,String>();
 		
 		DOMReader reader = new DOMReader(inputStream, false);
 		NodeList objList = reader.getElements("SearchResults/ExtrinsicObject");
@@ -77,12 +78,19 @@ public class WRSResponseReader {
 			Element objElt = (Element)objList.item(i);
 			//if(skipHyperion(reader, objElt))
 			//	continue;
+			Element nameElt = reader.getElement(objElt, "Name");
+			if(nameElt == null)
+				continue;   // skip it
+			Element lsElt = reader.getElement(nameElt, "LocalizedString");
+			if(lsElt == null) 
+				continue;  // skip it
+			String name = lsElt.getAttribute("value");
 			String id = objElt.getAttribute("id");
 			if(id != null)
-				extObjIds.add(id);
+				eoMap.put(id, name);
 		}
 		
-		return extObjIds;
+		return eoMap;
 	}
 	
 	private boolean skipHyperion(DOMReader reader, Element objElt){
