@@ -67,8 +67,18 @@ public class GMLGeometryReader
             // read lower corner
             coordsText = dom.getElementValue(pointElt, "coordinates");
             coords = coordsText.split(" ");
-            point.x = Double.parseDouble(coords[0]);
-            point.y = Double.parseDouble(coords[1]);            
+            
+            if (srs.contains("EPSG") && srs.contains("432"))
+            {
+                point.y = Double.parseDouble(coords[0]);
+                point.x = Double.parseDouble(coords[1]);
+            }
+            else if (srs.contains("CRS84"))
+            {
+                point.x = Double.parseDouble(coords[0]);
+                point.y = Double.parseDouble(coords[1]);
+            }
+            
             if (coords.length > 2)
                 point.z = Double.parseDouble(coords[2]);
         }
