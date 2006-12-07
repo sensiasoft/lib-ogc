@@ -34,9 +34,9 @@ public class OWSExceptionReader
 	
 	public static void checkException(DOMReader dom) throws OWSException
 	{
-		String exceptionText = null;
 		Element rootElt = dom.getRootElement();
-               
+        String exceptionText = dom.getElementValue(rootElt, "");
+        
         if (exceptionText == null)
             exceptionText = dom.getElementValue(rootElt, "Exception");
         

@@ -29,6 +29,8 @@ import java.io.*;
 import org.ogc.cdm.common.*;
 import org.vast.cdm.reader.*;
 import org.vast.io.xml.*;
+import org.vast.ows.OWSException;
+import org.vast.ows.OWSExceptionReader;
 import org.w3c.dom.*;
 
 
@@ -56,6 +58,7 @@ public class CoverageReader extends CDMReader
 			
 			// parse xml header using DataComponent and DataEncoding readers
 			DOMReader domReader = new DOMReader(streamFilter, false);
+            OWSExceptionReader.checkException(domReader);
 			
 			// get structure and encoding elements
 			Element defElt = domReader.getElement("result/Data/definition/DataDefinition");
@@ -75,6 +78,10 @@ public class CoverageReader extends CDMReader
 		{
 			throw new CDMException("Error while parsing Coverage XML", e);
 		}
+        catch (OWSException e)
+        {
+            throw new CDMException(e.getMessage());
+        }
 	}
 	
 	
