@@ -25,8 +25,7 @@
 package org.vast.ows.wcs;
 
 import java.io.*;
-
-import org.ogc.cdm.common.*;
+import org.vast.cdm.common.CDMException;
 import org.vast.cdm.reader.*;
 import org.vast.io.xml.*;
 import org.vast.ows.OWSException;

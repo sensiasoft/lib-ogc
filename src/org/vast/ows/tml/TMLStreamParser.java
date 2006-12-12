@@ -28,14 +28,14 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.*;
 
-import org.ogc.cdm.common.CDMException;
-import org.ogc.cdm.common.DataComponent;
-import org.ogc.cdm.common.DataEncoding;
-import org.ogc.cdm.common.DataHandler;
-import org.ogc.cdm.common.ErrorHandler;
-import org.ogc.cdm.common.RawDataHandler;
-import org.ogc.cdm.reader.DataStreamParser;
-import org.ogc.cdm.reader.StreamDemux;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataEncoding;
+import org.vast.cdm.common.DataHandler;
+import org.vast.cdm.common.DataStreamParser;
+import org.vast.cdm.common.ErrorHandler;
+import org.vast.cdm.common.RawDataHandler;
+import org.vast.cdm.common.StreamDemux;
 import org.vast.cdm.reader.URIStreamHandler;
 
 

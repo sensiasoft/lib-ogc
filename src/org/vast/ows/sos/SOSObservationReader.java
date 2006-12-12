@@ -25,7 +25,7 @@ package org.vast.ows.sos;
 
 import java.io.*;
 
-import org.ogc.cdm.common.CDMException;
+import org.vast.cdm.common.CDMException;
 import org.vast.cdm.reader.*;
 import org.vast.math.Vector3d;
 import org.vast.ows.OWSException;

@@ -25,9 +25,11 @@ package org.vast.ows.tml;
 
 import java.io.*;
 import java.util.ArrayList;
-
-import org.ogc.cdm.reader.*;
-import org.ogc.cdm.common.*;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataEncoding;
+import org.vast.cdm.common.DataStreamParser;
+import org.vast.cdm.common.InputStreamProvider;
 import org.vast.cdm.reader.*;
 import org.vast.io.xml.*;
 import org.w3c.dom.*;
