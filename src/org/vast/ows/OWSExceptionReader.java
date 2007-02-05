@@ -25,14 +25,14 @@ package org.vast.ows;
 
 import java.io.InputStream;
 
-import org.vast.io.xml.*;
+import org.vast.xml.*;
 import org.w3c.dom.Element;
 
 
 public class OWSExceptionReader
 {
 	
-	public static void checkException(DOMReader dom) throws OWSException
+	public static void checkException(DOMHelper dom) throws OWSException
 	{
 		Element rootElt = dom.getRootElement();
         String exceptionText = dom.getElementValue(rootElt, "");
@@ -61,10 +61,10 @@ public class OWSExceptionReader
 	{
 		try
         {
-            DOMReader dom = new DOMReader(in, false);
+            DOMHelper dom = new DOMHelper(in, false);
             checkException(dom);
         }
-        catch (DOMReaderException e)
+        catch (DOMHelperException e)
         {
             e.printStackTrace();
         }

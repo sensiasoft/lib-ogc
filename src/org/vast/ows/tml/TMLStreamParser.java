@@ -36,7 +36,7 @@ import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
 import org.vast.cdm.common.StreamDemux;
-import org.vast.cdm.reader.URIStreamHandler;
+import org.vast.sweCommon.URIStreamHandler;
 
 
 public class TMLStreamParser implements StreamDemux, DataStreamParser

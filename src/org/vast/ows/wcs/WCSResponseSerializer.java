@@ -25,8 +25,6 @@
 package org.vast.ows.wcs;
 
 import java.io.IOException;
-
-import org.vast.io.xml.DOMReader;
 import org.vast.ows.SweDataWriter;
 import org.vast.ows.SweResponseSerializer;
 import org.w3c.dom.Element;
@@ -34,15 +32,17 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p>Title: WCSResponseWriter</p>
+ * <p><b>Title:</b>
+ * WCS Response Serializer
+ * </p>
  *
- * <p>Description:
+ * <p><b>Description:</b><br/>
  * Write SWE XML response in a WCS
  * </p>
  *
- * <p>Copyright: Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @since Aug 9, 2005
+ * <p>Copyright (c) 2005</p>
+ * @author Alexandre Robin, Tony Cook
+ * @date Jun 21, 2005
  * @version 1.0
  */
 public class WCSResponseSerializer extends SweResponseSerializer
@@ -67,32 +67,30 @@ public class WCSResponseSerializer extends SweResponseSerializer
 	//  between Goes and SRTM
 	//  Leaving it now.  SRTMHandler is the only class still calling this.  TC 6/13/06
 	public void setGridDimension(int xdim, int ydim, int zdim){
-		DOMReader domReader = new DOMReader(xmlDocument);
-        // set numRows
-		Element elt = domReader.getElement("result/Data/definition/DataDefinition/dataComponents/DataArray");
+		// set numRows
+		Element elt = dom.getElement("result/Data/definition/DataDefinition/dataComponents/DataArray");
 		elt.setAttribute("arraySize", "" + ydim);
 		// set numCols
-		Element ncElt = domReader.getElement("result/Data/definition/DataDefinition/dataComponents/DataArray/" + 
+		Element ncElt = dom.getElement("result/Data/definition/DataDefinition/dataComponents/DataArray/" + 
 											"component/DataArray");		
 		ncElt.setAttribute("arraySize", "" + xdim);
 		
 		//  TODO:  support zdim
 		int dim = xdim*ydim*zdim;
-		Element blElt = domReader.getElement("result/Data/definition/DataDefinition/encoding/BinaryBlock"); 
+		Element blElt = dom.getElement("result/Data/definition/DataDefinition/encoding/BinaryBlock"); 
 		if(blElt != null)
 			blElt.setAttribute("byteLength", "" + (dim*bytesPerPoint));
 	}
 	
 	//  Just like setGridDim, but gets the second occurence of the dimension elements
 	public void setImageDimension(int width, int height){
-        DOMReader domReader = new DOMReader(xmlDocument);
         // set numRows
-		NodeList nl = domReader.getElements("result/Data/definition/DataDefinition/dataComponents/" +
+		NodeList nl = dom.getElements("result/Data/definition/DataDefinition/dataComponents/" +
 										  "DataGroup/component/DataArray");
 		Element elt = (Element)nl.item(1);
 		elt.setAttribute("arraySize", "" + height);
 		// set numCols
-		nl = domReader.getElements("result/Data/definition/DataDefinition/dataComponents/" + 
+		nl = dom.getElements("result/Data/definition/DataDefinition/dataComponents/" + 
 							     "DataGroup/component/DataArray/component/DataArray");
 		elt = (Element)nl.item(1);
 		elt.setAttribute("arraySize", "" + width);

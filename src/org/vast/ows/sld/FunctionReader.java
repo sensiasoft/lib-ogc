@@ -23,7 +23,7 @@
 
 package org.vast.ows.sld;
 
-import org.vast.io.xml.DOMReader;
+import org.vast.xml.DOMHelper;
 import org.vast.ows.sld.functions.LinearAdjustment;
 import org.vast.ows.sld.functions.LookUpTable0D;
 import org.vast.ows.sld.functions.LookUpTable1D;
@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
  */
 public class FunctionReader
 {
-	public MappingFunction readFunction(DOMReader dom, Element functionElt)
+	public MappingFunction readFunction(DOMHelper dom, Element functionElt)
 	{
 		String functionType = functionElt.getLocalName();
         MappingFunction func = null;
@@ -81,7 +81,7 @@ public class FunctionReader
      * @param lutElt
      * @return
      */
-    public MappingFunction readLinearAdjustment(DOMReader dom, Element lutElt)
+    public MappingFunction readLinearAdjustment(DOMHelper dom, Element lutElt)
     {
         // default gain and offset values
         double gain = 1;
@@ -108,7 +108,7 @@ public class FunctionReader
      * @param lutElt
      * @return
      */
-    public MappingFunction readLUT0D(DOMReader dom, Element lutElt)
+    public MappingFunction readLUT0D(DOMHelper dom, Element lutElt)
     {
         // parse values
         Element valuesElt = dom.getElement(lutElt, "TableValues");
@@ -125,7 +125,7 @@ public class FunctionReader
      * @param lutElt
      * @return
      */
-    public MappingFunction readLUT1D(DOMReader dom, Element lutElt)
+    public MappingFunction readLUT1D(DOMHelper dom, Element lutElt)
     {
         // parse values
         Element valuesElt = dom.getElement(lutElt, "TableValues");
@@ -142,7 +142,7 @@ public class FunctionReader
      * @param valuesElt
      * @return
      */
-    private double[][] parseTableValues(DOMReader dom, Element valuesElt)
+    private double[][] parseTableValues(DOMHelper dom, Element valuesElt)
     {
         String values = dom.getElementValue(valuesElt, "");
         String[] valueTable = values.split(" ");

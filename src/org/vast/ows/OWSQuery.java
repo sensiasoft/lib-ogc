@@ -40,7 +40,7 @@ import java.io.*;
  * @date Oct 27, 2005
  * @version 1.0
  */
-public abstract class OWSQuery
+public class OWSQuery
 {
 	protected OutputStream responseStream;
 	protected String getServer;

@@ -47,7 +47,9 @@ import org.vast.ows.util.TimeInfo;
  */
 public class WCSQuery extends OWSQuery
 {
-	protected String layer;
+    protected final static String unsupportedVersion = "Unsupported WCS version";
+    
+    protected String layer;
 	protected String format;		
 	protected TimeInfo time;
 	protected Bbox bbox;

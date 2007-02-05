@@ -23,7 +23,7 @@
 
 package org.vast.ows.gml;
 
-import org.vast.io.xml.DOMWriter;
+import org.vast.xml.DOMHelper;
 import org.vast.ows.util.Bbox;
 import org.w3c.dom.Element;
 
@@ -50,7 +50,7 @@ public class GMLEnvelopeWriter
     }
     
         
-    public Element writeEnvelope(DOMWriter dom, Bbox bbox) throws GMLException
+    public Element writeEnvelope(DOMHelper dom, Bbox bbox) throws GMLException
     {
         Element envelopeElt = dom.createElement("gml:Envelope");
         

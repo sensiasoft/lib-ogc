@@ -26,10 +26,14 @@ package org.vast.ows.wcs;
 
 import java.io.*;
 import org.vast.cdm.common.CDMException;
-import org.vast.cdm.reader.*;
-import org.vast.io.xml.*;
+import org.vast.xml.DOMHelper;
+import org.vast.xml.DOMHelperException;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReader;
+import org.vast.sweCommon.CDMFilter;
+import org.vast.sweCommon.CDMReader;
+import org.vast.sweCommon.SWECommonUtils;
+import org.vast.sweCommon.URIStreamHandler;
 import org.w3c.dom.*;
 
 
@@ -56,24 +60,23 @@ public class CoverageReader extends CDMReader
 //			System.exit(0);
 			
 			// parse xml header using DataComponent and DataEncoding readers
-			DOMReader domReader = new DOMReader(streamFilter, false);
-            OWSExceptionReader.checkException(domReader);
+			DOMHelper dom = new DOMHelper(streamFilter, false);
+            OWSExceptionReader.checkException(dom);
 			
 			// get structure and encoding elements
-			Element defElt = domReader.getElement("result/Data/definition/DataDefinition");
-			Element dataElt = domReader.getElement(defElt, "dataComponents");
-			Element encElt = domReader.getElement(defElt, "encoding/*");
+			Element defElt = dom.getElement("result/Data/definition/DataDefinition");
+			Element dataElt = dom.getElement(defElt, "dataComponents");
+			Element encElt = dom.getElement(defElt, "encoding");
 			
 			// parse structure and encoding
-			DataComponentsReader infReader = new DataComponentsReader(domReader);
-			EncodingReader encReader = new EncodingReader(domReader);			
-			this.dataComponents = infReader.readComponentProperty(dataElt);
-			this.dataEncoding = encReader.readDataEncoding(encElt);
+            SWECommonUtils utils = new SWECommonUtils();
+            this.dataComponents = utils.readComponentProperty(dom, dataElt);
+			this.dataEncoding = utils.readEncodingProperty(dom, encElt);
 			
 			// read link to out of band data stream if present
-			resultUri = domReader.getAttributeValue("result/data/value/externalLink");
+			resultUri = dom.getAttributeValue("result/data/value/externalLink");
 		}
-		catch (DOMReaderException e)
+		catch (DOMHelperException e)
 		{
 			throw new CDMException("Error while parsing Coverage XML", e);
 		}

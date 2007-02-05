@@ -23,20 +23,16 @@
 
 package org.vast.ows.sas;
 
-import org.vast.io.xml.DOMWriter;
+import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSQuery;
-import org.vast.ows.OWSRequestWriter;
-import org.vast.ows.gml.GMLEnvelopeWriter;
-import org.vast.ows.gml.GMLException;
-import org.vast.ows.gml.GMLTimeWriter;
-import org.vast.ows.util.Bbox;
-import org.vast.ows.util.TimeInfo;
+import org.vast.ows.AbstractRequestWriter;
 import org.w3c.dom.Element;
 
 
 /**
  * <p><b>Title:</b><br/>
+ * Provides methods to build a GET or POST SAS request and
+ * using an SASQuery object for OWS4 version 0.0.31
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -47,7 +43,7 @@ import org.w3c.dom.Element;
  * @date Nov 21, 2006
  * @version 1.0
  */
-public class SASRequestWriter extends OWSRequestWriter
+public class SASRequestWriter extends AbstractRequestWriter<SASQuery>
 {
 	public SASRequestWriter()
 	{
@@ -55,7 +51,7 @@ public class SASRequestWriter extends OWSRequestWriter
 
 	
 	@Override
-	public String buildGetRequest(OWSQuery owsQuery)
+	public String buildURLQuery(SASQuery query)
 	{
 		//  Some SAS ops don't support KVP, so I'm not dealing with it yet
 		return null;
@@ -64,26 +60,24 @@ public class SASRequestWriter extends OWSRequestWriter
 	
 	//  Initially, just try to do a Subscribe request
 	@Override
-	public Element buildRequestXML(OWSQuery owsQuery, DOMWriter domWriter) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, SASQuery query) throws OWSException
 	{
-		Element elt;
-		SASQuery query = (SASQuery)owsQuery;
-		domWriter.addNS("http://www.opengis.net/sas", "sas");
-		domWriter.addNS("http://www.opengis.net/ogc", "ogc");
+		dom.addUserPrefix("sas", "http://www.opengis.net/sas");
+		dom.addUserPrefix("ogc", "http://www.opengis.net/ogc");
 //		domWriter.addNS("http://www.opengeospatial.net/swe", "swe");
 		
 		// root element
-		Element rootElt = domWriter.createElement("sas:Subscribe");
-		domWriter.setAttributeValue(rootElt, "version", query.getVersion());
-		domWriter.setAttributeValue(rootElt, "service", query.getService());
+		Element rootElt = dom.createElement("sas:Subscribe");
+		dom.setAttributeValue(rootElt, "version", query.getVersion());
+		dom.setAttributeValue(rootElt, "service", query.getService());
 		
 		// Sub ID
 		if(query.getSubscriptionId() != null)
-			domWriter.setElementValue(rootElt, "sas:SubscriptionOfferingID", query.getSubscriptionId());
+			dom.setElementValue(rootElt, "sas:SubscriptionOfferingID", query.getSubscriptionId());
         
 		//  FeatureOfInterest
 		if(query.getFeatureOfInterest() != null)
-			domWriter.setElementValue(rootElt, "sas:FeatureOfInterestName", query.getFeatureOfInterest());
+			dom.setElementValue(rootElt, "sas:FeatureOfInterestName", query.getFeatureOfInterest());
 		// display request
        // try {domWriter.writeDOM(rootElt, System.out, null);}
        // catch (Exception e) {e.printStackTrace();}        

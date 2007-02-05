@@ -30,9 +30,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.vast.io.xml.DOMReader;
-import org.vast.io.xml.DOMReaderException;
+import org.vast.xml.DOMHelper;
+import org.vast.xml.DOMHelperException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -52,10 +51,10 @@ import org.w3c.dom.NodeList;
 
 public class WRSResponseReader {
 	
-	public List<String> parseSOSEndpoint(InputStream inputStream) throws IOException, DOMReaderException {
+	public List<String> parseSOSEndpoint(InputStream inputStream) throws IOException, DOMHelperException {
 		List<String> sosUri = new ArrayList<String>();
 		
-		DOMReader reader = new DOMReader(inputStream, false);
+        DOMHelper reader = new DOMHelper(inputStream, false);
 		NodeList svcList = reader.getElements("SearchResults/Service");
 		for(int i=0; i<svcList.getLength(); i++) {
 			Element svcElt = (Element)svcList.item(i);
@@ -69,10 +68,10 @@ public class WRSResponseReader {
 		return sosUri;
 	}
 	
-	public HashMap<String,String> parseExtrinsicObjects(InputStream inputStream) throws IOException, DOMReaderException {
+	public HashMap<String,String> parseExtrinsicObjects(InputStream inputStream) throws IOException, DOMHelperException {
 		HashMap<String,String> eoMap = new HashMap<String,String>();
 		
-		DOMReader reader = new DOMReader(inputStream, false);
+        DOMHelper reader = new DOMHelper(inputStream, false);
 		NodeList objList = reader.getElements("SearchResults/ExtrinsicObject");
 		for(int i=0; i<objList.getLength(); i++) {
 			Element objElt = (Element)objList.item(i);
@@ -91,19 +90,6 @@ public class WRSResponseReader {
 		}
 		
 		return eoMap;
-	}
-	
-	private boolean skipHyperion(DOMReader reader, Element objElt){
-		Element nameElt = reader.getElement(objElt, "Name");
-		if(nameElt!=null){
-			Element lsElt = reader.getElement(nameElt, "LocalizedString");
-			if(lsElt != null) {
-				String nameAtt = lsElt.getAttribute("value");
-				if(nameAtt.contains("EO1"))
-					return true;
-			}
-		}
-		return false;
 	}
 }
 

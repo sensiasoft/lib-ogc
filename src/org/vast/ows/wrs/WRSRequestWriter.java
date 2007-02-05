@@ -26,16 +26,15 @@
 package org.vast.ows.wrs;
 
 import java.util.List;
-
-import org.vast.io.xml.DOMWriter;
+import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSQuery;
-import org.vast.ows.OWSRequestWriter;
+import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.wrs.WRSQuery.QueryType;
 import org.w3c.dom.Element;
 
-public class WRSRequestWriter extends OWSRequestWriter
+
+public class WRSRequestWriter extends AbstractRequestWriter<WRSQuery>
 {
 	//  TODO  hardwired for ionic catalog (move to resource file eventually)
 	
@@ -43,8 +42,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 	}
 	
 	//  TODO  Modify to filter on keywd, layerName 
-	public Element buildRequestXML(OWSQuery owsQuery, DOMWriter domWriter) throws OWSException {
-		WRSQuery query = (WRSQuery)owsQuery;
+	public Element buildXMLQuery(DOMHelper domWriter, WRSQuery query) throws OWSException {
 		Element rootElt = buildQueryRootElement(domWriter);
 		List<QueryType> queryTypes = query.getQueryTypeList();
 		
@@ -68,10 +66,10 @@ public class WRSRequestWriter extends OWSRequestWriter
 		return rootElt;
 	}
 	
-	protected Element buildQueryRootElement(DOMWriter domWriter) throws OWSException {
-		domWriter.addNS("http://www.opengis.net/cat/csw", "csw");
-		domWriter.addNS("http://www.opengis.net/ogc", "ogc");
-		domWriter.addNS("http://www.opengis.net/gml", "gml");
+	protected Element buildQueryRootElement(DOMHelper domWriter) throws OWSException {
+		domWriter.addUserPrefix("csw", "http://www.opengis.net/cat/csw");
+		domWriter.addUserPrefix("ogc", "http://www.opengis.net/ogc");
+		domWriter.addUserPrefix("gml", "http://www.opengis.net/gml");
 		
 		// root element
 		Element rootElt = domWriter.createElement("csw:GetRecords");
@@ -89,7 +87,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 	 * @return A CSW XML Query for getting all SOS instances from a Catalog
 	 * @throws OWSException
 	 */
-	protected Element buildQueryAllSosElement(DOMWriter domWriter, Element rootElt) throws OWSException {
+	protected Element buildQueryAllSosElement(DOMHelper domWriter, Element rootElt) throws OWSException {
 		Element queryElt = domWriter.addElement(rootElt, "csw:Query");
 		queryElt.setAttribute("typeNames", "Service Concept Classification");
 		domWriter.setElementValue(queryElt,"csw:ElementName","/Service");
@@ -111,7 +109,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 	 * @return a CSW XML Query for finding all ExtrinsicObjects within the requested BBOX of the query
 	 * @throws OWSException
 	 */
-	protected Element buildQueryBboxElement(DOMWriter domWriter, Element rootElt, Bbox bbox) 
+	protected Element buildQueryBboxElement(DOMHelper domWriter, Element rootElt, Bbox bbox) 
 			throws OWSException {
 		Element queryElt = domWriter.addElement(rootElt, "csw:Query");
 		queryElt.setAttribute("typeNames", "ExtrinsicObject");
@@ -138,7 +136,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 	 * @param targetId
 	 * @return  a CSW XML Query for finding the Service assocaited extrinsicObject targetId
 	 */
-	protected Element buildServiceSearchElement(DOMWriter domWriter, Element rootElt, 
+	protected Element buildServiceSearchElement(DOMHelper domWriter, Element rootElt, 
 													 String targetId){
 		Element targetElt = domWriter.addElement(rootElt, "csw:Query");
 		targetElt.setAttribute("typeNames", "Service Association");
@@ -153,7 +151,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 		return targetElt;
 	}
 
-	protected Element buildQueryKeywordElement(DOMWriter domWriter, Element rootElt, String keyword) 
+	protected Element buildQueryKeywordElement(DOMHelper domWriter, Element rootElt, String keyword) 
 		throws OWSException {
 		String kws = "%" + keyword + "%";
 		Element queryElt = domWriter.addElement(rootElt, "csw:Query");
@@ -181,7 +179,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 		return queryElt;
 	}
 	
-	protected Element addPropertyIsEqualToProperty(DOMWriter domWriter, Element parentElt, 
+	protected Element addPropertyIsEqualToProperty(DOMHelper domWriter, Element parentElt, 
 			String propName, String targetProp){
 		Element propElt = domWriter.addElement(parentElt, "+ogc:PropertyIsEqualTo");
 		domWriter.setElementValue(propElt,"ogc:PropertyName", propName);
@@ -190,7 +188,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 		return propElt;
 	}
 
-	protected Element addPropertyIsEqualToLiteral(DOMWriter domWriter, Element parentElt, 
+	protected Element addPropertyIsEqualToLiteral(DOMHelper domWriter, Element parentElt, 
 			String propName, String literal){
 		Element propElt = domWriter.addElement(parentElt, "+ogc:PropertyIsEqualTo");
 		domWriter.setElementValue(propElt,"ogc:PropertyName", propName);
@@ -199,7 +197,7 @@ public class WRSRequestWriter extends OWSRequestWriter
 		return propElt;
 	}
 
-	protected Element addPropertyIsLikeLiteral(DOMWriter domWriter, Element parentElt, 
+	protected Element addPropertyIsLikeLiteral(DOMHelper domWriter, Element parentElt, 
 			String propName, String literal){
 		Element propElt = domWriter.addElement(parentElt, "+ogc:PropertyIsLike");
 		domWriter.setElementValue(propElt,"ogc:PropertyName", propName);
@@ -210,13 +208,13 @@ public class WRSRequestWriter extends OWSRequestWriter
 
 	public static void main(String [] args) throws OWSException{
 		WRSRequestWriter req = new WRSRequestWriter();
-		OWSQuery query = new WRSQuery();
-		req.buildPostRequest(query);
+        WRSQuery query = new WRSQuery();
+		req.buildXMLQuery(query);
 	}
 
 	@Override
 	//  WRS does not support KVP request
-	public String buildGetRequest(OWSQuery query) throws OWSException {
+	public String buildURLQuery(WRSQuery query) throws OWSException {
 		// TODO Auto-generated method stub
 		return null;
 	}

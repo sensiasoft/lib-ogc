@@ -28,21 +28,16 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
-
-import org.vast.io.xml.DOMReader;
-import org.vast.ows.OWSException;
+import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.OWSQuery;
 import org.vast.ows.OWSServiceCapabilities;
-import org.vast.ows.sos.SOSCapabilitiesReader;
-import org.vast.ows.wfs.WFSCapabilitiesReader;
-import org.vast.ows.wms.WMSCapabilitiesReader;
+import org.vast.ows.OWSUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 
-
-public class ExtrinsicObjectSearch extends DOMReader
+public class ExtrinsicObjectSearch extends DOMHelper
 {
 	protected static String Service;
 	protected static String Keyword;
@@ -51,11 +46,12 @@ public class ExtrinsicObjectSearch extends DOMReader
 	protected static String SRSNumber;
 	protected static String Format;
 	protected static String ServerURL;
-	DOMReader dom;
+    DOMHelper dom;
 	ArrayList<String> serviceList;
 	String sosVersion = "0.0.31";
 	String wmsVersion = "1.1.1";
 	String wfsVersion = "1.0.0";
+    OWSUtils owsUtils = new OWSUtils();
 	
 	public ExtrinsicObjectSearch()
 	{
@@ -192,7 +188,7 @@ public class ExtrinsicObjectSearch extends DOMReader
 			out.close();
 
 			InputStream in = connection.getInputStream();
-			DOMReader reader = new DOMReader(in,false);
+            DOMHelper reader = new DOMHelper(in,false);
 			String server = null;
 			
 			NodeList list = reader.getElements("SearchResults/ExtrinsicObject");
@@ -259,19 +255,19 @@ public class ExtrinsicObjectSearch extends DOMReader
 			if(Service.equalsIgnoreCase("ObservationOffering"))
 			{
 				Version = sosVersion;
-				owsCap = new SOSCapabilitiesReader().readCapabilities(server,Version);
+                owsUtils.getCapabilities(server, "SOS", Version);
 			}
 			//Creates ServiceCapabilities for WMS
 			if(Service.equalsIgnoreCase("WMS_Layer"))
 			{
 				Version = wmsVersion;
-				owsCap = new WMSCapabilitiesReader().readCapabilities(server,Version);
+                owsUtils.getCapabilities(server, "WCS", Version);
 			}
 			//Creates ServiceCapabilities for WFS
 			if(Service.equalsIgnoreCase("FeatureType"))
 			{
 				Version = wfsVersion;
-				owsCap = new WFSCapabilitiesReader().readCapabilities(server,Version);
+                owsUtils.getCapabilities(server, "WFS", Version);
 			}
 			
 			List<OWSLayerCapabilities> capList = new ArrayList<OWSLayerCapabilities>
@@ -315,7 +311,7 @@ public class ExtrinsicObjectSearch extends DOMReader
 			}
 			//Stores wanted layers in owsCap
 			owsCap.setLayers(capList);
-		} catch (OWSException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
@@ -324,7 +320,7 @@ public class ExtrinsicObjectSearch extends DOMReader
 		return capList;
 	}
 	
-	protected ArrayList createIDList(DOMReader reader)
+	protected ArrayList createIDList(DOMHelper reader)
 	{	
 		NodeList list = reader.getElements("SearchResults/ExtrinsicObject");
 		ArrayList<String>idList = new ArrayList<String>();
@@ -370,20 +366,17 @@ public class ExtrinsicObjectSearch extends DOMReader
 			//Check SOS server
 			if(Service.equalsIgnoreCase("ObservationOffering"))
 			{
-				SOSCapabilitiesReader testReader = new SOSCapabilitiesReader();
-				testReader.readCapabilities(server,sosVersion);
+                owsUtils.getCapabilities(server, "SOS", sosVersion);
 			}
 			//Check WMS server
 			else if(Service.equalsIgnoreCase("WMS_Layer"))
 			{
-				WMSCapabilitiesReader testReader = new WMSCapabilitiesReader();
-				testReader.readCapabilities(server,wmsVersion);
+                owsUtils.getCapabilities(server, "WMS", wmsVersion);
 			}
 		    //Check WFS server
 			else if(Service.equalsIgnoreCase("FeatureType"))
 			{
-				WFSCapabilitiesReader testReader = new WFSCapabilitiesReader();
-				testReader.readCapabilities(server,wfsVersion);
+                owsUtils.getCapabilities(server, "WFS", wfsVersion);
 			}
 		}
 		catch (Exception e)

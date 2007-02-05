@@ -30,8 +30,12 @@ import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.InputStreamProvider;
-import org.vast.cdm.reader.*;
-import org.vast.io.xml.*;
+import org.vast.sweCommon.AsciiDataParser;
+import org.vast.sweCommon.BinaryDataParser;
+import org.vast.sweCommon.CDMFilter;
+import org.vast.sweCommon.SWECommonUtils;
+import org.vast.xml.DOMHelper;
+import org.vast.xml.DOMHelperException;
 import org.w3c.dom.*;
 
 
@@ -70,25 +74,24 @@ public class TMLReader implements InputStreamProvider
 			this.tmlParser = new TMLStreamParser();
 			
 			// parse xml header using DataComponent and DataEncoding readers
-			DOMReader domReader = new DOMReader(this.streamFilter, false);
+			DOMHelper dom = new DOMHelper(this.streamFilter, false);
 			
 			// create and register a parser for each product
-			NodeList products = domReader.getElements("product/DataDefinition");
+            SWECommonUtils utils = new SWECommonUtils();
+			NodeList products = dom.getElements("product/DataDefinition");
 			for (int i=0; i<products.getLength(); i++)
 			{
 				Element defElt = (Element)products.item(i);
-				String clusterID = domReader.getAttributeValue(defElt, "id");
+				String clusterID = dom.getAttributeValue(defElt, "id");
 				
 				// get structure and encoding elements
-				Element dataElt = domReader.getElement(defElt, "dataComponents");
-				Element encElt = domReader.getElement(defElt, "encoding");
+				Element dataElt = dom.getElement(defElt, "dataComponents");
+				Element encElt = dom.getElement(defElt, "encoding");
 				
-				// parse structure and encoding
-				DataComponentsReader infReader = new DataComponentsReader(domReader);
-				EncodingReader encReader = new EncodingReader(domReader);			
-				DataComponent dataInfo = infReader.readComponentProperty(dataElt);
-				DataEncoding dataEncoding = encReader.readEncodingProperty(encElt);
-				
+				// parse structure and encoding                
+                DataComponent dataInfo = utils.readComponentProperty(dom, dataElt);
+                DataEncoding dataEncoding = utils.readEncodingProperty(dom, encElt);
+                				
 				// create parser
 				DataStreamParser parser = createDataParser(dataInfo, dataEncoding);
 				
@@ -97,7 +100,7 @@ public class TMLReader implements InputStreamProvider
 				this.parsers.add(parser);
 			}
 		}
-		catch (DOMReaderException e)
+		catch (DOMHelperException e)
 		{
 			throw new CDMException("Error while parsing TML XML", e);
 		}

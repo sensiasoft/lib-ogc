@@ -18,147 +18,30 @@
  
  Contributor(s): 
     Alexandre Robin <robin@nsstc.uah.edu>
-    Tony Cook <tcook@nsstc.uah.edu>
  
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.wcs;
 
-import java.util.StringTokenizer;
-
-import org.vast.io.xml.DOMReader;
-import org.w3c.dom.*;
-import org.vast.ows.*;
-import org.vast.ows.sos.SOSException;
+import org.vast.ows.AbstractRequestReader;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WMS Request Reader
+ * <p><b>Title:</b>
+ * WCS Request Reader
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provides methods to parse a GET or POST WCS request and
- * create an WCSQuery object
+ * Abstract WCS Request Reader containing common code
+ * for all versions
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin, Tony Cook
- * @date Nov 17, 2005
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin
+ * @date Jan 16, 2007
  * @version 1.0
  */
-public class WCSRequestReader extends OWSRequestReader
+public abstract class WCSRequestReader extends AbstractRequestReader<WCSQuery>
 {
-	public WCSRequestReader()
-	{	
-	}
 
-	
-	@Override
-	public WCSQuery readGetRequest(String queryString) throws OWSException
-	{
-		WCSQuery query = new WCSQuery();
-		StringTokenizer st = new StringTokenizer(queryString, "&");
-        
-        while (st.hasMoreTokens())
-        {
-            String argName = null;
-            String argValue = null;
-            String nextArg = st.nextToken();
-
-            // separate argument name and value
-            try
-            {
-                int sepIndex = nextArg.indexOf('=');
-                argName = nextArg.substring(0, sepIndex);
-                argValue = nextArg.substring(sepIndex + 1);
-            }
-            catch (IndexOutOfBoundsException e)
-            {
-                throw new WCSException(invalidGet);
-            }
-            
-            // service ID
-            if (argName.equalsIgnoreCase("service"))
-            {
-                query.setService(argValue);
-            }
-            
-            // service version
-            else if (argName.equalsIgnoreCase("version"))
-            {
-                query.setVersion(argValue);
-            }
-
-            // request argument
-            else if (argName.equalsIgnoreCase("request"))
-            {
-                query.setRequest(argValue);
-            }
-
-            // format argument
-            else if (argName.equalsIgnoreCase("format"))
-            {
-                query.setFormat(argValue);
-            }
-            
-            // time
-            else if (argName.equalsIgnoreCase("time"))
-            {
-                this.parseTimeArg(query.getTime(), argValue);
-            }
-            
-            // bbox
-            else if (argName.equalsIgnoreCase("bbox"))
-            {
-                this.parseBboxArg(query.getBbox(), argValue);
-            }
-
-            else
-                throw new SOSException(invalidGet + ": Unknown Argument " + argName);
-        }
-
-        return query;
-	}
-	
-	
-	@Override
-	public WCSQuery readRequestXML(DOMReader domReader, Element requestElt) throws WCSException
-	{
-		String opName = requestElt.getLocalName();
-		WCSQuery query;
-		
-		if (opName.equalsIgnoreCase("GetCapabilities"))
-		{
-			query = new WCSQuery();
-			readGetCapabilitiesXML(domReader, requestElt, query);
-		}
-		
-		else if (opName.equalsIgnoreCase("GetCoverage"))
-			query = readGetCoverageXML(domReader, requestElt);
-		
-		else throw new WCSException("Operation " + opName + "not supported");
-		
-		// do common stuffs like version, request name and service type
-		readCommonXML(domReader, requestElt, query);		
-		
-		return query;
-	}
-	
-	
-	/**
-	 * Reads a GetCoverage XML request and fill up the WCSQuery accordingly
-	 * @param domReader
-	 * @param requestElt
-	 * @return
-	 * @throws WCSException
-	 */
-	protected WCSQuery readGetCoverageXML(DOMReader domReader, Element requestElt) throws WCSException
-	{
-		WCSQuery query = new WCSQuery();
-		
-        // TODO read GetCoverage XML
-        
-		return query;
-	}
 }

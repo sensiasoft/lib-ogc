@@ -23,9 +23,7 @@
 
 package org.vast.ows.wrs;
 
-import java.util.EnumSet;
 import java.util.List;
-
 import org.vast.ows.OWSQuery;
 import org.vast.ows.util.Bbox;
 
@@ -45,7 +43,9 @@ import org.vast.ows.util.Bbox;
  */
 public class WRSQuery extends OWSQuery
 {
-	protected String serverUrl = "http://dev.ionicsoft.com:8082/ows4catalog/wrs/WRS";
+    protected final static String unsupportedVersion = "Unsupported WRS version";
+    
+    protected String serverUrl = "http://dev.ionicsoft.com:8082/ows4catalog/wrs/WRS";
 	protected String keyword;
 	protected Bbox bbox;
 	protected String serviceSearchId;

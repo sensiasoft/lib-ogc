@@ -25,8 +25,7 @@ package org.vast.ows.sld;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import org.vast.io.xml.DOMReader;
+import org.vast.xml.DOMHelper;
 import org.vast.util.MessageSystem;
 import org.vast.util.URIResolver;
 import org.w3c.dom.Element;
@@ -59,7 +58,7 @@ public class SLDReader
 	}
 	
 	
-	public Symbolizer readSymbolizer(DOMReader dom, Element symElt)
+	public Symbolizer readSymbolizer(DOMHelper dom, Element symElt)
 	{
 		Symbolizer sym = null;
 		
@@ -88,7 +87,7 @@ public class SLDReader
 	}
 	
 	
-	public PointSymbolizer readPoint(DOMReader dom, Element symElt)
+	public PointSymbolizer readPoint(DOMHelper dom, Element symElt)
 	{
 		PointSymbolizer pointSym = new PointSymbolizer();		
 		readGeometryElt(pointSym, dom, symElt);
@@ -102,7 +101,7 @@ public class SLDReader
 	}
 	
 	
-	public LineSymbolizer readLine(DOMReader dom, Element symElt)
+	public LineSymbolizer readLine(DOMHelper dom, Element symElt)
 	{
 		LineSymbolizer lineSym = new LineSymbolizer();
 		readGeometryElt(lineSym, dom, symElt);
@@ -116,7 +115,7 @@ public class SLDReader
 	}
 	
 	
-	public PolygonSymbolizer readPolygon(DOMReader dom, Element symElt)
+	public PolygonSymbolizer readPolygon(DOMHelper dom, Element symElt)
 	{
 		PolygonSymbolizer polygonSym = new PolygonSymbolizer();
 		readGeometryElt(polygonSym, dom, symElt);
@@ -135,7 +134,7 @@ public class SLDReader
 	}
 	
 	
-	public TextSymbolizer readText(DOMReader dom, Element symElt)
+	public TextSymbolizer readText(DOMHelper dom, Element symElt)
 	{
 		TextSymbolizer textSym = new TextSymbolizer();
         readGeometryElt(textSym, dom, symElt);
@@ -162,7 +161,7 @@ public class SLDReader
 	}
     
     
-    public GridFillSymbolizer readGridFill(DOMReader dom, Element symElt)
+    public GridFillSymbolizer readGridFill(DOMHelper dom, Element symElt)
     {
         GridFillSymbolizer gridSym = new GridFillSymbolizer();
         readGeometryElt(gridSym, dom, symElt);
@@ -181,7 +180,7 @@ public class SLDReader
     }
     
     
-    public GridMeshSymbolizer readGridMesh(DOMReader dom, Element symElt)
+    public GridMeshSymbolizer readGridMesh(DOMHelper dom, Element symElt)
     {
         GridMeshSymbolizer gridSym = new GridMeshSymbolizer();
         readGeometryElt(gridSym, dom, symElt);
@@ -200,7 +199,7 @@ public class SLDReader
     }
     
     
-    public GridBorderSymbolizer readGridBorder(DOMReader dom, Element symElt)
+    public GridBorderSymbolizer readGridBorder(DOMHelper dom, Element symElt)
     {
         GridBorderSymbolizer gridSym = new GridBorderSymbolizer();
         readGeometryElt(gridSym, dom, symElt);
@@ -219,7 +218,7 @@ public class SLDReader
     }    
 	
 	
-	public RasterSymbolizer readRaster(DOMReader dom, Element symElt)
+	public RasterSymbolizer readRaster(DOMHelper dom, Element symElt)
 	{
         RasterSymbolizer rasterSym = new RasterSymbolizer();
         readRasterParameters(rasterSym, dom, symElt);
@@ -227,7 +226,7 @@ public class SLDReader
     }
     
     
-    public void readRasterParameters(RasterSymbolizer rasterSym, DOMReader dom, Element symElt)
+    public void readRasterParameters(RasterSymbolizer rasterSym, DOMHelper dom, Element symElt)
     {
         // read normalizedColors attribute
         String normColors = dom.getAttributeValue(symElt, "ChannelSelection/@normalizedColors");
@@ -266,7 +265,7 @@ public class SLDReader
 	}
     
     
-    public RasterChannel readRasterChannel(DOMReader dom, Element channelElt)
+    public RasterChannel readRasterChannel(DOMHelper dom, Element channelElt)
     {
         RasterChannel channel = null;
         
@@ -303,7 +302,7 @@ public class SLDReader
     }
     
     
-    public TextureSymbolizer readTexture(DOMReader dom, Element symElt)
+    public TextureSymbolizer readTexture(DOMHelper dom, Element symElt)
     {
         TextureSymbolizer texSym = new TextureSymbolizer();
         
@@ -322,7 +321,7 @@ public class SLDReader
     }
 	
 	
-	protected void readGeometryElt(Symbolizer symbolizer, DOMReader dom, Element symElt)
+	protected void readGeometryElt(Symbolizer symbolizer, DOMHelper dom, Element symElt)
 	{
 		// read geometry
 		Element geomElt = dom.getElement(symElt, "Geometry");
@@ -342,7 +341,7 @@ public class SLDReader
 	 * @param geomElt
 	 * @return
 	 */
-	public Geometry readGeometry(DOMReader dom, Element geomElt)
+	public Geometry readGeometry(DOMHelper dom, Element geomElt)
 	{
 		Geometry geometry = new Geometry();
 		
@@ -403,7 +402,7 @@ public class SLDReader
      * @param symElt
      * @return
      */
-    public Dimensions readDimensions(DOMReader dom, Element dimElt)
+    public Dimensions readDimensions(DOMHelper dom, Element dimElt)
     {
         Dimensions dim = new Dimensions();
         
@@ -427,7 +426,7 @@ public class SLDReader
 	 * @param graphicElt
 	 * @return
 	 */
-	public Graphic readGraphic(DOMReader dom, Element graphicElt)
+	public Graphic readGraphic(DOMHelper dom, Element graphicElt)
 	{
 		Graphic graphic = new Graphic();
 		if (graphicElt == null)
@@ -477,7 +476,7 @@ public class SLDReader
             {
                 try
                 {
-                    URIResolver resolver = new URIResolver(new URI("./"), dom.getXmlFragment().getParentDocument().getUri());
+                    URIResolver resolver = new URIResolver(new URI("./"), dom.getXmlDocument().getUri());
                     img.setBaseFolder(resolver.getResolvedUri().toString());
                 }
                 catch (URISyntaxException e){}
@@ -511,7 +510,7 @@ public class SLDReader
 	 * @param fillElt
 	 * @return
 	 */
-	public Fill readFill(DOMReader dom, Element fillElt)
+	public Fill readFill(DOMHelper dom, Element fillElt)
 	{
 		Fill fill = new Fill();
         fill.setColor(new Color());
@@ -568,7 +567,7 @@ public class SLDReader
 	 * @param strokeElt
 	 * @return
 	 */
-	public Stroke readStroke(DOMReader dom, Element strokeElt)
+	public Stroke readStroke(DOMHelper dom, Element strokeElt)
 	{
 		Stroke stroke = new Stroke();
         stroke.setColor(new Color());
@@ -656,7 +655,7 @@ public class SLDReader
 	 * @param fontElt
 	 * @return
 	 */
-	public Font readFont(DOMReader dom, Element fontElt)
+	public Font readFont(DOMHelper dom, Element fontElt)
 	{
 		Font font = new Font();
 		if (fontElt == null)

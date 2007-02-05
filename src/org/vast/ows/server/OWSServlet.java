@@ -26,7 +26,8 @@ package org.vast.ows.server;
 import javax.servlet.http.*;
 import java.io.*;
 import org.apache.log4j.Logger;
-import org.vast.io.xml.*;
+import org.vast.xml.DOMHelper;
+import org.vast.xml.DOMHelperException;
 import org.vast.ows.OWSCapabilitiesSerializer;
 import org.w3c.dom.*;
 
@@ -69,10 +70,10 @@ public abstract class OWSServlet extends HttpServlet
 	{
 		try
 		{
-			DOMReader capsReader = new DOMReader(capFile, false);
-			this.capsDoc = capsReader.getXmlFragment().getParentDocument().getDocument();
+            DOMHelper capsReader = new DOMHelper(capFile, false);
+			this.capsDoc = capsReader.getDocument();
 		}
-		catch (DOMReaderException e)
+		catch (DOMHelperException e)
 		{
 			e.printStackTrace();
 		}

@@ -28,12 +28,12 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import org.vast.io.xml.DOMReader;
+import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 
-public class ServiceSearch extends DOMReader
+public class ServiceSearch extends DOMHelper
 {
 	public String server;
 	
@@ -59,7 +59,7 @@ public class ServiceSearch extends DOMReader
 		
 			InputStream in = connection.getInputStream();
 			
-			DOMReader reader = new DOMReader(in,false);
+            DOMHelper reader = new DOMHelper(in,false);
 			
 			NodeList list = reader.getElements("SearchResults/Service/ServiceBinding");
 			

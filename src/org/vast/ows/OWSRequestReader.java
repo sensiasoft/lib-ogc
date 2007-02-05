@@ -17,163 +17,67 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+ Alexandre Robin <robin@nsstc.uah.edu>
  
-******************************* END LICENSE BLOCK ***************************/
+ ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows;
 
-import java.io.*;
-import java.text.ParseException;
-import org.vast.io.xml.DOMReader;
-import org.vast.io.xml.DOMReaderException;
-import org.vast.ows.util.Bbox;
-import org.vast.ows.util.TimeInfo;
-import org.vast.util.DateTimeFormat;
+import java.io.InputStream;
+
+import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Abstract class for all OWS Request Reader
+ * <p><b>Title:</b>
+ * OWS Request Reader
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provides methods to parse a GET or POST SOS request and
- * create an OWSQuery object
+ * Base interface for all OWS request readers
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 4, 2005
+ * @date Jan 16, 2007
  * @version 1.0
  */
-public abstract class OWSRequestReader
+public interface OWSRequestReader<QueryType extends OWSQuery>
 {
-    protected final static String invalidGet = "Invalid SOS GET Request";
-    protected final static String invalidPost = "Invalid SOS POST Request";
-    
-    
-	public OWSRequestReader()
-	{	
-	}
-	
-		
-	public abstract OWSQuery readGetRequest(String queryString) throws OWSException;	
-	public abstract OWSQuery readRequestXML(DOMReader domReader, Element requestElt) throws OWSException;
-	
-	
-	public OWSQuery readPostRequest(InputStream input) throws OWSException
-	{
-		try
-		{
-			DOMReader domReader = new DOMReader(input, false);
-			return readRequestXML(domReader, domReader.getBaseElement());
-		}
-		catch (DOMReaderException e)
-		{
-			throw new OWSException("", e);
-		}
-	}
+
+    /**
+     * Reads URL request arguments from the given query string 
+     * @param queryString
+     * @return
+     * @throws OWSException
+     */
+    public QueryType readURLQuery(String queryString) throws OWSException;
     
     
     /**
-     * Utility method to parse time argument from GET request.
-     * Format is YYYY-MM-DDTHH:MM:SS.sss/YYYY-MM-DDTHH:MM:SS.sss/PYMDTHMS
-     * @param timeInfo
-     * @param argValue
+     * Reads XML request parameters from the given input stream
+     * @param input
+     * @return
+     * @throws OWSException
      */
-    protected void parseTimeArg(TimeInfo timeInfo, String argValue) throws OWSException
-    {
-        String[] timeRange = argValue.split("/");
-        double now = System.currentTimeMillis() / 1000;
-        
-        try
-        {
-            // parse start time
-            if (timeRange[0].equalsIgnoreCase("now"))
-            {
-                timeInfo.setBeginNow(true);
-                timeInfo.setStartTime(now);
-            }
-            else
-                timeInfo.setStartTime(DateTimeFormat.parseIso(timeRange[0]));
-            
-            // parse stop time if present
-            if (timeRange.length > 1)
-            {
-                if (timeRange[1].equalsIgnoreCase("now"))
-                {
-                    timeInfo.setEndNow(true);
-                    timeInfo.setStopTime(now);
-                }
-                else
-                    timeInfo.setStopTime(DateTimeFormat.parseIso(timeRange[1]));
-            }
-            
-            // parse step time if present
-            if (timeRange.length > 2)
-            {
-                timeInfo.setTimeStep(DateTimeFormat.parseIsoPeriod(timeRange[2]));
-            }
-        }
-        catch (ParseException e)
-        {
-            throw new OWSException(invalidGet + ": Invalid Time: " + argValue);
-        }
-        
-        // make sure deltas are null for time instant
-        if (timeRange.length == 1)
-            timeInfo.setDeltaTimes(0, 0);
-    }
+    public QueryType readXMLQuery(InputStream is) throws OWSException;
+
+
+    /**
+     * Reads XML request parameters from the given element and using the given DOMHelper.
+     * @param domHelper
+     * @param requestElt
+     * @return
+     * @throws OWSException
+     */
+    public QueryType readXMLQuery(DOMHelper domHelper, Element requestElt) throws OWSException;
     
     
     /**
-     * Utility method to parse bbox argument from GET request
-     * Format is minY,minX,maxY,maxX
-     * @param bbox
-     * @param argValue
+     * Toggles request printing by MessageSystem
+     * @param print
      */
-    protected void parseBboxArg(Bbox bbox, String argValue) throws OWSException
-    {
-        try
-        {
-            String[] coords = argValue.split("[ ,]");
-            
-            bbox.setMinX(Double.parseDouble(coords[0]));
-            bbox.setMinY(Double.parseDouble(coords[1]));
-            bbox.setMaxX(Double.parseDouble(coords[2]));
-            bbox.setMaxY(Double.parseDouble(coords[3]));
-        }
-        catch (Exception e)
-        {
-            throw new OWSException(invalidGet + ": Invalid Bbox: " + argValue, e);
-        }
-    }
-	
-	
-	/**
-	 * Reads common XML request parameters and fill up the OWSQuery accordingly
-	 * @param dom
-	 * @param requestElt
-	 * @param query
-	 */
-	protected void readCommonXML(DOMReader dom, Element requestElt, OWSQuery query)
-	{
-		query.setRequest(requestElt.getLocalName());
-		query.setService(dom.getAttributeValue(requestElt, "service"));
-		query.setVersion(dom.getAttributeValue(requestElt, "version"));
-	}
-	
-	
-	/**
-	 * Reads a GetCapabilities XML request and fill up the OWSQuery accordingly
-	 * @param dom
-	 * @param requestElt
-	 * @param query
-	 */
-	protected void readGetCapabilitiesXML(DOMReader dom, Element requestElt, OWSQuery query)
-	{
-		query.setSection(dom.getElementValue(requestElt, "Section"));
-	}
+    public void setPrintRequest(boolean print);
+
 }

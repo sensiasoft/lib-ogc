@@ -23,8 +23,8 @@
 
 package org.vast.ows.sas;
 
-import org.vast.io.xml.DOMReader;
-import org.vast.ows.OWSCapabilitiesReader;
+import org.vast.xml.DOMHelper;
+import org.vast.ows.AbstractCapabilitiesReader;
 import org.vast.ows.OWSException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -43,7 +43,7 @@ import org.w3c.dom.NodeList;
  * @date Nov 21, 2006
  * @version 1.0
  */
-public class SASCapabilitiesReader extends OWSCapabilitiesReader
+public class SASCapabilitiesReader extends AbstractCapabilitiesReader
 {
    
     public SASCapabilitiesReader()
@@ -51,45 +51,19 @@ public class SASCapabilitiesReader extends OWSCapabilitiesReader
     }
     
     
-    public SASCapabilitiesReader(DOMReader dom)
-    {
-        this.dom = dom;
-    }
-    
-    
     @Override
     protected String buildQuery() throws OWSException
     {
         String url = null;
-        
-        // build query according to version group
-        if (versionGroup == GROUP1)
-        {
-        	url = this.server + "service=SAS&version=" + version + "&request=GetCapabilities";
-        }
-        else
-            throw new OWSException("SAS version " + version + " not supported");
-
-        System.out.println("SAS Capabilities request: " + url);        
+        url = this.server + "service=SAS&version=" + version + "&request=GetCapabilities";        
         return url;
     }
-
-
+    
+    
     @Override
-    protected void setVersionGroup(String version)
+    protected void readServers(DOMHelper dom, Element capsElt) throws OWSException
     {
-        if (version.equalsIgnoreCase("1.0.0"))
-        {
-            versionGroup = GROUP1;
-        }
-        else
-            System.err.println("SASCapabilities error: version number " + version + " not recognized");
-    }
-    
-    
-    protected void readServers()
-    {
-    	super.readServers();
+    	super.readServers(dom, capsElt);
     	
     	// put default POST server if none is specified in capabilities doc
 		if (serviceCaps.getGetServers().isEmpty() && serviceCaps.getPostServers().isEmpty())
@@ -100,13 +74,14 @@ public class SASCapabilitiesReader extends OWSCapabilitiesReader
 
     
     @Override
-    protected void readContents(Element contentElt) throws OWSException
+    protected void readContents(DOMHelper dom, Element capsElt) throws OWSException
     {
-        NodeList subList = dom.getElements(contentElt, "SubscriptionOfferingList/SubscriptionOffering");
+        NodeList subList = dom.getElements(capsElt, "Contents/SubscriptionOfferingList/SubscriptionOffering");
         
         for (int i=0; i<subList.getLength(); i++)
         {
             Element subElt = (Element)subList.item(i);
+            System.out.println(dom.getAttributeValue(subElt, "@id"));
            // String offeringName = dom.getElementValue(offeringElt, "name");
             
            // if (offeringName == null)

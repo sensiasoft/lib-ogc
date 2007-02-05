@@ -23,7 +23,7 @@
 
 package org.vast.ows.gml;
 
-import org.vast.io.xml.DOMReader;
+import org.vast.xml.DOMHelper;
 import org.vast.ows.util.Bbox;
 import org.w3c.dom.Element;
 
@@ -52,7 +52,7 @@ public class GMLEnvelopeReader
     }
     
         
-    public Bbox readEnvelope(DOMReader dom, Element envelopeElt) throws GMLException
+    public Bbox readEnvelope(DOMHelper dom, Element envelopeElt) throws GMLException
     {
         Bbox bbox = new Bbox();
         String coordsText = "";

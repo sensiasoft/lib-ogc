@@ -17,216 +17,85 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+ Alexandre Robin <robin@nsstc.uah.edu>
  
-******************************* END LICENSE BLOCK ***************************/
+ ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows;
 
-import java.io.*;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import org.w3c.dom.*;
 
-import org.vast.io.xml.DOMWriter;
-import org.vast.ows.util.Bbox;
-import org.vast.ows.util.TimeInfo;
-import org.vast.util.DateTimeFormat;
+import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * OWS Request Builder
+ * <p><b>Title:</b>
+ * OWS Request Writer
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base abstract class for all service specific POST/GET
- * request builders
+ * Base interface for all OWS request writers
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Oct 30, 2005
+ * @date Jan 16, 2007
  * @version 1.0
  */
-public abstract class OWSRequestWriter
+public interface OWSRequestWriter<QueryType extends OWSQuery>
 {
-	public boolean showPostOutput = false;
-    public boolean showGetOutput = true;
-    
-    
-	public OWSRequestWriter()
-	{	
-	}
 
-	
-	/**
-	 * Builds a String containing the GET request URL
-	 * @param query
-	 * @return
-	 */
-	public abstract String buildGetRequest(OWSQuery query) throws OWSException;
-	
-	
-	/**
-	 * Builds a DOM element containing the request XML
-	 * @param query
-	 * @return
-	 */
-	public abstract Element buildRequestXML(OWSQuery query, DOMWriter domWriter) throws OWSException;
-	
-	
-	/**
-	 * Builds a String containing the POST request
-	 * @param owsQuery
-	 * @return
-	 * @throws OWSException
-	 */
-	public String buildPostRequest(OWSQuery owsQuery) throws OWSException
-	{
-		try
-		{
-			DOMWriter domWriter = new DOMWriter();
-			domWriter.createDocument("Request");
-			Element requestElt = buildRequestXML(owsQuery, domWriter);
-            ByteArrayOutputStream charArray = new ByteArrayOutputStream();
-            domWriter.writeDOM(requestElt, charArray, null);                   
-			return charArray.toString();
-		}
-		catch (IOException e)
-		{
-			throw new OWSException("IO Error while building request", e);
-		}
-	}
-	
-    
     /**
-     * Utility method to add time argument to a GET request
-     * Format is YYYY-MM-DDTHH:MM:SS.sss/YYYY-MM-DDTHH:MM:SS.sss/PYMDTHMS
-     * @param buffer
-     * @param time
+     * Builds a String containing the GET request URL
+     * @param query
+     * @return
      */
-    protected void writeTimeArgument(StringBuffer buffer, TimeInfo time)
-    {
-        if (time.isTimeInstant())
-        {
-            if (time.isBaseAtNow())
-                buffer.append("now");
-            else
-                buffer.append(DateTimeFormat.formatIso(time.getBaseTime(), 0));
-        }
-        else
-        {
-            // add start time
-            if (time.isBeginNow())
-                buffer.append("now");
-            else
-                buffer.append(DateTimeFormat.formatIso(time.getStartTime(), 0));
-        
-            // add stop and step time
-            buffer.append('/');
-            
-            if (time.isEndNow())
-                buffer.append("now");
-            else
-                buffer.append(DateTimeFormat.formatIso(time.getStopTime(), 0));
-            
-            // add time step if specified
-            if (time.getTimeStep() > 0)
-            {
-                buffer.append('/');
-                buffer.append(DateTimeFormat.formatIsoPeriod(time.getTimeStep()));
-            }
-        }
-    }
+    public String buildURLQuery(QueryType query) throws OWSException;
+
+
+    /**
+     * Builds a DOM element containing the request XML
+     * Note that the element is not yet appended to any parent.
+     * @param query
+     * @return
+     */
+    public Element buildXMLQuery(DOMHelper dom, QueryType query) throws OWSException;
+
+
+    /**
+     * Builds a valid XML String containing the POST request
+     * @param owsQuery
+     * @return
+     * @throws OWSException
+     */
+    public String buildXMLQuery(QueryType owsQuery) throws OWSException;
     
     
     /**
-     * Utility method to add bbox argument to a GET request
-     * Format is minY,minX,maxY,maxX
-     * @param buffer
-     * @param bbox
+     * Writes an XML query to the specified output stream
+     * @param os
+     * @param owsQuery
+     * @throws OWSException
      */
-    protected void writeBboxArgument(StringBuffer buffer, Bbox bbox)
-    {
-        buffer.append(bbox.getMinX());
-        buffer.append("," + bbox.getMinY());
-        buffer.append("," + bbox.getMaxX());
-        buffer.append("," + bbox.getMaxY());
-    }
+    public void writeXMLQuery(OutputStream os, QueryType owsQuery) throws OWSException;
+
+
+    /**
+     * Sends the request using either GET or POST
+     * @param query OWSQuery object
+     * @param usePost true if using POST
+     * @return Server Response InputStream
+     * @throws OWSException
+     */
+    public HttpURLConnection sendRequest(QueryType query, boolean usePost) throws OWSException;
     
     
-	
-	/**
-	 * Sends the request using either GET or POST
-	 * @param query OWSQuery object
-	 * @param usePost true if using POST
-	 * @return Server Response InputStream
-	 * @throws OWSException
-	 */
-	public HttpURLConnection sendRequest(OWSQuery query, boolean usePost) throws OWSException
-	{
-		String requestString = null;
-		
-		try
-		{
-			boolean canDoPost = (query.getPostServer() != null);
-            boolean canDoGet = (query.getGetServer() != null);
-            
-            if (usePost && canDoPost)
-			{
-				String server = query.getPostServer();
-				URL url;
-				
-				// make sure server URL is valid
-				if (server.endsWith("?"))
-					url = new URL(server.substring(0, server.length()-1));
-				else
-					url = new URL(server);
-				
-				// initiatlize HTTP connection
-				HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-				connection.setDoInput(true);
-				connection.setDoOutput(true);
-				connection.setRequestMethod("POST");
-				//  Some servers don't like "text/plain" for POST type, changed to "text/xml"
-				connection.setRequestProperty( "Content-type", "text/xml" );
-				PrintStream out = new PrintStream(connection.getOutputStream());
-				
-				// send post data
-				requestString = buildPostRequest(query);
-				out.print(requestString);
-				out.flush();
-				connection.connect();
-				out.close();
-                
-                // print request if desired
-                if (showPostOutput)
-                {
-                    System.out.println(query.getService() + " Request:");
-                    System.out.println(requestString);
-                }
-				
-				// return server response stream
-				return connection;
-			}
-			else if (canDoGet)
-			{
-				requestString = buildGetRequest(query);
-                
-				// print request if desired
-                if (showGetOutput)
-                    System.out.println(query.getService() + " Request: " + requestString);
-                
-				URL url = new URL(requestString);
-				return (HttpURLConnection)url.openConnection();
-			}
-            else
-                throw new OWSException("No GET or POST endpoint URL specified in request");
-		}
-		catch (IOException e)
-		{
-			throw new OWSException("Error while sending request:\n" + requestString, e);
-		}
-	}
+    /**
+     * Toggles request printing by MessageSystem
+     * @param print
+     */
+    public void setPrintRequest(boolean print);
+
 }

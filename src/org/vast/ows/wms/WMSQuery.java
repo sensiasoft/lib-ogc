@@ -47,7 +47,9 @@ import org.vast.ows.util.TimeInfo;
  */
 public class WMSQuery extends OWSQuery
 {
-	protected TimeInfo time;
+    protected final static String unsupportedVersion = "Unsupported WMS version";
+    
+    protected TimeInfo time;
 	protected Bbox bbox;
 	protected String srs;
 	protected String format;	

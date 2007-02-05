@@ -46,7 +46,9 @@ import org.vast.ows.util.TimeInfo;
  */
 public class SOSQuery extends OWSQuery
 {
-	public enum ResponseMode
+    protected final static String unsupportedVersion = "Unsupported SOS version";
+    
+    public enum ResponseMode
     {
         INLINE, ATTACHED, OUT_OF_BAND, RESULT_TEMPLATE, RESULT_ONLY
     }
@@ -68,7 +70,7 @@ public class SOSQuery extends OWSQuery
 		bbox = new Bbox();
 		time = new TimeInfo();
 		observables = new ArrayList<String>(2);
-		procedures = new ArrayList<String>(2);		
+		procedures = new ArrayList<String>(2);
 	}
 	
 

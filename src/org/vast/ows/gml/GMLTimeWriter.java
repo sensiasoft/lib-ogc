@@ -23,7 +23,7 @@
 
 package org.vast.ows.gml;
 
-import org.vast.io.xml.DOMWriter;
+import org.vast.xml.DOMHelper;
 import org.vast.ows.util.TimeInfo;
 import org.vast.util.DateTimeFormat;
 import org.w3c.dom.Element;
@@ -52,7 +52,7 @@ public class GMLTimeWriter
     }
     
         
-    public Element writeTime(DOMWriter dom, TimeInfo timeInfo) throws GMLException
+    public Element writeTime(DOMHelper dom, TimeInfo timeInfo) throws GMLException
     {
         Element timeElt;
         int zone = timeInfo.getTimeZone();

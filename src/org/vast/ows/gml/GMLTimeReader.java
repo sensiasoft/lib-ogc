@@ -24,7 +24,7 @@
 package org.vast.ows.gml;
 
 import java.text.ParseException;
-import org.vast.io.xml.DOMReader;
+import org.vast.xml.DOMHelper;
 import org.vast.ows.util.TimeInfo;
 import org.vast.util.DateTimeFormat;
 import org.w3c.dom.Element;
@@ -63,7 +63,7 @@ public class GMLTimeReader
      * @return
      * @throws GMLException
      */
-    public TimeInfo readTimePrimitive(DOMReader dom, Element timeElt) throws GMLException
+    public TimeInfo readTimePrimitive(DOMHelper dom, Element timeElt) throws GMLException
     {
         String eltName = timeElt.getLocalName();
         
@@ -85,7 +85,7 @@ public class GMLTimeReader
      * @return
      * @throws GMLException
      */
-    public TimeInfo readTimeInstant(DOMReader dom, Element timeElt) throws GMLException
+    public TimeInfo readTimeInstant(DOMHelper dom, Element timeElt) throws GMLException
     {
         TimeInfo time = new TimeInfo();
         
@@ -120,7 +120,7 @@ public class GMLTimeReader
      * @return
      * @throws GMLException
      */
-    public TimeInfo readTimePeriod(DOMReader dom, Element timePeriodElt) throws GMLException
+    public TimeInfo readTimePeriod(DOMHelper dom, Element timePeriodElt) throws GMLException
     {
         TimeInfo timeInfo = new TimeInfo();
         
@@ -204,7 +204,7 @@ public class GMLTimeReader
      * @return
      * @throws GMLException
      */
-    public TimeInfo readTimeGrid(DOMReader dom, Element timePeriodElt) throws GMLException
+    public TimeInfo readTimeGrid(DOMHelper dom, Element timePeriodElt) throws GMLException
     {
         return null;
     }

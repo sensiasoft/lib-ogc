@@ -23,7 +23,7 @@
 
 package org.vast.ows.sld;
 
-import org.vast.io.xml.DOMReader;
+import org.vast.xml.DOMHelper;
 import org.vast.ows.sld.functions.LookUpTable1D;
 import org.w3c.dom.Element;
 
@@ -55,7 +55,7 @@ public class ParameterReader
     }
     
     
-    public ScalarParameter readPropertyName(DOMReader dom, Element paramElt)
+    public ScalarParameter readPropertyName(DOMHelper dom, Element paramElt)
     {
         if (paramElt == null)
             return null;
@@ -68,7 +68,7 @@ public class ParameterReader
     }
     
     
-    public ScalarParameter readCssParameter(DOMReader dom, Element paramElt)
+    public ScalarParameter readCssParameter(DOMHelper dom, Element paramElt)
 	{
 		ScalarParameter param;
         
@@ -98,7 +98,7 @@ public class ParameterReader
 	}
     
     
-    public ScalarParameter readCssParameterValue(DOMReader dom, Element paramElt)
+    public ScalarParameter readCssParameterValue(DOMHelper dom, Element paramElt)
     {
         String val = dom.getElementValue(paramElt, "");
         ScalarParameter param = new ScalarParameter();
@@ -119,7 +119,7 @@ public class ParameterReader
     }
     
     
-    public ScalarParameter readParamWithMappingFunction(DOMReader dom, Element paramElt)
+    public ScalarParameter readParamWithMappingFunction(DOMHelper dom, Element paramElt)
     {
         ScalarParameter param = new ScalarParameter();
         
@@ -136,7 +136,7 @@ public class ParameterReader
     }
     
     
-    public MappingFunction readLUT(DOMReader dom, Element lutElt)
+    public MappingFunction readLUT(DOMHelper dom, Element lutElt)
     {
         // parse values
         String values = dom.getElementValue(lutElt, "TableValues");

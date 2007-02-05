@@ -23,7 +23,7 @@
 
 package org.vast.ows.gml;
 
-import org.vast.io.xml.DOMReader;
+import org.vast.xml.DOMHelper;
 import org.vast.math.Vector3d;
 import org.w3c.dom.Element;
 
@@ -52,7 +52,7 @@ public class GMLGeometryReader
     }
     
         
-    public Vector3d readPoint(DOMReader dom, Element pointElt) throws GMLException
+    public Vector3d readPoint(DOMHelper dom, Element pointElt) throws GMLException
     {
         Vector3d point = new Vector3d();
         String coordsText = "";
