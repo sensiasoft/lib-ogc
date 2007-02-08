@@ -23,6 +23,8 @@
 
 package org.vast.ows;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.StringTokenizer;
 import org.vast.ogc.OGCRegistry;
@@ -44,7 +46,7 @@ import org.w3c.dom.Element;
  * @date Jan 16, 2007
  * @version 1.0
  */
-public class OWSUtils
+public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OWSQuery>
 {
     public final static String requestParsingError = "Error while parsing request";
     public final static String requestWritingError = "Error while building request";
@@ -76,6 +78,12 @@ public class OWSUtils
         {
             throw new OWSException(requestParsingError, e);
         }
+    }
+    
+    
+    public OWSQuery readXMLQuery(InputStream is) throws OWSException
+    {
+        return null;
     }
     
     
@@ -214,10 +222,31 @@ public class OWSUtils
             throw new OWSException(requestWritingError, e);
         }
     }
+    
+    
+    /**
+     * Helper method to write any OWS XML request to an output stream
+     * @param os
+     * @param query
+     * @throws OWSException
+     */
+    public void writeXMLQuery(OutputStream os, OWSQuery query) throws OWSException
+    {
+        try
+        {
+            OWSRequestWriter<OWSQuery> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.request, query.version);
+            writer.setPrintRequest(showRequest);
+            writer.writeXMLQuery(os, query);
+        }
+        catch (Exception e)
+        {
+            throw new OWSException(requestWritingError, e);
+        }        
+    }
 
 
     /**
-     * Helper method to send any OWS request using either GET or POST
+     * Helper method to send any OWS request to the server URL using either GET or POST
      * @param query OWSQuery object
      * @param usePost true if using POST
      * @return Server Response InputStream
@@ -294,4 +323,5 @@ public class OWSUtils
     {
         showRequest = print;
     }
+    
 }

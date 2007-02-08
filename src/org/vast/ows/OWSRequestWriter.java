@@ -62,15 +62,6 @@ public interface OWSRequestWriter<QueryType extends OWSQuery>
      * @return
      */
     public Element buildXMLQuery(DOMHelper dom, QueryType query) throws OWSException;
-
-
-    /**
-     * Builds a valid XML String containing the POST request
-     * @param owsQuery
-     * @return
-     * @throws OWSException
-     */
-    public String buildXMLQuery(QueryType owsQuery) throws OWSException;
     
     
     /**

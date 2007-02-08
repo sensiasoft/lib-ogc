@@ -206,11 +206,6 @@ public class WRSRequestWriter extends AbstractRequestWriter<WRSQuery>
 		return propElt;
 	}
 
-	public static void main(String [] args) throws OWSException{
-		WRSRequestWriter req = new WRSRequestWriter();
-        WRSQuery query = new WRSQuery();
-		req.buildXMLQuery(query);
-	}
 
 	@Override
 	//  WRS does not support KVP request

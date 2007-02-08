@@ -60,24 +60,6 @@ public abstract class AbstractRequestWriter<QueryType extends OWSQuery> implemen
 	
 	public abstract String buildURLQuery(QueryType query) throws OWSException;		
 	public abstract Element buildXMLQuery(DOMHelper dom, QueryType query) throws OWSException;
-	
-	
-	public String buildXMLQuery(QueryType owsQuery) throws OWSException
-	{
-		try
-		{
-            DOMHelper dom = new DOMHelper();
-			dom.createDocument("ows:Request");
-			Element requestElt = buildXMLQuery(dom, owsQuery);
-            ByteArrayOutputStream charArray = new ByteArrayOutputStream();
-            dom.serialize(requestElt, charArray, null);                   
-			return charArray.toString();
-		}
-		catch (IOException e)
-		{
-			throw new OWSException("IO Error while building XML request", e);
-		}
-	}
     
     
     public void writeXMLQuery(OutputStream os, QueryType owsQuery) throws OWSException
