@@ -57,10 +57,6 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
     
     /**
      * Helper method to parse any OWS query from an XML/DOM tree
-     * @param dom
-     * @param requestElt
-     * @return
-     * @throws OWSException
      */
     public OWSQuery readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
     {
@@ -81,6 +77,9 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
     }
     
     
+    /**
+     * Helper method to parse any OWS query directly from an InputStream
+     */
     public OWSQuery readXMLQuery(InputStream is) throws OWSException
     {
         return null;
@@ -89,10 +88,6 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
     
     /**
      * Helper method to parse any OWS query from a URL query string
-     * @param dom
-     * @param requestElt
-     * @return
-     * @throws OWSException
      */
     public OWSQuery readURLQuery(String queryString) throws OWSException
     {
@@ -182,16 +177,12 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
     
     /**
      * Helper method to build an URL query from given query object
-     * @param query
-     * @return
-     * @throws OWSException
      */
     public String buildURLQuery(OWSQuery query) throws OWSException
     {
         try
         {
             OWSRequestWriter<OWSQuery> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.request, query.version);
-            writer.setPrintRequest(showRequest);
             String queryString = writer.buildURLQuery(query);
             return queryString;
         }
@@ -205,15 +196,12 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
     /**
      * Helper method to build a DOM element containing the request XML
      * Note that the element is not yet appended to any parent.
-     * @param query
-     * @return
      */
     public Element buildXMLQuery(DOMHelper dom, OWSQuery query) throws OWSException
     {
         try
         {
             OWSRequestWriter<OWSQuery> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.request, query.version);
-            writer.setPrintRequest(showRequest);
             Element requestElt = writer.buildXMLQuery(dom, query);
             return requestElt;
         }
@@ -226,16 +214,12 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
     
     /**
      * Helper method to write any OWS XML request to an output stream
-     * @param os
-     * @param query
-     * @throws OWSException
      */
     public void writeXMLQuery(OutputStream os, OWSQuery query) throws OWSException
     {
         try
         {
             OWSRequestWriter<OWSQuery> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.request, query.version);
-            writer.setPrintRequest(showRequest);
             writer.writeXMLQuery(os, query);
         }
         catch (Exception e)
@@ -257,7 +241,6 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
         try
         {
             OWSRequestWriter<OWSQuery> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.request, query.version);
-            writer.setPrintRequest(showRequest);
             HttpURLConnection connection = writer.sendRequest(query, usePost);
             return connection;
         }
@@ -312,16 +295,6 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
         {
             throw new OWSException(capsParsingError, e);
         }
-    }
-    
-    
-    /**
-     * Toggles request printing by MessageSystem
-     * @param print
-     */
-    public void setPrintRequest(boolean print)
-    {
-        showRequest = print;
     }
     
 }

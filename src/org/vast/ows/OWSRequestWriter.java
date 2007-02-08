@@ -81,12 +81,5 @@ public interface OWSRequestWriter<QueryType extends OWSQuery>
      * @throws OWSException
      */
     public HttpURLConnection sendRequest(QueryType query, boolean usePost) throws OWSException;
-    
-    
-    /**
-     * Toggles request printing by MessageSystem
-     * @param print
-     */
-    public void setPrintRequest(boolean print);
 
 }

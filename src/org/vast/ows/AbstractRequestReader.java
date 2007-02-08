@@ -52,7 +52,6 @@ public abstract class AbstractRequestReader<QueryType extends OWSQuery> implemen
 {
     protected final static String invalidGet = "Invalid GET Request";
     protected final static String invalidPost = "Invalid POST Request";
-    public boolean showRequest = false;
     
     
 	public AbstractRequestReader()
@@ -76,12 +75,6 @@ public abstract class AbstractRequestReader<QueryType extends OWSQuery> implemen
 			throw new OWSException("", e);
 		}
 	}
-    
-    
-    public void setPrintRequest(boolean print)
-    {
-        showRequest = print;
-    }
         
     
     /**

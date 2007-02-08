@@ -50,7 +50,6 @@ import org.vast.util.DateTimeFormat;
  */
 public abstract class AbstractRequestWriter<QueryType extends OWSQuery> implements OWSRequestWriter<QueryType>
 {
-    public boolean showRequest = false;
     
     
 	public AbstractRequestWriter()
@@ -112,24 +111,12 @@ public abstract class AbstractRequestWriter<QueryType extends OWSQuery> implemen
                 connection.connect();
                 out.close();
                 
-                // print request if desired
-                if (showRequest)
-                {
-                    System.out.println(query.getService() + " Request:");
-                    writeXMLQuery(System.out, query);
-                }
-                
                 // return server response stream
                 return connection;
             }
             else if (canDoGet)
             {
-                requestString = buildURLQuery(query);
-                
-                // print request if desired
-                if (showRequest)
-                    System.out.println(query.getService() + " Request: " + requestString);
-                
+                requestString = buildURLQuery(query);                
                 URL url = new URL(requestString);
                 return (HttpURLConnection)url.openConnection();
             }
@@ -140,12 +127,6 @@ public abstract class AbstractRequestWriter<QueryType extends OWSQuery> implemen
         {
             throw new OWSException("IO Error while sending request:\n" + requestString, e);
         }
-    }
-    
-    
-    public void setPrintRequest(boolean print)
-    {
-        showRequest = print;
     }
 	
     

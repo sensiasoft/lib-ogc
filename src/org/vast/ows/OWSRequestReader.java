@@ -72,12 +72,5 @@ public interface OWSRequestReader<QueryType extends OWSQuery>
      * @throws OWSException
      */
     public QueryType readXMLQuery(DOMHelper domHelper, Element requestElt) throws OWSException;
-    
-    
-    /**
-     * Toggles request printing by MessageSystem
-     * @param print
-     */
-    public void setPrintRequest(boolean print);
 
 }
