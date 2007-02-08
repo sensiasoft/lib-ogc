@@ -27,6 +27,7 @@ import javax.servlet.http.*;
 import javax.servlet.*;
 import java.io.*;
 import java.util.*;
+import org.vast.ows.OWSUtils;
 import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLTimeReader;
 import org.vast.ows.sos.*;
@@ -51,7 +52,7 @@ public abstract class SOSServlet extends OWSServlet
 {
     // Table of SOS handlers: 1 for each ObservationSet
 	protected Hashtable<String, SOSHandler> dataSetHandlers = new Hashtable<String, SOSHandler>();
-	protected SOSUtils sosUtils = new SOSUtils();
+	protected OWSUtils sosUtils = new OWSUtils();
 
     
 	/**
@@ -257,7 +258,7 @@ public abstract class SOSServlet extends OWSServlet
 			//  parse query arguments
 			String queryString = req.getQueryString();
             logger.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
-            query = sosUtils.readURLQuery(queryString);			
+            query = (SOSQuery)sosUtils.readURLQuery(queryString);			
 			query.setResponseStream(resp.getOutputStream());
 			this.processQuery(query);			
 		}
@@ -302,7 +303,7 @@ public abstract class SOSServlet extends OWSServlet
 		{
 			InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
             DOMHelper dom = new DOMHelper(xmlRequest, false);
-            query = sosUtils.readXMLQuery(dom, dom.getBaseElement());
+            query = (SOSQuery)sosUtils.readXMLQuery(dom, dom.getBaseElement());
 			query.setResponseStream(resp.getOutputStream());
 			this.processQuery(query);
 		}
