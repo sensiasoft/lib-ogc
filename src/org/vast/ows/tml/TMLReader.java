@@ -32,7 +32,7 @@ import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.InputStreamProvider;
 import org.vast.sweCommon.AsciiDataParser;
 import org.vast.sweCommon.BinaryDataParser;
-import org.vast.sweCommon.CDMFilter;
+import org.vast.sweCommon.SWEFilter;
 import org.vast.sweCommon.SWECommonUtils;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
@@ -41,7 +41,7 @@ import org.w3c.dom.*;
 
 public class TMLReader implements InputStreamProvider
 {
-	CDMFilter streamFilter;
+	SWEFilter streamFilter;
 	InputStream inputStream;
 	TMLStreamParser tmlParser;
 	ArrayList<DataStreamParser> parsers;
@@ -57,7 +57,7 @@ public class TMLReader implements InputStreamProvider
 	{		
 		try
 		{
-			this.streamFilter = new CDMFilter(inputStream);
+			this.streamFilter = new SWEFilter(inputStream);
 			this.streamFilter.setDataElementName("tmlData");
 			this.inputStream = inputStream;
 			

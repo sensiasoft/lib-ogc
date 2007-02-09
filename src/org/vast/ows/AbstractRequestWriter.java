@@ -66,7 +66,7 @@ public abstract class AbstractRequestWriter<QueryType extends OWSQuery> implemen
         try
         {
             DOMHelper dom = new DOMHelper();
-            dom.createDocument("Request");
+            dom.createDocument("ogc:Request");
             Element requestElt = buildXMLQuery(dom, owsQuery);
             dom.serialize(requestElt, os, null);                   
         }

@@ -30,24 +30,24 @@ import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReader;
-import org.vast.sweCommon.CDMFilter;
-import org.vast.sweCommon.CDMReader;
+import org.vast.sweCommon.SWEFilter;
+import org.vast.sweCommon.SWEReader;
 import org.vast.sweCommon.SWECommonUtils;
 import org.vast.sweCommon.URIStreamHandler;
 import org.w3c.dom.*;
 
 
-public class CoverageReader extends CDMReader
+public class CoverageReader extends SWEReader
 {
 	String resultUri;
-	CDMFilter streamFilter;
+	SWEFilter streamFilter;
 	
 	
 	public void parse(InputStream inputStream) throws CDMException
 	{		
 		try
 		{
-			streamFilter = new CDMFilter(inputStream);
+			streamFilter = new SWEFilter(inputStream);
 			streamFilter.setDataElementName("value");
 						
 //			int val;
