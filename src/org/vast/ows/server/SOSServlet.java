@@ -26,6 +26,7 @@ package org.vast.ows.server;
 import javax.servlet.http.*;
 import javax.servlet.*;
 import java.io.*;
+import java.net.URLDecoder;
 import java.util.*;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.gml.GMLException;
@@ -136,6 +137,8 @@ public abstract class SOSServlet extends OWSServlet
 			for (int i=0; i<observableElts.getLength(); i++)
 			{
 				String idString = capsReader.getAttributeValue((Element)observableElts.item(i), "*/id");
+				if(idString == null)
+					idString =  capsReader.getAttributeValue((Element)observableElts.item(i), "href");
 				
 				if (idString.equals(query.getObservables().get(j)))
 				{
@@ -257,6 +260,7 @@ public abstract class SOSServlet extends OWSServlet
 		{
 			//  parse query arguments
 			String queryString = req.getQueryString();
+			queryString = URLDecoder.decode(queryString, "UTF-8");
             logger.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
             query = (SOSQuery)sosUtils.readURLQuery(queryString);			
 			query.setResponseStream(resp.getOutputStream());
