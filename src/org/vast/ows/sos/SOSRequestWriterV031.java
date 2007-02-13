@@ -24,6 +24,7 @@
 package org.vast.ows.sos;
 
 import org.vast.xml.DOMHelper;
+import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.gml.GMLEnvelopeWriter;
 import org.vast.ows.gml.GMLException;
@@ -113,15 +114,10 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, SOSQuery query) throws OWSException
 	{
-		Element elt;
-		
-        if (query.getVersion().equals("0.0.31"))
-            dom.addUserPrefix("sos", "http://www.opengeospatial.net/sos");
-        else
-            dom.addUserPrefix("sos", "http://www.opengis.net/sos");
-		dom.addUserPrefix("ogc", "http://www.opengis.net/ogc");
-		dom.addUserPrefix("gml", "http://www.opengis.net/gml");
-		dom.addUserPrefix("swe", "http://www.opengeospatial.net/swe");
+		dom.addUserPrefix("sos", OGCRegistry.SOS_NS);
+		dom.addUserPrefix("ogc", OGCRegistry.OGC_NS);
+		dom.addUserPrefix("gml", OGCRegistry.GML_NS);
+		dom.addUserPrefix("swe", OGCRegistry.SWE_NS);
 		
 		// root element
 		Element rootElt = dom.createElement("sos:GetObservation");
@@ -138,7 +134,7 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
             if (timeInfo != null)
             {
                 Element timeElt = timeWriter.writeTime(dom, timeInfo);
-                elt = dom.addElement(rootElt, "sos:eventTime/ogc:During");
+                Element elt = dom.addElement(rootElt, "sos:eventTime/ogc:During");
                 elt.appendChild(timeElt);
             }
         }
@@ -154,7 +150,7 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
             if (bbox != null && !bbox.isNull())
             {
                 Element envelopeElt = bboxWriter.writeEnvelope(dom, bbox);
-                elt = dom.addElement(rootElt, "sos:featureOfInterest/ogc:BBOX");
+                Element elt = dom.addElement(rootElt, "sos:featureOfInterest/ogc:BBOX");
                 elt.appendChild(envelopeElt);
             }
         }
