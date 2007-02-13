@@ -143,7 +143,8 @@ public class SOSRequestReaderV031 extends SOSRequestReader
             }
 			
 			// observables
-			else if (argName.equalsIgnoreCase("observables"))
+			else if (argName.equalsIgnoreCase("observables") ||
+					argName.equalsIgnoreCase("observedProperty"))
 			{
 				String[] obsList = argValue.split(",");
 				query.getObservables().clear();					
