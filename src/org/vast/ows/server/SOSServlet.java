@@ -53,7 +53,7 @@ public abstract class SOSServlet extends OWSServlet
 {
     // Table of SOS handlers: 1 for each ObservationSet
 	protected Hashtable<String, SOSHandler> dataSetHandlers = new Hashtable<String, SOSHandler>();
-	protected OWSUtils sosUtils = new OWSUtils();
+	protected OWSUtils owsUtils = new OWSUtils();
 
     
 	/**
@@ -75,15 +75,13 @@ public abstract class SOSServlet extends OWSServlet
 			if (sensorId == null)
 				throw new SOSException("A DescribeSensor request must specify a sensorId argument");
 			
-            DOMHelper capsReader = new DOMHelper(this.capsDoc);
-			sendSensorMLDocument(sensorId, capsReader, query.getResponseStream());
+			sendSensorMLDocument(sensorId, capsHelper, query.getResponseStream());
 		}
 		
 		// GetObservation request
 		else if (query.getRequest().equalsIgnoreCase("GetObservation"))
 		{
-            DOMHelper capsReader = new DOMHelper(this.capsDoc);
-			
+		
 			if (query.getOffering() == null)
 				throw new SOSException("A GetObservation SOS request must specify an offeringId argument");
 			
@@ -99,9 +97,9 @@ public abstract class SOSServlet extends OWSServlet
 			if (handler != null)
 			{
 				// check query parameters
-				checkQueryObservables(query, capsReader);
-				checkQueryFormat(query, capsReader);
-				checkQueryTime(query, capsReader);
+				checkQueryObservables(query, capsHelper);
+				checkQueryFormat(query, capsHelper);
+				checkQueryTime(query, capsHelper);
 				
 				// then retrieve observation data
                 handler.getObservation(query);				
@@ -262,9 +260,9 @@ public abstract class SOSServlet extends OWSServlet
 			String queryString = req.getQueryString();
 			queryString = URLDecoder.decode(queryString, "UTF-8");
             logger.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
-            query = (SOSQuery)sosUtils.readURLQuery(queryString);			
+            query = (SOSQuery)owsUtils.readURLQuery(queryString, "SOS");			
 			query.setResponseStream(resp.getOutputStream());
-			this.processQuery(query);			
+			this.processQuery(query);
 		}
 		catch (SOSException e)
 		{
@@ -307,7 +305,7 @@ public abstract class SOSServlet extends OWSServlet
 		{
 			InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
             DOMHelper dom = new DOMHelper(xmlRequest, false);
-            query = (SOSQuery)sosUtils.readXMLQuery(dom, dom.getBaseElement());
+            query = (SOSQuery)owsUtils.readXMLQuery(dom, dom.getBaseElement());
 			query.setResponseStream(resp.getOutputStream());
 			this.processQuery(query);
 		}

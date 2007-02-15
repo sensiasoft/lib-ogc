@@ -28,8 +28,6 @@ import java.io.*;
 import org.apache.log4j.Logger;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
-import org.vast.ows.OWSCapabilitiesSerializer;
-import org.w3c.dom.*;
 
 
 /**
@@ -47,7 +45,7 @@ import org.w3c.dom.*;
 public abstract class OWSServlet extends HttpServlet
 {
     protected final static String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
-    protected Document capsDoc;
+    protected DOMHelper capsHelper;
     protected Logger logger = Logger.getRootLogger();
 
 
@@ -70,8 +68,7 @@ public abstract class OWSServlet extends HttpServlet
 	{
 		try
 		{
-            DOMHelper capsReader = new DOMHelper(capFile, false);
-			this.capsDoc = capsReader.getDocument();
+            capsHelper = new DOMHelper(capFile, false);
 		}
 		catch (DOMHelperException e)
 		{
@@ -89,9 +86,7 @@ public abstract class OWSServlet extends HttpServlet
 	{
 		try
 		{
-			OWSCapabilitiesSerializer serializer = new OWSCapabilitiesSerializer();
-            serializer.setOutputByteStream(resp);
-            serializer.serialize(capsDoc.getDocumentElement());
+            capsHelper.serialize(capsHelper.getRootElement(), resp, null);
 		}
 		catch (IOException e)
 		{

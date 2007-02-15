@@ -91,7 +91,19 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
      */
     public OWSQuery readURLQuery(String queryString) throws OWSException
     {
+        return readURLQuery(queryString, null);
+    }
+    
+    
+    /**
+     * Helper method to parse any OWS query from a URL query string
+     * The service type is also specified in case it is missing in the query
+     */
+    public OWSQuery readURLQuery(String queryString, String service) throws OWSException
+    {
         OWSQuery query = readCommonQueryArguments(queryString);
+        if (query.getService() == null)
+            query.setService(service);
         
         try
         {
