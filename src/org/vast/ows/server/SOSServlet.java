@@ -27,6 +27,8 @@ import javax.servlet.http.*;
 import javax.servlet.*;
 import java.io.*;
 import java.util.*;
+
+import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLTimeReader;
@@ -61,7 +63,11 @@ public abstract class SOSServlet extends OWSServlet
 	 */
 	protected void processQuery(SOSQuery query) throws Exception
 	{
-		// GetCapabilities request
+		// check that request and version were specified
+        if (query.getRequest() == null || query.getVersion() == null)
+            throw new SOSException("Both REQUEST and VERSION parameters must be present");
+        
+        // GetCapabilities request
 		if (query.getRequest().equalsIgnoreCase("GetCapabilities"))
 		{
 			sendCapabilities("ALL", query.getResponseStream());
@@ -262,7 +268,7 @@ public abstract class SOSServlet extends OWSServlet
 			query.setResponseStream(resp.getOutputStream());
 			this.processQuery(query);
 		}
-		catch (SOSException e)
+		catch (OWSException e)
 		{
 			try
             {
