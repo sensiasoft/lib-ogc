@@ -26,6 +26,8 @@ package org.vast.ows;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.StringTokenizer;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
@@ -101,12 +103,14 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
      */
     public OWSQuery readURLQuery(String queryString, String service) throws OWSException
     {
-        OWSQuery query = readCommonQueryArguments(queryString);
-        if (query.getService() == null)
-            query.setService(service);
-        
         try
         {
+            queryString = URLDecoder.decode(queryString, "UTF-8");
+        
+            OWSQuery query = readCommonQueryArguments(queryString);
+            if (query.getService() == null)
+                query.setService(service);        
+        
             OWSRequestReader reader = (OWSRequestReader)OGCRegistry.createReader(query.service, query.request, query.version);
             query = reader.readURLQuery(queryString);
             return query;
@@ -196,6 +200,7 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
         {
             OWSRequestWriter<OWSQuery> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.request, query.version);
             String queryString = writer.buildURLQuery(query);
+            queryString = URLEncoder.encode(queryString, "UTF-8");
             return queryString;
         }
         catch (Exception e)
