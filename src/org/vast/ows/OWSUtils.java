@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.StringTokenizer;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
@@ -199,9 +198,8 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
         try
         {
             OWSRequestWriter<OWSQuery> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.request, query.version);
-            String queryString = writer.buildURLQuery(query);
-            queryString = URLEncoder.encode(queryString, "UTF-8");
-            return queryString;
+            String url = writer.buildURLQuery(query);
+            return url;
         }
         catch (Exception e)
         {

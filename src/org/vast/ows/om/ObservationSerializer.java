@@ -64,8 +64,9 @@ public class ObservationSerializer extends SweResponseSerializer
     public void setTemplate(InputStream baseXML)
     {
         super.setTemplate(baseXML);
-        dom.addUserPrefix("gml", OGCRegistry.GML_NS);
         dom.addUserPrefix("om", OGCRegistry.OM_NS);
+        dom.addUserPrefix("gml", OGCRegistry.GML_NS);
+        dom.addUserPrefix("swe", OGCRegistry.SWE_NS);
     }
     
     

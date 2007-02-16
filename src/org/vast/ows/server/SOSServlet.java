@@ -257,8 +257,12 @@ public abstract class SOSServlet extends OWSServlet
 		
 		try
 		{
-			//  parse query arguments
-			String queryString = req.getQueryString();			
+			//  get query string
+			String queryString = req.getQueryString();            
+            if (queryString == null)
+                sendErrorMessage(resp.getOutputStream(), "Invalid request");
+            
+            // parse query arguments
             logger.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
             query = (SOSQuery)owsUtils.readURLQuery(queryString, "SOS");			
 			query.setResponseStream(resp.getOutputStream());

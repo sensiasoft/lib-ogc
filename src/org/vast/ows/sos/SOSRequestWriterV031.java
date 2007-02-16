@@ -23,6 +23,9 @@
 
 package org.vast.ows.sos;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
@@ -101,7 +104,9 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
 			if (i == 0)
 				urlBuff.append("&observables=");
 			
-			urlBuff.append(query.getObservables().get(i));
+            String nextObs = query.getObservables().get(i);            
+			try {urlBuff.append(URLEncoder.encode(nextObs, "UTF-8"));}
+            catch (UnsupportedEncodingException e) {e.printStackTrace();}
 			
 			if (i != obsCount-1)
 				urlBuff.append(',');				
