@@ -24,8 +24,10 @@
 package org.vast.ows.om;
 
 import java.io.*;
+
 import org.w3c.dom.*;
 import org.vast.math.Vector3d;
+import org.vast.ogc.OGCRegistry;
 import org.vast.ows.SweResponseSerializer;
 import org.vast.ows.gml.GMLTimeWriter;
 import org.vast.ows.util.TimeInfo;
@@ -52,9 +54,19 @@ import org.vast.ows.util.TimeInfo;
 public class ObservationSerializer extends SweResponseSerializer
 {
 		
-	public ObservationSerializer()
+	
+    public ObservationSerializer()
 	{		
 	}
+    
+    
+    @Override
+    public void setTemplate(InputStream baseXML)
+    {
+        super.setTemplate(baseXML);
+        dom.addUserPrefix("gml", OGCRegistry.GML_NS);
+        dom.addUserPrefix("om", OGCRegistry.OM_NS);
+    }
     
     
     /**
@@ -65,8 +77,8 @@ public class ObservationSerializer extends SweResponseSerializer
     {
         dom.setAttributeValue("gml:id", id);
     }
-	
-	
+    
+    
 	/**
 	 * Changes eventTime element in the DOM to contain the request times
 	 * @param time

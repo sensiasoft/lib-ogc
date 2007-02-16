@@ -63,11 +63,7 @@ public abstract class SOSServlet extends OWSServlet
 	 */
 	protected void processQuery(SOSQuery query) throws Exception
 	{
-		// check that request and version were specified
-        if (query.getRequest() == null || query.getVersion() == null)
-            throw new SOSException("Both REQUEST and VERSION parameters must be present");
-        
-        // GetCapabilities request
+		// GetCapabilities request
 		if (query.getRequest().equalsIgnoreCase("GetCapabilities"))
 		{
 			sendCapabilities("ALL", query.getResponseStream());
@@ -268,7 +264,7 @@ public abstract class SOSServlet extends OWSServlet
 			query.setResponseStream(resp.getOutputStream());
 			this.processQuery(query);
 		}
-		catch (OWSException e)
+		catch (SOSException e)
 		{
 			try
             {
@@ -279,6 +275,17 @@ public abstract class SOSServlet extends OWSServlet
                 e.printStackTrace();
             }
 		}
+        catch (OWSException e)
+        {
+            try
+            {
+                sendErrorMessage(resp.getOutputStream(), "Invalid request or unrecognized version");
+            }
+            catch (IOException e1)
+            {
+                e.printStackTrace();
+            }            
+        }
 		catch (Exception e)
 		{
 			throw new ServletException(internalErrorMsg, e);
@@ -313,7 +320,7 @@ public abstract class SOSServlet extends OWSServlet
 			query.setResponseStream(resp.getOutputStream());
 			this.processQuery(query);
 		}
-		catch (SOSException e)
+        catch (SOSException e)
 		{
             try
             {
@@ -324,6 +331,17 @@ public abstract class SOSServlet extends OWSServlet
                 e.printStackTrace();
             }
 		}
+        catch (OWSException e)
+        {
+            try
+            {
+                sendErrorMessage(resp.getOutputStream(), "Invalid request or unrecognized version");
+            }
+            catch (IOException e1)
+            {
+                e.printStackTrace();
+            }            
+        }
 		catch (DOMHelperException e)
 		{
             try
