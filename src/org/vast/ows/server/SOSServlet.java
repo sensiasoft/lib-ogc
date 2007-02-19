@@ -234,7 +234,7 @@ public abstract class SOSServlet extends OWSServlet
         {
             if (timeList.get(i).contains(query.getTime()))
             {
-                ok = false;
+                ok = true;
                 break;
             }
         }
