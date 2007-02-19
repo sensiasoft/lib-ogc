@@ -45,10 +45,12 @@ import org.w3c.dom.Element;
  */
 public class GMLTimeWriter
 {
+    protected double now;
     
     
     public GMLTimeWriter()
     {
+        now = System.currentTimeMillis() / 1000;
     }
     
         
@@ -70,16 +72,43 @@ public class GMLTimeWriter
         {
             timeElt = dom.createElement("gml:TimePeriod");
             
-            if (timeInfo.isBeginNow())
-                dom.setAttributeValue(timeElt, "gml:beginPosition/@indeterminatePosition", "now");
-            else
-                dom.setElementValue(timeElt, "gml:beginPosition", DateTimeFormat.formatIso(timeInfo.getStartTime(), zone));
+            // case of relative start or stop (now +/- period)
+            if (timeInfo.isBaseAtNow())
+            {
+                if (timeInfo.getLeadTimeDelta() > 0.0 && timeInfo.getLagTimeDelta() > 0.0)
+                {
+                    dom.setElementValue(timeElt, "gml:beginPosition", DateTimeFormat.formatIso(now - timeInfo.getLagTimeDelta(), zone));
+                    dom.setElementValue(timeElt, "gml:endPosition", DateTimeFormat.formatIso(now + timeInfo.getLeadTimeDelta(), zone));
+                }
+                else if (timeInfo.getLagTimeDelta() == 0.0)
+                {
+                    dom.setAttributeValue(timeElt, "gml:beginPosition/@indeterminatePosition", "now");
+                    dom.setAttributeValue(timeElt, "gml:endPosition/@indeterminatePosition", "unknown");
+                    dom.setElementValue(timeElt, "gml:timeInterval", DateTimeFormat.formatIsoPeriod(timeInfo.getLeadTimeDelta()));
+                }
+                else if (timeInfo.getLeadTimeDelta() == 0.0)
+                {
+                    dom.setAttributeValue(timeElt, "gml:beginPosition/@indeterminatePosition", "unknown");
+                    dom.setAttributeValue(timeElt, "gml:endPosition/@indeterminatePosition", "now");
+                    dom.setElementValue(timeElt, "gml:timeInterval", DateTimeFormat.formatIsoPeriod(timeInfo.getLagTimeDelta()));
+                }             
+            }
             
-            if (timeInfo.isEndNow())
-                dom.setAttributeValue(timeElt, "gml:endPosition/@indeterminatePosition", "now");
+            // case of absolute start and stop
             else
-                dom.setElementValue(timeElt, "gml:endPosition", DateTimeFormat.formatIso(timeInfo.getStopTime(), zone));
+            {
+                if (timeInfo.isBeginNow())
+                    dom.setAttributeValue(timeElt, "gml:beginPosition/@indeterminatePosition", "now");
+                else
+                    dom.setElementValue(timeElt, "gml:beginPosition", DateTimeFormat.formatIso(timeInfo.getStartTime(), zone));
+                
+                if (timeInfo.isEndNow())
+                    dom.setAttributeValue(timeElt, "gml:endPosition/@indeterminatePosition", "now");
+                else
+                    dom.setElementValue(timeElt, "gml:endPosition", DateTimeFormat.formatIso(timeInfo.getStopTime(), zone));
+            }            
             
+            // handle time step if specified (i.e. not 0)
             if (timeInfo.getTimeStep() != 0)
             {
                 dom.setElementValue(timeElt, "gml:timeStep", DateTimeFormat.formatIsoPeriod(timeInfo.getTimeStep()));

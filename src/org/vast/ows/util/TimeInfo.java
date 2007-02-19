@@ -78,15 +78,20 @@ public class TimeInfo extends TimeExtent
      */
     public void setStartTime(double startTime)
     {
-        if (Double.isNaN(baseTime))
+        beginNow = false;
+        
+        if (Double.isNaN(baseTime) || baseAtNow)
         {
             baseTime = startTime;
             lagTimeDelta = 0.0;
+            baseAtNow = false;
         }
         
         else if (startTime > baseTime)
         {
-            timeBias = startTime - baseTime;
+            double stopTime = baseTime + leadTimeDelta;
+            baseTime = startTime;
+            leadTimeDelta = Math.max(0.0, stopTime - baseTime);
             lagTimeDelta = 0.0;
         }
         
@@ -109,20 +114,27 @@ public class TimeInfo extends TimeExtent
      */
     public void setStopTime(double stopTime)
     {
-        if (Double.isNaN(baseTime))
+        endNow = false;
+        
+        if (Double.isNaN(baseTime) || baseAtNow)
         {
             baseTime = stopTime;
             leadTimeDelta = 0.0;
+            baseAtNow = false;
         }
         
         else if (stopTime < baseTime)
         {
-            timeBias = stopTime - baseTime;
+            double startTime = baseTime - lagTimeDelta;
+            baseTime = stopTime;
+            lagTimeDelta = Math.max(0.0, baseTime - startTime);
             leadTimeDelta = 0.0;
         }
         
         else
-            leadTimeDelta = stopTime - baseTime;
+        {
+            lagTimeDelta = stopTime - baseTime;
+        }
     }
 	
 	

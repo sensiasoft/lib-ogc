@@ -48,7 +48,7 @@ public abstract class OWSServlet extends HttpServlet
     protected final static String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
     protected DOMHelper capsHelper;
     protected Logger logger = Logger.getRootLogger();
-
+    
 
 	// Sends an OWS Service Exception to the user
 	protected void sendErrorMessage(OutputStream resp, String message)

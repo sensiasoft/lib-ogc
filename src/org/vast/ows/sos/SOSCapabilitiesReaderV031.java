@@ -100,24 +100,34 @@ public class SOSCapabilitiesReaderV031 extends SOSCapabilitiesReader
      * @param parentElement
      * @return
      */
-    protected void getTimeList(DOMHelper dom, Element parentElement, SOSLayerCapabilities layerCaps) throws GMLException
+    protected void getTimeList(DOMHelper dom, Element parentElement, SOSLayerCapabilities layerCaps) throws GMLException, SOSException
     {
-    	NodeList timeElts = dom.getElements(parentElement, "eventTime/*");
-       	if(timeElts.getLength()==0) {
-    		timeElts = dom.getElements(parentElement, "time/*");
-    		if(timeElts.getLength()==0)
-    			throw new GMLException("SOS Servlet Error:  GML Time is invalid");
-    	}
-       	int listSize = timeElts.getLength();
-        ArrayList<TimeInfo> timeList = new ArrayList<TimeInfo>(listSize);
-        layerCaps.setTimeList(timeList);
-    	GMLTimeReader timeReader = new GMLTimeReader();
-            
-        for(int i = 0; i < listSize; i++)
+        GMLTimeReader timeReader = new GMLTimeReader();
+        Element timeElt = dom.getElement(parentElement, "eventTime/*");
+        if(timeElt == null)
+            throw new SOSException("At least one offering time must be specified");
+        
+        // case of time aggregate
+        if (dom.existElement(timeElt, "member"))
         {
-            Element timeElt = (Element)timeElts.item(i);
-            TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);            
-            timeList.add(time);
+            NodeList timeElts = dom.getElements(timeElt, "member/*");
+            int listSize = timeElts.getLength();
+            ArrayList<TimeInfo> timeList = new ArrayList<TimeInfo>(listSize);
+            layerCaps.setTimeList(timeList);
+            
+            for(int i = 0; i < listSize; i++)
+            {
+                Element timeMemberElt = (Element)timeElts.item(i);
+                TimeInfo time = timeReader.readTimePrimitive(dom, timeMemberElt);            
+                timeList.add(time);
+            }
+        }
+        
+        // case of single instant/period/grid
+        else
+        {
+            TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
+            layerCaps.getTimeList().add(time);
         }
     }
     

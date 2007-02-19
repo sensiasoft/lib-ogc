@@ -189,32 +189,73 @@ public abstract class SOSServlet extends OWSServlet
 	 * @param capsReader
 	 * @throws SOSException
 	 */
-	protected void checkQueryTime(SOSQuery query, DOMHelper capsReader) throws SOSException
+	protected void checkQueryTime(SOSQuery query, DOMHelper dom) throws SOSException
 	{
-		Element offeringElt = getOffering(query.getOffering(), capsReader);
-        Element timeElt = capsReader.getElement(offeringElt, "eventTime/*");
-        if(timeElt == null) {
-        	timeElt = capsReader.getElement(offeringElt, "time/*");
-        	if(timeElt == null)
-        		throw new SOSException("Internal Error: Invalid Time in Capabilities Document");
-        }
-        TimeInfo capsTime = null;
+        // make sure startTime <= stopTime
+        if (query.getTime().getStartTime() > query.getTime().getStopTime())
+            throw new SOSException("The requested period must begin before the it ends");
+        
+        // loads capabilities advertised time
+        Element offeringElt = getOffering(query.getOffering(), dom);
+        Element timeElt = dom.getElement(offeringElt, "eventTime/*");
+        if(timeElt == null)
+            throw new SOSException("Internal Error: No Time Present in Capabilities Document");        
+        GMLTimeReader timeReader = new GMLTimeReader();
+        ArrayList<TimeInfo> timeList = new ArrayList<TimeInfo>();
         
         try
         {
-            GMLTimeReader timeReader = new GMLTimeReader();
-            capsTime = timeReader.readTimePrimitive(capsReader, timeElt);
+            // case of time aggregate
+            if (dom.existElement(timeElt, "member"))
+            {
+                NodeList timeElts = dom.getElements(timeElt, "member/*");                
+                for(int i = 0; i < timeElts.getLength(); i++)
+                {
+                    Element timeMemberElt = (Element)timeElts.item(i);
+                    TimeInfo time = timeReader.readTimePrimitive(dom, timeMemberElt);
+                    timeList.add(time);
+                }
+            }            
+            // case of single instant/period/grid
+            else
+            {
+                TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
+                timeList.add(time);
+            }
         }
         catch (GMLException e)
         {
             throw new SOSException("Internal Error: Invalid Time in Capabilities Document", e);
-        } 
+        }
         
-        if (query.getTime().getStartTime() > query.getTime().getStopTime())
-            throw new SOSException("The requested period must begin before the it ends");
+        // check that request time is within one of the advertised periods
+        boolean ok = false;
+        for (int i=0; i<timeList.size(); i++)
+        {
+            if (timeList.get(i).contains(query.getTime()))
+            {
+                ok = false;
+                break;
+            }
+        }
         
-		if (!capsTime.contains(query.getTime()))
-            throw new SOSException("The requested period must be contained in " + capsTime.getIsoString(0));			
+        // send error if request time is not contained in any of the advertised periods 
+        if (!ok)
+        {
+            // construct error message
+            StringBuffer buf = new StringBuffer("The requested period must be contained in ");
+            if (timeList.size() > 1)
+                buf.append("one of the following periods:\n");
+            
+            for (int i=0; i<timeList.size(); i++)
+            {
+                buf.append(timeList.get(i).getIsoString(0));
+                if (i<timeList.size()-1)
+                    buf.append(',');
+            }
+            
+            throw new SOSException(buf.toString());
+        }            
 	}
 	
 	

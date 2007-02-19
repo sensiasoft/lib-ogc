@@ -124,9 +124,9 @@ public class GMLTimeReader
     {
         TimeInfo timeInfo = new TimeInfo();
         
-        String startAtt = dom.getAttributeValue(timePeriodElt, "beginPosition/indeterminatePosition");
+        String startAtt = dom.getAttributeValue(timePeriodElt, "beginPosition/@indeterminatePosition");
         String isoStartTime = dom.getElementValue(timePeriodElt, "beginPosition");
-        String stopAtt = dom.getAttributeValue(timePeriodElt, "endPosition/indeterminatePosition");
+        String stopAtt = dom.getAttributeValue(timePeriodElt, "endPosition/@indeterminatePosition");
         String isoStopTime = dom.getElementValue(timePeriodElt, "endPosition");
         String duration = dom.getElementValue(timePeriodElt, "timeInterval");
         String timeStep = dom.getElementValue(timePeriodElt, "timeStep");
@@ -204,7 +204,7 @@ public class GMLTimeReader
      * @return
      * @throws GMLException
      */
-    public TimeInfo readTimeGrid(DOMHelper dom, Element timePeriodElt) throws GMLException
+    public TimeInfo readTimeGrid(DOMHelper dom, Element timeGridElt) throws GMLException
     {
         return null;
     }
