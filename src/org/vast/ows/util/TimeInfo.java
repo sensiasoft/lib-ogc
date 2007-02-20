@@ -133,7 +133,7 @@ public class TimeInfo extends TimeExtent
         
         else
         {
-            lagTimeDelta = stopTime - baseTime;
+            leadTimeDelta = stopTime - baseTime;
         }
     }
 	

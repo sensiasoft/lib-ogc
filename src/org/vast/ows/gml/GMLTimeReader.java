@@ -95,7 +95,6 @@ public class GMLTimeReader
         if (att != null && att.equals("now"))
         {
             time.setBaseAtNow(true);
-            time.setBaseTime(now);
         }
         else
         {
@@ -140,10 +139,7 @@ public class GMLTimeReader
             if (startAtt != null)
             {
                 if (startAtt.equals("now"))
-                {
                     timeInfo.setBeginNow(true);
-                    timeInfo.setStartTime(now);
-                }
                 else if (startAtt.equals("unknown"))
                     startUnknown = true;
             }
@@ -154,10 +150,7 @@ public class GMLTimeReader
             if (stopAtt != null)
             {
                 if (stopAtt.equals("now"))
-                {
                     timeInfo.setEndNow(true);
-                    timeInfo.setStopTime(now);
-                }
                 else if (startAtt.equals("unknown"))
                     stopUnknown = true;
             }
@@ -170,13 +163,9 @@ public class GMLTimeReader
                 double dT = DateTimeFormat.parseIsoPeriod(duration);
                 
                 if (startUnknown)
-                {
                     timeInfo.setLagTimeDelta(dT);
-                }
                 else
-                {
                     timeInfo.setLeadTimeDelta(dT);
-                }
             }
             
             // also parse step time

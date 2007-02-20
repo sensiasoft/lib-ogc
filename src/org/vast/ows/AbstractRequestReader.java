@@ -86,16 +86,12 @@ public abstract class AbstractRequestReader<QueryType extends OWSQuery> implemen
     protected void parseTimeArg(TimeInfo timeInfo, String argValue) throws OWSException
     {
         String[] timeRange = argValue.split("/");
-        double now = System.currentTimeMillis() / 1000;
         
         try
         {
             // parse start time
             if (timeRange[0].equalsIgnoreCase("now"))
-            {
                 timeInfo.setBeginNow(true);
-                timeInfo.setStartTime(now);
-            }
             else
                 timeInfo.setStartTime(DateTimeFormat.parseIso(timeRange[0]));
             
@@ -103,10 +99,7 @@ public abstract class AbstractRequestReader<QueryType extends OWSQuery> implemen
             if (timeRange.length > 1)
             {
                 if (timeRange[1].equalsIgnoreCase("now"))
-                {
                     timeInfo.setEndNow(true);
-                    timeInfo.setStopTime(now);
-                }
                 else
                     timeInfo.setStopTime(DateTimeFormat.parseIso(timeRange[1]));
             }
