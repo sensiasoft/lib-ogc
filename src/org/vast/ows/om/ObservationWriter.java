@@ -23,7 +23,7 @@
 
 package org.vast.ows.om;
 
-import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -31,11 +31,11 @@ import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b>
- * Observation Reader
+ * Observation Writer
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base interface for Observation Readers of all versions
+ * Base interface for Observation Writers of all versions
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -43,25 +43,25 @@ import org.w3c.dom.Element;
  * @date Feb 23, 2007
  * @version 1.0
  */
-public interface ObservationReader
+public interface ObservationWriter
 {
     
     /**
-     * Reads an Observation object from the given InputStream
-     * @param is
-     * @return
+     * Writes XML for an Observation in the given OutputStream
+     * @param os
+     * @param obs
      * @throws OMException
      */
-    public AbstractObservation readObservation(InputStream is) throws OMException;
+    public void writeObservation(OutputStream os, AbstractObservation obs) throws OMException;
     
     
     /**
-     * Reads an Observation object from the given XML element using the DOMHelper
+     * Builds a DOM Element for the given Observation 
      * @param dom
-     * @param obsElt
+     * @param obs
      * @return
      * @throws OMException
      */
-    public AbstractObservation readObservation(DOMHelper dom, Element obsElt) throws OMException;
-
+    public Element writeObservation(DOMHelper dom, AbstractObservation obs) throws OMException;
+    
 }

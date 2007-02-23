@@ -86,6 +86,16 @@ public abstract class SweResponseSerializer extends XMLSerializer
 			e.printStackTrace();
 		}
 	}
+    
+    
+    /**
+     * Assign the template as DOMHelper wrapping a DOM document
+     * @param dom
+     */
+    public void setTemplate(DOMHelper dom)
+    {
+        this.dom = dom;
+    }
 	
 	
 	/**

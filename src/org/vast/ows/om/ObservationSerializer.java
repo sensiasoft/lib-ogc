@@ -39,11 +39,11 @@ import org.vast.ows.util.TimeInfo;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * This class is a specific serializer used to output
- * Common Observations. It provides an additional setTime
- * method to easily change the time in the XML response and
- * overrides the <swe:result> element serialization by calling
- * the attached DataWriter to handle the job. 
+ * This class is a specific serializer used to output XML for
+ * O&M Observations. It provides additional setID, setTime, setFoi, 
+ * methods to easily change the corresponding parameters in the XML
+ * response and overrides the <swe:result> element serialization by
+ * calling the attached SweDataWriter to handle the job. 
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -60,10 +60,8 @@ public class ObservationSerializer extends SweResponseSerializer
 	}
     
     
-    @Override
-    public void setTemplate(InputStream baseXML)
+    protected void ensureNamespaces()
     {
-        super.setTemplate(baseXML);
         dom.addUserPrefix("om", OGCRegistry.OM_NS);
         dom.addUserPrefix("gml", OGCRegistry.GML_NS);
         dom.addUserPrefix("swe", OGCRegistry.SWE_NS);
@@ -76,6 +74,7 @@ public class ObservationSerializer extends SweResponseSerializer
      */
     public void setID(String id)
     {
+        ensureNamespaces();
         dom.setAttributeValue("gml:id", id);
     }
     
@@ -88,6 +87,7 @@ public class ObservationSerializer extends SweResponseSerializer
 	{
         try
         {
+            ensureNamespaces();
             time = time.copy();
             time.setTimeZone(zone);
             time.setBeginNow(false);
@@ -105,10 +105,17 @@ public class ObservationSerializer extends SweResponseSerializer
 	}
     
     
+    /**
+     * Set Foi parameters name and location
+     * @param name
+     * @param location
+     */
     public void setFoi(String name, Vector3d location)
     {
         try
         {
+            ensureNamespaces();
+            
             Element foiElt = dom.addElement("om:featureOfInterest/swe:GeoReferenceableFeature");
             dom.setElementValue(foiElt, "gml:name", name);
             
@@ -132,13 +139,15 @@ public class ObservationSerializer extends SweResponseSerializer
 	{
 		if (elt.getLocalName().equals("result"))
 		{
-			this._format.setIndenting(false);
-			this._printer.printText("\n<om:result>");
+			String omPrefix = "om";//dom.getXmlDocument().getNSPrefix(OGCRegistry.OM_NS);
+            
+            this._format.setIndenting(false);
+			this._printer.printText("\n<" + omPrefix + ":result>");
 			this._printer.flush();
 			
             dataWriter.write();
 			
-			this._printer.printText("\n</om:result>");
+			this._printer.printText("\n</" + omPrefix + ":result>");
 			this._printer.flush();
 			this._format.setIndenting(true);
 		}

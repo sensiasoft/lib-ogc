@@ -17,51 +17,44 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+ Alexandre Robin <robin@nsstc.uah.edu>
  
-******************************* END LICENSE BLOCK ***************************/
+ ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.om;
 
-import java.io.InputStream;
-
-import org.vast.xml.DOMHelper;
-import org.w3c.dom.Element;
+import java.util.List;
 
 
 /**
  * <p><b>Title:</b>
- * Observation Reader
+ * Observation Collection
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base interface for Observation Readers of all versions
+ * Implementation of the Observation Collection which uses the 
+ * composite pattern to encapsulate a list of member Observations
+ * while still being an Observation itself.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 23, 2007
+ * @date Feb 20, 2007
  * @version 1.0
  */
-public interface ObservationReader
+public class ObservationCollection extends AbstractObservation
 {
-    
-    /**
-     * Reads an Observation object from the given InputStream
-     * @param is
-     * @return
-     * @throws OMException
-     */
-    public AbstractObservation readObservation(InputStream is) throws OMException;
-    
-    
-    /**
-     * Reads an Observation object from the given XML element using the DOMHelper
-     * @param dom
-     * @param obsElt
-     * @return
-     * @throws OMException
-     */
-    public AbstractObservation readObservation(DOMHelper dom, Element obsElt) throws OMException;
+    protected List<AbstractObservation> members;
 
+
+    public List<AbstractObservation> getMembers()
+    {
+        return members;
+    }
+
+
+    public void setMembers(List<AbstractObservation> members)
+    {
+        this.members = members;
+    }
 }
