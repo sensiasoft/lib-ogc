@@ -84,7 +84,9 @@ public class Feature
     
     public void setName(String name)
     {
-        names.add(new QName(QName.DEFAULT_PREFIX, name));
+        QName qname = new QName();
+        qname.setLocalName(name);
+        names.add(qname);
     }
 
 

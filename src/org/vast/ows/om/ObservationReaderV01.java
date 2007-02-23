@@ -35,6 +35,8 @@ import org.vast.ows.OWSExceptionReader;
 import org.vast.ows.gml.Feature;
 import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLGeometryReader;
+import org.vast.ows.gml.GMLTimeReader;
+import org.vast.ows.util.TimeInfo;
 import org.vast.sweCommon.DataSourceInline;
 import org.vast.sweCommon.DataSourceURI;
 import org.vast.sweCommon.SWECommonUtils;
@@ -60,10 +62,12 @@ import org.w3c.dom.*;
 public class ObservationReaderV01 implements ObservationReader
 {
 	protected SWEFilter streamFilter;
-       
+    protected GMLTimeReader timeReader;
+    
     
     public ObservationReaderV01()
     {
+        timeReader = new GMLTimeReader();
     }
     
 	
@@ -108,8 +112,20 @@ public class ObservationReaderV01 implements ObservationReader
             throw new OMException("Unrecognized Observation Type");
         
         // read observation name
-        String name = dom.getElementValue(obsElt, "featureOfInterest/*/name");
+        String name = dom.getElementValue(obsElt, "name");
         observation.setName(name);
+        
+        // read time
+        try
+        {
+            Element timeElt = dom.getElement(obsElt, "eventTime/*");
+            TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
+            observation.setTime(time);
+        }
+        catch (GMLException e)
+        {
+            throw new OMException(e.getMessage());
+        }
         
         // read procedure ID
         String procedure = dom.getAttributeValue(obsElt, "procedure/@href");
@@ -203,6 +219,12 @@ public class ObservationReaderV01 implements ObservationReader
     protected Feature readFOI(DOMHelper dom, Element foiElt) throws OMException
     {
         Feature feature = new Feature();
+        
+        // read name
+        String name = dom.getElementValue(foiElt, "name");
+        feature.setName(name);
+        
+        // read location
         Element pointElt = dom.getElement(foiElt, "location/Point");
         
         if (pointElt != null)

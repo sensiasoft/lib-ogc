@@ -24,6 +24,7 @@
 package org.vast.ows.om;
 
 import org.vast.ows.gml.Feature;
+import org.vast.ows.util.TimeInfo;
 import org.vast.sensorML.metadata.Contact;
 
 
@@ -43,11 +44,24 @@ import org.vast.sensorML.metadata.Contact;
  */
 public abstract class AbstractObservation extends Feature
 {
+    protected final static String TIME = "time";
     protected final static String RESPONSIBLE = "responsible";
     protected final static String PROCEDURE = "procedure";
     protected final static String FOI = "featureOfInterest";
 
 
+    public TimeInfo getTime()
+    {
+        return (TimeInfo)properties.get(TIME);
+    }
+
+
+    public void setTime(TimeInfo time)
+    {
+        setProperty(TIME, time);
+    }
+    
+    
     public Contact getResponsible()
     {
         return (Contact)properties.get(RESPONSIBLE);
