@@ -37,6 +37,20 @@ import org.vast.xml.*;
 import org.w3c.dom.Element;
 
 
+/**
+ * <p><b>Title:</b>
+ * Observation Writer V0.0
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Observation Writer for version 0.0
+ * </p>
+ *
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin
+ * @date Feb 23, 2007
+ * @version 1.0
+ */
 public class ObservationWriterV01 implements ObservationWriter
 {
     protected GMLTimeWriter timeWriter;
@@ -106,14 +120,17 @@ public class ObservationWriterV01 implements ObservationWriter
             propertyElt = dom.addElement(dataDefElt, "swe:encoding");
             Element encodingElt = encodingWriter.writeEncoding(dom, encoding);
             propertyElt.appendChild(encodingElt);
+            
+            // write result
+            StringBuffer buffer = new StringBuffer();
+            obs.getSweData().writeResult(buffer);
+            Element resultElt = dom.addElement(obsElt, "om:result");
+            dom.setElementValue(resultElt, buffer.toString());
         }
         catch (CDMException e)
         {
             throw new OMException(e);
         }
-        
-        // write result
-        
         
         return obsElt;
     }
