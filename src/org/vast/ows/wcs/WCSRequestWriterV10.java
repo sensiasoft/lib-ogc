@@ -54,22 +54,24 @@ public class WCSRequestWriterV10 extends WCSRequestWriter
 		
         urlBuff.append("service=WCS");
         urlBuff.append("&version=" + query.getVersion());
-        urlBuff.append("&request=GetCoverage");          
-        urlBuff.append("&layers=" + query.getLayer());
-        urlBuff.append("&crs=" + query.getSrs());
-        
-        if (query.getTime() != null)
-        {
-            urlBuff.append("&time=");
-            this.writeTimeArgument(urlBuff, query.getTime());
+        String request = query.getRequest();
+        urlBuff.append("&request=" + request);          
+        if(!"GetCapabilities".equalsIgnoreCase(request)) {
+	        urlBuff.append("&layers=" + query.getLayer());
+	        urlBuff.append("&crs=" + query.getSrs());
+	        
+	        if (query.getTime() != null)
+	        {
+	            urlBuff.append("&time=");
+	            this.writeTimeArgument(urlBuff, query.getTime());
+	        }
+	        
+	        urlBuff.append("&bbox=");
+	        this.writeBboxArgument(urlBuff, query.getBbox());
+	        urlBuff.append("&skipX=" + query.getSkipX());
+	        urlBuff.append("&skipY=" + query.getSkipY());
+	        urlBuff.append("&format=" + query.getFormat());
         }
-        
-        urlBuff.append("&bbox=");
-        this.writeBboxArgument(urlBuff, query.getBbox());
-        urlBuff.append("&skipX=" + query.getSkipX());
-        urlBuff.append("&skipY=" + query.getSkipY());
-        urlBuff.append("&format=" + query.getFormat());
-		
 		String url = urlBuff.toString();
 		url.replaceAll(" ","%20");
 		return url;
