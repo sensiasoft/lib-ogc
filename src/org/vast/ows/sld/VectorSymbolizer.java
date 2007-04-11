@@ -40,109 +40,30 @@ package org.vast.ows.sld;
  */
 public class VectorSymbolizer extends Symbolizer
 {
-	public enum CoordsType
-    {
-        DIFF, POLAR, ABS
-    }
-    
-    protected Graphic graphic;
-	protected ScalarParameter dx, dy, dz;
-    protected ScalarParameter dth, dphi, dr;
-    protected CoordsType coordinateType;
+    protected Geometry direction;
+    protected Graphic graphic;	
     
     
-	public Graphic getGraphic()
-	{
-		return graphic;
-	}
-
-
-	public void setGraphic(Graphic graphic)
-	{
-		this.graphic = graphic;
-	}
-
-
-    public CoordsType getCoordinateType()
+	public Geometry getDirection()
     {
-        return coordinateType;
+        return direction;
     }
 
 
-    public void setCoordinateType(CoordsType coordinateType)
+    public void setDirection(Geometry direction)
     {
-        this.coordinateType = coordinateType;
+        this.direction = direction;
+    }
+    
+    
+    public Graphic getGraphic()
+    {
+        return graphic;
     }
 
 
-    public ScalarParameter getDphi()
+    public void setGraphic(Graphic graphic)
     {
-        return dphi;
-    }
-
-
-    public void setDphi(ScalarParameter dphi)
-    {
-        this.dphi = dphi;
-    }
-
-
-    public ScalarParameter getDr()
-    {
-        return dr;
-    }
-
-
-    public void setDr(ScalarParameter dr)
-    {
-        this.dr = dr;
-    }
-
-
-    public ScalarParameter getDth()
-    {
-        return dth;
-    }
-
-
-    public void setDth(ScalarParameter dth)
-    {
-        this.dth = dth;
-    }
-
-
-    public ScalarParameter getDx()
-    {
-        return dx;
-    }
-
-
-    public void setDx(ScalarParameter dx)
-    {
-        this.dx = dx;
-    }
-
-
-    public ScalarParameter getDy()
-    {
-        return dy;
-    }
-
-
-    public void setDy(ScalarParameter dy)
-    {
-        this.dy = dy;
-    }
-
-
-    public ScalarParameter getDz()
-    {
-        return dz;
-    }
-
-
-    public void setDz(ScalarParameter dz)
-    {
-        this.dz = dz;
+        this.graphic = graphic;
     }
 }

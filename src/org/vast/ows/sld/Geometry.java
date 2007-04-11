@@ -42,12 +42,13 @@ package org.vast.ows.sld;
 public class Geometry
 {
 	protected String propertyName;
+    protected String crs;
 	protected ScalarParameter x;
 	protected ScalarParameter y;
 	protected ScalarParameter z;
 	protected ScalarParameter t;
     protected ScalarParameter breaks;
-	protected ScalarParameter object;
+	protected ScalarParameter object;    
 
 
     public String getPropertyName()
@@ -60,6 +61,18 @@ public class Geometry
 	{
 		this.propertyName = propertyName;
 	}
+    
+    
+    public String getCrs()
+    {
+        return crs;
+    }
+
+
+    public void setCrs(String crs)
+    {
+        this.crs = crs;
+    }
 
 
     public ScalarParameter getT()
