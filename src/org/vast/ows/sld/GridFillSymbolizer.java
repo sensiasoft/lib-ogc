@@ -45,9 +45,13 @@ public class GridFillSymbolizer extends GridSymbolizer
     
     public Fill getFill()
     {
+        if (fill == null)
+            fill = new Fill();
+        
         return fill;
     }
 
+    
     public void setFill(Fill fill)
     {
         this.fill = fill;

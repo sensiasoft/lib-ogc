@@ -45,7 +45,10 @@ public class PointSymbolizer extends Symbolizer
     
 	public Graphic getGraphic()
 	{
-		return graphic;
+        if (graphic == null)
+            graphic = new Graphic();
+        
+        return graphic;
 	}
 
 

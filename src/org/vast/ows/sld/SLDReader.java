@@ -26,6 +26,7 @@ package org.vast.ows.sld;
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.vast.xml.DOMHelper;
+import org.vast.ows.sld.VectorSymbolizer.DirectionType;
 import org.vast.util.MessageSystem;
 import org.vast.util.URIResolver;
 import org.w3c.dom.Element;
@@ -68,6 +69,8 @@ public class SLDReader
 			sym = readLine(dom, symElt);
 		else if (symElt.getLocalName().equals("PolygonSymbolizer"))
 			sym = readPolygon(dom, symElt);
+        else if (symElt.getLocalName().equals("VectorSymbolizer"))
+            sym = readVector(dom, symElt);
         else if (symElt.getLocalName().equals("TextSymbolizer"))
             sym = readText(dom, symElt);
         else if (symElt.getLocalName().equals("GridMeshSymbolizer"))
@@ -132,6 +135,57 @@ public class SLDReader
 		
 		return polygonSym;
 	}
+    
+    
+    public VectorSymbolizer readVector(DOMHelper dom, Element symElt)
+    {
+        VectorSymbolizer vectorSym = new VectorSymbolizer();
+        readGeometryElt(vectorSym, dom, symElt);
+        
+        // read direction coordinates
+        Element dirElt = dom.getElement(symElt, "Direction");
+        Geometry direction = readGeometry(dom, dirElt);
+        vectorSym.setDirection(direction);
+        
+        // read direction type
+        String dirType = dom.getAttributeValue(dirElt, "type");
+        if (dirType.equalsIgnoreCase("DIFF"))
+            vectorSym.setDirectionType(DirectionType.DIFF);
+        else if (dirType.equalsIgnoreCase("ROT"))
+            vectorSym.setDirectionType(DirectionType.ROT);
+        else if (dirType.equalsIgnoreCase("ABS"))
+            vectorSym.setDirectionType(DirectionType.ABS);
+        
+        // read length
+        NodeList cssElts = dom.getElements(symElt, "Direction/CssParameter");
+        for (int i=0; i<cssElts.getLength(); i++)
+        {
+            Element cssElt = (Element)cssElts.item(i);
+            String paramName = dom.getAttributeValue(cssElt, "name");            
+            if (paramName.equalsIgnoreCase("geometry-length"))
+            {
+                ScalarParameter lengthData = cssReader.readCssParameter(dom, cssElt);
+                vectorSym.setLength(lengthData);
+            }
+        }
+        
+        // read stroke
+        Element strokeElt = dom.getElement(symElt, "Stroke");
+        Stroke stroke = readStroke(dom, strokeElt);
+        vectorSym.setStroke(stroke);
+        
+        // read fill
+        Element fillElt = dom.getElement(symElt, "Fill");
+        Fill fill = readFill(dom, fillElt);
+        vectorSym.setFill(fill);
+        
+        // read graphic
+        Element graphicElt = dom.getElement(symElt, "Graphic");
+        Graphic graphic = readGraphic(dom, graphicElt);
+        vectorSym.setGraphic(graphic);
+        
+        return vectorSym;
+    }
 	
 	
 	public TextSymbolizer readText(DOMHelper dom, Element symElt)
@@ -390,6 +444,10 @@ public class SLDReader
 					geometry.setT(tData);
 				}
 			}
+            
+            // read crs from Geometry element
+            String crs = dom.getAttributeValue(geomElt, "srsName");
+            geometry.setCrs(crs);
 		}
 		
 		return geometry;

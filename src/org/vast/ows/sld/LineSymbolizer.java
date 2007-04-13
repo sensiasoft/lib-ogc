@@ -40,12 +40,15 @@ package org.vast.ows.sld;
  */
 public class LineSymbolizer extends Symbolizer
 {
-	protected Stroke stroke = new Stroke();
+	protected Stroke stroke;
 
 
 	public Stroke getStroke()
 	{
-		return stroke;
+        if (stroke == null)
+            stroke = new Stroke();
+        
+        return stroke;
 	}
 
 

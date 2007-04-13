@@ -45,7 +45,10 @@ public class GridMeshSymbolizer extends GridSymbolizer
 
 	public Stroke getStroke()
 	{
-		return stroke;
+		if (stroke == null)
+            stroke = new Stroke();
+        
+        return stroke;
 	}
 
 

@@ -101,7 +101,7 @@ public class Geometry
 
     public ScalarParameter getY()
 	{
-		return y;
+        return y;
 	}
 
 
@@ -113,7 +113,7 @@ public class Geometry
 
     public ScalarParameter getZ()
 	{
-		return z;
+        return z;
 	}
 
 

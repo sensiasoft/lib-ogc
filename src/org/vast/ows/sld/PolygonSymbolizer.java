@@ -46,7 +46,10 @@ public class PolygonSymbolizer extends Symbolizer
 
 	public Fill getFill()
 	{
-		return fill;
+        if (fill == null)
+            fill = new Fill();
+        
+        return fill;
 	}
 
 
@@ -58,7 +61,10 @@ public class PolygonSymbolizer extends Symbolizer
 
 	public Stroke getStroke()
 	{
-		return stroke;
+        if (stroke == null)
+            stroke = new Stroke();
+        
+        return stroke;
 	}
 
 

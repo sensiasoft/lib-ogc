@@ -40,12 +40,28 @@ package org.vast.ows.sld;
  */
 public class VectorSymbolizer extends Symbolizer
 {
+    public enum DirectionType {DIFF, ROT, ABS};
+    
     protected Geometry direction;
-    protected Graphic graphic;	
-    
-    
-	public Geometry getDirection()
+    protected DirectionType directionType = DirectionType.DIFF;
+    protected ScalarParameter length;
+    protected Stroke stroke;
+    protected Fill fill;
+    protected Graphic graphic;
+
+
+    public VectorSymbolizer()
     {
+        length = new ScalarParameter();
+        length.setConstantValue(new Double(1.0));
+    }
+    
+    
+    public Geometry getDirection()
+    {
+        if (direction == null)
+            direction = new Geometry();
+        
         return direction;
     }
 
@@ -53,6 +69,60 @@ public class VectorSymbolizer extends Symbolizer
     public void setDirection(Geometry direction)
     {
         this.direction = direction;
+    }
+    
+    
+    public DirectionType getDirectionType()
+    {
+        return directionType;
+    }
+
+
+    public void setDirectionType(DirectionType directionType)
+    {
+        this.directionType = directionType;
+    }
+
+
+    public ScalarParameter getLength()
+    {
+        return length;
+    }
+
+
+    public void setLength(ScalarParameter length)
+    {
+        this.length = length;
+    }
+    
+    
+    public Stroke getStroke()
+    {
+        if (stroke == null)
+            stroke = new Stroke();
+        
+        return stroke;
+    }
+
+
+    public void setStroke(Stroke stroke)
+    {
+        this.stroke = stroke;
+    }
+    
+    
+    public Fill getFill()
+    {
+        if (fill == null)
+            fill = new Fill();
+        
+        return fill;
+    }
+
+
+    public void setFill(Fill fill)
+    {
+        this.fill = fill;
     }
     
     
