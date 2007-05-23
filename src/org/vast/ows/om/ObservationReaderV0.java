@@ -23,128 +23,254 @@
 
 package org.vast.ows.om;
 
-import java.io.*;
-
+import java.io.IOException;
+import java.io.InputStream;
 import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataEncoding;
+import org.vast.cdm.common.DataSource;
 import org.vast.math.Vector3d;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReader;
+import org.vast.ows.gml.Feature;
+import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLGeometryReader;
-import org.vast.sweCommon.SWEFilter;
-import org.vast.sweCommon.SWEReader;
+import org.vast.ows.gml.GMLTimeReader;
+import org.vast.ows.util.TimeInfo;
+import org.vast.sweCommon.DataSourceInline;
+import org.vast.sweCommon.DataSourceURI;
 import org.vast.sweCommon.SWECommonUtils;
-import org.vast.sweCommon.URIStreamHandler;
+import org.vast.sweCommon.SWEFilter;
 import org.vast.xml.*;
 import org.w3c.dom.*;
 
 
-public class ObservationReaderV0 extends SWEReader
+/**
+ * <p><b>Title:</b>
+ * Observation Reader v0.0
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Reader for O&M observations v0.0
+ * </p>
+ *
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin
+ * @date Feb 23, 2007
+ * @version 1.0
+ */
+public class ObservationReaderV0 implements ObservationReader
 {
-	protected String resultUri;
 	protected SWEFilter streamFilter;
-	protected Vector3d foiLocation;
-    protected String procedure;
-    protected String observationName;
-       
+    protected GMLTimeReader timeReader;
+    
     
     public ObservationReaderV0()
     {
-        foiLocation = new Vector3d();
+        timeReader = new GMLTimeReader();
     }
     
-    
-    public void parse(InputStream inputStream) throws CDMException
-	{
-		try
-		{
-			streamFilter = new SWEFilter(inputStream);
-			streamFilter.setDataElementName("result");
-			
-			// parse xml header using DOMReader
-			DOMHelper dom = new DOMHelper(streamFilter, false);
-			OWSExceptionReader.checkException(dom);
-			
-			// find first observation element
-			Element rootElement = dom.getRootElement();
-			NodeList elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om", "CommonObservation");
-			Element obsElt = (Element)elts.item(0);			
-			if (obsElt == null)
-				throw new CDMException("XML Response doesn't contain any Observation");
-			
-            // read FOI location
-            GMLGeometryReader geometryReader = new GMLGeometryReader();
-            Element pointElt = dom.getElement(obsElt, "featureOfInterest/*/location/Point");
-            if (pointElt != null)
-                foiLocation = geometryReader.readPoint(dom, pointElt);
-            
-            // read procedure ID and observation name
-            procedure = dom.getAttributeValue(obsElt, "procedure/@href");
-            observationName = dom.getElementValue(obsElt, "featureOfInterest/*/name");
-            
-            // read resultDefinition
-			Element defElt = dom.getElement(obsElt, "resultDefinition/DataDefinition");
-			Element dataElt = dom.getElement(defElt, "dataComponents");
-			Element encElt = dom.getElement(defElt, "encoding");		
-            SWECommonUtils utils = new SWECommonUtils();
-            this.dataComponents = utils.readComponentProperty(dom, dataElt);
-            this.dataEncoding = utils.readEncodingProperty(dom, encElt);
-			
-			// read external link if present
-			resultUri = dom.getAttributeValue(obsElt, "result/externalLink");
-		}
-        catch (IllegalStateException e)
+	
+    public AbstractObservation readObservation(InputStream inputStream) throws OMException
+    {
+        try
         {
-            throw new CDMException("No reader found for SWECommon", e);
+            // install SWE Filter to skip inline data
+            streamFilter = new SWEFilter(inputStream);
+            streamFilter.setDataElementName("result");
+            
+            // parse xml header using DOMReader
+            DOMHelper dom = new DOMHelper(streamFilter, false);
+            OWSExceptionReader.checkException(dom);
+            
+            return this.readObservation(dom, dom.getRootElement());
         }
-		catch (DOMHelperException e)
-		{
-			throw new CDMException("Error while parsing Observation XML", e);
-		}
-		catch (OWSException e)
-		{
-			throw new CDMException(e.getMessage());
-		}
-	}
-	
-	
-	public InputStream getDataStream() throws CDMException
-	{
-		if (resultUri != null)
-		{
-			try
-			{
-				streamFilter.startReadingData();
-				streamFilter.close();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-			
-			return URIStreamHandler.openStream(resultUri);
-		}
-		else
-		{
-			streamFilter.startReadingData();
-			return streamFilter;
-		}
-	}
-
-
-    public Vector3d getFoiLocation()
-    {
-        return foiLocation;
+        catch (DOMHelperException e)
+        {
+            throw new OMException("Error while parsing XML document", e);
+        }
+        catch (OWSException e)
+        {
+            throw new OMException(e.getMessage());
+        }
     }
-
-
-    public String getObservationName()
+    
+    
+    public AbstractObservation readObservation(DOMHelper dom, Element obsElt) throws OMException
     {
-        return observationName;
+        AbstractObservation observation = null;
+        
+        // case of ObservationCollection
+        if (obsElt.getLocalName().equals("ObservationCollection"))
+            observation = readObsCollection(dom, obsElt);
+        
+        // case of Common Observation
+        else if (obsElt.getLocalName().endsWith("CommonObservation"))
+            observation = readObsStream(dom, obsElt);
+        
+        else
+            throw new OMException("Unrecognized Observation Type");
+        
+        // read observation name
+        String name = dom.getElementValue(obsElt, "name");
+        observation.setName(name);
+        
+        // read time
+        try
+        {
+            Element timeElt = dom.getElement(obsElt, "eventTime/*");
+            TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
+            observation.setTime(time);
+        }
+        catch (GMLException e)
+        {
+            throw new OMException(e.getMessage());
+        }
+        
+        // read procedure ID
+        String procedure = dom.getAttributeValue(obsElt, "procedure/@href");
+        observation.setProcedure(procedure);        
+        
+        // read foi
+        Element foiElt = dom.getElement(obsElt, "featureOfInterest/*");
+        if (foiElt != null)
+        {
+            Feature foi = readFOI(dom, foiElt);
+            observation.setFeatureOfInterest(foi);
+        }
+        
+        return observation;
     }
-
-
-    public String getProcedure()
+    
+    
+    /**
+     * Reads a collection and all its member recursively
+     * @param dom
+     * @param obsElt
+     * @return
+     * @throws OMException
+     */
+    protected AbstractObservation readObsCollection(DOMHelper dom, Element obsElt) throws OMException
     {
-        return procedure;
+        ObservationCollection collection = new ObservationCollection();
+        
+        // read members
+        NodeList memberList = dom.getElements(obsElt, "member");
+        for (int i=0; i<memberList.getLength(); i++)
+        {
+            Element memberElt = (Element)memberList.item(i);
+            Element memberObsElt = dom.getFirstChildElement(memberElt);
+            AbstractObservation obs = this.readObservation(dom, memberObsElt);
+            collection.getMembers().add(obs);
+        }
+        
+        // if collection has only one member return the member
+        if (collection.getMembers().size() == 1)
+            return collection.getMembers().get(0);
+        else
+            return collection;
     }
+    
+    
+    /**
+     * Reads an Observation with a stream of values as a result
+     * @param dom
+     * @param obsElt
+     * @return
+     * @throws OMException
+     */
+    protected AbstractObservation readObsStream(DOMHelper dom, Element obsElt) throws OMException
+    {
+        ObservationStream observation = new ObservationStream();
+        
+        // read resultDefinition
+        try
+        {
+            Element defElt = dom.getElement(obsElt, "resultDefinition/DataDefinition");
+            Element dataElt = dom.getElement(defElt, "dataComponents");
+            Element encElt = dom.getElement(defElt, "encoding");        
+            SWECommonUtils sweUtils = new SWECommonUtils();
+            DataComponent dataComponents = sweUtils.readComponentProperty(dom, dataElt);
+            DataEncoding dataEncoding = sweUtils.readEncodingProperty(dom, encElt);
+            observation.getResult().setDataComponents(dataComponents);
+            observation.getResult().setDataEncoding(dataEncoding);
+        }
+        catch (CDMException e)
+        {
+            throw new OMException("Error while parsing data definition", e);
+        }
+        
+        // read result
+        Element resultElt = dom.getElement(obsElt, "result");
+        DataSource dataSrc = readResultSource(dom, resultElt);
+        observation.getResult().setDataSource(dataSrc);        
+        
+        return observation;
+    }
+    
+    
+    /**
+     * Reads the feature of interest XML
+     * @param dom
+     * @param foiElt
+     * @return
+     * @throws OMException
+     */
+    protected Feature readFOI(DOMHelper dom, Element foiElt) throws OMException
+    {
+        Feature feature = new Feature();
+        
+        // read name
+        String name = dom.getElementValue(foiElt, "name");
+        feature.setName(name);
+        
+        // read location
+        Element pointElt = dom.getElement(foiElt, "location/Point");
+        
+        if (pointElt != null)
+        {
+            try
+            {
+                GMLGeometryReader geometryReader = new GMLGeometryReader();
+                Vector3d location = geometryReader.readPoint(dom, pointElt);
+                feature.setLocation(location);
+            }
+            catch (GMLException e)
+            {
+                throw new OMException("Error while parsing FOI location", e); 
+            }            
+        }
+        
+        return feature;
+    }
+    
+    
+    /**
+     * Creates a DataSource depending on the type of result obtained
+     * Allows support of inline, out-of-band and mime packaged results
+     * @param dom
+     * @param resultElt
+     * @return
+     */
+    protected DataSource readResultSource(DOMHelper dom, Element resultElt)
+    {
+        String resultUri = dom.getAttributeValue(resultElt, "@externalLink");
+        
+        // case of inline data
+        if (resultUri == null)
+        {
+            streamFilter.startReadingData();
+            return new DataSourceInline(streamFilter);
+        }
+        
+        // case of URI
+        else
+        {
+            streamFilter.startReadingData();
+            try { streamFilter.close(); }
+            catch(IOException e) { e.printStackTrace(); };
+            return new DataSourceURI(resultUri);
+        }
+    }
+    
 }

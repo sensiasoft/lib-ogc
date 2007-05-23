@@ -43,24 +43,24 @@ import org.vast.sweCommon.SWEData;
  */
 public class ObservationStream extends AbstractObservation
 {
-    protected SWEData sweData;
+    protected SWEData result;
 
     
     public ObservationStream()
     {
-        sweData = new SWEData();
+        result = new SWEData();
     }
     
     
-    public SWEData getSweData()
+    public SWEData getResult()
     {
-        return sweData;
+        return result;
     }
 
     
-    public void setSweData(SWEData sweData)
+    public void setResult(SWEData sweData)
     {
-        this.sweData = sweData;
+        this.result = sweData;
     }
 
 }

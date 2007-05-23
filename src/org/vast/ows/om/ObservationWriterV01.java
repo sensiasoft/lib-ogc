@@ -109,21 +109,21 @@ public class ObservationWriterV01 implements ObservationWriter
             Element dataDefElt = dom.addElement(obsElt, "om:resultDefinition/swe:DataDefinition");
             
             // write data components
-            DataComponent components = obs.getSweData().getDataComponents();
+            DataComponent components = obs.getResult().getDataComponents();
             Element propertyElt = dom.addElement(dataDefElt, "swe:dataComponents");
             dom.setAttributeValue(propertyElt, "@name", components.getName());
             Element componentElt = componentWriter.writeComponent(dom, components);
             propertyElt.appendChild(componentElt);
             
             // write data encoding
-            DataEncoding encoding = obs.getSweData().getDataEncoding();
+            DataEncoding encoding = obs.getResult().getDataEncoding();
             propertyElt = dom.addElement(dataDefElt, "swe:encoding");
             Element encodingElt = encodingWriter.writeEncoding(dom, encoding);
             propertyElt.appendChild(encodingElt);
             
             // write result
             StringBuffer buffer = new StringBuffer();
-            obs.getSweData().writeResult(buffer);
+            obs.getResult().writeResult(buffer);
             Element resultElt = dom.addElement(obsElt, "om:result");
             dom.setElementValue(resultElt, buffer.toString());
         }

@@ -160,7 +160,7 @@ public class OMUtils
      * @param dom
      * @return
      */
-    private String getVersion(DOMHelper dom, Element omElt)
+    public String getVersion(DOMHelper dom, Element omElt)
     {
         // get version from the last part of namespace URI
         //String sweUri = dom.getXmlDocument().getNSUri("swe");

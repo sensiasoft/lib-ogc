@@ -102,7 +102,7 @@ public class ObservationReaderV01 implements ObservationReader
         
         // case of ObservationCollection
         if (obsElt.getLocalName().equals("ObservationCollection"))
-            observation = null;
+            observation = readObsCollection(dom, obsElt);
         
         // case of Observation
         else if (obsElt.getLocalName().endsWith("Observation"))
@@ -118,7 +118,7 @@ public class ObservationReaderV01 implements ObservationReader
         // read time
         try
         {
-            Element timeElt = dom.getElement(obsElt, "eventTime/*");
+            Element timeElt = dom.getElement(obsElt, "samplingTime/*");
             TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
             observation.setTime(time);
         }
@@ -140,6 +140,12 @@ public class ObservationReaderV01 implements ObservationReader
         }
         
         return observation;
+    }
+    
+    
+    public void readResult()
+    {
+        
     }
     
     
@@ -192,8 +198,8 @@ public class ObservationReaderV01 implements ObservationReader
             SWECommonUtils sweUtils = new SWECommonUtils();
             DataComponent dataComponents = sweUtils.readComponentProperty(dom, dataElt);
             DataEncoding dataEncoding = sweUtils.readEncodingProperty(dom, encElt);
-            observation.getSweData().setDataComponents(dataComponents);
-            observation.getSweData().setDataEncoding(dataEncoding);
+            observation.getResult().setDataComponents(dataComponents);
+            observation.getResult().setDataEncoding(dataEncoding);
         }
         catch (CDMException e)
         {
@@ -203,7 +209,7 @@ public class ObservationReaderV01 implements ObservationReader
         // read result
         Element resultElt = dom.getElement(obsElt, "result");
         DataSource dataSrc = readResultSource(dom, resultElt);
-        observation.getSweData().setDataSource(dataSrc);        
+        observation.getResult().setDataSource(dataSrc);        
         
         return observation;
     }
