@@ -67,7 +67,9 @@ public class SOSResponseReader extends SWEReader
 			// find first observation element
 			Element rootElement = dom.getRootElement();
 			NodeList elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om", "CommonObservation");
-			Element obsElt = (Element)elts.item(0);			
+            if (elts.getLength() == 0)
+                elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om/0.0", "Observation");
+			Element obsElt = (Element)elts.item(0);	
 			if (obsElt == null)
 				throw new CDMException("XML Response doesn't contain any Observation");
 			
@@ -83,7 +85,13 @@ public class SOSResponseReader extends SWEReader
             
             // read resultDefinition
 			Element defElt = dom.getElement(obsElt, "resultDefinition/DataDefinition");
+            if (defElt == null)
+                defElt = dom.getElement(obsElt, "resultDefinition/DataBlockDefinition");
+            
 			Element dataElt = dom.getElement(defElt, "dataComponents");
+            if (dataElt == null)
+                dataElt = dom.getElement(defElt, "components");
+            
 			Element encElt = dom.getElement(defElt, "encoding");		
             SWECommonUtils utils = new SWECommonUtils();
             this.dataComponents = utils.readComponentProperty(dom, dataElt);
