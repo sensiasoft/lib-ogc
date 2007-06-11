@@ -64,7 +64,7 @@ public class SOSResponseReader extends SWEReader
 			DOMHelper dom = new DOMHelper(streamFilter, false);
 			OWSExceptionReader.checkException(dom);
 			
-			// find first observation element
+			// find first Observation OR CommonObservation element
 			Element rootElement = dom.getRootElement();
 			NodeList elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om", "CommonObservation");
             if (elts.getLength() == 0)
@@ -86,8 +86,7 @@ public class SOSResponseReader extends SWEReader
             // read resultDefinition
 			Element defElt = dom.getElement(obsElt, "resultDefinition/DataDefinition");
             if (defElt == null)
-                defElt = dom.getElement(obsElt, "resultDefinition/DataBlockDefinition");
-            
+                defElt = dom.getElement(obsElt, "resultDefinition/DataBlockDefinition");            
 			Element dataElt = dom.getElement(defElt, "dataComponents");
             if (dataElt == null)
                 dataElt = dom.getElement(defElt, "components");
