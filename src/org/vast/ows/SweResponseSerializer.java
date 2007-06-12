@@ -79,7 +79,8 @@ public abstract class SweResponseSerializer extends XMLSerializer
 		try
 		{
 			// preload base observation document
-            dom = new DOMHelper(baseXML, false);
+            DOMHelper newDom = new DOMHelper(baseXML, false);
+            this.setTemplate(newDom);
 		}
 		catch (DOMHelperException e)
 		{
