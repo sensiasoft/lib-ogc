@@ -119,7 +119,7 @@ public class TMLReader implements InputStreamProvider
 	}
 	
 	
-	private DataStreamParser createDataParser(DataComponent dataInfo, DataEncoding dataEncoding)
+	private DataStreamParser createDataParser(DataComponent dataInfo, DataEncoding dataEncoding) throws CDMException
 	{
 		DataStreamParser parser = null;
 		
