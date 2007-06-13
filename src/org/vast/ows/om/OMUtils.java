@@ -24,11 +24,11 @@
 package org.vast.ows.om;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -53,10 +53,10 @@ public class OMUtils
 {
     public final static String OM = "OM";
     public final static String OBSERVATION = "Observation";
-    protected final static int NS_CHARS = 1000;
+    protected final static int NS_CHARS = 500;
     protected final static String versionRegex = "^\\d+(\\.\\d+)?(\\.\\d+)?$";
-    protected final static String namespaceRegex = "xmlns(:.+)?=http://www.opengis.net/om/[\\d.]+";
-    protected final static String defaultVersion = "0.0";
+    protected final static String namespaceRegex = "=\"http://www\\.opengis\\.net/om/[\\d\\.]*\\d?";
+    protected final static String defaultVersion = "0.0.1";
     
     
     /**
@@ -85,12 +85,12 @@ public class OMUtils
     {
         try
         {
-            String version = defaultVersion;
+            String version = defaultVersion;           
             
             // buffer the stream with a buffer size of NS_CHARS+2 and mark beginning
             BufferedInputStream bufferedInput = new BufferedInputStream(inputStream, NS_CHARS+2);
             bufferedInput.mark(NS_CHARS+1);
-            
+                        
             // read first characters
             StringBuilder buf = new StringBuilder(NS_CHARS);
             for (int i=0; i<NS_CHARS; i++)
@@ -102,7 +102,7 @@ public class OMUtils
             Matcher matcher = pattern.matcher(text);
             
             // extract version from namespace
-            if (matcher.matches())
+            if (matcher.find())
             {
                 String match = matcher.group();
                 version = match.substring(match.lastIndexOf('/') + 1);
@@ -118,8 +118,11 @@ public class OMUtils
             // parse observation using appropariate reader for this version
             ObservationReader reader = (ObservationReader)OGCRegistry.createReader(OM, OBSERVATION, version);
             return reader.readObservation(bufferedInput);
+            
+            //DOMHelper dom = new DOMHelper (inputStream, false);
+            //return readObservation(dom, dom.getBaseElement());
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             throw new OMException("Error while accessing inputstream", e);
         }

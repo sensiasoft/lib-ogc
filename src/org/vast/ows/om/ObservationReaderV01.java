@@ -119,8 +119,11 @@ public class ObservationReaderV01 implements ObservationReader
         try
         {
             Element timeElt = dom.getElement(obsElt, "samplingTime/*");
-            TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
-            observation.setTime(time);
+            if (timeElt != null)
+            {
+                TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
+                observation.setTime(time);
+            }
         }
         catch (GMLException e)
         {
@@ -129,7 +132,7 @@ public class ObservationReaderV01 implements ObservationReader
         
         // read procedure ID
         String procedure = dom.getAttributeValue(obsElt, "procedure/@href");
-        observation.setProcedure(procedure);        
+        observation.setProcedure(procedure);
         
         // read foi
         Element foiElt = dom.getElement(obsElt, "featureOfInterest/*");
@@ -137,6 +140,16 @@ public class ObservationReaderV01 implements ObservationReader
         {
             Feature foi = readFOI(dom, foiElt);
             observation.setFeatureOfInterest(foi);
+        }
+        
+        // if collection has only one member return the member
+        if (observation instanceof ObservationCollection)
+        {
+            ObservationCollection collection = (ObservationCollection)observation;
+            if (collection.getMembers().size() == 1)
+                observation = collection.getMembers().get(0);            
+            if (observation.getName() == null)
+                observation.setName(collection.getName());
         }
         
         return observation;
@@ -156,7 +169,7 @@ public class ObservationReaderV01 implements ObservationReader
      * @return
      * @throws OMException
      */
-    protected AbstractObservation readObsCollection(DOMHelper dom, Element obsElt) throws OMException
+    protected ObservationCollection readObsCollection(DOMHelper dom, Element obsElt) throws OMException
     {
         ObservationCollection collection = new ObservationCollection();
         
@@ -170,11 +183,7 @@ public class ObservationReaderV01 implements ObservationReader
             collection.getMembers().add(obs);
         }
         
-        // if collection has only one member return the member
-        if (collection.getMembers().size() == 1)
-            return collection.getMembers().get(0);
-        else
-            return collection;
+        return collection;
     }
     
     
@@ -185,15 +194,15 @@ public class ObservationReaderV01 implements ObservationReader
      * @return
      * @throws OMException
      */
-    protected AbstractObservation readObsStream(DOMHelper dom, Element obsElt) throws OMException
+    protected ObservationStream readObsStream(DOMHelper dom, Element obsElt) throws OMException
     {
         ObservationStream observation = new ObservationStream();
         
         // read resultDefinition
         try
         {
-            Element defElt = dom.getElement(obsElt, "resultDefinition/DataDefinition");
-            Element dataElt = dom.getElement(defElt, "dataComponents");
+            Element defElt = dom.getElement(obsElt, "resultDefinition/DataBlockDefinition");
+            Element dataElt = dom.getElement(defElt, "components");
             Element encElt = dom.getElement(defElt, "encoding");        
             SWECommonUtils sweUtils = new SWECommonUtils();
             DataComponent dataComponents = sweUtils.readComponentProperty(dom, dataElt);

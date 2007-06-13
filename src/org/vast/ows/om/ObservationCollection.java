@@ -23,6 +23,7 @@
 
 package org.vast.ows.om;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,7 +47,12 @@ public class ObservationCollection extends AbstractObservation
 {
     protected List<AbstractObservation> members;
 
-
+    public ObservationCollection()
+    {
+        members = new ArrayList<AbstractObservation>();
+    }
+    
+    
     public List<AbstractObservation> getMembers()
     {
         return members;
