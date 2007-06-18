@@ -68,7 +68,11 @@ public class SOSResponseReader extends SWEReader
 			Element rootElement = dom.getRootElement();
 			NodeList elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om", "CommonObservation");
             if (elts.getLength() == 0)
+                elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om", "Observation");
+            if (elts.getLength() == 0)
                 elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om/0.0", "Observation");
+            if (elts.getLength() == 0)
+                elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om/1.0", "Observation");
 			Element obsElt = (Element)elts.item(0);	
 			if (obsElt == null)
 				throw new CDMException("XML Response doesn't contain any Observation");
