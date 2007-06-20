@@ -111,6 +111,21 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
 			if (i != obsCount-1)
 				urlBuff.append(',');				
 		}
+        
+		// add procedure list
+        int procCount = query.getProcedures().size();
+        for (int i=0; i<procCount; i++)
+        {
+            if (i == 0)
+                urlBuff.append("&procedures=");
+            
+            String nextProc = query.getProcedures().get(i);            
+            try {urlBuff.append(URLEncoder.encode(nextProc, "UTF-8"));}
+            catch (UnsupportedEncodingException e) {e.printStackTrace();}
+            
+            if (i != procCount-1)
+                urlBuff.append(',');                
+        }
 		
 		return urlBuff.toString();
 	}

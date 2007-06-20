@@ -152,8 +152,8 @@ public class SOSRequestReaderV031 extends SOSRequestReader
 					query.getObservables().add(obsList[i]);
 			}
 			
-			// sensor Ids
-			else if (argName.equalsIgnoreCase("sensorID"))
+			// procedures
+			else if (argName.equalsIgnoreCase("procedures"))
 			{
 				String[] sensorList = argValue.split(",");
 				query.getProcedures().clear();					
