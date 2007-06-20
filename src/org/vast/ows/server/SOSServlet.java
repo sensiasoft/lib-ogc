@@ -99,6 +99,7 @@ public abstract class SOSServlet extends OWSServlet
 			{
 				// check query parameters
 				checkQueryObservables(query, capsHelper);
+                checkQueryProcedures(query, capsHelper);
 				checkQueryFormat(query, capsHelper);
 				checkQueryTime(query, capsHelper);
 				
@@ -150,6 +151,41 @@ public abstract class SOSServlet extends OWSServlet
 				throw new SOSException("Observed Property - " + query.getObservables().get(j) + " - is not available for offering " + query.getOffering());
 		}
 	}
+    
+    
+    /**
+     * Checks if all selected observables are available in this offering
+     * @param query
+     * @param capsReader
+     * @throws SOSException
+     */
+    protected void checkQueryProcedures(SOSQuery query, DOMHelper capsReader) throws SOSException
+    {
+        Element procedureElt = getOffering(query.getOffering(), capsReader);     
+        NodeList procedureElts = capsReader.getElements(procedureElt, "procedure");
+        boolean ok;
+        
+        for (int j=0; j<query.getProcedures().size(); j++)
+        {
+            ok = false;
+            
+            for (int i=0; i<procedureElts.getLength(); i++)
+            {
+                String idString = capsReader.getAttributeValue((Element)procedureElts.item(i), "*/id");
+                if(idString == null)
+                    idString =  capsReader.getAttributeValue((Element)procedureElts.item(i), "href");
+                
+                if (idString.equals(query.getProcedures().get(j)))
+                {
+                    ok = true;
+                    break;
+                }
+            }
+            
+            if (!ok)
+                throw new SOSException("Procedure - " + query.getProcedures().get(j) + " - is not available for offering " + query.getOffering());
+        }
+    }
 	
 	
 	/**
