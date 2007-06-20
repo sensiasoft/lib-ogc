@@ -86,17 +86,6 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
             this.writeBboxArgument(urlBuff, query.getBbox());
         }        
         
-        // format
-		urlBuff.append("&format=" + query.getFormat());
-        
-        // response mode
-        if (query.getResponseMode() != null)
-            urlBuff.append("&responseMode=" + this.getResponseMode(query));
-        
-        // result model
-        if (query.getResultModel() != null)
-            urlBuff.append("&resultModel=" + query.getResultModel());
-        
 		// add observable list
 		int obsCount = query.getObservables().size();
 		for (int i=0; i<obsCount; i++)
@@ -126,6 +115,17 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
             if (i != procCount-1)
                 urlBuff.append(',');                
         }
+        
+        // format
+        urlBuff.append("&format=" + query.getFormat());
+        
+        // response mode
+        if (query.getResponseMode() != null)
+            urlBuff.append("&responseMode=" + this.getResponseMode(query));
+        
+        // result model
+        if (query.getResultModel() != null)
+            urlBuff.append("&resultModel=" + query.getResultModel());
 		
 		return urlBuff.toString();
 	}
