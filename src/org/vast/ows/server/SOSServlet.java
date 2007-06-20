@@ -136,9 +136,9 @@ public abstract class SOSServlet extends OWSServlet
 			
 			for (int i=0; i<observableElts.getLength(); i++)
 			{
-				String idString = capsReader.getAttributeValue((Element)observableElts.item(i), "*/id");
+				String idString =  capsReader.getAttributeValue((Element)observableElts.item(i), "href");
 				if(idString == null)
-					idString =  capsReader.getAttributeValue((Element)observableElts.item(i), "href");
+                    idString = capsReader.getAttributeValue((Element)observableElts.item(i), "*/id");
 				
 				if (idString.equals(query.getObservables().get(j)))
 				{
@@ -161,8 +161,8 @@ public abstract class SOSServlet extends OWSServlet
      */
     protected void checkQueryProcedures(SOSQuery query, DOMHelper capsReader) throws SOSException
     {
-        Element procedureElt = getOffering(query.getOffering(), capsReader);     
-        NodeList procedureElts = capsReader.getElements(procedureElt, "procedure");
+        Element offeringElt = getOffering(query.getOffering(), capsReader);     
+        NodeList procedureElts = capsReader.getElements(offeringElt, "procedure");
         boolean ok;
         
         for (int j=0; j<query.getProcedures().size(); j++)
@@ -171,9 +171,9 @@ public abstract class SOSServlet extends OWSServlet
             
             for (int i=0; i<procedureElts.getLength(); i++)
             {
-                String idString = capsReader.getAttributeValue((Element)procedureElts.item(i), "*/id");
+                String idString =  capsReader.getAttributeValue((Element)procedureElts.item(i), "href");
                 if(idString == null)
-                    idString =  capsReader.getAttributeValue((Element)procedureElts.item(i), "href");
+                    idString = capsReader.getAttributeValue((Element)procedureElts.item(i), "*/id");
                 
                 if (idString.equals(query.getProcedures().get(j)))
                 {
