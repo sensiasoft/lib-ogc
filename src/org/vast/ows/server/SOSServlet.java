@@ -54,9 +54,11 @@ public abstract class SOSServlet extends OWSServlet
 {
     // Table of SOS handlers: 1 for each ObservationSet
 	protected Hashtable<String, SOSHandler> dataSetHandlers = new Hashtable<String, SOSHandler>();
+	// Table of <ProcedureId, SensorMLUrl> - 1 per procedure 
+	protected Hashtable<String, String> sensorMLUrls = new Hashtable<String, String>();
 	protected OWSUtils owsUtils = new OWSUtils();
-
     
+	
 	/**
 	 * Decode the query, check validity and call the right handler
 	 * @param query
@@ -76,8 +78,13 @@ public abstract class SOSServlet extends OWSServlet
 			if (sensorId == null)
 				throw new SOSException("A DescribeSensor request must specify a sensorId argument");
 			
-			sendSensorMLDocument(sensorId, capsHelper, query.getResponseStream());
-		}
+			//  Check for SensorId in SensorMLUrl hashtable
+			String smlUrl = sensorMLUrls.get(sensorId);
+			if(smlUrl == null)
+				throw new SOSException("SensorML description for " + sensorId + " not available");
+			DOMHelper dom = new DOMHelper(smlUrl, false);				
+	        dom.serialize(dom.getBaseElement(), query.getResponseStream() , null);		
+	    }
 		
 		// GetObservation request
 		else if (query.getRequest().equalsIgnoreCase("GetObservation"))
@@ -154,7 +161,7 @@ public abstract class SOSServlet extends OWSServlet
     
     
     /**
-     * Checks if all selected observables are available in this offering
+     * Checks if all selected procedures are available in this offering
      * @param query
      * @param capsReader
      * @throws SOSException
@@ -318,13 +325,6 @@ public abstract class SOSServlet extends OWSServlet
 		return obsElt;
 	}
 	
-	
-	protected void sendSensorMLDocument(String sensorId, DOMHelper capsReader, OutputStream resp) throws SOSException
-	{
-		throw new SOSException("SensorML description for " + sensorId + " not available");
-	}
-
-
 	/**
 	 * Parse and process HTTP GET request
 	 */
@@ -451,7 +451,43 @@ public abstract class SOSServlet extends OWSServlet
         }
 	}
 
+	@Override
+	/**
+	 * Load the Caps doc, and build a hashtable of SensorID<=>SensorMLUrl mappings
+	 * NOTE : Any subclasses that override this method should call super.updateCaps() first,
+	 *        or the SensorML hashtable won't be built. TC
+	 * @param capFile - the Capabilites file
+	 */
+	public synchronized void updateCapabilities(InputStream capFile)
+	{
+		super.updateCapabilities(capFile);
+		//  Populate the sensorMLUrls hashtable
+		NodeList procedureElts = 
+			capsHelper.getElements("Contents/ObservationOfferingList/ObservationOffering/procedure");
+		if(procedureElts == null)
+			return;
+		//  Clear the hashtable, just in case this gets called multiple times 
+		sensorMLUrls.clear();
+		for (int i=0; i<procedureElts.getLength(); i++) {
+			Element procElt = (Element)procedureElts.item(i);
+            String idString =  capsHelper.getAttributeValue(procElt, "href");
+            if(idString == null)  // skip this proc if no href
+            	continue;
+            if(!procElt.hasChildNodes())  // skip if no child elements
+            	continue;
+            //  I put the child check in b/c the following statement was generating a NPE
+            //  in the guts of the XML code when procElt had no children- TC
+            Element infoElt = capsHelper.getElement(procElt, "internalInfo");
+            if(infoElt == null)
+            	continue;
+            String docUrl = capsHelper.getAttributeValue(infoElt, "Parameters/sensorMLUrl/href");
+            if(docUrl == null)
+            	continue;
+            sensorMLUrls.put(idString, docUrl);
+        }
+	}
 
+	
 	/**
 	 * Adds a new handler or the given observation ID
 	 * @param obsID
