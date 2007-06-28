@@ -153,7 +153,7 @@ public class SOSRequestReaderV031 extends SOSRequestReader
 			}
 			
 			// procedures
-			else if (argName.equalsIgnoreCase("procedures"))
+			else if (argName.equalsIgnoreCase("procedures") || argName.equalsIgnoreCase("SensorId"))
 			{
 				String[] sensorList = argValue.split(",");
 				query.getProcedures().clear();					
