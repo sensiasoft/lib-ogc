@@ -23,7 +23,7 @@
 
 package org.vast.ows.sas;
 
-import org.vast.ows.OWSQuery;
+import org.vast.ows.OWSRequest;
 
 
 /**
@@ -39,7 +39,7 @@ import org.vast.ows.OWSQuery;
  * @date Nov 21, 2006
  * @version 1.0
  */
-public class SASQuery extends OWSQuery
+public class SASQuery extends OWSRequest
 {
     protected String featureOfInterest;
     protected String subscriptionId;

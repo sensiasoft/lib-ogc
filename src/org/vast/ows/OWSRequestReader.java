@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
  * @date Jan 16, 2007
  * @version 1.0
  */
-public interface OWSRequestReader<QueryType extends OWSQuery>
+public interface OWSRequestReader<QueryType extends OWSRequest>
 {
 
     /**

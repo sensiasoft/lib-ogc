@@ -31,7 +31,7 @@ import java.text.ParseException;
 import java.util.*;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSQuery;
+import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.util.TimeInfo;
 import org.vast.ows.wcs.DescribeCoverageRequest;
@@ -130,7 +130,7 @@ public abstract class WCSServlet extends OWSServlet
         try
         {
 	        //this.log("GET REQUEST: " + query + " from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
-	        OWSQuery query = (OWSQuery) owsUtils.readURLQuery(req.getQueryString());
+	        OWSRequest query = (OWSRequest) owsUtils.readURLQuery(req.getQueryString());
 	        query.setResponseStream(resp.getOutputStream());
 	        resp.setContentType("text/xml");
 	        

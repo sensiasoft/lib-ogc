@@ -9,7 +9,7 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "SensorML DataProcessing Engine".
+ The Original Code is the "OGC Service Framework".
  
  The Initial Developer of the Original Code is the
  University of Alabama in Huntsville (UAH).
@@ -46,26 +46,24 @@ import org.vast.util.DateTimeFormat;
  * @date Oct 30, 2005
  * @version 1.0
  */
-public abstract class AbstractRequestWriter<QueryType extends OWSQuery> implements OWSRequestWriter<QueryType>
+public abstract class AbstractRequestWriter<RequestType extends OWSRequest> implements OWSRequestWriter<RequestType>
 {
-    
-    
+        
 	public AbstractRequestWriter()
 	{	
 	}
 
 	
-	public abstract String buildURLQuery(QueryType query) throws OWSException;		
-	public abstract Element buildXMLQuery(DOMHelper dom, QueryType query) throws OWSException;
+	public abstract String buildURLQuery(RequestType request) throws OWSException;		
+	public abstract Element buildXMLQuery(DOMHelper dom, RequestType request) throws OWSException;
     
     
-    public void writeXMLQuery(OutputStream os, QueryType owsQuery) throws OWSException
+    public void writeXMLQuery(OutputStream os, RequestType request) throws OWSException
     {
         try
         {
             DOMHelper dom = new DOMHelper();
-            dom.createDocument("Request");
-            Element requestElt = buildXMLQuery(dom, owsQuery);
+            Element requestElt = buildXMLQuery(dom, request);
             dom.serialize(requestElt, os, null);
         }
         catch (IOException e)
@@ -153,11 +151,11 @@ public abstract class AbstractRequestWriter<QueryType extends OWSQuery> implemen
      * Adds common attributes to XML request element
      * @param dom
      * @param requestElt
-     * @param query
+     * @param request
      */
-    protected void addCommonXML(DOMHelper dom, Element requestElt, OWSQuery query)
+    protected void addCommonXML(DOMHelper dom, Element requestElt, OWSRequest request)
 	{
-    	requestElt.setAttribute("service", query.getService());
-    	requestElt.setAttribute("version", query.getVersion());
+    	requestElt.setAttribute("service", request.getService());
+    	requestElt.setAttribute("version", request.getVersion());
 	}
 }

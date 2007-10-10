@@ -53,7 +53,7 @@ public class GetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilities
 		
         urlBuff.append("SERVICE=" + query.getService());
         urlBuff.append("&VERSION=" + query.getVersion());
-        urlBuff.append("&REQUEST=" + query.getRequest());
+        urlBuff.append("&REQUEST=" + query.getOperation());
 		
         if (query.getSection() != null)
         	urlBuff.append("&SECTION=" + query.getSection());
@@ -63,14 +63,14 @@ public class GetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilities
 	
 	
 	@Override
-	public Element buildXMLQuery(DOMHelper dom, GetCapabilitiesRequest query) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, GetCapabilitiesRequest request) throws OWSException
 	{
-		Element rootElt = dom.createElement(query.getRequest());
-		dom.setAttributeValue(rootElt, "version", query.getVersion());
-		dom.setAttributeValue(rootElt, "service", query.getService());
+		Element rootElt = dom.createElement(request.getOperation());
+		dom.setAttributeValue(rootElt, "version", request.getVersion());
+		dom.setAttributeValue(rootElt, "service", request.getService());
 		
-		if (query.getSection() != null)
-			dom.setElementValue(rootElt, "section", query.getSection());
+		if (request.getSection() != null)
+			dom.setElementValue(rootElt, "section", request.getSection());
 		
 		return rootElt;
 	}

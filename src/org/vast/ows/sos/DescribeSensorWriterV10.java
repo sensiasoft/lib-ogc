@@ -63,48 +63,50 @@ public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSenso
 
 	
 	@Override
-	public String buildURLQuery(DescribeSensorRequest query) throws OWSException
+	public String buildURLQuery(DescribeSensorRequest request) throws OWSException
 	{
 		StringBuffer urlBuff;
 		
-		urlBuff = new StringBuffer(query.getGetServer());
+		urlBuff = new StringBuffer(request.getGetServer());
 		urlBuff.append("service=SOS");
-		urlBuff.append("&version=" + query.getVersion());
-		urlBuff.append("&request=" + query.getRequest());
+		urlBuff.append("&version=" + request.getVersion());
+		urlBuff.append("&request=" + request.getOperation());
         
 		// procedure
-        urlBuff.append("&procedure=" + query.getProcedure());
+        urlBuff.append("&procedure=" + request.getProcedure());
         
-        if (query.getTime() != null)
+        if (request.getTime() != null)
         {
         	urlBuff.append("&time=");
-        	this.writeTimeArgument(urlBuff, query.getTime());
+        	this.writeTimeArgument(urlBuff, request.getTime());
         }
         
         // format
-        urlBuff.append("&format=" + query.getFormat());
-		
-		return urlBuff.toString();
+        urlBuff.append("&format=" + request.getFormat());
+
+        String url = urlBuff.toString();
+        url = url.replaceAll(" ","%20");
+		return url;
 	}
 	
 	
 	@Override
-	public Element buildXMLQuery(DOMHelper dom, DescribeSensorRequest query) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, DescribeSensorRequest request) throws OWSException
 	{
-		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI("SOS", "1.0"));			
+		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI("SOS", request.getVersion()));			
 		
 		// root element
 		Element rootElt = dom.createElement("sos:GetObservation");
-		addCommonXML(dom, rootElt, query);
+		addCommonXML(dom, rootElt, request);
 		
 		// procedure
-        if (query.getProcedure() != null)
-        	dom.setElementValue(rootElt, "sos:procedure", query.getProcedure());
+        if (request.getProcedure() != null)
+        	dom.setElementValue(rootElt, "sos:procedure", request.getProcedure());
         
 		// time instant or period
         try
         {
-            TimeInfo timeInfo = query.getTime();
+            TimeInfo timeInfo = request.getTime();
             if (timeInfo != null)
             {
                 Element timeElt = timeWriter.writeTime(dom, timeInfo);
@@ -118,7 +120,7 @@ public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSenso
         }
 		
 		// result format
-		dom.setAttributeValue(rootElt, "@resultFormat", query.getFormat());
+		dom.setAttributeValue(rootElt, "@resultFormat", request.getFormat());
         
 		return rootElt;
 	}

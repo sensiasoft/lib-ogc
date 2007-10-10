@@ -9,15 +9,14 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "SensorML DataProcessing Engine".
+ The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the
- University of Alabama in Huntsville (UAH).
- Portions created by the Initial Developer are Copyright (C) 2006
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -31,31 +30,31 @@ import org.vast.ows.*;
 
 /**
  * <p><b>Title:</b><br/>
- * WMS POST/GET Request Reader
+ * GetMap Request Reader v1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provides methods to parse a GET or POST WMS request and
- * create a WMSQuery object for versions 1.0.8, 1.1.0, 1.1.1
+ * Provides methods to parse a KVP or XML GetMap request and
+ * create a GetMapRequest object for version 1.1
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Nov 4, 2005
+ * @date Oct 10, 2007
  * @version 1.0
  */
-public class WMSRequestReaderV11 extends WMSRequestReader
+public class GetMapReaderV11 extends AbstractRequestReader<GetMapRequest>
 {
 	
-	public WMSRequestReaderV11()
+	public GetMapReaderV11()
 	{	
 	}
 
 	
 	@Override
-	public WMSQuery readURLQuery(String queryString) throws OWSException
+	public GetMapRequest readURLQuery(String queryString) throws OWSException
 	{
-		WMSQuery query = new WMSQuery();
+		GetMapRequest request = new GetMapRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
         
         while (st.hasMoreTokens())
@@ -79,170 +78,117 @@ public class WMSRequestReaderV11 extends WMSRequestReader
             // service ID
             if (argName.equalsIgnoreCase("service"))
             {
-                query.setService(argValue);
+                request.setService(argValue);
             }
             
             // service version
             else if (argName.equalsIgnoreCase("version"))
             {
-                query.setVersion(argValue);
+                request.setVersion(argValue);
             }
 
             // request argument
             else if (argName.equalsIgnoreCase("request"))
             {
-                query.setRequest(argValue);
+                request.setOperation(argValue);
             }
             
             // layers argument
             else if (argName.equalsIgnoreCase("layers"))
             {
                 String[] layerList = argValue.split(",");
-                query.getLayers().clear();                 
+                request.getLayers().clear();                 
                 for (int i=0; i<layerList.length; i++)
-                    query.getLayers().add(layerList[i]);
+                    request.getLayers().add(layerList[i]);
             }
             
             // styles argument
             else if (argName.equalsIgnoreCase("styles"))
             {
                 String[] styleList = argValue.split(",");
-                query.getStyles().clear();                 
+                request.getStyles().clear();                 
                 for (int i=0; i<styleList.length; i++)
-                    query.getStyles().add(styleList[i]);
+                    request.getStyles().add(styleList[i]);
             }
             
             // time
             else if (argName.equalsIgnoreCase("time"))
             {
-                this.parseTimeArg(query.getTime(), argValue);
+                this.parseTimeArg(request.getTime(), argValue);
             }
             
             // bbox
             else if (argName.equalsIgnoreCase("bbox"))
             {
-                this.parseBboxArg(query.getBbox(), argValue);
+                this.parseBboxArg(request.getBbox(), argValue);
             }
             
             // width
             else if (argName.equalsIgnoreCase("width"))
             {
-                try {query.setWidth(Integer.parseInt(argValue));}
+                try {request.setWidth(Integer.parseInt(argValue));}
                 catch (NumberFormatException e) {throw new WMSException(invalidKVP + "Width should be an integer value");}
             }
             
             // height
             else if (argName.equalsIgnoreCase("height"))
             {
-                try {query.setHeight(Integer.parseInt(argValue));}
+                try {request.setHeight(Integer.parseInt(argValue));}
                 catch (NumberFormatException e) {throw new WMSException(invalidKVP + "Height should be an integer value");}
             }
             
             // transparency
             else if (argName.equalsIgnoreCase("transparent"))
             {
-                query.setTransparent(Boolean.parseBoolean(argValue));
+                request.setTransparent(Boolean.parseBoolean(argValue));
             }
             
             // format argument
             else if (argName.equalsIgnoreCase("format"))
             {
-                query.setFormat(argValue);
+                request.setFormat(argValue);
             }
 
             else
                 throw new WMSException(invalidKVP + ": Unknown Argument " + argName);
         }
         
-		return query;
+		return request;
 	}
 	
 	
 	@Override
-	public WMSQuery readXMLQuery(DOMHelper dom, Element requestElt) throws WMSException
+	public GetMapRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		String opName = requestElt.getLocalName();
-		WMSQuery query;
-		
-		if (opName.equalsIgnoreCase("GetMap"))
-			query = readGetMapXML(dom, requestElt);
-		
-		else if (opName.equalsIgnoreCase("GetFeatureInfo"))
-			query = readGetFeatureInfoXML(dom, requestElt);
-		
-		else throw new WMSException("Operation " + opName + "not supported");
+		GetMapRequest request = new GetMapRequest();
 		
 		// do common stuffs like version, request name and service type
-		readCommonXML(dom, requestElt, query);		
-		
-		return query;
-	}
-	
-	
-	/**
-	 * Reads a GetMap XML request and fill up the WMSQuery accordingly
-	 * @param dom
-	 * @param requestElt
-	 * @return
-	 * @throws WMSException
-	 */
-	protected WMSQuery readGetMapXML(DOMHelper dom, Element requestElt) throws WMSException
-	{
-		WMSQuery query = new WMSQuery();
+		readCommonXML(dom, requestElt, request);
 		
 		// layer names and styles
 		NodeList layerElts = dom.getElements(requestElt, "StyledLayerDescriptor/NamedLayer");
 		for (int i=0; i<layerElts.getLength(); i++)
 		{
 			Element elt = (Element)layerElts.item(i);
-			query.getLayers().add(dom.getElementValue(elt, "Name"));
+			request.getLayers().add(dom.getElementValue(elt, "Name"));
 			String styleName = dom.getElementValue(elt, "NamedStyle/Name");
 			if (styleName == null) styleName = "";
-			query.getStyles().add(styleName);
+			request.getStyles().add(styleName);
 		}
 		
 		// bounding box
-		parseBbox(query, dom.getElementValue(requestElt, "BoundingBox/coordinates"));
-		query.setSrs(dom.getAttributeValue(requestElt, "BoundingBox/srsName"));
+		String bboxText = dom.getElementValue(requestElt, "BoundingBox/coordinates");
+		this.parseBboxArg(request.getBbox(), bboxText);
+		request.setSrs(dom.getAttributeValue(requestElt, "BoundingBox/srsName"));
 		
 		// output parameters
-		query.setFormat(dom.getElementValue(requestElt, "Output/Format"));
+		request.setFormat(dom.getElementValue(requestElt, "Output/Format"));
 		String transparency = dom.getElementValue(requestElt, "Output/Transparent");
-		query.setTransparent(transparency.equalsIgnoreCase("true") ? true : false);
-		query.setWidth(Integer.parseInt(dom.getElementValue(requestElt, "Output/Size/Width")));
-		query.setHeight(Integer.parseInt(dom.getElementValue(requestElt, "Output/Size/Height")));
-		query.setExceptionType(dom.getElementValue(requestElt, "Exceptions"));
+		request.setTransparent(transparency.equalsIgnoreCase("true") ? true : false);
+		request.setWidth(Integer.parseInt(dom.getElementValue(requestElt, "Output/Size/Width")));
+		request.setHeight(Integer.parseInt(dom.getElementValue(requestElt, "Output/Size/Height")));
+		request.setExceptionType(dom.getElementValue(requestElt, "Exceptions"));
 		
-		return query;
-	}
-	
-	
-	/**
-	 * Parses a GetFeatureInfo request and fill up the WMSQuery accordingly
-	 * @param dom
-	 * @param requestElt
-	 * @return
-	 * @throws WMSException
-	 */
-	protected WMSQuery readGetFeatureInfoXML(DOMHelper dom, Element requestElt) throws WMSException
-	{
-		WMSQuery query = new WMSQuery();
-		
-		return query;
-	}
-	
-	
-	/**
-	 * Parses comma separated BBOX coordinates and set corresponding fields in WMSQuery
-	 * @param query
-	 * @param coordText
-	 */
-	protected void parseBbox(WMSQuery query, String coordText)
-	{
-		String[] coords = coordText.split("[ ,]");
-		query.getBbox().setMinX(Double.parseDouble(coords[0]));
-		query.getBbox().setMinY(Double.parseDouble(coords[1]));
-		query.getBbox().setMaxX(Double.parseDouble(coords[2]));
-		query.getBbox().setMaxY(Double.parseDouble(coords[3]));
+		return request;
 	}
 }

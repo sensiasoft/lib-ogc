@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  * @date Jan 16, 2007
  * @version 1.0
  */
-public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OWSQuery>
+public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<OWSRequest>
 {
     public final static String soapUri = "http://schemas.xmlsoap.org/soap/envelope/";    
 	public final static String unsupportedVersion = "Unsupported Request Version: ";
@@ -62,7 +62,7 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
     /**
      * Helper method to parse any OWS query from an XML/DOM tree
      */
-    public OWSQuery readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+    public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
     {
         String queryType = requestElt.getLocalName();
         String serviceType = dom.getAttributeValue(requestElt, "@service");
@@ -71,7 +71,7 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
         try
         {
             OWSRequestReader reader = (OWSRequestReader)OGCRegistry.createReader(serviceType, queryType, version);
-            OWSQuery query = reader.readXMLQuery(dom, requestElt);
+            OWSRequest query = reader.readXMLQuery(dom, requestElt);
             return query;
         }
         catch (IllegalStateException e)
@@ -84,7 +84,7 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
     /**
      * Helper method to parse any OWS query directly from an InputStream
      */
-    public OWSQuery readXMLQuery(InputStream is) throws OWSException
+    public OWSRequest readXMLQuery(InputStream is) throws OWSException
     {
         return null;
     }
@@ -93,7 +93,7 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
     /**
      * Helper method to parse any OWS query from a URL query string
      */
-    public OWSQuery readURLQuery(String queryString) throws OWSException
+    public OWSRequest readURLQuery(String queryString) throws OWSException
     {
         return readURLQuery(queryString, null);
     }
@@ -103,9 +103,9 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
      * Helper method to parse any OWS query from a URL query string
      * The service type is also specified in case it is missing in the query
      */
-    public OWSQuery readURLQuery(String queryString, String service) throws OWSException
+    public OWSRequest readURLQuery(String queryString, String service) throws OWSException
     {
-    	OWSQuery query = null;
+    	OWSRequest query = null;
     	
     	try
         {
@@ -116,7 +116,7 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
             if (service != null)
                 query.setService(service);        
         
-            OWSRequestReader reader = (OWSRequestReader)OGCRegistry.createReader(query.service, query.request, query.version);
+            OWSRequestReader reader = (OWSRequestReader)OGCRegistry.createReader(query.service, query.operation, query.version);
             query = reader.readURLQuery(queryString);
             return query;
         }
@@ -132,9 +132,9 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
      * @param queryString
      * @return
      */
-    public OWSQuery readCommonQueryArguments(String queryString) throws OWSException
+    public OWSRequest readCommonQueryArguments(String queryString) throws OWSException
     {
-        OWSQuery query = new OWSQuery();
+        OWSRequest query = new OWSRequest();
         try {queryString = URLDecoder.decode(queryString, "UTF-8");}
         catch (UnsupportedEncodingException e) {};
         StringTokenizer st = new StringTokenizer(queryString, "&");
@@ -172,7 +172,7 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
             // request argument
             else if (argName.equalsIgnoreCase("REQUEST"))
             {
-                query.setRequest(argValue);
+                query.setOperation(argValue);
             }
         }
         
@@ -202,11 +202,11 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
     /**
      * Helper method to build an URL query from given query object
      */
-    public String buildURLQuery(OWSQuery query) throws OWSException
+    public String buildURLQuery(OWSRequest query) throws OWSException
     {
         try
         {
-            OWSRequestWriter<OWSQuery> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.request, query.version);
+            OWSRequestWriter<OWSRequest> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.operation, query.version);
             String url = writer.buildURLQuery(query);
             return url;
         }
@@ -221,11 +221,11 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
      * Helper method to build a DOM element containing the request XML
      * Note that the element is not yet appended to any parent.
      */
-    public Element buildXMLQuery(DOMHelper dom, OWSQuery query) throws OWSException
+    public Element buildXMLQuery(DOMHelper dom, OWSRequest query) throws OWSException
     {
         try
         {
-            OWSRequestWriter<OWSQuery> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.request, query.version);
+            OWSRequestWriter<OWSRequest> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.operation, query.version);
             Element requestElt = writer.buildXMLQuery(dom, query);
             return requestElt;
         }
@@ -239,11 +239,11 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
     /**
      * Helper method to write any OWS XML request to an output stream
      */
-    public void writeXMLQuery(OutputStream os, OWSQuery query) throws OWSException
+    public void writeXMLQuery(OutputStream os, OWSRequest query) throws OWSException
     {
         try
         {
-            OWSRequestWriter<OWSQuery> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.request, query.version);
+            OWSRequestWriter<OWSRequest> writer = (OWSRequestWriter)OGCRegistry.createWriter(query.service, query.operation, query.version);
             writer.writeXMLQuery(os, query);
         }
         catch (IllegalStateException e)
@@ -260,7 +260,7 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
      * @return HTTP Connection Object
      * @throws OWSException
      */
-    public HttpURLConnection sendGetRequest(OWSQuery query) throws OWSException
+    public HttpURLConnection sendGetRequest(OWSRequest query) throws OWSException
     {
 	    String requestString = null;
         
@@ -295,7 +295,7 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
      * @return HTTP Connection Object
      * @throws OWSException
      */
-    public HttpURLConnection sendPostRequest(OWSQuery query) throws OWSException
+    public HttpURLConnection sendPostRequest(OWSRequest query) throws OWSException
     {
 	    String requestString = null;
         
@@ -322,7 +322,7 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-type", "text/xml");
-            connection.setRequestProperty("SOAPAction", query.getRequest());
+            connection.setRequestProperty("SOAPAction", query.getOperation());
             PrintStream out = new PrintStream(connection.getOutputStream());
             
             // send post data            
@@ -351,7 +351,7 @@ public class OWSUtils implements OWSRequestReader<OWSQuery>, OWSRequestWriter<OW
      * @return HTTP Connection Object
      * @throws OWSException
      */
-    public HttpURLConnection sendSoapRequest(OWSQuery query) throws OWSException
+    public HttpURLConnection sendSoapRequest(OWSRequest query) throws OWSException
     {
 	    String requestString = null;
         

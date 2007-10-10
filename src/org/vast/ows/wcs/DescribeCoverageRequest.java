@@ -23,7 +23,7 @@
 package org.vast.ows.wcs;
 
 import java.util.ArrayList;
-import org.vast.ows.OWSQuery;
+import org.vast.ows.OWSRequest;
 
 
 /**
@@ -40,7 +40,7 @@ import org.vast.ows.OWSQuery;
  * @date Spe 21, 2007
  * @version 1.0
  */
-public class DescribeCoverageRequest extends OWSQuery
+public class DescribeCoverageRequest extends OWSRequest
 {
     protected ArrayList<String> coverages;
 	
@@ -48,7 +48,7 @@ public class DescribeCoverageRequest extends OWSQuery
     public DescribeCoverageRequest()
     {
         service = "WCS";
-        request = "DescribeCoverage";
+        operation = "DescribeCoverage";
         coverages = new ArrayList<String>();
     }
 

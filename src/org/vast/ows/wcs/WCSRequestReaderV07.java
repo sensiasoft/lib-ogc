@@ -56,7 +56,7 @@ public class WCSRequestReaderV07 extends AbstractRequestReader<GetCoverageReques
 	@Override
 	public GetCoverageRequest readURLQuery(String queryString) throws OWSException
 	{
-		GetCoverageRequest query = new GetCoverageRequest();
+		GetCoverageRequest request = new GetCoverageRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
         
         while (st.hasMoreTokens())
@@ -80,57 +80,57 @@ public class WCSRequestReaderV07 extends AbstractRequestReader<GetCoverageReques
             // service ID
             if (argName.equalsIgnoreCase("service"))
             {
-                query.setService(argValue);
+                request.setService(argValue);
             }
             
             // service version
             else if (argName.equalsIgnoreCase("version"))
             {
-                query.setVersion(argValue);
+                request.setVersion(argValue);
             }
 
             // request argument
             else if (argName.equalsIgnoreCase("request"))
             {
-                query.setRequest(argValue);
+                request.setOperation(argValue);
             }
 
             // format argument
             else if (argName.equalsIgnoreCase("format"))
             {
-                query.setFormat(argValue);
+                request.setFormat(argValue);
             }
             
             // time
             else if (argName.equalsIgnoreCase("time"))
             {
-                this.parseTimeArg(query.getTimes().get(0), argValue);
+                this.parseTimeArg(request.getTimes().get(0), argValue);
             }
             
             // bbox
             else if (argName.equalsIgnoreCase("bbox"))
             {
-                this.parseBboxArg(query.getBbox(), argValue);
+                this.parseBboxArg(request.getBbox(), argValue);
             }
 
             else
                 throw new WCSException(invalidKVP + ": Unknown Argument " + argName);
         }
 
-        return query;
+        return request;
 	}
 	
 	
 	@Override
 	public GetCoverageRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		GetCoverageRequest query = new GetCoverageRequest();
+		GetCoverageRequest request = new GetCoverageRequest();
 		
 		// TODO readXMLQuery
 		
 		// do common stuffs like version, request name and service type
-		readCommonXML(dom, requestElt, query);		
+		readCommonXML(dom, requestElt, request);		
 		
-		return query;
+		return request;
 	}
 }

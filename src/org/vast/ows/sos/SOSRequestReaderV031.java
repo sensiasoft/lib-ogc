@@ -104,7 +104,7 @@ public class SOSRequestReaderV031 extends SOSRequestReader
 			// request argument
 			else if (argName.equalsIgnoreCase("request"))
 			{
-				query.setRequest(argValue);
+				query.setOperation(argValue);
 			}
 
 			// offering argument

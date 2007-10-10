@@ -66,13 +66,13 @@ public abstract class SOSServlet extends OWSServlet
 	protected void processQuery(SOSQuery query) throws Exception
 	{
 		// GetCapabilities request
-		if (query.getRequest().equalsIgnoreCase("GetCapabilities"))
+		if (query.getOperation().equalsIgnoreCase("GetCapabilities"))
 		{
 			sendCapabilities("ALL", query.getResponseStream());
 		}
 		
 		// DescribeSensor request
-		else if (query.getRequest().equalsIgnoreCase("DescribeSensor"))
+		else if (query.getOperation().equalsIgnoreCase("DescribeSensor"))
 		{
 			String sensorId = query.getProcedures().get(0);
 			if (sensorId == null)
@@ -87,7 +87,7 @@ public abstract class SOSServlet extends OWSServlet
 	    }
 		
 		// GetObservation request
-		else if (query.getRequest().equalsIgnoreCase("GetObservation"))
+		else if (query.getOperation().equalsIgnoreCase("GetObservation"))
 		{
 		
 			if (query.getOffering() == null)
@@ -120,7 +120,7 @@ public abstract class SOSServlet extends OWSServlet
 		// Unrecognized request type
 		else
 		{
-			throw new SOSException(query.getRequest() + " request unsupported on this server: Use GetCapabilities, GetObservation, DescribeSensor"); 
+			throw new SOSException(query.getOperation() + " request unsupported on this server: Use GetCapabilities, GetObservation, DescribeSensor"); 
 		}
 	}
 	

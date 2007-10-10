@@ -39,7 +39,7 @@ package org.vast.ows;
  * @date Sep 21, 2007
  * @version 1.0
  */
-public class GetCapabilitiesRequest extends OWSQuery
+public class GetCapabilitiesRequest extends OWSRequest
 {
     protected String section;
 	
@@ -47,7 +47,7 @@ public class GetCapabilitiesRequest extends OWSQuery
     public GetCapabilitiesRequest()
     {
         service = "OWS";
-        request = "GetCapabilities";
+        operation = "GetCapabilities";
     }
 
 

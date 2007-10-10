@@ -43,7 +43,7 @@ import org.vast.xml.QName;
  *
  * <p><b>Description:</b><br/>
  * Provides methods to generate a KVP or XML GetCoverage request based
- * on values contained in a GetCoverage object for version 1.0
+ * on values contained in a GetCoverageRequest object for version 1.0
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -57,52 +57,52 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
 	
 	
 	@Override
-	public String buildURLQuery(GetCoverageRequest query) throws OWSException
+	public String buildURLQuery(GetCoverageRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(query.getGetServer());
+		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
 		
         urlBuff.append("SERVICE=WCS");
-        urlBuff.append("&VERSION=" + query.getVersion());
-        urlBuff.append("&REQUEST=" + query.getRequest());
+        urlBuff.append("&VERSION=" + request.getVersion());
+        urlBuff.append("&REQUEST=" + request.getOperation());
         
         // COVERAGE
-        urlBuff.append("&COVERAGE=" + query.getCoverage());
+        urlBuff.append("&COVERAGE=" + request.getCoverage());
         
         // TIME
-        if (query.getTime() != null)
+        if (request.getTime() != null)
         {
             urlBuff.append("&TIME=");
-            this.writeTimeArgument(urlBuff, query.getTime());
+            this.writeTimeArgument(urlBuff, request.getTime());
         }
         
         // BBOX and CRS if specified
-        if (query.getBbox() != null)
+        if (request.getBbox() != null)
         {
-        	urlBuff.append("&CRS=" + query.getBbox().getCrs());
+        	urlBuff.append("&CRS=" + request.getBbox().getCrs());
         	urlBuff.append("&BBOX=");
-	        this.writeBboxArgument(urlBuff, query.getBbox());
+	        this.writeBboxArgument(urlBuff, request.getBbox());
 	        
 	        // add either RESX/RESY or WIDTH/HEIGHT
-	        if (query.isUseResolution())
+	        if (request.isUseResolution())
 	        {	        
-	        	urlBuff.append("&RESX=" + query.getResX());
-	        	urlBuff.append("&RESY=" + query.getResY());
-	        	if (query.getResZ() > 0)
-	        		urlBuff.append("&RESZ=" + query.getResZ());
+	        	urlBuff.append("&RESX=" + request.getResX());
+	        	urlBuff.append("&RESY=" + request.getResY());
+	        	if (request.getResZ() > 0)
+	        		urlBuff.append("&RESZ=" + request.getResZ());
 	        }
 	        else
 	        {
-	        	urlBuff.append("&WIDTH=" + query.getWidth());
-	        	urlBuff.append("&HEIGHT=" + query.getHeight());
-	        	if (query.getDepth() > 0)
-	        		urlBuff.append("&DEPTH=" + query.getDepth());
+	        	urlBuff.append("&WIDTH=" + request.getWidth());
+	        	urlBuff.append("&HEIGHT=" + request.getHeight());
+	        	if (request.getDepth() > 0)
+	        		urlBuff.append("&DEPTH=" + request.getDepth());
 	        }
         }
         
         // {PARAMETERS}
-        for (int i=0; i<query.getAxisSubsets().size(); i++)
+        for (int i=0; i<request.getAxisSubsets().size(); i++)
         {
-	        AxisSubset param = query.getAxisSubsets().get(i);
+	        AxisSubset param = request.getAxisSubsets().get(i);
 	        urlBuff.append("&" + param.getName().toUpperCase() + "=");
 	        
         	if (!param.getRangeIntervals().isEmpty()) // case of interval
@@ -127,24 +127,24 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
         }
         
         // RESPONSE_CRS
-        if (query.getGridCrs() != null)
-        	urlBuff.append("&RESPONSE_CRS=" + query.getGridCrs());
+        if (request.getGridCrs() != null)
+        	urlBuff.append("&RESPONSE_CRS=" + request.getGridCrs());
         
         // FORMAT
-        urlBuff.append("&FORMAT=" + query.getFormat());
+        urlBuff.append("&FORMAT=" + request.getFormat());
         
         // vendor parameters
-        Enumeration<String> paramEnum = query.getVendorParameters().keys();
+        Enumeration<String> paramEnum = request.getVendorParameters().keys();
         while (paramEnum.hasMoreElements())
         {
         	String key = paramEnum.nextElement();
-        	String val = query.getVendorParameters().get(key);
+        	String val = request.getVendorParameters().get(key);
         	urlBuff.append("&" + key.toUpperCase() + "=" + val);
         }        	
         
         // EXCEPTIONS
-        if (query.getExceptionType() != null)
-        	urlBuff.append("&EXCEPTIONS=" + query.getExceptionType());
+        if (request.getExceptionType() != null)
+        	urlBuff.append("&EXCEPTIONS=" + request.getExceptionType());
         
         // replace spaces
         String url = urlBuff.toString();
@@ -154,39 +154,39 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
 	
 	
 	@Override
-	public Element buildXMLQuery(DOMHelper dom, GetCoverageRequest query) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, GetCoverageRequest request) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI("WCS", query.getVersion()));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI("WCS", request.getVersion()));
 		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI("GML", "3.1.1"));
 		
 		// root element
 		Element rootElt = dom.createElement("GetCoverage");
-		addCommonXML(dom, rootElt, query);
+		addCommonXML(dom, rootElt, request);
 		
 		// source coverage
-		dom.setElementValue(rootElt, "sourceCoverage", query.getCoverage());
+		dom.setElementValue(rootElt, "sourceCoverage", request.getCoverage());
 		
 		////// domain subset //////
 		Element domainElt = dom.addElement(rootElt, "domainSubset");
 		
 		// spatial subset
-		if (query.getBbox() != null)
+		if (request.getBbox() != null)
 		{
 			Element spatialElement = dom.addElement(domainElt, "spatialSubset");
 			
 			// envelope
-			Element envelopeElt = envelopeWriter.writeEnvelope(dom, query.getBbox());
+			Element envelopeElt = envelopeWriter.writeEnvelope(dom, request.getBbox());
 			spatialElement.appendChild(envelopeElt);
 			
 			// grid definition
-			if (!query.isUseResolution()) // grid width/height
+			if (!request.isUseResolution()) // grid width/height
 			{
 				Element gridElt = dom.addElement(spatialElement, "gml:Grid");
 				dom.setAttributeValue(gridElt, "@dimension", "2");				
 				
 				Element gridEnvElt = dom.addElement(gridElt, "gml:limits/gml:GridEnvelope");
 				dom.setElementValue(gridEnvElt, "gml:low", "0 0");
-				dom.setElementValue(gridEnvElt, "gml:high", query.getWidth() + " " + query.getHeight());
+				dom.setElementValue(gridEnvElt, "gml:high", request.getWidth() + " " + request.getHeight());
 				
 				dom.setElementValue(gridElt, "+gml:axisName", "u");
 				dom.setElementValue(gridElt, "+gml:axisName", "v");
@@ -198,13 +198,13 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
 		}
 		
 		// temporal subset
-		if (query.getTime() != null)
+		if (request.getTime() != null)
 		{
 			Element temporalElt = dom.addElement(domainElt, "temporalSubset");
 			
-			for (int i=0; i<query.getTimes().size(); i++)
+			for (int i=0; i<request.getTimes().size(); i++)
 			{
-				TimeInfo timeInfo = query.getTimes().get(i);
+				TimeInfo timeInfo = request.getTimes().get(i);
 				if (timeInfo.isTimeInstant())
 				{
 					String time = DateTimeFormat.formatIso(timeInfo.getBaseTime(), timeInfo.getTimeZone());
@@ -229,9 +229,9 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
 		}
 		
 		////// range subset //////
-		for (int i=0; i<query.getAxisSubsets().size(); i++)
+		for (int i=0; i<request.getAxisSubsets().size(); i++)
         {
-	        AxisSubset param = query.getAxisSubsets().get(i);
+	        AxisSubset param = request.getAxisSubsets().get(i);
 			Element axisElt = dom.addElement(rootElt, "rangeSubset/+axisSubset");
 			dom.setAttributeValue(axisElt, "@name", param.getName());
 			
@@ -252,16 +252,16 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
 		}
 				
 		////// interpolation method //////
-		if (query.getInterpolationMethod() != null)
-			dom.setElementValue(rootElt, "interpolationMethod", query.getInterpolationMethod());
+		if (request.getInterpolationMethod() != null)
+			dom.setElementValue(rootElt, "interpolationMethod", request.getInterpolationMethod());
 		
 		////// output parameters //////
 		Element outputElt = dom.addElement(rootElt, "output");
 		
-		if (query.getGridCrs() != null)
-			dom.setElementValue(outputElt, "crs", query.getGridCrs());
+		if (request.getGridCrs() != null)
+			dom.setElementValue(outputElt, "crs", request.getGridCrs());
 		
-		dom.setElementValue(outputElt, "format", query.getFormat());
+		dom.setElementValue(outputElt, "format", request.getFormat());
 		
 		return rootElt;
 	}

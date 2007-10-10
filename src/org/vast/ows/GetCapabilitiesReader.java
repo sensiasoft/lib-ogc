@@ -55,7 +55,7 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 	@Override
 	public GetCapabilitiesRequest readURLQuery(String queryString) throws OWSException
 	{
-		GetCapabilitiesRequest query = new GetCapabilitiesRequest();
+		GetCapabilitiesRequest request = new GetCapabilitiesRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
         
         while (st.hasMoreTokens())
@@ -79,38 +79,38 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
             // service ID
             if (argName.equalsIgnoreCase("service"))
             {
-                query.setService(argValue);
+                request.setService(argValue);
             }
             
             // service version
             else if (argName.equalsIgnoreCase("version"))
             {
-                query.setVersion(argValue);
+                request.setVersion(argValue);
             }
 
             // request argument
             else if (argName.equalsIgnoreCase("request"))
             {
-                query.setRequest(argValue);
+                request.setOperation(argValue);
             }
 
             // section argument
             else if (argName.equalsIgnoreCase("section"))
             {
-                query.setSection(argValue);
+                request.setSection(argValue);
             }
         }
 
-        return query;
+        return request;
 	}
 	
 	
 	@Override
 	public GetCapabilitiesRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		GetCapabilitiesRequest query = new GetCapabilitiesRequest();
-		query.setSection(dom.getElementValue(requestElt, "section")); 
-		readCommonXML(dom, requestElt, query);		
-		return query;
+		GetCapabilitiesRequest request = new GetCapabilitiesRequest();
+		request.setSection(dom.getElementValue(requestElt, "section")); 
+		readCommonXML(dom, requestElt, request);		
+		return request;
 	}
 }

@@ -48,29 +48,29 @@ public class WCSRequestWriterV07 extends AbstractRequestWriter<GetCoverageReques
 {
 	
 	@Override
-	public String buildURLQuery(GetCoverageRequest query) throws OWSException
+	public String buildURLQuery(GetCoverageRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(query.getGetServer());
+		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
 		
         urlBuff.append("service=WCS");
-        urlBuff.append("&version=" + query.getVersion());
-        String request = query.getRequest();
-        urlBuff.append("&request=" + request);
-        if(!"GetCapabilities".equalsIgnoreCase(request)) {
-	        urlBuff.append("&layers=" + query.getCoverage());
-	        urlBuff.append("&crs=" + query.getBbox().getCrs());
+        urlBuff.append("&version=" + request.getVersion());
+        String operation = request.getOperation();
+        urlBuff.append("&request=" + operation);
+        if(!"GetCapabilities".equalsIgnoreCase(operation)) {
+	        urlBuff.append("&layers=" + request.getCoverage());
+	        urlBuff.append("&crs=" + request.getBbox().getCrs());
 	        
-	        if (query.getTime() != null)
+	        if (request.getTime() != null)
 	        {
 	            urlBuff.append("&time=");
-	            this.writeTimeArgument(urlBuff, query.getTime());
+	            this.writeTimeArgument(urlBuff, request.getTime());
 	        }
 	        
 	        urlBuff.append("&bbox=");
-	        this.writeBboxArgument(urlBuff, query.getBbox());
-	        urlBuff.append("&skipX=" + query.getResX());
-	        urlBuff.append("&skipY=" + query.getResY());
-	        urlBuff.append("&format=" + query.getFormat());
+	        this.writeBboxArgument(urlBuff, request.getBbox());
+	        urlBuff.append("&skipX=" + request.getResX());
+	        urlBuff.append("&skipY=" + request.getResY());
+	        urlBuff.append("&format=" + request.getFormat());
         }
 		String url = urlBuff.toString();
 		url.replaceAll(" ","%20");

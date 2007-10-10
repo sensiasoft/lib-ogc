@@ -24,7 +24,7 @@
 package org.vast.ows.wrs;
 
 import java.util.List;
-import org.vast.ows.OWSQuery;
+import org.vast.ows.OWSRequest;
 import org.vast.ows.util.Bbox;
 
 
@@ -41,7 +41,7 @@ import org.vast.ows.util.Bbox;
  * @date Nov 26, 2006
  * @version 1.0
  */
-public class WRSQuery extends OWSQuery
+public class WRSQuery extends OWSRequest
 {
     protected final static String unsupportedVersion = "Unsupported WRS version";
     

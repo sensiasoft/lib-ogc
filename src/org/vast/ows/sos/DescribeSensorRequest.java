@@ -24,7 +24,7 @@ package org.vast.ows.sos;
 
 import java.util.ArrayList;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSQuery;
+import org.vast.ows.OWSRequest;
 import org.vast.ows.util.TimeInfo;
 
 
@@ -42,7 +42,7 @@ import org.vast.ows.util.TimeInfo;
  * @date Oct 09, 2007
  * @version 1.0
  */
-public class DescribeSensorRequest extends OWSQuery
+public class DescribeSensorRequest extends OWSRequest
 {
     public final static String SENSORML_FORMAT = "text/xml;subType=\"SensorML/1.0\"";
     public final static String TML_FORMAT = "text/xml;subType=\"TML/1.0\"";
@@ -55,7 +55,7 @@ public class DescribeSensorRequest extends OWSQuery
 	public DescribeSensorRequest()
 	{
 		service = "SOS";
-		request = "DescribeSensor";
+		operation = "DescribeSensor";
 		format = SENSORML_FORMAT;
 	}
 	

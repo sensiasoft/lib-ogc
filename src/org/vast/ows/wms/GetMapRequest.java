@@ -9,15 +9,14 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "SensorML DataProcessing Engine".
+ The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the
- University of Alabama in Huntsville (UAH).
- Portions created by the Initial Developer are Copyright (C) 2006
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -26,29 +25,27 @@ package org.vast.ows.wms;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.vast.ows.OWSQuery;
+import org.vast.ows.OWSRequest;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
 
 
 /**
  * <p><b>Title:</b><br/>
- * WMS Query
+ * WMS GetMap Request
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for WMS query parameters
+ * Container for GetMap request parameters
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @date Oct 27, 2005
+ * <p>Copyright (c) 2007</p>
+ * @author Alex Robin
+ * @date Oct 10, 2007
  * @version 1.0
  */
-public class WMSQuery extends OWSQuery
+public class GetMapRequest extends OWSRequest
 {
-    protected final static String unsupportedVersion = "Unsupported WMS version";
-    
     protected TimeInfo time;
 	protected Bbox bbox;
 	protected String srs;
@@ -61,7 +58,7 @@ public class WMSQuery extends OWSQuery
 	protected List<String> styles;
 
 	
-	public WMSQuery()
+	public GetMapRequest()
 	{
 		service = "WMS";
 		bbox = new Bbox();

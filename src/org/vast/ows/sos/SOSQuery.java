@@ -25,7 +25,7 @@ package org.vast.ows.sos;
 
 import java.util.*;
 
-import org.vast.ows.OWSQuery;
+import org.vast.ows.OWSRequest;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
 
@@ -45,7 +45,7 @@ import org.vast.ows.util.TimeInfo;
  * @version 1.0
  * @deprecated Oct 10, 2007 use GetObservationRequest, DescribeSensorRequest, GetResultRequest...
  */
-public class SOSQuery extends OWSQuery
+public class SOSQuery extends OWSRequest
 {
     protected final static String unsupportedVersion = "Unsupported SOS version";
     

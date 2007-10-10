@@ -67,33 +67,33 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
 
 	
 	@Override
-	public String buildURLQuery(GetObservationRequest query) throws OWSException
+	public String buildURLQuery(GetObservationRequest request) throws OWSException
 	{
 		StringBuffer urlBuff;
 		
-		urlBuff = new StringBuffer(query.getGetServer());
+		urlBuff = new StringBuffer(request.getGetServer());
 		urlBuff.append("service=SOS");
-		urlBuff.append("&version=" + query.getVersion());
-		urlBuff.append("&request=" + query.getRequest());
+		urlBuff.append("&version=" + request.getVersion());
+		urlBuff.append("&request=" + request.getOperation());
 		
 		// offering
-		urlBuff.append("&offering=" + query.getOffering());
+		urlBuff.append("&offering=" + request.getOffering());
         
 		// event time
-		if (query.getTime() != null)
+		if (request.getTime() != null)
 		{
 			urlBuff.append("&time=");
-	        this.writeTimeArgument(urlBuff, query.getTime());
+	        this.writeTimeArgument(urlBuff, request.getTime());
 		}
         
         // procedure list
-        int procCount = query.getProcedures().size();
+        int procCount = request.getProcedures().size();
         for (int i=0; i<procCount; i++)
         {
             if (i == 0)
                 urlBuff.append("&procedures=");
             
-            String nextProc = query.getProcedures().get(i);            
+            String nextProc = request.getProcedures().get(i);            
             try {urlBuff.append(URLEncoder.encode(nextProc, "UTF-8"));}
             catch (UnsupportedEncodingException e) {e.printStackTrace();}
             
@@ -102,13 +102,13 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
         }
         
 		// observable list
-		int obsCount = query.getObservables().size();
+		int obsCount = request.getObservables().size();
 		for (int i=0; i<obsCount; i++)
 		{
 			if (i == 0)
 				urlBuff.append("&observables=");
 			
-            String nextObs = query.getObservables().get(i);            
+            String nextObs = request.getObservables().get(i);            
 			try {urlBuff.append(URLEncoder.encode(nextObs, "UTF-8"));}
             catch (UnsupportedEncodingException e) {e.printStackTrace();}
 			
@@ -117,7 +117,7 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
 		}
 		
 		// add bbox only if specified
-		Bbox bbox = query.getBbox();
+		Bbox bbox = request.getBbox();
         if (bbox != null && !bbox.isNull())
         {
             urlBuff.append("&bbox=");
@@ -125,37 +125,39 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
         }
         
         // format
-        urlBuff.append("&format=" + query.getFormat());
+        urlBuff.append("&format=" + request.getFormat());
         
         // response mode
-        if (query.getResponseMode() != null)
-            urlBuff.append("&responseMode=" + this.getResponseMode(query));
+        if (request.getResponseMode() != null)
+            urlBuff.append("&responseMode=" + this.getResponseMode(request));
         
         // result model
-        if (query.getResultModel() != null)
-            urlBuff.append("&resultModel=" + query.getResultModel());
+        if (request.getResultModel() != null)
+            urlBuff.append("&resultModel=" + request.getResultModel());
 		
-		return urlBuff.toString();
+        String url = urlBuff.toString();
+        url = url.replaceAll(" ","%20");
+		return url;
 	}
 	
 	
 	@Override
-	public Element buildXMLQuery(DOMHelper dom, GetObservationRequest query) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, GetObservationRequest request) throws OWSException
 	{
-		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI("SOS", "1.0"));
+		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI("SOS", request.getVersion()));
 		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI("OGC"));
 		
 		// root element
 		Element rootElt = dom.createElement("sos:GetObservation");
-		addCommonXML(dom, rootElt, query);
+		addCommonXML(dom, rootElt, request);
 		
 		// offering
-		dom.setElementValue(rootElt, "sos:offering", query.getOffering());
+		dom.setElementValue(rootElt, "sos:offering", request.getOffering());
 		
 		// event time
         try
         {
-            TimeInfo timeInfo = query.getTime();
+            TimeInfo timeInfo = request.getTime();
             if (timeInfo != null)
             {
                 Element timeElt = timeWriter.writeTime(dom, timeInfo);
@@ -169,19 +171,19 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
         }
         
         // procedures
-		int procCount = query.getProcedures().size();
+		int procCount = request.getProcedures().size();
 		for (int i=0; i<procCount; i++)
-			dom.setElementValue(rootElt, "+sos:procedure", query.getProcedures().get(i));
+			dom.setElementValue(rootElt, "+sos:procedure", request.getProcedures().get(i));
         
 		// observables
-		int obsCount = query.getObservables().size();
+		int obsCount = request.getObservables().size();
 		for (int i=0; i<obsCount; i++)
-			dom.setElementValue(rootElt, "+sos:observedProperty", query.getObservables().get(i));
+			dom.setElementValue(rootElt, "+sos:observedProperty", request.getObservables().get(i));
 		
         // foi bbox
         try
         {
-            Bbox bbox = query.getBbox();
+            Bbox bbox = request.getBbox();
             if (bbox != null && !bbox.isNull())
             {
                 Element envelopeElt = bboxWriter.writeEnvelope(dom, bbox);
@@ -195,15 +197,15 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
         }
 		
 		// response format
-		dom.setElementValue(rootElt, "sos:responseFormat", query.getFormat());
+		dom.setElementValue(rootElt, "sos:responseFormat", request.getFormat());
         
 		// result model
-        if (query.getResultModel() != null)
-            dom.setElementValue(rootElt, "sos:resultModel", query.getResultModel());
+        if (request.getResultModel() != null)
+            dom.setElementValue(rootElt, "sos:resultModel", request.getResultModel());
         
         // response mode (inline, attached, etc...)
-        if (query.getResponseMode() != null)
-            dom.setElementValue(rootElt, "sos:responseMode", this.getResponseMode(query));
+        if (request.getResponseMode() != null)
+            dom.setElementValue(rootElt, "sos:responseMode", this.getResponseMode(request));
         
 		return rootElt;
 	}

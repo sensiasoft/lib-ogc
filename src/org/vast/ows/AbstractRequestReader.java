@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  * @date Nov 4, 2005
  * @version 1.0
  */
-public abstract class AbstractRequestReader<QueryType extends OWSQuery> implements OWSRequestReader<QueryType>
+public abstract class AbstractRequestReader<RequestType extends OWSRequest> implements OWSRequestReader<RequestType>
 {
 	protected final static String invalidReq = "Invalid Request";
 	protected final static String invalidKVP = "Invalid KVP Request";
@@ -61,11 +61,11 @@ public abstract class AbstractRequestReader<QueryType extends OWSQuery> implemen
 	}
 	
     
-    public abstract QueryType readURLQuery(String queryString) throws OWSException;
-	public abstract QueryType readXMLQuery(DOMHelper domHelper, Element requestElt) throws OWSException;
+    public abstract RequestType readURLQuery(String queryString) throws OWSException;
+	public abstract RequestType readXMLQuery(DOMHelper domHelper, Element requestElt) throws OWSException;
 	
     
-    public QueryType readXMLQuery(InputStream input) throws OWSException
+    public RequestType readXMLQuery(InputStream input) throws OWSException
 	{
 		try
 		{
@@ -210,9 +210,9 @@ public abstract class AbstractRequestReader<QueryType extends OWSQuery> implemen
 	 * @param requestElt
 	 * @param query
 	 */
-	protected void readCommonXML(DOMHelper dom, Element requestElt, OWSQuery query)
+	protected void readCommonXML(DOMHelper dom, Element requestElt, OWSRequest query)
 	{
-		query.setRequest(requestElt.getLocalName());
+		query.setOperation(requestElt.getLocalName());
 		query.setService(dom.getAttributeValue(requestElt, "service"));
 		query.setVersion(dom.getAttributeValue(requestElt, "version"));
 	}

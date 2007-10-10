@@ -74,7 +74,7 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
 		urlBuff = new StringBuffer(query.getGetServer());
 		urlBuff.append("service=SOS");
 		urlBuff.append("&version=" + query.getVersion());
-		urlBuff.append("&request=" + query.getRequest());
+		urlBuff.append("&request=" + query.getOperation());
 		urlBuff.append("&offering=" + query.getOffering());
         
 		urlBuff.append("&time=");

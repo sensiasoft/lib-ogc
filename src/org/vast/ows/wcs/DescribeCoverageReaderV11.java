@@ -49,7 +49,7 @@ public class DescribeCoverageReaderV11 extends AbstractRequestReader<DescribeCov
 	@Override
 	public DescribeCoverageRequest readURLQuery(String queryString) throws OWSException
 	{
-		DescribeCoverageRequest query = new DescribeCoverageRequest();
+		DescribeCoverageRequest request = new DescribeCoverageRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
         
         while (st.hasMoreTokens())
@@ -73,19 +73,19 @@ public class DescribeCoverageReaderV11 extends AbstractRequestReader<DescribeCov
             // SERVICE
             if (argName.equalsIgnoreCase("SERVICE"))
             {
-                query.setService(argValue);
+                request.setService(argValue);
             }
             
             // VERSION
             else if (argName.equalsIgnoreCase("VERSION"))
             {
-                query.setVersion(argValue);
+                request.setVersion(argValue);
             }
 
             // REQUEST
             else if (argName.equalsIgnoreCase("REQUEST"))
             {
-                query.setRequest(argValue);
+                request.setOperation(argValue);
             }
             
             // IDENTIFIER list
@@ -93,30 +93,30 @@ public class DescribeCoverageReaderV11 extends AbstractRequestReader<DescribeCov
             {
                 String[] coverageList = argValue.split(",");
                 for (int i=0; i<coverageList.length; i++)
-                	query.getCoverages().add(coverageList[i]);
+                	request.getCoverages().add(coverageList[i]);
             }
         }
 
-        return query;
+        return request;
 	}
 	
 	
 	@Override
 	public DescribeCoverageRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		DescribeCoverageRequest query = new DescribeCoverageRequest();
+		DescribeCoverageRequest request = new DescribeCoverageRequest();
 		
 		// do common stuffs like version, request name and service type
-		readCommonXML(dom, requestElt, query);
+		readCommonXML(dom, requestElt, request);
 		
 		// get all Coverage ids
 		NodeList idElts = dom.getElements(requestElt, "Identifier");
 		for (int i=0; i<idElts.getLength(); i++)
 		{
 			String val = dom.getElementValue((Element)idElts.item(i));
-			query.getCoverages().add(val);
+			request.getCoverages().add(val);
 		}
 		
-		return query;
+		return request;
 	}
 }

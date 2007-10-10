@@ -76,7 +76,7 @@ public abstract class AbstractCapabilitiesReader implements OWSCapabilitiesReade
     	// Try to parse the XML response
     	try
 		{
-    		this.server = OWSQuery.checkServer(server);
+    		this.server = OWSRequest.checkServer(server);
     		this.version = version;
     		String url = buildQuery();
             

@@ -44,5 +44,5 @@ import java.io.IOException;
 public interface SweDataWriter
 {
 	public void write() throws IOException;
-	public void setQuery(OWSQuery query);
+	public void setQuery(OWSRequest query);
 }

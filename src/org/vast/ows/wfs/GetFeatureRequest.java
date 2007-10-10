@@ -26,7 +26,7 @@ package org.vast.ows.wfs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.vast.ows.OWSQuery;
+import org.vast.ows.OWSRequest;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
 
@@ -45,7 +45,7 @@ import org.vast.ows.util.TimeInfo;
  * @date Oct 27, 2005
  * @version 1.0
  */
-public class WFSQuery extends OWSQuery
+public class GetFeatureRequest extends OWSRequest
 {
     protected final static String unsupportedVersion = "Unsupported WFS version";
     
@@ -57,7 +57,7 @@ public class WFSQuery extends OWSQuery
 	protected int maxFeatures;
 
 	
-	public WFSQuery()
+	public GetFeatureRequest()
 	{
 		service = "WFS";
 		bbox = new Bbox();

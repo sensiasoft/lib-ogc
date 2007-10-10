@@ -43,7 +43,7 @@ import org.vast.ogc.OGCRegistry;
  * @date Oct 27, 2005
  * @version 1.0
  */
-public class OWSQuery
+public class OWSRequest
 {
 	protected final static String EXCEPTION_MIME_TYPE = "application/vnd.ogc.se_xml";
 	protected OutputStream responseStream;
@@ -51,12 +51,12 @@ public class OWSQuery
 	protected String postServer;
 	protected String service;
 	protected String version;
-	protected String request;
+	protected String operation;
     protected String exceptionType;
     protected Hashtable<String, String> vendorParameters;
     
 	
-    public OWSQuery()
+    public OWSRequest()
     {
     	exceptionType = EXCEPTION_MIME_TYPE;
     }
@@ -81,7 +81,7 @@ public class OWSQuery
 			missingParams.add(0, "VERSION");
 		
 		// need REQUEST
-		if (this.getRequest() == null)
+		if (this.getOperation() == null)
 			missingParams.add(0, "REQUEST");
 		
 		// need SERVICE
@@ -162,15 +162,15 @@ public class OWSQuery
 	}
 
 
-	public String getRequest()
+	public String getOperation()
 	{
-		return request;
+		return operation;
 	}
 
 
-	public void setRequest(String request)
+	public void setOperation(String operation)
 	{
-		this.request = request;
+		this.operation = operation;
 	}
 
 

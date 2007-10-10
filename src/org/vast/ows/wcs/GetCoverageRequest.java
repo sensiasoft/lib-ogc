@@ -25,7 +25,7 @@ package org.vast.ows.wcs;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSQuery;
+import org.vast.ows.OWSRequest;
 import org.vast.ows.util.AxisSubset;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
@@ -45,7 +45,7 @@ import org.vast.ows.util.TimeInfo;
  * @date Sep 21, 2007
  * @version 1.0
  */
-public class GetCoverageRequest extends OWSQuery
+public class GetCoverageRequest extends OWSRequest
 {
     public final static String SIMPLE_GRID = "urn:ogc:def:method:WCS:1.1:2dSimpleGrid";
     public final static String GRID_2D_IN_CRS_2D = "urn:ogc:def:method:WCS:1.1:2dGridin2dCrs";
@@ -72,7 +72,7 @@ public class GetCoverageRequest extends OWSQuery
 	public GetCoverageRequest()
     {
         service = "WCS";
-        request = "GetCoverage";
+        operation = "GetCoverage";
         
         axisSubsets = new ArrayList<AxisSubset>();
         times = new ArrayList<TimeInfo>();

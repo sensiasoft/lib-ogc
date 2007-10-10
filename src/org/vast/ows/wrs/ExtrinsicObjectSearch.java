@@ -30,7 +30,7 @@ import java.util.List;
 import java.io.*;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSLayerCapabilities;
-import org.vast.ows.OWSQuery;
+import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSServiceCapabilities;
 import org.vast.ows.OWSUtils;
 import org.w3c.dom.Element;
@@ -245,7 +245,7 @@ public class ExtrinsicObjectSearch extends DOMHelper
 	
 	protected List<OWSLayerCapabilities> getEOSLayers(ArrayList idList, String server)
 	{
-		server = OWSQuery.checkServer(server);	
+		server = OWSRequest.checkServer(server);	
 			
 		OWSServiceCapabilities owsCap=null;
 		

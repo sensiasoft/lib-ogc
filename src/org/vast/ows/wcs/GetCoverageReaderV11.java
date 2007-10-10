@@ -60,7 +60,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 	@Override
 	public GetCoverageRequest readURLQuery(String queryString) throws OWSException
 	{
-		GetCoverageRequest query = new GetCoverageRequest();
+		GetCoverageRequest request = new GetCoverageRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
         
         while (st.hasMoreTokens())
@@ -84,25 +84,25 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
             // service
             if (argName.equalsIgnoreCase("service"))
             {
-                query.setService(argValue);
+                request.setService(argValue);
             }
             
             // version
             else if (argName.equalsIgnoreCase("version"))
             {
-                query.setVersion(argValue);
+                request.setVersion(argValue);
             }
 
             // request
             else if (argName.equalsIgnoreCase("request"))
             {
-                query.setRequest(argValue);
+                request.setOperation(argValue);
             }
             
             // Coverage Identifier
             else if (argName.equalsIgnoreCase("identifier"))
             {
-                query.setCoverage(argValue);
+                request.setCoverage(argValue);
             }
             
             // Sequence of time periods or instants
@@ -119,64 +119,64 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
             // BoundingBox + integrated CRS
             else if (argName.equalsIgnoreCase("BoundingBox"))
             {
-            	if (query.getBbox() == null)
-            		query.setBbox(new Bbox());
-            	this.parseBboxArg(query.getBbox(), argValue);
+            	if (request.getBbox() == null)
+            		request.setBbox(new Bbox());
+            	this.parseBboxArg(request.getBbox(), argValue);
             }
             
             // RangeSubset
             else if (argName.equalsIgnoreCase("RangeSubset"))
             {
-            	this.parseRangeSubset(query, argValue);
+            	this.parseRangeSubset(request, argValue);
             }
             
             // GridBaseCRS
             else if (argName.equalsIgnoreCase("GridBaseCRS"))
             {
-            	query.setGridCrs(argValue);
+            	request.setGridCrs(argValue);
             }
             
             // GridCS
             else if (argName.equalsIgnoreCase("GridCS"))
             {
-            	query.setGridCs(argValue);
+            	request.setGridCs(argValue);
             }
             
             // GridType
             else if (argName.equalsIgnoreCase("GridType"))
             {
-            	query.setGridType(argValue);
+            	request.setGridType(argValue);
             }
             
             // GridOrigin
             else if (argName.equalsIgnoreCase("GridOrigin"))
             {
             	double[] origin = parseVector(argValue);
-            	query.setGridDimension(origin.length);
-            	query.setGridOrigin(origin);
+            	request.setGridDimension(origin.length);
+            	request.setGridOrigin(origin);
             }
             
             // GridOffsets
             else if (argName.equalsIgnoreCase("GridOffsets"))
             {
             	double[] offsets = parseVector(argValue);
-            	query.setGridOffsets(offsets);
+            	request.setGridOffsets(offsets);
             }
             
             // format
             else if (argName.equalsIgnoreCase("format"))
             {
-                query.setFormat(argValue);
+                request.setFormat(argValue);
             }
             
             // other axis subsets and vendor specific parameters
             else
             {
-            	query.getVendorParameters().put(argName.toUpperCase(), argValue);
+            	request.getVendorParameters().put(argName.toUpperCase(), argValue);
             }
         }
 		
-        return query;
+        return request;
 	}
 	
 	
@@ -189,16 +189,15 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 	@Override
 	public GetCoverageRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI("OWS", "1.1"));
-		
-		GetCoverageRequest query = new GetCoverageRequest();
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI("OWS", "1.1"));		
+		GetCoverageRequest request = new GetCoverageRequest();
 		
 		// do common stuffs like version, request name and service type
-		readCommonXML(dom, requestElt, query);
+		readCommonXML(dom, requestElt, request);
 		
 		// coverage identifier
 		String covID = dom.getElementValue(requestElt, "Identifier");
-		query.setCoverage(covID);
+		request.setCoverage(covID);
 				
 		////// domain subset //////
 		Element domainElt = dom.getElement(requestElt, "DomainSubset");
@@ -208,7 +207,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 		if (bboxElt != null)
 		{
 			Bbox bbox = bboxReader.readBbox(dom, bboxElt);
-			query.setBbox(bbox);
+			request.setBbox(bbox);
 		}
 		
 		// temporal subset
@@ -219,7 +218,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 			
 			if (timeElt.getLocalName().equals("timePosition"))
 			{
-				query.getTimes().add(timeReader.readTimeInstant(dom, timeElt));
+				request.getTimes().add(timeReader.readTimeInstant(dom, timeElt));
 			}
 			
 			else if (timeElt.getLocalName().equals("TimePeriod"))
@@ -268,7 +267,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 					}
 				}
 				
-				query.getTimes().add(timeRange);
+				request.getTimes().add(timeRange);
 			}
 			
 			else
@@ -320,7 +319,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 				axis.getRangeValues().add(val);
 			}
 			
-			query.getAxisSubsets().add(axis);
+			request.getAxisSubsets().add(axis);
 		}	
 		
 		
@@ -329,14 +328,14 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 		
 		// format
 		String format = dom.getAttributeValue(outputElt, "@format");
-		query.setFormat(format);
+		request.setFormat(format);
 		
 		// store
 		String store = dom.getAttributeValue(outputElt, "@store");
 		if (store != null && store.equalsIgnoreCase("true"))
-			query.setStore(true);
+			request.setStore(true);
 		else
-			query.setStore(false);
+			request.setStore(false);
 		
 		// rectified grid
 		Element gridElt = dom.getElement(outputElt, "GridCRS");
@@ -344,25 +343,25 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 		{
 			// base CRS
 			String responseCrs = dom.getElementValue(gridElt, "GridBaseCRS");
-			query.setGridCrs(responseCrs);
+			request.setGridCrs(responseCrs);
 			
 			// type
 			String gridType = dom.getElementValue(gridElt, "GridType");
 			if (gridType != null)
-				query.setGridType(gridType);
+				request.setGridType(gridType);
 			
 			// CS
 			String gridCs = dom.getElementValue(gridElt, "GridCS");
 			if (gridCs != null)
-				query.setGridCs(gridCs);
+				request.setGridCs(gridCs);
 			
 			// origin
 			String gridOrigin = dom.getElementValue(gridElt, "GridOrigin");
 			if (gridOrigin != null)
 			{
 				double[] vecOrig = this.parseVector(gridOrigin);
-				query.setGridDimension(vecOrig.length);
-				query.setGridOrigin(vecOrig);
+				request.setGridDimension(vecOrig.length);
+				request.setGridOrigin(vecOrig);
 			}
 			
 			// offsets
@@ -370,11 +369,11 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 			if (gridOffsets != null)
 			{
 				double[] vecOff = this.parseVector(gridOffsets);
-				query.setGridOffsets(vecOff);
+				request.setGridOffsets(vecOff);
 			}
 		}
 		
 		
-		return query;
+		return request;
 	}
 }

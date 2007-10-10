@@ -59,7 +59,7 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 	@Override
 	public DescribeSensorRequest readURLQuery(String queryString) throws OWSException
 	{
-		DescribeSensorRequest query = new DescribeSensorRequest();		
+		DescribeSensorRequest request = new DescribeSensorRequest();		
 		StringTokenizer st = new StringTokenizer(queryString, "&");
 		
 		while (st.hasMoreTokens())
@@ -83,71 +83,71 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 			// service ID
 			if (argName.equalsIgnoreCase("service"))
 			{
-				query.setService(argValue);
+				request.setService(argValue);
 			}
 			
 			// service version
 			else if (argName.equalsIgnoreCase("version"))
 			{
-				query.setVersion(argValue);
+				request.setVersion(argValue);
 			}
 
 			// request argument
 			else if (argName.equalsIgnoreCase("request"))
 			{
-				query.setRequest(argValue);
+				request.setOperation(argValue);
 			}
 
 			// format argument
 			else if (argName.equalsIgnoreCase("format"))
 			{
-				query.setFormat(argValue);
+				request.setFormat(argValue);
 			}
 			
 			// time
 			else if (argName.equalsIgnoreCase("time"))
 			{
-			    this.parseTimeArg(query.getTime(), argValue);
+			    this.parseTimeArg(request.getTime(), argValue);
 			}
 			
 			// procedure
 			else if (argName.equalsIgnoreCase("procedure"))
 			{
-				query.setProcedure(argValue);
+				request.setProcedure(argValue);
 			}
 			
 			else
 				throw new SOSException(invalidKVP + ": Unknown Argument " + argName);
 		}
 
-		return query;
+		return request;
 	}
 	
 	
 	@Override
 	public DescribeSensorRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-        DescribeSensorRequest query = new DescribeSensorRequest();
+        DescribeSensorRequest request = new DescribeSensorRequest();
 		
         // do common stuffs like version, request name and service type
-		readCommonXML(dom, requestElt, query);
+		readCommonXML(dom, requestElt, request);
 		
         // procedure
 		String procedure = dom.getElementValue(requestElt, "procedure");
-		query.setProcedure(procedure);
+		request.setProcedure(procedure);
 		
 		// time
 		Element timeElt = dom.getElement(requestElt, "time/*");
 		if (timeElt != null)
 		{
 			TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
-			query.setTime(time);
+			request.setTime(time);
 		}
 		
 		// format
 		String format = dom.getAttributeValue(requestElt, "@outputFormat");
-		query.setFormat(format);
+		request.setFormat(format);
 		
-		return query;
+		return request;
 	}
 }

@@ -66,7 +66,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 	@Override
 	public GetObservationRequest readURLQuery(String queryString) throws OWSException
 	{
-		GetObservationRequest query = new GetObservationRequest();
+		GetObservationRequest request = new GetObservationRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
 		
 		while (st.hasMoreTokens())
@@ -90,99 +90,99 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 			// service ID
 			if (argName.equalsIgnoreCase("service"))
 			{
-				query.setService(argValue);
+				request.setService(argValue);
 			}
 			
 			// service version
 			else if (argName.equalsIgnoreCase("version"))
 			{
-				query.setVersion(argValue);
+				request.setVersion(argValue);
 			}
 
 			// request argument
 			else if (argName.equalsIgnoreCase("request"))
 			{
-				query.setRequest(argValue);
+				request.setOperation(argValue);
 			}
 
 			// offering argument
 			else if (argName.equalsIgnoreCase("offering"))
 			{
-				query.setOffering(argValue);
+				request.setOffering(argValue);
 			}
 			
 			// time
 			else if (argName.equalsIgnoreCase("time"))
 			{
-			    this.parseTimeArg(query.getTime(), argValue);
+			    this.parseTimeArg(request.getTime(), argValue);
 			}
 			
 			// procedures
 			else if (argName.equalsIgnoreCase("procedures"))
 			{
 				String[] sensorList = argValue.split(",");
-				query.getProcedures().clear();					
+				request.getProcedures().clear();					
 				for (int i=0; i<sensorList.length; i++)
-					query.getProcedures().add(sensorList[i]);
+					request.getProcedures().add(sensorList[i]);
 			}
 			
 			// observables
 			else if (argName.equalsIgnoreCase("observables"))
 			{
 				String[] obsList = argValue.split(",");
-				query.getObservables().clear();					
+				request.getObservables().clear();					
 				for (int i=0; i<obsList.length; i++)
-					query.getObservables().add(obsList[i]);
+					request.getObservables().add(obsList[i]);
 			}
 			
 			// bbox
             else if (argName.equalsIgnoreCase("bbox"))
             {
-                this.parseBboxArg(query.getBbox(), argValue);
+                this.parseBboxArg(request.getBbox(), argValue);
             }
 
 			// format argument
 			else if (argName.equalsIgnoreCase("format"))
 			{
-				query.setFormat(argValue);
+				request.setFormat(argValue);
 			}
             
 			// responseMode argument
             else if (argName.equalsIgnoreCase("responseMode"))
             {
-                parseResponseMode(argValue, query);
+                parseResponseMode(argValue, request);
             }
             
 			// resultModel argument
             else if (argName.equalsIgnoreCase("resultModel"))
             {
-                query.setResultModel(argValue);
+                request.setResultModel(argValue);
             }
 
 			else
 				throw new SOSException(invalidKVP + ": Unknown Argument " + argName);
 		}
 
-		return query;
+		return request;
 	}
 	
 	
 	@Override
 	public GetObservationRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		GetObservationRequest query = new GetObservationRequest();
+		GetObservationRequest request = new GetObservationRequest();
 		
 		// do common stuffs like version, request name and service type
-		readCommonXML(dom, requestElt, query);
+		readCommonXML(dom, requestElt, request);
 		
 		// offering
 		String offering = dom.getElementValue(requestElt, "offering");
-		query.setOffering(offering);
+		request.setOffering(offering);
 		
 		// event time
 		try
         {
-            readTemporalOps(dom, requestElt, query);
+            readTemporalOps(dom, requestElt, request);
         }
         catch (GMLException e)
         {
@@ -194,7 +194,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 		for (int i = 0; i < procList.getLength(); i++)
 		{
 			String val = dom.getElementValue((Element)procList.item(i), "");
-			query.getProcedures().add(val);
+			request.getProcedures().add(val);
 		}
 		
         // observables
@@ -202,13 +202,13 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 		for (int i = 0; i < obsList.getLength(); i++)
 		{
 			String val = dom.getElementValue((Element)obsList.item(i), "");
-			query.getObservables().add(val);
+			request.getObservables().add(val);
 		}
 		
 		// feature of interest
         try
         {
-        	readFOI(dom, requestElt, query);
+        	readFOI(dom, requestElt, request);
         }
         catch (GMLException e)
         {
@@ -217,17 +217,17 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 		
 		// response format
 		String resFormat = dom.getElementValue(requestElt, "responseFormat");
-		query.setFormat(resFormat);
+		request.setFormat(resFormat);
 		
 		// result model
 		String resultModel = dom.getElementValue(requestElt, "resultModel");
-        query.setResultModel(resultModel);
+        request.setResultModel(resultModel);
         
         // response mode
         String mode = dom.getElementValue(requestElt, "responseMode");
-        parseResponseMode(mode, query);
+        parseResponseMode(mode, request);
 
-        return query;
+        return request;
 	}
     
     

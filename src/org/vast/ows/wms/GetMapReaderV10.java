@@ -9,15 +9,14 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "SensorML DataProcessing Engine".
+ The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the
- University of Alabama in Huntsville (UAH).
- Portions created by the Initial Developer are Copyright (C) 2006
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -31,31 +30,31 @@ import org.vast.ows.*;
 
 /**
  * <p><b>Title:</b><br/>
- * WMS POST/GET Request Reader
+ * GetMap Request Reader v1.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provides methods to parse a GET or POST WMS request and
- * create a WMSQuery object for versions 1.0
+ * Provides methods to parse a KVP or XML GetMap request and
+ * create a GetMapRequest object for version 1.0
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Nov 4, 2005
+ * @date Oct 10, 2007
  * @version 1.0
  */
-public class WMSRequestReaderV10 extends WMSRequestReader
+public class GetMapReaderV10 extends AbstractRequestReader<GetMapRequest>
 {
 	
-	public WMSRequestReaderV10()
+	public GetMapReaderV10()
 	{	
 	}
 
 	
 	@Override
-	public WMSQuery readURLQuery(String queryString) throws OWSException
+	public GetMapRequest readURLQuery(String queryString) throws OWSException
 	{
-		WMSQuery query = new WMSQuery();
+		GetMapRequest request = new GetMapRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
         
         while (st.hasMoreTokens())
@@ -79,75 +78,75 @@ public class WMSRequestReaderV10 extends WMSRequestReader
             // service version
             if (argName.equalsIgnoreCase("wmtver"))
             {
-                query.setVersion(argValue);
+                request.setVersion(argValue);
             }
 
             // request argument
             else if (argName.equalsIgnoreCase("request"))
             {
-                query.setRequest(argValue);
+                request.setOperation(argValue);
             }
             
             // layers argument
             else if (argName.equalsIgnoreCase("layers"))
             {
                 String[] layerList = argValue.split(",");
-                query.getLayers().clear();                 
+                request.getLayers().clear();                 
                 for (int i=0; i<layerList.length; i++)
-                    query.getLayers().add(layerList[i]);
+                    request.getLayers().add(layerList[i]);
             }
             
             // styles argument
             else if (argName.equalsIgnoreCase("styles"))
             {
                 String[] styleList = argValue.split(",");
-                query.getStyles().clear();                 
+                request.getStyles().clear();                 
                 for (int i=0; i<styleList.length; i++)
-                    query.getStyles().add(styleList[i]);
+                    request.getStyles().add(styleList[i]);
             }
             
             // bbox
             else if (argName.equalsIgnoreCase("bbox"))
             {
-                this.parseBboxArg(query.getBbox(), argValue);
+                this.parseBboxArg(request.getBbox(), argValue);
             }
             
             // width
             else if (argName.equalsIgnoreCase("width"))
             {
-                try {query.setWidth(Integer.parseInt(argValue));}
+                try {request.setWidth(Integer.parseInt(argValue));}
                 catch (NumberFormatException e) {throw new WMSException(invalidKVP + "Width should be an integer value");}
             }
             
             // height
             else if (argName.equalsIgnoreCase("height"))
             {
-                try {query.setHeight(Integer.parseInt(argValue));}
+                try {request.setHeight(Integer.parseInt(argValue));}
                 catch (NumberFormatException e) {throw new WMSException(invalidKVP + "Height should be an integer value");}
             }
             
             // transparency
             else if (argName.equalsIgnoreCase("transparent"))
             {
-                query.setTransparent(Boolean.parseBoolean(argValue));
+                request.setTransparent(Boolean.parseBoolean(argValue));
             }
             
             // format argument
             else if (argName.equalsIgnoreCase("format"))
             {
-                query.setFormat(argValue);
+                request.setFormat(argValue);
             }
 
             else
                 throw new WMSException(invalidKVP + ": Unknown Argument " + argName);
         }
         
-		return query;
+		return request;
 	}
 	
 	
 	@Override
-	public WMSQuery readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+	public GetMapRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
 		throw new WMSException("XML request not supported in WMS 1.0");
 	}
@@ -158,7 +157,7 @@ public class WMSRequestReaderV10 extends WMSRequestReader
 	 * @param query
 	 * @param coordText
 	 */
-	protected void parseBbox(WMSQuery query, String coordText)
+	protected void parseBbox(GetMapRequest query, String coordText)
 	{
 		String[] coords = coordText.split("[ ,]");
 		query.getBbox().setMinX(Double.parseDouble(coords[0]));

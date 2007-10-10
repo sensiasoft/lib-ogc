@@ -47,22 +47,22 @@ public class DescribeCoverageWriterV10 extends AbstractRequestWriter<DescribeCov
 {
 
 	@Override
-	public String buildURLQuery(DescribeCoverageRequest query) throws OWSException
+	public String buildURLQuery(DescribeCoverageRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(query.getGetServer());
+		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
 		
         urlBuff.append("SERVICE=WCS");
-        urlBuff.append("&VERSION=" + query.getVersion());
-        urlBuff.append("&REQUEST=" + query.getRequest());
+        urlBuff.append("&VERSION=" + request.getVersion());
+        urlBuff.append("&REQUEST=" + request.getOperation());
         
         // add all requested coverage names
-        if (!query.getCoverages().isEmpty())
+        if (!request.getCoverages().isEmpty())
         {
 			urlBuff.append("&COVERAGE=");
-			int listSize = query.getCoverages().size();
+			int listSize = request.getCoverages().size();
         	for (int i=0; i<listSize; i++)
         	{
-				urlBuff.append(query.getCoverages().get(i));
+				urlBuff.append(request.getCoverages().get(i));
 				if (i < listSize-1)
 					urlBuff.append(",");
         	}
@@ -76,17 +76,17 @@ public class DescribeCoverageWriterV10 extends AbstractRequestWriter<DescribeCov
 	
 	
 	@Override
-	public Element buildXMLQuery(DOMHelper dom, DescribeCoverageRequest query) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, DescribeCoverageRequest request) throws OWSException
 	{
-		dom.addUserPrefix("wcs", OGCRegistry.getNamespaceURI("WCS", "1.0"));
+		dom.addUserPrefix("wcs", OGCRegistry.getNamespaceURI("WCS", request.getVersion()));
 		
 		// root element
 		Element rootElt = dom.createElement("wcs:DescribeCoverage");
-		addCommonXML(dom, rootElt, query);
+		addCommonXML(dom, rootElt, request);
 		
 		// add all requested coverage names
-		for (int i=0; i<query.getCoverages().size(); i++)
-			dom.setElementValue(rootElt, "wcs:Coverage", query.getCoverages().get(i));
+		for (int i=0; i<request.getCoverages().size(); i++)
+			dom.setElementValue(rootElt, "wcs:Coverage", request.getCoverages().get(i));
 		
 		return rootElt;
 	}

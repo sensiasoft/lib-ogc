@@ -25,7 +25,7 @@ package org.vast.ows.sos;
 import java.util.*;
 
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSQuery;
+import org.vast.ows.OWSRequest;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
 
@@ -44,7 +44,7 @@ import org.vast.ows.util.TimeInfo;
  * @date Oct 09, 2007
  * @version 1.0
  */
-public class GetObservationRequest extends OWSQuery
+public class GetObservationRequest extends OWSRequest
 {
     
 	public enum ResponseMode
@@ -66,7 +66,7 @@ public class GetObservationRequest extends OWSQuery
 	public GetObservationRequest()
 	{
 		service = "SOS";
-		request = "GetObservation";
+		operation = "GetObservation";
 		observables = new ArrayList<String>(2);
 		procedures = new ArrayList<String>(2);
 	}
