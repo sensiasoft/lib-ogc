@@ -24,7 +24,7 @@
 
 package org.vast.ows.server;
 
-import org.vast.ows.wcs.WCSQuery;
+import org.vast.ows.wcs.GetCoverageRequest;
 
 
 /**
@@ -41,5 +41,5 @@ import org.vast.ows.wcs.WCSQuery;
  */
 public interface WCSHandler
 {
-	public abstract void getCoverage(WCSQuery query) throws Exception;
+	public abstract void getCoverage(GetCoverageRequest req) throws Exception;
 }

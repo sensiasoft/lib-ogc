@@ -24,8 +24,6 @@
 package org.vast.ows;
 
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -71,15 +69,5 @@ public interface OWSRequestWriter<QueryType extends OWSQuery>
      * @throws OWSException
      */
     public void writeXMLQuery(OutputStream os, QueryType owsQuery) throws OWSException;
-
-
-    /**
-     * Sends the request using either GET or POST
-     * @param query OWSQuery object
-     * @param usePost true if using POST
-     * @return Server Response InputStream
-     * @throws OWSException
-     */
-    public HttpURLConnection sendRequest(QueryType query, boolean usePost) throws OWSException;
 
 }

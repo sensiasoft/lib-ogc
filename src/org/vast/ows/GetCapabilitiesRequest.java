@@ -18,48 +18,47 @@
  
  Contributor(s): 
     Alexandre Robin <robin@nsstc.uah.edu>
+    Tony Cook <tcook@nsstc.uah.edu>
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.gml;
-
-import org.vast.xml.DOMHelper;
-import org.vast.ows.util.Bbox;
-import org.w3c.dom.Element;
+package org.vast.ows;
 
 
 /**
- * <p><b>Title:</b>
- * GML Envelope Writer
+ * <p><b>Title:</b><br/>
+ * GetCapabilities Query
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Used to serialize Bbox objects to GML.
+ * Container for GetCapabilities query parameters
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @date Oct 25, 2006
+ * <p>Copyright (c) 2007</p>
+ * @author Alex Robin
+ * @date Sep 21, 2007
  * @version 1.0
  */
-public class GMLEnvelopeWriter
+public class GetCapabilitiesRequest extends OWSQuery
 {
+    protected String section;
+	
     
-    public GMLEnvelopeWriter()
+    public GetCapabilitiesRequest()
     {
+        service = "OWS";
+        request = "GetCapabilities";
     }
-    
-        
-    public Element writeEnvelope(DOMHelper dom, Bbox bbox) throws GMLException
-    {
-    	Element envelopeElt = dom.createElement("gml:Envelope");
-    	
-		dom.setAttributeValue(envelopeElt, "@srsName", bbox.getCrs());
-		String lowerCorner = bbox.getMinX() + " " + bbox.getMinY();
-		dom.setElementValue(envelopeElt, "gml:lowerCorner", lowerCorner);
-		String upperCorner = bbox.getMaxX() + " " + bbox.getMaxY();
-		dom.setElementValue(envelopeElt, "gml:upperCorner", upperCorner);
-        
-        return envelopeElt;
-    }
+
+
+	public String getSection()
+	{
+		return section;
+	}
+
+
+	public void setSection(String section)
+	{
+		this.section = section;
+	}
 }

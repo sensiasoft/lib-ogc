@@ -9,40 +9,52 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "SensorML DataProcessing Engine".
+ The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the
- University of Alabama in Huntsville (UAH).
- Portions created by the Initial Developer are Copyright (C) 2006
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows.wcs;
 
-import org.vast.ows.AbstractRequestReader;
+import java.util.ArrayList;
+import org.vast.ows.OWSQuery;
 
 
 /**
- * <p><b>Title:</b>
- * SOS Request Reader
+ * <p><b>Title:</b><br/>
+ * WCS DescribeCoverage Query
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Abstract SOS Request Reader containing common code
- * for all versions
+ * Container for DescribeCoverage query parameters
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @date Jan 16, 2007
+ * @author Alex Robin
+ * @date Spe 21, 2007
  * @version 1.0
- * @deprecated Oct 10, 2007 use OWSRequestReader<???Request>, ...
  */
-public abstract class SOSRequestReader extends AbstractRequestReader<SOSQuery>
+public class DescribeCoverageRequest extends OWSQuery
 {
+    protected ArrayList<String> coverages;
+	
+    
+    public DescribeCoverageRequest()
+    {
+        service = "WCS";
+        request = "DescribeCoverage";
+        coverages = new ArrayList<String>();
+    }
 
+
+	public ArrayList<String> getCoverages()
+	{
+		return coverages;
+	}
 }

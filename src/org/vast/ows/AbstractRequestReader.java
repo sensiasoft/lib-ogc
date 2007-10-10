@@ -50,8 +50,10 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractRequestReader<QueryType extends OWSQuery> implements OWSRequestReader<QueryType>
 {
-    protected final static String invalidGet = "Invalid GET Request";
-    protected final static String invalidPost = "Invalid POST Request";
+	protected final static String invalidReq = "Invalid Request";
+	protected final static String invalidKVP = "Invalid KVP Request";
+    protected final static String invalidXML = "Invalid XML Request";
+    protected final static String invalidValue = "Invalid Value for ";
     
     
 	public AbstractRequestReader()
@@ -72,7 +74,7 @@ public abstract class AbstractRequestReader<QueryType extends OWSQuery> implemen
 		}
 		catch (DOMHelperException e)
 		{
-			throw new OWSException("", e);
+			throw new OWSException(e);
 		}
 	}
         
@@ -112,7 +114,7 @@ public abstract class AbstractRequestReader<QueryType extends OWSQuery> implemen
         }
         catch (ParseException e)
         {
-            throw new OWSException(invalidGet + ": Invalid Time: " + argValue);
+            throw new OWSException(invalidKVP + ": Invalid Time: " + argValue);
         }
         
         // make sure deltas are null for time instant
@@ -122,25 +124,82 @@ public abstract class AbstractRequestReader<QueryType extends OWSQuery> implemen
     
     
     /**
-     * Utility method to parse bbox argument from GET request
-     * Format is minY,minX,maxY,maxX
+     * Utility method to parse bbox argument from request
+     * Format is minX,minY{,minZ},maxX,maxY{,maxZ}{,crs}
      * @param bbox
      * @param argValue
      */
-    protected void parseBboxArg(Bbox bbox, String argValue) throws OWSException
+    protected void parseBboxArg(Bbox bbox, String bboxText) throws OWSException
     {
         try
         {
-            String[] coords = argValue.split("[ ,]");
+            String[] coords = bboxText.trim().split("[ ,]");
             
-            bbox.setMinX(Double.parseDouble(coords[0]));
-            bbox.setMinY(Double.parseDouble(coords[1]));
-            bbox.setMaxX(Double.parseDouble(coords[2]));
-            bbox.setMaxY(Double.parseDouble(coords[3]));
+            // case of 1D
+            if (coords.length == 2 || coords.length == 3)
+            {
+	            bbox.setMinX(Double.parseDouble(coords[0]));
+	            bbox.setMaxX(Double.parseDouble(coords[1]));
+            }
+            
+            // case of 2D
+            else if (coords.length == 4 || coords.length == 5)
+            {
+	            bbox.setMinX(Double.parseDouble(coords[0]));
+	            bbox.setMinY(Double.parseDouble(coords[1]));
+	            bbox.setMaxX(Double.parseDouble(coords[2]));
+	            bbox.setMaxY(Double.parseDouble(coords[3]));
+            }
+            
+            // case of 3D
+            else if (coords.length == 6 || coords.length == 7)
+            {
+            	bbox.setMinX(Double.parseDouble(coords[0]));
+	            bbox.setMinY(Double.parseDouble(coords[1]));
+	            bbox.setMaxX(Double.parseDouble(coords[2]));
+	            bbox.setMaxY(Double.parseDouble(coords[3]));
+	            bbox.setMinZ(Double.parseDouble(coords[4]));
+	            bbox.setMaxZ(Double.parseDouble(coords[5]));
+            }
+            
+            else
+            	throw new Exception();
+            
+            // try to parse crs id as the last part
+            // if number of coords is odd
+            if (coords.length % 2 != 0)
+            {
+            	String crs = coords[coords.length-1];
+            	bbox.setCrs(crs);
+            }
         }
         catch (Exception e)
         {
-            throw new OWSException(invalidGet + ": Invalid Bbox: " + argValue, e);
+            throw new OWSException(invalidReq + ": Invalid Bbox: " + bboxText, e);
+        }
+    }
+    
+    
+    /**
+     * Utility method to parse vector composed of comma/space separated decimal values
+     * @param argValue
+     * @return
+     */
+    protected double[] parseVector(String vectorText) throws OWSException
+    {
+    	try
+        {
+    		String[] elts = vectorText.trim().split("[ ,]");
+    		double[] vec = new double[elts.length];
+	    	
+    		for (int i=0; i<elts.length; i++)
+    			vec[i] = Double.parseDouble(elts[i]);
+    			
+	    	return vec;
+        }
+        catch (NumberFormatException e)
+        {
+            throw new OWSException(invalidReq + ": Invalid Vector: " + vectorText, e);
         }
     }
 	
@@ -157,17 +216,4 @@ public abstract class AbstractRequestReader<QueryType extends OWSQuery> implemen
 		query.setService(dom.getAttributeValue(requestElt, "service"));
 		query.setVersion(dom.getAttributeValue(requestElt, "version"));
 	}
-    
-    
-    /**
-     * Reads a GetCapabilities XML request and fill up the OWSQuery accordingly
-     * @param dom
-     * @param requestElt
-     * @param query
-     */
-    protected void readGetCapabilitiesXML(DOMHelper dom, Element requestElt, OWSQuery query)
-    {
-        query.setSection(dom.getElementValue(requestElt, "Section"));
-    }
-    
 }

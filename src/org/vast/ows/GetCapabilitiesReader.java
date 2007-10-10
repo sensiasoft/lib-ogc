@@ -22,41 +22,40 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.wcs;
+package org.vast.ows;
 
 import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
-import org.vast.ows.*;
 
 
 /**
  * <p><b>Title:</b><br/>
- * WCS Request Reader v0.7
+ * GetCapabilities Request Reader v1.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provides methods to parse a KVP or XML GetCoverage request and
- * create a GetCoverage object for version 0.7
+ * Provides methods to parse a KVP or XML GetCapabilities request and
+ * create a GetCapabilities object for all version
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin, Tony Cook
- * @date Nov 17, 2005
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin
+ * @date Sep 21, 2007
  * @version 1.0
  */
-public class WCSRequestReaderV07 extends AbstractRequestReader<GetCoverageRequest>
+public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilitiesRequest>
 {
 	
-    public WCSRequestReaderV07()
+    public GetCapabilitiesReader()
 	{	
 	}
 
 	
 	@Override
-	public GetCoverageRequest readURLQuery(String queryString) throws OWSException
+	public GetCapabilitiesRequest readURLQuery(String queryString) throws OWSException
 	{
-		GetCoverageRequest query = new GetCoverageRequest();
+		GetCapabilitiesRequest query = new GetCapabilitiesRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
         
         while (st.hasMoreTokens())
@@ -74,7 +73,7 @@ public class WCSRequestReaderV07 extends AbstractRequestReader<GetCoverageReques
             }
             catch (IndexOutOfBoundsException e)
             {
-                throw new WCSException(invalidKVP);
+                throw new OWSException(invalidKVP);
             }
             
             // service ID
@@ -95,26 +94,11 @@ public class WCSRequestReaderV07 extends AbstractRequestReader<GetCoverageReques
                 query.setRequest(argValue);
             }
 
-            // format argument
-            else if (argName.equalsIgnoreCase("format"))
+            // section argument
+            else if (argName.equalsIgnoreCase("section"))
             {
-                query.setFormat(argValue);
+                query.setSection(argValue);
             }
-            
-            // time
-            else if (argName.equalsIgnoreCase("time"))
-            {
-                this.parseTimeArg(query.getTimes().get(0), argValue);
-            }
-            
-            // bbox
-            else if (argName.equalsIgnoreCase("bbox"))
-            {
-                this.parseBboxArg(query.getBbox(), argValue);
-            }
-
-            else
-                throw new WCSException(invalidKVP + ": Unknown Argument " + argName);
         }
 
         return query;
@@ -122,15 +106,11 @@ public class WCSRequestReaderV07 extends AbstractRequestReader<GetCoverageReques
 	
 	
 	@Override
-	public GetCoverageRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+	public GetCapabilitiesRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		GetCoverageRequest query = new GetCoverageRequest();
-		
-		// TODO readXMLQuery
-		
-		// do common stuffs like version, request name and service type
+		GetCapabilitiesRequest query = new GetCapabilitiesRequest();
+		query.setSection(dom.getElementValue(requestElt, "section")); 
 		readCommonXML(dom, requestElt, query);		
-		
 		return query;
 	}
 }

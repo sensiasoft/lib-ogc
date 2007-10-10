@@ -9,15 +9,14 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "SensorML DataProcessing Engine".
+ The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the
- University of Alabama in Huntsville (UAH).
- Portions created by the Initial Developer are Copyright (C) 2006
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -25,6 +24,7 @@ package org.vast.ows.sos;
 
 import java.util.*;
 
+import org.vast.ows.OWSException;
 import org.vast.ows.OWSQuery;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
@@ -32,46 +32,64 @@ import org.vast.ows.util.TimeInfo;
 
 /**
  * <p><b>Title:</b><br/>
- * SOS Query
+ * GetObservation Request
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for SOS query parameters
+ * Container for SOS GetObservation request parameters
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Oct 27, 2005
+ * @date Oct 09, 2007
  * @version 1.0
- * @deprecated Oct 10, 2007 use GetObservationRequest, DescribeSensorRequest, GetResultRequest...
  */
-public class SOSQuery extends OWSQuery
+public class GetObservationRequest extends OWSQuery
 {
-    protected final static String unsupportedVersion = "Unsupported SOS version";
     
-    public enum ResponseMode
+	public enum ResponseMode
     {
         INLINE, ATTACHED, OUT_OF_BAND, RESULT_TEMPLATE, RESULT_ONLY
     }
     
-    protected String offering;	
+    protected String offering;
 	protected TimeInfo time;
 	protected Bbox bbox;
+	protected String foiId;
     protected String format;
     protected String resultModel;
     protected ResponseMode responseMode;
-
 	protected List<String> observables;
 	protected List<String> procedures;
 
 	
-	public SOSQuery()
+	public GetObservationRequest()
 	{
 		service = "SOS";
-		bbox = new Bbox();
-		time = new TimeInfo();
+		request = "GetObservation";
 		observables = new ArrayList<String>(2);
 		procedures = new ArrayList<String>(2);
+	}
+	
+	
+	public void checkParameters() throws OWSException
+	{
+		ArrayList<String> missingParams = new ArrayList<String>();
+		
+		// need offering
+		if (this.getOffering() == null)
+			missingParams.add("Offering Identifier");
+		
+		// need at least BBOX or TIME
+		if (this.getBbox() == null && this.getTime() == null)
+			missingParams.add("FOI Bounding Box or Time");
+		
+		// need format
+		if (this.getFormat() == null)
+			missingParams.add("Response Format");
+		
+		// check common params + generate exception
+		super.checkParameters(missingParams);
 	}
 	
 

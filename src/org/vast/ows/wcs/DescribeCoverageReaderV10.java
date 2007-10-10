@@ -9,16 +9,14 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "SensorML DataProcessing Engine".
+ The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the
- University of Alabama in Huntsville (UAH).
- Portions created by the Initial Developer are Copyright (C) 2006
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
-    Tony Cook <tcook@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -32,31 +30,26 @@ import org.vast.ows.*;
 
 /**
  * <p><b>Title:</b><br/>
- * WCS Request Reader v0.7
+ * DescribeCoverage Request Reader v1.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provides methods to parse a KVP or XML GetCoverage request and
- * create a GetCoverage object for version 0.7
+ * Provides methods to parse a KVP or XML DescribeCoverage request and
+ * create a DescribeCoverage object for version 1.0
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin, Tony Cook
- * @date Nov 17, 2005
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin
+ * @date Sep 21, 2007
  * @version 1.0
  */
-public class WCSRequestReaderV07 extends AbstractRequestReader<GetCoverageRequest>
+public class DescribeCoverageReaderV10 extends AbstractRequestReader<DescribeCoverageRequest>
 {
 	
-    public WCSRequestReaderV07()
-	{	
-	}
-
-	
 	@Override
-	public GetCoverageRequest readURLQuery(String queryString) throws OWSException
+	public DescribeCoverageRequest readURLQuery(String queryString) throws OWSException
 	{
-		GetCoverageRequest query = new GetCoverageRequest();
+		DescribeCoverageRequest query = new DescribeCoverageRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
         
         while (st.hasMoreTokens())
@@ -77,44 +70,31 @@ public class WCSRequestReaderV07 extends AbstractRequestReader<GetCoverageReques
                 throw new WCSException(invalidKVP);
             }
             
-            // service ID
-            if (argName.equalsIgnoreCase("service"))
+            // SERVICE
+            if (argName.equalsIgnoreCase("SERVICE"))
             {
                 query.setService(argValue);
             }
             
-            // service version
-            else if (argName.equalsIgnoreCase("version"))
+            // VERSION
+            else if (argName.equalsIgnoreCase("VERSION"))
             {
                 query.setVersion(argValue);
             }
 
-            // request argument
-            else if (argName.equalsIgnoreCase("request"))
+            // REQUEST
+            else if (argName.equalsIgnoreCase("REQUEST"))
             {
                 query.setRequest(argValue);
             }
-
-            // format argument
-            else if (argName.equalsIgnoreCase("format"))
-            {
-                query.setFormat(argValue);
-            }
             
-            // time
-            else if (argName.equalsIgnoreCase("time"))
+            // COVERAGE list
+            else if (argName.equalsIgnoreCase("COVERAGE"))
             {
-                this.parseTimeArg(query.getTimes().get(0), argValue);
+                String[] coverageList = argValue.split(",");
+                for (int i=0; i<coverageList.length; i++)
+                	query.getCoverages().add(coverageList[i]);
             }
-            
-            // bbox
-            else if (argName.equalsIgnoreCase("bbox"))
-            {
-                this.parseBboxArg(query.getBbox(), argValue);
-            }
-
-            else
-                throw new WCSException(invalidKVP + ": Unknown Argument " + argName);
         }
 
         return query;
@@ -122,14 +102,20 @@ public class WCSRequestReaderV07 extends AbstractRequestReader<GetCoverageReques
 	
 	
 	@Override
-	public GetCoverageRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+	public DescribeCoverageRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		GetCoverageRequest query = new GetCoverageRequest();
-		
-		// TODO readXMLQuery
+		DescribeCoverageRequest query = new DescribeCoverageRequest();
 		
 		// do common stuffs like version, request name and service type
-		readCommonXML(dom, requestElt, query);		
+		readCommonXML(dom, requestElt, query);
+		
+		// get all Coverage ids
+		NodeList covElts = dom.getElements(requestElt, "Coverage");
+		for (int i=0; i<covElts.getLength(); i++)
+		{
+			String val = dom.getElementValue((Element)covElts.item(i));
+			query.getCoverages().add(val);
+		}
 		
 		return query;
 	}

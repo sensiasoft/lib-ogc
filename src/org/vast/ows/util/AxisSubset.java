@@ -21,45 +21,60 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.gml;
+package org.vast.ows.util;
 
-import org.vast.xml.DOMHelper;
-import org.vast.ows.util.Bbox;
-import org.w3c.dom.Element;
+import java.util.ArrayList;
 
 
 /**
- * <p><b>Title:</b>
- * GML Envelope Writer
+ * <p><b>Title:</b><br/>
+ * AxisSubset
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Used to serialize Bbox objects to GML.
+ * Specifies subsetting parameters for any axis other than spatial and temporal.
+ * For space and time use Bbox and TimeInfo
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @date Oct 25, 2006
+ * <p>Copyright (c) 2007</p>
+ * @author Alex Robin
+ * @date Sep 24, 2007
  * @version 1.0
  */
-public class GMLEnvelopeWriter
+public class AxisSubset
 {
-    
-    public GMLEnvelopeWriter()
-    {
-    }
-    
-        
-    public Element writeEnvelope(DOMHelper dom, Bbox bbox) throws GMLException
-    {
-    	Element envelopeElt = dom.createElement("gml:Envelope");
-    	
-		dom.setAttributeValue(envelopeElt, "@srsName", bbox.getCrs());
-		String lowerCorner = bbox.getMinX() + " " + bbox.getMinY();
-		dom.setElementValue(envelopeElt, "gml:lowerCorner", lowerCorner);
-		String upperCorner = bbox.getMaxX() + " " + bbox.getMaxY();
-		dom.setElementValue(envelopeElt, "gml:upperCorner", upperCorner);
-        
-        return envelopeElt;
-    }
+	protected String name;
+	protected ArrayList<Interval> rangeIntervals;
+	protected ArrayList<String> rangeValues;
+
+
+	public AxisSubset()
+	{
+		rangeIntervals = new ArrayList<Interval>();
+		rangeValues = new ArrayList<String>();
+	}
+
+
+	public String getName()
+	{
+		return name;
+	}
+
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+
+	public ArrayList<Interval> getRangeIntervals()
+	{
+		return rangeIntervals;
+	}
+
+
+	public ArrayList<String> getRangeValues()
+	{
+		return rangeValues;
+	}
 }

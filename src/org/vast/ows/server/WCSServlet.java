@@ -26,17 +26,17 @@ package org.vast.ows.server;
 
 import javax.servlet.http.*;
 import javax.servlet.*;
-
 import java.io.*;
 import java.text.ParseException;
 import java.util.*;
-
+import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
-import org.vast.ows.sos.SOSException;
-import org.vast.ows.util.Bbox;
+import org.vast.ows.OWSQuery;
+import org.vast.ows.OWSUtils;
 import org.vast.ows.util.TimeInfo;
+import org.vast.ows.wcs.DescribeCoverageRequest;
+import org.vast.ows.wcs.GetCoverageRequest;
 import org.vast.ows.wcs.WCSException;
-import org.vast.ows.wcs.WCSQuery;
 import org.vast.util.*;
 
 
@@ -57,7 +57,8 @@ public abstract class WCSServlet extends OWSServlet
 {
     // Table of WCS handlers: 1 for each ObservationSet
     protected Hashtable<String, WCSHandler> dataSetHandlers = new Hashtable<String, WCSHandler>();
-
+    protected OWSUtils owsUtils = new OWSUtils();
+    
 
     // Sends an XML Exception to the user
     protected void sendErrorMessage(OutputStream resp, String message)
@@ -73,61 +74,49 @@ public abstract class WCSServlet extends OWSServlet
     }
 
 
-    protected void processQuery(WCSQuery query) throws Exception
+    protected void processQuery(GetCapabilitiesRequest query) throws Exception
     {
-        String requestName = query.getRequest();
+    	sendCapabilities("ALL", query.getResponseStream());
+    }
+    
+    
+    protected void processQuery(GetCoverageRequest query) throws Exception
+    {
+    	String coverage = query.getCoverage();
+        WCSHandler handler = dataSetHandlers.get(coverage);
 
-        // GetCapabilities request
-        if (requestName.equalsIgnoreCase("GetCapabilities"))
+        if (handler != null)
         {
-            sendCapabilities("ALL", query.getResponseStream());
-            return;
+            /*
+             Iterator<TimeInfo> it;
+
+             // first check all requested times
+             it = query.times.iterator();
+             while (it.hasNext()) {
+             query.time = it.next();
+             checkQueryTime(query, capsReader);
+             }
+             
+             // check query format
+             //checkQueryFormat(query, capsReader);
+
+             // then retrieve observation for each time or period
+             it = query.times.iterator();
+             while (it.hasNext()) {
+             query.time = it.next();
+             handler.getCoverage(query);
+             }*/
+
+            handler.getCoverage(query);
         }
-
-        // GetObservation request
-        else if (requestName.equalsIgnoreCase("GetCoverage"))
-        {
-            //DOMReader capsReader = new DOMReader(this.capsDoc);
-            String layer = query.getLayer();
-
-            if (layer == null)
-                throw new WCSException("WCS request missing LAYER.");
-
-            WCSHandler handler = dataSetHandlers.get(layer);
-
-            if (handler != null)
-            {
-                /*
-                 Iterator<TimeInfo> it;
-
-                 // first check all requested times
-                 it = query.times.iterator();
-                 while (it.hasNext()) {
-                 query.time = it.next();
-                 checkQueryTime(query, capsReader);
-                 }
-                 
-                 // check query format
-                 //checkQueryFormat(query, capsReader);
-
-                 // then retrieve observation for each time or period
-                 it = query.times.iterator();
-                 while (it.hasNext()) {
-                 query.time = it.next();
-                 handler.getCoverage(query);
-                 }*/
-
-                handler.getCoverage(query);
-            }
-            else
-                throw new WCSException("LAYER " + layer + " is unavailable on this server");
-        }
-
-        // Unrecognized request type
         else
-        {
-            throw new WCSException("Invalid request: Use GetCapabilities or GetCoverage");
-        }
+            throw new WCSException("COVERAGE " + coverage + " is unavailable on this server");        
+    }
+    
+    
+    protected void processQuery(DescribeCoverageRequest query) throws Exception
+    {
+    	
     }
 
 
@@ -137,102 +126,22 @@ public abstract class WCSServlet extends OWSServlet
      */
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException
     {
-        String invalidQuery = "Invalid WCS GET request";
-
         // parse query arguments
-        WCSQuery queryInfo = new WCSQuery();
-        String query = req.getQueryString();
-        //this.log("GET REQUEST: " + query + " from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
-
         try
         {
-            if (query == null)
-                sendErrorMessage(resp.getOutputStream(), invalidQuery);
-
-            StringTokenizer st = new StringTokenizer(query, "&");
-            queryInfo.setResponseStream(resp.getOutputStream());
-
-            while (st.hasMoreTokens())
-            {
-                String argName = null;
-                String argValue = null;
-                String nextArg = st.nextToken();
-
-                // separate argument name and value
-                try
-                {
-                    int sepIndex = nextArg.indexOf('=');
-                    argName = nextArg.substring(0, sepIndex);
-                    argValue = nextArg.substring(sepIndex + 1);
-                }
-                catch (IndexOutOfBoundsException e)
-                {
-                    throw new SOSException(invalidQuery);
-                }
-
-                // parse args into WCSQuery object
-                if (argName.equalsIgnoreCase("request"))
-                {
-                    queryInfo.setRequest(argValue);
-                }
-                else if (argName.equalsIgnoreCase("layers") || argName.equalsIgnoreCase("layer"))
-                {
-                    queryInfo.setLayer(argValue);
-                }
-                else if (argName.equalsIgnoreCase("format"))
-                {
-                    queryInfo.setFormat(argValue);
-                }
-                else if (argName.equalsIgnoreCase("skipX"))
-                {
-                    queryInfo.setSkipX(Integer.parseInt(argValue));
-                }
-                else if (argName.equalsIgnoreCase("skipY"))
-                {
-                    queryInfo.setSkipY(Integer.parseInt(argValue));
-                }
-                else if (argName.equalsIgnoreCase("bbox"))
-                {
-                    String[] bbStr = argValue.split(",");
-                    Bbox bbox = new Bbox();
-                    queryInfo.setBbox(bbox);
-                    bbox.setMinX(Double.parseDouble(bbStr[0]));
-                    bbox.setMinY(Double.parseDouble(bbStr[1]));
-                    bbox.setMaxX(Double.parseDouble(bbStr[2]));
-                    bbox.setMaxY(Double.parseDouble(bbStr[3]));
-                    //					bbox.westLon = bbox.minX;
-                    //					bbox.eastLon = bbox.maxX;
-                    //					bbox.northLat = bbox.maxY;
-                    //					bbox.southLat = bbox.minY;
-                }
-
-                // singleTime
-                //  
-                else if (argName.equalsIgnoreCase("time"))
-                {
-                    TimeInfo timeInfo = new TimeInfo();
-                	if(argValue.equalsIgnoreCase("now")){
-                		timeInfo.setBeginNow(true);
-                        timeInfo.setStartTime(System.currentTimeMillis() / 1000);
-                    } else {
-                    	//  Added to support time range (this needs to be migrated
-                    	//  to WCSRequestReader
-                    	this.parseTimeArg(timeInfo, argValue);
-                    	//timeInfo.setStartTime(DateTimeFormat.parseIso(argValue));
-                    	//timeInfo.setStopTime(timeInfo.getStartTime());
-                    }
-                    queryInfo.getTimes().add(timeInfo);
-                }
-
-                //  Don't throw exception- just ignore any args we don't understand for now
-                //				else
-                //					throw new WCSException(invalidQuery);
-            }
-
-            resp.setContentType("text/xml");
-            this.processQuery(queryInfo);
+	        //this.log("GET REQUEST: " + query + " from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
+	        OWSQuery query = (OWSQuery) owsUtils.readURLQuery(req.getQueryString());
+	        query.setResponseStream(resp.getOutputStream());
+	        resp.setContentType("text/xml");
+	        
+	        if (query instanceof GetCapabilitiesRequest)
+	        	processQuery((GetCapabilitiesRequest)query);
+	        else if (query instanceof GetCoverageRequest)
+	        	processQuery((GetCoverageRequest)query);
+	        else if (query instanceof DescribeCoverageRequest)
+	        	processQuery((DescribeCoverageRequest)query);
         }
-        catch (WCSException e)
+        catch (OWSException e)
         {
             try
             {
@@ -243,21 +152,9 @@ public abstract class WCSServlet extends OWSServlet
                 e.printStackTrace();
             }
         }
-        catch (ParseException e)
-        {
-            
-            try
-            {
-                sendErrorMessage(resp.getOutputStream(), "Invalid time format: use ISO8601");
-            }
-            catch (IOException e1)
-            {
-                e.printStackTrace();
-            }
-        }
         catch (Exception e)
         {
-            throw new ServletException(internalErrorMsg, e);
+        	throw new ServletException(e);
         }
         finally
         {

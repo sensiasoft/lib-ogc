@@ -9,15 +9,14 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "SensorML DataProcessing Engine".
+ The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the
- University of Alabama in Huntsville (UAH).
- Portions created by the Initial Developer are Copyright (C) 2006
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -33,32 +32,31 @@ import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLTimeReader;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
-import org.vast.ows.sos.SOSQuery.ResponseMode;
+import org.vast.ows.sos.GetObservationRequest.ResponseMode;
 
 
 /**
  * <p><b>Title:</b><br/>
- * SOS Request Reader v0.0.31
+ * SOS GetObservation Request Reader v1.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provides methods to parse a GET or POST SOS request and
- * create an SOSQuery object for OWS4 version 0.0.31
+ * Provides methods to parse a KVP or XML SOS GetObservation
+ * request and create a GetObservationRequest object for version 1.0
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Nov 4, 2005
+ * @date Oct 10, 2007
  * @version 1.0
- * @deprecated Oct 10, 2007 use GetObservationReaderVXX, DescribeSensorReaderVXX...
  */
-public class SOSRequestReaderV031 extends SOSRequestReader
+public class GetObservationReaderV10 extends AbstractRequestReader<GetObservationRequest>
 {
     protected GMLTimeReader timeReader;
     protected GMLEnvelopeReader bboxReader;
     
     
-    public SOSRequestReaderV031()
+    public GetObservationReaderV10()
 	{
         timeReader = new GMLTimeReader();
         bboxReader = new GMLEnvelopeReader();
@@ -66,9 +64,9 @@ public class SOSRequestReaderV031 extends SOSRequestReader
 
 	
 	@Override
-	public SOSQuery readURLQuery(String queryString) throws OWSException
+	public GetObservationRequest readURLQuery(String queryString) throws OWSException
 	{
-		SOSQuery query = new SOSQuery();
+		GetObservationRequest query = new GetObservationRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
 		
 		while (st.hasMoreTokens())
@@ -112,6 +110,36 @@ public class SOSRequestReaderV031 extends SOSRequestReader
 			{
 				query.setOffering(argValue);
 			}
+			
+			// time
+			else if (argName.equalsIgnoreCase("time"))
+			{
+			    this.parseTimeArg(query.getTime(), argValue);
+			}
+			
+			// procedures
+			else if (argName.equalsIgnoreCase("procedures"))
+			{
+				String[] sensorList = argValue.split(",");
+				query.getProcedures().clear();					
+				for (int i=0; i<sensorList.length; i++)
+					query.getProcedures().add(sensorList[i]);
+			}
+			
+			// observables
+			else if (argName.equalsIgnoreCase("observables"))
+			{
+				String[] obsList = argValue.split(",");
+				query.getObservables().clear();					
+				for (int i=0; i<obsList.length; i++)
+					query.getObservables().add(obsList[i]);
+			}
+			
+			// bbox
+            else if (argName.equalsIgnoreCase("bbox"))
+            {
+                this.parseBboxArg(query.getBbox(), argValue);
+            }
 
 			// format argument
 			else if (argName.equalsIgnoreCase("format"))
@@ -130,37 +158,6 @@ public class SOSRequestReaderV031 extends SOSRequestReader
             {
                 query.setResultModel(argValue);
             }
-			
-			// time
-			else if (argName.equalsIgnoreCase("time"))
-			{
-			    this.parseTimeArg(query.getTime(), argValue);
-			}
-            
-            // bbox
-            else if (argName.equalsIgnoreCase("bbox"))
-            {
-                this.parseBboxArg(query.getBbox(), argValue);
-            }
-			
-			// observables
-			else if (argName.equalsIgnoreCase("observables") ||
-					argName.equalsIgnoreCase("observedProperty"))
-			{
-				String[] obsList = argValue.split(",");
-				query.getObservables().clear();					
-				for (int i=0; i<obsList.length; i++)
-					query.getObservables().add(obsList[i]);
-			}
-			
-			// procedures
-			else if (argName.equalsIgnoreCase("procedures") || argName.equalsIgnoreCase("SensorId"))
-			{
-				String[] sensorList = argValue.split(",");
-				query.getProcedures().clear();					
-				for (int i=0; i<sensorList.length; i++)
-					query.getProcedures().add(sensorList[i]);
-			}
 
 			else
 				throw new SOSException(invalidKVP + ": Unknown Argument " + argName);
@@ -171,50 +168,18 @@ public class SOSRequestReaderV031 extends SOSRequestReader
 	
 	
 	@Override
-	public SOSQuery readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+	public GetObservationRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-        String opName = requestElt.getLocalName();
-		SOSQuery query;
-		
-		if (opName.equalsIgnoreCase("GetObservation"))
-			query = readGetObservationXML(dom, requestElt);
-		
-		else if (opName.equalsIgnoreCase("DescribeSensor"))
-			query = readDescribeSensorXML(dom, requestElt);
-		
-		else throw new SOSException("Operation " + opName + " not supported");
+		GetObservationRequest query = new GetObservationRequest();
 		
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, query);
 		
-		return query;
-	}
-	
-	
-	/**
-	 * Reads a GetObservation XML request and fill up the SOSQuery accordingly
-	 * @param dom
-	 * @param requestElt
-	 * @return
-	 * @throws SOSException
-	 */
-	protected SOSQuery readGetObservationXML(DOMHelper dom, Element requestElt) throws SOSException
-	{
-		SOSQuery query = new SOSQuery();
+		// offering
+		String offering = dom.getElementValue(requestElt, "offering");
+		query.setOffering(offering);
 		
-		// read main request parameters
-		query.setOffering(dom.getElementValue(requestElt, "offering"));
-		String resFormat = dom.getElementValue(requestElt, "resultFormat");
-		if(resFormat == null)
-			resFormat = dom.getElementValue(requestElt, "responseFormat");
-		query.setFormat(resFormat);
-        query.setResultModel(dom.getElementValue(requestElt, "resultModel"));
-        
-        // read responseMode
-        String mode = dom.getElementValue(requestElt, "responseMode");
-        parseResponseMode(mode, query);
-
-		// read time instant or period
+		// event time
 		try
         {
             readTemporalOps(dom, requestElt, query);
@@ -224,17 +189,15 @@ public class SOSRequestReaderV031 extends SOSRequestReader
             throw new SOSException(invalidXML + ": " + e.getMessage());
         }
         
-        // read bbox
-        try
-        {
-            readSpatialOps(dom, requestElt, query);
-        }
-        catch (GMLException e)
-        {
-            throw new SOSException(invalidXML + ": " + e.getMessage());
-        }
+        // procedures
+		NodeList procList = dom.getElements(requestElt, "procedure");
+		for (int i = 0; i < procList.getLength(); i++)
+		{
+			String val = dom.getElementValue((Element)procList.item(i), "");
+			query.getProcedures().add(val);
+		}
 		
-		// read observables
+        // observables
 		NodeList obsList = dom.getElements(requestElt, "observedProperty");
 		for (int i = 0; i < obsList.getLength(); i++)
 		{
@@ -242,41 +205,33 @@ public class SOSRequestReaderV031 extends SOSRequestReader
 			query.getObservables().add(val);
 		}
 		
-		// read procedures
-		NodeList procList = dom.getElements(requestElt, "procedure");
-		for (int i = 0; i < procList.getLength(); i++)
-		{
-			String val = dom.getElementValue((Element)procList.item(i), "");
-			query.getProcedures().add(val);
-		}
-
-		return query;
-	}
-	
-	
-	/**
-	 * Reads a DescribeSensor XML request and fill up the SOSQuery accordingly
-	 * @param dom
-	 * @param requestElt
-	 * @return
-	 * @throws SOSException
-	 */
-	protected SOSQuery readDescribeSensorXML(DOMHelper dom, Element requestElt) throws SOSException
-	{
-		SOSQuery query = new SOSQuery();
+		// feature of interest
+        try
+        {
+        	readFOI(dom, requestElt, query);
+        }
+        catch (GMLException e)
+        {
+            throw new SOSException(invalidXML + ": " + e.getMessage());
+        }
 		
-		NodeList sensorList = dom.getElements("sensorId");
-		for (int i = 0; i < sensorList.getLength(); i++)
-		{
-			String val = dom.getElementValue((Element)sensorList.item(i), "");
-			query.getProcedures().add(val);
-		}
+		// response format
+		String resFormat = dom.getElementValue(requestElt, "responseFormat");
+		query.setFormat(resFormat);
+		
+		// result model
+		String resultModel = dom.getElementValue(requestElt, "resultModel");
+        query.setResultModel(resultModel);
+        
+        // response mode
+        String mode = dom.getElementValue(requestElt, "responseMode");
+        parseResponseMode(mode, query);
 
-		return query;
+        return query;
 	}
     
     
-    protected void parseResponseMode(String mode, SOSQuery query) throws SOSException
+    protected void parseResponseMode(String mode, GetObservationRequest query) throws SOSException
     {
         if (mode == null)
             query.setResponseMode(null);
@@ -303,7 +258,7 @@ public class SOSRequestReaderV031 extends SOSRequestReader
      * @param query
      * @throws GMLException
      */
-	protected void readTemporalOps(DOMHelper dom, Element requestElt, SOSQuery query) throws GMLException
+	protected void readTemporalOps(DOMHelper dom, Element requestElt, GetObservationRequest query) throws GMLException
 	{
         Element timeElt = dom.getElement(requestElt, "eventTime/*/*");
         
@@ -315,6 +270,19 @@ public class SOSRequestReaderV031 extends SOSRequestReader
 	}
     
     
+	/**
+	 * Reads the Feature of Interest section
+	 * @param dom
+	 * @param requestElt
+	 * @param query
+	 * @throws GMLException
+	 */
+	protected void readFOI(DOMHelper dom, Element requestElt, GetObservationRequest query) throws GMLException
+    {
+		readSpatialOps(dom, requestElt, query);
+    }
+	
+	
     /**
      * Reads the spatialOps section
      * TODO support more spatial operators... (currently supporting only BBOX)
@@ -323,7 +291,7 @@ public class SOSRequestReaderV031 extends SOSRequestReader
      * @param query
      * @throws GMLException
      */
-    protected void readSpatialOps(DOMHelper dom, Element requestElt, SOSQuery query) throws GMLException
+    protected void readSpatialOps(DOMHelper dom, Element requestElt, GetObservationRequest query) throws GMLException
     {
         Element envelopeElt = dom.getElement(requestElt, "featureOfInterest/BBOX/Envelope");
         

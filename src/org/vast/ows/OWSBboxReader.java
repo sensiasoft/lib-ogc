@@ -9,19 +9,18 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "SensorML DataProcessing Engine".
+ The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the
- University of Alabama in Huntsville (UAH).
- Portions created by the Initial Developer are Copyright (C) 2006
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.gml;
+package org.vast.ows;
 
 import org.vast.xml.DOMHelper;
 import org.vast.ows.util.Bbox;
@@ -30,50 +29,50 @@ import org.w3c.dom.Element;
 
 /**
  *  * <p><b>Title:</b>
- * GML Envelope Reader
+ * OWS Bbox Reader
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Reads GML envelope (coords + CRS)
+ * Reads OWS Bounding Box (coords + CRS) used in several OGC services
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Oct 25, 2006
+ * @date Oct 08, 2007
  * @version 1.0
  */
-public class GMLEnvelopeReader
+public class OWSBboxReader
 {
     protected final static String invalidCoordinates = "Invalid Coordinates: ";
     
     
-    public GMLEnvelopeReader()
+    public OWSBboxReader()
     {
     }
     
         
-    public Bbox readEnvelope(DOMHelper dom, Element envelopeElt) throws GMLException
+    public Bbox readBbox(DOMHelper dom, Element bboxElt) throws OWSException
     {
     	Bbox bbox = new Bbox();
         String coordsText = "";
         String[] coords;
         
-        // read SRS
-        String srs = dom.getAttributeValue(envelopeElt, "@srsName");
-        bbox.setCrs(srs);
+        // read CRS
+        String crs = dom.getAttributeValue(bboxElt, "@crs");
+        bbox.setCrs(crs);
         
         try
         {
             // read lower corner
-            coordsText = dom.getElementValue(envelopeElt, "lowerCorner");
+            coordsText = dom.getElementValue(bboxElt, "LowerCorner");
             coords = coordsText.split(" ");
             bbox.setMinX(Double.parseDouble(coords[0]));
             bbox.setMinY(Double.parseDouble(coords[1]));
             if (coords.length == 3)
-            	bbox.setMinZ(Double.parseDouble(coords[2]));                
+            	bbox.setMinZ(Double.parseDouble(coords[2]));
             
             // read upper corner
-            coordsText = dom.getElementValue(envelopeElt, "upperCorner");
+            coordsText = dom.getElementValue(bboxElt, "UpperCorner");
             coords = coordsText.split(" ");
             bbox.setMaxX(Double.parseDouble(coords[0]));
             bbox.setMaxY(Double.parseDouble(coords[1]));
@@ -82,7 +81,7 @@ public class GMLEnvelopeReader
         }
         catch (Exception e)
         {
-            throw new GMLException(invalidCoordinates + coordsText, e);
+            throw new OWSException(invalidCoordinates + coordsText, e);
         }
         
         return bbox;

@@ -24,8 +24,6 @@
 package org.vast.ows;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.util.Bbox;
@@ -68,7 +66,7 @@ public abstract class AbstractRequestWriter<QueryType extends OWSQuery> implemen
             DOMHelper dom = new DOMHelper();
             dom.createDocument("Request");
             Element requestElt = buildXMLQuery(dom, owsQuery);
-            dom.serialize(requestElt, os, null);                   
+            dom.serialize(requestElt, os, null);
         }
         catch (IOException e)
         {
@@ -76,59 +74,6 @@ public abstract class AbstractRequestWriter<QueryType extends OWSQuery> implemen
         }
     }
     
-    
-    public HttpURLConnection sendRequest(QueryType query, boolean usePost) throws OWSException
-    {
-        String requestString = null;
-        
-        try
-        {
-            boolean canDoPost = (query.getPostServer() != null);
-            boolean canDoGet = (query.getGetServer() != null);
-            
-            if (usePost && canDoPost)
-            {
-                String server = query.getPostServer();
-                URL url;
-                
-                // make sure server URL is valid
-                if (server.endsWith("?"))
-                    url = new URL(server.substring(0, server.length()-1));
-                else
-                    url = new URL(server);
-                
-                // initiatlize HTTP connection
-                HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                connection.setRequestMethod("POST");
-                connection.setRequestProperty( "Content-type", "text/xml");
-                PrintStream out = new PrintStream(connection.getOutputStream());
-                
-                // send post data
-                writeXMLQuery(out, query);
-                out.flush();
-                connection.connect();
-                out.close();
-                
-                // return server response stream
-                return connection;
-            }
-            else if (canDoGet)
-            {
-                requestString = buildURLQuery(query);                
-                URL url = new URL(requestString);
-                return (HttpURLConnection)url.openConnection();
-            }
-            else
-                throw new OWSException("No GET or POST endpoint URL specified in request");
-        }
-        catch (IOException e)
-        {
-            throw new OWSException("IO Error while sending request:\n" + requestString, e);
-        }
-    }
-	
     
     /**
      * Utility method to add time argument to a GET request
@@ -202,4 +147,17 @@ public abstract class AbstractRequestWriter<QueryType extends OWSQuery> implemen
         
         return buff.toString();
     }
+    
+    
+    /**
+     * Adds common attributes to XML request element
+     * @param dom
+     * @param requestElt
+     * @param query
+     */
+    protected void addCommonXML(DOMHelper dom, Element requestElt, OWSQuery query)
+	{
+    	requestElt.setAttribute("service", query.getService());
+    	requestElt.setAttribute("version", query.getVersion());
+	}
 }

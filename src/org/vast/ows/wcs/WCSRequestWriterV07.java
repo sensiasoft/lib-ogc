@@ -44,11 +44,11 @@ import org.vast.xml.DOMHelper;
  * @date Oct 30, 2005
  * @version 1.0
  */
-public class WCSRequestWriterV07 extends WCSRequestWriter
+public class WCSRequestWriterV07 extends AbstractRequestWriter<GetCoverageRequest>
 {
 	
 	@Override
-	public String buildURLQuery(WCSQuery query) throws OWSException
+	public String buildURLQuery(GetCoverageRequest query) throws OWSException
 	{
 		StringBuffer urlBuff = new StringBuffer(query.getGetServer());
 		
@@ -57,8 +57,8 @@ public class WCSRequestWriterV07 extends WCSRequestWriter
         String request = query.getRequest();
         urlBuff.append("&request=" + request);
         if(!"GetCapabilities".equalsIgnoreCase(request)) {
-	        urlBuff.append("&layers=" + query.getLayer());
-	        urlBuff.append("&crs=" + query.getSrs());
+	        urlBuff.append("&layers=" + query.getCoverage());
+	        urlBuff.append("&crs=" + query.getBbox().getCrs());
 	        
 	        if (query.getTime() != null)
 	        {
@@ -68,8 +68,8 @@ public class WCSRequestWriterV07 extends WCSRequestWriter
 	        
 	        urlBuff.append("&bbox=");
 	        this.writeBboxArgument(urlBuff, query.getBbox());
-	        urlBuff.append("&skipX=" + query.getSkipX());
-	        urlBuff.append("&skipY=" + query.getSkipY());
+	        urlBuff.append("&skipX=" + query.getResX());
+	        urlBuff.append("&skipY=" + query.getResY());
 	        urlBuff.append("&format=" + query.getFormat());
         }
 		String url = urlBuff.toString();
@@ -79,7 +79,7 @@ public class WCSRequestWriterV07 extends WCSRequestWriter
 	
 	
 	@Override
-	public Element buildXMLQuery(DOMHelper dom, WCSQuery query) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, GetCoverageRequest query) throws OWSException
 	{
 	    // TODO WCSRequestWriter v0.7 buildRequestXML
         return null;

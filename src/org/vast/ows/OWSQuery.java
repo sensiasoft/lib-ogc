@@ -24,6 +24,9 @@
 package org.vast.ows;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import org.vast.ogc.OGCRegistry;
 
 
 /**
@@ -42,16 +45,71 @@ import java.io.*;
  */
 public class OWSQuery
 {
+	protected final static String EXCEPTION_MIME_TYPE = "application/vnd.ogc.se_xml";
 	protected OutputStream responseStream;
 	protected String getServer;
 	protected String postServer;
 	protected String service;
 	protected String version;
 	protected String request;
-	protected String section;
     protected String exceptionType;
-
+    protected Hashtable<String, String> vendorParameters;
+    
 	
+    public OWSQuery()
+    {
+    	exceptionType = EXCEPTION_MIME_TYPE;
+    }
+    
+    
+    public void checkParameters() throws OWSException
+    {
+    	ArrayList<String> missingParams = new ArrayList<String>();
+		checkParameters(missingParams);
+    }
+    
+    
+    /**
+	 * Checks that OWS common mandatory parameters are present
+	 * @param query
+	 * @param missingParams
+	 */
+	protected void checkParameters(ArrayList<String> missingParams) throws OWSException
+	{
+		// need VERSION
+		if (this.getVersion() == null)
+			missingParams.add(0, "VERSION");
+		
+		// need REQUEST
+		if (this.getRequest() == null)
+			missingParams.add(0, "REQUEST");
+		
+		// need SERVICE
+		if (this.getService() == null)
+			missingParams.add(0, "SERVICE");
+				
+		// send exception with all missing parameters
+		if (!missingParams.isEmpty())
+		{
+			StringBuffer params = new StringBuffer();
+			int listSize = missingParams.size();
+			for (int i=0; i<listSize; i++)
+			{
+				params.append(missingParams.get(i));
+				if (i < listSize-1)
+					params.append(", ");
+			}
+			
+			throw new OWSException("Missing " + params.toString() + " parameter(s)");
+		}
+	}
+    
+	
+	/**
+	 * Method used to normalize server KVP endpoint (always add ? or &) 
+	 * @param url
+	 * @return
+	 */
 	public static String checkServer(String url)
     {
     	if (url == null) return null;
@@ -67,7 +125,7 @@ public class OWSQuery
         return url + firstChar;
     }
 	
-
+	
 	public OutputStream getResponseStream()
 	{
 		return responseStream;
@@ -132,23 +190,17 @@ public class OWSQuery
 	{
 		return version;
 	}
+	
+	
+	public String getNormalizedVersion()
+	{
+		return OGCRegistry.normalizeVersionString(version);
+	}
 
 
 	public void setVersion(String version)
 	{
 		this.version = version;
-	}
-
-
-	public String getSection()
-	{
-		return section;
-	}
-
-
-	public void setSection(String section)
-	{
-		this.section = section;
 	}
 
 
@@ -162,4 +214,10 @@ public class OWSQuery
     {
         this.exceptionType = exceptionType;
     }
+    
+    
+    public Hashtable<String, String> getVendorParameters()
+	{
+		return vendorParameters;
+	}
 }

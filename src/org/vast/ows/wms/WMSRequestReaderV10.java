@@ -73,7 +73,7 @@ public class WMSRequestReaderV10 extends WMSRequestReader
             }
             catch (IndexOutOfBoundsException e)
             {
-                throw new WMSException(invalidGet);
+                throw new WMSException(invalidKVP);
             }
             
             // service version
@@ -116,14 +116,14 @@ public class WMSRequestReaderV10 extends WMSRequestReader
             else if (argName.equalsIgnoreCase("width"))
             {
                 try {query.setWidth(Integer.parseInt(argValue));}
-                catch (NumberFormatException e) {throw new WMSException(invalidGet + "Width should be an integer value");}
+                catch (NumberFormatException e) {throw new WMSException(invalidKVP + "Width should be an integer value");}
             }
             
             // height
             else if (argName.equalsIgnoreCase("height"))
             {
                 try {query.setHeight(Integer.parseInt(argValue));}
-                catch (NumberFormatException e) {throw new WMSException(invalidGet + "Height should be an integer value");}
+                catch (NumberFormatException e) {throw new WMSException(invalidKVP + "Height should be an integer value");}
             }
             
             // transparency
@@ -139,7 +139,7 @@ public class WMSRequestReaderV10 extends WMSRequestReader
             }
 
             else
-                throw new WMSException(invalidGet + ": Unknown Argument " + argName);
+                throw new WMSException(invalidKVP + ": Unknown Argument " + argName);
         }
         
 		return query;

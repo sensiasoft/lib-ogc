@@ -25,8 +25,6 @@
 package org.vast.ows.wcs;
 
 import org.vast.ows.sos.SOSResponseSerializer;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 
 /**

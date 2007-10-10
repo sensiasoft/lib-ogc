@@ -9,15 +9,14 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "SensorML DataProcessing Engine".
+ The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the
- University of Alabama in Huntsville (UAH).
- Portions created by the Initial Developer are Copyright (C) 2006
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -28,6 +27,7 @@ import java.net.URLEncoder;
 
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.gml.GMLEnvelopeWriter;
 import org.vast.ows.gml.GMLException;
@@ -39,27 +39,27 @@ import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b><br/>
- * SOS Request Builder v0.0.31
+ * SOS GetObservation Request Writer v1.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provides methods to generate a GET or POST SOS request based
- * on values contained in a SOSQuery object for OWS4 version 0.0.31
+ * Provides methods to generate a KVP or XML SOS GetObservation
+ * request based on values contained in a GetObservationRequest
+ * object for version 1.0
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Sep 15, 2005
+ * @date Oct 10, 2007
  * @version 1.0
- * @deprecated Oct 10, 2007 use GetObservationWriterVXX, DescribeSensorWriterVXX...
  */
-public class SOSRequestWriterV031 extends SOSRequestWriter
+public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservationRequest>
 {
 	protected GMLEnvelopeWriter bboxWriter;
     protected GMLTimeWriter timeWriter;
     
     
-	public SOSRequestWriterV031()
+	public GetObservationWriterV10()
 	{
         bboxWriter = new GMLEnvelopeWriter();
         timeWriter = new GMLTimeWriter();
@@ -67,7 +67,7 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
 
 	
 	@Override
-	public String buildURLQuery(SOSQuery query) throws OWSException
+	public String buildURLQuery(GetObservationRequest query) throws OWSException
 	{
 		StringBuffer urlBuff;
 		
@@ -75,19 +75,33 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
 		urlBuff.append("service=SOS");
 		urlBuff.append("&version=" + query.getVersion());
 		urlBuff.append("&request=" + query.getRequest());
+		
+		// offering
 		urlBuff.append("&offering=" + query.getOffering());
         
-		urlBuff.append("&time=");
-        this.writeTimeArgument(urlBuff, query.getTime());
+		// event time
+		if (query.getTime() != null)
+		{
+			urlBuff.append("&time=");
+	        this.writeTimeArgument(urlBuff, query.getTime());
+		}
         
-        // add bbox only if specified
-        if (query.getBbox() != null && !query.getBbox().isNull())
+        // procedure list
+        int procCount = query.getProcedures().size();
+        for (int i=0; i<procCount; i++)
         {
-            urlBuff.append("&bbox=");
-            this.writeBboxArgument(urlBuff, query.getBbox());
-        }        
+            if (i == 0)
+                urlBuff.append("&procedures=");
+            
+            String nextProc = query.getProcedures().get(i);            
+            try {urlBuff.append(URLEncoder.encode(nextProc, "UTF-8"));}
+            catch (UnsupportedEncodingException e) {e.printStackTrace();}
+            
+            if (i != procCount-1)
+                urlBuff.append(',');                
+        }
         
-		// add observable list
+		// observable list
 		int obsCount = query.getObservables().size();
 		for (int i=0; i<obsCount; i++)
 		{
@@ -101,20 +115,13 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
 			if (i != obsCount-1)
 				urlBuff.append(',');				
 		}
-        
-		// add procedure list
-        int procCount = query.getProcedures().size();
-        for (int i=0; i<procCount; i++)
+		
+		// add bbox only if specified
+		Bbox bbox = query.getBbox();
+        if (bbox != null && !bbox.isNull())
         {
-            if (i == 0)
-                urlBuff.append("&procedures=");
-            
-            String nextProc = query.getProcedures().get(i);            
-            try {urlBuff.append(URLEncoder.encode(nextProc, "UTF-8"));}
-            catch (UnsupportedEncodingException e) {e.printStackTrace();}
-            
-            if (i != procCount-1)
-                urlBuff.append(',');                
+            urlBuff.append("&bbox=");
+            this.writeBboxArgument(urlBuff, bbox);
         }
         
         // format
@@ -133,22 +140,19 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
 	
 	
 	@Override
-	public Element buildXMLQuery(DOMHelper dom, SOSQuery query) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, GetObservationRequest query) throws OWSException
 	{
-		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI("SOS", "0.0"));
-		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI("SWE", "0.0"));
+		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI("SOS", "1.0"));
 		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI("OGC"));
-		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI("GML"));		
 		
 		// root element
 		Element rootElt = dom.createElement("sos:GetObservation");
-		dom.setAttributeValue(rootElt, "version", query.getVersion());
-		dom.setAttributeValue(rootElt, "service", query.getService());
+		addCommonXML(dom, rootElt, query);
 		
-		// offering ID
+		// offering
 		dom.setElementValue(rootElt, "sos:offering", query.getOffering());
 		
-		// time period
+		// event time
         try
         {
             TimeInfo timeInfo = query.getTime();
@@ -164,7 +168,17 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
             throw new SOSException("Error while writing time", e);
         }
         
-        // bbox
+        // procedures
+		int procCount = query.getProcedures().size();
+		for (int i=0; i<procCount; i++)
+			dom.setElementValue(rootElt, "+sos:procedure", query.getProcedures().get(i));
+        
+		// observables
+		int obsCount = query.getObservables().size();
+		for (int i=0; i<obsCount; i++)
+			dom.setElementValue(rootElt, "+sos:observedProperty", query.getObservables().get(i));
+		
+        // foi bbox
         try
         {
             Bbox bbox = query.getBbox();
@@ -180,18 +194,8 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
             throw new SOSException("Error while writing bbox", e);
         }
 		
-		// procedures
-		int procCount = query.getProcedures().size();
-		for (int i=0; i<procCount; i++)
-			dom.setElementValue(rootElt, "+sos:procedure", query.getProcedures().get(i));
-		
-		// observables
-		int obsCount = query.getObservables().size();
-		for (int i=0; i<obsCount; i++)
-			dom.setElementValue(rootElt, "+sos:observedProperty", query.getObservables().get(i));
-		
-		// result format
-		dom.setElementValue(rootElt, "sos:resultFormat", query.getFormat());
+		// response format
+		dom.setElementValue(rootElt, "sos:responseFormat", query.getFormat());
         
 		// result model
         if (query.getResultModel() != null)
@@ -210,7 +214,7 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
      * @param query
      * @return
      */
-    protected String getResponseMode(SOSQuery query)
+    protected String getResponseMode(GetObservationRequest query)
     {
         switch (query.getResponseMode())
         {

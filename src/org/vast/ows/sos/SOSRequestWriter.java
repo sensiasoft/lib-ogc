@@ -40,6 +40,7 @@ import org.vast.ows.AbstractRequestWriter;
  * @author Alexandre Robin
  * @date Jan 16, 2007
  * @version 1.0
+ * @deprecated Oct 10, 2007 No need for this intermiedary class
  */
 public abstract class SOSRequestWriter extends AbstractRequestWriter<SOSQuery>
 {
