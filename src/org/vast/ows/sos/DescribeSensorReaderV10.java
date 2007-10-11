@@ -107,7 +107,8 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 			// time
 			else if (argName.equalsIgnoreCase("time"))
 			{
-			    this.parseTimeArg(request.getTime(), argValue);
+				TimeInfo time = parseTimeArg(argValue);
+            	request.setTime(time);
 			}
 			
 			// procedure

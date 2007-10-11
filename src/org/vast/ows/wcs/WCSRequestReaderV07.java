@@ -28,6 +28,8 @@ import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 import org.vast.ows.*;
+import org.vast.ows.util.Bbox;
+import org.vast.ows.util.TimeInfo;
 
 
 /**
@@ -104,13 +106,15 @@ public class WCSRequestReaderV07 extends AbstractRequestReader<GetCoverageReques
             // time
             else if (argName.equalsIgnoreCase("time"))
             {
-                this.parseTimeArg(request.getTimes().get(0), argValue);
+            	TimeInfo time = parseTimeArg(argValue);
+            	request.setTime(time);
             }
             
             // bbox
             else if (argName.equalsIgnoreCase("bbox"))
             {
-                this.parseBboxArg(request.getBbox(), argValue);
+            	Bbox bbox = parseBboxArg(argValue);
+                request.setBbox(bbox);
             }
 
             else

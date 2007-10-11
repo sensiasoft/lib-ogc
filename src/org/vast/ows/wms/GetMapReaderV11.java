@@ -26,6 +26,8 @@ import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 import org.vast.ows.*;
+import org.vast.ows.util.Bbox;
+import org.vast.ows.util.TimeInfo;
 
 
 /**
@@ -114,13 +116,15 @@ public class GetMapReaderV11 extends AbstractRequestReader<GetMapRequest>
             // time
             else if (argName.equalsIgnoreCase("time"))
             {
-                this.parseTimeArg(request.getTime(), argValue);
+            	TimeInfo time = parseTimeArg(argValue);
+            	request.setTime(time);
             }
             
             // bbox
             else if (argName.equalsIgnoreCase("bbox"))
             {
-                this.parseBboxArg(request.getBbox(), argValue);
+            	Bbox bbox = parseBboxArg(argValue);
+                request.setBbox(bbox);
             }
             
             // width
@@ -178,7 +182,7 @@ public class GetMapReaderV11 extends AbstractRequestReader<GetMapRequest>
 		
 		// bounding box
 		String bboxText = dom.getElementValue(requestElt, "BoundingBox/coordinates");
-		this.parseBboxArg(request.getBbox(), bboxText);
+		request.setBbox(parseBboxArg(bboxText));
 		request.setSrs(dom.getAttributeValue(requestElt, "BoundingBox/srsName"));
 		
 		// output parameters

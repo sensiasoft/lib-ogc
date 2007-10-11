@@ -114,7 +114,8 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 			// time
 			else if (argName.equalsIgnoreCase("time"))
 			{
-			    this.parseTimeArg(request.getTime(), argValue);
+				TimeInfo timeInfo = parseTimeArg(argValue);
+				request.setTime(timeInfo);
 			}
 			
 			// procedures
@@ -138,7 +139,8 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 			// bbox
             else if (argName.equalsIgnoreCase("bbox"))
             {
-                this.parseBboxArg(request.getBbox(), argValue);
+                Bbox bbox = parseBboxArg(argValue);
+                request.setBbox(bbox);
             }
 
 			// format argument
@@ -246,7 +248,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
         else if (mode.equalsIgnoreCase("resultOnly"))
             query.setResponseMode(ResponseMode.RESULT_ONLY);
         else
-            throw new SOSException("Invalid response mode: " + mode);
+            throw new SOSException(invalidReq + "Invalid response mode: " + mode);
     }
 	
 	

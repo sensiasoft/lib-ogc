@@ -68,7 +68,7 @@ public class SOSRequestReaderV031 extends SOSRequestReader
 	@Override
 	public SOSQuery readURLQuery(String queryString) throws OWSException
 	{
-		SOSQuery query = new SOSQuery();
+		SOSQuery request = new SOSQuery();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
 		
 		while (st.hasMoreTokens())
@@ -92,55 +92,57 @@ public class SOSRequestReaderV031 extends SOSRequestReader
 			// service ID
 			if (argName.equalsIgnoreCase("service"))
 			{
-				query.setService(argValue);
+				request.setService(argValue);
 			}
 			
 			// service version
 			else if (argName.equalsIgnoreCase("version"))
 			{
-				query.setVersion(argValue);
+				request.setVersion(argValue);
 			}
 
 			// request argument
 			else if (argName.equalsIgnoreCase("request"))
 			{
-				query.setOperation(argValue);
+				request.setOperation(argValue);
 			}
 
 			// offering argument
 			else if (argName.equalsIgnoreCase("offering"))
 			{
-				query.setOffering(argValue);
+				request.setOffering(argValue);
 			}
 
 			// format argument
 			else if (argName.equalsIgnoreCase("format"))
 			{
-				query.setFormat(argValue);
+				request.setFormat(argValue);
 			}
             
 			// responseMode argument
             else if (argName.equalsIgnoreCase("responseMode"))
             {
-                parseResponseMode(argValue, query);
+                parseResponseMode(argValue, request);
             }
             
 			// resultModel argument
             else if (argName.equalsIgnoreCase("resultModel"))
             {
-                query.setResultModel(argValue);
+                request.setResultModel(argValue);
             }
 			
 			// time
 			else if (argName.equalsIgnoreCase("time"))
 			{
-			    this.parseTimeArg(query.getTime(), argValue);
+			    TimeInfo time = parseTimeArg(argValue);
+			    request.setTime(time);
 			}
             
             // bbox
             else if (argName.equalsIgnoreCase("bbox"))
             {
-                this.parseBboxArg(query.getBbox(), argValue);
+            	Bbox bbox = parseBboxArg(argValue);
+                request.setBbox(bbox);
             }
 			
 			// observables
@@ -148,25 +150,25 @@ public class SOSRequestReaderV031 extends SOSRequestReader
 					argName.equalsIgnoreCase("observedProperty"))
 			{
 				String[] obsList = argValue.split(",");
-				query.getObservables().clear();					
+				request.getObservables().clear();					
 				for (int i=0; i<obsList.length; i++)
-					query.getObservables().add(obsList[i]);
+					request.getObservables().add(obsList[i]);
 			}
 			
 			// procedures
 			else if (argName.equalsIgnoreCase("procedures") || argName.equalsIgnoreCase("SensorId"))
 			{
 				String[] sensorList = argValue.split(",");
-				query.getProcedures().clear();					
+				request.getProcedures().clear();					
 				for (int i=0; i<sensorList.length; i++)
-					query.getProcedures().add(sensorList[i]);
+					request.getProcedures().add(sensorList[i]);
 			}
 
 			else
 				throw new SOSException(invalidKVP + ": Unknown Argument " + argName);
 		}
 
-		return query;
+		return request;
 	}
 	
 	

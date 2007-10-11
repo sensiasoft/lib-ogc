@@ -108,20 +108,19 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
             // Sequence of time periods or instants
             else if (argName.equalsIgnoreCase("TimeSequence"))
             {
-                String[] timeList = argValue.split(",");
+            	String[] timeList = argValue.split(",");
                 for (int i=0; i<timeList.length; i++)
                 {
-                	TimeInfo newTime = new TimeInfo();
-                	this.parseTimeArg(newTime, timeList[i]);
+                	TimeInfo newTime = parseTimeArg(timeList[i]);
+                	request.getTimes().add(newTime);
                 }
             }
             
             // BoundingBox + integrated CRS
             else if (argName.equalsIgnoreCase("BoundingBox"))
             {
-            	if (request.getBbox() == null)
-            		request.setBbox(new Bbox());
-            	this.parseBboxArg(request.getBbox(), argValue);
+            	Bbox bbox = parseBboxArg(argValue);
+                request.setBbox(bbox);
             }
             
             // RangeSubset

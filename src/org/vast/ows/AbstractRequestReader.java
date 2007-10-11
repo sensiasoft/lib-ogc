@@ -85,9 +85,10 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
      * @param timeInfo
      * @param argValue
      */
-    protected void parseTimeArg(TimeInfo timeInfo, String argValue) throws OWSException
+    protected TimeInfo parseTimeArg(String argValue) throws OWSException
     {
-        String[] timeRange = argValue.split("/");
+    	TimeInfo timeInfo = new TimeInfo();
+    	String[] timeRange = argValue.split("/");
         
         try
         {
@@ -120,6 +121,8 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
         // make sure deltas are null for time instant
         if (timeRange.length == 1)
             timeInfo.setDeltaTimes(0, 0);
+        
+        return timeInfo;
     }
     
     
@@ -129,9 +132,11 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
      * @param bbox
      * @param argValue
      */
-    protected void parseBboxArg(Bbox bbox, String bboxText) throws OWSException
+    protected Bbox parseBboxArg(String bboxText) throws OWSException
     {
-        try
+    	Bbox bbox = new Bbox();
+    	
+    	try
         {
             String[] coords = bboxText.trim().split("[ ,]");
             
@@ -177,6 +182,8 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
         {
             throw new OWSException(invalidReq + ": Invalid Bbox: " + bboxText, e);
         }
+        
+        return bbox;
     }
     
     

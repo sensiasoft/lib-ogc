@@ -109,8 +109,8 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 	public GetCapabilitiesRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
 		GetCapabilitiesRequest request = new GetCapabilitiesRequest();
-		request.setSection(dom.getElementValue(requestElt, "section")); 
-		readCommonXML(dom, requestElt, request);		
+		readCommonXML(dom, requestElt, request);
+		request.setSection(dom.getElementValue(requestElt, "section"));				
 		return request;
 	}
 }

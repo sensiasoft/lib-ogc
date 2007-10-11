@@ -112,17 +112,16 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
                 String[] timeList = argValue.split(",");
                 for (int i=0; i<timeList.length; i++)
                 {
-                	TimeInfo newTime = new TimeInfo();
-                	this.parseTimeArg(newTime, timeList[i]);
+                	TimeInfo newTime = parseTimeArg(timeList[i]);
+                	request.getTimes().add(newTime);
                 }
             }
             
             // BBOX
             else if (argName.equalsIgnoreCase("BBOX"))
             {
-            	if (request.getBbox() == null)
-            		request.setBbox(new Bbox());
-            	this.parseBboxArg(request.getBbox(), argValue);
+            	Bbox bbox = parseBboxArg(argValue);
+                request.setBbox(bbox);
             }
             
             // CRS
@@ -313,14 +312,14 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 			}
 			else
 			{
-				TimeInfo timeRange = new TimeInfo();
+				TimeInfo timeInfo = new TimeInfo();
 				String beginTime = dom.getElementValue(timeElt, "beginTime");
 				String endTime = dom.getElementValue(timeElt, "endTime");
 				
 				try
 				{
 					double begin = DateTimeFormat.parseIso(beginTime);
-					timeRange.setStartTime(begin);
+					timeInfo.setStartTime(begin);
 				}
 				catch (ParseException e)
 				{
@@ -330,7 +329,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 				try
 				{
 					double end = DateTimeFormat.parseIso(endTime);
-					timeRange.setStopTime(end);
+					timeInfo.setStopTime(end);
 				}
 				catch (ParseException e)
 				{
@@ -349,7 +348,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 						else
 							step = Double.parseDouble(timeRes);
 						
-						timeRange.setTimeStep(step);
+						timeInfo.setTimeStep(step);
 					}
 					catch (Exception e)
 					{
@@ -357,7 +356,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 					}
 				}
 				
-				request.getTimes().add(timeRange);
+				request.getTimes().add(timeInfo);
 			}
 		}
 

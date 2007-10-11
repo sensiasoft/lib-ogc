@@ -26,6 +26,7 @@ import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 import org.vast.ows.*;
+import org.vast.ows.util.Bbox;
 
 
 /**
@@ -108,7 +109,8 @@ public class GetMapReaderV10 extends AbstractRequestReader<GetMapRequest>
             // bbox
             else if (argName.equalsIgnoreCase("bbox"))
             {
-                this.parseBboxArg(request.getBbox(), argValue);
+            	Bbox bbox = parseBboxArg(argValue);
+                request.setBbox(bbox);
             }
             
             // width
