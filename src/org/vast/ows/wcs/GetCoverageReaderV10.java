@@ -63,6 +63,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 	{
 		GetCoverageRequest request = new GetCoverageRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
+        String crs = null;
         
         while (st.hasMoreTokens())
         {
@@ -122,14 +123,18 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
             {
             	Bbox bbox = parseBboxArg(argValue);
                 request.setBbox(bbox);
+                if (crs != null)
+                	bbox.setCrs(crs);
             }
             
             // CRS
             else if (argName.equalsIgnoreCase("CRS"))
             {
-                if (request.getBbox() == null)
-                	request.setBbox(new Bbox());
-            	request.getBbox().setCrs(argValue);
+            	Bbox bbox = request.getBbox();
+            	if (bbox != null)
+            		bbox.setCrs(argValue);
+            	else
+            		crs = argValue;
             }
             
             // RESPONSE_CRS
