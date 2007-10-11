@@ -23,20 +23,31 @@
 
 package org.vast.ows.server;
 
-import javax.servlet.http.*;
-import javax.servlet.*;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLTimeReader;
-import org.vast.ows.sos.*;
+import org.vast.ows.sos.DescribeSensorRequest;
+import org.vast.ows.sos.GetObservationRequest;
+import org.vast.ows.sos.SOSException;
 import org.vast.ows.util.PostRequestFilter;
 import org.vast.ows.util.TimeInfo;
-import org.w3c.dom.*;
-import org.vast.xml.*;
+import org.vast.xml.DOMHelper;
+import org.vast.xml.DOMHelperException;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 
 /**
@@ -58,70 +69,56 @@ public abstract class SOSServlet extends OWSServlet
 	protected Hashtable<String, String> sensorMLUrls = new Hashtable<String, String>();
 	protected OWSUtils owsUtils = new OWSUtils();
     
+	protected void processQuery(GetCapabilitiesRequest query) throws Exception
+    {
+	    sendCapabilities("ALL", query.getResponseStream());
+    }
+	    
+	protected void processQuery(DescribeSensorRequest query) throws Exception
+	{
+		String sensorId = query.getProcedure();
+		if (sensorId == null)
+			throw new SOSException("A DescribeSensor request must specify a sensorId argument");
+		
+		//  Check for SensorId in SensorMLUrl hashtable
+		String smlUrl = sensorMLUrls.get(sensorId);
+		if(smlUrl == null)
+			throw new SOSException("SensorML description for " + sensorId + " not available");
+		DOMHelper dom = new DOMHelper(smlUrl, false);				
+        dom.serialize(dom.getBaseElement(), query.getResponseStream() , null);		
+	}
 	
 	/**
 	 * Decode the query, check validity and call the right handler
 	 * @param query
 	 */
-	protected void processQuery(SOSQuery query) throws Exception
+	protected void processQuery(GetObservationRequest query) throws Exception
 	{
-		// GetCapabilities request
-		if (query.getOperation().equalsIgnoreCase("GetCapabilities"))
-		{
-			sendCapabilities("ALL", query.getResponseStream());
-		}
+		if (query.getOffering() == null)
+			throw new SOSException("A GetObservation SOS request must specify an offeringId argument");
 		
-		// DescribeSensor request
-		else if (query.getOperation().equalsIgnoreCase("DescribeSensor"))
-		{
-			String sensorId = query.getProcedures().get(0);
-			if (sensorId == null)
-				throw new SOSException("A DescribeSensor request must specify a sensorId argument");
-			
-			//  Check for SensorId in SensorMLUrl hashtable
-			String smlUrl = sensorMLUrls.get(sensorId);
-			if(smlUrl == null)
-				throw new SOSException("SensorML description for " + sensorId + " not available");
-			DOMHelper dom = new DOMHelper(smlUrl, false);				
-	        dom.serialize(dom.getBaseElement(), query.getResponseStream() , null);		
-	    }
+		//if (query.observables.isEmpty())
+		//	throw new SOSException("An SOS request must contain at least one observable ID");
 		
-		// GetObservation request
-		else if (query.getOperation().equalsIgnoreCase("GetObservation"))
-		{
+		if (query.getFormat() == null)
+			throw new SOSException("A GetObservation SOS request must specify a format argument");
 		
-			if (query.getOffering() == null)
-				throw new SOSException("A GetObservation SOS request must specify an offeringId argument");
-			
-			//if (query.observables.isEmpty())
-			//	throw new SOSException("An SOS request must contain at least one observable ID");
-			
-			if (query.getFormat() == null)
-				throw new SOSException("A GetObservation SOS request must specify a format argument");
-			
-						
-			SOSHandler handler = dataSetHandlers.get(query.getOffering());
+					
+		SOSHandler handler = dataSetHandlers.get(query.getOffering());
 
-			if (handler != null)
-			{
-				// check query parameters
-				checkQueryObservables(query, capsHelper);
-                checkQueryProcedures(query, capsHelper);
-				checkQueryFormat(query, capsHelper);
-				checkQueryTime(query, capsHelper);
-				
-				// then retrieve observation data
-                handler.getObservation(query);				
-			}
-			else
-				throw new SOSException("Data for observation " + query.getOffering() + " is unavailable on this server");				
-		}
-		
-		// Unrecognized request type
-		else
+		if (handler != null)
 		{
-			throw new SOSException(query.getOperation() + " request unsupported on this server: Use GetCapabilities, GetObservation, DescribeSensor"); 
+			// check query parameters
+			checkQueryObservables(query, capsHelper);
+            checkQueryProcedures(query, capsHelper);
+			checkQueryFormat(query, capsHelper);
+			checkQueryTime(query, capsHelper);
+			
+			// then retrieve observation data
+            handler.getObservation(query);				
 		}
+		else
+			throw new SOSException("Data for observation " + query.getOffering() + " is unavailable on this server");
 	}
 	
 	
@@ -131,7 +128,7 @@ public abstract class SOSServlet extends OWSServlet
 	 * @param capsReader
 	 * @throws SOSException
 	 */
-	protected void checkQueryObservables(SOSQuery query, DOMHelper capsReader) throws SOSException
+	protected void checkQueryObservables(GetObservationRequest query, DOMHelper capsReader) throws SOSException
 	{
 		Element offeringElt = getOffering(query.getOffering(), capsReader);		
 		NodeList observableElts = capsReader.getElements(offeringElt, "observedProperty");
@@ -166,7 +163,7 @@ public abstract class SOSServlet extends OWSServlet
      * @param capsReader
      * @throws SOSException
      */
-    protected void checkQueryProcedures(SOSQuery query, DOMHelper capsReader) throws SOSException
+    protected void checkQueryProcedures(GetObservationRequest query, DOMHelper capsReader) throws SOSException
     {
         Element offeringElt = getOffering(query.getOffering(), capsReader);     
         NodeList procedureElts = capsReader.getElements(offeringElt, "procedure");
@@ -201,7 +198,7 @@ public abstract class SOSServlet extends OWSServlet
 	 * @param capsReader
 	 * @throws SOSException
 	 */
-	protected void checkQueryFormat(SOSQuery query, DOMHelper capsReader) throws SOSException
+	protected void checkQueryFormat(GetObservationRequest query, DOMHelper capsReader) throws SOSException
 	{
 		Element offeringElt = getOffering(query.getOffering(), capsReader);
         
@@ -232,7 +229,7 @@ public abstract class SOSServlet extends OWSServlet
 	 * @param capsReader
 	 * @throws SOSException
 	 */
-	protected void checkQueryTime(SOSQuery query, DOMHelper dom) throws SOSException
+	protected void checkQueryTime(GetObservationRequest query, DOMHelper dom) throws SOSException
 	{
         // make sure startTime <= stopTime
         if (query.getTime().getStartTime() > query.getTime().getStopTime())
@@ -330,7 +327,7 @@ public abstract class SOSServlet extends OWSServlet
 	 */
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException
 	{
-		SOSQuery query = null;
+		OWSRequest query = null;
 		
 		try
 		{
@@ -341,9 +338,15 @@ public abstract class SOSServlet extends OWSServlet
             
             // parse query arguments
             logger.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
-            query = (SOSQuery)owsUtils.readURLQuery(queryString, "SOS");			
+            query = (OWSRequest)owsUtils.readURLQuery(queryString, "SOS");			
 			query.setResponseStream(resp.getOutputStream());
-			this.processQuery(query);
+			
+			if (query instanceof GetCapabilitiesRequest)
+	        	processQuery((GetCapabilitiesRequest)query);
+	        else if (query instanceof DescribeSensorRequest)
+	        	processQuery((DescribeSensorRequest)query);
+	        else if (query instanceof GetObservationRequest)
+	        	processQuery((GetObservationRequest)query);
 		}
 		catch (SOSException e)
 		{
@@ -390,16 +393,22 @@ public abstract class SOSServlet extends OWSServlet
 	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
 	{
-		SOSQuery query = null;
+		OWSRequest query = null;
 		logger.info("POST REQUEST from IP " + req.getRemoteAddr());
 		
 		try
 		{
 			InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
             DOMHelper dom = new DOMHelper(xmlRequest, false);
-            query = (SOSQuery)owsUtils.readXMLQuery(dom, dom.getBaseElement());
+            query = (OWSRequest)owsUtils.readXMLQuery(dom, dom.getBaseElement());
 			query.setResponseStream(resp.getOutputStream());
-			this.processQuery(query);
+			
+			if (query instanceof GetCapabilitiesRequest)
+	        	processQuery((GetCapabilitiesRequest)query);
+	        else if (query instanceof DescribeSensorRequest)
+	        	processQuery((DescribeSensorRequest)query);
+	        else if (query instanceof GetObservationRequest)
+	        	processQuery((GetObservationRequest)query);
 		}
         catch (SOSException e)
 		{
