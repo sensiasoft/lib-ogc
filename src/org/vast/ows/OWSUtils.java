@@ -375,14 +375,13 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setDoInput(true);
             connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-type", "text/xml");
             connection.setRequestProperty("SOAPAction", request.getOperation());
             PrintStream out = new PrintStream(connection.getOutputStream());
             
             // send post data
             DOMHelper dom = new DOMHelper();
-            dom.addUserPrefix("soap", "soapUri");
+            dom.addUserPrefix("soap", soapUri);
             Element envElt = dom.createElement("soap:Envelope");		
 			Element bodyElt = dom.addElement(envElt, "soap:Body");
 			Element reqElt = buildXMLQuery(dom, request);
