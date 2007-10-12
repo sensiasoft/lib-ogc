@@ -35,7 +35,7 @@ import org.vast.ows.*;
  *
  * <p><b>Description:</b><br/>
  * Provides methods to parse a KVP or XML DescribeCoverage request and
- * create a DescribeCoverage object for version 1.0
+ * create a DescribeCoverageRequest object for version 1.0
  * </p>
  *
  * <p>Copyright (c) 2007</p>

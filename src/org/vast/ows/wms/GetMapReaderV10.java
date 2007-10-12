@@ -150,7 +150,7 @@ public class GetMapReaderV10 extends AbstractRequestReader<GetMapRequest>
 	@Override
 	public GetMapRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		throw new WMSException("XML request not supported in WMS 1.0");
+		throw new WMSException(noXML + "WMS 1.0 GetMap");
 	}
 	
 	
