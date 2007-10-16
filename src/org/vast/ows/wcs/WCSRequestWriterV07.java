@@ -68,8 +68,8 @@ public class WCSRequestWriterV07 extends AbstractRequestWriter<GetCoverageReques
 	        
 	        urlBuff.append("&bbox=");
 	        this.writeBboxArgument(urlBuff, request.getBbox());
-	        urlBuff.append("&skipX=" + request.getResX());
-	        urlBuff.append("&skipY=" + request.getResY());
+	        urlBuff.append("&skipX=" + request.getSkipX());
+	        urlBuff.append("&skipY=" + request.getSkipY());
 	        urlBuff.append("&format=" + request.getFormat());
         }
 		String url = urlBuff.toString();
