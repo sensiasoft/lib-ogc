@@ -20,25 +20,53 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows.wcs;
 
-import org.vast.ows.OWSRequest;
+import java.util.ArrayList;
+import org.vast.ows.OWSIdentification;
+import org.vast.ows.OWSReferenceGroup;
 
 
 /**
  * <p><b>Title:</b><br/>
- * GetResult Request
+ * WCS GetCoverage Response
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for SOS GetResult request parameters
+ * Container for GetCoverage response
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @date Oct 09, 2007
+ * @author Alex Robin
+ * @date Oct 11, 2007
  * @version 1.0
  */
-public class GetResultRequest extends OWSRequest
+public class CoverageManifest extends OWSIdentification
 {
+    protected String version;
+	protected ArrayList<OWSReferenceGroup> coverages;
+		
+	
+	public CoverageManifest()
+    {    
+        coverages = new ArrayList<OWSReferenceGroup>();
+    }
+
+
+	public ArrayList<OWSReferenceGroup> getCoverages()
+	{
+		return coverages;
+	}
+
+
+	public String getVersion()
+	{
+		return version;
+	}
+
+
+	public void setVersion(String version)
+	{
+		this.version = version;
+	}	
 }

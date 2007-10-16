@@ -20,25 +20,21 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows.wcst;
 
-import org.vast.ows.OWSRequest;
+import org.vast.ows.OWSReferenceGroup;
 
 
-/**
- * <p><b>Title:</b><br/>
- * GetResult Request
- * </p>
- *
- * <p><b>Description:</b><br/>
- * Container for SOS GetResult request parameters
- * </p>
- *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @date Oct 09, 2007
- * @version 1.0
- */
-public class GetResultRequest extends OWSRequest
+public class CoverageTransaction extends OWSReferenceGroup
 {
+	public final static String ADD = "Add";
+	public final static String DELETE = "Delete";
+	public final static String UPDATE = "Update";
+	public final static String UPDATE_METADATA = "UpdateMetadata";
+	
+	public final static String COVERAGE_PIXELS = "urn:ogc:def:role:WCS:1.1:Pixels";
+    public final static String COVERAGE_DESCRIPTION = "urn:ogc:def:role:WCS:1.1:CoverageDescription";
+    public final static String COVERAGE_TRANSFORMATION = "urn:ogc:def:role:WCS:1.1:GeoreferencingTransformation";
+    
+    //protected Polygon updateZone ?? 
 }

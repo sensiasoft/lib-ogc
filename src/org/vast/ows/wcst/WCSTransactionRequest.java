@@ -20,25 +20,55 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows.wcst;
 
+import java.util.ArrayList;
+import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 
 
 /**
  * <p><b>Title:</b><br/>
- * GetResult Request
+ * WCS Transaction Request
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for SOS GetResult request parameters
+ * Container for Transactional request parameters
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @date Oct 09, 2007
+ * @author Alex Robin
+ * @date Oct 11, 2007
  * @version 1.0
  */
-public class GetResultRequest extends OWSRequest
+public class WCSTransactionRequest extends OWSRequest
 {
+    protected ArrayList<CoverageTransaction> inputCoverages;
+		
+	
+	public WCSTransactionRequest()
+    {
+        service = "WCS";
+        operation = "Transaction";        
+        inputCoverages = new ArrayList<CoverageTransaction>();
+    }
+	
+	
+	public void checkParameters() throws OWSException
+	{
+		ArrayList<String> missingParams = new ArrayList<String>();
+		
+		// need coverage
+		if (this.getInputCoverages().isEmpty())
+			missingParams.add("Input Coverage");
+				
+		// check common params + generate exception
+		super.checkParameters(missingParams);
+	}
+
+
+	public ArrayList<CoverageTransaction> getInputCoverages()
+	{
+		return inputCoverages;
+	}	
 }

@@ -20,25 +20,24 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows;
 
-import org.vast.ows.OWSRequest;
+import java.util.ArrayList;
 
 
-/**
- * <p><b>Title:</b><br/>
- * GetResult Request
- * </p>
- *
- * <p><b>Description:</b><br/>
- * Container for SOS GetResult request parameters
- * </p>
- *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @date Oct 09, 2007
- * @version 1.0
- */
-public class GetResultRequest extends OWSRequest
+public class OWSReferenceGroup extends OWSIdentification
 {
+	protected ArrayList<OWSReference> references;
+
+	
+	public OWSReferenceGroup()
+	{
+		references = new ArrayList<OWSReference>(3);
+	}
+	
+	
+	public ArrayList<OWSReference> getReferences()
+	{
+		return references;
+	}
 }
