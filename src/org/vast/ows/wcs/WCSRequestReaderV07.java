@@ -60,7 +60,8 @@ public class WCSRequestReaderV07 extends AbstractRequestReader<GetCoverageReques
 	{
 		GetCoverageRequest request = new GetCoverageRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
-        
+        String crs = null;
+		
         while (st.hasMoreTokens())
         {
             String argName = null;
@@ -115,8 +116,53 @@ public class WCSRequestReaderV07 extends AbstractRequestReader<GetCoverageReques
             {
             	Bbox bbox = parseBboxArg(argValue);
                 request.setBbox(bbox);
+                if (crs != null)
+                	bbox.setCrs(crs);
             }
 
+            else if (argName.equalsIgnoreCase("layers")) {
+            	request.setCoverage(argValue);
+            }
+            
+         // CRS
+            else if (argName.equalsIgnoreCase("CRS"))
+            {
+            	Bbox bbox = request.getBbox();
+            	if (bbox != null)
+            		bbox.setCrs(argValue);
+            	else
+            		crs = argValue;
+            }
+            
+         // RESY
+            else if (argName.equalsIgnoreCase("skipx"))
+            {
+                try
+				{
+					int skipX = Integer.parseInt(argValue);
+					request.setSkipX(skipX);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new WCSException(invalidKVP + ": Invalid value for SkipX: " + argValue);
+				}
+            }
+            
+            // RESZ
+            else if (argName.equalsIgnoreCase("skipy"))
+            {
+                try
+				{
+					int skipY = Integer.parseInt(argValue);
+					request.setSkipX(skipY);
+				}
+				catch (NumberFormatException e)
+				{
+					throw new WCSException(invalidKVP + ": Invalid value for SkipY: " + argValue);
+				}
+            }
+            
+            
             else
                 throw new WCSException(invalidKVP + ": Unknown Argument " + argName);
         }
