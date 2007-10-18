@@ -23,6 +23,7 @@
 
 package org.vast.ows;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -55,7 +56,7 @@ import org.w3c.dom.Element;
 public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<OWSRequest>
 {
     public final static String soapUri = "http://schemas.xmlsoap.org/soap/envelope/";    
-	public final static String unsupportedVersion = "Unsupported Request Version: ";
+	public final static String unsupportedSpec = "No support for ";
     public final static String invalidEndpoint = "No Endpoint URL specified in request object";
     
     
@@ -64,19 +65,20 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
      */
     public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
     {
-        String queryType = requestElt.getLocalName();
+        String requestType = requestElt.getLocalName();
         String serviceType = dom.getAttributeValue(requestElt, "@service");
         String version = readXMLVersion(dom, requestElt);
         
         try
         {
-            OWSRequestReader reader = (OWSRequestReader)OGCRegistry.createReader(serviceType, queryType, version);
+            OWSRequestReader reader = (OWSRequestReader)OGCRegistry.createReader(serviceType, requestType, version);
             OWSRequest request = reader.readXMLQuery(dom, requestElt);
             return request;
         }
         catch (IllegalStateException e)
         {
-            throw new OWSException(unsupportedVersion + version, e);
+            String spec = serviceType + " " + requestType + " v" + version;
+        	throw new OWSException(unsupportedSpec + spec, e);
         }
     }
     
@@ -122,7 +124,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         }
         catch (IllegalStateException e)
         {
-            throw new OWSException(unsupportedVersion + request.version, e);
+        	String spec = request.service + " " + request.operation + " v" + request.version;
+        	throw new OWSException(unsupportedSpec + spec, e);
         }
     }
     
@@ -212,7 +215,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         }
         catch (IllegalStateException e)
         {
-            throw new OWSException(unsupportedVersion + request.version);
+        	String spec = request.service + " " + request.operation + " v" + request.version;
+        	throw new OWSException(unsupportedSpec + spec, e);
         }
     }
 
@@ -231,7 +235,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         }
         catch (IllegalStateException e)
         {
-            throw new OWSException(unsupportedVersion + request.version, e);
+        	String spec = request.service + " " + request.operation + " v" + request.version;
+        	throw new OWSException(unsupportedSpec + spec, e);
         }
     }
     
@@ -248,7 +253,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         }
         catch (IllegalStateException e)
         {
-            throw new OWSException(unsupportedVersion + request.version, e);
+        	String spec = request.service + " " + request.operation + " v" + request.version;
+        	throw new OWSException(unsupportedSpec + spec, e);
         }        
     }
 
@@ -278,10 +284,6 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             URL url = new URL(requestString);
             return (HttpURLConnection)url.openConnection();
         }
-        catch (IllegalStateException e)
-        {
-            throw new OWSException(unsupportedVersion + request.version, e);
-        }
         catch (IOException e)
         {
             throw new OWSException("IO Error while sending request:\n" + requestString, e);
@@ -297,9 +299,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
      */
     public HttpURLConnection sendPostRequest(OWSRequest request) throws OWSException
     {
-	    String requestString = null;
-        
-        try
+	    try
         {
         	URL url;
         	String endpoint = request.getPostServer();
@@ -333,13 +333,11 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             // return server response stream
             return connection;
         }
-        catch (IllegalStateException e)
-        {
-            throw new OWSException(unsupportedVersion + request.version, e);
-        }
         catch (IOException e)
         {
-            throw new OWSException("IO Error while sending request:\n" + requestString, e);
+        	ByteArrayOutputStream buf = new ByteArrayOutputStream();
+        	writeXMLQuery(buf, request);
+        	throw new OWSException("IO Error while sending request:\n" + buf, e);
         }
     }
     
@@ -352,9 +350,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
      */
     public HttpURLConnection sendSoapRequest(OWSRequest request) throws OWSException
     {
-	    String requestString = null;
-        
-        try
+	    try
         {
         	URL url;
         	String endpoint = request.getPostServer();
@@ -394,13 +390,11 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             // return server response stream
             return connection;
         }
-        catch (IllegalStateException e)
-        {
-            throw new OWSException(unsupportedVersion + request.version, e);
-        }
         catch (IOException e)
         {
-            throw new OWSException("IO Error while sending request:\n" + requestString, e);
+        	ByteArrayOutputStream buf = new ByteArrayOutputStream();
+        	writeXMLQuery(buf, request);
+        	throw new OWSException("IO Error while sending request:\n" + buf, e);
         }
     }
     
@@ -423,7 +417,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         }
         catch (IllegalStateException e)
         {
-            throw new OWSException(unsupportedVersion + version, e);
+        	String spec = serviceType + " Capabilities v" + version;
+        	throw new OWSException(unsupportedSpec + spec, e);
         }
     }
     
@@ -449,7 +444,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         }
         catch (IllegalStateException e)
         {
-            throw new OWSException(unsupportedVersion + version, e);
+        	String spec = serviceType + " Capabilities v" + version;
+        	throw new OWSException(unsupportedSpec + spec, e);
         }
     }
     
