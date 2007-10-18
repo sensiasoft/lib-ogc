@@ -22,6 +22,7 @@
 
 package org.vast.ows.wms;
 
+import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
 import org.vast.xml.DOMHelper;
@@ -55,10 +56,7 @@ public class GetMapWriterV11 extends AbstractRequestWriter<GetMapRequest>
 	public String buildURLQuery(GetMapRequest request) throws OWSException
 	{
 		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
-		
-        urlBuff.append("service=WMS");
-        urlBuff.append("&version=" + request.getVersion());
-        urlBuff.append("&request=GetMap");
+		addCommonArgs(urlBuff, request);
 		
         urlBuff.append("&layers=" + createLayerList(request));
         
@@ -88,10 +86,10 @@ public class GetMapWriterV11 extends AbstractRequestWriter<GetMapRequest>
     @Override
     public Element buildXMLQuery(DOMHelper dom, GetMapRequest request) throws OWSException
     {
-        dom.addUserPrefix("ows", "http://www.opengis.net/ows");
-        dom.addUserPrefix("ogc", "http://www.opengis.net/ogc");
-        dom.addUserPrefix("gml", "http://www.opengis.net/gml");
-        dom.addUserPrefix("sld", "http://www.opengis.net/sld");
+        dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS));
+        dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+        dom.addUserPrefix("sld", OGCRegistry.getNamespaceURI(OGCRegistry.SLD));
         
         // root element
         Element rootElt = dom.createElement("ows:GetMap");

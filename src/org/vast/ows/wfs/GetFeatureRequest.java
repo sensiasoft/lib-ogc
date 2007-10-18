@@ -47,8 +47,6 @@ import org.vast.ows.util.TimeInfo;
  */
 public class GetFeatureRequest extends OWSRequest
 {
-    protected final static String unsupportedVersion = "Unsupported WFS version";
-    
     protected TimeInfo time;
 	protected Bbox bbox;
 	protected String srs;

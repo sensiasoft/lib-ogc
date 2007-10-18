@@ -26,6 +26,7 @@ package org.vast.ows.wfs;
 import java.util.*;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
+import org.vast.ows.AbstractCapabilitiesReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.util.Bbox;
 
@@ -46,7 +47,7 @@ import org.vast.ows.util.Bbox;
  * @date Oct 30, 2005
  * @version 1.0
  */
-public class WFSCapabilitiesReaderV10 extends WFSCapabilitiesReader
+public class WFSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
 {
 	
     public WFSCapabilitiesReaderV10()

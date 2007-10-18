@@ -69,12 +69,8 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
 	@Override
 	public String buildURLQuery(GetObservationRequest request) throws OWSException
 	{
-		StringBuffer urlBuff;
-		
-		urlBuff = new StringBuffer(request.getGetServer());
-		urlBuff.append("service=SOS");
-		urlBuff.append("&version=" + request.getVersion());
-		urlBuff.append("&request=" + request.getOperation());
+		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
+        addCommonArgs(urlBuff, request);
 		
 		// offering
 		urlBuff.append("&offering=" + request.getOffering());
@@ -144,8 +140,8 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, GetObservationRequest request) throws OWSException
 	{
-		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI("SOS", request.getVersion()));
-		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI("OGC"));
+		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(OGCRegistry.SOS, request.getVersion()));
+		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
 		
 		// root element
 		Element rootElt = dom.createElement("sos:GetObservation");

@@ -48,7 +48,10 @@ import org.vast.util.DateTimeFormat;
  */
 public abstract class AbstractRequestWriter<RequestType extends OWSRequest> implements OWSRequestWriter<RequestType>
 {
-        
+    protected final static String noKVP = "KVP request not supported in ";
+    protected final static String noXML = "XML request not supported in ";
+    
+    
 	public AbstractRequestWriter()
 	{	
 	}
@@ -158,4 +161,17 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
     	requestElt.setAttribute("service", request.getService());
     	requestElt.setAttribute("version", request.getVersion());
 	}
+    
+    
+    /**
+     * Adds common arguments to URL query
+     * @param urlBuff
+     * @param request
+     */
+    protected void addCommonArgs(StringBuffer urlBuff, OWSRequest request)
+    {
+        urlBuff.append("service=" + request.getService());
+        urlBuff.append("&version=" + request.getVersion());
+        urlBuff.append("&request=" + request.getOperation());
+    }
 }

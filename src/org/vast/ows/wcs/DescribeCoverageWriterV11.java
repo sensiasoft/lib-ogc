@@ -51,10 +51,7 @@ public class DescribeCoverageWriterV11 extends AbstractRequestWriter<DescribeCov
 	public String buildURLQuery(DescribeCoverageRequest request) throws OWSException
 	{
 		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
-		
-        urlBuff.append("SERVICE=WCS");
-        urlBuff.append("&VERSION=" + request.getVersion());
-        urlBuff.append("&REQUEST=" + request.getOperation());
+        addCommonArgs(urlBuff, request);
         
         // add all requested coverage names
         if (!request.getCoverages().isEmpty())
@@ -79,7 +76,7 @@ public class DescribeCoverageWriterV11 extends AbstractRequestWriter<DescribeCov
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, DescribeCoverageRequest request) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI("WCS", request.getVersion()));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, request.getVersion()));
 				
 		// root element
 		Element rootElt = dom.createElement("DescribeCoverage");

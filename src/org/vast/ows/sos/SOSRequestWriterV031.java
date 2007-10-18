@@ -69,12 +69,10 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
 	@Override
 	public String buildURLQuery(SOSQuery query) throws OWSException
 	{
-		StringBuffer urlBuff;
-		
-		urlBuff = new StringBuffer(query.getGetServer());
-		urlBuff.append("service=SOS");
-		urlBuff.append("&version=" + query.getVersion());
-		urlBuff.append("&request=" + query.getOperation());
+		StringBuffer urlBuff = new StringBuffer(query.getGetServer());
+        addCommonArgs(urlBuff, query);
+        
+        // offering
 		urlBuff.append("&offering=" + query.getOffering());
         
 		urlBuff.append("&time=");
@@ -135,10 +133,8 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, SOSQuery query) throws OWSException
 	{
-		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI("SOS", "0.0"));
-		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI("SWE", "0.0"));
-		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI("OGC"));
-		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI("GML"));		
+		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(OGCRegistry.SOS, "0.0.31"));
+		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
 		
 		// root element
 		Element rootElt = dom.createElement("sos:GetObservation");

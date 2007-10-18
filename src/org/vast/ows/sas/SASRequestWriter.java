@@ -24,6 +24,7 @@
 package org.vast.ows.sas;
 
 import org.vast.xml.DOMHelper;
+import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.AbstractRequestWriter;
 import org.w3c.dom.Element;
@@ -62,8 +63,8 @@ public class SASRequestWriter extends AbstractRequestWriter<SASQuery>
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, SASQuery query) throws OWSException
 	{
-		dom.addUserPrefix("sas", "http://www.opengis.net/sas");
-		dom.addUserPrefix("ogc", "http://www.opengis.net/ogc");
+		dom.addUserPrefix("sas", OGCRegistry.getNamespaceURI(OGCRegistry.SAS, query.getVersion()));
+		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
 //		domWriter.addNS("http://www.opengeospatial.net/swe", "swe");
 		
 		// root element

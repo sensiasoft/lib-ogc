@@ -24,6 +24,7 @@
 package org.vast.ows.gml;
 
 import org.vast.xml.DOMHelper;
+import org.vast.ogc.OGCRegistry;
 import org.vast.ows.util.Bbox;
 import org.w3c.dom.Element;
 
@@ -52,7 +53,9 @@ public class GMLEnvelopeWriter
         
     public Element writeEnvelope(DOMHelper dom, Bbox bbox) throws GMLException
     {
-    	Element envelopeElt = dom.createElement("gml:Envelope");
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+        
+        Element envelopeElt = dom.createElement("gml:Envelope");
     	
 		dom.setAttributeValue(envelopeElt, "@srsName", bbox.getCrs());
 		String lowerCorner = bbox.getMinX() + " " + bbox.getMinY();

@@ -65,12 +65,8 @@ public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSenso
 	@Override
 	public String buildURLQuery(DescribeSensorRequest request) throws OWSException
 	{
-		StringBuffer urlBuff;
-		
-		urlBuff = new StringBuffer(request.getGetServer());
-		urlBuff.append("service=SOS");
-		urlBuff.append("&version=" + request.getVersion());
-		urlBuff.append("&request=" + request.getOperation());
+		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
+        addCommonArgs(urlBuff, request);
         
 		// procedure
         urlBuff.append("&procedure=" + request.getProcedure());
@@ -93,7 +89,7 @@ public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSenso
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, DescribeSensorRequest request) throws OWSException
 	{
-		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI("SOS", request.getVersion()));			
+		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(OGCRegistry.SOS, request.getVersion()));			
 		
 		// root element
 		Element rootElt = dom.createElement("sos:GetObservation");

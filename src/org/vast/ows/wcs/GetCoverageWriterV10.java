@@ -60,10 +60,7 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
 	public String buildURLQuery(GetCoverageRequest request) throws OWSException
 	{
 		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
-		
-        urlBuff.append("SERVICE=WCS");
-        urlBuff.append("&VERSION=" + request.getVersion());
-        urlBuff.append("&REQUEST=" + request.getOperation());
+        addCommonArgs(urlBuff, request);
         
         // COVERAGE
         urlBuff.append("&COVERAGE=" + request.getCoverage());
@@ -156,8 +153,8 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, GetCoverageRequest request) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI("WCS", request.getVersion()));
-		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI("GML", "3.1.1"));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS));
+		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
 		
 		// root element
 		Element rootElt = dom.createElement("GetCoverage");

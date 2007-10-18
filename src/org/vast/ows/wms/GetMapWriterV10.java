@@ -87,7 +87,7 @@ public class GetMapWriterV10 extends AbstractRequestWriter<GetMapRequest>
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, GetMapRequest request) throws OWSException
 	{
-		throw new WMSException("XML request not supported in WMS 1.0");
+		throw new WMSException(noXML + "WMS 1.0");
 	}
 	
 	

@@ -64,10 +64,10 @@ public class SOSResponseSerializer extends SweResponseSerializer
     @Override
     public void setTemplate(DOMHelper dom)
     {
-        super.setTemplate(dom);
-        dom.addUserPrefix("om", OGCRegistry.getNamespaceURI("OM", "0.0"));
-        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI("GML", "3.1.1"));
-        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI("SWE", "1.0"));
+        super.setTemplate(dom);        
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+        dom.addUserPrefix("om", OGCRegistry.getNamespaceURI(OGCRegistry.OM, "0.0"));
+        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.0"));
         NodeList elts = dom.getDocument().getElementsByTagNameNS("http://www.opengis.net/om/0.0", "Observation");
         obsElt = (Element)elts.item(0);
     }

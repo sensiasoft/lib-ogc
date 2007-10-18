@@ -83,10 +83,10 @@ public class ObservationWriterV01 implements ObservationWriter
     
     public Element writeObservation(DOMHelper dom, AbstractObservation obs) throws OMException
     {
-        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI("SWE", "1.0"));
-        dom.addUserPrefix("om", OGCRegistry.getNamespaceURI("OM", "0.0"));
-        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI("GML", "3.1.1"));
-        dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI("XLINK"));
+        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.0"));
+        dom.addUserPrefix("om", OGCRegistry.getNamespaceURI(OGCRegistry.OM, "0.0"));
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+        dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
         
         if (obs instanceof ObservationStream)
             return writeObservationStream(dom, (ObservationStream)obs);

@@ -27,6 +27,7 @@ package org.vast.ows.wrs;
 
 import java.util.List;
 import org.vast.xml.DOMHelper;
+import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.util.Bbox;
@@ -67,9 +68,9 @@ public class WRSRequestWriter extends AbstractRequestWriter<WRSQuery>
 	}
 	
 	protected Element buildQueryRootElement(DOMHelper domWriter) throws OWSException {
-		domWriter.addUserPrefix("csw", "http://www.opengis.net/cat/csw");
-		domWriter.addUserPrefix("ogc", "http://www.opengis.net/ogc");
-		domWriter.addUserPrefix("gml", "http://www.opengis.net/gml");
+		domWriter.addUserPrefix("csw", OGCRegistry.getNamespaceURI(OGCRegistry.CSW));
+		domWriter.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
+		domWriter.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
 		
 		// root element
 		Element rootElt = domWriter.createElement("csw:GetRecords");

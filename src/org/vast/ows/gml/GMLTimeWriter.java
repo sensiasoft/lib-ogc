@@ -57,7 +57,7 @@ public class GMLTimeWriter
         
     public Element writeTime(DOMHelper dom, TimeInfo timeInfo) throws GMLException
     {
-    	dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI("GML"));
+    	dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
     	
     	Element timeElt;
         int zone = timeInfo.getTimeZone();

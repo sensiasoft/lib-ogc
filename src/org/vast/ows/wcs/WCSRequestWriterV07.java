@@ -25,6 +25,7 @@
 package org.vast.ows.wcs;
 
 import org.vast.ows.*;
+import org.vast.ows.wms.WMSException;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 
@@ -81,7 +82,6 @@ public class WCSRequestWriterV07 extends AbstractRequestWriter<GetCoverageReques
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, GetCoverageRequest query) throws OWSException
 	{
-	    // TODO WCSRequestWriter v0.7 buildRequestXML
-        return null;
+        throw new WMSException(noXML + "WCS 0.7");
 	}
 }

@@ -51,9 +51,9 @@ public class CoverageManifestWriterV11
 
 	public Element buildXML(DOMHelper dom, CoverageManifest manifest) throws WCSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI("WCS", manifest.getVersion()));
-		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI("OWS"));
-		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI("XLINK"));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, manifest.getVersion()));
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS));
+		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
 		
 		// root element
 		Element rootElt = dom.createElement("Coverages");
