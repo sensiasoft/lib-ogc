@@ -13,9 +13,9 @@ import org.w3c.dom.Element;
  * <p><b>Description:</b><br/>
  * </p>
  *
- * <p>Copyright (c) 2006</p>
+ * <p>Copyright (c) 2007</p>
  * @author Tony Cook
- * @date Dec 6, 2006
+ * @date Dec 6, 2007
  * @version 1.0
  */
 
