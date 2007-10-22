@@ -125,7 +125,7 @@ public class SOSRequestWriterV031 extends SOSRequestWriter
         // result model
         if (query.getResultModel() != null)
             urlBuff.append("&resultModel=" + query.getResultModel());
-		
+		System.err.println(urlBuff);
 		return urlBuff.toString();
 	}
 	
