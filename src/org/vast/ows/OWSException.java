@@ -136,7 +136,7 @@ public class OWSException extends Exception
 		String message = super.getMessage();
 		
 		// first try to use custom message if specified
-		if (message != null || message.equals(""))
+		if (message != null && !message.equals(""))
 			return message;
 		
 		// otherwise build generic message
