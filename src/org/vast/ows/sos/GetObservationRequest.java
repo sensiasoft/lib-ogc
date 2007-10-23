@@ -65,6 +65,8 @@ public class GetObservationRequest extends OWSRequest
 		operation = "GetObservation";
 		observables = new ArrayList<String>(2);
 		procedures = new ArrayList<String>(2);
+		bbox = new Bbox();
+		time = new TimeInfo();
 	}
 	
 	
