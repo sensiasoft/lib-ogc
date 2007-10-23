@@ -21,7 +21,6 @@
 package org.vast.ows.wcst;
 
 import java.util.ArrayList;
-import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 
 
@@ -50,19 +49,6 @@ public class WCSTransactionRequest extends OWSRequest
         operation = "Transaction";        
         inputCoverages = new ArrayList<CoverageTransaction>();
     }
-	
-	
-	public void checkParameters() throws OWSException
-	{
-		ArrayList<String> missingParams = new ArrayList<String>();
-		
-		// need coverage
-		if (this.getInputCoverages().isEmpty())
-			missingParams.add("Input Coverage");
-				
-		// check common params + generate exception
-		super.checkParameters(missingParams);
-	}
 
 
 	public ArrayList<CoverageTransaction> getInputCoverages()

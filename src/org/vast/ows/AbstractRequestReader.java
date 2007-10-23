@@ -22,6 +22,7 @@ package org.vast.ows;
 
 import java.io.*;
 import java.text.ParseException;
+import java.util.List;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.vast.ows.util.Bbox;
@@ -47,6 +48,7 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractRequestReader<RequestType extends OWSRequest> implements OWSRequestReader<RequestType>
 {
+	protected final static String versionRegex = "^[0-9]{1,2}\\.[0-9]{1,2}(\\.[0-9]{1,3})?$";
 	protected final static String invalidReq = "Invalid Request";
 	protected final static String invalidKVP = "Invalid KVP Request";
     protected final static String invalidXML = "Invalid XML Request";
@@ -221,5 +223,42 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 		query.setOperation(requestElt.getLocalName());
 		query.setService(dom.getAttributeValue(requestElt, "service"));
 		query.setVersion(dom.getAttributeValue(requestElt, "version"));
+	}
+	
+	
+	/**
+	 * Checks that OWS common mandatory parameters are present
+	 * @param request
+	 * @param report
+	 */
+	public static void checkParameters(OWSRequest request, OWSExceptionReport report) throws OWSException
+	{
+		List<OWSException> list = report.getExceptionList();
+		
+		// need VERSION
+		if (request.getVersion() == null)
+		{
+			list.add(0, new OWSException(OWSException.missing_param_code, "VERSION"));
+		}
+		
+		// check version validity
+		else if (!request.getVersion().matches(versionRegex))
+		{
+			OWSException ex = new OWSException(OWSException.invalid_param_code, "VERSION");
+			ex.setBadValue(request.getVersion());
+			list.add(0, ex);
+		}
+		
+		// need REQUEST
+		if (request.getOperation() == null)
+			list.add(0, new OWSException(OWSException.missing_param_code, "REQUEST"));
+		
+		// need SERVICE
+		if (request.getService() == null)
+			list.add(0, new OWSException(OWSException.missing_param_code, "SERVICE"));
+				
+		// send exception with all missing parameters
+		if (!list.isEmpty())
+			throw report;
 	}
 }

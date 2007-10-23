@@ -21,6 +21,7 @@
 package org.vast.ows.wcs;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.StringTokenizer;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
@@ -58,6 +59,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 	@Override
 	public GetCoverageRequest readURLQuery(String queryString) throws OWSException
 	{
+		OWSExceptionReport report = new OWSExceptionReport();
 		GetCoverageRequest request = new GetCoverageRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
         
@@ -173,6 +175,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
             }
         }
 		
+        this.checkParameters(request, report);
         return request;
 	}
 	
@@ -186,8 +189,9 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 	@Override
 	public GetCoverageRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI("OWS", "1.1"));		
+		OWSExceptionReport report = new OWSExceptionReport();
 		GetCoverageRequest request = new GetCoverageRequest();
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI("OWS", "1.1"));		
 		
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
@@ -317,8 +321,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 			}
 			
 			request.getAxisSubsets().add(axis);
-		}	
-		
+		}		
 		
 		////// Output //////
 		Element outputElt = dom.getElement(requestElt, "Output");
@@ -370,7 +373,42 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 			}
 		}
 		
-		
+		this.checkParameters(request, report);
 		return request;
+	}
+	
+	
+	/**
+     * Checks that GetCoverage mandatory parameters are present
+     * @param request
+     * @throws OWSException
+     */
+	protected void checkParameters(GetCoverageRequest request, OWSExceptionReport report) throws OWSException
+    {
+    	List<OWSException> list = report.getExceptionList();
+		
+		// need coverage
+		if (request.getCoverage() == null)
+			list.add(new OWSException(OWSException.missing_param_code, "Identifier"));
+		
+		// need at least BBOX or TIME
+		if (request.getBbox() == null && request.getTime() == null)
+			list.add(new OWSException(OWSException.missing_param_code, "TimeSequence/BoundingBox"));
+		
+		// TODO check Grid info??
+		//if (request.getWidth() < 0 && request.getResX() < 0)
+		//	list.add(new OWSException(OWSException.missing_param_code, "WIDTH/HEIGHT/RESX/RESY"));
+		
+		// need format
+		if (request.getFormat() == null)
+			list.add(new OWSException(OWSException.missing_param_code, "Format"));
+		
+		// copy crs to responseCrs if needed
+		if (request.gridCrs == null)
+			request.gridCrs = request.getBbox().getCrs();
+		
+		// check common params
+		// needs to be called at the end since it throws the exception if report is non empty
+		super.checkParameters(request, report);
 	}
 }

@@ -20,23 +20,135 @@
 
 package org.vast.ows;
 
+
+/**
+ * <p><b>Title:</b><br/>
+ * OWS Exception
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Base exception class for all OGC Services.
+ * Contains the fields necessary to generate an exception report.
+ * </p>
+ *
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date 23 oct. 07
+ * @version 1.0
+ */
 public class OWSException extends Exception
 {
-	static final long serialVersionUID = 0;
-		
-		
+	static final long serialVersionUID = 0xED126190670F4F6AL;
+	public final static String invalid_param_code = "InvalidParameterValue";
+	public final static String invalid_param_text = "Invalid Parameter Value: ";
+	public final static String missing_param_code = "MissingParameterValue";
+	public final static String missing_param_text = "Missing Parameter Value: ";
+	public final static String unsupported_op_code = "OperationNotSupported";
+	public final static String unsupported_op_text = "Unsupported Operation: ";
+	public final static String no_code = "NoApplicableCode";
+	public final static String no_code_text = "Internal Error";
+	
+	protected String code;
+	protected String locator;
+	protected String badValue;
+	
+	
 	public OWSException(String message)
 	{
 		super(message);
 	}
+	
+	
+	public OWSException(String code, String locator)
+	{
+		this.code = code;
+		this.locator = locator;
+	}
+	
+	
+	public OWSException(String code, String locator, String message)
+	{
+		super(message);
+		this.code = code;
+		this.locator = locator;
+	}
+	
 	
 	public OWSException(Exception e)
 	{
 		super(e);
 	}
 	
+	
 	public OWSException(String message, Exception e)
 	{
 		super(message, e);
+	}
+	
+	
+	public OWSException(String code, String locator, String message, Exception e)
+	{
+		super(message, e);
+		this.code = code;
+		this.locator = locator;
+	}
+
+
+	public String getCode()
+	{
+		return code;
+	}
+
+
+	public void setCode(String code)
+	{
+		this.code = code;
+	}
+
+
+	public String getLocator()
+	{
+		return locator;
+	}
+
+
+	public void setLocator(String locator)
+	{
+		this.locator = locator;
+	}
+	
+	
+	public String getBadValue()
+	{
+		return badValue;
+	}
+
+
+	public void setBadValue(String badValue)
+	{
+		this.badValue = badValue;
+	}
+
+
+	@Override
+	public String getMessage()
+	{
+		String message = super.getMessage();
+		
+		// first try to use custom message if specified
+		if (message != null)
+			return message;
+		
+		// otherwise build generic message
+		else if (this.code == missing_param_code)
+			return missing_param_text + locator;
+		else if (this.code == invalid_param_code)
+			return invalid_param_text + locator + ((badValue == null) ? "" : " = " + badValue);
+		else if (this.code == unsupported_op_code)
+			return unsupported_op_text + locator;
+		else if (this.code == no_code)
+			return no_code_text;
+		else
+			return null;
 	}
 }

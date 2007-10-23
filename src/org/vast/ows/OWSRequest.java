@@ -21,7 +21,6 @@
 package org.vast.ows;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import org.vast.ogc.OGCRegistry;
 
@@ -43,6 +42,7 @@ import org.vast.ogc.OGCRegistry;
 public class OWSRequest
 {
 	protected final static String EXCEPTION_MIME_TYPE = "application/vnd.ogc.se_xml";
+	
 	protected OutputStream responseStream;
 	protected String getServer;
 	protected String postServer;
@@ -59,50 +59,7 @@ public class OWSRequest
     }
     
     
-    public void checkParameters() throws OWSException
-    {
-    	ArrayList<String> missingParams = new ArrayList<String>();
-		checkParameters(missingParams);
-    }
-    
-    
     /**
-	 * Checks that OWS common mandatory parameters are present
-	 * @param query
-	 * @param missingParams
-	 */
-	protected void checkParameters(ArrayList<String> missingParams) throws OWSException
-	{
-		// need VERSION
-		if (this.getVersion() == null)
-			missingParams.add(0, "VERSION");
-		
-		// need REQUEST
-		if (this.getOperation() == null)
-			missingParams.add(0, "REQUEST");
-		
-		// need SERVICE
-		if (this.getService() == null)
-			missingParams.add(0, "SERVICE");
-				
-		// send exception with all missing parameters
-		if (!missingParams.isEmpty())
-		{
-			StringBuffer params = new StringBuffer();
-			int listSize = missingParams.size();
-			for (int i=0; i<listSize; i++)
-			{
-				params.append(missingParams.get(i));
-				if (i < listSize-1)
-					params.append(", ");
-			}
-			
-			throw new OWSException("Missing " + params.toString() + " parameter(s)");
-		}
-	}
-    
-	
-	/**
 	 * Method used to normalize server KVP endpoint (always add ? or &) 
 	 * @param url
 	 * @return

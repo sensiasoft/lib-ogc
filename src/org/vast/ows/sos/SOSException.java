@@ -23,19 +23,36 @@ package org.vast.ows.sos;
 import org.vast.ows.OWSException;
 
 
+/**
+ * <p><b>Title:</b><br/>
+ * SOS Exception
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Exception object to carry SOS error messages.
+ * </p>
+ *
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin <robin@nsstc.uah.edu>
+ * @date 07 jul. 06
+ * @version 1.0
+ */
 public class SOSException extends OWSException
 {
-	static final long serialVersionUID = 0;
+	static final long serialVersionUID = 0x59DB55493721FA3CL;
 		
+	
 	public SOSException(String message)
 	{
 		super(message);
 	}
 	
+	
 	public SOSException(Exception e)
 	{
 		super(e);
 	}
+	
 	
 	public SOSException(String message, Exception e)
 	{

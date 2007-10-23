@@ -20,6 +20,7 @@
 
 package org.vast.ows.sos;
 
+import java.util.List;
 import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -57,7 +58,8 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 	@Override
 	public DescribeSensorRequest readURLQuery(String queryString) throws OWSException
 	{
-		DescribeSensorRequest request = new DescribeSensorRequest();		
+		OWSExceptionReport report = new OWSExceptionReport();
+		DescribeSensorRequest request = new DescribeSensorRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
 		
 		while (st.hasMoreTokens())
@@ -119,6 +121,7 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 				throw new SOSException(invalidKVP + ": Unknown Argument " + argName);
 		}
 
+		checkParameters(request, report);
 		return request;
 	}
 	
@@ -126,8 +129,9 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 	@Override
 	public DescribeSensorRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-        DescribeSensorRequest request = new DescribeSensorRequest();
-		
+		OWSExceptionReport report = new OWSExceptionReport();
+		DescribeSensorRequest request = new DescribeSensorRequest();        
+        
         // do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
 		
@@ -147,6 +151,29 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 		String format = dom.getAttributeValue(requestElt, "@outputFormat");
 		request.setFormat(format);
 		
+		checkParameters(request, report); 
 		return request;
+	}
+	
+	
+	/**
+     * Checks that DescribeSensor mandatory parameters are present
+     * @param request
+     * @throws OWSException
+     */
+	protected void checkParameters(DescribeSensorRequest request, OWSExceptionReport report) throws OWSException
+	{
+		List<OWSException> list = report.getExceptionList();
+		
+		// need procedure
+		if (request.getProcedure() == null)
+			list.add(new OWSException(OWSException.missing_param_code, "PROCEDURE"));
+		
+		// need format
+		if (request.getFormat() == null)
+			list.add(new OWSException(OWSException.missing_param_code, "RESPONSE_FORMAT"));
+		
+		// check common params + generate exception
+		super.checkParameters(request, report);
 	}
 }

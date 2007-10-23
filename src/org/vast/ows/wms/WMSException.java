@@ -23,19 +23,36 @@ package org.vast.ows.wms;
 import org.vast.ows.OWSException;
 
 
+/**
+ * <p><b>Title:</b><br/>
+ * WMS Exception
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Exception object to carry WMS error messages.
+ * </p>
+ *
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin <robin@nsstc.uah.edu>
+ * @date 07 jul. 06
+ * @version 1.0
+ */
 public class WMSException extends OWSException
 {
-	static final long serialVersionUID = 0;
+	static final long serialVersionUID = 0x0D57D045A3588AE34L;
 		
+	
 	public WMSException(String message)
 	{
 		super(message);
 	}
 	
+	
 	public WMSException(Exception e)
 	{
 		super(e);
 	}
+	
 	
 	public WMSException(String message, Exception e)
 	{

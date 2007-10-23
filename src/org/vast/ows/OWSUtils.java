@@ -29,7 +29,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
@@ -52,7 +51,7 @@ import org.w3c.dom.Element;
  */
 public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<OWSRequest>
 {
-    public final static String soapUri = "http://schemas.xmlsoap.org/soap/envelope/";    
+    public final static String soapUri = "http://schemas.xmlsoap.org/soap/envelope/";
 	public final static String unsupportedSpec = "No support for ";
     public final static String invalidEndpoint = "No Endpoint URL specified in request object";
     
@@ -176,7 +175,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             }
         }
         
-        request.checkParameters(new ArrayList<String>());
+        AbstractRequestReader.checkParameters(request, new OWSExceptionReport());
         return request;
     }
     

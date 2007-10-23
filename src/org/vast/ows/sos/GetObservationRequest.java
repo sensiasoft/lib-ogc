@@ -21,8 +21,6 @@
 package org.vast.ows.sos;
 
 import java.util.*;
-
-import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
@@ -70,27 +68,6 @@ public class GetObservationRequest extends OWSRequest
 	}
 	
 	
-	public void checkParameters() throws OWSException
-	{
-		ArrayList<String> missingParams = new ArrayList<String>();
-		
-		// need offering
-		if (this.getOffering() == null)
-			missingParams.add("Offering Identifier");
-		
-		// need at least BBOX or TIME
-		if (this.getBbox() == null && this.getTime() == null)
-			missingParams.add("FOI Bounding Box or Time");
-		
-		// need format
-		if (this.getFormat() == null)
-			missingParams.add("Response Format");
-		
-		// check common params + generate exception
-		super.checkParameters(missingParams);
-	}
-	
-
 	public String getFormat()
 	{
 		return format;

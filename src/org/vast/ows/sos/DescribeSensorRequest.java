@@ -20,8 +20,6 @@
 
 package org.vast.ows.sos;
 
-import java.util.ArrayList;
-import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.util.TimeInfo;
 
@@ -58,23 +56,6 @@ public class DescribeSensorRequest extends OWSRequest
 	}
 	
 	
-	public void checkParameters() throws OWSException
-	{
-		ArrayList<String> missingParams = new ArrayList<String>();
-		
-		// need procedure
-		if (this.getProcedure() == null)
-			missingParams.add("Procedure Identifier");
-		
-		// need format
-		if (this.getFormat() == null)
-			missingParams.add("Response Format");
-		
-		// check common params + generate exception
-		super.checkParameters(missingParams);
-	}
-	
-
 	public String getFormat()
 	{
 		return format;

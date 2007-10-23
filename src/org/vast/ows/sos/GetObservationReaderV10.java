@@ -20,6 +20,7 @@
 
 package org.vast.ows.sos;
 
+import java.util.List;
 import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -64,6 +65,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 	@Override
 	public GetObservationRequest readURLQuery(String queryString) throws OWSException
 	{
+		OWSExceptionReport report = new OWSExceptionReport();
 		GetObservationRequest request = new GetObservationRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
 		
@@ -163,6 +165,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 				throw new SOSException(invalidKVP + ": Unknown Argument " + argName);
 		}
 
+		this.checkParameters(request, report);
 		return request;
 	}
 	
@@ -170,6 +173,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 	@Override
 	public GetObservationRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
+		OWSExceptionReport report = new OWSExceptionReport();
 		GetObservationRequest request = new GetObservationRequest();
 		
 		// do common stuffs like version, request name and service type
@@ -227,6 +231,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
         String mode = dom.getElementValue(requestElt, "responseMode");
         parseResponseMode(mode, request);
 
+        this.checkParameters(request, report);
         return request;
 	}
     
@@ -300,5 +305,32 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
             Bbox bbox = bboxReader.readEnvelope(dom, envelopeElt);
             query.setBbox(bbox);
         }
+    }
+    
+    
+    /**
+     * Checks that GetObservation mandatory parameters are present
+     * @param request
+     * @throws OWSException
+     */
+    protected void checkParameters(GetObservationRequest request, OWSExceptionReport report) throws OWSException
+    {
+    	List<OWSException> list = report.getExceptionList();
+		
+		// need offering
+		if (request.getOffering() == null)
+			list.add(new OWSException(OWSException.missing_param_code, "OFFERING"));
+		
+		// need at least BBOX or TIME
+		if (request.getBbox() == null && request.getTime() == null)
+			list.add(new OWSException(OWSException.missing_param_code, "FOI/TIME"));
+		
+		// need format
+		if (request.getFormat() == null)
+			list.add(new OWSException(OWSException.missing_param_code, "RESPONSE_FORMAT"));
+		
+		// check common params
+		// needs to be called at the end since it throws the exception if report is non empty
+		super.checkParameters(request, report);
     }
 }

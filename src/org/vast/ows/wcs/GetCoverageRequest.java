@@ -22,7 +22,6 @@ package org.vast.ows.wcs;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.util.AxisSubset;
 import org.vast.ows.util.Bbox;
@@ -84,35 +83,6 @@ public class GetCoverageRequest extends OWSRequest
         width = height = depth = -1;
         useResolution = false;
     }
-	
-	
-	public void checkParameters() throws OWSException
-	{
-		ArrayList<String> missingParams = new ArrayList<String>();
-		
-		// need coverage
-		if (this.getCoverage() == null)
-			missingParams.add("Coverage Identifier");
-		
-		// need at least BBOX or TIME
-		if (this.getBbox() == null && this.getTime() == null)
-			missingParams.add("Bounding Box or Time");
-		
-		// need at least WIDTH or RESX
-		if (this.getWidth() < 0 && this.getResX() < 0)
-			missingParams.add("Grid Size or Resolution");
-		
-		// need format
-		if (this.getFormat() == null)
-			missingParams.add("Format");
-		
-		// copy crs to responseCrs if needed
-		if (gridCrs == null)
-			gridCrs = bbox.getCrs();
-		
-		// check common params + generate exception
-		super.checkParameters(missingParams);
-	}
 	
 	
 	public String getCoverage()
