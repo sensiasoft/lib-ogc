@@ -360,7 +360,7 @@ public abstract class SOSServlet extends OWSServlet
         {
             try
             {
-                sendErrorMessage(resp.getOutputStream(), "Invalid request or unrecognized version");
+                sendErrorMessage(resp.getOutputStream(), e.getMessage());
             }
             catch (IOException e1)
             {
