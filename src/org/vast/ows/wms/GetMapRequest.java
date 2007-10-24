@@ -59,8 +59,7 @@ public class GetMapRequest extends OWSRequest
 	public GetMapRequest()
 	{
 		service = "WMS";
-		bbox = new Bbox();
-		time = new TimeInfo();
+        operation = "GetMap";
 		layers = new ArrayList<String>(2);
 		styles = new ArrayList<String>(2);		
 	}
