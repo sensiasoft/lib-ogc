@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractRequestReader<RequestType extends OWSRequest> implements OWSRequestReader<RequestType>
 {
-	protected final static String versionRegex = "^[0-9]{1,2}\\.[0-9]{1,2}(\\.[0-9]{1,3})?$";
+	protected final static String versionRegex = "^[0-9]+\\.[0-9]+(\\.[0-9]+)?$";
 	protected final static String invalidReq = "Invalid Request";
 	protected final static String invalidKVP = "Invalid KVP Request";
     protected final static String invalidXML = "Invalid XML Request";

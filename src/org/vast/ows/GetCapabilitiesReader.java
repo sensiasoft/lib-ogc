@@ -52,6 +52,7 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 	@Override
 	public GetCapabilitiesRequest readURLQuery(String queryString) throws OWSException
 	{
+		OWSExceptionReport report = new OWSExceptionReport();
 		GetCapabilitiesRequest request = new GetCapabilitiesRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
         
@@ -98,6 +99,7 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
             }
         }
 
+        super.checkParameters(request, report);
         return request;
 	}
 	
@@ -105,9 +107,11 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 	@Override
 	public GetCapabilitiesRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
+		OWSExceptionReport report = new OWSExceptionReport();
 		GetCapabilitiesRequest request = new GetCapabilitiesRequest();
 		readCommonXML(dom, requestElt, request);
-		request.setSection(dom.getElementValue(requestElt, "section"));				
+		request.setSection(dom.getElementValue(requestElt, "section"));
+		super.checkParameters(request, report);
 		return request;
 	}
 }
