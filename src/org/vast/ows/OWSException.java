@@ -74,6 +74,13 @@ public class OWSException extends Exception
 	}
 	
 	
+	public OWSException(String code, String locator, String badValue, String message)
+	{
+		this(code, locator, message);
+		this.badValue = badValue;
+	}
+	
+	
 	public OWSException(Exception e)
 	{
 		super(e);

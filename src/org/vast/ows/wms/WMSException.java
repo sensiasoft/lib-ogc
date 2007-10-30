@@ -58,4 +58,10 @@ public class WMSException extends OWSException
 	{
 		super(message, e);
 	}
+	
+	
+	public WMSException(String code, String locator, String badValue, String message)
+	{
+		super(code, locator, badValue, message);
+	}
 }

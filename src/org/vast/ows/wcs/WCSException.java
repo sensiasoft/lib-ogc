@@ -52,4 +52,16 @@ public class WCSException extends OWSException
 	{
 		super(e);
 	}
+	
+	
+	public WCSException(String message, Exception e)
+	{
+		super(message, e);
+	}
+	
+	
+	public WCSException(String code, String locator, String badValue, String message)
+	{
+		super(code, locator, badValue, message);
+	}
 }
