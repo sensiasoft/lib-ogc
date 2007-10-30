@@ -81,6 +81,16 @@ public class OWSExceptionReport extends OWSException
 	{
 		this.version = version;
 	}
+	
+	
+	/**
+	 * Helper method to add an exception to the report
+	 * @param e
+	 */
+	public void add(OWSException e)
+	{
+		exceptionList.add(e);
+	}
 
 
 	public List<OWSException> getExceptionList()
@@ -104,5 +114,12 @@ public class OWSExceptionReport extends OWSException
 		}
 		
 		return buf.toString();
+	}
+	
+	
+	public void process() throws OWSException
+	{
+		if (!exceptionList.isEmpty())
+			throw this;
 	}
 }

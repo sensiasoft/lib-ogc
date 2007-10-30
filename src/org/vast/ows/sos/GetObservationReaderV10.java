@@ -20,7 +20,6 @@
 
 package org.vast.ows.sos;
 
-import java.util.List;
 import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -315,22 +314,21 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
      */
     protected void checkParameters(GetObservationRequest request, OWSExceptionReport report) throws OWSException
     {
-    	List<OWSException> list = report.getExceptionList();
-		
-		// need offering
+    	// check common params
+		super.checkParameters(request, report);
+    	
+    	// need offering
 		if (request.getOffering() == null)
-			list.add(new OWSException(OWSException.missing_param_code, "OFFERING"));
+			report.add(new OWSException(OWSException.missing_param_code, "OFFERING"));
 		
 		// need at least BBOX or TIME
 		if (request.getBbox() == null && request.getTime() == null)
-			list.add(new OWSException(OWSException.missing_param_code, "FOI/TIME"));
+			report.add(new OWSException(OWSException.missing_param_code, "FOI/TIME"));
 		
 		// need format
 		if (request.getFormat() == null)
-			list.add(new OWSException(OWSException.missing_param_code, "RESPONSE_FORMAT"));
+			report.add(new OWSException(OWSException.missing_param_code, "RESPONSE_FORMAT"));
 		
-		// check common params
-		// needs to be called at the end since it throws the exception if report is non empty
-		super.checkParameters(request, report);
+		report.process();
     }
 }

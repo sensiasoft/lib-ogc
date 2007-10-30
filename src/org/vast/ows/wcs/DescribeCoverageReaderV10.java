@@ -47,7 +47,6 @@ public class DescribeCoverageReaderV10 extends AbstractRequestReader<DescribeCov
 	@Override
 	public DescribeCoverageRequest readURLQuery(String queryString) throws OWSException
 	{
-		OWSExceptionReport report = new OWSExceptionReport();
 		DescribeCoverageRequest request = new DescribeCoverageRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
         
@@ -96,7 +95,6 @@ public class DescribeCoverageReaderV10 extends AbstractRequestReader<DescribeCov
             }
         }
 
-        this.checkParameters(request, report);
         return request;
 	}
 	
@@ -104,7 +102,6 @@ public class DescribeCoverageReaderV10 extends AbstractRequestReader<DescribeCov
 	@Override
 	public DescribeCoverageRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		OWSExceptionReport report = new OWSExceptionReport();
 		DescribeCoverageRequest request = new DescribeCoverageRequest();
 		
 		// do common stuffs like version, request name and service type
@@ -118,18 +115,6 @@ public class DescribeCoverageReaderV10 extends AbstractRequestReader<DescribeCov
 			request.getCoverages().add(val);
 		}
 		
-		this.checkParameters(request, report);
 		return request;
-	}
-	
-	
-	/**
-     * Checks that DescribeCoverage mandatory parameters are present
-     * @param request
-     * @throws OWSException
-     */
-	protected void checkParameters(DescribeCoverageRequest request, OWSExceptionReport report) throws OWSException
-    {
-		super.checkParameters(request, report);
 	}
 }

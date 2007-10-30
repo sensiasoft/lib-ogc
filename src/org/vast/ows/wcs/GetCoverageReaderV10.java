@@ -21,7 +21,6 @@
 package org.vast.ows.wcs;
 
 import java.text.ParseException;
-import java.util.List;
 import java.util.StringTokenizer;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
@@ -438,30 +437,29 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
      */
 	protected void checkParameters(GetCoverageRequest request, OWSExceptionReport report) throws OWSException
     {
-    	List<OWSException> list = report.getExceptionList();
-		
-		// need coverage
-		if (request.getCoverage() == null)
-			list.add(new OWSException(OWSException.missing_param_code, "COVERAGE"));
-		
-		// need at least BBOX or TIME
-		if (request.getBbox() == null && request.getTime() == null)
-			list.add(new OWSException(OWSException.missing_param_code, "TIME/BBOX"));
-		
-		// need at least WIDTH or RESX
-		if (request.getWidth() < 0 && request.getResX() < 0)
-			list.add(new OWSException(OWSException.missing_param_code, "WIDTH/HEIGHT/RESX/RESY"));
-		
-		// need format
-		if (request.getFormat() == null)
-			list.add(new OWSException(OWSException.missing_param_code, "FORMAT"));
-		
 		// copy crs to responseCrs if needed
-		if (request.gridCrs == null)
+		if (request.gridCrs == null && request.getBbox() != null)
 			request.gridCrs = request.getBbox().getCrs();
 		
 		// check common params
-		// needs to be called at the end since it throws the exception if report is non empty
 		super.checkParameters(request, report);
+		
+		// need coverage
+		if (request.getCoverage() == null)
+			report.add(new OWSException(OWSException.missing_param_code, "COVERAGE"));
+		
+		// need at least BBOX or TIME
+		if (request.getBbox() == null && request.getTime() == null)
+			report.add(new OWSException(OWSException.missing_param_code, "TIME/BBOX"));
+		
+		// need at least WIDTH or RESX
+		if (request.getWidth() < 0 && request.getResX() < 0)
+			report.add(new OWSException(OWSException.missing_param_code, "WIDTH/HEIGHT/RESX/RESY"));
+		
+		// need format
+		if (request.getFormat() == null)
+			report.add(new OWSException(OWSException.missing_param_code, "FORMAT"));
+				
+		report.process();
 	}
 }

@@ -22,7 +22,6 @@ package org.vast.ows;
 
 import java.io.*;
 import java.text.ParseException;
-import java.util.List;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.vast.ows.util.Bbox;
@@ -233,12 +232,14 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 	 */
 	public static void checkParameters(OWSRequest request, OWSExceptionReport report) throws OWSException
 	{
-		List<OWSException> list = report.getExceptionList();
+		// need SERVICE
+		if (request.getService() == null)
+			report.add(new OWSException(OWSException.missing_param_code, "SERVICE"));
 		
 		// need VERSION
 		if (request.getVersion() == null)
 		{
-			list.add(0, new OWSException(OWSException.missing_param_code, "VERSION"));
+			report.add(new OWSException(OWSException.missing_param_code, "VERSION"));
 		}
 		
 		// check version validity
@@ -246,19 +247,11 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 		{
 			OWSException ex = new OWSException(OWSException.invalid_param_code, "VERSION");
 			ex.setBadValue(request.getVersion());
-			list.add(0, ex);
+			report.add(ex);
 		}
 		
 		// need REQUEST
 		if (request.getOperation() == null)
-			list.add(0, new OWSException(OWSException.missing_param_code, "REQUEST"));
-		
-		// need SERVICE
-		if (request.getService() == null)
-			list.add(0, new OWSException(OWSException.missing_param_code, "SERVICE"));
-				
-		// send exception with all missing parameters
-		if (!list.isEmpty())
-			throw report;
+			report.add(new OWSException(OWSException.missing_param_code, "REQUEST"));
 	}
 }

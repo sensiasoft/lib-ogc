@@ -20,7 +20,6 @@
 
 package org.vast.ows.sos;
 
-import java.util.List;
 import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -163,17 +162,17 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
      */
 	protected void checkParameters(DescribeSensorRequest request, OWSExceptionReport report) throws OWSException
 	{
-		List<OWSException> list = report.getExceptionList();
+		// check common params + generate exception
+		super.checkParameters(request, report);
 		
 		// need procedure
 		if (request.getProcedure() == null)
-			list.add(new OWSException(OWSException.missing_param_code, "PROCEDURE"));
+			report.add(new OWSException(OWSException.missing_param_code, "PROCEDURE"));
 		
 		// need format
 		if (request.getFormat() == null)
-			list.add(new OWSException(OWSException.missing_param_code, "RESPONSE_FORMAT"));
+			report.add(new OWSException(OWSException.missing_param_code, "RESPONSE_FORMAT"));
 		
-		// check common params + generate exception
-		super.checkParameters(request, report);
+		report.process();
 	}
 }
