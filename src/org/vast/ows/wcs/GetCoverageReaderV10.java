@@ -438,7 +438,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 	protected void checkParameters(GetCoverageRequest request, OWSExceptionReport report) throws OWSException
     {
 		// copy crs to responseCrs if needed
-		if (request.gridCrs == null && request.getBbox() != null)
+		if (request.getGridCrs() == null && request.getBbox() != null)
 			request.gridCrs = request.getBbox().getCrs();
 		
 		// check common params
@@ -451,6 +451,13 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 		// need at least BBOX or TIME
 		if (request.getBbox() == null && request.getTime() == null)
 			report.add(new OWSException(OWSException.missing_param_code, "TIME/BBOX"));
+		
+		// need crs
+		if (request.getBbox() != null)
+		{
+			if (request.getBbox().getCrs() == null)
+				report.add(new OWSException(OWSException.missing_param_code, "CRS"));
+		}
 		
 		// need at least WIDTH or RESX
 		if (request.getWidth() < 0 && request.getResX() < 0)

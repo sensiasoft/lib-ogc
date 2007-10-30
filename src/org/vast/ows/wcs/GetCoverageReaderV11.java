@@ -399,6 +399,13 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 		if (request.getBbox() == null && request.getTime() == null)
 			report.add(new OWSException(OWSException.missing_param_code, "TimeSequence/BoundingBox"));
 		
+		// need crs
+		if (request.getBbox() != null)
+		{
+			if (request.getBbox().getCrs() == null)
+				report.add(new OWSException(OWSException.missing_param_code, "CRS"));
+		}
+		
 		// TODO check Grid info??
 		//if (request.getWidth() < 0 && request.getResX() < 0)
 		//	list.add(new OWSException(OWSException.missing_param_code, "WIDTH/HEIGHT/RESX/RESY"));
