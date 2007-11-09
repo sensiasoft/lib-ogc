@@ -193,7 +193,7 @@ public class ExtrinsicObjectSearch extends DOMHelper
 			ArrayList<OWSLayerCapabilities> layerCapAl = new ArrayList<OWSLayerCapabilities>();
 			ArrayList<String>serverList = new ArrayList<String>();
 			ArrayList<String>errorList = new ArrayList<String>();
-			ArrayList idList = createIDList(reader);
+			ArrayList<String> idList = createIDList(reader);
 			
 			//Creates a list of the layer's servers
 			for(int i=0; i<list.getLength(); i++)
@@ -240,7 +240,7 @@ public class ExtrinsicObjectSearch extends DOMHelper
 		return null;
 	}
 	
-	protected List<OWSLayerCapabilities> getEOSLayers(ArrayList idList, String server)
+	protected List<OWSLayerCapabilities> getEOSLayers(ArrayList<String> idList, String server)
 	{
 		server = OWSRequest.checkServer(server);	
 			
@@ -317,7 +317,7 @@ public class ExtrinsicObjectSearch extends DOMHelper
 		return capList;
 	}
 	
-	protected ArrayList createIDList(DOMHelper reader)
+	protected ArrayList<String> createIDList(DOMHelper reader)
 	{	
 		NodeList list = reader.getElements("SearchResults/ExtrinsicObject");
 		ArrayList<String>idList = new ArrayList<String>();

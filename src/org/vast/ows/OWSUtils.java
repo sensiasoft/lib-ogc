@@ -67,7 +67,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         
         try
         {
-            OWSRequestReader reader = (OWSRequestReader)OGCRegistry.createReader(serviceType, requestType, version);
+            OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(serviceType, requestType, version);
             OWSRequest request = reader.readXMLQuery(dom, requestElt);
             return request;
         }
@@ -114,7 +114,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             if (service != null)
                 request.setService(service);        
         
-            OWSRequestReader reader = (OWSRequestReader)OGCRegistry.createReader(request.service, request.operation, request.version);
+            OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(request.service, request.operation, request.version);
             request = reader.readURLQuery(queryString);
             return request;
         }
@@ -205,7 +205,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     {
         try
         {
-            OWSRequestWriter<OWSRequest> writer = (OWSRequestWriter)OGCRegistry.createWriter(request.service, request.operation, request.version);
+            OWSRequestWriter<OWSRequest> writer = (OWSRequestWriter<OWSRequest>)OGCRegistry.createWriter(request.service, request.operation, request.version);
             String url = writer.buildURLQuery(request);
             return url;
         }
@@ -225,7 +225,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     {
         try
         {
-            OWSRequestWriter<OWSRequest> writer = (OWSRequestWriter)OGCRegistry.createWriter(request.service, request.operation, request.version);
+            OWSRequestWriter<OWSRequest> writer = (OWSRequestWriter<OWSRequest>)OGCRegistry.createWriter(request.service, request.operation, request.version);
             Element requestElt = writer.buildXMLQuery(dom, request);
             return requestElt;
         }
@@ -244,7 +244,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     {
         try
         {
-            OWSRequestWriter<OWSRequest> writer = (OWSRequestWriter)OGCRegistry.createWriter(request.service, request.operation, request.version);
+            OWSRequestWriter<OWSRequest> writer = (OWSRequestWriter<OWSRequest>)OGCRegistry.createWriter(request.service, request.operation, request.version);
             writer.writeXMLQuery(os, request);
         }
         catch (IllegalStateException e)
