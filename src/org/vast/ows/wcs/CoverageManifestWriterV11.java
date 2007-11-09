@@ -75,10 +75,10 @@ public class CoverageManifestWriterV11
 				dom.setElementValue(coverageElt, "Identifier", coverageInfo.getIdentifier());
 			
 			// references
-			for (int j=0; j<coverageInfo.getReferences().size(); j++)
+			for (int j=0; j<coverageInfo.getReferenceList().size(); j++)
 			{
 				Element refElt = dom.addElement(coverageElt, "+Reference");
-				OWSReference ref = coverageInfo.getReferences().get(j);
+				OWSReference ref = coverageInfo.getReferenceList().get(j);
 				
 				// role
 				dom.setAttributeValue(refElt, "@xlink:role", ref.getRole());

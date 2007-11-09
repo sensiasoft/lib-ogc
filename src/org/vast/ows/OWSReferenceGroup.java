@@ -25,17 +25,17 @@ import java.util.ArrayList;
 
 public class OWSReferenceGroup extends OWSIdentification
 {
-	protected ArrayList<OWSReference> references;
+	protected ArrayList<OWSReference> referenceList;
 
 	
 	public OWSReferenceGroup()
 	{
-		references = new ArrayList<OWSReference>(3);
+		referenceList = new ArrayList<OWSReference>(3);
 	}
 	
 	
-	public ArrayList<OWSReference> getReferences()
+	public ArrayList<OWSReference> getReferenceList()
 	{
-		return references;
+		return referenceList;
 	}
 }
