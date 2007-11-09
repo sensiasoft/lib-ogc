@@ -20,6 +20,7 @@
 
 package org.vast.ows.sld;
 
+
 /**
  * <p><b>Title:</b><br/>
  * Color
@@ -41,6 +42,43 @@ public class Color
     protected ScalarParameter green;
     protected ScalarParameter blue;
     protected ScalarParameter alpha;
+        
+    
+    public static String toHexString(float r, float g, float b, boolean bgr)
+    {
+        String red = Integer.toHexString((int)(r*255.0f));
+        String green = Integer.toHexString((int)(g*255.0f));
+        String blue = Integer.toHexString((int)(b*255.0f));
+        
+        // make sure we always have 2 digits!
+        if (red.length() == 1)
+            red = "0" + red;
+        if (green.length() == 1)
+            green = "0" + green;
+        if (blue.length() == 1)
+            blue = "0" + blue;
+        
+        if (bgr)
+            return blue + green + red;
+        else
+            return red + green + blue;
+    }
+    
+    
+    public static String toHexString(float r, float g, float b, float a, boolean abgr)
+    {
+        String color = toHexString(r, g, b, abgr);
+        String alpha = Integer.toHexString((int)(a*255.0f));
+        
+        // make sure we always have 2 digits!
+        if (alpha.length() == 1)
+            alpha = "0" + alpha;
+        
+        if (abgr)
+            return alpha + color;
+        else
+            return color + alpha;
+    }
 
 
     public Color()
@@ -117,8 +155,8 @@ public class Color
         
         return true;
     }
-
-
+    
+    
     public void setFromHexValue(String hexValue)
     {
         // red
