@@ -43,9 +43,17 @@ import org.w3c.dom.*;
  */
 public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilitiesRequest>
 {
+	protected String service;
+	
 	
     public GetCapabilitiesReader()
 	{	
+	}
+    
+    
+    public GetCapabilitiesReader(String service)
+	{
+    	this.service = service;
 	}
 
 	
@@ -99,7 +107,7 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
             }
         }
 
-        super.checkParameters(request, report);
+        super.checkParameters(request, report, service);
         report.process();
         
         return request;
@@ -114,7 +122,7 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 		readCommonXML(dom, requestElt, request);
 		request.setSection(dom.getElementValue(requestElt, "section"));
 		
-		super.checkParameters(request, report);
+		super.checkParameters(request, report, service);
 		report.process();
 		
 		return request;

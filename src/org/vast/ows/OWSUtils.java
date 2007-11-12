@@ -29,7 +29,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.StringTokenizer;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -61,19 +60,31 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
      */
     public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
     {
-        String requestType = requestElt.getLocalName();
-        String serviceType = dom.getAttributeValue(requestElt, "@service");
-        String version = readXMLVersion(dom, requestElt);
+    	return readXMLQuery(dom, requestElt, null);
+    }
+    
+    
+    /**
+     * Helper method to parse any OWS query from an XML/DOM tree
+     */
+    public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt, String service) throws OWSException
+    {
+        // read common params and check that they're present
+        OWSRequest request = new OWSRequest();
+		AbstractRequestReader.readCommonXML(dom, requestElt, request);
+		OWSExceptionReport report = new OWSExceptionReport();
+		AbstractRequestReader.checkParameters(request, report, service);
+        report.process();
         
         try
         {
-            OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(serviceType, requestType, version);
-            OWSRequest request = reader.readXMLQuery(dom, requestElt);
+            OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(request.service, request.operation, request.version);
+            request = reader.readXMLQuery(dom, requestElt);
             return request;
         }
         catch (IllegalStateException e)
         {
-            String spec = serviceType + " " + requestType + " v" + version;
+            String spec = request.service + " " + request.operation + " v" + request.version;
         	throw new OWSException(unsupportedSpec + spec, e);
         }
     }
@@ -103,16 +114,18 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
      */
     public OWSRequest readURLQuery(String queryString, String service) throws OWSException
     {
-    	OWSRequest request = null;
+    	OWSRequest request = new OWSRequest();
     	
     	try
         {
     		try {queryString = URLDecoder.decode(queryString, "UTF-8");}
     		catch (UnsupportedEncodingException e){}
-    		request = readCommonQueryArguments(queryString);
-            
-            if (service != null)
-                request.setService(service);        
+    		
+    		// read common params and check that they're present
+    		AbstractRequestReader.readCommonQueryArguments(queryString, request);
+    		OWSExceptionReport report = new OWSExceptionReport();
+    		AbstractRequestReader.checkParameters(request, report, service);
+            report.process();
         
             OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(request.service, request.operation, request.version);
             request = reader.readURLQuery(queryString);
@@ -123,59 +136,6 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         	String spec = request.service + " " + request.operation + " v" + request.version;
         	throw new OWSException(unsupportedSpec + spec, e);
         }
-    }
-    
-    
-    /**
-     * Helper method to read service, operation name and version from any OWS query string
-     * @param queryString
-     * @return
-     */
-    public OWSRequest readCommonQueryArguments(String queryString) throws OWSException
-    {
-        OWSRequest request = new OWSRequest();
-        try {queryString = URLDecoder.decode(queryString, "UTF-8");}
-        catch (UnsupportedEncodingException e) {};
-        StringTokenizer st = new StringTokenizer(queryString, "&");
-        
-        while (st.hasMoreTokens())
-        {
-            String argName = null;
-            String argValue = null;
-            String nextArg = st.nextToken();
-
-            // separate argument name and value
-            try
-            {
-                int sepIndex = nextArg.indexOf('=');
-                argName = nextArg.substring(0, sepIndex);
-                argValue = nextArg.substring(sepIndex + 1);
-            }
-            catch (IndexOutOfBoundsException e)
-            {
-                throw new OWSException(AbstractRequestReader.invalidKVP);
-            }
-            
-            // service ID
-            if (argName.equalsIgnoreCase("SERVICE"))
-            {
-                request.setService(argValue);
-            }
-            
-            // service version
-            else if (argName.equalsIgnoreCase("VERSION"))
-            {
-                request.setVersion(argValue);
-            }
-
-            // request argument
-            else if (argName.equalsIgnoreCase("REQUEST"))
-            {
-                request.setOperation(argValue);
-            }
-        }
-        
-        return request;
     }
     
     

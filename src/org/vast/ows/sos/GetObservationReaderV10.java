@@ -24,6 +24,7 @@ import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
 import org.vast.ows.gml.GMLEnvelopeReader;
 import org.vast.ows.gml.GMLException;
@@ -315,7 +316,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
     protected void checkParameters(GetObservationRequest request, OWSExceptionReport report) throws OWSException
     {
     	// check common params
-		super.checkParameters(request, report);
+		super.checkParameters(request, report, OGCRegistry.SOS);
     	
     	// need offering
 		if (request.getOffering() == null)

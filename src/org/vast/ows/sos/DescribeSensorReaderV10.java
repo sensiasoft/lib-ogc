@@ -23,6 +23,7 @@ package org.vast.ows.sos;
 import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
+import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
 import org.vast.ows.gml.GMLTimeReader;
 import org.vast.ows.util.TimeInfo;
@@ -163,7 +164,7 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 	protected void checkParameters(DescribeSensorRequest request, OWSExceptionReport report) throws OWSException
 	{
 		// check common params + generate exception
-		super.checkParameters(request, report);
+		super.checkParameters(request, report, OGCRegistry.SOS);
 		
 		// need procedure
 		if (request.getProcedure() == null)

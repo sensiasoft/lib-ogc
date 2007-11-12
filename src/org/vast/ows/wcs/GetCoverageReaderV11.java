@@ -384,14 +384,8 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
      */
 	protected void checkParameters(GetCoverageRequest request, OWSExceptionReport report) throws OWSException
     {
-		super.checkParameters(request, report);
-		
-		// copy crs to responseCrs if needed
-		if (request.gridCrs == null && request.getBbox() != null)
-			request.gridCrs = request.getBbox().getCrs();
-		
 		// check common params
-		super.checkParameters(request, report);
+		super.checkParameters(request, report, OGCRegistry.WCS);
 		
 		// need coverage
 		if (request.getCoverage() == null)
@@ -406,6 +400,10 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 		{
 			if (request.getBbox().getCrs() == null)
 				report.add(new OWSException(OWSException.missing_param_code, "CRS"));
+			
+			// copy crs to responseCrs if needed
+			else if (request.gridCrs == null && request.getBbox() != null)
+				request.gridCrs = request.getBbox().getCrs();
 		}
 		
 		// TODO check Grid info??

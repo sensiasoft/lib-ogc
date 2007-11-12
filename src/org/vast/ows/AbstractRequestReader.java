@@ -21,7 +21,9 @@
 package org.vast.ows;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.text.ParseException;
+import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.vast.ows.util.Bbox;
@@ -55,11 +57,6 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
     protected final static String noKVP = "KVP request not supported in ";
     protected final static String noXML = "XML request not supported in ";
     
-    
-	public AbstractRequestReader()
-	{	
-	}
-	
     
     public abstract RequestType readURLQuery(String queryString) throws OWSException;
 	public abstract RequestType readXMLQuery(DOMHelper domHelper, Element requestElt) throws OWSException;
@@ -215,26 +212,85 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 	 * Reads common XML request parameters and fill up the OWSQuery accordingly
 	 * @param dom
 	 * @param requestElt
-	 * @param query
+	 * @param request
 	 */
-	protected void readCommonXML(DOMHelper dom, Element requestElt, OWSRequest query)
+	public static void readCommonXML(DOMHelper dom, Element requestElt, OWSRequest request)
 	{
-		query.setOperation(requestElt.getLocalName());
-		query.setService(dom.getAttributeValue(requestElt, "service"));
-		query.setVersion(dom.getAttributeValue(requestElt, "version"));
+		request.setOperation(requestElt.getLocalName());
+		request.setService(dom.getAttributeValue(requestElt, "service"));
+		request.setVersion(dom.getAttributeValue(requestElt, "version"));
 	}
 	
+	
+	/**
+     * Helper method to read service, operation name and version from any OWS query string
+     * @param request
+     * @param queryString
+     * @return
+     */
+    public static void readCommonQueryArguments(String queryString, OWSRequest request) throws OWSException
+    {
+    	try {queryString = URLDecoder.decode(queryString, "UTF-8");}
+        catch (UnsupportedEncodingException e) {};
+        StringTokenizer st = new StringTokenizer(queryString, "&");
+        
+        while (st.hasMoreTokens())
+        {
+            String argName = null;
+            String argValue = null;
+            String nextArg = st.nextToken();
+
+            // separate argument name and value
+            try
+            {
+                int sepIndex = nextArg.indexOf('=');
+                argName = nextArg.substring(0, sepIndex);
+                argValue = nextArg.substring(sepIndex + 1);
+            }
+            catch (IndexOutOfBoundsException e)
+            {
+                throw new OWSException(AbstractRequestReader.invalidKVP);
+            }
+            
+            // service ID
+            if (argName.equalsIgnoreCase("SERVICE"))
+            {
+                request.setService(argValue);
+            }
+            
+            // service version
+            else if (argName.equalsIgnoreCase("VERSION"))
+            {
+                request.setVersion(argValue);
+            }
+
+            // request argument
+            else if (argName.equalsIgnoreCase("REQUEST"))
+            {
+                request.setOperation(argValue);
+            }
+        }
+    }
+    	
 	
 	/**
 	 * Checks that OWS common mandatory parameters are present
 	 * @param request
 	 * @param report
 	 */
-	public void checkParameters(OWSRequest request, OWSExceptionReport report) throws OWSException
+	public static void checkParameters(OWSRequest request, OWSExceptionReport report, String serviceType) throws OWSException
 	{
 		// need SERVICE
 		if (request.getService() == null)
 			report.add(new OWSException(OWSException.missing_param_code, "SERVICE"));
+		
+		// must be correct service 
+		else if (serviceType != null)
+		{
+			String reqService = request.getService();
+			if (!reqService.equalsIgnoreCase(serviceType))
+				report.add(new OWSException(OWSException.invalid_param_code, "SERVICE", reqService, ""));
+		}
 		
 		// need VERSION
 		if (request.getVersion() == null)
