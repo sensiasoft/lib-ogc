@@ -150,7 +150,7 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 		String format = dom.getAttributeValue(requestElt, "@outputFormat");
 		request.setFormat(format);
 		
-		checkParameters(request, report); 
+		this.checkParameters(request, report); 
 		return request;
 	}
 	

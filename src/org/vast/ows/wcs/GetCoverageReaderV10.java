@@ -437,6 +437,8 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
      */
 	protected void checkParameters(GetCoverageRequest request, OWSExceptionReport report) throws OWSException
     {
+		super.checkParameters(request, report);
+		
 		// copy crs to responseCrs if needed
 		if (request.getGridCrs() == null && request.getBbox() != null)
 			request.gridCrs = request.getBbox().getCrs();

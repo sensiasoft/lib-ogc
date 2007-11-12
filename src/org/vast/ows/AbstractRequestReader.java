@@ -230,7 +230,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 	 * @param request
 	 * @param report
 	 */
-	public static void checkParameters(OWSRequest request, OWSExceptionReport report) throws OWSException
+	public void checkParameters(OWSRequest request, OWSExceptionReport report) throws OWSException
 	{
 		// need SERVICE
 		if (request.getService() == null)

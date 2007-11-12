@@ -175,7 +175,6 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             }
         }
         
-        AbstractRequestReader.checkParameters(request, new OWSExceptionReport());
         return request;
     }
     

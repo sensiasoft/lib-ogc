@@ -20,7 +20,6 @@
 
 package org.vast.ows.wcst;
 
-import java.util.List;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 import org.vast.ows.*;
@@ -113,11 +112,9 @@ public class WCSTransactionReaderV11 extends AbstractRequestReader<WCSTransactio
      */
 	protected void checkParameters(WCSTransactionRequest request, OWSExceptionReport report) throws OWSException
     {
-    	List<OWSException> list = report.getExceptionList();
-		
-		// need coverage
+    	// need coverage
 		if (request.getInputCoverages().isEmpty())
-			list.add(new OWSException(OWSException.missing_param_code, "InputCoverages"));
+			report.add(new OWSException(OWSException.missing_param_code, "InputCoverages"));
 		
 		// check common params
 		// needs to be called at the end since it throws the exception if report is non empty
