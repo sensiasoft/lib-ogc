@@ -21,11 +21,12 @@
 package org.vast.ows;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class OWSReferenceGroup extends OWSIdentification
 {
-	protected ArrayList<OWSReference> referenceList;
+	protected List<OWSReference> referenceList;
 
 	
 	public OWSReferenceGroup()
@@ -34,7 +35,7 @@ public class OWSReferenceGroup extends OWSIdentification
 	}
 	
 	
-	public ArrayList<OWSReference> getReferenceList()
+	public List<OWSReference> getReferenceList()
 	{
 		return referenceList;
 	}

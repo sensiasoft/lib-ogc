@@ -11,7 +11,11 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is the VAST team at the
+ University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
+ Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
     Alexandre Robin <alexandre.robin@spotimage.fr>
@@ -20,7 +24,9 @@
 
 package org.vast.ows.wcst;
 
+import javax.activation.DataHandler;
 import org.vast.ows.OWSReferenceGroup;
+import org.vast.ows.util.Bbox;
 
 
 public class CoverageTransaction extends OWSReferenceGroup
@@ -29,10 +35,62 @@ public class CoverageTransaction extends OWSReferenceGroup
 	public final static String DELETE = "Delete";
 	public final static String UPDATE = "Update";
 	public final static String UPDATE_METADATA = "UpdateMetadata";
-	
+
 	public final static String COVERAGE_PIXELS = "urn:ogc:def:role:WCS:1.1:Pixels";
-    public final static String COVERAGE_DESCRIPTION = "urn:ogc:def:role:WCS:1.1:CoverageDescription";
-    public final static String COVERAGE_TRANSFORMATION = "urn:ogc:def:role:WCS:1.1:GeoreferencingTransformation";
-    
-    //protected Polygon updateZone ?? 
+	public final static String COVERAGE_DESCRIPTION = "urn:ogc:def:role:WCS:1.1:CoverageDescription";
+	public final static String GEOREFERENCING_TRANSFORMATION = "urn:ogc:def:role:WCS:1.1:GeoreferencingTransformation";
+
+	protected Bbox updateBbox;
+	protected DataHandler coverageData;
+	protected DataHandler coverageMetadata;
+	protected DataHandler georeferencingModel;
+	
+
+	public Bbox getUpdateBbox()
+	{
+		return updateBbox;
+	}
+
+
+	public void setUpdateBbox(Bbox updateBbox)
+	{
+		this.updateBbox = updateBbox;
+	}
+
+
+	public DataHandler getCoverageData()
+	{
+		return coverageData;
+	}
+
+
+	public void setCoverageData(DataHandler coverageData)
+	{
+		this.coverageData = coverageData;
+	}
+
+
+	public DataHandler getCoverageMetadata()
+	{
+		return coverageMetadata;
+	}
+
+
+	public void setCoverageMetadata(DataHandler coverageMetadata)
+	{
+		this.coverageMetadata = coverageMetadata;
+	}
+
+
+	public DataHandler getGeoreferencingModel()
+	{
+		return georeferencingModel;
+	}
+
+
+	public void setGeoreferencingModel(DataHandler georeferencingModel)
+	{
+		this.georeferencingModel = georeferencingModel;
+	}
+
 }
