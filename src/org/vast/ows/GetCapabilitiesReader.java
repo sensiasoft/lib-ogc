@@ -100,6 +100,8 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
         }
 
         super.checkParameters(request, report);
+        report.process();
+        
         return request;
 	}
 	
