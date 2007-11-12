@@ -113,7 +113,10 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 		GetCapabilitiesRequest request = new GetCapabilitiesRequest();
 		readCommonXML(dom, requestElt, request);
 		request.setSection(dom.getElementValue(requestElt, "section"));
+		
 		super.checkParameters(request, report);
+		report.process();
+		
 		return request;
 	}
 }
