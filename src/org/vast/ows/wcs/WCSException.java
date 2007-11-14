@@ -40,7 +40,11 @@ import org.vast.ows.OWSException;
 public class WCSException extends OWSException
 {
 	static final long serialVersionUID = 0xED126190670F4F6AL;
-		
+	public final static String invalid_format_code = "InvalidFormat";
+	public final static String invalid_format_text = "Invalid Format: ";
+	public final static String invalid_coverage_code = "CoverageNotDefined";
+	public final static String invalid_coverage_text = "Invalid Coverage ID: ";
+	
 	
 	public WCSException(String message)
 	{
