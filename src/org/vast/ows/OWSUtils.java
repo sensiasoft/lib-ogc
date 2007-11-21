@@ -247,6 +247,29 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     
     /**
+     * Helper method to build a DOM element containing the response XML
+     * in a version agnostic way. The element is not appended to any parent 
+     * @param dom
+     * @param response
+     * @return
+     */
+    public Element buildXMLResponse(DOMHelper dom, OWSResponse response) throws OWSException
+    {
+    	try
+        {
+            OWSResponseWriter<OWSResponse> writer = (OWSResponseWriter<OWSResponse>)OGCRegistry.createWriter(response.service, response.messageType, response.version);
+            Element requestElt = writer.buildXMLResponse(dom, response);
+            return requestElt;
+        }
+        catch (IllegalStateException e)
+        {
+        	String spec = response.service + " " + response.messageType + " v" + response.version;
+        	throw new OWSException(unsupportedSpec + spec, e);
+        }
+    }
+    
+    
+    /**
      * Helper method to send any OWS request to the server URL using POST
      * @param request OWSQuery object
      * @return HTTP Connection Object
@@ -403,5 +426,4 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         	throw new OWSException(unsupportedSpec + spec, e);
         }
     }
-    
 }

@@ -407,7 +407,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 		}
 		
 		// TODO check Grid info??
-		//if (request.getWidth() < 0 && request.getResX() < 0)
+		//if (request.getWidth() < 0 && Double.isNaN(request.getResX()))
 		//	list.add(new OWSException(OWSException.missing_param_code, "WIDTH/HEIGHT/RESX/RESY"));
 		
 		// need format

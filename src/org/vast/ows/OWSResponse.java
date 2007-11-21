@@ -18,55 +18,78 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.wcs;
+package org.vast.ows;
 
-import java.util.ArrayList;
-import org.vast.ows.OWSIdentification;
-import org.vast.ows.OWSResponse;
+import org.vast.ogc.OGCRegistry;
 
 
 /**
+ * 
  * <p><b>Title:</b><br/>
- * WCS CoverageManifest Response
+ * OWS Response
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for a CoverageManifest response
+ * Base class for all OWS service responses
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alex Robin
- * @date Oct 11, 2007
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date 21 nov. 07
  * @version 1.0
  */
-public class CoverageManifest extends OWSResponse
+public class OWSResponse
 {
-	protected OWSIdentification identification;
-	protected ArrayList<CoverageReferenceGroup> coverages;
-		
+	protected String service;
+	protected String version;
+	protected String messageType;
+    
 	
-	public CoverageManifest()
-    {    
-        this.service = "WCS";
-        this.messageType = "CoverageManifest";
-        coverages = new ArrayList<CoverageReferenceGroup>();
+    public OWSResponse()
+    {
+    	
     }
+	
 
-
-	public ArrayList<CoverageReferenceGroup> getCoverages()
+	public String getService()
 	{
-		return coverages;
+		return service;
 	}
 
 
-	public OWSIdentification getIdentification()
+	public void setService(String service)
 	{
-		return identification;
+		this.service = service;
 	}
 
 
-	public void setIdentification(OWSIdentification identification)
+	public String getVersion()
 	{
-		this.identification = identification;
-	}	
+		return version;
+	}
+	
+	
+	public String getNormalizedVersion()
+	{
+		return OGCRegistry.normalizeVersionString(version);
+	}
+
+
+	public void setVersion(String version)
+	{
+		this.version = version;
+	}
+
+
+	public String getMessageType()
+	{
+		return messageType;
+	}
+
+
+	public void setMessageType(String message)
+	{
+		this.messageType = message;
+	}
+    
 }

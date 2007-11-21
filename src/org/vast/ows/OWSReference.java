@@ -21,6 +21,7 @@
 package org.vast.ows;
 
 import java.util.ArrayList;
+import javax.activation.DataHandler;
 import org.w3c.dom.Element;
 
 
@@ -33,6 +34,7 @@ public class OWSReference
 	protected String description;
 	protected String identifier;
 	protected ArrayList<Object> metadata;
+	protected DataHandler dataHandler;
 	
 
 	public OWSReference()
@@ -104,5 +106,17 @@ public class OWSReference
 	public ArrayList<Object> getMetadata()
 	{
 		return metadata;
+	}
+
+
+	public DataHandler getDataHandler()
+	{
+		return dataHandler;
+	}
+
+
+	public void setDataHandler(DataHandler dataHandler)
+	{
+		this.dataHandler = dataHandler;
 	}
 }

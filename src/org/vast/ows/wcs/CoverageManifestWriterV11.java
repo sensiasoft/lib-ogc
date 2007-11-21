@@ -23,6 +23,7 @@ package org.vast.ows.wcs;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSReference;
 import org.vast.ows.OWSReferenceGroup;
+import org.vast.ows.OWSResponseWriter;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
@@ -30,11 +31,11 @@ import org.vast.xml.QName;
 
 /**
  * <p><b>Title:</b><br/>
- * Coverage Manifest Builder v1.1
+ * Coverage Manifest Writer v1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Builder to generate an XML Coverage Manifest based
+ * Writer to generate an XML Coverage Manifest based
  * on values contained in a CoverageManifest object for version 1.1
  * </p>
  *
@@ -43,14 +44,13 @@ import org.vast.xml.QName;
  * @date Oct 11, 2007
  * @version 1.0
  */
-public class CoverageManifestWriterV11
+public class CoverageManifestWriterV11 implements OWSResponseWriter<CoverageManifest>
 {
 
-
-	public Element buildXML(DOMHelper dom, CoverageManifest manifest) throws WCSException
+	public Element buildXMLResponse(DOMHelper dom, CoverageManifest manifest) throws WCSException
 	{
 		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, manifest.getVersion()));
-		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS));
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
 		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
 		
 		// root element
@@ -62,6 +62,10 @@ public class CoverageManifestWriterV11
 			Element coverageElt = dom.addElement(rootElt, "+Coverage");
 			OWSReferenceGroup coverageInfo = manifest.getCoverages().get(i);
 			
+			// identifier
+			if (coverageInfo.getIdentifier() != null)
+				dom.setElementValue(coverageElt, "ows:Identifier", coverageInfo.getIdentifier());
+			
 			// title
 			if (coverageInfo.getTitle() != null)
 				dom.setElementValue(coverageElt, "ows:Title", coverageInfo.getTitle());
@@ -69,10 +73,6 @@ public class CoverageManifestWriterV11
 			// abstract
 			if (coverageInfo.getDescription() != null)
 				dom.setElementValue(coverageElt, "ows:Abstract", coverageInfo.getDescription());
-			
-			// identifier
-			if (coverageInfo.getIdentifier() != null)
-				dom.setElementValue(coverageElt, "Identifier", coverageInfo.getIdentifier());
 			
 			// references
 			for (int j=0; j<coverageInfo.getReferenceList().size(); j++)

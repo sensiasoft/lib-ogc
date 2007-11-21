@@ -14,59 +14,40 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <robin@nsstc.uah.edu>
  
-******************************* END LICENSE BLOCK ***************************/
+ ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.wcs;
+package org.vast.ows;
 
-import java.util.ArrayList;
-import org.vast.ows.OWSIdentification;
-import org.vast.ows.OWSResponse;
+import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
 
 
 /**
+ * 
  * <p><b>Title:</b><br/>
- * WCS CoverageManifest Response
+ * OWS Response Writer
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for a CoverageManifest response
+ * 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alex Robin
- * @date Oct 11, 2007
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date 21 nov. 07
  * @version 1.0
  */
-public class CoverageManifest extends OWSResponse
+public interface OWSResponseWriter<ResponseType extends OWSResponse>
 {
-	protected OWSIdentification identification;
-	protected ArrayList<CoverageReferenceGroup> coverages;
-		
-	
-	public CoverageManifest()
-    {    
-        this.service = "WCS";
-        this.messageType = "CoverageManifest";
-        coverages = new ArrayList<CoverageReferenceGroup>();
-    }
 
-
-	public ArrayList<CoverageReferenceGroup> getCoverages()
-	{
-		return coverages;
-	}
-
-
-	public OWSIdentification getIdentification()
-	{
-		return identification;
-	}
-
-
-	public void setIdentification(OWSIdentification identification)
-	{
-		this.identification = identification;
-	}	
+    /**
+     * Builds a DOM element containing the response XML
+     * Note that the element is not yet appended to any parent.
+     * @param query
+     * @return
+     */
+    public Element buildXMLResponse(DOMHelper dom, ResponseType query) throws OWSException;
+    
 }

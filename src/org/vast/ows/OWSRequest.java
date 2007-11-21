@@ -27,11 +27,11 @@ import org.vast.ogc.OGCRegistry;
 
 /**
  * <p><b>Title:</b><br/>
- * OWS Query
+ * OWS Request
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base class for all OWS style query objects
+ * Base class for all OWS style request objects
  * </p>
  *
  * <p>Copyright (c) 2007</p>

@@ -460,8 +460,8 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 		}
 		
 		// need at least WIDTH or RESX
-		if (request.getWidth() < 0 && request.getResX() < 0)
-			report.add(new OWSException(OWSException.missing_param_code, "WIDTH/HEIGHT/RESX/RESY"));
+		if ((request.getWidth() < 0 || request.getHeight() < 0) && Double.isNaN(request.getResX()))
+			report.add(new OWSException(OWSException.missing_param_code, "WIDTH/HEIGHT or RESX/RESY"));
 		
 		// need format
 		if (request.getFormat() == null)

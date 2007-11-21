@@ -22,31 +22,28 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.wcst;
+package org.vast.ows.wcs;
 
-import org.vast.ows.util.Bbox;
-import org.vast.ows.wcs.CoverageReferenceGroup;
+import org.vast.ows.OWSReference;
+import org.vast.ows.OWSReferenceGroup;
 
 
-public class CoverageTransaction extends CoverageReferenceGroup
+public class CoverageReferenceGroup extends OWSReferenceGroup
 {
-	public final static String ADD = "Add";
-	public final static String DELETE = "Delete";
-	public final static String UPDATE = "Update";
-	public final static String UPDATE_METADATA = "UpdateMetadata";
+	public final static String COVERAGE_PIXELS = "urn:ogc:def:role:WCS:1.1:Pixels";
+	public final static String COVERAGE_DESCRIPTION = "urn:ogc:def:role:WCS:1.1:CoverageDescription";
+	public final static String GEOREFERENCING_TRANSFORMATION = "urn:ogc:def:role:WCS:1.1:GeoreferencingTransformation";
 
-	protected Bbox updateBbox;
-	
 
-	public Bbox getUpdateBbox()
+	protected OWSReference getReference(String role)
 	{
-		return updateBbox;
+		for (int i=0; i<referenceList.size(); i++)
+		{
+			OWSReference nextReference = referenceList.get(i);
+			if (nextReference.getRole().equals(role))
+				return nextReference;
+		}
+		
+		return null;
 	}
-
-
-	public void setUpdateBbox(Bbox updateBbox)
-	{
-		this.updateBbox = updateBbox;
-	}
-
 }
