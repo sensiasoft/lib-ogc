@@ -18,72 +18,53 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows;
+package org.vast.ows.wcst;
 
+import org.vast.util.DateTimeFormat;
+import org.vast.xml.DOMHelper;
+import org.vast.xml.QName;
+import org.w3c.dom.*;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ows.*;
 
 
 /**
- * 
  * <p><b>Title:</b><br/>
- * OWS Response
+ * WCS Transaction Ack Writer V1.1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base class for all OWS service responses
+ * Writer to generate an WCS-T Transaction Ackowledgment for
+ * version 1.1.1 based on a WCSTransactionAck object. 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 21 nov. 07
+ * @date 22 nov. 07
  * @version 1.0
  */
-public class OWSResponse
+public class WCSTransactionAckWriterV11 implements OWSResponseWriter<WCSTransactionAck>
 {
-	protected String service;
-	protected String version;
-	protected String messageType;
-    
-	
-    public OWSResponse()
-    {
-    	
-    }
-	
-
-	public String getService()
-	{
-		return service;
-	}
-
-
-	public void setService(String service)
-	{
-		this.service = service;
-	}
-
-
-	public String getVersion()
-	{
-		return version;
-	}
+	protected WCSTransactionWriterV11 requestWriter = new WCSTransactionWriterV11();
 	
 	
-	public String getNormalizedVersion()
+	public Element buildXMLResponse(DOMHelper dom, WCSTransactionAck response) throws OWSException
 	{
-		return OGCRegistry.normalizeVersionString(version);
+		WCSTransactionRequest request = response.getRequest();
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, request.getVersion()));
+		
+		// root element
+		Element rootElt = dom.createElement("Acknowledgement");
+		
+		// time stamp
+		String timeStamp = DateTimeFormat.formatIso(response.getTimeStamp().getJulianTime(), 0);
+		dom.setElementValue(rootElt, "TimeStamp", timeStamp);
+		
+		// original request
+		Element originalRequestElt = dom.addElement(rootElt, "OperationRequest");
+		Element requestElt = requestWriter.buildXMLQuery(dom, request);
+		originalRequestElt.appendChild(dom.getFirstChildElement(requestElt));
+		
+		return rootElt;
 	}
-
-
-	public void setVersion(String version)
-	{
-		this.version = version;
-	}
-
-
-	public String getMessageType()
-	{
-		return messageType;
-	}
-    
 }

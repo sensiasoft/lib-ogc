@@ -20,10 +20,9 @@
 
 package org.vast.ows.wcs;
 
+import java.util.List;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSReferenceGroup;
-import org.vast.ows.OWSReferenceWriterV11;
 import org.vast.ows.OWSResponseWriter;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
@@ -32,38 +31,47 @@ import org.vast.xml.QName;
 
 /**
  * <p><b>Title:</b><br/>
- * Coverage Manifest Writer v1.1
+ * Coverage Descriptions Writer V11
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Writer to generate an XML Coverage Manifest based
- * on values contained in a CoverageManifest object for version 1.1
+ * 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @date Oct 11, 2007
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date 23 nov. 07
  * @version 1.0
  */
-public class CoverageManifestWriterV11 implements OWSResponseWriter<CoverageManifest>
+public class CoverageDescriptionsWriterV1 implements OWSResponseWriter<CoverageDescriptions>
 {
-	protected OWSReferenceWriterV11 owsWriter = new OWSReferenceWriterV11();
 	
 	
-	public Element buildXMLResponse(DOMHelper dom, CoverageManifest manifest) throws OWSException
+	public Element buildXMLResponse(DOMHelper dom, CoverageDescriptions desc) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, manifest.getVersion()));
-		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
-		
-		// root element
-		Element rootElt = dom.createElement("Coverages");
-		
-		// add all coverage briefs
-		for (int i=0; i<manifest.getCoverages().size(); i++)
+		// root element and ns URI according to version
+		Element rootElt;
+		if (desc.getNormalizedVersion().equals("1"))
 		{
-			Element coverageElt = dom.addElement(rootElt, "+Coverage");
-			OWSReferenceGroup coverageInfo = manifest.getCoverages().get(i);
-			owsWriter.buildRefGroupXML(dom, coverageElt, coverageInfo);
+			dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS));
+			rootElt = dom.createElement("CoverageDescription");
+		}
+		else
+		{
+			dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, desc.getVersion()));
+			rootElt = dom.createElement("CoverageDescriptions");
+		}
+
+		// add all coverage descriptions
+		List<WCSMetadataProxy> metadataProxys = desc.getMetadataProxys();
+		for (int i=0; i<metadataProxys.size(); i++)
+		{
+			// delegates work to each metadata provider
+			WCSMetadataProxy proxy = metadataProxys.get(i);
+			WCSMetadataProvider metaProvider = proxy.getMetadataProvider(desc.getVersion());
+			Element descElt = metaProvider.getCoverageDescription();
+			Node importedNode = dom.getDocument().importNode(descElt, true);
+			rootElt.appendChild(importedNode);
 		}
 				
 		return rootElt;

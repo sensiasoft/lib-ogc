@@ -42,18 +42,18 @@ import org.vast.ows.OWSResponse;
 public class CoverageManifest extends OWSResponse
 {
 	protected OWSIdentification identification;
-	protected ArrayList<CoverageReferenceGroup> coverages;
+	protected ArrayList<CoverageRefGroup> coverages;
 		
 	
 	public CoverageManifest()
     {    
         this.service = "WCS";
         this.messageType = "CoverageManifest";
-        coverages = new ArrayList<CoverageReferenceGroup>();
+        coverages = new ArrayList<CoverageRefGroup>();
     }
 
 
-	public ArrayList<CoverageReferenceGroup> getCoverages()
+	public ArrayList<CoverageRefGroup> getCoverages()
 	{
 		return coverages;
 	}

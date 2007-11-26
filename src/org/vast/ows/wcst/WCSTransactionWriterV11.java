@@ -18,54 +18,61 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.wcs;
+package org.vast.ows.wcst;
 
-import org.vast.ogc.OGCRegistry;
-import org.vast.ows.OWSException;
-import org.vast.ows.OWSReferenceGroup;
-import org.vast.ows.OWSReferenceWriterV11;
-import org.vast.ows.OWSResponseWriter;
-import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
+import org.w3c.dom.*;
+import org.vast.ogc.OGCRegistry;
+import org.vast.ows.*;
+import org.vast.ows.wcs.WCSException;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Coverage Manifest Writer v1.1
+ * WCS Transaction Writer V1.1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Writer to generate an XML Coverage Manifest based
- * on values contained in a CoverageManifest object for version 1.1
+ * Writer to generate an WCS-T Transaction for version 1.1.1 based
+ * on values contained in a WCSTransactionRequest object. 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @date Oct 11, 2007
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date 22 nov. 07
  * @version 1.0
  */
-public class CoverageManifestWriterV11 implements OWSResponseWriter<CoverageManifest>
+public class WCSTransactionWriterV11 extends AbstractRequestWriter<WCSTransactionRequest>
 {
 	protected OWSReferenceWriterV11 owsWriter = new OWSReferenceWriterV11();
 	
 	
-	public Element buildXMLResponse(DOMHelper dom, CoverageManifest manifest) throws OWSException
+	@Override
+	public String buildURLQuery(WCSTransactionRequest request) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, manifest.getVersion()));
-		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
+		throw new WCSException(noKVP + "WCS 1.1 Transaction");
+	}
+
+
+	@Override
+	public Element buildXMLQuery(DOMHelper dom, WCSTransactionRequest request) throws OWSException
+	{
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, request.getVersion()));
 		
 		// root element
-		Element rootElt = dom.createElement("Coverages");
+		Element rootElt = dom.createElement("Transaction");
+		addCommonXML(dom, rootElt, request);
+		Element inputElt = dom.addElement(rootElt, "InputCoverages");
 		
 		// add all coverage briefs
-		for (int i=0; i<manifest.getCoverages().size(); i++)
+		for (int i=0; i<request.getInputCoverages().size(); i++)
 		{
-			Element coverageElt = dom.addElement(rootElt, "+Coverage");
-			OWSReferenceGroup coverageInfo = manifest.getCoverages().get(i);
+			Element coverageElt = dom.addElement(inputElt, "+Coverage");
+			OWSReferenceGroup coverageInfo = request.getInputCoverages().get(i);
 			owsWriter.buildRefGroupXML(dom, coverageElt, coverageInfo);
 		}
-				
+		
 		return rootElt;
 	}
 }

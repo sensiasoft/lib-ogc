@@ -28,7 +28,7 @@ import org.vast.ows.OWSReference;
 import org.vast.ows.OWSReferenceGroup;
 
 
-public class CoverageReferenceGroup extends OWSReferenceGroup
+public class CoverageRefGroup extends OWSReferenceGroup
 {
 	public final static String COVERAGE_PIXELS = "urn:ogc:def:role:WCS:1.1:Pixels";
 	public final static String COVERAGE_DESCRIPTION = "urn:ogc:def:role:WCS:1.1:CoverageDescription";

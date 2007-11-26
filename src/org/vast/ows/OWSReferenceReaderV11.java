@@ -20,70 +20,59 @@
 
 package org.vast.ows;
 
-import org.vast.ogc.OGCRegistry;
-
+import org.vast.ows.OWSReference;
+import org.w3c.dom.*;
+import org.vast.xml.DOMHelper;
 
 /**
- * 
  * <p><b>Title:</b><br/>
- * OWS Response
+ * OWS Reference Reader V11
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base class for all OWS service responses
+ * Utility methods to read OWS common References and Reference Groups
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 21 nov. 07
+ * @date 22 nov. 07
  * @version 1.0
  */
-public class OWSResponse
+public class OWSReferenceReaderV11
 {
-	protected String service;
-	protected String version;
-	protected String messageType;
-    
-	
-    public OWSResponse()
-    {
-    	
-    }
-	
 
-	public String getService()
+	public OWSReference readXML(DOMHelper dom, Element refElt) throws OWSException
 	{
-		return service;
-	}
-
-
-	public void setService(String service)
-	{
-		this.service = service;
-	}
-
-
-	public String getVersion()
-	{
-		return version;
+		OWSReference ref = new OWSReference();		
+		
+		// role
+		String role = dom.getAttributeValue(refElt, "@role");
+		ref.setRole(role);
+		
+		// href
+		String endpoint = dom.getAttributeValue(refElt, "@href");
+		ref.setHref(endpoint);
+		
+		// format
+		String format = dom.getElementValue(refElt, "Format");
+		ref.setFormat(format);
+		
+		return ref;
 	}
 	
 	
-	public String getNormalizedVersion()
+	public void readRefGroupInfo(DOMHelper dom, Element refGroupElt, OWSReferenceGroup refGroup)
 	{
-		return OGCRegistry.normalizeVersionString(version);
+		// title = transaction type (add, update, delete)
+		String title = dom.getElementValue(refGroupElt, "Title");
+		refGroup.setTitle(title);
+		
+		// description
+		String description = dom.getElementValue(refGroupElt, "Abstract");
+		refGroup.setDescription(description);
+		
+		// identifier
+		String identifier = dom.getElementValue(refGroupElt, "Identifier");
+		refGroup.setIdentifier(identifier);
 	}
-
-
-	public void setVersion(String version)
-	{
-		this.version = version;
-	}
-
-
-	public String getMessageType()
-	{
-		return messageType;
-	}
-    
 }

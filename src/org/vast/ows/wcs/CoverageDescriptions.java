@@ -11,26 +11,25 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the
- University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ The Initial Developer of the Original Code is Spotimage S.A.
  Portions created by the Initial Developer are Copyright (C) 2007
- the Initial Developer. All Rights Reserved.
- Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
     Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.wcst;
+package org.vast.ows.wcs;
 
-import org.vast.ows.util.Bbox;
-import org.vast.ows.wcs.CoverageRefGroup;
+import java.util.ArrayList;
+import java.util.List;
+import org.vast.ows.OWSResponse;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Coverage Transaction
+ * CoverageDescriptions
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -39,28 +38,25 @@ import org.vast.ows.wcs.CoverageRefGroup;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 26 nov. 07
+ * @date 23 nov. 07
  * @version 1.0
  */
-public class CoverageTransaction extends CoverageRefGroup
+public class CoverageDescriptions extends OWSResponse
 {
-	public final static String ADD = "Add";
-	public final static String DELETE = "Delete";
-	public final static String UPDATE = "Update";
-	public final static String UPDATE_METADATA = "UpdateMetadata";
+	protected List<WCSMetadataProxy> metadataProxys;
 
-	protected Bbox updateBbox;
 	
-	
-	public Bbox getUpdateBbox()
+	public CoverageDescriptions()
 	{
-		return updateBbox;
+		this.service = "WCS";
+        this.messageType = "CoverageDescriptions";		
+		metadataProxys = new ArrayList<WCSMetadataProxy>();
 	}
-
-
-	public void setUpdateBbox(Bbox updateBbox)
+	
+	
+	public List<WCSMetadataProxy> getMetadataProxys()
 	{
-		this.updateBbox = updateBbox;
+		return metadataProxys;
 	}
 
 }

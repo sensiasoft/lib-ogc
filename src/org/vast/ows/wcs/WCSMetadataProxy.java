@@ -11,26 +11,21 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the
- University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ The Initial Developer of the Original Code is Spotimage S.A.
  Portions created by the Initial Developer are Copyright (C) 2007
- the Initial Developer. All Rights Reserved.
- Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
     Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
+package org.vast.ows.wcs;
 
-package org.vast.ows.wcst;
-
-import org.vast.ows.util.Bbox;
-import org.vast.ows.wcs.CoverageRefGroup;
-
+import org.vast.ows.OWSIdentification;
 
 /**
  * <p><b>Title:</b><br/>
- * Coverage Transaction
+ * CoverageDescriptionProxy
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -39,28 +34,10 @@ import org.vast.ows.wcs.CoverageRefGroup;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 26 nov. 07
+ * @date 23 nov. 07
  * @version 1.0
  */
-public class CoverageTransaction extends CoverageRefGroup
+public abstract class WCSMetadataProxy extends OWSIdentification
 {
-	public final static String ADD = "Add";
-	public final static String DELETE = "Delete";
-	public final static String UPDATE = "Update";
-	public final static String UPDATE_METADATA = "UpdateMetadata";
-
-	protected Bbox updateBbox;
-	
-	
-	public Bbox getUpdateBbox()
-	{
-		return updateBbox;
-	}
-
-
-	public void setUpdateBbox(Bbox updateBbox)
-	{
-		this.updateBbox = updateBbox;
-	}
-
+	public abstract WCSMetadataProvider getMetadataProvider(String version);
 }

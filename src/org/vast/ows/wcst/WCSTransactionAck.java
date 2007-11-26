@@ -11,79 +11,70 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is the VAST team at the
+ University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
+ Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
     Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows;
+package org.vast.ows.wcst;
 
-import org.vast.ogc.OGCRegistry;
+import org.vast.ows.OWSResponse;
+import org.vast.util.DateTime;
 
 
 /**
- * 
  * <p><b>Title:</b><br/>
- * OWS Response
+ * WCS Transaction Acknowledgment
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base class for all OWS service responses
+ * 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 21 nov. 07
+ * @date 26 nov. 07
  * @version 1.0
  */
-public class OWSResponse
+public class WCSTransactionAck extends OWSResponse
 {
-	protected String service;
-	protected String version;
-	protected String messageType;
-    
-	
-    public OWSResponse()
-    {
-    	
-    }
-	
+	protected DateTime timeStamp;
+	protected WCSTransactionRequest request;
 
-	public String getService()
+
+	public WCSTransactionAck()
 	{
-		return service;
-	}
-
-
-	public void setService(String service)
-	{
-		this.service = service;
-	}
-
-
-	public String getVersion()
-	{
-		return version;
+		service = "WCS";
+        messageType = "TransactionAck";
 	}
 	
 	
-	public String getNormalizedVersion()
+	public DateTime getTimeStamp()
 	{
-		return OGCRegistry.normalizeVersionString(version);
+		return timeStamp;
 	}
 
 
-	public void setVersion(String version)
+	public void setTimeStamp(DateTime timeStamp)
 	{
-		this.version = version;
+		this.timeStamp = timeStamp;
 	}
 
 
-	public String getMessageType()
+	public WCSTransactionRequest getRequest()
 	{
-		return messageType;
+		return request;
 	}
-    
+
+
+	public void setRequest(WCSTransactionRequest request)
+	{
+		this.request = request;
+	}	
 }

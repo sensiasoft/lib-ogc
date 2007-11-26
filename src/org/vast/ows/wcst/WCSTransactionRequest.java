@@ -46,7 +46,7 @@ public class WCSTransactionRequest extends OWSRequest
 	public WCSTransactionRequest()
     {
         service = "WCS";
-        operation = "Transaction";        
+        operation = "Transaction";
         inputCoverages = new ArrayList<CoverageTransaction>();
     }
 

@@ -14,23 +14,24 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <robin@nsstc.uah.edu>
  
-******************************* END LICENSE BLOCK ***************************/
+ ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows;
 
-import org.vast.ogc.OGCRegistry;
+import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
 
 
 /**
  * 
  * <p><b>Title:</b><br/>
- * OWS Response
+ * OWS Response Reader
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base class for all OWS service responses
+ * 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -38,52 +39,16 @@ import org.vast.ogc.OGCRegistry;
  * @date 21 nov. 07
  * @version 1.0
  */
-public class OWSResponse
+public interface OWSResponseReader<ResponseType extends OWSResponse>
 {
-	protected String service;
-	protected String version;
-	protected String messageType;
-    
-	
-    public OWSResponse()
-    {
-    	
-    }
-	
 
-	public String getService()
-	{
-		return service;
-	}
-
-
-	public void setService(String service)
-	{
-		this.service = service;
-	}
-
-
-	public String getVersion()
-	{
-		return version;
-	}
-	
-	
-	public String getNormalizedVersion()
-	{
-		return OGCRegistry.normalizeVersionString(version);
-	}
-
-
-	public void setVersion(String version)
-	{
-		this.version = version;
-	}
-
-
-	public String getMessageType()
-	{
-		return messageType;
-	}
+	/**
+     * Reads XML response from the given element and using the given DOMHelper.
+     * @param domHelper
+     * @param responseElt
+     * @return
+     * @throws OWSException
+     */
+    public ResponseType readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException;
     
 }

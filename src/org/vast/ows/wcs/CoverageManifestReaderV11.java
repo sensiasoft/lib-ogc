@@ -18,23 +18,21 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.wcst;
+package org.vast.ows.wcs;
 
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
-import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
-import org.vast.ows.wcs.WCSException;
 
 
 /**
  * <p><b>Title:</b><br/>
- * WCS Transaction Request Reader v1.1
+ * Coverage Manifest Reader v1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provides methods to parse an XML Transaction request and
- * create a WCSTransactionRequest object for version 1.1
+ * Provides methods to parse an XML Coverage Manifest response and
+ * create a CoverageManifest object for version 1.1
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -42,32 +40,20 @@ import org.vast.ows.wcs.WCSException;
  * @date Oct 11, 2007
  * @version 1.0
  */
-public class WCSTransactionReaderV11 extends AbstractRequestReader<WCSTransactionRequest>
+public class CoverageManifestReaderV11 implements OWSResponseReader<CoverageManifest>
 {
 	protected OWSReferenceReaderV11 owsReader = new OWSReferenceReaderV11();
-	
 
-	@Override
-	public WCSTransactionRequest readURLQuery(String queryString) throws OWSException
+
+	public CoverageManifest readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
-		throw new WCSException(noKVP + "WCS 1.1 Transaction");
-	}
-	
-	
-	@Override
-	public WCSTransactionRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
-	{
-		OWSExceptionReport report = new OWSExceptionReport();
-		WCSTransactionRequest request = new WCSTransactionRequest();
-		
-		// do common stuffs like version, request name and service type
-		readCommonXML(dom, requestElt, request);
+		CoverageManifest manifest = new CoverageManifest();
 		
 		// get all Coverage Reference Groups
-		NodeList covElts = dom.getElements(requestElt, "InputCoverages/Coverage");
+		NodeList covElts = dom.getElements(responseElt, "InputCoverages/Coverage");
 		for (int i=0; i<covElts.getLength(); i++)
 		{
-			CoverageTransaction coverageRef = new CoverageTransaction();
+			CoverageRefGroup coverageRef = new CoverageRefGroup();
 			Element coverageElt = (Element)covElts.item(i);
 			
 			// read group info
@@ -91,27 +77,9 @@ public class WCSTransactionReaderV11 extends AbstractRequestReader<WCSTransactio
 				coverageRef.getReferenceList().add(ref);
 			}
 			
-			request.getInputCoverages().add(coverageRef);
+			manifest.getCoverages().add(coverageRef);
 		}
 		
-		this.checkParameters(request, report);
-		return request;
-	}
-	
-	
-	/**
-     * Checks that Transaction mandatory parameters are present
-     * @param request
-     * @throws OWSException
-     */
-	protected void checkParameters(WCSTransactionRequest request, OWSExceptionReport report) throws OWSException
-    {
-    	// need coverage
-		if (request.getInputCoverages().isEmpty())
-			report.add(new OWSException(OWSException.missing_param_code, "InputCoverages"));
-		
-		// check common params
-		// needs to be called at the end since it throws the exception if report is non empty
-		super.checkParameters(request, report, OGCRegistry.WCS);
+		return manifest;
 	}
 }

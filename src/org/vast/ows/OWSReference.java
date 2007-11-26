@@ -29,10 +29,10 @@ public class OWSReference
 {
 	protected String role;
 	protected String href;
-	protected Element requestXML;
-	
 	protected String description;
+	protected String format;
 	protected String identifier;
+	protected Element requestXML;
 	protected ArrayList<Object> metadata;
 	protected DataHandler dataHandler;
 	
@@ -118,5 +118,17 @@ public class OWSReference
 	public void setDataHandler(DataHandler dataHandler)
 	{
 		this.dataHandler = dataHandler;
+	}
+
+
+	public String getFormat()
+	{
+		return format;
+	}
+
+
+	public void setFormat(String format)
+	{
+		this.format = format;
 	}
 }

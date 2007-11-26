@@ -21,9 +21,8 @@
 package org.vast.ows.wcs;
 
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.OWSException;
+import org.vast.ows.OWSReference;
 import org.vast.ows.OWSReferenceGroup;
-import org.vast.ows.OWSReferenceWriterV11;
 import org.vast.ows.OWSResponseWriter;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
@@ -45,14 +44,13 @@ import org.vast.xml.QName;
  * @date Oct 11, 2007
  * @version 1.0
  */
-public class CoverageManifestWriterV11 implements OWSResponseWriter<CoverageManifest>
+public class OWSReferenceGroupWriterV11 implements OWSResponseWriter<CoverageManifest>
 {
-	protected OWSReferenceWriterV11 owsWriter = new OWSReferenceWriterV11();
-	
-	
-	public Element buildXMLResponse(DOMHelper dom, CoverageManifest manifest) throws OWSException
+
+	public Element buildXMLResponse(DOMHelper dom, CoverageManifest manifest) throws WCSException
 	{
 		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, manifest.getVersion()));
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
 		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
 		
 		// root element
@@ -63,7 +61,31 @@ public class CoverageManifestWriterV11 implements OWSResponseWriter<CoverageMani
 		{
 			Element coverageElt = dom.addElement(rootElt, "+Coverage");
 			OWSReferenceGroup coverageInfo = manifest.getCoverages().get(i);
-			owsWriter.buildRefGroupXML(dom, coverageElt, coverageInfo);
+			
+			// title
+			if (coverageInfo.getTitle() != null)
+				dom.setElementValue(coverageElt, "ows:Title", coverageInfo.getTitle());
+			
+			// abstract
+			if (coverageInfo.getDescription() != null)
+				dom.setElementValue(coverageElt, "ows:Abstract", coverageInfo.getDescription());
+			
+			// identifier
+			if (coverageInfo.getIdentifier() != null)
+				dom.setElementValue(coverageElt, "ows:Identifier", coverageInfo.getIdentifier());
+			
+			// references
+			for (int j=0; j<coverageInfo.getReferenceList().size(); j++)
+			{
+				Element refElt = dom.addElement(coverageElt, "+ows:Reference");
+				OWSReference ref = coverageInfo.getReferenceList().get(j);
+				
+				// role
+				dom.setAttributeValue(refElt, "@xlink:role", ref.getRole());
+				
+				// href
+				dom.setAttributeValue(refElt, "@xlink:href", ref.getHref());
+			}
 		}
 				
 		return rootElt;
