@@ -35,7 +35,7 @@ public class CoverageRefGroup extends OWSReferenceGroup
 	public final static String GEOREFERENCING_TRANSFORMATION = "urn:ogc:def:role:WCS:1.1:GeoreferencingTransformation";
 
 
-	protected OWSReference getReference(String role)
+	public OWSReference getReference(String role)
 	{
 		for (int i=0; i<referenceList.size(); i++)
 		{
