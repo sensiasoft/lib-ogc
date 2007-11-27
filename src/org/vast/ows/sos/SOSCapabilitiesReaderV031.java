@@ -72,8 +72,8 @@ public class SOSCapabilitiesReaderV031 extends SOSCapabilitiesReader
             
             try
             {
-	            layerCaps.setName(offeringName);
-	            layerCaps.setId(id);
+	            layerCaps.setTitle(offeringName);
+	            layerCaps.setIdentifier(id);
 	            getFormatList(dom, offeringElt, layerCaps);
 	            getObservableList(dom, offeringElt, layerCaps);
 	            getProcedureList(dom, offeringElt, layerCaps);
@@ -82,7 +82,7 @@ public class SOSCapabilitiesReaderV031 extends SOSCapabilitiesReader
             }
             catch (GMLException e)
             {
-            	String message = parsingError + " in offering " + layerCaps.getId();
+            	String message = parsingError + " in offering " + layerCaps.getIdentifier();
                 ExceptionSystem.display(new SOSException(message, e));
 				continue;
             }

@@ -132,11 +132,11 @@ public class WMSCapabilitiesReaderV10 extends WMSCapabilitiesReader
         
         // read layer id
         String id = dom.getElementValue(layerElt, "Name");
-        layerCaps.setId(id);        
+        layerCaps.setIdentifier(id);        
         
         // read layer name
         String name = dom.getElementValue(layerElt, "Title");
-        layerCaps.setName(name);
+        layerCaps.setTitle(name);
         
         // read layer description
         String desc = dom.getElementValue(layerElt, "Abstract");
@@ -154,7 +154,7 @@ public class WMSCapabilitiesReaderV10 extends WMSCapabilitiesReader
         mergeWithParent(layerCaps, parentCaps);
         
         // add it to the main service object if it is has a name/id
-    	if (layerCaps.getId() != null)
+    	if (layerCaps.getIdentifier() != null)
         	serviceCaps.getLayers().add(layerCaps);
         
         // get all child layers        

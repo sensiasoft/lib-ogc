@@ -37,53 +37,14 @@ package org.vast.ows;
  * @date Oct 31, 2005
  * @version 1.0
  */
-public abstract class OWSLayerCapabilities
+public abstract class OWSLayerCapabilities extends OWSIdentification
 {
 	protected OWSServiceCapabilities parent;
-	protected String id;
-	protected String name;
-	protected String description;	
 	    
 
     public OWSLayerCapabilities()
     {    	
     }
-    
-    
-	public String getDescription()
-	{
-		return description;
-	}
-
-
-	public void setDescription(String description)
-	{
-		this.description = description;
-	}
-
-
-	public String getId()
-	{
-		return id;
-	}
-
-
-	public void setId(String id)
-	{
-		this.id = id;
-	}
-
-
-	public String getName()
-	{
-		return name;
-	}
-
-
-	public void setName(String name)
-	{
-		this.name = name;
-	}
 
 
 	public OWSServiceCapabilities getParent()
@@ -100,6 +61,6 @@ public abstract class OWSLayerCapabilities
 	
 	public String toString()
     {
-    	return name;
+    	return title;
     }
 }

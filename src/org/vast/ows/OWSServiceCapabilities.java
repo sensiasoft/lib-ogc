@@ -21,6 +21,7 @@
 package org.vast.ows;
 
 import java.util.*;
+import org.vast.util.ResponsibleParty;
 
 
 /**
@@ -37,12 +38,17 @@ import java.util.*;
  * @date Oct 27, 2005
  * @version 1.0
  */
-public class OWSServiceCapabilities
+public class OWSServiceCapabilities extends OWSIdentification
 {
+	// service identification
 	protected String service;
 	protected String version;
-	protected String name;
-	protected String description;
+	protected String fees;
+	protected String accessConstraints;
+	protected List<String> supportedVersions;
+	
+	// service provider
+	protected ResponsibleParty serviceProvider;
 		
 	// list of layers
 	protected List<OWSLayerCapabilities> layers;
@@ -58,35 +64,13 @@ public class OWSServiceCapabilities
 	
     public OWSServiceCapabilities()
     {
+    	serviceProvider = new ResponsibleParty();
+    	supportedVersions = new ArrayList<String>(1);
     	layers = new ArrayList<OWSLayerCapabilities>(5);
     	exceptionTypes = new ArrayList<String>(1);
     	getServers = new Hashtable<String, String>();
     	postServers = new Hashtable<String, String>();
     }
-    
-    
-	public String getDescription()
-	{
-		return description;
-	}
-
-
-	public void setDescription(String description)
-	{
-		this.description = description;
-	}
-
-
-	public String getName()
-	{
-		return name;
-	}
-
-
-	public void setName(String name)
-	{
-		this.name = name;
-	}
 
 
 	public String getService()
@@ -110,7 +94,49 @@ public class OWSServiceCapabilities
 	public void setVersion(String version)
 	{
 		this.version = version;
-	}   
+	}
+	
+	
+	public String getFees()
+	{
+		return fees;
+	}
+
+
+	public void setFees(String fees)
+	{
+		this.fees = fees;
+	}
+
+
+	public String getAccessConstraints()
+	{
+		return accessConstraints;
+	}
+
+
+	public void setAccessConstraints(String accessConstraints)
+	{
+		this.accessConstraints = accessConstraints;
+	}
+	
+	
+	public List<String> getSupportedVersions()
+	{
+		return supportedVersions;
+	}
+
+
+	public ResponsibleParty getServiceProvider()
+	{
+		return serviceProvider;
+	}
+
+
+	public void setServiceProvider(ResponsibleParty serviceProvider)
+	{
+		this.serviceProvider = serviceProvider;
+	}
     
     
     public Map<String, String> getGetServers()
@@ -165,7 +191,7 @@ public class OWSServiceCapabilities
     {
     	StringBuffer text = new StringBuffer(service + " Service Capabilities: ");
     	
-    	text.append(name);
+    	text.append(title);
     			
     	if (description != null)
     	{

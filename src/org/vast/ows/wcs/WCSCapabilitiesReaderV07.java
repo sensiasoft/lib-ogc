@@ -88,14 +88,14 @@ public class WCSCapabilitiesReaderV07 extends WCSCapabilitiesReader
 			layerCap.setParent(serviceCaps);
 	        
 			String layerId = dom.getElementValue(layerCapElt, "LayerID");
-	        layerCap.setId(layerId);
+	        layerCap.setIdentifier(layerId);
 	        
 	        String desc = dom.getElementValue(layerCapElt, "Title");
 	        layerCap.setDescription(desc);
 	        
 	        Element bboxElt = dom.getElement(layerCapElt, "LatLonBoundingBox");
 	        Bbox bbox = getBbox(dom, bboxElt);
-	        layerCap.setBbox(bbox);
+	        layerCap.getBboxList().add(bbox);
 	        
 	        crsList = getCRSList(dom, layerCapElt);
 	        layerCap.setCrsList(crsList);

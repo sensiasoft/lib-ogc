@@ -22,7 +22,7 @@ package org.vast.ows.om;
 
 import org.vast.ows.gml.Feature;
 import org.vast.ows.util.TimeInfo;
-import org.vast.sensorML.metadata.Contact;
+import org.vast.util.Contact;
 
 
 /**

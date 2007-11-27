@@ -11,72 +11,110 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is the VAST team at the
+ University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
+ Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
     Alexandre Robin <robin@nsstc.uah.edu>
     Tony Cook <tcook@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.wcs;
 
 import java.util.*;
-
 import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
 
 
+/**
+ * <p><b>Title:</b><br/>
+ * WCS Layer Capabilities
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * 
+ * </p>
+ *
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date 27 nov. 07
+ * @version 1.0
+ */
 public class WCSLayerCapabilities extends OWSLayerCapabilities
 {
-	protected ArrayList<String> formatList;
-	protected ArrayList<String> crsList;
-	protected ArrayList<TimeInfo> timeList;
-	protected Bbox bbox;  //  Don't think this needs to be an ArrayList for WMS
+	protected List<String> formatList;
+	protected List<String> crsList;
+	protected List<Bbox> bboxList;
+	protected List<TimeInfo> timeList;
+	protected List<WCSLayerCapabilities> childCoverages;
 
 
 	public WCSLayerCapabilities()
 	{
+		formatList = new ArrayList<String>();
+		crsList = new ArrayList<String>();
+		bboxList = new ArrayList<Bbox>();
+		childCoverages = new ArrayList<WCSLayerCapabilities>(0);
 	}
 
 
-	public ArrayList<String> getCrsList() {
+	public List<String> getCrsList()
+	{
 		return crsList;
 	}
 
 
-	public void setCrsList(ArrayList<String> crsList) {
-		this.crsList = crsList;
-	}
-
-
-	public ArrayList<String> getFormatList() {
+	public List<String> getFormatList()
+	{
 		return formatList;
 	}
 
 
-	public void setFormatList(ArrayList<String> formatList) {
-		this.formatList = formatList;
+	public List<Bbox> getBboxList()
+	{
+		return bboxList;
 	}
-
-
-	public ArrayList<TimeInfo> getTimeList() {
+	
+	
+	public List<TimeInfo> getTimeList()
+	{
 		return timeList;
 	}
 
 
-	public void setTimeList(ArrayList<TimeInfo> timeList) {
+	public List<WCSLayerCapabilities> getChildCoverages()
+	{
+		return childCoverages;
+	}
+
+
+	public void setFormatList(List<String> formatList)
+	{
+		this.formatList = formatList;
+	}
+
+
+	public void setCrsList(List<String> crsList)
+	{
+		this.crsList = crsList;
+	}
+
+
+	public void setBboxList(List<Bbox> bboxList)
+	{
+		this.bboxList = bboxList;
+	}
+
+
+	public void setTimeList(List<TimeInfo> timeList)
+	{
 		this.timeList = timeList;
 	}
 
-
-	public Bbox getBbox() {
-		return bbox;
-	}
-
-
-	public void setBbox(Bbox bbox) {
-		this.bbox = bbox;
-	}
 }

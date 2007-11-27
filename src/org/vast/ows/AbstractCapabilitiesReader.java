@@ -128,16 +128,13 @@ public abstract class AbstractCapabilitiesReader implements OWSCapabilitiesReade
 	        desc = dom.getElementValue(serviceElt, "Abstract");
         }
         
-        serviceCaps.setName(serviceTitle);
+        serviceCaps.setTitle(serviceTitle);
         serviceCaps.setDescription(desc);
         serviceCaps.setService(serviceType);
         serviceCaps.setVersion(this.version);
         
         // Server URLS
         readServers(dom, capabilitiesElt);
-        
-    	//if (capabilities.getPostServers().isEmpty())
-    	//	capabilities.getPostServers().put("GetObservation", this.server);
         
         // Contents section
         readContents(dom, capabilitiesElt);

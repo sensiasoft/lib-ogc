@@ -276,7 +276,7 @@ public class ExtrinsicObjectSearch extends DOMHelper
 			//Eliminates null values from owsCap list
 			for(int i=0; i<owsCap.getLayers().size(); i++)
 			{
-				if(owsCap.getLayers().get(i).getId()==null) 
+				if(owsCap.getLayers().get(i).getIdentifier()==null) 
 				{
 					for(int j=i; j<owsCap.getLayers().size()-1; j++)
 					{
@@ -293,7 +293,7 @@ public class ExtrinsicObjectSearch extends DOMHelper
 				{
 					if(idList.get(j)==null)
 						continue;
-					if(owsCap.getLayers().get(i).getId().equalsIgnoreCase(
+					if(owsCap.getLayers().get(i).getIdentifier().equalsIgnoreCase(
 							idList.get(j).toString()))
 					{
 						found=true;

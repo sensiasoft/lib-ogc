@@ -134,14 +134,14 @@ public class WFSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
         
         // read layer name/id
         String name = dom.getElementValue(featureElt, "name");
-        layerCaps.setId(name);        
+        layerCaps.setIdentifier(name);        
         
         // read layer title/description
         String title = dom.getElementValue(featureElt, "title");
         if (title != null)
-        	layerCaps.setName(title);
+        	layerCaps.setTitle(title);
         else
-        	layerCaps.setName(name);
+        	layerCaps.setTitle(name);
         
         // read layer SRS and style lists
         getSRSList(dom, featureElt, layerCaps);

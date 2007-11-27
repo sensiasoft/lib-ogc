@@ -48,7 +48,7 @@ public class OWSIdentification
 
 	public OWSIdentification()
 	{
-		keywords = new ArrayList<String>();
+		keywords = new ArrayList<String>(5);
 		metadata = new ArrayList<Object>(1);
 	}
 	

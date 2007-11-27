@@ -22,14 +22,11 @@
 
 package org.vast.ows.wcs;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.vast.ows.OWSResponse;
-
+import org.vast.ows.OWSIdentification;
 
 /**
  * <p><b>Title:</b><br/>
- * CoverageDescriptions
+ * CoverageDescription
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -38,32 +35,10 @@ import org.vast.ows.OWSResponse;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 23 nov. 07
+ * @date 27 nov. 07
  * @version 1.0
  */
-public class CoverageDescriptions extends OWSResponse
+public class CoverageDescription extends OWSIdentification
 {
-	protected List<CoverageDescription> descriptions;
-	protected List<WCSMetadataProxy> metadataProxys;
 
-	
-	public CoverageDescriptions()
-	{
-		this.service = "WCS";
-        this.messageType = "CoverageDescriptions";		
-		metadataProxys = new ArrayList<WCSMetadataProxy>();
-		descriptions = new ArrayList<CoverageDescription>();
-	}
-	
-	
-	public List<WCSMetadataProxy> getMetadataProxys()
-	{
-		return metadataProxys;
-	}
-
-
-	public List<CoverageDescription> getDescriptions()
-	{
-		return descriptions;
-	}
 }
