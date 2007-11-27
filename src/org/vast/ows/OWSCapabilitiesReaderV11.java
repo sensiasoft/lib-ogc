@@ -11,34 +11,41 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
+package org.vast.ows;
 
-package org.vast.ows.wms;
-
-import org.vast.ows.AbstractCapabilitiesReader;
-
+import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b><br/>
- * WMS Capabilities Reader
+ * OWSCapabilitiesReaderV11
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Abstract WMS Capabilities Reader containing common code
- * for all versions.
+ * 
  * </p>
  *
- * <p>Copyright (c) 2006</p>
- * @author Alexandre Robin
- * @date Dec 20, 2006
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date 27 nov. 07
  * @version 1.0
  */
-public abstract class WMSCapabilitiesReader extends AbstractCapabilitiesReader
+public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReader
 {
+
+	@Override
+	public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

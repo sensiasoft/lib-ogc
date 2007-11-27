@@ -23,7 +23,9 @@ package org.vast.ows.wms;
 import java.util.*;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
+import org.vast.ows.AbstractCapabilitiesReader;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSServiceCapabilities;
 import org.vast.ows.util.Bbox;
 
 
@@ -43,7 +45,7 @@ import org.vast.ows.util.Bbox;
  * @date Oct 30, 2005
  * @version 1.0
  */
-public class WMSCapabilitiesReaderV10 extends WMSCapabilitiesReader
+public class WMSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
 {
 	ArrayList<String> formatList;
 	
@@ -59,6 +61,34 @@ public class WMSCapabilitiesReaderV10 extends WMSCapabilitiesReader
         String url = null;
         url = this.server + "REQUEST=capabilities&WMTVER=" + version;      
         return url;
+    }
+    
+    
+    @Override
+    public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException
+    {
+    	serviceCaps = new OWSServiceCapabilities();
+    	
+    	// Version
+        this.version = dom.getAttributeValue(capabilitiesElt, "version");
+        serviceCaps.setVersion(this.version);
+        
+        // Read Service Identification Section
+        Element serviceElt = dom.getElement(capabilitiesElt, "Service");
+        String serviceTitle = dom.getElementValue(serviceElt, "Title");
+        serviceCaps.setTitle(serviceTitle);        
+        String serviceType = dom.getElementValue(serviceElt, "Name");
+        serviceCaps.setService(serviceType);        
+        String desc = dom.getElementValue(serviceElt, "Abstract");
+        serviceCaps.setDescription(desc);
+        
+        // Server URLS
+        readServers(dom, capabilitiesElt);
+        
+        // Contents section
+        readContents(dom, capabilitiesElt);
+        
+        return serviceCaps;
     }
     
     

@@ -26,6 +26,8 @@ package org.vast.ows.wcs;
 
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
+import org.vast.ows.OWSCapabilitiesReaderV11;
+import org.vast.ows.OWSException;
 import org.vast.ows.util.Bbox;
 
 
@@ -45,14 +47,23 @@ import org.vast.ows.util.Bbox;
  * @date 27 nov. 07
  * @version 1.0
  */
-public class WCSCapabilitiesReaderV11 extends WCSCapabilitiesReader
+public class WCSCapabilitiesReaderV11 extends OWSCapabilitiesReaderV11
 {
 
 	public WCSCapabilitiesReaderV11()
 	{
 	}
-
-
+	
+	
+	@Override
+    protected String buildQuery() throws OWSException
+    {
+        String query = null;
+        query = this.server + "SERVICE=WCS&VERSION=1.1.1&REQUEST=GetCapabilities"; 
+        return query;
+    }
+	
+	
 	@Override
 	protected void readServers(DOMHelper dom, Element capabilitiesElt)
 	{

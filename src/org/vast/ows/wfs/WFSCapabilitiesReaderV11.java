@@ -25,6 +25,7 @@ import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.AbstractCapabilitiesReader;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSServiceCapabilities;
 import org.vast.ows.util.Bbox;
 
 
@@ -58,6 +59,34 @@ public class WFSCapabilitiesReaderV11 extends AbstractCapabilitiesReader
         String url = null;
         url = this.server + "REQUEST=GetCapabilities&VERSION=1.0&SERVICE=WFS";       
         return url;
+    }
+    
+    
+    @Override
+    public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException
+    {
+    	serviceCaps = new OWSServiceCapabilities();
+    	
+    	// Version
+        this.version = dom.getAttributeValue(capabilitiesElt, "version");
+        serviceCaps.setVersion(this.version);
+        
+        // Read Service Identification Section
+        Element serviceElt = dom.getElement(capabilitiesElt, "ServiceIdentification");
+        String serviceTitle = dom.getElementValue(serviceElt, "Title");
+        serviceCaps.setTitle(serviceTitle);
+        String serviceType = dom.getElementValue(serviceElt, "ServiceType");
+        serviceCaps.setService(serviceType);
+        String desc = dom.getElementValue(serviceElt, "Abstract");
+        serviceCaps.setDescription(desc);        
+        
+        // Server URLS
+        readServers(dom, capabilitiesElt);
+        
+        // Contents section
+        readContents(dom, capabilitiesElt);
+        
+        return serviceCaps;
     }
     
     

@@ -25,6 +25,9 @@ import java.text.ParseException;
 import java.util.*;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
+import org.vast.ows.AbstractCapabilitiesReader;
+import org.vast.ows.OWSException;
+import org.vast.ows.OWSServiceCapabilities;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
 import org.vast.util.DateTime;
@@ -50,11 +53,48 @@ import org.vast.util.DateTimeFormat;
  * @TODO  add support for WCS 1.*
  * @TODO  clarify/add support for realTime
  */
-public class WCSCapabilitiesReaderV07 extends WCSCapabilitiesReader
+public class WCSCapabilitiesReaderV07 extends AbstractCapabilitiesReader
 {
 
     public WCSCapabilitiesReaderV07()
     {
+    }
+    
+    
+    @Override
+    protected String buildQuery() throws OWSException
+    {
+        String query = null;
+        query = this.server + "SERVICE=WCS&VERSION=0.7&REQUEST=GetCapabilities"; 
+        return query;
+    }
+    
+    
+    @Override
+    public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException
+    {
+    	serviceCaps = new OWSServiceCapabilities();
+    	
+    	// Version
+        this.version = dom.getAttributeValue(capabilitiesElt, "version");
+        serviceCaps.setVersion(this.version);
+        
+        // Read Service Identification Section
+        Element serviceElt = dom.getElement(capabilitiesElt, "Service");
+        String serviceTitle = dom.getElementValue(serviceElt, "Title");
+        serviceCaps.setTitle(serviceTitle);        
+        String serviceType = dom.getElementValue(serviceElt, "Name");
+        serviceCaps.setService(serviceType);        
+        String desc = dom.getElementValue(serviceElt, "Abstract");
+        serviceCaps.setDescription(desc);
+        
+        // Server URLS
+        readServers(dom, capabilitiesElt);
+        
+        // Contents section
+        readContents(dom, capabilitiesElt);
+        
+        return serviceCaps;
     }
     
     

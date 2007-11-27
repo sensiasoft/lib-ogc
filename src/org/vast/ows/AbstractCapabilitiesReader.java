@@ -56,6 +56,16 @@ public abstract class AbstractCapabilitiesReader implements OWSCapabilitiesReade
     }
     
     
+    /**
+     * Read Capabilities from the given DOM document
+     * @param dom
+     * @param capabilitiesElt
+     * @return
+     * @throws OWSException
+     */
+    public abstract OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException;
+    
+    
     protected abstract String buildQuery() throws OWSException;
     protected abstract void readContents(DOMHelper dom, Element capsElt) throws OWSException;
     
@@ -94,55 +104,7 @@ public abstract class AbstractCapabilitiesReader implements OWSCapabilitiesReade
 		}
     }
     
-    
-    /**
-     * Read Capabilities from the given DOM document
-     * @param dom
-     * @param capabilitiesElt
-     * @return
-     * @throws OWSException
-     */
-    public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException
-    {
-    	// Version
-        this.version = dom.getAttributeValue(capabilitiesElt, "version");
         
-        // Read Service Identification Section
-        serviceCaps = new OWSServiceCapabilities();
-        Element serviceElt;
-        String serviceTitle = null;
-        String serviceType = null;
-        String desc = null;
-        
-        // two cases depending on service
-        if ((serviceElt = dom.getElement(capabilitiesElt, "ServiceIdentification")) != null)
-        {
-	        serviceTitle = dom.getElementValue(serviceElt, "Title");
-	        serviceType = dom.getElementValue(serviceElt, "ServiceType");
-	        desc = dom.getElementValue(serviceElt, "Abstract");
-        }
-        else if ((serviceElt = dom.getElement(capabilitiesElt, "Service")) != null)
-        {
-        	serviceTitle = dom.getElementValue(serviceElt, "Title");
-	        serviceType = dom.getElementValue(serviceElt, "Name");
-	        desc = dom.getElementValue(serviceElt, "Abstract");
-        }
-        
-        serviceCaps.setTitle(serviceTitle);
-        serviceCaps.setDescription(desc);
-        serviceCaps.setService(serviceType);
-        serviceCaps.setVersion(this.version);
-        
-        // Server URLS
-        readServers(dom, capabilitiesElt);
-        
-        // Contents section
-        readContents(dom, capabilitiesElt);
-        
-        return serviceCaps;
-    }
-    
-    
     /**
      * Read server GET and POST urls for each operation
      * @param operationMetadataElt

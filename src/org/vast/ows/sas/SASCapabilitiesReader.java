@@ -23,6 +23,7 @@ package org.vast.ows.sas;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.AbstractCapabilitiesReader;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSServiceCapabilities;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -108,5 +109,13 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
 //            serviceCaps.getLayers().add(layerCaps);
         }
     }
+
+
+	@Override
+	public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 }
