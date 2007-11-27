@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * @date Jan 16, 2007
  * @version 1.0
  */
-public interface OWSCapabilitiesWriter<CapsType extends OWSLayerCapabilities>
+public interface OWSCapabilitiesWriter
 {
    
     /**
@@ -50,7 +50,7 @@ public interface OWSCapabilitiesWriter<CapsType extends OWSLayerCapabilities>
      * @return
      * @throws OWSException
      */
-    public Element buildServiceCapabilities(DOMHelper dom, OWSServiceCapabilities caps) throws OWSException;
+    public Element writeServiceCapabilities(DOMHelper dom, OWSServiceCapabilities caps) throws OWSException;
     
     
     /**
@@ -60,24 +60,6 @@ public interface OWSCapabilitiesWriter<CapsType extends OWSLayerCapabilities>
      * @throws OWSException
      */
     public void writeServiceCapabilities(OutputStream os, OWSServiceCapabilities caps) throws OWSException;
-    
-    
-    /**
-     * Builds a DOM element containing the capabilities for one layer/offering
-     * @param dom
-     * @param caps
-     * @return
-     * @throws OWSException
-     */
-    public Element buildLayerCapabilities(DOMHelper dom, CapsType caps) throws OWSException;
-    
-    
-    /**
-     * Writes the given layer capabilities to the specified output stream
-     * @param os
-     * @param caps
-     * @throws OWSException
-     */
-    public void writeLayerCapabilities(OutputStream os, CapsType caps) throws OWSException;
+
 
 }

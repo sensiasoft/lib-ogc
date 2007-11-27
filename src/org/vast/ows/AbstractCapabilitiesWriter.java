@@ -41,41 +41,25 @@ import org.w3c.dom.Element;
  * @date Feb 2, 2007
  * @version 1.0
  */
-public abstract class AbstractCapabilitiesWriter<CapsType extends OWSLayerCapabilities> implements OWSCapabilitiesWriter<CapsType>
+public abstract class AbstractCapabilitiesWriter implements OWSCapabilitiesWriter
 {
 
-    public abstract Element buildServiceCapabilities(DOMHelper dom, OWSServiceCapabilities caps) throws OWSException;
-    public abstract Element buildLayerCapabilities(DOMHelper dom, CapsType caps) throws OWSException;
-
-
+    public abstract Element writeServiceCapabilities(DOMHelper dom, OWSServiceCapabilities caps) throws OWSException;
+    protected abstract void writeContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps) throws OWSException;
+    
+    
     public void writeServiceCapabilities(OutputStream os, OWSServiceCapabilities caps) throws OWSException
     {
         try
         {
             DOMHelper dom = new DOMHelper();
             dom.createDocument("Capabilities");
-            Element requestElt = buildServiceCapabilities(dom, caps);
+            Element requestElt = writeServiceCapabilities(dom, caps);
             dom.serialize(requestElt, os, null);                   
         }
         catch (IOException e)
         {
             throw new OWSException("IO Error while writing service capabilities XML", e);
-        }
-    }
-
-
-    public void writeLayerCapabilities(OutputStream os, CapsType caps) throws OWSException
-    {
-        try
-        {
-            DOMHelper dom = new DOMHelper();
-            dom.createDocument("Capabilities");
-            Element requestElt = buildLayerCapabilities(dom, caps);
-            dom.serialize(requestElt, os, null);                   
-        }
-        catch (IOException e)
-        {
-            throw new OWSException("IO Error while writing layer capabilities XML", e);
         }
     }
 

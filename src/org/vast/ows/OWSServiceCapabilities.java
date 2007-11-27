@@ -58,8 +58,8 @@ public class OWSServiceCapabilities extends OWSResponse
 	protected List<String> exceptionTypes;
 	
 	// tables of operation->url
-	protected Map<String, String> getServers;
-	protected Map<String, String> postServers;
+	protected Hashtable<String, String> getServers;
+	protected Hashtable<String, String> postServers;
 	
 	
     public OWSServiceCapabilities()
@@ -153,25 +153,25 @@ public class OWSServiceCapabilities extends OWSResponse
 	}
     
     
-    public Map<String, String> getGetServers()
+    public Hashtable<String, String> getGetServers()
 	{
 		return getServers;
 	}
     
     
-	public void setGetServers(Map<String, String> getServers)
+	public void setGetServers(Hashtable<String, String> getServers)
 	{
 		this.getServers = getServers;
 	}
 
 
-	public Map<String, String> getPostServers()
+	public Hashtable<String, String> getPostServers()
 	{
 		return postServers;
 	}
 	
 	
-	public void setPostServers(Map<String, String> postServers)
+	public void setPostServers(Hashtable<String, String> postServers)
 	{
 		this.postServers = postServers;
 	}

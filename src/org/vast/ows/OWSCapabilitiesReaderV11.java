@@ -93,7 +93,7 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
 	@Override
 	protected void readOperationsMetadata(DOMHelper dom, Element capabilitiesElt)
 	{
-		NodeList opElts = dom.getAllElements(capabilitiesElt, "OperationsMetadata/Operation");
+		NodeList opElts = dom.getElements(capabilitiesElt, "OperationsMetadata/Operation");
 		int numElts = opElts.getLength();
 		for (int i = 0; i < numElts; i++)
 		{
@@ -150,7 +150,7 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
 		text = dom.getElementValue(providerElt, "ProviderName");
 		provider.setOrganizationName(text);
 		
-		text = dom.getElementValue(providerElt, "ProviderSite");
+		text = dom.getAttributeValue(providerElt, "ProviderSite/@href");
 		provider.setWebsite(text);
 		
 		Element contactElt = dom.getElement(providerElt, "ServiceContact");		
@@ -184,6 +184,5 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
 		provider.setCountry(text);
 		text = dom.getElementValue(addressElt, "ElectronicMailAddress");
 		provider.setEmail(text);
-		
 	}
 }
