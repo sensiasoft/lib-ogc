@@ -110,7 +110,7 @@ public abstract class AbstractCapabilitiesReader implements OWSCapabilitiesReade
      * @param operationMetadataElt
      * @param capabilities
      */
-    protected void readServers(DOMHelper dom, Element capabilitiesElt) throws OWSException
+    protected void readOperationsMetadata(DOMHelper dom, Element capabilitiesElt) throws OWSException
     {
     	NodeList operationList = dom.getElements(capabilitiesElt, "OperationsMetadata/Operation");    	
     	for (int i=0; i<operationList.getLength(); i++)

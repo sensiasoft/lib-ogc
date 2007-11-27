@@ -74,14 +74,14 @@ public class WFSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
         // Read Service Identification Section
         Element serviceElt = dom.getElement(capabilitiesElt, "Service");
         String serviceTitle = dom.getElementValue(serviceElt, "Title");
-        serviceCaps.setTitle(serviceTitle);        
+        serviceCaps.getIdentification().setTitle(serviceTitle);        
         String serviceType = dom.getElementValue(serviceElt, "Name");
-        serviceCaps.setService(serviceType);        
+        serviceCaps.setService(serviceType);
         String desc = dom.getElementValue(serviceElt, "Abstract");
-        serviceCaps.setDescription(desc);
+        serviceCaps.getIdentification().setDescription(desc);
         
         // Server URLS
-        readServers(dom, capabilitiesElt);
+        readOperationsMetadata(dom, capabilitiesElt);
         
         // Contents section
         readContents(dom, capabilitiesElt);
@@ -91,7 +91,7 @@ public class WFSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
     
     
     @Override
-    protected void readServers(DOMHelper dom, Element capsElt) throws OWSException
+    protected void readOperationsMetadata(DOMHelper dom, Element capsElt) throws OWSException
     {
         String url;
         

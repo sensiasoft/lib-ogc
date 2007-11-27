@@ -24,9 +24,8 @@ import java.util.*;
 import org.w3c.dom.*;
 import org.vast.util.*;
 import org.vast.xml.DOMHelper;
-import org.vast.ows.AbstractCapabilitiesReader;
+import org.vast.ows.OWSCapabilitiesReaderV11;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSServiceCapabilities;
 import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLTimeReader;
 import org.vast.ows.util.TimeInfo;
@@ -34,13 +33,13 @@ import org.vast.ows.util.TimeInfo;
 
 /**
  * <p><b>Title:</b><br/>
- * SOS Capabilities Reader v0.0.31
+ * SOS Capabilities Reader v1.0
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Reads a SOS server capabilities document and create and
  * populate the corresponding OWSServiceCapabilities and
- * SOSLayerCapabilities objects for version 0.0.31
+ * SOSLayerCapabilities objects for version 1.0
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -48,10 +47,10 @@ import org.vast.ows.util.TimeInfo;
  * @date Sep 14, 2005
  * @version 1.0
  */
-public class SOSCapabilitiesReaderV031 extends AbstractCapabilitiesReader
+public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
 {
    
-    public SOSCapabilitiesReaderV031()
+    public SOSCapabilitiesReaderV10()
     {
     }
     
@@ -60,38 +59,10 @@ public class SOSCapabilitiesReaderV031 extends AbstractCapabilitiesReader
     protected String buildQuery() throws OWSException
     {
         String url = null;
-        url = this.server + "service=SOS&version=0.0.31&request=GetCapabilities";  
+        url = this.server + "service=SOS&version=1.0&request=GetCapabilities";  
         return url;
     }
-    
-    
-    @Override
-    public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException
-    {
-    	serviceCaps = new OWSServiceCapabilities();
-    	
-    	// Version
-        this.version = dom.getAttributeValue(capabilitiesElt, "version");
-        serviceCaps.setVersion(this.version);
-        
-        // Read Service Identification Section
-        Element serviceElt = dom.getElement(capabilitiesElt, "ServiceIdentification");
-        String serviceTitle = dom.getElementValue(serviceElt, "Title");
-        serviceCaps.getIdentification().setTitle(serviceTitle);
-        String desc = dom.getElementValue(serviceElt, "Abstract");
-        serviceCaps.getIdentification().setDescription(desc);        
-        String serviceType = dom.getElementValue(serviceElt, "ServiceType");
-        serviceCaps.setService(serviceType);
-        
-        // Server URLS
-        readOperationsMetadata(dom, capabilitiesElt);
-        
-        // Contents section
-        readContents(dom, capabilitiesElt);
-        
-        return serviceCaps;
-    }
-    
+       
     
     @Override
     protected void readContents(DOMHelper dom, Element capsElt) throws SOSException

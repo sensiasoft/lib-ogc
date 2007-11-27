@@ -59,7 +59,7 @@ public class WMSCapabilitiesReaderV11 extends WMSCapabilitiesReaderV10
     
     
     @Override
-    protected void readServers(DOMHelper dom, Element capsElt) throws OWSException
+    protected void readOperationsMetadata(DOMHelper dom, Element capsElt) throws OWSException
     {
         String url;
         

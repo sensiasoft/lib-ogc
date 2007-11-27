@@ -55,27 +55,21 @@ public class WCSCapabilitiesReaderV11 extends OWSCapabilitiesReaderV11
 	}
 	
 	
+	public WCSCapabilitiesReaderV11(String version)
+	{
+		this.version = version;
+	}
+	
+	
 	@Override
     protected String buildQuery() throws OWSException
     {
         String query = null;
-        query = this.server + "SERVICE=WCS&VERSION=1.1.1&REQUEST=GetCapabilities"; 
+        query = this.server + "SERVICE=WCS&VERSION=" + version + "&REQUEST=GetCapabilities"; 
         return query;
     }
 	
 	
-	@Override
-	protected void readServers(DOMHelper dom, Element capabilitiesElt)
-	{
-		Node map = dom.getAllElements(capabilitiesElt, "http:operation").item(0);
-		String url = ((Element) map).getAttribute("location");
-
-		// GET server
-		if (url != null)
-			serviceCaps.getGetServers().put("GetCoverage", url);
-	}
-
-
 	@Override
 	protected void readContents(DOMHelper dom, Element capsElt)
 	{
@@ -89,14 +83,8 @@ public class WCSCapabilitiesReaderV11 extends OWSCapabilitiesReaderV11
 			Element layerCapElt = (Element) layers.item(i);
 			WCSLayerCapabilities layerCap = new WCSLayerCapabilities();
 			layerCap.setParent(serviceCaps);
-
-			String title = dom.getElementValue(layerCapElt, "Title");
-			layerCap.setTitle(title);
+			readIdentification(layerCap, dom, layerCapElt);
 			
-			String desc = dom.getElementValue(layerCapElt, "Abstract");
-			layerCap.setDescription(desc);
-
-			readKeywordList(layerCap, dom, layerCapElt);			
 			read2DBboxList(layerCap, dom, layerCapElt);
 			readCRSList(layerCap, dom, layerCapElt);
 			readFormatList(layerCap, dom, layerCapElt);
@@ -142,25 +130,6 @@ public class WCSCapabilitiesReaderV11 extends OWSCapabilitiesReaderV11
 	}
 	
 	
-	/**
-	 * Reads all keywords for given layer
-	 * @param layerElt
-	 * @return
-	 */
-	protected void readKeywordList(WCSLayerCapabilities layerCap, DOMHelper dom, Element layerElt)
-	{
-		NodeList keywordElts = dom.getElements(layerElt, "Keywords/Keyword");
-		int numElts = keywordElts.getLength();
-
-		for (int i = 0; i < numElts; i++)
-		{
-			Element keywordElt = (Element) keywordElts.item(i);
-			String keyword = dom.getElementValue(keywordElt);
-			layerCap.getKeywords().add(keyword);
-		}
-	}
-
-
 	/**
 	 * Reads all supported format for given layer
 	 * @param layerElt

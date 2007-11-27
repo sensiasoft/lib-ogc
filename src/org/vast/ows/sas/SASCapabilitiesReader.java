@@ -59,9 +59,9 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
     
     
     @Override
-    protected void readServers(DOMHelper dom, Element capsElt) throws OWSException
+    protected void readOperationsMetadata(DOMHelper dom, Element capsElt) throws OWSException
     {
-    	super.readServers(dom, capsElt);
+    	super.readOperationsMetadata(dom, capsElt);
     	
     	// put default POST server if none is specified in capabilities doc
 		if (serviceCaps.getGetServers().isEmpty() && serviceCaps.getPostServers().isEmpty())

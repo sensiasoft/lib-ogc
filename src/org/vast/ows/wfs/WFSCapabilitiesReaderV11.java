@@ -74,14 +74,14 @@ public class WFSCapabilitiesReaderV11 extends AbstractCapabilitiesReader
         // Read Service Identification Section
         Element serviceElt = dom.getElement(capabilitiesElt, "ServiceIdentification");
         String serviceTitle = dom.getElementValue(serviceElt, "Title");
-        serviceCaps.setTitle(serviceTitle);
+        serviceCaps.getIdentification().setTitle(serviceTitle);
         String serviceType = dom.getElementValue(serviceElt, "ServiceType");
         serviceCaps.setService(serviceType);
         String desc = dom.getElementValue(serviceElt, "Abstract");
-        serviceCaps.setDescription(desc);        
+        serviceCaps.getIdentification().setDescription(desc);        
         
         // Server URLS
-        readServers(dom, capabilitiesElt);
+        readOperationsMetadata(dom, capabilitiesElt);
         
         // Contents section
         readContents(dom, capabilitiesElt);

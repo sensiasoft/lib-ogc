@@ -38,11 +38,12 @@ import org.vast.util.ResponsibleParty;
  * @date Oct 27, 2005
  * @version 1.0
  */
-public class OWSServiceCapabilities extends OWSIdentification
+public class OWSServiceCapabilities extends OWSResponse
 {
 	// service identification
-	protected String service;
-	protected String version;
+	protected OWSIdentification identification;
+	
+	// additional service options
 	protected String fees;
 	protected String accessConstraints;
 	protected List<String> supportedVersions;
@@ -59,17 +60,18 @@ public class OWSServiceCapabilities extends OWSIdentification
 	// tables of operation->url
 	protected Map<String, String> getServers;
 	protected Map<String, String> postServers;
-
 	
 	
     public OWSServiceCapabilities()
     {
+    	messageType = "Capabilities";
+    	identification = new OWSIdentification();
     	serviceProvider = new ResponsibleParty();
     	supportedVersions = new ArrayList<String>(1);
     	layers = new ArrayList<OWSLayerCapabilities>(5);
     	exceptionTypes = new ArrayList<String>(1);
     	getServers = new Hashtable<String, String>();
-    	postServers = new Hashtable<String, String>();
+    	postServers = new Hashtable<String, String>();    	
     }
 
 
@@ -94,6 +96,18 @@ public class OWSServiceCapabilities extends OWSIdentification
 	public void setVersion(String version)
 	{
 		this.version = version;
+	}
+	
+	
+	public OWSIdentification getIdentification()
+	{
+		return identification;
+	}
+
+
+	public void setIdentification(OWSIdentification identification)
+	{
+		this.identification = identification;
 	}
 	
 	
@@ -191,13 +205,14 @@ public class OWSServiceCapabilities extends OWSIdentification
     {
     	StringBuffer text = new StringBuffer(service + " Service Capabilities: ");
     	
-    	text.append(title);
+    	text.append(identification.getTitle());
     			
-    	if (description != null)
+    	String desc = identification.getDescription();
+    	if (desc != null)
     	{
     		text.append("\n");
         	text.append("Description: ");
-    		text.append(description);
+    		text.append(desc);
     	}
     	
     	text.append("\n");

@@ -21,8 +21,10 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.ows;
 
+import org.vast.util.ResponsibleParty;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * <p><b>Title:</b><br/>
@@ -30,7 +32,7 @@ import org.w3c.dom.Element;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * 
+ * Base reader for all capabilities document based on OWS common 1.1
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -44,8 +46,144 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
 	@Override
 	public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		serviceCaps = new OWSServiceCapabilities();
+    	
+    	// Version
+        this.version = dom.getAttributeValue(capabilitiesElt, "version");
+        serviceCaps.setVersion(this.version);
+        
+        // Read Service Identification Section
+        Element serviceIdElt = dom.getElement(capabilitiesElt, "ServiceIdentification");
+        readIdentification(serviceCaps.getIdentification(), dom, serviceIdElt);
+                
+        // service type
+        String serviceType = dom.getElementValue(serviceIdElt, "ServiceType");
+        serviceCaps.setService(serviceType);
+        
+        // supported service versions
+        NodeList versionElts = dom.getElements(serviceIdElt, "ServiceTypeVersion");
+        int numElts = versionElts.getLength();
+		for (int i = 0; i < numElts; i++)
+		{
+			Element versionElt = (Element) versionElts.item(i);
+			String version = dom.getElementValue(versionElt);
+			serviceCaps.getSupportedVersions().add(version);
+		}
+        
+        // fees and access constraints
+        String fees = dom.getElementValue(serviceIdElt, "Fees");
+        serviceCaps.setFees(fees);
+        String constraints = dom.getElementValue(serviceIdElt, "AccessConstraints");
+        serviceCaps.setAccessConstraints(constraints);
+        
+        // service provider
+        Element providerElt = dom.getElement(capabilitiesElt, "ServiceProvider");
+        readServiceProvider(dom, providerElt);
+        
+        // Server URLS
+        readOperationsMetadata(dom, capabilitiesElt);
+        
+        // Contents section
+        readContents(dom, capabilitiesElt);
+        
+        return serviceCaps;
+	}
+	
+	
+	@Override
+	protected void readOperationsMetadata(DOMHelper dom, Element capabilitiesElt)
+	{
+		NodeList opElts = dom.getAllElements(capabilitiesElt, "OperationsMetadata/Operation");
+		int numElts = opElts.getLength();
+		for (int i = 0; i < numElts; i++)
+		{
+			Element opElt = (Element) opElts.item(i);
+			String opName = dom.getAttributeValue(opElt, "@name");
+			String getUrl = dom.getAttributeValue(opElt, "DCP/HTTP/Get/@href");
+			String postUrl = dom.getAttributeValue(opElt, "DCP/HTTP/Post/@href");
+			
+			if (getUrl != null)
+				serviceCaps.getGetServers().put(opName, getUrl);
+			
+			if (postUrl != null)
+				serviceCaps.getPostServers().put(opName, postUrl);
+		}
+	}
+	
+	
+	/**
+	 * Reads a keyword list
+	 * @param layerElt
+	 * @return
+	 */
+	protected void readIdentification(OWSIdentification idObject, DOMHelper dom, Element parentElt)
+	{
+		String serviceTitle = dom.getElementValue(parentElt, "Title");
+		idObject.setTitle(serviceTitle);
+        
+        String desc = dom.getElementValue(parentElt, "Abstract");
+        idObject.setDescription(desc);
+		
+		NodeList keywordElts = dom.getElements(parentElt, "Keywords/Keyword");
+		int numElts = keywordElts.getLength();
+
+		for (int i = 0; i < numElts; i++)
+		{
+			Element keywordElt = (Element) keywordElts.item(i);
+			String keyword = dom.getElementValue(keywordElt);
+			idObject.getKeywords().add(keyword);
+		}
 	}
 
+	
+	/**
+	 * Reads the service provider section
+	 * @param dom
+	 * @param parentElt
+	 * @return
+	 */
+	protected void readServiceProvider(DOMHelper dom, Element providerElt)
+	{
+		ResponsibleParty provider = serviceCaps.getServiceProvider();
+		String text;
+		
+		text = dom.getElementValue(providerElt, "ProviderName");
+		provider.setOrganizationName(text);
+		
+		text = dom.getElementValue(providerElt, "ProviderSite");
+		provider.setWebsite(text);
+		
+		Element contactElt = dom.getElement(providerElt, "ServiceContact");		
+		text = dom.getElementValue(contactElt, "IndividualName");
+		provider.setIndividualName(text);		
+		text = dom.getElementValue(contactElt, "PositionName");
+		provider.setPositionName(text);		
+		text = dom.getElementValue(contactElt, "Role");
+		provider.setRole(text);
+		
+		Element contactInfoElt = dom.getElement(contactElt, "ContactInfo");		
+		text = dom.getElementValue(contactInfoElt, "Phone/Voice");
+		provider.setVoiceNumber(text);		
+		text = dom.getElementValue(contactInfoElt, "Phone/Facsimile");
+		provider.setFaxNumber(text);		
+		text = dom.getElementValue(contactInfoElt, "HoursOfService");
+		provider.setHoursOfService(text);		
+		text = dom.getElementValue(contactInfoElt, "ContactInstructions");
+		provider.setContactInstructions(text);
+		
+		Element addressElt = dom.getElement(contactInfoElt, "Address");		
+		text = dom.getElementValue(addressElt, "DeliveryPoint");
+		provider.setDeliveryPoint(text);		
+		text = dom.getElementValue(addressElt, "City");
+		provider.setCity(text);
+		text = dom.getElementValue(addressElt, "AdministrativeArea");
+		provider.setAdministrativeArea(text);
+		text = dom.getElementValue(addressElt, "PostalCode");
+		provider.setPostalCode(text);
+		text = dom.getElementValue(addressElt, "Country");
+		provider.setCountry(text);
+		text = dom.getElementValue(addressElt, "ElectronicMailAddress");
+		provider.setEmail(text);
+		
+	}
 }
