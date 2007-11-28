@@ -20,6 +20,7 @@
 
 package org.vast.ows;
 
+import java.io.OutputStream;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -41,7 +42,7 @@ import org.w3c.dom.Element;
  */
 public interface OWSResponseWriter<ResponseType extends OWSResponse>
 {
-
+		
     /**
      * Builds a DOM element containing the response XML
      * Note that the element is not yet appended to any parent.
@@ -62,4 +63,22 @@ public interface OWSResponseWriter<ResponseType extends OWSResponse>
      */
     public Element buildXMLResponse(DOMHelper dom, ResponseType response, String version) throws OWSException;
     
+    
+    /**
+     * Writes the XML response directly to the output stream
+     * @param os
+     * @param response
+     * @throws OWSException
+     */
+    public void writeXMLResponse(OutputStream os, ResponseType response) throws OWSException;
+    
+    
+    /**
+     * Writes the XML response for desired version directly to the output stream
+     * @param os
+     * @param response
+     * @param version
+     * @throws OWSException
+     */
+    public void writeXMLResponse(OutputStream os, ResponseType response, String version) throws OWSException;
 }

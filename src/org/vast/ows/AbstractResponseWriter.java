@@ -21,6 +21,8 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.ows;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -40,7 +42,9 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractResponseWriter<ResponseType extends OWSResponse> implements OWSResponseWriter<ResponseType>
 {
-
+	public final static String ioError = "IO error while writing XML response to stream";
+	
+	
 	public abstract Element buildXMLResponse(DOMHelper dom, ResponseType response, String version) throws OWSException;
 	
 	
@@ -48,5 +52,26 @@ public abstract class AbstractResponseWriter<ResponseType extends OWSResponse> i
 	{
 		return buildXMLResponse(dom, response, response.getVersion());
 	}
+	
+	
+	public void writeXMLResponse(OutputStream os, ResponseType response, String version) throws OWSException
+    {
+    	try
+        {
+            DOMHelper dom = new DOMHelper();
+            Element responseElt = buildXMLResponse(dom, response, version);
+            dom.serialize(responseElt, os, null);
+        }
+        catch (IOException e)
+        {
+            throw new OWSException(ioError, e);
+        }        
+    }
+	
+	
+	public void writeXMLResponse(OutputStream os, ResponseType response) throws OWSException
+    {
+    	writeXMLResponse(os, response, response.getVersion());      
+    }
 
 }

@@ -45,9 +45,10 @@ import org.vast.util.DateTimeFormat;
  */
 public abstract class AbstractRequestWriter<RequestType extends OWSRequest> implements OWSRequestWriter<RequestType>
 {
-    protected final static String noKVP = "KVP request not supported in ";
+	public final static String ioError = "IO error while writing XML request to stream";
+	protected final static String noKVP = "KVP request not supported in ";
     protected final static String noXML = "XML request not supported in ";
-    
+    	
     
 	public AbstractRequestWriter()
 	{	
@@ -68,7 +69,7 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
         }
         catch (IOException e)
         {
-            throw new OWSException("IO Error while writing XML request", e);
+            throw new OWSException(ioError, e);
         }
     }
     

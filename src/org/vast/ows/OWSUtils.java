@@ -54,8 +54,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     public final static String soapUri = "http://schemas.xmlsoap.org/soap/envelope/";
 	public final static String unsupportedSpec = "No support for ";
     public final static String invalidEndpoint = "No Endpoint URL specified in request object";
-    public final static String ioError = "IO error while writing XML to stream";
-    
+        
     
     /**
      * Helper method to parse any OWS query from an XML/DOM tree
@@ -105,7 +104,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
 		}
 		catch (DOMHelperException e)
 		{
-			throw new OWSException(ioError, e);
+			throw new OWSException(AbstractRequestReader.invalidXML, e);
 		}
     }
     
@@ -220,7 +219,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         }
         catch (IOException e)
         {
-            throw new OWSException(ioError, e);
+            throw new OWSException(AbstractRequestWriter.ioError, e);
         }        
     }
 
@@ -307,7 +306,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         }
         catch (IOException e)
         {
-            throw new OWSException(ioError, e);
+            throw new OWSException(AbstractResponseWriter.ioError, e);
         }        
     }
     
