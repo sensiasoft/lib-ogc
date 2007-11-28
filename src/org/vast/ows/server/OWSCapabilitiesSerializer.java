@@ -18,49 +18,53 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows;
+package org.vast.ows.server;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import org.vast.xml.DOMHelper;
+
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * Abstract Capabilities Writer
+ * <p><b>Title:</b><br/>
+ * OWS Capabilities Serializer
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base abstract class for writing an OWS server capabilities document
- * as a DOM element or in an output stream.
+ * Seializes a Capabilities document to the given
+ * output stream. This will also skip elements called
+ * internalInfo that are used internally by our servlets.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 2, 2007
+ * @date Aug 22, 2006
  * @version 1.0
  */
-public abstract class AbstractCapabilitiesWriter implements OWSCapabilitiesWriter
+public class OWSCapabilitiesSerializer extends XMLSerializer
 {
-
-    public abstract Element writeServiceCapabilities(DOMHelper dom, OWSServiceCapabilities caps) throws OWSException;
-    protected abstract void writeContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps) throws OWSException;
     
-    
-    public void writeServiceCapabilities(OutputStream os, OWSServiceCapabilities caps) throws OWSException
+    public OWSCapabilitiesSerializer()
     {
-        try
+        this._format = new OutputFormat();
+        this._format.setMethod("xml");
+        this._format.setIndenting(true);
+        this._format.setLineWidth(0);
+    }
+    
+    
+    @Override
+    protected void serializeElement(Element elt) throws IOException
+    {
+        if (elt.getLocalName().equals("internalInfo"))
         {
-            DOMHelper dom = new DOMHelper();
-            dom.createDocument("Capabilities");
-            Element requestElt = writeServiceCapabilities(dom, caps);
-            dom.serialize(requestElt, os, null);                   
+            // do nothing (skip serialization of this element!)
         }
-        catch (IOException e)
+        else
         {
-            throw new OWSException("IO Error while writing service capabilities XML", e);
+            super.serializeElement(elt);
         }
     }
-
 }

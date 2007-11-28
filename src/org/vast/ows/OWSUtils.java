@@ -259,6 +259,30 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
 	 * Helper method to build a DOM element containing the response XML
+	 * for the specified version 
+	 * @param dom
+	 * @param response
+	 * @param version
+	 * @return
+	 */
+	public Element buildXMLResponse(DOMHelper dom, OWSResponse response, String version) throws OWSException
+	{
+		try
+	    {
+	        OWSResponseWriter<OWSResponse> writer = (OWSResponseWriter<OWSResponse>)OGCRegistry.createWriter(response.service, response.messageType, version);
+	        Element requestElt = writer.buildXMLResponse(dom, response, version);
+	        return requestElt;
+	    }
+	    catch (IllegalStateException e)
+	    {
+	    	String spec = response.service + " " + response.messageType + " v" + version;
+	    	throw new OWSException(unsupportedSpec + spec, e);
+	    }
+	}
+	
+	
+	/**
+	 * Helper method to build a DOM element containing the response XML
 	 * in a version agnostic way. The element is not appended to any parent 
 	 * @param dom
 	 * @param response
@@ -266,35 +290,34 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
 	 */
 	public Element buildXMLResponse(DOMHelper dom, OWSResponse response) throws OWSException
 	{
-		try
-	    {
-	        OWSResponseWriter<OWSResponse> writer = (OWSResponseWriter<OWSResponse>)OGCRegistry.createWriter(response.service, response.messageType, response.version);
-	        Element requestElt = writer.buildXMLResponse(dom, response);
-	        return requestElt;
-	    }
-	    catch (IllegalStateException e)
-	    {
-	    	String spec = response.service + " " + response.messageType + " v" + response.version;
-	    	throw new OWSException(unsupportedSpec + spec, e);
-	    }
+		return buildXMLResponse(dom, response, response.getVersion());
 	}
 	
 	
 	/**
      * Helper method to write any OWS XML response to an output stream
      */
-    public void writeXMLResponse(OutputStream os, OWSResponse response) throws OWSException
+    public void writeXMLResponse(OutputStream os, OWSResponse response, String version) throws OWSException
     {
     	try
         {
             DOMHelper dom = new DOMHelper();
-            Element responseElt = buildXMLResponse(dom, response);
+            Element responseElt = buildXMLResponse(dom, response, version);
             dom.serialize(responseElt, os, null);
         }
         catch (IOException e)
         {
             throw new OWSException(ioError, e);
         }        
+    }
+    
+    
+    /**
+     * Helper method to write any OWS XML response to an output stream
+     */
+    public void writeXMLResponse(OutputStream os, OWSResponse response) throws OWSException
+    {
+    	writeXMLResponse(os, response, response.getVersion());
     }
     
     

@@ -51,24 +51,24 @@ public class WCSCapabilitiesWriterV10 extends OWSCapabilitiesWriterV0
 {
 
 	@Override
-	public Element writeServiceCapabilities(DOMHelper dom, OWSServiceCapabilities caps) throws OWSException
+	public Element buildXMLResponse(DOMHelper dom, OWSServiceCapabilities caps, String version) throws OWSException
 	{
 		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS));
 		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
 		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
 		
 		Element capsElt = dom.createElement("WCS_Capabilities");
-		writeRootAttributes(dom, capsElt, caps);
-		writeService(dom, capsElt, caps);		
+		writeRootAttributes(dom, capsElt, caps, version);
+		writeService(dom, capsElt, caps);
 		writeCapability(dom, capsElt, caps);
-		writeContents(dom, capsElt, caps);
+		writeContents(dom, capsElt, caps, version);
 				
 		return capsElt;
 	}
 	
 	
 	@Override
-	protected void writeContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps) throws OWSException
+	protected void writeContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps, String version) throws OWSException
 	{
 		Element contentsElt = dom.addElement(capsElt, "ContentMetadata");
 		

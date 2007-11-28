@@ -45,9 +45,21 @@ public interface OWSResponseWriter<ResponseType extends OWSResponse>
     /**
      * Builds a DOM element containing the response XML
      * Note that the element is not yet appended to any parent.
-     * @param query
+     * @param dom
+     * @param response
      * @return
      */
-    public Element buildXMLResponse(DOMHelper dom, ResponseType query) throws OWSException;
+    public Element buildXMLResponse(DOMHelper dom, ResponseType response) throws OWSException;
+    
+    
+    /**
+     * Builds a DOM element containing the response XML for given version
+     * Note that the element is not yet appended to any parent.
+     * @param dom
+     * @param response
+     * @param version
+     * @return
+     */
+    public Element buildXMLResponse(DOMHelper dom, ResponseType response, String version) throws OWSException;
     
 }

@@ -22,8 +22,8 @@ package org.vast.ows.wcs;
 
 import java.util.List;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSResponseWriter;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
@@ -43,24 +43,27 @@ import org.vast.xml.QName;
  * @date 23 nov. 07
  * @version 1.0
  */
-public class CoverageDescriptionsWriterV1 implements OWSResponseWriter<CoverageDescriptions>
+public class CoverageDescriptionsWriterV1 extends AbstractResponseWriter<CoverageDescriptions>
 {
 	
 	
-	public Element buildXMLResponse(DOMHelper dom, CoverageDescriptions desc) throws OWSException
+	public Element buildXMLResponse(DOMHelper dom, CoverageDescriptions desc, String version) throws OWSException
 	{
 		// root element and ns URI according to version
 		Element rootElt;
-		if (desc.getNormalizedVersion().equals("1"))
+		if (OGCRegistry.normalizeVersionString(version).equals("1"))
 		{
 			dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS));
 			rootElt = dom.createElement("CoverageDescription");
 		}
 		else
 		{
-			dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, desc.getVersion()));
+			dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, version));
 			rootElt = dom.createElement("CoverageDescriptions");
 		}
+		
+		// write response version
+		dom.setAttributeValue(rootElt, "@version", version);
 
 		// add all coverage descriptions
 		List<WCSMetadataProxy> metadataProxys = desc.getMetadataProxys();

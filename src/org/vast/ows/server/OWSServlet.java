@@ -23,7 +23,6 @@ package org.vast.ows.server;
 import javax.servlet.http.*;
 import java.io.*;
 import org.apache.log4j.Logger;
-import org.vast.ows.OWSCapabilitiesSerializer;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 

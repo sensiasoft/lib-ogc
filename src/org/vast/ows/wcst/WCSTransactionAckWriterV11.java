@@ -43,12 +43,12 @@ import org.vast.ows.*;
  * @date 22 nov. 07
  * @version 1.0
  */
-public class WCSTransactionAckWriterV11 implements OWSResponseWriter<WCSTransactionAck>
+public class WCSTransactionAckWriterV11 extends AbstractResponseWriter<WCSTransactionAck>
 {
 	protected WCSTransactionWriterV11 requestWriter = new WCSTransactionWriterV11();
 	
 	
-	public Element buildXMLResponse(DOMHelper dom, WCSTransactionAck response) throws OWSException
+	public Element buildXMLResponse(DOMHelper dom, WCSTransactionAck response, String version) throws OWSException
 	{
 		WCSTransactionRequest request = response.getRequest();
 		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, request.getVersion()));
@@ -67,4 +67,5 @@ public class WCSTransactionAckWriterV11 implements OWSResponseWriter<WCSTransact
 		
 		return rootElt;
 	}
+
 }

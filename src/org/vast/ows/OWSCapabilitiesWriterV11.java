@@ -41,22 +41,24 @@ import org.w3c.dom.Element;
  * @date 27 nov. 07
  * @version 1.0
  */
-public abstract class OWSCapabilitiesWriterV11 extends AbstractCapabilitiesWriter
+public abstract class OWSCapabilitiesWriterV11 extends AbstractResponseWriter<OWSServiceCapabilities>
 {
-
+		
+	protected abstract void writeContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps, String version) throws OWSException; 
+	
+	
 	/**
 	 * Writes version and updateSequence attributes on root Capabilities elt
 	 * @param dom
 	 * @param capsElt
 	 * @param caps
 	 */
-	protected void writeRootAttributes(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps)
+	protected void writeRootAttributes(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps, String version)
 	{
 		String text;
 		
 		// mandatory version attribute
-		text = caps.getVersion();
-		dom.setAttributeValue(capsElt, "version", text);
+		dom.setAttributeValue(capsElt, "version", version);
 		
 		// updateSequence attribute
 		text = caps.getUpdateSequence();
