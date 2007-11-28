@@ -20,7 +20,6 @@
 
 package org.vast.ows;
 
-import java.io.OutputStream;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -57,14 +56,5 @@ public interface OWSRequestWriter<QueryType extends OWSRequest>
      * @return
      */
     public Element buildXMLQuery(DOMHelper dom, QueryType query) throws OWSException;
-    
-    
-    /**
-     * Writes an XML query to the specified output stream
-     * @param os
-     * @param owsQuery
-     * @throws OWSException
-     */
-    public void writeXMLQuery(OutputStream os, QueryType owsQuery) throws OWSException;
 
 }

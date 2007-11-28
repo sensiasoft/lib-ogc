@@ -22,7 +22,6 @@
 package org.vast.ows;
 
 import java.util.Enumeration;
-import java.util.List;
 import org.vast.util.ResponsibleParty;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -33,7 +32,8 @@ import org.w3c.dom.Element;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base writer for all service capabilities based on OWS common 1.1
+ * Base writer for all service capabilities based on the
+ * pre-version of OWS common (here called v0)
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  * @date 27 nov. 07
  * @version 1.0
  */
-public abstract class OWSCapabilitiesWriterV11 extends AbstractCapabilitiesWriter
+public abstract class OWSCapabilitiesWriterV0 extends AbstractCapabilitiesWriter
 {
 
 	/**
@@ -66,39 +66,33 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractCapabilitiesWrite
 	
 	
 	/**
-	 * Writes the whole ServiceIndetification section
+	 * Writes the whole ServiceIdentification section
 	 * @param dom
 	 * @param capsElt
 	 * @param caps
 	 */
-	protected void writeServiceIdentification(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps)
+	protected void writeService(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps)
 	{
-		Element idElt = dom.addElement(capsElt, "ows:ServiceIdentification");
-		writeIdentification(dom, idElt, caps.getIdentification());
+		Element serviceElt = dom.addElement(capsElt, "Service");
 		
-		// mandatory service type
-		String text = caps.getService();
-		dom.setElementValue(idElt, "ows:ServiceType", text);
-		
-		// at least one supported version
-		List<String> versions = caps.getSupportedVersions();
-		for (int i=0; i<versions.size(); i++)
-			dom.setElementValue(idElt, "+ows:ServiceTypeVersion", versions.get(i));
+		writeIdentification(dom, serviceElt, caps.getIdentification());				
+		writeKeywords(dom, serviceElt, caps.getIdentification());
+		writeResponsibleParty(dom, serviceElt, caps.getServiceProvider());
 		
 		// fees
-		text = caps.getFees();
+		String text = caps.getFees();
 		if (text != null)
-			dom.setElementValue(idElt, "ows:Fees", text);
+			dom.setElementValue(serviceElt, "fees", text);
 		
 		// access constraints
 		text = caps.getAccessConstraints();
 		if (text != null)
-			dom.setElementValue(idElt, "ows:AccessConstraints", text);
+			dom.setElementValue(serviceElt, "accessConstraints", text);
 	}
 	
 	
 	/**
-	 * Append elements defined in ows:DescriptionType to parentElt
+	 * Append elements defined in ows:DescriptionType to parent element
 	 * @param dom
 	 * @param parentElt
 	 * @param identification
@@ -110,23 +104,37 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractCapabilitiesWrite
 		if (identification == null)
 			return;
 		
-		text = identification.getTitle();
-		if (text != null)
-			dom.setElementValue(parentElt, "ows:Title", text);
-		
 		text = identification.getDescription();
 		if (text != null)
-			dom.setElementValue(parentElt, "ows:Abstract", text);
+			dom.setElementValue(parentElt, "description", text);
 		
+		text = identification.getIdentifier();
+		if (text != null)
+			dom.setElementValue(parentElt, "name", text);
+		
+		text = identification.getTitle();
+		if (text != null)
+			dom.setElementValue(parentElt, "label", text);
+	}
+	
+	
+	/**
+	 * Append keyword list to parent parent element
+	 * @param dom
+	 * @param parentElt
+	 * @param identification
+	 */
+	protected void writeKeywords(DOMHelper dom, Element parentElt, OWSIdentification identification)
+	{
 		// write all keywords
 		if (!identification.getKeywords().isEmpty())
 		{
-			Element keywordsElt = dom.addElement(parentElt, "ows:Keywords");
+			Element keywordsElt = dom.addElement(parentElt, "keywords");
 			int numElts = identification.getKeywords().size();
 			for (int i = 0; i < numElts; i++)
 			{
 				String keyword = identification.getKeywords().get(i);
-				dom.setElementValue(keywordsElt, "+ows:Keyword", keyword);
+				dom.setElementValue(keywordsElt, "+keyword", keyword);
 			}
 		}
 	}
@@ -138,7 +146,7 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractCapabilitiesWrite
 	 * @param capsElt
 	 * @param provider
 	 */
-	protected void writeServiceProvider(DOMHelper dom, Element capsElt, ResponsibleParty provider)
+	protected void writeResponsibleParty(DOMHelper dom, Element capsElt, ResponsibleParty provider)
 	{
 		String text;
 		
@@ -146,66 +154,46 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractCapabilitiesWrite
 			return;
 		
 		// ServiceProvider element
-		Element providerElt = dom.addElement(capsElt, "ows:ServiceProvider");
-
-		text = provider.getOrganizationName();
-		dom.setElementValue(providerElt, "ows:ProviderName", text);
-	
-		text = provider.getWebsite();
-		if (text != null)
-			dom.setAttributeValue(providerElt, "ows:ProviderSite/@xlink:href", text);
-		
-		// ServiceContact element
-		Element contactElt = dom.addElement(providerElt, "ows:ServiceContact");
+		Element respPartyElt = dom.addElement(capsElt, "responsibleParty");
 		text = provider.getIndividualName();
 		if (text != null)
-			dom.setElementValue(contactElt, "ows:IndividualName", text);
+			dom.setElementValue(respPartyElt, "individualName", text);
+		text = provider.getOrganizationName();
+		if (text != null)
+			dom.setElementValue(respPartyElt, "organizationName", text);
 		text = provider.getPositionName();
 		if (text != null)
-			dom.setElementValue(contactElt, "ows:PositionName", text);
+			dom.setElementValue(respPartyElt, "positionName", text);
 				
 		// Contact Info element and children
-		Element contactInfoElt = dom.addElement(contactElt, "ows:ContactInfo");
+		Element contactInfoElt = dom.addElement(respPartyElt, "contactInfo");
 		text = provider.getVoiceNumber();
 		if (text != null)
-			dom.setElementValue(contactInfoElt, "ows:Phone/ows:Voice", text);
+			dom.setElementValue(contactInfoElt, "phone/voice", text);
 		text = provider.getFaxNumber();
 		if (text != null)
-			dom.setElementValue(contactInfoElt, "ows:Phone/ows:Facsimile", text);
+			dom.setElementValue(contactInfoElt, "phone/facsimile", text);
 		
 		// Address element and children	
-		Element addressElt = dom.addElement(contactInfoElt, "ows:Address");
+		Element addressElt = dom.addElement(contactInfoElt, "address");
 		text = provider.getDeliveryPoint();		
 		if (text != null)
-			dom.setElementValue(addressElt, "ows:DeliveryPoint", text);
+			dom.setElementValue(addressElt, "deliveryPoint", text);
 		text = provider.getCity();
 		if (text != null)
-			dom.setElementValue(addressElt, "ows:City", text);
+			dom.setElementValue(addressElt, "city", text);
 		text = provider.getAdministrativeArea();
 		if (text != null)
-			dom.setElementValue(addressElt, "ows:AdministrativeArea", text);
+			dom.setElementValue(addressElt, "administrativeArea", text);
 		text = provider.getPostalCode();
 		if (text != null)
-			dom.setElementValue(addressElt, "ows:PostalCode", text);
+			dom.setElementValue(addressElt, "postalCode", text);
 		text = provider.getCountry();
 		if (text != null)
-			dom.setElementValue(addressElt, "ows:Country", text);
+			dom.setElementValue(addressElt, "country", text);
 		text = provider.getEmail();
 		if (text != null)
-			dom.setElementValue(addressElt, "ows:ElectronicMailAddress", text);
-		
-		// end of ContactInfo
-		text = provider.getHoursOfService();
-		if (text != null)
-			dom.setElementValue(contactInfoElt, "ows:HoursOfService", text);
-		text = provider.getContactInstructions();
-		if (text != null)
-			dom.setElementValue(contactInfoElt, "ows:ContactInstructions", text);
-		
-		// end of ServiceContact		
-		text = provider.getRole();
-		if (text != null)
-			dom.setElementValue(contactElt, "ows:Role", text);
+			dom.setElementValue(addressElt, "electronicMailAddress", text);
 	}
 	
 	
@@ -215,13 +203,13 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractCapabilitiesWrite
 	 * @param capsElt
 	 * @param caps
 	 */
-	protected void writeOperationsMetadata(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps)
+	protected void writeCapability(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps)
 	{
 		if (caps.getGetServers().isEmpty() && caps.getPostServers().isEmpty())
 			return;
 		
 		// OperationsMetadata element
-		Element opsElt = dom.addElement(capsElt, "ows:OperationsMetadata");
+		Element requestElt = dom.addElement(capsElt, "Capability/Request");
 		
 		// first add everything in GetServer table
 		Enumeration<String> getOps = caps.getGetServers().keys();
@@ -229,14 +217,13 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractCapabilitiesWrite
 		{
 			String opName = getOps.nextElement();
 			String opUrl =  caps.getGetServers().get(opName);
-			Element opElt = dom.addElement(opsElt, "+ows:Operation");
-			dom.setAttributeValue(opElt, "@name", opName);
-			dom.setAttributeValue(opElt, "ows:DCP/ows:HTTP/ows:Get/@xlink:href", opUrl);
+			Element opElt = dom.addElement(requestElt, opName);
+			dom.setAttributeValue(opElt, "DCPType/HTTP/Get/OnlineResource/@xlink:href", opUrl);
 			
 			// also add POST url if found
 			String postUrl = caps.getPostServers().get(opName);
 			if (postUrl != null)
-				dom.setAttributeValue(opElt, "ows:DCP/ows:HTTP/ows:Post/@xlink:href", postUrl);
+				dom.setAttributeValue(opElt, "DCPType/HTTP/Post/OnlineResource/@xlink:href", postUrl);
 		}
 		
 		// now loop through all PostServers + add only the ones with only POST support
@@ -248,9 +235,8 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractCapabilitiesWrite
 			if (caps.getGetServers().get(opName) != null)
 				continue;
 			
-			Element opElt = dom.addElement(opsElt, "+ows:Operation");
-			dom.setAttributeValue(opElt, "@name", opName);
-			dom.setAttributeValue(opElt, "ows:DCP/ows:HTTP/ows:Post/@xlink:href", opUrl);
+			Element opElt = dom.addElement(requestElt, opName);
+			dom.setAttributeValue(opElt, "DCPType/HTTP/Post/OnlineResource/@xlink:href", opUrl);
 		}
 		
 	}

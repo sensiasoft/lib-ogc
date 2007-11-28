@@ -40,6 +40,9 @@ import org.vast.util.ResponsibleParty;
  */
 public class OWSServiceCapabilities extends OWSResponse
 {
+	// updateSeqience
+	protected String updateSequence = "0";
+	
 	// service identification
 	protected OWSIdentification identification;
 	
@@ -73,32 +76,20 @@ public class OWSServiceCapabilities extends OWSResponse
     	getServers = new Hashtable<String, String>();
     	postServers = new Hashtable<String, String>();    	
     }
-
-
-	public String getService()
-	{
-		return service;
-	}
-
-
-	public void setService(String service)
-	{
-		this.service = service;
-	}
-
-
-	public String getVersion()
-	{
-		return version;
-	}
-
-
-	public void setVersion(String version)
-	{
-		this.version = version;
-	}
 	
 	
+	public String getUpdateSequence()
+	{
+		return updateSequence;
+	}
+
+
+	public void setUpdateSequence(String updateSequence)
+	{
+		this.updateSequence = updateSequence;
+	}
+
+
 	public OWSIdentification getIdentification()
 	{
 		return identification;

@@ -20,8 +20,6 @@
 
 package org.vast.ows;
 
-import java.io.InputStream;
-
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -50,15 +48,6 @@ public interface OWSRequestReader<QueryType extends OWSRequest>
      * @throws OWSException
      */
     public QueryType readURLQuery(String queryString) throws OWSException;
-    
-    
-    /**
-     * Reads XML request parameters from the given input stream
-     * @param input
-     * @return
-     * @throws OWSException
-     */
-    public QueryType readXMLQuery(InputStream is) throws OWSException;
 
 
     /**

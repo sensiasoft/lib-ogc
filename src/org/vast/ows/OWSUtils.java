@@ -31,6 +31,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.DOMHelperException;
 import org.w3c.dom.Element;
 
 
@@ -53,6 +54,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     public final static String soapUri = "http://schemas.xmlsoap.org/soap/envelope/";
 	public final static String unsupportedSpec = "No support for ";
     public final static String invalidEndpoint = "No Endpoint URL specified in request object";
+    public final static String ioError = "IO error while writing XML to stream";
     
     
     /**
@@ -93,9 +95,18 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     /**
      * Helper method to parse any OWS query directly from an InputStream
      */
-    public OWSRequest readXMLQuery(InputStream is) throws OWSException
+    public OWSRequest readXMLQuery(InputStream is, String service) throws OWSException
     {
-        return null;
+    	try
+		{
+			DOMHelper dom = new DOMHelper(is, false);
+			OWSRequest request = readXMLQuery(dom, dom.getRootElement(), service);
+			return request;
+		}
+		catch (DOMHelperException e)
+		{
+			throw new OWSException(ioError, e);
+		}
     }
     
     
@@ -201,15 +212,15 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
      */
     public void writeXMLQuery(OutputStream os, OWSRequest request) throws OWSException
     {
-        try
+    	try
         {
-            OWSRequestWriter<OWSRequest> writer = (OWSRequestWriter<OWSRequest>)OGCRegistry.createWriter(request.service, request.operation, request.version);
-            writer.writeXMLQuery(os, request);
+            DOMHelper dom = new DOMHelper();
+            Element requestElt = buildXMLQuery(dom, request);
+            dom.serialize(requestElt, os, null);
         }
-        catch (IllegalStateException e)
+        catch (IOException e)
         {
-        	String spec = request.service + " " + request.operation + " v" + request.version;
-        	throw new OWSException(unsupportedSpec + spec, e);
+            throw new OWSException(ioError, e);
         }        
     }
 
@@ -247,25 +258,43 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     
     /**
-     * Helper method to build a DOM element containing the response XML
-     * in a version agnostic way. The element is not appended to any parent 
-     * @param dom
-     * @param response
-     * @return
+	 * Helper method to build a DOM element containing the response XML
+	 * in a version agnostic way. The element is not appended to any parent 
+	 * @param dom
+	 * @param response
+	 * @return
+	 */
+	public Element buildXMLResponse(DOMHelper dom, OWSResponse response) throws OWSException
+	{
+		try
+	    {
+	        OWSResponseWriter<OWSResponse> writer = (OWSResponseWriter<OWSResponse>)OGCRegistry.createWriter(response.service, response.messageType, response.version);
+	        Element requestElt = writer.buildXMLResponse(dom, response);
+	        return requestElt;
+	    }
+	    catch (IllegalStateException e)
+	    {
+	    	String spec = response.service + " " + response.messageType + " v" + response.version;
+	    	throw new OWSException(unsupportedSpec + spec, e);
+	    }
+	}
+	
+	
+	/**
+     * Helper method to write any OWS XML response to an output stream
      */
-    public Element buildXMLResponse(DOMHelper dom, OWSResponse response) throws OWSException
+    public void writeXMLResponse(OutputStream os, OWSResponse response) throws OWSException
     {
     	try
         {
-            OWSResponseWriter<OWSResponse> writer = (OWSResponseWriter<OWSResponse>)OGCRegistry.createWriter(response.service, response.messageType, response.version);
-            Element requestElt = writer.buildXMLResponse(dom, response);
-            return requestElt;
+            DOMHelper dom = new DOMHelper();
+            Element responseElt = buildXMLResponse(dom, response);
+            dom.serialize(responseElt, os, null);
         }
-        catch (IllegalStateException e)
+        catch (IOException e)
         {
-        	String spec = response.service + " " + response.messageType + " v" + response.version;
-        	throw new OWSException(unsupportedSpec + spec, e);
-        }
+            throw new OWSException(ioError, e);
+        }        
     }
     
     
