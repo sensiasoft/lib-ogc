@@ -55,6 +55,7 @@ public class CoverageDescriptionsWriterV10 extends AbstractResponseWriter<Covera
 		// setup ns and create root elt
 		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS));
 		Element rootElt = dom.createElement("CoverageDescription");
+		dom.setAttributeValue(rootElt, "@version", "1.0");
 
 		// add all coverage descriptions
 		List<CoverageDescription> descriptions = response.getDescriptions();
