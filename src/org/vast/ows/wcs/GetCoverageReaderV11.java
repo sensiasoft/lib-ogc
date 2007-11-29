@@ -36,12 +36,12 @@ import org.vast.ows.util.TimeInfo;
 
 /**
  * <p><b>Title:</b><br/>
- * GetCoverage Request Reader v1.0
+ * GetCoverage Request Reader v1.1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Provides methods to parse a KVP or XML GetCoverage request and
- * create a GetCoverage object for version 1.0
+ * create a GetCoverage object for version 1.1.1
  * </p>
  *
  * <p>Copyright (c) 2007</p>

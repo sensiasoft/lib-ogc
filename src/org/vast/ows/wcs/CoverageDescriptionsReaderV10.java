@@ -55,15 +55,15 @@ public class CoverageDescriptionsReaderV10 extends AbstractResponseReader<Covera
 	public CoverageDescriptions readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 		CoverageDescriptions response = new CoverageDescriptions();
-		String version = dom.getAttributeValue(responseElt, "@version");
-		response.setVersion(version);
+		response.setVersion("1.0");
 
 		NodeList descElts = dom.getElements(responseElt, "CoverageOffering");
 		for (int i = 0; i < descElts.getLength(); i++)
 		{
 			Element offeringElt = (Element) descElts.item(i);
 			CoverageDescription desc = new CoverageDescription();
-
+			response.getDescriptions().add(desc);
+			
 			// title, abstract, identifier elts
 			readIdentification(dom, offeringElt, desc);
 
@@ -117,6 +117,29 @@ public class CoverageDescriptionsReaderV10 extends AbstractResponseReader<Covera
 
 				field.getAxisList().add(axis);
 			}
+			
+			// try to read one numerical null value
+			try
+			{
+				String nullValue = dom.getElementValue(rangeSetElt, "nullValues/singleValue");
+				if (nullValue != null)
+					field.setNullValue(Double.parseDouble(nullValue));
+			}
+			catch (NumberFormatException e)
+			{
+			}
+			
+			// supported crs
+			NodeList crsElts = dom.getElements(offeringElt, "supportedCRSs/requestResponseCRSs");
+			for (int j = 0; j < crsElts.getLength(); j++)
+			{
+				Element crsElt = (Element) crsElts.item(j);
+				String crsName = dom.getElementValue(crsElt);
+				desc.getCrsList().add(crsName);
+			}
+			
+			// native crs
+			desc.setNativeCrs(dom.getElementValue(offeringElt, "supportedCRSs/nativeCRSs"));
 
 			// supported formats
 			NodeList formatElts = dom.getElements(offeringElt, "supportedFormats/formats");
@@ -130,18 +153,6 @@ public class CoverageDescriptionsReaderV10 extends AbstractResponseReader<Covera
 			// native format
 			desc.setNativeFormat(dom.getAttributeValue(offeringElt, "supportedFormats/@nativeFormat"));
 
-			// supported crs
-			NodeList crsElts = dom.getElements(offeringElt, "supportedCRSs/requestResponseCRSs");
-			for (int j = 0; j < crsElts.getLength(); j++)
-			{
-				Element crsElt = (Element) crsElts.item(j);
-				String crsName = dom.getElementValue(crsElt);
-				desc.getCrsList().add(crsName);
-			}
-			
-			// native crs
-			desc.setNativeCrs(dom.getElementValue(offeringElt, "supportedCRSs/nativeCRSs"));
-
 			// other interpolation methods
 			NodeList interpElts = dom.getElements(offeringElt, "supportedInterpolations/interpolationMethod");
 			for (int j = 0; j < interpElts.getLength(); j++)
@@ -154,8 +165,6 @@ public class CoverageDescriptionsReaderV10 extends AbstractResponseReader<Covera
 			// set default method
 			String defaultMethod = dom.getAttributeValue(offeringElt, "supportedInterpolations/@default");
 			field.setDefaultInterpolationMethod(defaultMethod);
-
-			response.getDescriptions().add(desc);
 		}
 		
 		return response;

@@ -23,8 +23,8 @@ package org.vast.ows.wcs;
 import java.util.List;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractResponseWriter;
-import org.vast.ows.OWSCommonWriterV11;
 import org.vast.ows.OWSException;
+import org.vast.ows.gml.GMLEnvelopeWriter;
 import org.vast.ows.util.Bbox;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
@@ -33,7 +33,7 @@ import org.vast.xml.QName;
 
 /**
  * <p><b>Title:</b><br/>
- * Coverage Descriptions Writer V11
+ * Coverage Descriptions Writer V1.0
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -47,103 +47,146 @@ import org.vast.xml.QName;
  */
 public class CoverageDescriptionsWriterV10 extends AbstractResponseWriter<CoverageDescriptions>
 {
-	protected OWSCommonWriterV11 owsWriter = new OWSCommonWriterV11();
+	protected GMLEnvelopeWriter gmlWriter = new GMLEnvelopeWriter();
 	
 	
 	public Element buildXMLResponse(DOMHelper dom, CoverageDescriptions response, String version) throws OWSException
 	{
 		// setup ns and create root elt
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, version));
-		Element rootElt = dom.createElement("CoverageDescriptions");
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS));
+		Element rootElt = dom.createElement("CoverageDescription");
 
 		// add all coverage descriptions
 		List<CoverageDescription> descriptions = response.getDescriptions();
 		for (int i=0; i<descriptions.size(); i++)
 		{
 			CoverageDescription desc = descriptions.get(i);
-			Element descElt = dom.addElement(rootElt, "CoverageDescription");
+			Element descElt = dom.addElement(rootElt, "CoverageOffering");
 			
 			// title, abstract, keywords elts
-			owsWriter.buildDescription(dom, descElt, desc);
+			WCSCapabilitiesWriterV10.writeIdentification(dom, descElt, desc);
 			
-			// identifier
-			dom.setElementValue(descElt, "Identifier", desc.getIdentifier());
+			// TODO lonLatEnvelope
 						
 			// spatial domain
-			Element spDomainElt = dom.addElement(descElt, "Domain/SpatialDomain");
+			Element spDomainElt = dom.addElement(descElt, "domainSet/spatialDomain");
 			
 			// bbox list
 			List<Bbox> bboxList = desc.getBboxList();
 			for (int j=0; j<bboxList.size(); j++)
 			{
-				Element bboxElt = owsWriter.buildBbox(dom, bboxList.get(j));
-				spDomainElt.appendChild(bboxElt);
+				Element envElt = gmlWriter.writeEnvelope(dom, bboxList.get(j));
+				spDomainElt.appendChild(envElt);
 			}
 			
-			// TODO write grid CRS
-			// TODO write Transformation -> link to SensorML?
+			// TODO write grid list
+			// TODO write polygons list
 			
 			// TODO write time domain
-			//Element timeDomainElt = dom.addElement(descElt, "Domain/TemporalDomain");
+			//Element timeDomainElt = dom.addElement(descElt, "domainSet/temporalDomain");
 						
-			// range fields
-			for (int j=0; j<desc.getRangeFields().size(); j++)
+			// rangeSet
+			Element rangeSetElt = dom.addElement(descElt, "rangeSet/RangeSet");
+			RangeField field = desc.getRangeFields().get(0);
+			
+			// description, label, name
+			WCSCapabilitiesWriterV10.writeIdentification(dom, rangeSetElt, field);
+			
+			// all range axes
+			for (int j=0; j<field.getAxisList().size(); j++)
 			{
-				RangeField field = desc.getRangeFields().get(j);
-				Element fieldElt = dom.addElement(descElt, "Range/Field");
+				RangeAxis axis = field.getAxisList().get(j);
+				Element axisElt = dom.addElement(rangeSetElt, "+axisDescription/AxisDescription");
 				
-				// title, abstract, keywords
-				owsWriter.buildDescription(dom, fieldElt, field);
+				// description, label, name
+				WCSCapabilitiesWriterV10.writeIdentification(dom, axisElt, axis);
 				
-				// identifier
-				dom.setElementValue(fieldElt, "Identifier", field.getIdentifier());
-				
-				// TODO read definition
-				// TODO read null value
-				
-				// interpolation methods
-				for (int k=0; k<field.getInterpolationMethods().size(); k++)
+				// axis values
+				List<String> keys = axis.getKeys();
+				for (int k=0; k<keys.size(); k++)
 				{
-					Element interpMethodElt = dom.addElement(fieldElt, "InterpolationMethods/+InterpolationMethod");
-					dom.setElementValue(interpMethodElt, field.getInterpolationMethods().get(k));
-					
-					// TODO write nullResilience
+					String key = keys.get(k);
+					dom.setElementValue(axisElt, "values/+singleValue", key);
 				}
 				
-				// default method
-				String defaultMethod = field.getDefaultInterpolationMethod();
-				if (defaultMethod != null)
-					dom.setElementValue(fieldElt, "InterpolationMethods/Default", defaultMethod);
-				
-				// all field axes
-				for (int k=0; k<field.getAxisList().size(); k++)
-				{
-					RangeAxis axis = field.getAxisList().get(k);
-					Element axisElt = dom.addElement(descElt, "Axis/Field");
-					
-					// title, abstract
-					owsWriter.buildDescription(dom, axisElt, axis);
-					
-					// identifier attribute!
-					dom.setAttributeValue(axisElt, "@identifier", axis.getIdentifier());
-					
-					// keys
-					List<String> keys = axis.getKeys();
-					for (int h=0; h<keys.size(); h++)
-					{
-						String key = keys.get(h);
-						dom.setElementValue(fieldElt, "AvailableKeys/+Key", key);
-					}
-					
-					// TODO write meaning
-					// TODO write data type
-					// TODO write unit
-				}
+				// TODO write semantic
+				// TODO write refSys or refSysLabel	
 			}
 			
-			
+			// null value
+			String nullValue = field.getNullValue().toString();
+			dom.setElementValue(rangeSetElt, "nullValues/singleValue", nullValue);
+			//*** end rangeSet
+						
+			// supported CRS and formats
+			writeCRSList(dom, descElt, desc);
+			writeFormatList(dom, descElt, desc);
+			writeInterpMethodList(dom, descElt, field);			
 		}
 				
 		return rootElt;
+	}
+	
+	
+	/**
+	 * Writes all supported CRSs
+	 * @param layerElt
+	 * @return
+	 */
+	protected void writeCRSList(DOMHelper dom, Element descElt, CoverageDescription desc)
+	{
+		int numElts = desc.getCrsList().size();
+		for (int i = 0; i < numElts; i++)
+		{
+			String crs = desc.getCrsList().get(i);
+			dom.setElementValue(descElt, "supportedCRSs/+requestResponseCRSs", crs);
+		}
+		
+		// native crs
+		String nativeCrs = desc.getNativeCrs();
+		if (nativeCrs != null)
+			dom.setElementValue(descElt, "supportedCRSs/nativeCRSs", nativeCrs);
+	}
+	
+	
+	/**
+	 * Writes all supported formats
+	 * @param layerElt
+	 * @return
+	 */
+	protected void writeFormatList(DOMHelper dom, Element descElt, CoverageDescription desc)
+	{
+		int numElts = desc.getFormatList().size();
+		for (int i = 0; i < numElts; i++)
+		{
+			String format = desc.getFormatList().get(i);
+			dom.setElementValue(descElt, "supportedFormats/+formats", format);
+		}
+		
+		// native format
+		String nativeFormat = desc.getNativeFormat();
+		if (nativeFormat != null)
+			dom.setAttributeValue(descElt, "supportedFormats/@nativeFormat", nativeFormat);
+	}
+	
+	
+	/**
+	 * Writes all supported interpolation methods
+	 * @param layerElt
+	 * @return
+	 */
+	protected void writeInterpMethodList(DOMHelper dom, Element descElt, RangeField field)
+	{
+		// interpolation methods
+		for (int k=0; k<field.getInterpolationMethods().size(); k++)
+		{
+			Element interpMethodElt = dom.addElement(descElt, "supportedInterpolations/+interpolationMethod");
+			dom.setElementValue(interpMethodElt, field.getInterpolationMethods().get(k));
+		}
+		
+		// default method
+		String defaultMethod = field.getDefaultInterpolationMethod();
+		if (defaultMethod != null)
+			dom.setAttributeValue(descElt, "supportedInterpolations/@default", defaultMethod);
 	}
 }

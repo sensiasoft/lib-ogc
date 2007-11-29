@@ -33,13 +33,13 @@ import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b><br/>
- * WCS Capabilities Writer V1.1
+ * WCS Capabilities Writer V1.1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Writes a WCS server capabilities document from
  * OWSServiceCapabilities and WCSLayerCapabilities
- * objects for version 1.1.0 and 1.1.1
+ * objects for version 1.1.1
  * </p>
  *
  * <p>Copyright (c) 2007</p>

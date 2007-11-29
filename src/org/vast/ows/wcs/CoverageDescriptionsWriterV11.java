@@ -33,7 +33,7 @@ import org.vast.xml.QName;
 
 /**
  * <p><b>Title:</b><br/>
- * Coverage Descriptions Writer V11
+ * Coverage Descriptions Writer V1.1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -82,6 +82,8 @@ public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<Covera
 			
 			// TODO write grid CRS
 			// TODO write Transformation -> link to SensorML?
+			// TODO write image CRS if unrectified
+			// TODO write polygon list
 			
 			// TODO write time domain
 			//Element timeDomainElt = dom.addElement(descElt, "Domain/TemporalDomain");
@@ -98,8 +100,12 @@ public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<Covera
 				// identifier
 				dom.setElementValue(fieldElt, "Identifier", field.getIdentifier());
 				
-				// TODO read definition
-				// TODO read null value
+				// TODO write complete definition
+				dom.addElement(fieldElt, "Definition/ows:AnyValue");
+				
+				// null value
+				String nullValue = field.getNullValue().toString();
+				dom.setElementValue(fieldElt, "NullValue", nullValue);
 				
 				// interpolation methods
 				for (int k=0; k<field.getInterpolationMethods().size(); k++)
@@ -141,9 +147,43 @@ public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<Covera
 				}
 			}
 			
-			
+			// supported CRS and formats
+			writeCRSList(dom, descElt, desc);
+			writeFormatList(dom, descElt, desc);
 		}
 				
 		return rootElt;
+	}
+	
+	
+	/**
+	 * Writes all supported CRSs
+	 * @param layerElt
+	 * @return
+	 */
+	protected void writeCRSList(DOMHelper dom, Element layerElt, CoverageDescription desc)
+	{
+		int numElts = desc.getCrsList().size();
+		for (int i = 0; i < numElts; i++)
+		{
+			String crs = desc.getCrsList().get(i);
+			dom.setElementValue(layerElt, "+SupportedCRS", crs);
+		}
+	}
+	
+	
+	/**
+	 * Writes all supported formats
+	 * @param layerElt
+	 * @return
+	 */
+	protected void writeFormatList(DOMHelper dom, Element layerElt, CoverageDescription desc)
+	{
+		int numElts = desc.getFormatList().size();
+		for (int i = 0; i < numElts; i++)
+		{
+			String format = desc.getFormatList().get(i);
+			dom.setElementValue(layerElt, "+SupportedFormat", format);
+		}
 	}
 }

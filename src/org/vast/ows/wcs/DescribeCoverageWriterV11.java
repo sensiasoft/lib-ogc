@@ -29,12 +29,12 @@ import org.vast.xml.QName;
 
 /**
  * <p><b>Title:</b><br/>
- * DescribeCoverage Request Builder v1.1
+ * DescribeCoverage Request Builder v1.1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Provides methods to generate a KVP or XML DescribeCoverage request based
- * on values contained in a DescribeCoverage object for version 1.1.0/1.1.1
+ * on values contained in a DescribeCoverage object for version 1.1.1
  * </p>
  *
  * <p>Copyright (c) 2007</p>

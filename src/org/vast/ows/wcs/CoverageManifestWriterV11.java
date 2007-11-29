@@ -31,12 +31,12 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * Coverage Manifest Writer v1.1
+ * Coverage Manifest Writer v1.1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Writer to generate an XML Coverage Manifest based
- * on values contained in a CoverageManifest object for version 1.1
+ * on values contained in a CoverageManifest object for version 1.1.1
  * </p>
  *
  * <p>Copyright (c) 2007</p>

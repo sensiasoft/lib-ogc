@@ -30,7 +30,7 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * Coverage Descriptions Reader V1.1
+ * Coverage Descriptions Reader V1.1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -50,13 +50,14 @@ public class CoverageDescriptionsReaderV11 extends AbstractResponseReader<Covera
 	public CoverageDescriptions readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 		CoverageDescriptions response = new CoverageDescriptions();
-		response.setVersion("1.0");
+		response.setVersion("1.1.1");
 		
 		NodeList descElts = dom.getElements(responseElt, "CoverageDescription");		
 		for (int i=0; i<descElts.getLength(); i++)
 		{ 
 			Element descElt = (Element)descElts.item(i);			
 			CoverageDescription desc = new CoverageDescription();
+			response.getDescriptions().add(desc);
 			
 			// title, abstract, identifier elts
 			owsReader.readIdentification(dom, descElt, desc);
@@ -90,7 +91,17 @@ public class CoverageDescriptionsReaderV11 extends AbstractResponseReader<Covera
 				owsReader.readIdentification(dom, fieldElt, field);
 				
 				// TODO read definition
-				// TODO read null value
+				
+				// try to read one numerical null value
+				try
+				{
+					String nullValue = dom.getElementValue(fieldElt, "NullValue");
+					if (nullValue != null)
+						field.setNullValue(Double.parseDouble(nullValue));
+				}
+				catch (NumberFormatException e)
+				{
+				}
 				
 				// interpolation methods
 				NodeList interpElts = dom.getElements(fieldElt, "InterpolationMethods/InterpolationMethod");
@@ -122,7 +133,7 @@ public class CoverageDescriptionsReaderV11 extends AbstractResponseReader<Covera
 					axis.setIdentifier(id);
 					
 					// keys
-					NodeList keyElts = dom.getElements(fieldElt, "AvailableKeys/Key");
+					NodeList keyElts = dom.getElements(axisElt, "AvailableKeys/Key");
 					for (int h=0; h<keyElts.getLength(); h++)
 					{
 						Element keyElt = (Element)keyElts.item(h);
@@ -140,7 +151,9 @@ public class CoverageDescriptionsReaderV11 extends AbstractResponseReader<Covera
 				desc.getRangeFields().add(field);
 			}
 			
-			response.getDescriptions().add(desc);
+			// supported CRSs and formats
+			readCRSList(desc, dom, descElt);
+			readFormatList(desc, dom, descElt);
 		}
 		
 		return response;

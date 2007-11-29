@@ -99,7 +99,7 @@ public abstract class OWSCapabilitiesWriterV0 extends AbstractResponseWriter<OWS
 	 * @param parentElt
 	 * @param identification
 	 */
-	protected void writeIdentification(DOMHelper dom, Element parentElt, OWSIdentification identification)
+	public static void writeIdentification(DOMHelper dom, Element parentElt, OWSIdentification identification)
 	{
 		String text;
 		
@@ -126,7 +126,7 @@ public abstract class OWSCapabilitiesWriterV0 extends AbstractResponseWriter<OWS
 	 * @param parentElt
 	 * @param identification
 	 */
-	protected void writeKeywords(DOMHelper dom, Element parentElt, OWSIdentification identification)
+	public static void writeKeywords(DOMHelper dom, Element parentElt, OWSIdentification identification)
 	{
 		// write all keywords
 		if (!identification.getKeywords().isEmpty())
@@ -148,7 +148,7 @@ public abstract class OWSCapabilitiesWriterV0 extends AbstractResponseWriter<OWS
 	 * @param capsElt
 	 * @param provider
 	 */
-	protected void writeResponsibleParty(DOMHelper dom, Element capsElt, ResponsibleParty provider)
+	public static void writeResponsibleParty(DOMHelper dom, Element capsElt, ResponsibleParty provider)
 	{
 		String text;
 		

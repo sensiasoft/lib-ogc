@@ -53,6 +53,7 @@ public class RangeField extends OWSIdentification
 	{
 		interpolationMethods = new ArrayList<String>(2);
 		axisList = new ArrayList<RangeAxis>(3);
+		nullValue = new Double(0);
 	}
 
 

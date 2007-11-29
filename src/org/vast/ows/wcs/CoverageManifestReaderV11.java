@@ -27,12 +27,12 @@ import org.vast.ows.*;
 
 /**
  * <p><b>Title:</b><br/>
- * Coverage Manifest Reader v1.1
+ * Coverage Manifest Reader v1.1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Provides methods to parse an XML Coverage Manifest response and
- * create a CoverageManifest object for version 1.1
+ * create a CoverageManifest object for version 1.1.1
  * </p>
  *
  * <p>Copyright (c) 2007</p>

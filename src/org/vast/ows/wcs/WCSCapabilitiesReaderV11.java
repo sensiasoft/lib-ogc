@@ -33,13 +33,13 @@ import org.vast.ows.util.Bbox;
 
 /**
  * <p><b>Title:</b><br/>
- * WCS Capabilities Reader V1.1
+ * WCS Capabilities Reader V1.1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Reads a WCS server capabilities document and create and
  * populate the corresponding OWSServiceCapabilities and
- * WCSLayerCapabilities objects for version 1.1.0 and 1.1.1
+ * WCSLayerCapabilities objects for version 1.1.1
  * </p>
  *
  * <p>Copyright (c) 2007</p>

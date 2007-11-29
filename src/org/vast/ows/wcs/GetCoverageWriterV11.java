@@ -36,12 +36,12 @@ import org.vast.xml.QName;
 
 /**
  * <p><b>Title:</b><br/>
- * GetCoverage Request Builder v1.0
+ * GetCoverage Request Builder v1.1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Provides methods to generate a KVP or XML GetCoverage request based
- * on values contained in a GetCoverageRequest object for version 1.0
+ * on values contained in a GetCoverageRequest object for version 1.1.1
  * </p>
  *
  * <p>Copyright (c) 2007</p>
