@@ -112,7 +112,7 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
 
 
 	@Override
-	public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException
+	public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
 	{
 		// TODO Auto-generated method stub
 		return null;

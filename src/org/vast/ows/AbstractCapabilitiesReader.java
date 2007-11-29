@@ -42,7 +42,7 @@ import org.vast.xml.DOMHelperException;
  * @date Oct 30, 2005
  * @version 1.0
  */
-public abstract class AbstractCapabilitiesReader implements OWSCapabilitiesReader
+public abstract class AbstractCapabilitiesReader implements OWSResponseReader<OWSServiceCapabilities>
 {
     protected final static String parsingError = "Error while parsing capabilities document";
     protected OWSServiceCapabilities serviceCaps;
@@ -63,7 +63,7 @@ public abstract class AbstractCapabilitiesReader implements OWSCapabilitiesReade
      * @return
      * @throws OWSException
      */
-    public abstract OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException;
+    public abstract OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException;
     
     
     protected abstract String buildQuery() throws OWSException;
@@ -96,7 +96,7 @@ public abstract class AbstractCapabilitiesReader implements OWSCapabilitiesReade
             OWSExceptionReader.checkException(dom);
             
             // read capabilities xml from dom
-            return readCapabilities(dom, dom.getBaseElement());
+            return readXMLResponse(dom, dom.getBaseElement());
 		}
 		catch (DOMHelperException e)
 		{

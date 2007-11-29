@@ -44,7 +44,7 @@ import org.vast.ows.wcs.WCSException;
  */
 public class WCSTransactionReaderV11 extends AbstractRequestReader<WCSTransactionRequest>
 {
-	protected OWSReferenceReaderV11 owsReader = new OWSReferenceReaderV11();
+	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();
 	
 
 	@Override
@@ -71,14 +71,14 @@ public class WCSTransactionReaderV11 extends AbstractRequestReader<WCSTransactio
 			Element coverageElt = (Element)covElts.item(i);
 			
 			// read group info
-			owsReader.readRefGroupInfo(dom, coverageElt, coverageRef);
+			owsReader.readIdentification(dom, coverageElt, coverageRef);
 			
 			// simple references
 			NodeList refElts = dom.getElements(coverageElt, "Reference");
 			for (int j=0; j<refElts.getLength(); j++)
 			{
 				Element refElt = (Element)refElts.item(j);
-				OWSReference ref = owsReader.readXML(dom, refElt);
+				OWSReference ref = owsReader.readReference(dom, refElt);
 				coverageRef.getReferenceList().add(ref);
 			}
 			
@@ -87,7 +87,7 @@ public class WCSTransactionReaderV11 extends AbstractRequestReader<WCSTransactio
 			for (int j=0; j<refElts.getLength(); j++)
 			{
 				Element refElt = (Element)refElts.item(j);
-				OWSReference ref = owsReader.readXML(dom, refElt);
+				OWSReference ref = owsReader.readReference(dom, refElt);
 				coverageRef.getReferenceList().add(ref);
 			}
 			

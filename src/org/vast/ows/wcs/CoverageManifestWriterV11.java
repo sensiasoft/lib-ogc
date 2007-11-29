@@ -24,7 +24,7 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSReferenceGroup;
-import org.vast.ows.OWSReferenceWriterV11;
+import org.vast.ows.OWSCommonWriterV11;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
@@ -47,7 +47,7 @@ import org.vast.xml.QName;
  */
 public class CoverageManifestWriterV11 extends AbstractResponseWriter<CoverageManifest>
 {
-	protected OWSReferenceWriterV11 owsWriter = new OWSReferenceWriterV11();
+	protected OWSCommonWriterV11 owsWriter = new OWSCommonWriterV11();
 	
 	
 	public Element buildXMLResponse(DOMHelper dom, CoverageManifest manifest, String version) throws OWSException
@@ -57,14 +57,13 @@ public class CoverageManifestWriterV11 extends AbstractResponseWriter<CoverageMa
 		
 		// root element
 		Element rootElt = dom.createElement("Coverages");
-		dom.setAttributeValue(rootElt, "@version", version);
-		
+				
 		// add all coverage briefs
 		for (int i=0; i<manifest.getCoverages().size(); i++)
 		{
 			Element coverageElt = dom.addElement(rootElt, "+Coverage");
 			OWSReferenceGroup coverageInfo = manifest.getCoverages().get(i);
-			owsWriter.buildRefGroupXML(dom, coverageElt, coverageInfo);
+			owsWriter.buildRefGroup(dom, coverageElt, coverageInfo);
 		}
 				
 		return rootElt;

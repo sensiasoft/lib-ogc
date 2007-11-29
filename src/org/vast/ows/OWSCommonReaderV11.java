@@ -20,36 +20,31 @@
 
 package org.vast.ows;
 
-import org.vast.xml.DOMHelper;
+import org.vast.ows.OWSReference;
 import org.vast.ows.util.Bbox;
-import org.w3c.dom.Element;
-
+import org.w3c.dom.*;
+import org.vast.xml.DOMHelper;
 
 /**
- *  * <p><b>Title:</b>
- * OWS Bbox Reader
+ * <p><b>Title:</b><br/>
+ * OWS Reference Reader V11
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Reads OWS Bounding Box (coords + CRS) used in several OGC services
+ * Utility methods to read OWS common References and Reference Groups
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @date Oct 08, 2007
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date 22 nov. 07
  * @version 1.0
  */
-public class OWSBboxReader
+public class OWSCommonReaderV11
 {
-    protected final static String invalidCoordinates = "Invalid Coordinates: ";
-    
-    
-    public OWSBboxReader()
-    {
-    }
-    
-        
-    public Bbox readBbox(DOMHelper dom, Element bboxElt) throws OWSException
+	protected final static String invalidCoordinates = "Invalid Coordinates: ";
+	
+	
+	public Bbox readBbox(DOMHelper dom, Element bboxElt) throws OWSException
     {
     	Bbox bbox = new Bbox();
         String coordsText = "";
@@ -84,4 +79,58 @@ public class OWSBboxReader
         
         return bbox;
     }
+	
+	
+	public OWSReference readReference(DOMHelper dom, Element refElt) throws OWSException
+	{
+		OWSReference ref = new OWSReference();
+		
+		// role
+		String role = dom.getAttributeValue(refElt, "@role");
+		ref.setRole(role);
+		
+		// href
+		String endpoint = dom.getAttributeValue(refElt, "@href");
+		ref.setHref(endpoint);
+		
+		// format
+		String format = dom.getElementValue(refElt, "Format");
+		ref.setFormat(format);
+		
+		return ref;
+	}
+	
+	
+	public void readIdentification(DOMHelper dom, Element parentElt, OWSIdentification idObject)
+	{
+		// title, abstract, keywords
+		readDescription(dom, parentElt, idObject);
+		
+		// identifier
+		String identifier = dom.getElementValue(parentElt, "Identifier");
+		idObject.setIdentifier(identifier);
+		
+		// metadata??
+	}
+	
+	
+	public void readDescription(DOMHelper dom, Element parentElt, OWSIdentification idObject)
+	{
+		// title
+		String title = dom.getElementValue(parentElt, "Title");
+		idObject.setTitle(title);
+		
+		// abstract
+		String description = dom.getElementValue(parentElt, "Abstract");
+		idObject.setDescription(description);
+		
+		// keywords
+		NodeList keywordElts = dom.getElements(parentElt, "Keywords/Keyword");
+		for (int i = 0; i < keywordElts.getLength(); i++)
+		{
+			Element keywordElt = (Element) keywordElts.item(i);
+			String keyword = dom.getElementValue(keywordElt);
+			idObject.getKeywords().add(keyword);
+		}
+	}
 }

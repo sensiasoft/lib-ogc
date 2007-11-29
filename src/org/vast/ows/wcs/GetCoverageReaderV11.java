@@ -51,7 +51,7 @@ import org.vast.ows.util.TimeInfo;
  */
 public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageRequest>
 {
-	protected OWSBboxReader bboxReader = new OWSBboxReader();
+	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();
 	protected GMLTimeReader timeReader = new GMLTimeReader();
 	
 	
@@ -131,34 +131,34 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
             // GridBaseCRS
             else if (argName.equalsIgnoreCase("GridBaseCRS"))
             {
-            	request.setGridCrs(argValue);
+            	request.getGridCrs().setBaseCrs(argValue);
             }
             
             // GridCS
             else if (argName.equalsIgnoreCase("GridCS"))
             {
-            	request.setGridCs(argValue);
+            	request.getGridCrs().setGridCs(argValue);
             }
             
             // GridType
             else if (argName.equalsIgnoreCase("GridType"))
             {
-            	request.setGridType(argValue);
+            	request.getGridCrs().setGridType(argValue);
             }
             
             // GridOrigin
             else if (argName.equalsIgnoreCase("GridOrigin"))
             {
             	double[] origin = parseVector(argValue);
-            	request.setGridDimension(origin.length);
-            	request.setGridOrigin(origin);
+            	request.getGridCrs().setGridDimension(origin.length);
+            	request.getGridCrs().setGridOrigin(origin);
             }
             
             // GridOffsets
             else if (argName.equalsIgnoreCase("GridOffsets"))
             {
-            	double[] offsets = parseVector(argValue);
-            	request.setGridOffsets(offsets);
+            	double[][] vectors = WCSUtils.parseGridOffsets(argValue);
+            	request.getGridCrs().setGridOffsets(vectors);
             }
             
             // format
@@ -206,7 +206,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 		Element bboxElt = dom.getElement(domainElt, "ows:BoundingBox");
 		if (bboxElt != null)
 		{
-			Bbox bbox = bboxReader.readBbox(dom, bboxElt);
+			Bbox bbox = owsReader.readBbox(dom, bboxElt);
 			request.setBbox(bbox);
 		}
 		
@@ -342,33 +342,33 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 		{
 			// base CRS
 			String responseCrs = dom.getElementValue(gridElt, "GridBaseCRS");
-			request.setGridCrs(responseCrs);
+			request.getGridCrs().setBaseCrs(responseCrs);
 			
 			// type
 			String gridType = dom.getElementValue(gridElt, "GridType");
 			if (gridType != null)
-				request.setGridType(gridType);
+				request.getGridCrs().setGridType(gridType);
 			
 			// CS
 			String gridCs = dom.getElementValue(gridElt, "GridCS");
 			if (gridCs != null)
-				request.setGridCs(gridCs);
+				request.getGridCrs().setGridCs(gridCs);
 			
 			// origin
 			String gridOrigin = dom.getElementValue(gridElt, "GridOrigin");
 			if (gridOrigin != null)
 			{
 				double[] vecOrig = this.parseVector(gridOrigin);
-				request.setGridDimension(vecOrig.length);
-				request.setGridOrigin(vecOrig);
+				request.getGridCrs().setGridDimension(vecOrig.length);
+				request.getGridCrs().setGridOrigin(vecOrig);
 			}
 			
 			// offsets
 			String gridOffsets = dom.getElementValue(gridElt, "GridOffsets");
 			if (gridOffsets != null)
 			{
-				double[] vecOff = this.parseVector(gridOffsets);
-				request.setGridOffsets(vecOff);
+				double[][] vectors = WCSUtils.parseGridOffsets(gridOffsets);
+				request.getGridCrs().setGridOffsets(vectors);
 			}
 		}
 		
@@ -403,7 +403,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 			
 			// copy crs to responseCrs if needed
 			else if (request.gridCrs == null && request.getBbox() != null)
-				request.gridCrs = request.getBbox().getCrs();
+				request.getGridCrs().setBaseCrs(request.getBbox().getCrs());
 		}
 		
 		// TODO check Grid info??

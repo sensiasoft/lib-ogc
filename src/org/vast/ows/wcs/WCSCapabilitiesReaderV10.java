@@ -73,9 +73,9 @@ public class WCSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV0
 	
 	
 	@Override
-	public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException
+	public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
 	{
-		OWSServiceCapabilities caps = super.readCapabilities(dom, capabilitiesElt);
+		OWSServiceCapabilities caps = super.readXMLResponse(dom, capabilitiesElt);
 		caps.setService(OGCRegistry.WCS);
 		return caps;
 	}

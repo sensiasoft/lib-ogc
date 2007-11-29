@@ -19,13 +19,17 @@
     Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
+
 package org.vast.ows.wcs;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.vast.ows.OWSIdentification;
+
 
 /**
  * <p><b>Title:</b><br/>
- * CoverageDescriptionProxy
+ * RangeField
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -34,10 +38,68 @@ import org.vast.ows.OWSIdentification;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 23 nov. 07
+ * @date 29 nov. 07
  * @version 1.0
  */
-public abstract class WCSMetadataProxy extends OWSIdentification
+public class RangeField extends OWSIdentification
 {
-	public abstract WCSMetadataProvider getMetadataProvider(String version);
+	protected List<String> interpolationMethods;
+	protected String defaultInterpolationMethod;
+	protected List<RangeAxis> axisList;
+	protected Object nullValue;
+
+
+	public RangeField()
+	{
+		interpolationMethods = new ArrayList<String>(2);
+		axisList = new ArrayList<RangeAxis>(3);
+	}
+
+
+	public List<String> getInterpolationMethods()
+	{
+		return interpolationMethods;
+	}
+
+
+	public void setInterpolationMethods(List<String> interpolationMethods)
+	{
+		this.interpolationMethods = interpolationMethods;
+	}
+
+
+	public List<RangeAxis> getAxisList()
+	{
+		return axisList;
+	}
+
+
+	public void setAxisList(List<RangeAxis> axisList)
+	{
+		this.axisList = axisList;
+	}
+
+
+	public Object getNullValue()
+	{
+		return nullValue;
+	}
+
+
+	public void setNullValue(Object nullValue)
+	{
+		this.nullValue = nullValue;
+	}
+
+
+	public String getDefaultInterpolationMethod()
+	{
+		return defaultInterpolationMethod;
+	}
+
+
+	public void setDefaultInterpolationMethod(String defaultInterpolationMethod)
+	{
+		this.defaultInterpolationMethod = defaultInterpolationMethod;
+	}
 }

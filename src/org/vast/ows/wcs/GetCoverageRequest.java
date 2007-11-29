@@ -44,22 +44,13 @@ import org.vast.ows.util.TimeInfo;
  */
 public class GetCoverageRequest extends OWSRequest
 {
-    public final static String SIMPLE_GRID = "urn:ogc:def:method:WCS:1.1:2dSimpleGrid";
-    public final static String GRID_2D_IN_CRS_2D = "urn:ogc:def:method:WCS:1.1:2dGridin2dCrs";
-    public final static String GRID_2D_IN_CRS_3D = "urn:ogc:def:method:WCS:1.1:2dGridin3dCrs";
-    
-	protected String coverage;
+    protected String coverage;
 	protected String format;
 	protected String interpolationMethod;
 	protected Bbox bbox;
 	protected int width, height, depth;
 	protected int skipX, skipY, skipZ;
-	protected String gridCrs;
-	protected String gridCs;
-	protected String gridType;
-	protected int gridDimension;
-	protected double[] gridOrigin;
-	protected double[] gridOffsets;
+	protected WCSRectifiedGridCrs gridCrs;
 	protected boolean store;
 	protected boolean useResolution;
 	protected ArrayList<AxisSubset> axisSubsets;
@@ -74,12 +65,8 @@ public class GetCoverageRequest extends OWSRequest
         axisSubsets = new ArrayList<AxisSubset>();
         times = new ArrayList<TimeInfo>();
         vendorParameters = new Hashtable<String, String>();
+        gridCrs = new WCSRectifiedGridCrs();
         
-        gridCs = "urn:ogc:def:cs:OGC:0.0:Grid2dSquareCS";
-        gridType = SIMPLE_GRID;
-        gridDimension = 2;
-        gridOrigin = new double[gridDimension];
-        gridOffsets = new double[gridDimension*gridDimension];
         width = height = depth = -1;
         useResolution = false;
     }
@@ -135,91 +122,22 @@ public class GetCoverageRequest extends OWSRequest
 	}
 
 
-	public int getGridDimension()
-	{
-		return gridDimension;
-	}
-
-
-	public void setGridDimension(int gridDimension)
-	{
-		if (this.gridDimension != gridDimension)
-		{
-			this.gridDimension = gridDimension;
-			gridOrigin = new double[gridDimension];
-	        gridOffsets = new double[gridDimension*gridDimension];
-		}
-	}
-
-
-	public String getGridCrs()
-	{
-		return gridCrs;
-	}
-
-
-	public void setGridCrs(String gridCrs)
+	public void setGridCrs(WCSRectifiedGridCrs gridCrs)
 	{
 		this.gridCrs = gridCrs;
 	}
 
-
-	public String getGridCs()
+	
+	public WCSRectifiedGridCrs getGridCrs()
 	{
-		return gridCs;
+		return gridCrs;
 	}
-
-
-	public void setGridCs(String gridCs)
-	{
-		this.gridCs = gridCs;
-	}
-
-
-	public String getGridType()
-	{
-		return gridType;
-	}
-
-
-	public void setGridType(String gridType)
-	{
-		this.gridType = gridType;
-	}
-
-
-	public double[] getGridOrigin()
-	{
-		return gridOrigin;
-	}
-
-
-	public void setGridOrigin(double[] gridOrigin)
-	{
-		this.gridOrigin = gridOrigin;
-	}
-
-
-	public double[] getGridOffsets()
-	{
-		if (useResolution)
-			return gridOffsets;
-		else
-			return null;
-	}
-
-
-	public void setGridOffsets(double[] gridOffsets)
-	{
-		this.gridOffsets = gridOffsets;
-		useResolution = true;
-	}
-
-
+	
+	
 	public double getResX()
 	{
-		if (useResolution && gridOffsets != null && gridDimension > 0)
-			return gridOffsets[0];
+		if (useResolution && gridCrs.gridOffsets != null && gridCrs.gridDimension > 0)
+			return gridCrs.gridOffsets[0][0];
 		else
 			return Double.NaN;
 	}
@@ -227,9 +145,9 @@ public class GetCoverageRequest extends OWSRequest
 
 	public void setResX(double resX)
 	{
-		if (gridOffsets != null && gridDimension > 0)
+		if (gridCrs.gridOffsets != null && gridCrs.gridDimension > 0)
 		{
-			this.gridOffsets[0] = resX;
+			gridCrs.gridOffsets[0][0] = resX;
 			this.useResolution = true;
 		}
 	}
@@ -237,8 +155,8 @@ public class GetCoverageRequest extends OWSRequest
 
 	public double getResY()
 	{
-		if (useResolution && gridOffsets != null && gridDimension > 1)
-			return gridOffsets[1];
+		if (useResolution && gridCrs.gridOffsets != null && gridCrs.gridDimension > 1)
+			return gridCrs.gridOffsets[1][1];
 		else
 			return Double.NaN;
 	}
@@ -246,9 +164,9 @@ public class GetCoverageRequest extends OWSRequest
 
 	public void setResY(double resY)
 	{
-		if (gridOffsets != null && gridDimension > 1)
+		if (gridCrs.gridOffsets != null && gridCrs.gridDimension > 1)
 		{
-			this.gridOffsets[1] = resY;
+			gridCrs.gridOffsets[1][1] = resY;
 			this.useResolution = true;
 		}		
 	}
@@ -256,8 +174,8 @@ public class GetCoverageRequest extends OWSRequest
 
 	public double getResZ()
 	{
-		if (useResolution && gridOffsets != null && gridDimension > 2)
-			return gridOffsets[2];
+		if (useResolution && gridCrs.gridOffsets != null && gridCrs.gridDimension > 2)
+			return gridCrs.gridOffsets[2][2];
 		else
 			return Double.NaN;
 	}
@@ -265,9 +183,9 @@ public class GetCoverageRequest extends OWSRequest
 
 	public void setResZ(double resZ)
 	{
-		if (gridOffsets != null && gridDimension > 2)
+		if (gridCrs.gridOffsets != null && gridCrs.gridDimension > 2)
 		{
-			this.gridOffsets[2] = resZ;
+			gridCrs.gridOffsets[2][2] = resZ;
 			this.useResolution = true;
 		}
 	}

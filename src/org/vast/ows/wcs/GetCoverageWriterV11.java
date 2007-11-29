@@ -254,7 +254,7 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
 		Element outputElt = dom.addElement(rootElt, "output");
 		
 		if (request.getGridCrs() != null)
-			dom.setElementValue(outputElt, "crs", request.getGridCrs());
+			dom.setElementValue(outputElt, "crs", request.getGridCrs().getBaseCrs());
 		
 		dom.setElementValue(outputElt, "format", request.getFormat());
 		

@@ -14,49 +14,51 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
- Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <robin@nsstc.uah.edu>
  
- ******************************* END LICENSE BLOCK ***************************/
+******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows;
 
+import java.io.*;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.DOMHelperException;
 import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * OWS Capabilities Reader
+ * <p><b>Title:</b><br/>
+ * Abstract class for all OWS Response Reader
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base interface for all OWS capabilities readers
+ * Provides methods to parse an XML OWS response and
+ * create an OWSResponse object
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Jan 16, 2007
+ * @date Nov 4, 2005
  * @version 1.0
  */
-public interface OWSCapabilitiesReader
+public abstract class AbstractResponseReader<ResponseType extends OWSResponse> implements OWSResponseReader<ResponseType>
 {
-    /**
-     * Requests and parse capabilities document from server
-     * @param server
-     * @param version
-     * @return
-     * @throws OWSException
-     */
-    public OWSServiceCapabilities getCapabilities(String server, String version) throws OWSException;
+	protected final static String invalidReq = "Invalid Response";
     
     
-    /**
-     * Parses the capabilities document from the given element 
-     * @param dom
-     * @param capabilitiesElt
-     * @return
-     * @throws OWSException
-     */
-    public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException;   
-
+    public abstract ResponseType readXMLResponse(DOMHelper domHelper, Element responseElt) throws OWSException;
+	
+    
+    public ResponseType readXMLResponse(InputStream input) throws OWSException
+	{
+		try
+		{
+            DOMHelper dom = new DOMHelper(input, false);
+			return readXMLResponse(dom, dom.getBaseElement());
+		}
+		catch (DOMHelperException e)
+		{
+			throw new OWSException(e);
+		}
+	}
 }

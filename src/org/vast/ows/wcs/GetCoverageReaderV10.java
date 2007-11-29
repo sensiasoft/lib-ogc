@@ -139,7 +139,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
             // RESPONSE_CRS
             else if (argName.equalsIgnoreCase("RESPONSE_CRS"))
             {
-            	request.setGridCrs(argValue);
+            	request.getGridCrs().setBaseCrs(argValue);
             }
             
             // RESX
@@ -419,7 +419,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 		
 		// response CRS
 		String responseCrs = dom.getElementValue(requestElt, "output/crs");
-		request.setGridCrs(responseCrs);
+		request.getGridCrs().setBaseCrs(responseCrs);
 		
 		// format
 		String format = dom.getElementValue(requestElt, "output/format");
@@ -456,7 +456,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 			
 			// copy crs to responseCrs if needed
 			else if (request.getGridCrs() == null && request.getBbox() != null)
-				request.gridCrs = request.getBbox().getCrs();
+				request.getGridCrs().setBaseCrs(request.getBbox().getCrs());
 		}
 		
 		// need at least WIDTH or RESX

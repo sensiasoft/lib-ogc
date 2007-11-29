@@ -20,8 +20,10 @@
 
 package org.vast.ows;
 
+import java.util.List;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSReference;
+import org.vast.ows.util.Bbox;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 
@@ -39,10 +41,58 @@ import org.vast.xml.DOMHelper;
  * @date 22 nov. 07
  * @version 1.0
  */
-public class OWSReferenceWriterV11
+public class OWSCommonWriterV11
 {
 
-	public Element buildReferenceXML(DOMHelper dom, OWSReference ref) throws OWSException
+	public Element buildBbox(DOMHelper dom, Bbox bbox) throws OWSException
+    {
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
+		Element bboxElt = dom.createElement("ows:BoundingBox");
+        
+        // set crs
+        String crs = bbox.getCrs();
+        if (crs != null)
+        	dom.setAttributeValue(bboxElt, "@crs", crs);
+                
+        // write lower corner
+        String lowCoords = Double.toString(bbox.getMinX());
+    	if (!Double.isNaN(bbox.getMinY()))
+    		lowCoords += " " + bbox.getMinY();
+    	if (!Double.isNaN(bbox.getMinZ()))
+    		lowCoords += " " + bbox.getMinZ();
+    	
+        dom.setElementValue(bboxElt, "LowerCorner", lowCoords);
+                    
+        // write upper corner
+        String upCoords = Double.toString(bbox.getMaxX());
+    	if (!Double.isNaN(bbox.getMaxY()))
+    		lowCoords += " " + bbox.getMaxY();
+    	if (!Double.isNaN(bbox.getMaxZ()))
+    		lowCoords += " " + bbox.getMaxZ();
+        dom.setElementValue(bboxElt, "UpperCorner", upCoords);
+        
+        return bboxElt;
+    }
+	
+	
+	public void buildRefGroup(DOMHelper dom, Element refGroupElt, OWSReferenceGroup refGroup) throws OWSException
+	{
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
+		
+		// read identification elements
+		buildIdentification(dom, refGroupElt, refGroup);
+		
+		// references
+		for (int j=0; j<refGroup.getReferenceList().size(); j++)
+		{
+			OWSReference ref = refGroup.getReferenceList().get(j);
+			Element refElt = this.buildReference(dom, ref);
+			refGroupElt.appendChild(refElt);
+		}
+	}
+
+	
+	public Element buildReference(DOMHelper dom, OWSReference ref) throws OWSException
 	{
 		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
 		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
@@ -88,30 +138,39 @@ public class OWSReferenceWriterV11
 	}
 	
 	
-	public Element buildRefGroupXML(DOMHelper dom, Element refGroupElt, OWSReferenceGroup refGroup) throws OWSException
+	public void buildIdentification(DOMHelper dom, Element parentElt, OWSIdentification idObject) throws OWSException
+	{
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
+		
+		// title, abstract, keywords
+		buildDescription(dom, parentElt, idObject);
+		
+		// identifier
+		if (idObject.getIdentifier() != null)
+			dom.setElementValue(parentElt, "ows:Identifier", idObject.getIdentifier());
+		
+		// metadata ??
+	}
+	
+	
+	public void buildDescription(DOMHelper dom, Element parentElt, OWSIdentification idObject) throws OWSException
 	{
 		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
 		
 		// title
-		if (refGroup.getTitle() != null)
-			dom.setElementValue(refGroupElt, "ows:Title", refGroup.getTitle());
+		if (idObject.getTitle() != null)
+			dom.setElementValue(parentElt, "ows:Title", idObject.getTitle());
 
 		// abstract
-		if (refGroup.getDescription() != null)
-			dom.setElementValue(refGroupElt, "ows:Abstract", refGroup.getDescription());
+		if (idObject.getDescription() != null)
+			dom.setElementValue(parentElt, "ows:Abstract", idObject.getDescription());
 		
-		// identifier
-		if (refGroup.getIdentifier() != null)
-			dom.setElementValue(refGroupElt, "ows:Identifier", refGroup.getIdentifier());
-		
-		// references
-		for (int j=0; j<refGroup.getReferenceList().size(); j++)
+		// keywords
+		List<String> keywords = idObject.getKeywords();
+		for (int i = 0; i < keywords.size(); i++)
 		{
-			OWSReference ref = refGroup.getReferenceList().get(j);
-			Element refElt = this.buildReferenceXML(dom, ref);
-			refGroupElt.appendChild(refElt);
+			String keyword = keywords.get(i);
+			dom.setElementValue(parentElt, "Keywords/+Keyword", keyword);
 		}
-		
-		return refGroupElt;
 	}
 }

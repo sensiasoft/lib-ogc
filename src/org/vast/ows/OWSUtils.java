@@ -429,6 +429,29 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     
     /**
+     * Helper method to parse any OWS capabilities document from an XML/DOM tree
+     */
+    public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capsElt, String service) throws OWSException
+    {
+        // read common params and check that they're present
+        String version = dom.getAttributeValue(capsElt, "@version");
+        String message = "Capabilities";
+        
+        try
+        {
+            OWSResponseReader<OWSResponse> reader = (OWSResponseReader<OWSResponse>)OGCRegistry.createReader(service, message, version);
+            OWSServiceCapabilities caps = (OWSServiceCapabilities)reader.readXMLResponse(dom, capsElt);
+            return caps;
+        }
+        catch (IllegalStateException e)
+        {
+            String spec = service + " " + message + " v" + version;
+        	throw new OWSException(unsupportedSpec + spec, e);
+        }
+    }
+    
+    
+    /**
      * Helper method to get capabilities from an OWS service and parse it
      * @param server
      * @param serviceType
@@ -440,35 +463,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     {
         try
         {
-            OWSCapabilitiesReader reader = (OWSCapabilitiesReader)OGCRegistry.createReader(serviceType, "Capabilities", version);
+            AbstractCapabilitiesReader reader = (AbstractCapabilitiesReader)OGCRegistry.createReader(serviceType, "Capabilities", version);
             OWSServiceCapabilities caps = reader.getCapabilities(server, version);
-            return caps;
-        }
-        catch (IllegalStateException e)
-        {
-        	String spec = serviceType + " Capabilities v" + version;
-        	throw new OWSException(unsupportedSpec + spec, e);
-        }
-    }
-    
-    
-    /**
-     * Helper method to parse capabilities from the given DOM Element
-     * @param dom
-     * @param serviceType
-     * @param capsElt
-     * @return
-     * @throws OWSException
-     */
-    public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capsElt, String serviceType) throws OWSException
-    {
-    	String version = null;
-    	
-    	try
-        {
-            version = readXMLVersion(dom, capsElt);
-            OWSCapabilitiesReader reader = (OWSCapabilitiesReader)OGCRegistry.createReader(serviceType, "Capabilities", version);
-            OWSServiceCapabilities caps = reader.readCapabilities(dom, capsElt);
             return caps;
         }
         catch (IllegalStateException e)

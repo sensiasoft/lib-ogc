@@ -66,12 +66,30 @@ public class WCSException extends OWSException
 	
 	public WCSException(String code, String locator)
 	{
-		super(code, locator);
+		this(code, locator, null, null);
 	}
 	
 	
 	public WCSException(String code, String locator, String badValue, String message)
 	{
 		super(code, locator, badValue, message);
+		
+		if (code == invalid_coverage_code)
+			locator = "Coverage";
+		else if (code == invalid_format_code)
+			locator = "Format";
+	}
+	
+	
+	@Override
+	public String getMessage()
+	{
+		// otherwise build generic message
+		if (this.code == invalid_coverage_code)
+			return invalid_coverage_text + ((badValue == null) ? "" : " = " + badValue);
+		else if (this.code == invalid_format_code)
+			return invalid_format_text + ((badValue == null) ? "" : " = " + badValue);
+		else
+			return super.getMessage();
 	}
 }

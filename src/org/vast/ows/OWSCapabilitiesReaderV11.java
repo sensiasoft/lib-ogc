@@ -42,9 +42,11 @@ import org.w3c.dom.NodeList;
  */
 public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReader
 {
-
+	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();
+	
+	
 	@Override
-	public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException
+	public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
 	{
 		serviceCaps = new OWSServiceCapabilities();
     	
@@ -54,7 +56,7 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
         
         // Read Service Identification Section
         Element serviceIdElt = dom.getElement(capabilitiesElt, "ServiceIdentification");
-        readIdentification(serviceCaps.getIdentification(), dom, serviceIdElt);
+        owsReader.readIdentification(dom, serviceIdElt, serviceCaps.getIdentification());
                 
         // service type
         String serviceType = dom.getElementValue(serviceIdElt, "ServiceType");
@@ -107,31 +109,6 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
 			
 			if (postUrl != null)
 				serviceCaps.getPostServers().put(opName, postUrl);
-		}
-	}
-	
-	
-	/**
-	 * Reads a keyword list
-	 * @param layerElt
-	 * @return
-	 */
-	protected void readIdentification(OWSIdentification idObject, DOMHelper dom, Element parentElt)
-	{
-		String serviceTitle = dom.getElementValue(parentElt, "Title");
-		idObject.setTitle(serviceTitle);
-        
-        String desc = dom.getElementValue(parentElt, "Abstract");
-        idObject.setDescription(desc);
-		
-		NodeList keywordElts = dom.getElements(parentElt, "Keywords/Keyword");
-		int numElts = keywordElts.getLength();
-
-		for (int i = 0; i < numElts; i++)
-		{
-			Element keywordElt = (Element) keywordElts.item(i);
-			String keyword = dom.getElementValue(keywordElt);
-			idObject.getKeywords().add(keyword);
 		}
 	}
 

@@ -45,7 +45,7 @@ import org.vast.ows.wcs.WCSException;
  */
 public class WCSTransactionWriterV11 extends AbstractRequestWriter<WCSTransactionRequest>
 {
-	protected OWSReferenceWriterV11 owsWriter = new OWSReferenceWriterV11();
+	protected OWSCommonWriterV11 owsWriter = new OWSCommonWriterV11();
 	
 	
 	@Override
@@ -70,7 +70,7 @@ public class WCSTransactionWriterV11 extends AbstractRequestWriter<WCSTransactio
 		{
 			Element coverageElt = dom.addElement(inputElt, "+Coverage");
 			OWSReferenceGroup coverageInfo = request.getInputCoverages().get(i);
-			owsWriter.buildRefGroupXML(dom, coverageElt, coverageInfo);
+			owsWriter.buildRefGroup(dom, coverageElt, coverageInfo);
 		}
 		
 		return rootElt;

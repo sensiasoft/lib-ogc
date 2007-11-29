@@ -44,21 +44,13 @@ import org.vast.ows.OWSResponse;
 public class CoverageDescriptions extends OWSResponse
 {
 	protected List<CoverageDescription> descriptions;
-	protected List<WCSMetadataProxy> metadataProxys;
 
 	
 	public CoverageDescriptions()
 	{
 		this.service = "WCS";
         this.messageType = "CoverageDescriptions";		
-		metadataProxys = new ArrayList<WCSMetadataProxy>();
 		descriptions = new ArrayList<CoverageDescription>();
-	}
-	
-	
-	public List<WCSMetadataProxy> getMetadataProxys()
-	{
-		return metadataProxys;
 	}
 
 

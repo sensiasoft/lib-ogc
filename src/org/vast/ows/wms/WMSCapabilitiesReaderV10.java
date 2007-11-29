@@ -65,7 +65,7 @@ public class WMSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
     
     
     @Override
-    public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capabilitiesElt) throws OWSException
+    public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
     {
     	serviceCaps = new OWSServiceCapabilities();
     	

@@ -83,14 +83,13 @@ public class WCSCapabilitiesReaderV11 extends OWSCapabilitiesReaderV11
 			Element layerCapElt = (Element) layers.item(i);
 			WCSLayerCapabilities layerCap = new WCSLayerCapabilities();
 			layerCap.setParent(serviceCaps);
-			readIdentification(layerCap, dom, layerCapElt);
+			
+			// title, abstract, keywords, identifier
+			owsReader.readIdentification(dom, layerCapElt, layerCap);
 			
 			read2DBboxList(layerCap, dom, layerCapElt);
 			readCRSList(layerCap, dom, layerCapElt);
 			readFormatList(layerCap, dom, layerCapElt);
-			
-			String id = dom.getElementValue(layerCapElt, "Identifier");
-			layerCap.setIdentifier(id);
 
 			serviceCaps.getLayers().add(layerCap);
 		}

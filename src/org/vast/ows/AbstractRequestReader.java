@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provides methods to parse a GET or POST SOS request and
+ * Provides methods to parse a GET or POST OWS request and
  * create an OWSQuery object
  * </p>
  *

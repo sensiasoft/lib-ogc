@@ -22,7 +22,12 @@
 
 package org.vast.ows.wcs;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.vast.ows.OWSIdentification;
+import org.vast.ows.util.Bbox;
+import org.vast.ows.util.TimeInfo;
+
 
 /**
  * <p><b>Title:</b><br/>
@@ -41,4 +46,141 @@ import org.vast.ows.OWSIdentification;
 public class CoverageDescription extends OWSIdentification
 {
 
+	// spatial domain
+	protected List<Bbox> bboxList;
+	protected WCSRectifiedGridCrs gridCrs;
+	protected Object transformation;
+	// protected List<Polygon> -> use JTS
+
+	// temporal domain
+	protected List<TimeInfo> timeList;
+
+	// range
+	protected List<RangeField> rangeFields;
+	
+	// output
+	protected List<String> formatList;
+	protected String nativeFormat;
+	protected List<String> crsList;
+	protected String nativeCrs;
+
+	
+	public CoverageDescription()
+	{
+		bboxList = new ArrayList<Bbox>(1);
+		
+		timeList = new ArrayList<TimeInfo>(0);
+		rangeFields = new ArrayList<RangeField>(1);
+		
+		formatList = new ArrayList<String>(3);
+		crsList = new ArrayList<String>(3);
+	}
+	
+	
+	public List<String> getFormatList()
+	{
+		return formatList;
+	}
+
+
+	public void setFormatList(List<String> formatList)
+	{
+		this.formatList = formatList;
+	}
+
+
+	public String getNativeFormat()
+	{
+		return nativeFormat;
+	}
+
+
+	public void setNativeFormat(String nativeFormat)
+	{
+		this.nativeFormat = nativeFormat;
+	}
+
+
+	public List<String> getCrsList()
+	{
+		return crsList;
+	}
+
+
+	public void setCrsList(List<String> crsList)
+	{
+		this.crsList = crsList;
+	}
+	
+	
+	public String getNativeCrs()
+	{
+		return nativeCrs;
+	}
+
+
+	public void setNativeCrs(String nativeCrs)
+	{
+		this.nativeCrs = nativeCrs;
+	}
+
+
+	public List<Bbox> getBboxList()
+	{
+		return bboxList;
+	}
+
+
+	public void setBboxList(List<Bbox> bboxList)
+	{
+		this.bboxList = bboxList;
+	}
+
+
+	public List<TimeInfo> getTimeList()
+	{
+		return timeList;
+	}
+
+
+	public void setTimeList(List<TimeInfo> timeList)
+	{
+		this.timeList = timeList;
+	}
+
+
+	public WCSRectifiedGridCrs getGridCrs()
+	{
+		return gridCrs;
+	}
+
+
+	public void setGridCrs(WCSRectifiedGridCrs gridCrs)
+	{
+		this.gridCrs = gridCrs;
+	}
+
+
+	public Object getTransformation()
+	{
+		return transformation;
+	}
+
+
+	public void setTransformation(Object transformation)
+	{
+		this.transformation = transformation;
+	}
+
+
+	public List<RangeField> getRangeFields()
+	{
+		return rangeFields;
+	}
+
+
+	public void setRangeFields(List<RangeField> rangeFields)
+	{
+		this.rangeFields = rangeFields;
+	}
 }
