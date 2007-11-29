@@ -52,6 +52,7 @@ public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<Covera
 	
 	public Element buildXMLResponse(DOMHelper dom, CoverageDescriptions response, String version) throws OWSException
 	{
+		// setup ns and create root elt
 		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, version));
 		Element rootElt = dom.createElement("CoverageDescriptions");
 
@@ -118,7 +119,7 @@ public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<Covera
 				for (int k=0; k<field.getAxisList().size(); k++)
 				{
 					RangeAxis axis = field.getAxisList().get(k);
-					Element axisElt = dom.addElement(descElt, "Axis/Field");
+					Element axisElt = dom.addElement(fieldElt, "Axis");
 					
 					// title, abstract
 					owsWriter.buildDescription(dom, axisElt, axis);
@@ -131,7 +132,7 @@ public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<Covera
 					for (int h=0; h<keys.size(); h++)
 					{
 						String key = keys.get(h);
-						dom.setElementValue(fieldElt, "AvailableKeys/+Key", key);
+						dom.setElementValue(axisElt, "AvailableKeys/+Key", key);
 					}
 					
 					// TODO write meaning

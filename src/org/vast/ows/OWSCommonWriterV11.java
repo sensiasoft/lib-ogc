@@ -66,9 +66,9 @@ public class OWSCommonWriterV11
         // write upper corner
         String upCoords = Double.toString(bbox.getMaxX());
     	if (!Double.isNaN(bbox.getMaxY()))
-    		lowCoords += " " + bbox.getMaxY();
+    		upCoords += " " + bbox.getMaxY();
     	if (!Double.isNaN(bbox.getMaxZ()))
-    		lowCoords += " " + bbox.getMaxZ();
+    		upCoords += " " + bbox.getMaxZ();
         dom.setElementValue(bboxElt, "UpperCorner", upCoords);
         
         return bboxElt;

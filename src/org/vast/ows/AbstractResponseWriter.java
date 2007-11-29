@@ -43,6 +43,7 @@ import org.w3c.dom.Element;
 public abstract class AbstractResponseWriter<ResponseType extends OWSResponse> implements OWSResponseWriter<ResponseType>
 {
 	public final static String ioError = "IO error while writing XML response to stream";
+	public final static String unsupportedVersion = "No support for version ";
 	
 	
 	public abstract Element buildXMLResponse(DOMHelper dom, ResponseType response, String version) throws OWSException;

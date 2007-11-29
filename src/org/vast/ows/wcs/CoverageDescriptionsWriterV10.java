@@ -52,6 +52,7 @@ public class CoverageDescriptionsWriterV10 extends AbstractResponseWriter<Covera
 	
 	public Element buildXMLResponse(DOMHelper dom, CoverageDescriptions response, String version) throws OWSException
 	{
+		// setup ns and create root elt
 		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, version));
 		Element rootElt = dom.createElement("CoverageDescriptions");
 

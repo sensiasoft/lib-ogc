@@ -86,8 +86,11 @@ public class CoverageDescriptionsReaderV10 extends AbstractResponseReader<Covera
 			//Element timeDomainElt = dom.getElement(descElt, "domainSet/temporalDomain");
 
 			// range set = single field in 1.0
-			Element rangeSetElt = dom.getElement(offeringElt, "rangeSetRange/RangeSet");
+			Element rangeSetElt = dom.getElement(offeringElt, "rangeSet/RangeSet");
 			RangeField field = new RangeField();
+			desc.getRangeFields().add(field);
+			
+			// description, name, label
 			readIdentification(dom, rangeSetElt, field);
 
 			// all axes
@@ -125,7 +128,7 @@ public class CoverageDescriptionsReaderV10 extends AbstractResponseReader<Covera
 			}
 			
 			// native format
-			desc.setNativeFormat(dom.getElementValue(offeringElt, "supportedFormats/nativeFormat"));
+			desc.setNativeFormat(dom.getAttributeValue(offeringElt, "supportedFormats/@nativeFormat"));
 
 			// supported crs
 			NodeList crsElts = dom.getElements(offeringElt, "supportedCRSs/requestResponseCRSs");
