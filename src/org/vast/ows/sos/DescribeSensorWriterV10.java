@@ -18,7 +18,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows.sps;
 
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;

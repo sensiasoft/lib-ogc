@@ -18,7 +18,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows.sps;
 
 import java.io.*;
 import org.w3c.dom.*;
