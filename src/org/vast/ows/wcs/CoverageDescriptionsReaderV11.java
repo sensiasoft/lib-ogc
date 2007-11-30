@@ -52,111 +52,129 @@ public class CoverageDescriptionsReaderV11 extends AbstractResponseReader<Covera
 		CoverageDescriptions response = new CoverageDescriptions();
 		response.setVersion("1.1.1");
 		
-		NodeList descElts = dom.getElements(responseElt, "CoverageDescription");		
-		for (int i=0; i<descElts.getLength(); i++)
-		{ 
-			Element descElt = (Element)descElts.item(i);			
-			CoverageDescription desc = new CoverageDescription();
+		// try to read one description at the root first
+		if (responseElt.getLocalName().equals("CoverageDescription"))
+		{
+			CoverageDescription desc = readDescription(dom, responseElt);
 			response.getDescriptions().add(desc);
-			
-			// title, abstract, identifier elts
-			owsReader.readIdentification(dom, descElt, desc);
-			
-			// spatial domain
-			Element spDomainElt = dom.getElement(descElt, "Domain/SpatialDomain");
-						
-			// bbox list
-			NodeList bboxElts = dom.getElements(spDomainElt, "BoundingBox");
-			for (int j=0; j<bboxElts.getLength(); j++)
-			{
-				Element bboxElt = (Element)bboxElts.item(j);
-				Bbox bbox = owsReader.readBbox(dom, bboxElt);
-				desc.getBboxList().add(bbox);
+		}
+		else
+		{
+			// otherwise loop through collection of descriptions
+			NodeList descElts = dom.getElements(responseElt, "CoverageDescription");		
+			for (int i=0; i<descElts.getLength(); i++)
+			{ 
+				Element descElt = (Element)descElts.item(i);
+				CoverageDescription desc = readDescription(dom, descElt);
+				response.getDescriptions().add(desc);
 			}
-			
-			// TODO read grid CRS
-			// TODO read Transformation -> link to SensorML
-			
-			// TODO read time domain
-			//Element timeDomainElt = dom.getElement(descElt, "Domain/TemporalDomain");
-			
-			// range definition
-			NodeList fieldElts = dom.getElements(descElt, "Range/Field");
-			for (int j=0; j<fieldElts.getLength(); j++)
-			{
-				Element fieldElt = (Element)fieldElts.item(j);				
-				RangeField field = new RangeField();
-				
-				// title, abstract, keywords, identifier elts
-				owsReader.readIdentification(dom, fieldElt, field);
-				
-				// TODO read definition
-				
-				// try to read one numerical null value
-				try
-				{
-					String nullValue = dom.getElementValue(fieldElt, "NullValue");
-					if (nullValue != null)
-						field.setNullValue(Double.parseDouble(nullValue));
-				}
-				catch (NumberFormatException e)
-				{
-				}
-				
-				// interpolation methods
-				NodeList interpElts = dom.getElements(fieldElt, "InterpolationMethods/InterpolationMethod");
-				for (int k=0; k<interpElts.getLength(); k++)
-				{
-					Element interpElt = (Element)interpElts.item(k);
-					String methodName = dom.getElementValue(interpElt);
-					field.getInterpolationMethods().add(methodName);
-					
-					// TODO read nullResilience
-				}
-				
-				// set default method
-				String defaultMethod = dom.getElementValue(fieldElt, "InterpolationMethods/Default");
-				field.setDefaultInterpolationMethod(defaultMethod);
-				
-				// all field axes
-				NodeList axisElts = dom.getElements(fieldElt, "Axis");
-				for (int k=0; k<axisElts.getLength(); k++)
-				{
-					Element axisElt = (Element)axisElts.item(k);
-					RangeAxis axis = new RangeAxis();
-					
-					// title, abstract elts
-					owsReader.readDescription(dom, axisElt, axis);
-					
-					// identifier as attribute!
-					String id = dom.getAttributeValue(axisElt, "@identifier");
-					axis.setIdentifier(id);
-					
-					// keys
-					NodeList keyElts = dom.getElements(axisElt, "AvailableKeys/Key");
-					for (int h=0; h<keyElts.getLength(); h++)
-					{
-						Element keyElt = (Element)keyElts.item(h);
-						String key = dom.getElementValue(keyElt);
-						axis.getKeys().add(key);
-					}
-					
-					// TODO read meaning
-					// TODO read data type
-					// TODO read unit
-					
-					field.getAxisList().add(axis);
-				}
-				
-				desc.getRangeFields().add(field);
-			}
-			
-			// supported CRSs and formats
-			readCRSList(desc, dom, descElt);
-			readFormatList(desc, dom, descElt);
 		}
 		
 		return response;
+	}
+	
+	
+	protected CoverageDescription readDescription(DOMHelper dom, Element descElt) throws OWSException
+	{
+		CoverageDescription desc = new CoverageDescription();
+				
+		// title, abstract, identifier elts
+		owsReader.readIdentification(dom, descElt, desc);
+		
+		// spatial domain
+		Element spDomainElt = dom.getElement(descElt, "Domain/SpatialDomain");
+					
+		// bbox list
+		NodeList bboxElts = dom.getElements(spDomainElt, "BoundingBox");
+		for (int j=0; j<bboxElts.getLength(); j++)
+		{
+			Element bboxElt = (Element)bboxElts.item(j);
+			Bbox bbox = owsReader.readBbox(dom, bboxElt);
+			desc.getBboxList().add(bbox);
+		}
+		
+		// TODO read grid CRS
+		// TODO read Transformation -> link to SensorML
+		
+		// TODO read time domain
+		//Element timeDomainElt = dom.getElement(descElt, "Domain/TemporalDomain");
+		
+		// range definition
+		NodeList fieldElts = dom.getElements(descElt, "Range/Field");
+		for (int j=0; j<fieldElts.getLength(); j++)
+		{
+			Element fieldElt = (Element)fieldElts.item(j);				
+			RangeField field = new RangeField();
+			
+			// title, abstract, keywords, identifier elts
+			owsReader.readIdentification(dom, fieldElt, field);
+			
+			// TODO read definition
+			
+			// try to read one numerical null value
+			try
+			{
+				String nullValue = dom.getElementValue(fieldElt, "NullValue");
+				if (nullValue != null)
+					field.setNullValue(Double.parseDouble(nullValue));
+			}
+			catch (NumberFormatException e)
+			{
+			}
+			
+			// interpolation methods
+			NodeList interpElts = dom.getElements(fieldElt, "InterpolationMethods/InterpolationMethod");
+			for (int k=0; k<interpElts.getLength(); k++)
+			{
+				Element interpElt = (Element)interpElts.item(k);
+				String methodName = dom.getElementValue(interpElt);
+				field.getInterpolationMethods().add(methodName);
+				
+				// TODO read nullResilience
+			}
+			
+			// set default method
+			String defaultMethod = dom.getElementValue(fieldElt, "InterpolationMethods/Default");
+			field.setDefaultInterpolationMethod(defaultMethod);
+			
+			// all field axes
+			NodeList axisElts = dom.getElements(fieldElt, "Axis");
+			for (int k=0; k<axisElts.getLength(); k++)
+			{
+				Element axisElt = (Element)axisElts.item(k);
+				RangeAxis axis = new RangeAxis();
+				
+				// title, abstract elts
+				owsReader.readDescription(dom, axisElt, axis);
+				
+				// identifier as attribute!
+				String id = dom.getAttributeValue(axisElt, "@identifier");
+				axis.setIdentifier(id);
+				
+				// keys
+				NodeList keyElts = dom.getElements(axisElt, "AvailableKeys/Key");
+				for (int h=0; h<keyElts.getLength(); h++)
+				{
+					Element keyElt = (Element)keyElts.item(h);
+					String key = dom.getElementValue(keyElt);
+					axis.getKeys().add(key);
+				}
+				
+				// TODO read meaning
+				// TODO read data type
+				// TODO read unit
+				
+				field.getAxisList().add(axis);
+			}
+			
+			desc.getRangeFields().add(field);
+		}
+		
+		// supported CRSs and formats
+		readCRSList(desc, dom, descElt);
+		readFormatList(desc, dom, descElt);
+		
+		return desc;
 	}
 	
 	

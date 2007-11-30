@@ -55,6 +55,13 @@ public class WCSTransactionAck extends OWSResponse
 	}
 	
 	
+	public WCSTransactionAck(WCSTransactionRequest request)
+	{
+		this();
+		this.request = request;
+	}
+	
+	
 	public DateTime getTimeStamp()
 	{
 		return timeStamp;

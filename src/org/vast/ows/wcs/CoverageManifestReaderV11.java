@@ -55,29 +55,8 @@ public class CoverageManifestReaderV11 implements OWSResponseReader<CoverageMani
 		for (int i=0; i<covElts.getLength(); i++)
 		{
 			CoverageRefGroup coverageRef = new CoverageRefGroup();
-			Element coverageElt = (Element)covElts.item(i);
-			
-			// read group info
-			owsReader.readIdentification(dom, coverageElt, coverageRef);
-			
-			// simple references
-			NodeList refElts = dom.getElements(coverageElt, "Reference");
-			for (int j=0; j<refElts.getLength(); j++)
-			{
-				Element refElt = (Element)refElts.item(j);
-				OWSReference ref = owsReader.readReference(dom, refElt);
-				coverageRef.getReferenceList().add(ref);
-			}
-			
-			// service references
-			refElts = dom.getElements(coverageElt, "ServiceReference");
-			for (int j=0; j<refElts.getLength(); j++)
-			{
-				Element refElt = (Element)refElts.item(j);
-				OWSReference ref = owsReader.readReference(dom, refElt);
-				coverageRef.getReferenceList().add(ref);
-			}
-			
+			Element coverageElt = (Element)covElts.item(i);			
+			owsReader.readReferenceGroup(dom, coverageElt, coverageRef);			
 			manifest.getCoverages().add(coverageRef);
 		}
 		

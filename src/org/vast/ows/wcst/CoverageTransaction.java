@@ -62,5 +62,4 @@ public class CoverageTransaction extends CoverageRefGroup
 	{
 		this.updateBbox = updateBbox;
 	}
-
 }

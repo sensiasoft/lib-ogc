@@ -57,117 +57,135 @@ public class CoverageDescriptionsReaderV10 extends AbstractResponseReader<Covera
 		CoverageDescriptions response = new CoverageDescriptions();
 		response.setVersion("1.0");
 
-		NodeList descElts = dom.getElements(responseElt, "CoverageOffering");
-		for (int i = 0; i < descElts.getLength(); i++)
+		// try to read one description at the root first
+		if (responseElt.getLocalName().equals("CoverageOffering"))
 		{
-			Element offeringElt = (Element) descElts.item(i);
-			CoverageDescription desc = new CoverageDescription();
+			CoverageDescription desc = readDescription(dom, responseElt);
 			response.getDescriptions().add(desc);
-			
-			// title, abstract, identifier elts
-			readIdentification(dom, offeringElt, desc);
-
-			// spatial domain
-			Element spDomainElt = dom.getElement(offeringElt, "domainSet/spatialDomain");
-
-			// envelope
-			NodeList envElts = dom.getElements(spDomainElt, "Envelope");
-			for (int j = 0; j < envElts.getLength(); j++)
-			{
-				Element envElt = (Element) envElts.item(j);
-				Bbox bbox = gmlReader.readEnvelope(dom, envElt);
-				desc.getBboxList().add(bbox);
-			}
-
-			// TODO read gml:Grids
-			// TODO read gml:Polygons
-
-			// TODO read time domain
-			//Element timeDomainElt = dom.getElement(descElt, "domainSet/temporalDomain");
-
-			// range set = single field in 1.0
-			Element rangeSetElt = dom.getElement(offeringElt, "rangeSet/RangeSet");
-			RangeField field = new RangeField();
-			desc.getRangeFields().add(field);
-			
-			// description, name, label
-			readIdentification(dom, rangeSetElt, field);
-
-			// all axes
-			NodeList axisElts = dom.getElements(rangeSetElt, "axisDescription/AxisDescription");
-			for (int j = 0; j < axisElts.getLength(); j++)
-			{
-				Element axisElt = (Element) axisElts.item(j);
-				RangeAxis axis = new RangeAxis();
-
-				// title, abstract, identifier elts
-				readIdentification(dom, axisElt, axis);
-
-				// values
-				NodeList keyElts = dom.getElements(axisElt, "values/singleValue");
-				for (int h = 0; h < keyElts.getLength(); h++)
-				{
-					Element keyElt = (Element) keyElts.item(h);
-					String key = dom.getElementValue(keyElt);
-					axis.getKeys().add(key);
-				}
-
-				// TODO read data type
-				// TODO read unit
-
-				field.getAxisList().add(axis);
-			}
-			
-			// try to read one numerical null value
-			try
-			{
-				String nullValue = dom.getElementValue(rangeSetElt, "nullValues/singleValue");
-				if (nullValue != null)
-					field.setNullValue(Double.parseDouble(nullValue));
-			}
-			catch (NumberFormatException e)
-			{
-			}
-			
-			// supported crs
-			NodeList crsElts = dom.getElements(offeringElt, "supportedCRSs/requestResponseCRSs");
-			for (int j = 0; j < crsElts.getLength(); j++)
-			{
-				Element crsElt = (Element) crsElts.item(j);
-				String crsName = dom.getElementValue(crsElt);
-				desc.getCrsList().add(crsName);
-			}
-			
-			// native crs
-			desc.setNativeCrs(dom.getElementValue(offeringElt, "supportedCRSs/nativeCRSs"));
-
-			// supported formats
-			NodeList formatElts = dom.getElements(offeringElt, "supportedFormats/formats");
-			for (int j = 0; j < formatElts.getLength(); j++)
-			{
-				Element formatElt = (Element) formatElts.item(j);
-				String formatName = dom.getElementValue(formatElt);
-				desc.getFormatList().add(formatName);
-			}
-			
-			// native format
-			desc.setNativeFormat(dom.getAttributeValue(offeringElt, "supportedFormats/@nativeFormat"));
-
-			// other interpolation methods
-			NodeList interpElts = dom.getElements(offeringElt, "supportedInterpolations/interpolationMethod");
-			for (int j = 0; j < interpElts.getLength(); j++)
-			{
-				Element interpElt = (Element) interpElts.item(j);
-				String methodName = dom.getElementValue(interpElt);
-				field.getInterpolationMethods().add(methodName);
-			}
-
-			// set default method
-			String defaultMethod = dom.getAttributeValue(offeringElt, "supportedInterpolations/@default");
-			field.setDefaultInterpolationMethod(defaultMethod);
 		}
+		else
+		{
+			// otherwise loop through collection of descriptions
+			NodeList offeringElts = dom.getElements(responseElt, "CoverageOffering");
+			for (int i = 0; i < offeringElts.getLength(); i++)
+			{
+				Element offeringElt = (Element) offeringElts.item(i);
+				CoverageDescription desc = readDescription(dom, offeringElt);
+				response.getDescriptions().add(desc);
+			}
+		}		
 		
 		return response;
+	}
+	
+	
+	protected CoverageDescription readDescription(DOMHelper dom, Element offeringElt) throws OWSException
+	{
+		CoverageDescription desc = new CoverageDescription();
+				
+		// title, abstract, identifier elts
+		readIdentification(dom, offeringElt, desc);
+
+		// spatial domain
+		Element spDomainElt = dom.getElement(offeringElt, "domainSet/spatialDomain");
+
+		// envelope
+		NodeList envElts = dom.getElements(spDomainElt, "Envelope");
+		for (int j = 0; j < envElts.getLength(); j++)
+		{
+			Element envElt = (Element) envElts.item(j);
+			Bbox bbox = gmlReader.readEnvelope(dom, envElt);
+			desc.getBboxList().add(bbox);
+		}
+
+		// TODO read gml:Grids
+		// TODO read gml:Polygons
+
+		// TODO read time domain
+		//Element timeDomainElt = dom.getElement(descElt, "domainSet/temporalDomain");
+
+		// range set = single field in 1.0
+		Element rangeSetElt = dom.getElement(offeringElt, "rangeSet/RangeSet");
+		RangeField field = new RangeField();
+		desc.getRangeFields().add(field);
+		
+		// description, name, label
+		readIdentification(dom, rangeSetElt, field);
+
+		// all axes
+		NodeList axisElts = dom.getElements(rangeSetElt, "axisDescription/AxisDescription");
+		for (int j = 0; j < axisElts.getLength(); j++)
+		{
+			Element axisElt = (Element) axisElts.item(j);
+			RangeAxis axis = new RangeAxis();
+
+			// title, abstract, identifier elts
+			readIdentification(dom, axisElt, axis);
+
+			// values
+			NodeList keyElts = dom.getElements(axisElt, "values/singleValue");
+			for (int h = 0; h < keyElts.getLength(); h++)
+			{
+				Element keyElt = (Element) keyElts.item(h);
+				String key = dom.getElementValue(keyElt);
+				axis.getKeys().add(key);
+			}
+
+			// TODO read data type
+			// TODO read unit
+
+			field.getAxisList().add(axis);
+		}
+		
+		// try to read one numerical null value
+		try
+		{
+			String nullValue = dom.getElementValue(rangeSetElt, "nullValues/singleValue");
+			if (nullValue != null)
+				field.setNullValue(Double.parseDouble(nullValue));
+		}
+		catch (NumberFormatException e)
+		{
+		}
+		
+		// supported crs
+		NodeList crsElts = dom.getElements(offeringElt, "supportedCRSs/requestResponseCRSs");
+		for (int j = 0; j < crsElts.getLength(); j++)
+		{
+			Element crsElt = (Element) crsElts.item(j);
+			String crsName = dom.getElementValue(crsElt);
+			desc.getCrsList().add(crsName);
+		}
+		
+		// native crs
+		desc.setNativeCrs(dom.getElementValue(offeringElt, "supportedCRSs/nativeCRSs"));
+
+		// supported formats
+		NodeList formatElts = dom.getElements(offeringElt, "supportedFormats/formats");
+		for (int j = 0; j < formatElts.getLength(); j++)
+		{
+			Element formatElt = (Element) formatElts.item(j);
+			String formatName = dom.getElementValue(formatElt);
+			desc.getFormatList().add(formatName);
+		}
+		
+		// native format
+		desc.setNativeFormat(dom.getAttributeValue(offeringElt, "supportedFormats/@nativeFormat"));
+
+		// other interpolation methods
+		NodeList interpElts = dom.getElements(offeringElt, "supportedInterpolations/interpolationMethod");
+		for (int j = 0; j < interpElts.getLength(); j++)
+		{
+			Element interpElt = (Element) interpElts.item(j);
+			String methodName = dom.getElementValue(interpElt);
+			field.getInterpolationMethods().add(methodName);
+		}
+
+		// set default method
+		String defaultMethod = dom.getAttributeValue(offeringElt, "supportedInterpolations/@default");
+		field.setDefaultInterpolationMethod(defaultMethod);
+		
+		return desc;
 	}
 
 

@@ -71,7 +71,7 @@ public class WCSCapabilitiesReaderV11 extends OWSCapabilitiesReaderV11
 	
 	
 	@Override
-	protected void readContents(DOMHelper dom, Element capsElt)
+	protected void readContents(DOMHelper dom, Element capsElt) throws OWSException
 	{
 		//  Load List of CoverageSummary elements
 		NodeList layers = dom.getElements(capsElt, "Contents/CoverageSummary");

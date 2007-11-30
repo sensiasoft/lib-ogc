@@ -62,7 +62,7 @@ public class CoverageDescriptionsWriterV10 extends AbstractResponseWriter<Covera
 		for (int i=0; i<descriptions.size(); i++)
 		{
 			CoverageDescription desc = descriptions.get(i);
-			Element descElt = dom.addElement(rootElt, "CoverageOffering");
+			Element descElt = dom.addElement(rootElt, "+CoverageOffering");
 			
 			// title, abstract, keywords elts
 			WCSCapabilitiesWriterV10.writeIdentification(dom, descElt, desc);

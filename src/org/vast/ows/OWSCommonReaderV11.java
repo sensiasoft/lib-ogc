@@ -81,6 +81,31 @@ public class OWSCommonReaderV11
     }
 	
 	
+	public void readReferenceGroup(DOMHelper dom, Element refGroupElt, OWSReferenceGroup refGroup) throws OWSException
+	{
+		// read group info
+		readIdentification(dom, refGroupElt, refGroup);
+		
+		// simple references
+		NodeList refElts = dom.getElements(refGroupElt, "Reference");
+		for (int j=0; j<refElts.getLength(); j++)
+		{
+			Element refElt = (Element)refElts.item(j);
+			OWSReference ref = readReference(dom, refElt);
+			refGroup.getReferenceList().add(ref);
+		}
+		
+		// service references
+		refElts = dom.getElements(refGroupElt, "ServiceReference");
+		for (int j=0; j<refElts.getLength(); j++)
+		{
+			Element refElt = (Element)refElts.item(j);
+			OWSReference ref = readReference(dom, refElt);
+			refGroup.getReferenceList().add(ref);
+		}
+	}
+	
+	
 	public OWSReference readReference(DOMHelper dom, Element refElt) throws OWSException
 	{
 		OWSReference ref = new OWSReference();
@@ -101,7 +126,7 @@ public class OWSCommonReaderV11
 	}
 	
 	
-	public void readIdentification(DOMHelper dom, Element parentElt, OWSIdentification idObject)
+	public void readIdentification(DOMHelper dom, Element parentElt, OWSIdentification idObject) throws OWSException
 	{
 		// title, abstract, keywords
 		readDescription(dom, parentElt, idObject);
@@ -114,7 +139,7 @@ public class OWSCommonReaderV11
 	}
 	
 	
-	public void readDescription(DOMHelper dom, Element parentElt, OWSIdentification idObject)
+	public void readDescription(DOMHelper dom, Element parentElt, OWSIdentification idObject) throws OWSException
 	{
 		// title
 		String title = dom.getElementValue(parentElt, "Title");

@@ -159,9 +159,16 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     {
         String version = dom.getAttributeValue(objectElt, "@version");
         
+        // if version is still null get it from namespace of elt
+        if (version == null)
+        {
+        	String nsUri = objectElt.getNamespaceURI();
+        	version = nsUri.substring(nsUri.lastIndexOf('/') + 1);
+        }
+        
         // throw exception if no version is specified
         if (version == null || version.length() == 0)
-            throw new OWSException("Version attribute is mandatory");
+            throw new OWSException("Cannot figure out document version");
         
         return version;
     }
@@ -252,6 +259,49 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         catch (IOException e)
         {
             throw new OWSException("IO Error while sending request:\n" + requestString, e);
+        }
+    }
+    
+    
+    /**
+     * Helper method to parse any OWSResponse from service type and response type only
+     * This tries to guess the version from a version attribute or the end of the namespace uri
+     * @param dom
+     * @param responseElt
+     * @param serviceType
+     * @param responseType
+     * @return
+     * @throws OWSException
+     */
+    public OWSResponse readXMLResponse(DOMHelper dom, Element responseElt, String serviceType, String responseType) throws OWSException
+    {
+    	String version = readXMLVersion(dom, responseElt);
+    	return readXMLResponse(dom, responseElt, serviceType, responseType, version);
+    }
+    
+    
+    /**
+     * Helper method to parse any OWSResponse from service type, response type and version
+     * @param dom
+     * @param responseElt
+     * @param serviceType
+     * @param responseType
+     * @param version
+     * @return
+     * @throws OWSException
+     */
+    public OWSResponse readXMLResponse(DOMHelper dom, Element responseElt, String serviceType, String responseType, String version) throws OWSException
+    {
+        try
+        {
+        	OWSResponseReader<OWSResponse> reader = (OWSResponseReader<OWSResponse>)OGCRegistry.createReader(serviceType, responseType, version);
+            OWSResponse response = reader.readXMLResponse(dom, responseElt);
+            return response;
+        }
+        catch (IllegalStateException e)
+        {
+            String spec = serviceType + " " + responseType + " v" + version;
+        	throw new OWSException(unsupportedSpec + spec, e);
         }
     }
     
