@@ -53,7 +53,8 @@ public class WCSLayerCapabilities extends OWSLayerCapabilities
 	protected List<Bbox> bboxList;
 	protected List<TimeInfo> timeList;
 	protected List<WCSLayerCapabilities> childCoverages;
-
+	protected CoverageDescription fullDescription; 
+	
 
 	public WCSLayerCapabilities()
 	{
@@ -115,6 +116,18 @@ public class WCSLayerCapabilities extends OWSLayerCapabilities
 	public void setTimeList(List<TimeInfo> timeList)
 	{
 		this.timeList = timeList;
+	}
+
+
+	public CoverageDescription getFullDescription()
+	{
+		return fullDescription;
+	}
+
+
+	public void setFullDescription(CoverageDescription fullDescription)
+	{
+		this.fullDescription = fullDescription;
 	}
 
 }
