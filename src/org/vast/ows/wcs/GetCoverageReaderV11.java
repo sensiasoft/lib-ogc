@@ -402,7 +402,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 				report.add(new OWSException(OWSException.missing_param_code, "CRS"));
 			
 			// copy crs to responseCrs if needed
-			else if (request.gridCrs == null && request.getBbox() != null)
+			else if (request.getGridCrs().getBaseCrs() == null && request.getBbox() != null)
 				request.getGridCrs().setBaseCrs(request.getBbox().getCrs());
 		}
 		
