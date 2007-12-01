@@ -20,40 +20,91 @@
 
 package org.vast.ows.sps;
 
-import java.net.URL;
+import java.util.Map;
+import java.util.Set;
 
-import org.vast.cdm.common.DataComponent;
-import org.vast.ows.OWSRequest;
+import net.opengis.sps.x10.InputDescriptorDocument.InputDescriptor;
+import net.opengis.sps.x10.InputParameterType;
+import net.opengis.sps.x10.NotificationTargetType;
+import net.opengis.sps.x10.ParametersType;
+import net.opengis.sps.x10.SubmitDocument;
+import net.opengis.sps.x10.SubmitRequestType;
+import net.opengis.sps.x10.SubmitRequestType.SensorParam;
+
+import org.apache.xmlbeans.XmlObject;
 
 
 /**
  * <p><b>Title:</b><br/>
- * GetResult Request
+ * SPSSubmitRequest
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for SOS GetResult request parameters
+ * Class for creating SPS Submit requests. Based upon given notification
+ * information and data description, a Submit request will be created by this
+ * class.
  * </p>
+ * 
+ * <p><b>Limitations:</b><br/>
+ * Time 
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @date Oct 09, 2007
+ * @author Gregoire Berthiau, Johannes Echterhoff
+ * @date Nov 30, 2007
  * @version 1.0
  */
-public class SPSSubmitRequest extends OWSRequest
+public class SPSSubmitRequest
 {
 	
-	private String wnsId;
-	private URL wnsUrl;
-	private DataComponent dataRecord;
 	
-	public SPSSubmitRequest(String wnsId, URL wnsUrl, DataComponent dataRecord) {
-		this.wnsId = wnsId;
-		this.wnsUrl = wnsUrl;
-		this.dataRecord = dataRecord;
+	private SubmitDocument request;
+	
+//	private static final String DEFAULT_WNS_ID = "NULL";
+//	private static final String DEFAULT_WNS_URL = "http://localhost/WNS/wns";
+	
+	public SPSSubmitRequest(String wnsId, String wnsUrl, String sensorID, Map<String, InputDescriptor> descriptorMap, Set<String> inputParamIds) {
+	   
+//	   String wnsId_;
+//	   String wnsUrl_;
+//	   
+//	   if(wnsId != null) {
+//	      wnsId_ = wnsId;
+//	   } else {
+//	      wnsId_ = DEFAULT_WNS_ID;
+//	   }
+//	   
+//	   if(wnsUrl != null) {
+//	      wnsUrl_ = wnsUrl;
+//	   } else {
+//	      wnsUrl_ = DEFAULT_WNS_URL;
+//	   }
+	   
+	   SubmitDocument sd = SubmitDocument.Factory.newInstance();
+      SubmitRequestType srt = sd.addNewSubmit();
+      
+      srt.setVersion("1.0.0");
+      srt.setService("SPS");
+      
+      NotificationTargetType ntt = srt.addNewNotificationTarget();
+      ntt.setNotificationID(wnsId);
+      ntt.setNotificationURL(wnsUrl);
+      
+      SensorParam tmp = srt.addNewSensorParam();
+		tmp.addNewSensorID().setStringValue(sensorID);
+		ParametersType parameters = tmp.addNewParameters();
 		
+		for(String inputParamId : inputParamIds) {
+		   
+		   InputDescriptor descriptor = descriptorMap.get(inputParamId);
+		   
+		   InputParameterType param = parameters.addNewInputParameter();
+		   param.setParameterID(descriptor.getParameterID());
+		   param.addNewValue().set((XmlObject)descriptor.getDefinition().getCommonData().getDomNode());
+		}
 	}
 	
-	public String
+	public SubmitDocument getSubmitRequest() {	   
+	   return this.request;
+	}
 	
 }
