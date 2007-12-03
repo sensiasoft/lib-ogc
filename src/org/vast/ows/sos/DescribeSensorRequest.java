@@ -18,7 +18,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sps;
+package org.vast.ows.sos;
 
 import org.vast.ows.OWSRequest;
 import org.vast.ows.util.TimeInfo;
