@@ -20,6 +20,7 @@
 
 package org.vast.ows;
 
+import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSReference;
 import org.vast.ows.util.Bbox;
 import org.w3c.dom.*;
@@ -110,14 +111,17 @@ public class OWSCommonReaderV11
 	{
 		OWSReference ref = new OWSReference();
 		
-		// role
-		String role = dom.getAttributeValue(refElt, "@role");
-		ref.setRole(role);
-		
 		// href
 		String endpoint = dom.getAttributeValue(refElt, "@href");
 		ref.setHref(endpoint);
 		
+		// remove href to make sure we don't follow it!!
+		refElt.removeAttributeNS(OGCRegistry.getNamespaceURI(OGCRegistry.XLINK), "href");
+		
+		// role
+		String role = dom.getAttributeValue(refElt, "@role");
+		ref.setRole(role);
+					
 		// format
 		String format = dom.getElementValue(refElt, "Format");
 		ref.setFormat(format);
