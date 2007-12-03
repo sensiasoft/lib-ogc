@@ -123,7 +123,7 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
         
         // RESPONSE_CRS
         if (request.getGridCrs() != null)
-        	urlBuff.append("&RESPONSE_CRS=" + request.getGridCrs());
+        	urlBuff.append("&RESPONSE_CRS=" + request.getGridCrs().getBaseCrs());
         
         // FORMAT
         urlBuff.append("&FORMAT=" + request.getFormat());
