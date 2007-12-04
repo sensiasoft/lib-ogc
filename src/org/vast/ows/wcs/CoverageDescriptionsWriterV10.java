@@ -48,7 +48,7 @@ import org.vast.xml.QName;
 public class CoverageDescriptionsWriterV10 extends AbstractResponseWriter<CoverageDescriptions>
 {
 	protected GMLEnvelopeWriter gmlWriter = new GMLEnvelopeWriter();
-	
+		
 	
 	public Element buildXMLResponse(DOMHelper dom, CoverageDescriptions response, String version) throws OWSException
 	{
@@ -80,7 +80,40 @@ public class CoverageDescriptionsWriterV10 extends AbstractResponseWriter<Covera
 				spDomainElt.appendChild(envElt);
 			}
 			
-			// TODO write grid list
+			// grid CRS
+			WCSRectifiedGridCrs gridCrs = desc.getGridCrs();
+			if (gridCrs != null)
+			{
+				dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+				Element gridElt = dom.addElement(spDomainElt, "gml:RectifiedGrid");
+				dom.setAttributeValue(gridElt, "srsName", gridCrs.getBaseCrs());
+				
+				// limits
+				Element limitsElt = dom.addElement(gridElt, "gml:limits");
+				Bbox gridBox = new Bbox();
+				gridBox.setMinX(0);
+				gridBox.setMinY(0);
+				gridBox.setMaxX(gridCrs.getGridSizes()[0]);
+				gridBox.setMaxY(gridCrs.getGridSizes()[1]);
+				Element gridEnvElt = gmlWriter.writeGridEnvelope(dom, gridBox);
+				limitsElt.appendChild(gridEnvElt);
+				
+				// axisNames
+				dom.setElementValue(gridElt, "+gml:axisName", "X");
+				dom.setElementValue(gridElt, "+gml:axisName", "Y");
+				
+				// origin coordinates
+				double[] origin = gridCrs.getGridOrigin();
+				String originVal = origin[0] + " " + origin[1];
+				dom.setElementValue(gridElt, "gml:origin/gml:pos", originVal);
+				
+				// offset vectors
+				double[] vecX = gridCrs.getGridOffsets()[0];
+				double[] vecY = gridCrs.getGridOffsets()[1];
+				dom.setElementValue(gridElt, "+gml:offsetVector", vecX[0] + " " + vecX[1]);
+				dom.setElementValue(gridElt, "+gml:offsetVector", vecY[0] + " " + vecY[1]);
+			}
+			
 			// TODO write polygons list
 			
 			// TODO write time domain

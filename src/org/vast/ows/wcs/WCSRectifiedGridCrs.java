@@ -47,8 +47,9 @@ public class WCSRectifiedGridCrs
 	protected String gridCs;
 	protected String gridType;
 	protected int gridDimension;
+	protected int[] gridSizes;
 	protected double[] gridOrigin;
-	protected double[][] gridOffsets;
+	protected double[][] gridOffsets;	
 
 
 	public WCSRectifiedGridCrs()
@@ -56,6 +57,7 @@ public class WCSRectifiedGridCrs
 		gridCs = SQUARE_CS_2D;
         gridType = SIMPLE_GRID;
         gridDimension = 2;
+        gridSizes = new int[gridDimension];
         gridOrigin = new double[gridDimension];
         gridOffsets = new double[gridDimension][gridDimension];
         gridOffsets[0][0] = 1.0;
@@ -132,5 +134,17 @@ public class WCSRectifiedGridCrs
 	public void setGridOffsets(double[][] gridOffsets)
 	{
 		this.gridOffsets = gridOffsets;
+	}
+
+
+	public int[] getGridSizes()
+	{
+		return gridSizes;
+	}
+
+
+	public void setGridSizes(int[] gridSizes)
+	{
+		this.gridSizes = gridSizes;
 	}
 }

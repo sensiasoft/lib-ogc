@@ -80,7 +80,34 @@ public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<Covera
 				spDomainElt.appendChild(bboxElt);
 			}
 			
-			// TODO write grid CRS
+			// grid CRS
+			WCSRectifiedGridCrs gridCrs = desc.getGridCrs();
+			if (gridCrs != null)
+			{
+				dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+				Element gridElt = dom.addElement(spDomainElt, "GridCRS");
+				dom.setElementValue(gridElt, "gml:srsName", desc.getIdentifier() + "_GRID_CRS");
+				dom.setElementValue(gridElt, "GridBaseCRS", gridCrs.getBaseCrs());
+				dom.setElementValue(gridElt, "GridType", gridCrs.getGridType());
+				
+				// origin coordinates
+				double[] origin = gridCrs.getGridOrigin();
+				String originVal = origin[0] + " " + origin[1];
+				dom.setElementValue(gridElt, "GridOrigin", originVal);
+				
+				// offsets coordinates
+				double[][] offsets = gridCrs.getGridOffsets();
+				StringBuffer offsetBuf = new StringBuffer();
+				for (int u=0; u<offsets.length; u++)
+					for (int v=0; v<offsets[0].length; v++)
+						offsetBuf.append(offsets[u][v] + " ");
+				String offsetVal = offsetBuf.toString().trim();
+				dom.setElementValue(gridElt, "GridOffsets", offsetVal);
+				
+				// cs type
+				dom.setElementValue(gridElt, "GridCS", gridCrs.getGridCs());
+			}
+			
 			// TODO write Transformation -> link to SensorML?
 			// TODO write image CRS if unrectified
 			// TODO write polygon list

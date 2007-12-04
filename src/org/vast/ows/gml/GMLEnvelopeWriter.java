@@ -54,11 +54,31 @@ public class GMLEnvelopeWriter
         
         Element envelopeElt = dom.createElement("gml:Envelope");
     	
-		dom.setAttributeValue(envelopeElt, "@srsName", bbox.getCrs());
+        if (bbox.getCrs() != null)
+        	dom.setAttributeValue(envelopeElt, "@srsName", bbox.getCrs());
+        
 		String lowerCorner = bbox.getMinX() + " " + bbox.getMinY();
 		dom.setElementValue(envelopeElt, "gml:lowerCorner", lowerCorner);
 		String upperCorner = bbox.getMaxX() + " " + bbox.getMaxY();
 		dom.setElementValue(envelopeElt, "gml:upperCorner", upperCorner);
+        
+        return envelopeElt;
+    }
+    
+    
+    public Element writeGridEnvelope(DOMHelper dom, Bbox bbox) throws GMLException
+    {
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+        
+        Element envelopeElt = dom.createElement("gml:GridEnvelope");
+    	
+        if (bbox.getCrs() != null)
+        	dom.setAttributeValue(envelopeElt, "@srsName", bbox.getCrs());
+        
+		String lowerCorner = bbox.getMinX() + " " + bbox.getMinY();
+		dom.setElementValue(envelopeElt, "gml:low", lowerCorner);
+		String upperCorner = bbox.getMaxX() + " " + bbox.getMaxY();
+		dom.setElementValue(envelopeElt, "gml:high", upperCorner);
         
         return envelopeElt;
     }
