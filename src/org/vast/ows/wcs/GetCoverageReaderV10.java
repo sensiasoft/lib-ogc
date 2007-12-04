@@ -29,7 +29,6 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
 import org.vast.ows.gml.GMLEnvelopeReader;
 import org.vast.ows.gml.GMLTimeReader;
-import org.vast.ows.util.AxisSubset;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.Interval;
 import org.vast.ows.util.TimeInfo;
@@ -229,7 +228,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
             // INTERPOLATION
             else if (argName.equalsIgnoreCase("INTERPOLATION"))
             {
-                request.setInterpolationMethod(argValue);
+                request.getFieldSubsets().get(0).setInterpolationMethod(argValue);
             }
             
             // FORMAT
@@ -366,6 +365,10 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 			}
 		}
 
+		FieldSubset fieldSubset = new FieldSubset();
+		fieldSubset.setIdentifier("Field0");
+		request.getFieldSubsets().add(fieldSubset);
+		
 		////// range subset //////
 		NodeList axisElts = dom.getElements(requestElt, "rangeSubset/axisSubset");
 		for (int i=0; i<axisElts.getLength(); i++)
@@ -373,7 +376,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 			AxisSubset axis = new AxisSubset();			
 			Element axisElt = (Element)axisElts.item(i);
 			String name = dom.getAttributeValue(axisElt, "name");
-			axis.setName(name);
+			axis.setIdentifier(name);
 			
 			NodeList intervalElts = dom.getElements(axisElt, "interval");
 			for (int p=0; p<intervalElts.getLength(); p++)
@@ -407,15 +410,15 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 				String val = dom.getElementValue(valueElt);
 				if (val == null)
 					throw new WCSException(invalidXML + ": Invalid range subset value: " + val);				
-				axis.getRangeValues().add(val);
+				axis.getKeys().add(val);
 			}
 			
-			request.getAxisSubsets().add(axis);
-		}
+			fieldSubset.getAxisSubsets().add(axis);
+		}	
 				
 		// interpolation method
 		String interpMethod = dom.getElementValue(requestElt, "interpolationMethod");
-		request.setInterpolationMethod(interpMethod);
+		fieldSubset.setInterpolationMethod(interpMethod);
 		
 		// response CRS
 		String responseCrs = dom.getElementValue(requestElt, "output/crs");

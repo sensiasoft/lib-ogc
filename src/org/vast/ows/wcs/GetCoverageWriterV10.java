@@ -25,7 +25,6 @@ import java.util.Enumeration;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
 import org.vast.ows.gml.GMLEnvelopeWriter;
-import org.vast.ows.util.AxisSubset;
 import org.vast.ows.util.Interval;
 import org.vast.ows.util.TimeInfo;
 import org.w3c.dom.*;
@@ -95,10 +94,11 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
         }
         
         // {PARAMETERS}
-        for (int i=0; i<request.getAxisSubsets().size(); i++)
+        FieldSubset field = request.getFieldSubsets().get(0);
+        for (int i=0; i<request.getFieldSubsets().size(); i++)
         {
-	        AxisSubset param = request.getAxisSubsets().get(i);
-	        urlBuff.append("&" + param.getName().toUpperCase() + "=");
+	        AxisSubset param = field.getAxisSubsets().get(i);
+	        urlBuff.append("&" + param.getIdentifier().toUpperCase() + "=");
 	        
         	if (!param.getRangeIntervals().isEmpty()) // case of interval
 	        {
@@ -109,12 +109,12 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
 	        	if (interval.getResolution() > 0)
 	        		urlBuff.append("/" + interval.getResolution());
 	        }
-	        else if (!param.getRangeValues().isEmpty())
+	        else if (!param.getKeys().isEmpty())
 	        {
-	        	int listSize = param.getRangeValues().size();
+	        	int listSize = param.getKeys().size();
 	        	for (int v=0; v<listSize; v++)
 	        	{
-	        		urlBuff.append(param.getRangeValues().get(v));
+	        		urlBuff.append(param.getKeys().get(v));
 	        		if (v < listSize-1)
 	        			urlBuff.append(",");
 	        	}
@@ -224,11 +224,12 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
 		}
 		
 		////// range subset //////
-		for (int i=0; i<request.getAxisSubsets().size(); i++)
+		FieldSubset field = request.getFieldSubsets().get(0);
+		for (int i=0; i<request.getFieldSubsets().size(); i++)
         {
-	        AxisSubset param = request.getAxisSubsets().get(i);
+	        AxisSubset param = field.getAxisSubsets().get(i);
 			Element axisElt = dom.addElement(rootElt, "rangeSubset/+axisSubset");
-			dom.setAttributeValue(axisElt, "@name", param.getName());
+			dom.setAttributeValue(axisElt, "@name", param.getIdentifier());
 			
 			// add all intervals
 			for (int j=0; j<param.getRangeIntervals().size(); j++)
@@ -242,13 +243,13 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
 			}
 			
 			// add all single values
-			for (int j=0; j<param.getRangeValues().size(); j++)
-				dom.setElementValue(axisElt, "+singleValue", param.getRangeValues().get(j));
+			for (int j=0; j<param.getKeys().size(); j++)
+				dom.setElementValue(axisElt, "+singleValue", param.getKeys().get(j));
 		}
 				
 		////// interpolation method //////
-		if (request.getInterpolationMethod() != null)
-			dom.setElementValue(rootElt, "interpolationMethod", request.getInterpolationMethod());
+		if (field.getInterpolationMethod() != null)
+			dom.setElementValue(rootElt, "interpolationMethod", field.getInterpolationMethod());
 		
 		////// output parameters //////
 		Element outputElt = dom.addElement(rootElt, "output");

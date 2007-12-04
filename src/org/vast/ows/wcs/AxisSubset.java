@@ -18,9 +18,11 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.util;
+package org.vast.ows.wcs;
 
 import java.util.ArrayList;
+import org.vast.ows.OWSIdentification;
+import org.vast.ows.util.Interval;
 
 
 /**
@@ -38,29 +40,16 @@ import java.util.ArrayList;
  * @date Sep 24, 2007
  * @version 1.0
  */
-public class AxisSubset
+public class AxisSubset extends OWSIdentification
 {
-	protected String name;
 	protected ArrayList<Interval> rangeIntervals;
-	protected ArrayList<String> rangeValues;
+	protected ArrayList<String> keys;
 
 
 	public AxisSubset()
 	{
 		rangeIntervals = new ArrayList<Interval>();
-		rangeValues = new ArrayList<String>();
-	}
-
-
-	public String getName()
-	{
-		return name;
-	}
-
-
-	public void setName(String name)
-	{
-		this.name = name;
+		keys = new ArrayList<String>();
 	}
 
 
@@ -70,8 +59,8 @@ public class AxisSubset
 	}
 
 
-	public ArrayList<String> getRangeValues()
+	public ArrayList<String> getKeys()
 	{
-		return rangeValues;
+		return keys;
 	}
 }

@@ -189,7 +189,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
      * @param argValue
      * @return
      */
-    protected double[] parseVector(String vectorText) throws OWSException
+    public static double[] parseVector(String vectorText) throws OWSException
     {
     	try
         {

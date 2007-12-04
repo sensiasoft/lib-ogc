@@ -47,6 +47,7 @@ import org.vast.xml.QName;
  */
 public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<CoverageDescriptions>
 {
+	protected WCSCommonWriterV11 wcsWriter = new WCSCommonWriterV11();
 	protected OWSCommonWriterV11 owsWriter = new OWSCommonWriterV11();
 	
 	
@@ -84,28 +85,10 @@ public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<Covera
 			WCSRectifiedGridCrs gridCrs = desc.getGridCrs();
 			if (gridCrs != null)
 			{
-				dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
-				Element gridElt = dom.addElement(spDomainElt, "GridCRS");
-				dom.setElementValue(gridElt, "gml:srsName", desc.getIdentifier() + "_GRID_CRS");
-				dom.setElementValue(gridElt, "GridBaseCRS", gridCrs.getBaseCrs());
-				dom.setElementValue(gridElt, "GridType", gridCrs.getGridType());
+				String id = desc.getIdentifier() + "_GRID_CRS";
+				Element gridCrsElt = wcsWriter.buildGridCRS(dom, gridCrs, id);
+				spDomainElt.appendChild(gridCrsElt);
 				
-				// origin coordinates
-				double[] origin = gridCrs.getGridOrigin();
-				String originVal = origin[0] + " " + origin[1];
-				dom.setElementValue(gridElt, "GridOrigin", originVal);
-				
-				// offsets coordinates
-				double[][] offsets = gridCrs.getGridOffsets();
-				StringBuffer offsetBuf = new StringBuffer();
-				for (int u=0; u<offsets.length; u++)
-					for (int v=0; v<offsets[0].length; v++)
-						offsetBuf.append(offsets[u][v] + " ");
-				String offsetVal = offsetBuf.toString().trim();
-				dom.setElementValue(gridElt, "GridOffsets", offsetVal);
-				
-				// cs type
-				dom.setElementValue(gridElt, "GridCS", gridCrs.getGridCs());
 			}
 			
 			// TODO write Transformation -> link to SensorML?

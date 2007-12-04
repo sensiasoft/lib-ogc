@@ -22,8 +22,8 @@ package org.vast.ows.wcs;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import org.vast.ows.OWSRequest;
-import org.vast.ows.util.AxisSubset;
 import org.vast.ows.util.Bbox;
 import org.vast.ows.util.TimeInfo;
 
@@ -45,16 +45,15 @@ import org.vast.ows.util.TimeInfo;
 public class GetCoverageRequest extends OWSRequest
 {
     protected String coverage;
-	protected String format;
-	protected String interpolationMethod;
+	protected String format;	
 	protected Bbox bbox;
 	protected int width, height, depth;
 	protected int skipX, skipY, skipZ;
 	protected WCSRectifiedGridCrs gridCrs;
 	protected boolean store;
 	protected boolean useResolution;
-	protected ArrayList<AxisSubset> axisSubsets;
-	protected ArrayList<TimeInfo> times;
+	protected List<FieldSubset> fieldSubsets;
+	protected List<TimeInfo> times;
 		
 	
 	public GetCoverageRequest()
@@ -62,7 +61,7 @@ public class GetCoverageRequest extends OWSRequest
         service = "WCS";
         operation = "GetCoverage";
         
-        axisSubsets = new ArrayList<AxisSubset>();
+        fieldSubsets = new ArrayList<FieldSubset>();
         times = new ArrayList<TimeInfo>();
         vendorParameters = new Hashtable<String, String>();
         gridCrs = new WCSRectifiedGridCrs();
@@ -110,15 +109,15 @@ public class GetCoverageRequest extends OWSRequest
 	}
 
 
-	public ArrayList<TimeInfo> getTimes()
+	public List<TimeInfo> getTimes()
 	{
 		return times;
 	}
 
 
-	public ArrayList<AxisSubset> getAxisSubsets()
+	public List<FieldSubset> getFieldSubsets()
 	{
-		return axisSubsets;
+		return fieldSubsets;
 	}
 
 
@@ -272,18 +271,6 @@ public class GetCoverageRequest extends OWSRequest
 	{
 		this.depth = depth;
 		this.useResolution = false;
-	}
-	
-	
-	public String getInterpolationMethod()
-	{
-		return interpolationMethod;
-	}
-
-
-	public void setInterpolationMethod(String interpolationMethod)
-	{
-		this.interpolationMethod = interpolationMethod;
 	}
 	
 	

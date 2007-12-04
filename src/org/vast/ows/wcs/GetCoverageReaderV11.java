@@ -28,9 +28,7 @@ import org.w3c.dom.*;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
 import org.vast.ows.gml.GMLTimeReader;
-import org.vast.ows.util.AxisSubset;
 import org.vast.ows.util.Bbox;
-import org.vast.ows.util.Interval;
 import org.vast.ows.util.TimeInfo;
 
 
@@ -51,6 +49,7 @@ import org.vast.ows.util.TimeInfo;
  */
 public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageRequest>
 {
+	protected WCSCommonReaderV11 wcsReader = new WCSCommonReaderV11();
 	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();
 	protected GMLTimeReader timeReader = new GMLTimeReader();
 	
@@ -157,7 +156,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
             // GridOffsets
             else if (argName.equalsIgnoreCase("GridOffsets"))
             {
-            	double[][] vectors = WCSUtils.parseGridOffsets(argValue);
+            	double[][] vectors = WCSCommonReaderV11.parseGridOffsets(argValue);
             	request.getGridCrs().setGridOffsets(vectors);
             }
             
@@ -181,7 +180,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 	
 	protected void parseRangeSubset(GetCoverageRequest query, String kvpToken)
 	{
-		
+		// TODO parse range subset in KVP
 	}
 	
 	
@@ -275,52 +274,43 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 		}
 
 		
-		////// range subset //////
-		NodeList axisElts = dom.getElements(requestElt, "RangeSubset/axisSubset");
-		for (int i=0; i<axisElts.getLength(); i++)
+		////// range subset (support only one field!) //////
+		NodeList fieldElts = dom.getElements(requestElt, "RangeSubset/FieldSubset");
+		for (int j=0; j<fieldElts.getLength(); j++)
 		{
-			AxisSubset axis = new AxisSubset();			
-			Element axisElt = (Element)axisElts.item(i);
-			String name = dom.getAttributeValue(axisElt, "name");
-			axis.setName(name);
+			Element fieldElt = (Element)fieldElts.item(j);
+			FieldSubset field = new FieldSubset();
+			request.getFieldSubsets().add(field);
 			
-			NodeList intervalElts = dom.getElements(axisElt, "interval");
-			for (int p=0; p<intervalElts.getLength(); p++)
+			// field identifier
+			field.setIdentifier(dom.getElementValue(fieldElt, "Identifier"));
+			
+			// interpolation method
+			String interpolationMethod = dom.getElementValue(fieldElt, "InterpolationType");
+			if (interpolationMethod != null)
+				field.setInterpolationMethod(interpolationMethod);
+			
+			// all field axes
+			NodeList axisElts = dom.getElements(fieldElt, "AxisSubset");
+			for (int k=0; k<axisElts.getLength(); k++)
 			{
-				Interval interval = new Interval();
-				Element intervalElt = (Element)intervalElts.item(p);
-				String minText = dom.getElementValue(intervalElt, "min");
-				String maxText = dom.getElementValue(intervalElt, "max");
-				String resText = dom.getElementValue(intervalElt, "res");
+				Element axisElt = (Element)axisElts.item(k);
+				AxisSubset axisSubset = new AxisSubset();
+				field.getAxisSubsets().add(axisSubset);
 				
-				try
+				// title, abstract elts
+				owsReader.readIdentification(dom, axisElt, axisSubset);
+				
+				// keys
+				NodeList keyElts = dom.getElements(axisElt, "Key");
+				for (int h=0; h<keyElts.getLength(); h++)
 				{
-					double min = Double.parseDouble(minText);
-					interval.setMin(min);
-					double max = Double.parseDouble(maxText);
-					interval.setMax(max);					
-					double res = Double.parseDouble(resText);
-					interval.setResolution(res);
+					Element keyElt = (Element)keyElts.item(h);
+					String key = dom.getElementValue(keyElt);
+					axisSubset.getKeys().add(key);
 				}
-				catch (NumberFormatException e)
-				{
-					throw new WCSException(invalidXML + ": " + invalidValue + " range subset: " + minText+"/"+maxText+"/");
-				}
-				axis.getRangeIntervals().add(interval);
 			}
-			
-			NodeList valueElts = dom.getElements(axisElt, "singleValue");
-			for (int p=0; p<valueElts.getLength(); p++)
-			{
-				Element valueElt = (Element)valueElts.item(p);
-				String val = dom.getElementValue(valueElt);
-				if (val == null)
-					throw new WCSException(invalidXML + ": " + invalidValue + " range subset: " + val);				
-				axis.getRangeValues().add(val);
-			}
-			
-			request.getAxisSubsets().add(axis);
-		}		
+		}
 		
 		////// Output //////
 		Element outputElt = dom.getElement(requestElt, "Output");
@@ -336,40 +326,12 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 		else
 			request.setStore(false);
 		
-		// rectified grid
+		// grid crs
 		Element gridElt = dom.getElement(outputElt, "GridCRS");
 		if (gridElt != null)
 		{
-			// base CRS
-			String responseCrs = dom.getElementValue(gridElt, "GridBaseCRS");
-			request.getGridCrs().setBaseCrs(responseCrs);
-			
-			// type
-			String gridType = dom.getElementValue(gridElt, "GridType");
-			if (gridType != null)
-				request.getGridCrs().setGridType(gridType);
-			
-			// CS
-			String gridCs = dom.getElementValue(gridElt, "GridCS");
-			if (gridCs != null)
-				request.getGridCrs().setGridCs(gridCs);
-			
-			// origin
-			String gridOrigin = dom.getElementValue(gridElt, "GridOrigin");
-			if (gridOrigin != null)
-			{
-				double[] vecOrig = this.parseVector(gridOrigin);
-				request.getGridCrs().setGridDimension(vecOrig.length);
-				request.getGridCrs().setGridOrigin(vecOrig);
-			}
-			
-			// offsets
-			String gridOffsets = dom.getElementValue(gridElt, "GridOffsets");
-			if (gridOffsets != null)
-			{
-				double[][] vectors = WCSUtils.parseGridOffsets(gridOffsets);
-				request.getGridCrs().setGridOffsets(vectors);
-			}
+			WCSRectifiedGridCrs gridCrs = new WCSRectifiedGridCrs();
+			wcsReader.readGridCRS(dom, gridElt, gridCrs);
 		}
 		
 		this.checkParameters(request, report);

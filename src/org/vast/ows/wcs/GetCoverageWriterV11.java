@@ -20,16 +20,10 @@
 
 package org.vast.ows.wcs;
 
-import java.text.NumberFormat;
 import java.util.Enumeration;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
-import org.vast.ows.gml.GMLEnvelopeWriter;
-import org.vast.ows.util.AxisSubset;
-import org.vast.ows.util.Interval;
-import org.vast.ows.util.TimeInfo;
 import org.w3c.dom.*;
-import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 
@@ -51,7 +45,8 @@ import org.vast.xml.QName;
  */
 public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageRequest>
 {
-	protected GMLEnvelopeWriter envelopeWriter = new GMLEnvelopeWriter();
+	protected WCSCommonWriterV11 wcsWriter = new WCSCommonWriterV11();
+	protected OWSCommonWriterV11 owsWriter = new OWSCommonWriterV11();
 	
 	
 	@Override
@@ -61,7 +56,7 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
         addCommonArgs(urlBuff, request);
         
         // COVERAGE
-        urlBuff.append("&COVERAGE=" + request.getCoverage());
+        urlBuff.append("&IDENTIFIER=" + request.getCoverage());
         
         // TIME
         if (request.getTime() != null)
@@ -94,32 +89,7 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
 	        }
         }
         
-        // {PARAMETERS}
-        for (int i=0; i<request.getAxisSubsets().size(); i++)
-        {
-	        AxisSubset param = request.getAxisSubsets().get(i);
-	        urlBuff.append("&" + param.getName().toUpperCase() + "=");
-	        
-        	if (!param.getRangeIntervals().isEmpty()) // case of interval
-	        {
-        		// only one interval is supportted in KVP
-        		Interval interval = param.getRangeIntervals().get(0);
-        		urlBuff.append(interval.getMin());
-	        	urlBuff.append("/" + interval.getMax());
-	        	if (interval.getResolution() > 0)
-	        		urlBuff.append("/" + interval.getResolution());
-	        }
-	        else if (!param.getRangeValues().isEmpty())
-	        {
-	        	int listSize = param.getRangeValues().size();
-	        	for (int v=0; v<listSize; v++)
-	        	{
-	        		urlBuff.append(param.getRangeValues().get(v));
-	        		if (v < listSize-1)
-	        			urlBuff.append(",");
-	        	}
-	        }
-        }
+        // TODO range subset
         
         // RESPONSE_CRS
         if (request.getGridCrs() != null)
@@ -152,111 +122,67 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
 	public Element buildXMLQuery(DOMHelper dom, GetCoverageRequest request) throws OWSException
 	{
 		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, request.getVersion()));
-		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
 		
 		// root element
 		Element rootElt = dom.createElement("GetCoverage");
 		addCommonXML(dom, rootElt, request);
 		
 		// source coverage
-		dom.setElementValue(rootElt, "sourceCoverage", request.getCoverage());
+		dom.setElementValue(rootElt, "ows:Identifier", request.getCoverage());
 		
 		////// domain subset //////
-		Element domainElt = dom.addElement(rootElt, "domainSubset");
+		Element domainElt = dom.addElement(rootElt, "DomainSubset");
 		
-		// spatial subset
-		if (request.getBbox() != null)
-		{
-			Element spatialElement = dom.addElement(domainElt, "spatialSubset");
-			
-			// envelope
-			Element envelopeElt = envelopeWriter.writeEnvelope(dom, request.getBbox());
-			spatialElement.appendChild(envelopeElt);
-			
-			// grid definition
-			if (!request.isUseResolution()) // grid width/height
-			{
-				Element gridElt = dom.addElement(spatialElement, "gml:Grid");
-				dom.setAttributeValue(gridElt, "@dimension", "2");				
-				
-				Element gridEnvElt = dom.addElement(gridElt, "gml:limits/gml:GridEnvelope");
-				dom.setElementValue(gridEnvElt, "gml:low", "0 0");
-				dom.setElementValue(gridEnvElt, "gml:high", request.getWidth() + " " + request.getHeight());
-				
-				dom.setElementValue(gridElt, "+gml:axisName", "u");
-				dom.setElementValue(gridElt, "+gml:axisName", "v");
-			}		
-			else // grid resolution
-			{
-				
-			}
-		}
+		// bounding box
+		Element bboxElt = owsWriter.buildBbox(dom, request.getBbox());
+		domainElt.appendChild(bboxElt);
 		
-		// temporal subset
-		if (request.getTime() != null)
-		{
-			Element temporalElt = dom.addElement(domainElt, "temporalSubset");
-			
-			for (int i=0; i<request.getTimes().size(); i++)
-			{
-				TimeInfo timeInfo = request.getTimes().get(i);
-				if (timeInfo.isTimeInstant())
-				{
-					String time = DateTimeFormat.formatIso(timeInfo.getBaseTime(), timeInfo.getTimeZone());
-					dom.setElementValue(temporalElt, "+gml:timePosition", time);
-				}
-				else
-				{
-					Element periodElt = dom.addElement(temporalElt, "+timePeriod");
-					String begin = DateTimeFormat.formatIso(timeInfo.getStartTime(), timeInfo.getTimeZone());
-					String end = DateTimeFormat.formatIso(timeInfo.getStopTime(), timeInfo.getTimeZone());
-					dom.setElementValue(periodElt, "beginTime", begin);
-					dom.setElementValue(periodElt, "endTime", end);
-					
-					if (timeInfo.getTimeStep() != 0)
-					{
-						NumberFormat.getNumberInstance().setMaximumFractionDigits(2);
-						String step = NumberFormat.getNumberInstance().format(timeInfo.getTimeStep());
-						dom.setElementValue(periodElt, "timeResolution", step);
-					}
-				}
-			}
-		}
-		
+		// TODO temporal subset
+				
 		////// range subset //////
-		for (int i=0; i<request.getAxisSubsets().size(); i++)
+		for (int i=0; i<request.getFieldSubsets().size(); i++)
         {
-	        AxisSubset param = request.getAxisSubsets().get(i);
-			Element axisElt = dom.addElement(rootElt, "rangeSubset/+axisSubset");
-			dom.setAttributeValue(axisElt, "@name", param.getName());
+			Element fieldElt = dom.addElement(rootElt, "RangeSubset/+FieldSubset");
+			FieldSubset field = request.getFieldSubsets().get(i);			
+			dom.setElementValue(fieldElt, "ows:Identifier", field.getIdentifier());
 			
-			// add all intervals
-			for (int j=0; j<param.getRangeIntervals().size(); j++)
-			{
-				Interval interval = param.getRangeIntervals().get(j);
-				Element intervalElt = dom.addElement(axisElt, "+interval");
-				dom.setElementValue(intervalElt, "min", Double.toString(interval.getMin()));
-				dom.setElementValue(intervalElt, "max", Double.toString(interval.getMax()));
-				if (interval.getResolution() > 0)
-					dom.setElementValue(intervalElt, "res", Double.toString(interval.getResolution()));
-			}
-			
-			// add all single values
-			for (int j=0; j<param.getRangeValues().size(); j++)
-				dom.setElementValue(axisElt, "+singleValue", param.getRangeValues().get(j));
-		}
+			// all axis subsets
+			for (int j=0; j<request.getFieldSubsets().size(); j++)
+	        {
+		        AxisSubset axis = field.getAxisSubsets().get(j);
+				Element axisElt = dom.addElement(fieldElt, "+AxisSubset");
+				dom.setElementValue(axisElt, "Identifier", axis.getIdentifier());
 				
-		////// interpolation method //////
-		if (request.getInterpolationMethod() != null)
-			dom.setElementValue(rootElt, "interpolationMethod", request.getInterpolationMethod());
+				// add all single values
+				for (int k=0; k<axis.getKeys().size(); k++)
+					dom.setElementValue(axisElt, "+Key", axis.getKeys().get(k));
+			}
+				
+			////// interpolation method //////
+			if (field.getInterpolationMethod() != null)
+				dom.setElementValue(fieldElt, "interpolationType", field.getInterpolationMethod());
+        }
 		
 		////// output parameters //////
-		Element outputElt = dom.addElement(rootElt, "output");
+		Element outputElt = dom.addElement(rootElt, "Output");
 		
 		if (request.getGridCrs() != null)
-			dom.setElementValue(outputElt, "crs", request.getGridCrs().getBaseCrs());
+		{
+			String id = "REQUEST_GRID_CRS";
+			Element gridCrsElt = wcsWriter.buildGridCRS(dom, request.getGridCrs(), id);
+			outputElt.appendChild(gridCrsElt);
+		}
 		
-		dom.setElementValue(outputElt, "format", request.getFormat());
+		// format
+		String format = request.getFormat();
+		if (format != null)
+			dom.setAttributeValue(outputElt, "format", request.getFormat());
+		
+		// store
+		boolean store = request.getStore();
+		if (store != false)
+			dom.setAttributeValue(outputElt, "store", Boolean.toString(store));
 		
 		return rootElt;
 	}

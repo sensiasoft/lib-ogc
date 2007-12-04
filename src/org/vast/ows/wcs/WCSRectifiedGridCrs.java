@@ -43,6 +43,7 @@ public class WCSRectifiedGridCrs
     public final static String GRID_2D_IN_CRS_3D = "urn:ogc:def:method:WCS:1.1:2dGridin3dCrs";
     public final static String SQUARE_CS_2D = "urn:ogc:def:cs:OGC:0.0:Grid2dSquareCS";
     
+    protected String srsName;
     protected String baseCrs;
 	protected String gridCs;
 	protected String gridType;
@@ -146,5 +147,17 @@ public class WCSRectifiedGridCrs
 	public void setGridSizes(int[] gridSizes)
 	{
 		this.gridSizes = gridSizes;
+	}
+
+
+	public String getSrsName()
+	{
+		return srsName;
+	}
+
+
+	public void setSrsName(String srsName)
+	{
+		this.srsName = srsName;
 	}
 }

@@ -44,6 +44,7 @@ import org.vast.xml.DOMHelper;
  */
 public class CoverageDescriptionsReaderV11 extends AbstractResponseReader<CoverageDescriptions>
 {
+	protected WCSCommonReaderV11 wcsReader = new WCSCommonReaderV11();
 	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();
 	
 	
@@ -93,7 +94,14 @@ public class CoverageDescriptionsReaderV11 extends AbstractResponseReader<Covera
 			desc.getBboxList().add(bbox);
 		}
 		
-		// TODO read grid CRS
+		// grid crs
+		Element gridElt = dom.getElement(spDomainElt, "GridCRS");
+		if (gridElt != null)
+		{
+			WCSRectifiedGridCrs gridCrs = new WCSRectifiedGridCrs();
+			wcsReader.readGridCRS(dom, gridElt, gridCrs);
+		}
+		
 		// TODO read Transformation -> link to SensorML
 		
 		// TODO read time domain
