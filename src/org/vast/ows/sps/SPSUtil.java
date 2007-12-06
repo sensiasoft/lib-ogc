@@ -21,8 +21,7 @@
  Contributor(s): 
     Johannes Echterhoff <echterhoff@uni-muenster.de>
  
-******************************* END LICENSE BLOCK ***************************/
-
+ ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.sps;
 
@@ -55,199 +54,197 @@ import org.apache.xmlbeans.XmlTokenSource;
  */
 public class SPSUtil {
 
-	private static Logger logger = Logger.getLogger(SPSUtil.class);
+   private static Logger logger = Logger.getLogger(SPSUtil.class);
 
-	/**
-	 * Gets a String representation of the exception plus its stack trace and
-	 * causes (in abbreviated form with incomplete stack traces).
-	 * 
-	 * @param e
-	 *            exception that occurred somewhere.
-	 * @return a String representing exception details (message, stack trace and
-	 *         causes)
-	 */
-	public static String getExceptionDetails(Exception e) {
+   /**
+    * Gets a String representation of the exception plus its stack trace and
+    * causes (in abbreviated form with incomplete stack traces).
+    * 
+    * @param e
+    *           exception that occurred somewhere.
+    * @return a String representing exception details (message, stack trace and
+    *         causes)
+    */
+   public static String getExceptionDetails(Exception e) {
 
-		String message = e.getMessage();
-		StackTraceElement[] stackTraces = e.getStackTrace();
+      String message = e.getMessage();
+      StackTraceElement[] stackTraces = e.getStackTrace();
 
-		StringBuffer sb = new StringBuffer();
-		sb.append("[EXC] An exception occurred");
+      StringBuffer sb = new StringBuffer();
+      sb.append("[EXC] An exception occurred");
 
-		sb.append(": " + e.getClass().getName() + ": " + message + "\n");
-		for (int i = 0; i < stackTraces.length; i++) {
-			StackTraceElement element = stackTraces[i];
-			sb.append("[EXC]   " + element.toString() + "\n");
-		}
+      sb.append(": " + e.getClass().getName() + ": " + message + "\n");
+      for (int i = 0; i < stackTraces.length; i++) {
+         StackTraceElement element = stackTraces[i];
+         sb.append("[EXC]   " + element.toString() + "\n");
+      }
 
-		// print out causes
-		Throwable cause = e.getCause();
-		while (cause != null) {
+      // print out causes
+      Throwable cause = e.getCause();
+      while (cause != null) {
 
-			sb.append("[EXC] Caused by: " + cause.getClass().getName() + ": "
-					+ cause.getMessage() + "\n");
+         sb.append("[EXC] Caused by: " + cause.getClass().getName() + ": "
+               + cause.getMessage() + "\n");
 
-			int maxNumberOfTracesToPrint = 3;
-			StackTraceElement[] stackTracesCause = cause.getStackTrace();
-			for (int i = 0; i < stackTracesCause.length
-					&& i < maxNumberOfTracesToPrint; i++) {
-				StackTraceElement element = stackTracesCause[i];
-				sb.append("[EXC]   " + element.toString() + "\n");
-			}
-			if (stackTracesCause.length > maxNumberOfTracesToPrint) {
-				int numOfMoreTraces = stackTracesCause.length
-						- maxNumberOfTracesToPrint;
-				sb.append("[EXC] ... " + numOfMoreTraces + " more\n");
-			}
+         int maxNumberOfTracesToPrint = 3;
+         StackTraceElement[] stackTracesCause = cause.getStackTrace();
+         for (int i = 0; i < stackTracesCause.length
+               && i < maxNumberOfTracesToPrint; i++) {
+            StackTraceElement element = stackTracesCause[i];
+            sb.append("[EXC]   " + element.toString() + "\n");
+         }
+         if (stackTracesCause.length > maxNumberOfTracesToPrint) {
+            int numOfMoreTraces = stackTracesCause.length
+                  - maxNumberOfTracesToPrint;
+            sb.append("[EXC] ... " + numOfMoreTraces + " more\n");
+         }
 
-			cause = cause.getCause();
-		}
+         cause = cause.getCause();
+      }
 
-		return sb.toString();
-	}
+      return sb.toString();
+   }
 
-	/**
-	 * Used for sending requests to another service in chain and getting the XML
-	 * encoded response back.
-	 * 
-	 * @param xts
-	 *            the xml encoded content of the request.
-	 * @param url
-	 *            location of the service to send the request to.
-	 * 
-	 * @throws SPSException
-	 *             if the request could not be sent.
-	 * @throws ServiceException
-	 *             if the response contained a ServiceException report
-	 */
-	public static XmlObject sendPOSTRequest(XmlTokenSource xts, URL url)
-			throws SPSException, ServiceException {
+   /**
+    * Used for sending requests to another service in chain and getting the XML
+    * encoded response back.
+    * 
+    * @param xts
+    *           the xml encoded content of the request.
+    * @param url
+    *           location of the service to send the request to.
+    * 
+    * @throws SPSException
+    *            if the request could not be sent.
+    * @throws ServiceException
+    *            if the response contained a ServiceException report
+    */
+   public static XmlObject sendPOSTRequest(XmlTokenSource xts, URL url)
+         throws SPSException, ServiceException {
 
-		BufferedReader brServiceAnswer = null;
+      BufferedReader brServiceAnswer = null;
 
-		try {
-			// send Request to URL
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			con.setRequestMethod("POST");
-			con.setDoOutput(true);
+      try {
+         // send Request to URL
+         HttpURLConnection con = (HttpURLConnection) url.openConnection();
+         con.setRequestMethod("POST");
+         con.setDoOutput(true);
 
-			OutputStream out = con.getOutputStream();
-			xts.save(out);
-			out.flush();
-			out.close();
+         OutputStream out = con.getOutputStream();
+         xts.save(out);
+         out.flush();
+         out.close();
 
-			// get answer from service
-			brServiceAnswer = new BufferedReader(new InputStreamReader(con
-					.getInputStream()));
+         // get answer from service
+         brServiceAnswer = new BufferedReader(new InputStreamReader(
+               con.getInputStream()));
 
-			// parse answer
-			XmlObject xobj = XmlObject.Factory.parse(brServiceAnswer);
+         // parse answer
+         XmlObject xobj = XmlObject.Factory.parse(brServiceAnswer);
 
-			if (xobj instanceof ExceptionReportDocument) {
+         if (xobj instanceof ExceptionReportDocument) {
 
-				ExceptionReportDocument erd = (ExceptionReportDocument) xobj;
-				if (!erd.validate()) {
-					throw new SPSException(
-							"Received invalid ExceptionReportDocument from "
-									+ url);
-				} // else
-				ServiceException se = new ServiceException();
-				se.addExceptionReport(erd);
-				throw se;
-			} else if (xobj instanceof ExceptionDocument) {
+            ExceptionReportDocument erd = (ExceptionReportDocument) xobj;
+            if (!erd.validate()) {
+               throw new SPSException(
+                     "Received invalid ExceptionReportDocument from " + url);
+            } // else
+            ServiceException se = new ServiceException();
+            se.addExceptionReport(erd);
+            throw se;
+         } else if (xobj instanceof ExceptionDocument) {
 
-				ExceptionDocument ed = (ExceptionDocument) xobj;
-				if (!ed.validate()) {
-					throw new SPSException(
-							"Received invalid ExceptionDocument from " + url);
-				} // else
-				ServiceException se = new ServiceException();
-				se.addExceptionReport(ed);
-				throw se;
-			} else {
-				return xobj; // should be the correct answer
-			}
+            ExceptionDocument ed = (ExceptionDocument) xobj;
+            if (!ed.validate()) {
+               throw new SPSException(
+                     "Received invalid ExceptionDocument from " + url);
+            } // else
+            ServiceException se = new ServiceException();
+            se.addExceptionReport(ed);
+            throw se;
+         } else {
+            return xobj; // should be the correct answer
+         }
 
-		} catch (IOException e) {
-			throw new SPSException("Could not send request to service " + url,
-					e);
-		} catch (XmlException e) {
-			XmlError error = e.getError();
-			if (error != null) {
-				logger.debug(error);
-			}
-			throw new SPSException("Answer from service " + url
-					+ " did not contain correct XML.", e);
-		} finally {
+      } catch (IOException e) {
+         throw new SPSException("Could not send request to service " + url, e);
+      } catch (XmlException e) {
+         XmlError error = e.getError();
+         if (error != null) {
+            logger.debug(error);
+         }
+         throw new SPSException("Answer from service " + url
+               + " did not contain correct XML.", e);
+      } finally {
 
-			if (brServiceAnswer != null) {
-				try {
-					brServiceAnswer.close();
-				} catch (IOException e) {
-					logger.debug("Could not close brServiceAnswer.", e);
-				}
-			}
-		}
-	}
+         if (brServiceAnswer != null) {
+            try {
+               brServiceAnswer.close();
+            } catch (IOException e) {
+               logger.debug("Could not close brServiceAnswer.", e);
+            }
+         }
+      }
+   }
 
-	/**
-	 * Sends the given XML message to the given URL. The given schema location
-	 * is added to the XML.
-	 * <p>
-	 * The XML will be pretty printed.
-	 * 
-	 * @param message
-	 *            contains the XML message.
-	 * @param schemaLocation
-	 *            will be added to the XML if not null.
-	 * @param destination
-	 *            the message will be sent to this URL.
-	 * 
-	 * @throws SPSException
-	 *             if the message could not be sent.
-	 */
-	public static void sendXmlMessage(XmlTokenSource message,
-			String schemaLocation, URL destination) throws SPSException {
+   /**
+    * Sends the given XML message to the given URL. The given schema location is
+    * added to the XML.
+    * <p>
+    * The XML will be pretty printed.
+    * 
+    * @param message
+    *           contains the XML message.
+    * @param schemaLocation
+    *           will be added to the XML if not null.
+    * @param destination
+    *           the message will be sent to this URL.
+    * 
+    * @throws SPSException
+    *            if the message could not be sent.
+    */
+   public static void sendXmlMessage(XmlTokenSource message,
+         String schemaLocation, URL destination) throws SPSException {
 
-		URLConnection con = null;
-		OutputStream out = null;
+      URLConnection con = null;
+      OutputStream out = null;
 
-		try {
-			con = destination.openConnection();
-			out = con.getOutputStream();
+      try {
+         con = destination.openConnection();
+         out = con.getOutputStream();
 
-			XmlOptions options = new XmlOptions();
+         XmlOptions options = new XmlOptions();
 
-			options.setSavePrettyPrint();
-			options.setUseDefaultNamespace();
-			options.setSaveAggressiveNamespaces();
+         options.setSavePrettyPrint();
+         options.setUseDefaultNamespace();
+         options.setSaveAggressiveNamespaces();
 
-			// If the schemaLocation is null do not insert schemaLocation to
-			// xml-instance
-			if (schemaLocation != null && schemaLocation.trim().length() > 0) {
-				XmlCursor c = message.newCursor();
-				c.toFirstChild();
-				c.setAttributeText(new QName(
-						"http://www.w3.org/2001/XMLSchema-instance",
-						"schemaLocation", "xsi"), schemaLocation);
-				c.dispose();
-			}
+         // If the schemaLocation is null do not insert schemaLocation to
+         // xml-instance
+         if (schemaLocation != null && schemaLocation.trim().length() > 0) {
+            XmlCursor c = message.newCursor();
+            c.toFirstChild();
+            c.setAttributeText(new QName(
+                  "http://www.w3.org/2001/XMLSchema-instance",
+                  "schemaLocation", "xsi"), schemaLocation);
+            c.dispose();
+         }
 
-			message.save(out, options);
+         message.save(out, options);
 
-			con.getInputStream();
+         con.getInputStream();
 
-		} catch (IOException e) {
-			throw new SPSException("Could not send message ", e);
-		} finally {
-			if (out != null) {
-				try {
-					out.flush();
-					out.close();
-				} catch (IOException e) {
-					logger.warn("cannot close URLs output stream", e);
-				}
-			}
-		}
-	}
+      } catch (IOException e) {
+         throw new SPSException("Could not send message ", e);
+      } finally {
+         if (out != null) {
+            try {
+               out.flush();
+               out.close();
+            } catch (IOException e) {
+               logger.warn("cannot close URLs output stream", e);
+            }
+         }
+      }
+   }
 }
