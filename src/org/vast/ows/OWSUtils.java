@@ -58,29 +58,25 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to parse any OWS query from an XML/DOM tree
+     * The service type is also specified to check if service in query is correct
+     * The default version is used in case no version is specified in the query
      */
-    public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+    public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt, String serviceType, String defaultVersion) throws OWSException
     {
-    	return readXMLQuery(dom, requestElt, null);
-    }
-    
-    
-    /**
-     * Helper method to parse any OWS query from an XML/DOM tree
-     */
-    public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt, String service) throws OWSException
-    {
-        // read common params and check that they're present
-        OWSRequest request = new OWSRequest();
-		AbstractRequestReader.readCommonXML(dom, requestElt, request);
+    	OWSRequest request = new OWSRequest();
+    	request.setVersion(defaultVersion);
+    	
+    	// read common params and check that they're present
+        AbstractRequestReader.readCommonXML(dom, requestElt, request);
 		OWSExceptionReport report = new OWSExceptionReport();
-		AbstractRequestReader.checkParameters(request, report, service);
+		AbstractRequestReader.checkParameters(request, report, serviceType);
         report.process();
         
         try
         {
             OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(request.service, request.operation, request.version);
             request = reader.readXMLQuery(dom, requestElt);
+            
             return request;
         }
         catch (IllegalStateException e)
@@ -88,6 +84,24 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             String spec = request.service + " " + request.operation + " v" + request.version;
         	throw new OWSException(unsupportedSpec + spec, e);
         }
+    }
+    
+    
+    /**
+     * Helper method to parse any OWS query from an XML/DOM tree
+     */
+    public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt, String serviceType) throws OWSException
+    {
+    	return readXMLQuery(dom, requestElt, serviceType, null);
+    }
+    
+    
+    /**
+     * Helper method to parse any OWS query from an XML/DOM tree
+     */
+    public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+    {
+    	return readXMLQuery(dom, requestElt, null, null);
     }
     
     
@@ -111,20 +125,13 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to parse any OWS query from a URL query string
+     * The service type is also specified to check if service in query is correct
+     * The default version is used in case no version is specified in the query
      */
-    public OWSRequest readURLQuery(String queryString) throws OWSException
-    {
-        return readURLQuery(queryString, null);
-    }
-    
-    
-    /**
-     * Helper method to parse any OWS query from a URL query string
-     * The service type is also specified in case it is missing in the query
-     */
-    public OWSRequest readURLQuery(String queryString, String service) throws OWSException
+    public OWSRequest readURLQuery(String queryString, String serviceType, String defaultVersion) throws OWSException
     {
     	OWSRequest request = new OWSRequest();
+    	request.setVersion(defaultVersion);
     	
     	try
         {
@@ -134,7 +141,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     		// read common params and check that they're present
     		AbstractRequestReader.readCommonQueryArguments(queryString, request);
     		OWSExceptionReport report = new OWSExceptionReport();
-    		AbstractRequestReader.checkParameters(request, report, service);
+    		AbstractRequestReader.checkParameters(request, report, serviceType);
             report.process();
         
             OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(request.service, request.operation, request.version);
@@ -146,6 +153,25 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         	String spec = request.service + " " + request.operation + " v" + request.version;
         	throw new OWSException(unsupportedSpec + spec, e);
         }
+    }
+    
+    
+    /**
+     * Helper method to parse any OWS query from a URL query string
+     * The service type is also specified in case it is missing in the query
+     */
+    public OWSRequest readURLQuery(String queryString, String service) throws OWSException
+    {
+    	return readURLQuery(queryString, service, null);
+    }
+    
+    
+    /**
+     * Helper method to parse any OWS query from a URL query string
+     */
+    public OWSRequest readURLQuery(String queryString) throws OWSException
+    {
+        return readURLQuery(queryString, null);
     }
     
     

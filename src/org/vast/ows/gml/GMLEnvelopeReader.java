@@ -23,6 +23,7 @@ package org.vast.ows.gml;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.util.Bbox;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 
 /**
@@ -61,8 +62,19 @@ public class GMLEnvelopeReader
         
         try
         {
-            // read lower corner
-            coordsText = dom.getElementValue(envelopeElt, "lowerCorner");
+	        Element lowerCornerElt = dom.getElement(envelopeElt, "lowerCorner");
+	        Element upperCornerElt = dom.getElement(envelopeElt, "upperCorner");
+	        
+        	// case of gml:pos (deprecated but used by WCS 1.0)
+	        if (dom.existElement(envelopeElt, "pos"))
+	        {
+	        	NodeList posElts = dom.getElements(envelopeElt, "pos");
+	        	lowerCornerElt = (Element)posElts.item(0);
+		        upperCornerElt = (Element)posElts.item(1);
+	        }
+	        	        
+	        // read lower corner
+            coordsText = dom.getElementValue(lowerCornerElt);
             coords = coordsText.split(" ");
             bbox.setMinX(Double.parseDouble(coords[0]));
             bbox.setMinY(Double.parseDouble(coords[1]));
@@ -70,7 +82,7 @@ public class GMLEnvelopeReader
             	bbox.setMinZ(Double.parseDouble(coords[2]));                
             
             // read upper corner
-            coordsText = dom.getElementValue(envelopeElt, "upperCorner");
+            coordsText = dom.getElementValue(upperCornerElt);
             coords = coordsText.split(" ");
             bbox.setMaxX(Double.parseDouble(coords[0]));
             bbox.setMaxY(Double.parseDouble(coords[1]));

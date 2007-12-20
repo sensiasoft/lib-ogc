@@ -94,30 +94,33 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
         }
         
         // {PARAMETERS}
-        FieldSubset field = request.getFieldSubsets().get(0);
-        for (int i=0; i<request.getFieldSubsets().size(); i++)
+        if (!request.getFieldSubsets().isEmpty())
         {
-	        AxisSubset param = field.getAxisSubsets().get(i);
-	        urlBuff.append("&" + param.getIdentifier().toUpperCase() + "=");
-	        
-        	if (!param.getRangeIntervals().isEmpty()) // case of interval
+	        FieldSubset field = request.getFieldSubsets().get(0);
+	        for (int i=0; i<field.getAxisSubsets().size(); i++)
 	        {
-        		// only one interval is supportted in KVP
-        		Interval interval = param.getRangeIntervals().get(0);
-        		urlBuff.append(interval.getMin());
-	        	urlBuff.append("/" + interval.getMax());
-	        	if (interval.getResolution() > 0)
-	        		urlBuff.append("/" + interval.getResolution());
-	        }
-	        else if (!param.getKeys().isEmpty())
-	        {
-	        	int listSize = param.getKeys().size();
-	        	for (int v=0; v<listSize; v++)
-	        	{
-	        		urlBuff.append(param.getKeys().get(v));
-	        		if (v < listSize-1)
-	        			urlBuff.append(",");
-	        	}
+		        AxisSubset param = field.getAxisSubsets().get(i);
+		        urlBuff.append("&" + param.getIdentifier().toUpperCase() + "=");
+		        
+	        	if (!param.getRangeIntervals().isEmpty()) // case of interval
+		        {
+	        		// only one interval is supportted in KVP
+	        		Interval interval = param.getRangeIntervals().get(0);
+	        		urlBuff.append(interval.getMin());
+		        	urlBuff.append("/" + interval.getMax());
+		        	if (interval.getResolution() > 0)
+		        		urlBuff.append("/" + interval.getResolution());
+		        }
+		        else if (!param.getKeys().isEmpty())
+		        {
+		        	int listSize = param.getKeys().size();
+		        	for (int v=0; v<listSize; v++)
+		        	{
+		        		urlBuff.append(param.getKeys().get(v));
+		        		if (v < listSize-1)
+		        			urlBuff.append(",");
+		        	}
+		        }
 	        }
         }
         

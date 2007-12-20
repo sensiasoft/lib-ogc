@@ -66,6 +66,24 @@ public class GMLEnvelopeWriter
     }
     
     
+    public Element writeEnvelopeWithPos(DOMHelper dom, Bbox bbox) throws GMLException
+    {
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+        
+        Element envelopeElt = dom.createElement("gml:Envelope");
+    	
+        if (bbox.getCrs() != null)
+        	dom.setAttributeValue(envelopeElt, "@srsName", bbox.getCrs());
+        
+		String lowerCorner = bbox.getMinX() + " " + bbox.getMinY();
+		dom.setElementValue(envelopeElt, "gml:pos", lowerCorner);
+		String upperCorner = bbox.getMaxX() + " " + bbox.getMaxY();
+		dom.setElementValue(envelopeElt, "+gml:pos", upperCorner);
+        
+        return envelopeElt;
+    }
+    
+    
     public Element writeGridEnvelope(DOMHelper dom, Bbox bbox) throws GMLException
     {
         dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));

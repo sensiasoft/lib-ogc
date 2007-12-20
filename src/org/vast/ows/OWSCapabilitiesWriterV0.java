@@ -162,7 +162,7 @@ public abstract class OWSCapabilitiesWriterV0 extends AbstractResponseWriter<OWS
 			dom.setElementValue(respPartyElt, "individualName", text);
 		text = provider.getOrganizationName();
 		if (text != null)
-			dom.setElementValue(respPartyElt, "organizationName", text);
+			dom.setElementValue(respPartyElt, "organisationName", text);
 		text = provider.getPositionName();
 		if (text != null)
 			dom.setElementValue(respPartyElt, "positionName", text);

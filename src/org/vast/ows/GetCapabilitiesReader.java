@@ -107,7 +107,7 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
             }
         }
 
-        super.checkParameters(request, report, service);
+        checkServiceParameter(request, report, service);
         report.process();
         
         return request;
@@ -122,9 +122,45 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 		readCommonXML(dom, requestElt, request);
 		request.setSection(dom.getElementValue(requestElt, "section"));
 		
-		super.checkParameters(request, report, service);
+		checkServiceParameter(request, report, service);
 		report.process();
 		
 		return request;
+	}
+	
+	
+	/**
+	 * Checks that mandatory parameters are present
+	 * @param request
+	 * @param report
+	 */
+	protected void checkServiceParameter(OWSRequest request, OWSExceptionReport report, String serviceType) throws OWSException
+	{
+		// need SERVICE
+		if (request.getService() == null)
+			report.add(new OWSException(OWSException.missing_param_code, "SERVICE"));
+		
+		// must be correct service 
+		else if (serviceType != null)
+		{
+			String reqService = request.getService();
+			if (!reqService.equalsIgnoreCase(serviceType))
+				report.add(new OWSException(OWSException.invalid_param_code, "SERVICE", reqService, ""));
+		}
+		
+		// if version is present, check version validity
+		if (request.getVersion() != null)
+		{
+			if (!request.getVersion().matches(versionRegex))
+			{
+				OWSException ex = new OWSException(OWSException.invalid_param_code, "VERSION");
+				ex.setBadValue(request.getVersion());
+				report.add(ex);
+			}
+		}
+		
+		// need REQUEST
+		if (request.getOperation() == null)
+			report.add(new OWSException(OWSException.missing_param_code, "REQUEST"));
 	}
 }

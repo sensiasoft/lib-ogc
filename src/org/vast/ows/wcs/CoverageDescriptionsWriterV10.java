@@ -76,7 +76,7 @@ public class CoverageDescriptionsWriterV10 extends AbstractResponseWriter<Covera
 			List<Bbox> bboxList = desc.getBboxList();
 			for (int j=0; j<bboxList.size(); j++)
 			{
-				Element envElt = gmlWriter.writeEnvelope(dom, bboxList.get(j));
+				Element envElt = gmlWriter.writeEnvelopeWithPos(dom, bboxList.get(j));
 				spDomainElt.appendChild(envElt);
 			}
 			
