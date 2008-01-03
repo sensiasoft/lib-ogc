@@ -698,6 +698,12 @@ public class SLDReader
 				ScalarParameter dashoffset = cssReader.readCssParameter(dom, cssElt);
 				stroke.setDashoffset(dashoffset);
 			}
+			else if (paramName.equalsIgnoreCase("stroke-smooth"))
+			{
+				ScalarParameter smooth = cssReader.readCssParameter(dom, cssElt);
+				if (((String)smooth.getValue()).equals("true"))
+					stroke.setSmooth(true);
+			}
 		}
 		
 		return stroke;

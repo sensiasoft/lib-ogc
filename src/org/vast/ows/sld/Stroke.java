@@ -47,6 +47,7 @@ public class Stroke
 	protected ScalarParameter linecap;
 	protected ScalarParameter dasharray;
 	protected ScalarParameter dashoffset;
+	protected boolean smooth = false;
 
 
 	public Color getColor()
@@ -154,6 +155,18 @@ public class Stroke
 	public void setWidth(ScalarParameter width)
 	{
 		this.width = width;
+	}
+
+
+	public boolean getSmooth()
+	{
+		return smooth;
+	}
+
+
+	public void setSmooth(boolean smooth)
+	{
+		this.smooth = smooth;
 	}
 
 }
