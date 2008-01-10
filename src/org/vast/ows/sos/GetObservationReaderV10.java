@@ -263,15 +263,21 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
      * @param query
      * @throws GMLException
      */
-	protected void readTemporalOps(DOMHelper dom, Element requestElt, GetObservationRequest query) throws GMLException
+	protected void readTemporalOps(DOMHelper dom, Element requestElt, GetObservationRequest query) throws SOSException, GMLException
 	{
-        Element timeElt = dom.getElement(requestElt, "eventTime/*/*");
-        
-        if (timeElt != null)
+		Element timeOpElt = dom.getElement(requestElt, "eventTime/*");
+		if (timeOpElt == null)
+			return;
+		
+		if (timeOpElt.getLocalName().equals("TM_During"))
         {
-    		TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
+        	NodeList childElts = dom.getElements(timeOpElt, "*");
+        	Element timePrimitiveElt = (Element)childElts.item(1);
+        	TimeInfo time = timeReader.readTimePrimitive(dom, timePrimitiveElt);
             query.setTime(time);
         }
+		else
+			throw new SOSException("Unsupported Time Operator: " + timeOpElt.getNodeName());
 	}
     
     

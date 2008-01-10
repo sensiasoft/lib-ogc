@@ -155,8 +155,9 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
             if (timeInfo != null)
             {
                 Element timeElt = timeWriter.writeTime(dom, timeInfo);
-                Element elt = dom.addElement(rootElt, "sos:eventTime/ogc:During");
-                elt.appendChild(timeElt);
+                Element opElt = dom.addElement(rootElt, "sos:eventTime/ogc:TM_During");
+                dom.setElementValue(opElt, "ogc:propertyName", "om:samplingTime");                
+                opElt.appendChild(timeElt);
             }
         }
         catch (GMLException e)
