@@ -43,8 +43,9 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractResponseReader<ResponseType extends OWSResponse> implements OWSResponseReader<ResponseType>
 {
-	protected final static String invalidReq = "Invalid Response";
-    
+	protected final static String invalidResp = "Invalid Response";
+	protected final static String invalidXML = "Invalid XML Response";
+	
     
     public abstract ResponseType readXMLResponse(DOMHelper domHelper, Element responseElt) throws OWSException;
 	

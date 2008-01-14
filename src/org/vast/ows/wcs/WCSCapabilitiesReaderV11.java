@@ -55,21 +55,6 @@ public class WCSCapabilitiesReaderV11 extends OWSCapabilitiesReaderV11
 	}
 	
 	
-	public WCSCapabilitiesReaderV11(String version)
-	{
-		this.version = version;
-	}
-	
-	
-	@Override
-    protected String buildQuery() throws OWSException
-    {
-        String query = null;
-        query = this.server + "SERVICE=WCS&VERSION=" + version + "&REQUEST=GetCapabilities"; 
-        return query;
-    }
-	
-	
 	@Override
 	protected void readContents(DOMHelper dom, Element capsElt) throws OWSException
 	{

@@ -50,8 +50,12 @@ public abstract class OWSCapabilitiesReaderV0 extends AbstractCapabilitiesReader
 		serviceCaps = new OWSServiceCapabilities();
     	
     	// Version
-        this.version = dom.getAttributeValue(capabilitiesElt, "version");
-        serviceCaps.setVersion(this.version);
+        String version = dom.getAttributeValue(capabilitiesElt, "version");
+        serviceCaps.setVersion(version);
+        
+        // Update Sequence
+        String updateSequence = dom.getAttributeValue(capabilitiesElt, "updateSequence");
+        serviceCaps.setUpdateSequence(updateSequence);
         
         // Read basic identification
         Element serviceElt = dom.getElement(capabilitiesElt, "Service");

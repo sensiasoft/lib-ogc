@@ -25,7 +25,6 @@ import org.w3c.dom.*;
 import org.vast.util.*;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSCapabilitiesReaderV11;
-import org.vast.ows.OWSException;
 import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLTimeReader;
 import org.vast.ows.util.TimeInfo;
@@ -52,15 +51,6 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
    
     public SOSCapabilitiesReaderV10()
     {
-    }
-    
-    
-    @Override
-    protected String buildQuery() throws OWSException
-    {
-        String url = null;
-        url = this.server + "service=SOS&version=1.0&request=GetCapabilities";  
-        return url;
     }
        
     

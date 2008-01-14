@@ -62,22 +62,13 @@ public class WCSCapabilitiesReaderV07 extends AbstractCapabilitiesReader
     
     
     @Override
-    protected String buildQuery() throws OWSException
-    {
-        String query = null;
-        query = this.server + "SERVICE=WCS&VERSION=0.7&REQUEST=GetCapabilities"; 
-        return query;
-    }
-    
-    
-    @Override
     public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
     {
     	serviceCaps = new OWSServiceCapabilities();
     	
     	// Version
-        this.version = dom.getAttributeValue(capabilitiesElt, "version");
-        serviceCaps.setVersion(this.version);
+        String version = dom.getAttributeValue(capabilitiesElt, "version");
+        serviceCaps.setVersion(version);
         
         // Read Service Identification Section
         Element serviceElt = dom.getElement(capabilitiesElt, "Service");

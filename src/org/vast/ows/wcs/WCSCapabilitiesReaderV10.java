@@ -57,21 +57,6 @@ public class WCSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV0
 	}
 	
 	
-	public WCSCapabilitiesReaderV10(String version)
-	{
-		this.version = version;
-	}
-	
-	
-	@Override
-    protected String buildQuery() throws OWSException
-    {
-        String query = null;
-        query = this.server + "SERVICE=WCS&VERSION=1.0&REQUEST=GetCapabilities";
-        return query;
-    }
-	
-	
 	@Override
 	public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
 	{

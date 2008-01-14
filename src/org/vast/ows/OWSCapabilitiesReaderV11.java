@@ -51,8 +51,12 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
 		serviceCaps = new OWSServiceCapabilities();
     	
     	// Version
-        this.version = dom.getAttributeValue(capabilitiesElt, "version");
-        serviceCaps.setVersion(this.version);
+        String version = dom.getAttributeValue(capabilitiesElt, "version");
+        serviceCaps.setVersion(version);
+        
+        // Update Sequence
+        String updateSequence = dom.getAttributeValue(capabilitiesElt, "updateSequence");
+        serviceCaps.setUpdateSequence(updateSequence);
         
         // Read Service Identification Section
         Element serviceIdElt = dom.getElement(capabilitiesElt, "ServiceIdentification");
@@ -68,8 +72,8 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
 		for (int i = 0; i < numElts; i++)
 		{
 			Element versionElt = (Element) versionElts.item(i);
-			String version = dom.getElementValue(versionElt);
-			serviceCaps.getSupportedVersions().add(version);
+			String supportedVersion = dom.getElementValue(versionElt);
+			serviceCaps.getSupportedVersions().add(supportedVersion);
 		}
         
         // fees and access constraints

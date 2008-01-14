@@ -47,28 +47,6 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
     public SASCapabilitiesReader()
     {
     }
-    
-    
-    @Override
-    protected String buildQuery() throws OWSException
-    {
-        String url = null;
-        url = this.server + "service=SAS&version=" + version + "&request=GetCapabilities";        
-        return url;
-    }
-    
-    
-    @Override
-    protected void readOperationsMetadata(DOMHelper dom, Element capsElt) throws OWSException
-    {
-    	super.readOperationsMetadata(dom, capsElt);
-    	
-    	// put default POST server if none is specified in capabilities doc
-		if (serviceCaps.getGetServers().isEmpty() && serviceCaps.getPostServers().isEmpty())
-		{
-			serviceCaps.getPostServers().put("GetObservation", this.server);
-		}
-    }
 
     
     @Override

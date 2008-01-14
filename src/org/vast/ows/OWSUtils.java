@@ -28,6 +28,7 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
@@ -54,7 +55,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     public final static String soapUri = "http://schemas.xmlsoap.org/soap/envelope/";
 	public final static String unsupportedSpec = "No support for ";
     public final static String invalidEndpoint = "No Endpoint URL specified in request object";
-        
+    public final static String ioError = "IO Error while sending request:";
+    
     
     /**
      * Helper method to parse any OWS query from an XML/DOM tree
@@ -258,38 +260,6 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
 
 
     /**
-     * Helper method to send any OWS request to the server URL using GET
-     * @param request OWSQuery object
-     * @param usePost true if using POST
-     * @return HTTP Connection Object
-     * @throws OWSException
-     */
-    public HttpURLConnection sendGetRequest(OWSRequest request) throws OWSException
-    {
-	    String requestString = null;
-        
-        try
-        {
-        	String endpoint = request.getGetServer();
-        	
-        	if (endpoint == null)
-        		endpoint = request.getPostServer();
-        	
-        	if (endpoint == null)
-        		throw new OWSException(invalidEndpoint);
-            
-            requestString = buildURLQuery(request);                
-            URL url = new URL(requestString);
-            return (HttpURLConnection)url.openConnection();
-        }
-        catch (IOException e)
-        {
-            throw new OWSException("IO Error while sending request:\n" + requestString, e);
-        }
-    }
-    
-    
-    /**
      * Helper method to parse any OWSResponse from service type and response type only
      * This tries to guess the version from a version attribute or the end of the namespace uri
      * @param dom
@@ -397,6 +367,38 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     
     /**
+     * Helper method to send any OWS request to the server URL using GET
+     * @param request OWSQuery object
+     * @param usePost true if using POST
+     * @return HTTP Connection Object
+     * @throws OWSException
+     */
+    public HttpURLConnection sendGetRequest(OWSRequest request) throws OWSException
+    {
+	    String requestString = null;
+        
+        try
+        {
+        	String endpoint = request.getGetServer();
+        	
+        	if (endpoint == null)
+        		endpoint = request.getPostServer();
+        	
+        	if (endpoint == null)
+        		throw new OWSException(invalidEndpoint);
+            
+            requestString = buildURLQuery(request);                
+            URL url = new URL(requestString);
+            return (HttpURLConnection)url.openConnection();
+        }
+        catch (IOException e)
+        {
+            throw new OWSException(ioError + "\n" + requestString, e);
+        }
+    }
+    
+    
+    /**
      * Helper method to send any OWS request to the server URL using POST
      * @param request OWSQuery object
      * @return HTTP Connection Object
@@ -442,7 +444,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         {
         	ByteArrayOutputStream buf = new ByteArrayOutputStream();
         	writeXMLQuery(buf, request);
-        	throw new OWSException("IO Error while sending request:\n" + buf, e);
+        	throw new OWSException(ioError + "\n" + buf, e);
         }
     }
     
@@ -499,7 +501,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         {
         	ByteArrayOutputStream buf = new ByteArrayOutputStream();
         	writeXMLQuery(buf, request);
-        	throw new OWSException("IO Error while sending request:\n" + buf, e);
+        	throw new OWSException(ioError + "\n" + buf, e);
         }
     }
     
@@ -525,7 +527,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         	throw new OWSException(unsupportedSpec + spec, e);
         }
     }
-    
+
     
     /**
      * Helper method to get capabilities from an OWS service and parse it
@@ -539,10 +541,28 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     {
         try
         {
-            AbstractCapabilitiesReader reader = (AbstractCapabilitiesReader)OGCRegistry.createReader(serviceType, "Capabilities", version);
-            OWSServiceCapabilities caps = reader.getCapabilities(server, version);
-            return caps;
+        	// prepare request
+        	GetCapabilitiesRequest request = new GetCapabilitiesRequest();
+        	request.setGetServer(server);
+        	request.setService(serviceType);
+        	request.setVersion(version);
+        	
+        	// send request and build DOM
+        	URLConnection connection = this.sendGetRequest(request);
+    		DOMHelper dom = new DOMHelper(connection.getInputStream(), false);
+    		
+    		// parse capabilities doc
+    		OWSServiceCapabilities caps = (OWSServiceCapabilities)readXMLResponse(dom, dom.getBaseElement(), serviceType, "Capabilities");
+    		return caps;    		          
         }
+        catch (IOException e)
+		{
+			throw new OWSException(ioError, e);
+		}
+        catch (DOMHelperException e)
+		{
+			throw new OWSException(AbstractResponseReader.invalidXML, e);
+		}  
         catch (IllegalStateException e)
         {
         	String spec = serviceType + " Capabilities v" + version;

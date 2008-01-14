@@ -22,7 +22,6 @@ package org.vast.ows;
 
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.DOMHelperException;
 
 
 /**
@@ -46,9 +45,6 @@ public abstract class AbstractCapabilitiesReader implements OWSResponseReader<OW
 {
     protected final static String parsingError = "Error while parsing capabilities document";
     protected OWSServiceCapabilities serviceCaps;
-    protected String version;
-    protected String server;
-    protected boolean showQuery;
     
 
     public AbstractCapabilitiesReader()
@@ -65,44 +61,7 @@ public abstract class AbstractCapabilitiesReader implements OWSResponseReader<OW
      */
     public abstract OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException;
     
-    
-    protected abstract String buildQuery() throws OWSException;
     protected abstract void readContents(DOMHelper dom, Element capsElt) throws OWSException;
-    
-    
-    /**
-     * This method will issue a GetCapabilities request and parse
-     * the returned capabilities document.
-     * @param server
-     * @param version
-     * @return
-     * @throws OWSException
-     */
-    public OWSServiceCapabilities getCapabilities(String server, String version) throws OWSException
-    {
-    	// Try to parse the XML response
-    	try
-		{
-    		this.server = OWSRequest.checkServer(server);
-    		this.version = version;
-    		String url = buildQuery();
-            
-            if (showQuery)
-                System.out.println("Capabilities Request: " + url);
-            
-            DOMHelper dom = new DOMHelper(url, false);
-            
-            // Check if exception was returned
-            OWSExceptionReader.checkException(dom);
-            
-            // read capabilities xml from dom
-            return readXMLResponse(dom, dom.getBaseElement());
-		}
-		catch (DOMHelperException e)
-		{
-			throw new OWSException("The Service responded with an invalid XML document", e);
-		}
-    }
     
         
     /**
@@ -126,40 +85,5 @@ public abstract class AbstractCapabilitiesReader implements OWSResponseReader<OW
     		if (postServer != null)
     			serviceCaps.getPostServers().put(name, postServer);
         }
-        
-        
-////       GET server
-//        url = dom.getAttributeValue(capsElt, "Capability/Request/Map/DCPType/HTTP/Get/onlineResource");
-//        if (url == null)
-//            url = dom.getAttributeValue(capsElt, "Capability/Request/GetMap/DCPType/HTTP/Get/OnlineResource/href");
-//        if (url != null)
-//            serviceCaps.getGetServers().put("GetMap", url);
-//        
-//        // POST server
-//        url = dom.getAttributeValue(capsElt, "Capability/Request/Map/DCPType/HTTP/Post/onlineResource");
-//        if (url == null)
-//            url = dom.getAttributeValue(capsElt, "Capability/Request/GetMap/DCPType/HTTP/Post/OnlineResource/href");
-//        if (url != null)
-//            serviceCaps.getPostServers().put("GetMap", url);
-//        
-////      GET server
-//        url = dom.getAttributeValue("Capability/Request/GetFeature/DCPType/HTTP/Get/@onlineResource");
-//        if (url == null)
-//            url = dom.getAttributeValue("Capability/Request/GetFeatureType/DCPType/HTTP/Get/@onlineResource");
-//        if (url != null)
-//            serviceCaps.getGetServers().put("GetFeature", url);
-//        
-//        // POST server
-//        url = dom.getAttributeValue("Capability/Request/GetFeature/DCPType/HTTP/Post/@onlineResource");
-//        if (url == null)
-//            url = dom.getAttributeValue("Capability/Request/GetFeatureType/DCPType/HTTP/Post/@onlineResource");
-//        if (url != null)
-//            serviceCaps.getPostServers().put("GetFeature", url);
-    }
-
-
-    public void setShowQuery(boolean showQuery)
-    {
-        this.showQuery = showQuery;
     }
 }

@@ -50,15 +50,6 @@ public class WMSCapabilitiesReaderV11 extends WMSCapabilitiesReaderV10
     
     
     @Override
-    protected String buildQuery() throws OWSException
-    {
-        String url = null;
-        url = this.server + "service=WMS&version=" + version + "&request=GetCapabilities";
-        return url;
-    }
-    
-    
-    @Override
     protected void readOperationsMetadata(DOMHelper dom, Element capsElt) throws OWSException
     {
         String url;
