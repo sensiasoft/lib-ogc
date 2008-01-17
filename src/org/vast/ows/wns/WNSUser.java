@@ -16,6 +16,13 @@ package org.vast.ows.wns;
 
 public abstract class WNSUser
 {
+	public final static String XMPP = "XMPP";
+    public final static String HTTP = "HTTP";
+    public final static String EMAIL = "Email";
+    public final static String PHONE = "Phone";
+    public final static String FAX = "Fax";
+    public final static String SMS = "SMS";
+    
 	protected String id;
 	protected String name;
 

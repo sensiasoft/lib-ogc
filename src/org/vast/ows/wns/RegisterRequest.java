@@ -39,14 +39,7 @@ import org.vast.ows.OWSRequest;
  */
 public class RegisterRequest extends OWSRequest
 {
-    public final static String XMPP = "XMPP";
-    public final static String HTTP = "HTTP";
-    public final static String EMAIL = "Email";
-    public final static String PHONE = "Phone";
-    public final static String FAX = "Fax";
-    public final static String SMS = "SMS";
-    
-	protected WNSUser user;
+    protected WNSUser user;
 	
     
     public RegisterRequest()
