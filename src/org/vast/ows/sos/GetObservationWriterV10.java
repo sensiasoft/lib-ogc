@@ -156,7 +156,7 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
             {
                 Element timeElt = timeWriter.writeTime(dom, timeInfo);
                 Element opElt = dom.addElement(rootElt, "sos:eventTime/ogc:TM_During");
-                dom.setElementValue(opElt, "ogc:propertyName", "om:samplingTime");                
+                dom.setElementValue(opElt, "ogc:PropertyName", "om:samplingTime");                
                 opElt.appendChild(timeElt);
             }
         }
