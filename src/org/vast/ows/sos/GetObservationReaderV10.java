@@ -271,8 +271,12 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 		
 		if (timeOpElt.getLocalName().equals("TM_During"))
         {
-        	NodeList childElts = dom.getElements(timeOpElt, "*");
-        	Element timePrimitiveElt = (Element)childElts.item(1);
+            Element propertyElt = dom.getElement(timeOpElt, "PropertyName");
+            if (propertyElt == null)
+                throw new SOSException("Invalid Time Operator: Missing PropertyName Element");
+            
+            NodeList childElts = dom.getElements(timeOpElt, "*");
+            Element timePrimitiveElt = (Element)childElts.item(1);
         	TimeInfo time = timeReader.readTimePrimitive(dom, timePrimitiveElt);
             query.setTime(time);
         }
