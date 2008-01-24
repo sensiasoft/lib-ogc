@@ -360,6 +360,7 @@ public class SLDReader
         // read grid info
         Element gridElt = dom.getElement(symElt, "Grid");
         readGeometryElt(texSym, dom, gridElt);
+        readTexCoords(texSym, dom, gridElt);
         Element dimElt = dom.getElement(gridElt, "Dimensions");
         Dimensions dim = readDimensions(dom, dimElt);
         texSym.setGridDimensions(dim);
@@ -369,6 +370,37 @@ public class SLDReader
         readRasterParameters(texSym, dom, rasterElt);
         
         return texSym;
+    }
+    
+    
+    public void readTexCoords(TextureSymbolizer texSym, DOMHelper dom, Element gridElt)
+    {
+        Geometry texCoords = texSym.getTextureCoordinates();
+        Element geomElt = dom.getElement(gridElt, "Geometry");
+        
+        // read css parameters for texture coordinates
+        NodeList cssElts = dom.getElements(geomElt, "CssParameter");
+        for (int i=0; i<cssElts.getLength(); i++)
+        {
+            Element cssElt = (Element)cssElts.item(i);
+            String paramName = dom.getAttributeValue(cssElt, "name");
+            
+            if (paramName.equalsIgnoreCase("geometry-tx"))
+            {
+                ScalarParameter xData = cssReader.readCssParameter(dom, cssElt);
+                texCoords.setX(xData);
+            }
+            else if (paramName.equalsIgnoreCase("geometry-ty"))
+            {
+                ScalarParameter yData = cssReader.readCssParameter(dom, cssElt);
+                texCoords.setY(yData);
+            }
+            else if (paramName.equalsIgnoreCase("geometry-tz"))
+            {
+                ScalarParameter zData = cssReader.readCssParameter(dom, cssElt);
+                texCoords.setZ(zData);
+            }
+        }
     }
 	
 	

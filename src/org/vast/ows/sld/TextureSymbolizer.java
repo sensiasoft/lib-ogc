@@ -38,8 +38,15 @@ package org.vast.ows.sld;
 public class TextureSymbolizer extends RasterSymbolizer
 {
     protected Dimensions gridDimensions;
+    protected Geometry textureCoordinates;
     
 
+    public TextureSymbolizer()
+    {
+        textureCoordinates = new Geometry();
+    }
+    
+    
     public Dimensions getGridDimensions()
     {
         return gridDimensions;
@@ -49,5 +56,17 @@ public class TextureSymbolizer extends RasterSymbolizer
     public void setGridDimensions(Dimensions gridDimensions)
     {
         this.gridDimensions = gridDimensions;
+    }
+    
+    
+    public Geometry getTextureCoordinates()
+    {
+        return textureCoordinates;
+    }
+
+
+    public void setTextureCoordinates(Geometry textureCoordinates)
+    {
+        this.textureCoordinates = textureCoordinates;
     }
 }

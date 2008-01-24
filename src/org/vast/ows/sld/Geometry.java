@@ -45,7 +45,7 @@ public class Geometry
 	protected ScalarParameter z;
 	protected ScalarParameter t;
     protected ScalarParameter breaks;
-	protected ScalarParameter object;    
+	protected ScalarParameter object;
 
 
     public String getPropertyName()
