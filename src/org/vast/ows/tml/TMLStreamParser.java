@@ -33,6 +33,7 @@ import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
 import org.vast.cdm.common.StreamDemux;
+import org.vast.data.DataArray;
 import org.vast.sweCommon.URIStreamHandler;
 
 
@@ -185,4 +186,11 @@ public class TMLStreamParser implements StreamDemux, DataStreamParser
 	public void setRawDataHandler(RawDataHandler handler)
 	{
 	}
+
+
+    public void setParentArray(DataArray parentArray)
+    {
+        // TODO Auto-generated method stub
+        
+    }
 }
