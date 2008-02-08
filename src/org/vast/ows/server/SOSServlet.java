@@ -225,6 +225,8 @@ public abstract class SOSServlet extends OWSServlet
 	 * @param query
 	 * @param capsReader
 	 * @throws SOSException
+	 * 	  TODO  these check*() methods need to be moved to account for differing SOS versions
+
 	 */
 	protected void checkQueryTime(GetObservationRequest query, DOMHelper dom) throws SOSException
 	{
@@ -235,6 +237,8 @@ public abstract class SOSServlet extends OWSServlet
         // loads capabilities advertised time
         Element offeringElt = getOffering(query.getOffering(), dom);
         Element timeElt = dom.getElement(offeringElt, "eventTime/*");
+        if(timeElt == null)
+        	timeElt = dom.getElement(offeringElt, "time/*");
         if(timeElt == null)
             throw new SOSException("Internal Error: No Time Present in Capabilities Document");        
         GMLTimeReader timeReader = new GMLTimeReader();

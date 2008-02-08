@@ -90,7 +90,7 @@ public class SOSResponseSerializer extends SweResponseSerializer
         {
             time = time.copy();
             time.setTimeZone(zone);
-            time.setBeginNow(false);
+            time.setBeginNow(false);  //  FIX THIS- should not change these
             time.setEndNow(false);
             time.setBaseAtNow(false);            
             Element obsTimeElt = dom.addElement(obsElt, "om:samplingTime");            

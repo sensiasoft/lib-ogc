@@ -87,6 +87,7 @@ public class SOSCapabilitiesReaderV031 extends AbstractCapabilitiesReader
     @Override
     protected void readContents(DOMHelper dom, Element capsElt) throws SOSException
     {
+    	System.err.println("CapsReader.readContents() 0.31");
         NodeList offeringList = dom.getElements(capsElt, "Contents/ObservationOfferingList/ObservationOffering");
         
         for (int i=0; i<offeringList.getLength(); i++)

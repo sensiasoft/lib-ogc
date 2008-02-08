@@ -101,7 +101,11 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
     protected void getTimeList(DOMHelper dom, Element parentElement, SOSLayerCapabilities layerCaps) throws GMLException, SOSException
     {
         GMLTimeReader timeReader = new GMLTimeReader();
-        Element timeElt = dom.getElement(parentElement, "eventTime/*");
+        Element timeElt = dom.getElement(parentElement, "time/*");  // 1.0 schema is using plain old 'time' here 
+        // test and remove eventTime check
+        if(timeElt == null)
+        	timeElt = dom.getElement(parentElement, "eventTime/*");
+
         if(timeElt == null)
             throw new SOSException("At least one offering time must be specified");
         

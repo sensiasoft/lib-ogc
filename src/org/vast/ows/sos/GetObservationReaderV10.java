@@ -128,7 +128,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 			}
 			
 			// observables
-			else if (argName.equalsIgnoreCase("observables"))
+			else if (argName.equalsIgnoreCase("observables") || argName.equalsIgnoreCase("observedProperty"))
 			{
 				String[] obsList = argValue.split(",");
 				request.getObservables().clear();					
@@ -144,7 +144,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
             }
 
 			// format argument
-			else if (argName.equalsIgnoreCase("format"))
+			else if (argName.equalsIgnoreCase("format") || argName.equalsIgnoreCase("response_format"))
 			{
 				request.setFormat(argValue);
 			}
