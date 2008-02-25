@@ -39,7 +39,33 @@ import org.vast.physics.SpatialExtent;
  */
 public class Bbox extends SpatialExtent
 {
-    @Override
+   
+	public Bbox()
+	{		
+	}
+	
+	
+	public Bbox(double minX, double minY, double maxX, double maxY)
+    {
+    	setMinX(minX);
+        setMinY(minY);
+        setMaxX(maxX);
+        setMaxY(maxY);
+    }
+	
+	
+	public Bbox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
+    {
+    	setMinX(minX);
+        setMinY(minY);
+        setMinZ(minZ);
+        setMaxX(maxX);
+        setMaxY(maxY);
+        setMaxZ(maxZ);
+    }
+	
+	
+	@Override
     public Bbox copy()
     {
         Bbox bbox = new Bbox();
