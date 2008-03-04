@@ -28,7 +28,7 @@ import org.apache.xml.serialize.*;
 
 /**
  * <p><b>Title:</b><br/>
- * Swe Response Serializer
+ * SweResponseSerializer
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -77,7 +77,8 @@ public abstract class SweResponseSerializer extends XMLSerializer
 		{
 			// preload base observation document
             DOMHelper newDom = new DOMHelper(baseXML, false);
-            this.setTemplate(newDom);
+            //this.setTemplate(newDom);
+            setTemplate(newDom);
 		}
 		catch (DOMHelperException e)
 		{
