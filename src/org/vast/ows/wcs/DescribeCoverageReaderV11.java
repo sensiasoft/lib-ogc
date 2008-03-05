@@ -98,6 +98,8 @@ public class DescribeCoverageReaderV11 extends AbstractRequestReader<DescribeCov
         }
 
         super.checkParameters(request, report, OGCRegistry.WCS);
+        report.process();
+        
         return request;
 	}
 	
@@ -120,6 +122,8 @@ public class DescribeCoverageReaderV11 extends AbstractRequestReader<DescribeCov
 		}
 		
 		super.checkParameters(request, report, OGCRegistry.WCS);
+		report.process();
+		
 		return request;
 	}
 }
