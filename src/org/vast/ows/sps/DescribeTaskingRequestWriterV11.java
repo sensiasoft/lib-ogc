@@ -16,7 +16,7 @@ Portions created by the Initial Developer are Copyright (C) 2007
 the Initial Developer. All Rights Reserved.
 
 Contributor(s): 
-   Philippe Merigot <philippe.merigot@spotimage.fr>
+   Alexandre Robin <alexandre.robin@spotimage.fr>
 
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -31,28 +31,28 @@ import org.vast.xml.DOMHelper;
 
 /**
 * <p><b>Title:</b><br/>
-* SPS DescribeGetFeasibility Request Writer v1.1
+* SPS DescribeTasking Request Writer v1.1
 * </p>
 *
 * <p><b>Description:</b><br/>
-* Provides methods to generate a KVP or XML SPS DescribeGetFeasibility
-* request based on values contained in a DescribeGetFeasibilityRequest
+* Provides methods to generate a KVP or XML SPS DescribeTasking
+* request based on values contained in a DescribeTasking
 * object for version 1.1
 * </p>
 *
-* <p>Copyright (c) 2007</p>
-* @author Philippe Merigot
-* @date Oct 10, 2007
+* <p>Copyright (c) 2008</p>
+* @author Alexandre Robin <alexandre.robin@spotimage.fr>
+* @date Feb, 28 2008
 * @version 1.0
 */
-public class DescribeGetFeasibilityWriterV11 extends AbstractRequestWriter<DescribeGetFeasibilityRequest>
+public class DescribeTaskingRequestWriterV11 extends AbstractRequestWriter<DescribeTaskingRequest>
 {
 
 	/**
-	 * Construction de la requete GET
+	 * KVP Request
 	 */
 	@Override
-	public String buildURLQuery(DescribeGetFeasibilityRequest request) throws OWSException
+	public String buildURLQuery(DescribeTaskingRequest request) throws OWSException
 	{
 		StringBuffer urlBuff;
 
@@ -71,15 +71,15 @@ public class DescribeGetFeasibilityWriterV11 extends AbstractRequestWriter<Descr
 
 
 	/**
-	 * Construction de la requete POST
+	 * XML Request
 	 */
 	@Override
-	public Element buildXMLQuery(DOMHelper dom, DescribeGetFeasibilityRequest request) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, DescribeTaskingRequest request) throws OWSException
 	{
 		dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", request.getVersion()));
 
 		// root element
-		Element rootElt = dom.createElement("sps:DescribeGetFeasibility");
+		Element rootElt = dom.createElement("sps:" + request.getOperation());
 		addCommonXML(dom, rootElt, request);
 
 		// sensorID

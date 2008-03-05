@@ -58,7 +58,7 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 	@Override
 	public DescribeSensorRequest readURLQuery(String queryString) throws OWSException
 	{
-		OWSExceptionReport report = new OWSExceptionReport();
+		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		DescribeSensorRequest request = new DescribeSensorRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
 		
@@ -129,7 +129,7 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 	@Override
 	public DescribeSensorRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		OWSExceptionReport report = new OWSExceptionReport();
+		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		DescribeSensorRequest request = new DescribeSensorRequest();        
         
         // do common stuffs like version, request name and service type

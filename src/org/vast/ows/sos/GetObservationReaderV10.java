@@ -65,7 +65,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 	@Override
 	public GetObservationRequest readURLQuery(String queryString) throws OWSException
 	{
-		OWSExceptionReport report = new OWSExceptionReport();
+		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		GetObservationRequest request = new GetObservationRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
 		
@@ -173,7 +173,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 	@Override
 	public GetObservationRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		OWSExceptionReport report = new OWSExceptionReport();
+		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		GetObservationRequest request = new GetObservationRequest();
 		
 		// do common stuffs like version, request name and service type

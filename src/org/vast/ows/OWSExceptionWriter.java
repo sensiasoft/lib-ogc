@@ -56,10 +56,16 @@ public class OWSExceptionWriter
 		if (e instanceof OWSExceptionReport)
 		{
 			OWSExceptionReport report = (OWSExceptionReport)e;
-			dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS));
+						
+			// use right namespace depending on version
+			String version = report.getVersion();
+			if (version == null || version.equals(OWSException.VERSION_10))
+				dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS));
+			else
+				dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, version));
 			
 			Element reportElt = dom.createElement("ows:ExceptionReport");
-			dom.setAttributeValue(reportElt, "@version", report.getVersion());
+			dom.setAttributeValue(reportElt, "@version", version);
 			
 			List<OWSException> exceptionList = report.getExceptionList();
 			for (int i=0; i<exceptionList.size(); i++)

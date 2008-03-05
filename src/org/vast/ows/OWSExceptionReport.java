@@ -46,7 +46,6 @@ public class OWSExceptionReport extends OWSException
 {
 	static final long serialVersionUID = 0x2E03E7BD4483B097L;
 	protected ArrayList<OWSException> exceptionList;
-	protected String version;
 	
 	
 	public OWSExceptionReport()

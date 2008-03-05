@@ -16,49 +16,49 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Philippe Merigot <philippe.merigot@spotimage.fr>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.sps;
 
-import org.vast.ows.OWSRequest;
+import org.vast.ows.OWSResponse;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DescribeSensor Request
+ * <p><b>Title:</b>
+ * Cancel Response
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for SPS DescribeGetFeasibility request parameters
+ * Container for a Cancel response
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Philippe Merigot
- * @date Oct 18, 2007
+ * <p>Copyright (c) 2008</p>
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date Mar, 03 2008
  * @version 1.0
  */
-public class DescribeGetFeasibilityRequest extends OWSRequest
+public class CancelResponse extends OWSResponse
 {
-	protected String sensorID;
-	
-	
-	public DescribeGetFeasibilityRequest()
+	protected ProgressReport progressReport;
+		
+
+	public CancelResponse()
 	{
-		setService("SPS");
-		setOperation("DescribeGetFeasibility");
-	}
-	
-	
-	public String getSensorID()
-	{
-		return sensorID;
+		this.service = "SPS";
+        this.messageType = "CancelResponse";
 	}
 
 
-	public void setSensorID(String sensorID)
+	public ProgressReport getProgressReport()
 	{
-		this.sensorID = sensorID;
+		return progressReport;
+	}
+
+
+	public void setProgressReport(ProgressReport progressReport)
+	{
+		this.progressReport = progressReport;
 	}
 }

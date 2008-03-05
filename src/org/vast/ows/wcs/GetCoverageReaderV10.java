@@ -58,7 +58,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 	@Override
 	public GetCoverageRequest readURLQuery(String queryString) throws OWSException
 	{
-		OWSExceptionReport report = new OWSExceptionReport();
+		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_10);
 		GetCoverageRequest request = new GetCoverageRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
         String crs = null;
@@ -258,7 +258,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 	@Override
 	public GetCoverageRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		OWSExceptionReport report = new OWSExceptionReport();
+		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_10);
 		GetCoverageRequest request = new GetCoverageRequest();
 		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI("GML", "3.1.1"));		
 		

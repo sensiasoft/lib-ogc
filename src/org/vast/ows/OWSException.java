@@ -48,9 +48,13 @@ public class OWSException extends Exception
 	public final static String no_code = "NoApplicableCode";
 	public final static String no_code_text = "Internal Error";
 	
+	public final static String VERSION_10 = "1.0";
+	public final static String VERSION_11 = "1.1.0";
+	
 	protected String code;
 	protected String locator;
 	protected String badValue;
+	protected String version;
 	
 	
 	public OWSException(String message)
@@ -137,6 +141,18 @@ public class OWSException extends Exception
 	}
 
 
+	public String getVersion()
+	{
+		return version;
+	}
+
+
+	public void setVersion(String version)
+	{
+		this.version = version;
+	}
+	
+	
 	@Override
 	public String getMessage()
 	{
@@ -150,7 +166,7 @@ public class OWSException extends Exception
 		else if (this.code == missing_param_code)
 			return missing_param_text + locator;
 		else if (this.code == invalid_param_code)
-			return invalid_param_text + locator + ((badValue == null) ? "" : " = " + badValue);
+			return invalid_param_text + locator + ((badValue == null) ? "" : "=" + badValue);
 		else if (this.code == unsupported_op_code)
 			return unsupported_op_text + locator;
 		else if (this.code == no_code)

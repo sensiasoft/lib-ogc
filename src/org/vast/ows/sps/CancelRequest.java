@@ -11,57 +11,54 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the
- University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ The Initial Developer of the Original Code is Spotimage S.A.
  Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
-
- Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Johannes Echterhoff <echterhoff@uni-muenster.de>
- 	Alexandre Robin <alexandre.robin@spotimage.fr>
- 	
+    Philippe Merigot <philippe.merigot@spotimage.fr>
+ 
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.sps;
 
-import org.vast.ows.OWSException;
+import org.vast.ows.OWSRequest;
 
 
 /**
+ * <p><b>Title:</b><br/>
+ * Cancel Request
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Container for SPS Cancel request parameters
+ * </p>
+ *
+ * <p>Copyright (c) 2008</p>
+ * @author Alexandre Robin
+ * @date Mar 03, 2008
+ * @version 1.0
  */
-public class SPSException extends OWSException
+public class CancelRequest extends OWSRequest
 {
-	private static final long serialVersionUID = 8834638750689652806L;
+	protected String ID;
+	
+	
+	public CancelRequest()
+	{
+		setService("SPS");
+		setOperation("Cancel");
+	}
+	
+	
+	public String getID()
+	{
+		return ID;
+	}
 
 
-	public SPSException(String message)
+	public void setID(String id)
 	{
-		super(message);
-	}
-	
-	
-	public SPSException(Exception e)
-	{
-		super(e);
-	}
-	
-	
-	public SPSException(String message, Exception e)
-	{
-		super(message, e);
-	}
-	
-	
-	public SPSException(String code, String locator)
-	{
-		this(code, locator, null, null);
-	}
-	
-	
-	public SPSException(String code, String locator, String badValue, String message)
-	{
-		super(code, locator, badValue, message);
+		this.ID = id;
 	}
 }

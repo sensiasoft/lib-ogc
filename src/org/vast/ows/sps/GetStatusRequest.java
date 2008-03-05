@@ -11,57 +11,56 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the
- University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ The Initial Developer of the Original Code is Spotimage S.A.
  Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
-
- Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Johannes Echterhoff <echterhoff@uni-muenster.de>
- 	Alexandre Robin <alexandre.robin@spotimage.fr>
- 	
+    Alexandre Robin <alexandre.robin@spotimage.fr>
+ 
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.sps;
 
-import org.vast.ows.OWSException;
+import org.vast.ows.OWSRequest;
 
 
 /**
+ * <p><b>Title:</b><br/>
+ * GetStatus Request
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Container for SPS GetStatus request parameters
+ * </p>
+ *
+ * <p>Copyright (c) 2008</p>
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date Feb 25, 2008
+ * @version 1.0
  */
-public class SPSException extends OWSException
+public class GetStatusRequest extends OWSRequest
 {
-	private static final long serialVersionUID = 8834638750689652806L;
+	public final static String ALL_TASKS = "ALL_TASKS";
+	
+	protected String id;
+	
+	
+	public GetStatusRequest()
+	{
+		setService("SPS");
+		setOperation("GetStatus");
+	}
+	
+	
+	public String getId()
+	{
+		return id;
+	}
 
 
-	public SPSException(String message)
+	public void setId(String taskID)
 	{
-		super(message);
-	}
-	
-	
-	public SPSException(Exception e)
-	{
-		super(e);
-	}
-	
-	
-	public SPSException(String message, Exception e)
-	{
-		super(message, e);
-	}
-	
-	
-	public SPSException(String code, String locator)
-	{
-		this(code, locator, null, null);
-	}
-	
-	
-	public SPSException(String code, String locator, String badValue, String message)
-	{
-		super(code, locator, badValue, message);
+		this.id = taskID;
 	}
 }

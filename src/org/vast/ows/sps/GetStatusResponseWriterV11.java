@@ -18,71 +18,55 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows;
+package org.vast.ows.sps;
 
+import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ows.AbstractResponseWriter;
+import org.vast.ows.OWSException;
+import org.w3c.dom.*;
+import org.vast.xml.DOMHelper;
 
 
 /**
- * 
  * <p><b>Title:</b><br/>
- * OWS Response
+ * GetStatus Response Writer v1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base class for all OWS service responses
+ * Writer to generate an XML GetStatus response based
+ * on values contained in a GetStatusResponse object for SPS v1.1
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 21 nov. 07
+ * <p>Copyright (c) 2008</p>
+ * @author Alexandre Robin
+ * @date Mar 04, 2008
  * @version 1.0
  */
-public class OWSResponse
+public class GetStatusResponseWriterV11 extends AbstractResponseWriter<GetStatusResponse>
 {
-	protected String service;
-	protected String version;
-	protected String messageType;
-    
-	
-    public OWSResponse()
-    {    	
-    }
-	
-
-	public String getService()
-	{
-		return service;
-	}
-
-
-	public void setService(String service)
-	{
-		this.service = service;
-	}
-
-
-	public String getVersion()
-	{
-		return version;
-	}
+	protected SPSCommonWriterV11 commonWriter = new SPSCommonWriterV11();
 	
 	
-	public String getNormalizedVersion()
+	public Element buildXMLResponse(DOMHelper dom, GetStatusResponse response, String version) throws OWSException
 	{
-		return OGCRegistry.normalizeVersionString(version);
+		try
+		{
+			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", response.getVersion()));
+			
+			// root element
+			Element rootElt = dom.createElement("sps:" + response.getMessageType());
+			
+			// progress report
+			Element reportElt = commonWriter.writeProgressReport(dom, response.getProgressReport());
+			rootElt.appendChild(reportElt);
+			
+			return rootElt;
+		}
+		catch (CDMException e)
+		{
+			throw new SPSException(e);
+		}
 	}
-
-
-	public void setVersion(String version)
-	{
-		this.version = version;
-	}
-
-
-	public String getMessageType()
-	{
-		return messageType;
-	}
-    
+	
 }

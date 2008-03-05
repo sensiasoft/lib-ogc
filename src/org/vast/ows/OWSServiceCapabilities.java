@@ -193,6 +193,26 @@ public class OWSServiceCapabilities extends OWSResponse
 	{
 		this.layers = layers;
 	}
+	
+	
+	/**
+	 * Retrieves LayerCapabilities object corresponding to
+	 * this layerId or null if not found 
+	 * @param layerId
+	 * @return
+	 */
+	public OWSLayerCapabilities getLayer(String layerId)
+	{
+		for (int i=0; i<layers.size(); i++)
+		{
+			OWSLayerCapabilities nextLayer = layers.get(i);
+			String nextId = nextLayer.getIdentifier();
+			if (nextId.equals(layerId))
+				return nextLayer;
+		}
+		
+		return null;
+	}
 
 
 	public List<String> getExceptionTypes()

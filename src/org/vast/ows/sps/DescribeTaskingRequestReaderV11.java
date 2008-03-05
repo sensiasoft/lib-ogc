@@ -32,29 +32,26 @@ import org.vast.xml.DOMHelper;
 
 /**
 * <p><b>Title:</b><br/>
-* SPS DescribeGetFeasibility Request Reader v1.1
+* SPS DescribeTasking Request Reader v1.1
 * </p>
 *
 * <p><b>Description:</b><br/>
-* Provides methods to parse a KVP or XML SPS DescribeGetFeasibility
-* request and create a DescribeGetFeasibilityRequest object for version 1.1
+* Provides methods to parse a KVP or XML SPS DescribeTasking
+* request and create a DescribeTasking object for version 1.1
 * </p>
 *
-* <p>Copyright (c) 2007</p>
-* @author Philippe Merigot
-* @date Oct 18, 2007
+* <p>Copyright (c) 2008</p>
+* @author Alexandre Robin <alexandre.robin@spotimage.fr>
+* @date Feb, 25 2008
 * @version 1.0
 */
-public class DescribeGetFeasibilityReaderV11 extends AbstractRequestReader<DescribeGetFeasibilityRequest>
+public class DescribeTaskingRequestReaderV11 extends AbstractRequestReader<DescribeTaskingRequest>
 {
 
-	/**
-	 * Requete GET
-	 */
 	@Override
-	public DescribeGetFeasibilityRequest readURLQuery(String queryString) throws OWSException
+	public DescribeTaskingRequest readURLQuery(String queryString) throws OWSException
 	{
-		DescribeGetFeasibilityRequest request = new DescribeGetFeasibilityRequest();
+		DescribeTaskingRequest request = new DescribeTaskingRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
 
 		while (st.hasMoreTokens())
@@ -75,7 +72,7 @@ public class DescribeGetFeasibilityReaderV11 extends AbstractRequestReader<Descr
 				throw new OWSException(invalidKVP);
 			}
 
-			// service ID
+			// service type
 			if (argName.equalsIgnoreCase("service"))
 			{
 				request.setService(argValue);
@@ -108,13 +105,10 @@ public class DescribeGetFeasibilityReaderV11 extends AbstractRequestReader<Descr
 	}
 
 
-	/**
-	 * Requete POST
-	 */
 	@Override
-	public DescribeGetFeasibilityRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+	public DescribeTaskingRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		DescribeGetFeasibilityRequest request = new DescribeGetFeasibilityRequest();
+		DescribeTaskingRequest request = new DescribeTaskingRequest();
 
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
@@ -129,11 +123,11 @@ public class DescribeGetFeasibilityReaderV11 extends AbstractRequestReader<Descr
 
 
 	/**
-	 * Checks that DescribeGetFeasibility mandatory parameters are present
+	 * Checks that DescribeTasking mandatory parameters are present
 	 * @param request
 	 * @throws OWSException
 	 */
-	protected void checkParameters(DescribeGetFeasibilityRequest request, OWSExceptionReport report) throws OWSException
+	protected void checkParameters(DescribeTaskingRequest request, OWSExceptionReport report) throws OWSException
 	{
 		// check common params + generate exception
 		checkParameters(request, report, "SPS");
