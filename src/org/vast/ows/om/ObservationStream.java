@@ -20,7 +20,7 @@
 
 package org.vast.ows.om;
 
-import org.vast.sweCommon.SWEData;
+import org.vast.sweCommon.SweData;
 
 
 /**
@@ -40,22 +40,22 @@ import org.vast.sweCommon.SWEData;
  */
 public class ObservationStream extends AbstractObservation
 {
-    protected SWEData result;
+    protected SweData result;
 
     
     public ObservationStream()
     {
-        result = new SWEData();
+        result = new SweData();
     }
     
     
-    public SWEData getResult()
+    public SweData getResult()
     {
         return result;
     }
 
     
-    public void setResult(SWEData sweData)
+    public void setResult(SweData sweData)
     {
         this.result = sweData;
     }

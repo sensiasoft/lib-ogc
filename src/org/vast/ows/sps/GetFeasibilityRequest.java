@@ -23,7 +23,7 @@
 package org.vast.ows.sps;
 
 import org.vast.ows.OWSRequest;
-import org.vast.sweCommon.SWEData;
+import org.vast.sweCommon.SweData;
 import org.vast.util.DateTime;
 
 
@@ -44,8 +44,8 @@ import org.vast.util.DateTime;
 public class GetFeasibilityRequest extends OWSRequest
 {
 	protected String sensorID;
-	protected SWEData taskingParameters;
-	protected SWEData additionalParameters;
+	protected SweData taskingParameters;
+	protected SweData additionalParameters;
 	protected DateTime timeFrame;
 	
 	
@@ -68,25 +68,25 @@ public class GetFeasibilityRequest extends OWSRequest
 	}
 
 
-	public SWEData getTaskingParameters()
+	public SweData getTaskingParameters()
 	{
 		return taskingParameters;
 	}
 
 
-	public void setTaskingParameters(SWEData taskingParameters)
+	public void setTaskingParameters(SweData taskingParameters)
 	{
 		this.taskingParameters = taskingParameters;
 	}
 
 
-	public SWEData getAdditionalParameters()
+	public SweData getAdditionalParameters()
 	{
 		return additionalParameters;
 	}
 
 
-	public void setAdditionalParameters(SWEData additionalParameters)
+	public void setAdditionalParameters(SweData additionalParameters)
 	{
 		this.additionalParameters = additionalParameters;
 	}

@@ -22,7 +22,7 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import org.vast.sweCommon.SWEData;
+import org.vast.sweCommon.SweData;
 import org.vast.util.DateTime;
 
 
@@ -54,7 +54,7 @@ public class ProgressReport
 	protected String statusCode;
 	protected String description;
 	protected DateTime estimatedToC;
-	protected SWEData reportParameters;
+	protected SweData reportParameters;
 
 
 	public String getId()
@@ -105,13 +105,13 @@ public class ProgressReport
 	}
 
 
-	public SWEData getReportParameters()
+	public SweData getReportParameters()
 	{
 		return reportParameters;
 	}
 
 
-	public void setReportParameters(SWEData reportParameters)
+	public void setReportParameters(SweData reportParameters)
 	{
 		this.reportParameters = reportParameters;
 	}
