@@ -26,7 +26,7 @@ import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.ows.OWSException;
 import org.vast.sweCommon.DataSourceXML;
-import org.vast.sweCommon.SweData;
+import org.vast.sweCommon.SWEData;
 import org.vast.sweCommon.SweEncodingReaderV11;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
@@ -61,14 +61,14 @@ public class SPSCommonReaderV11
 	 * @param paramStructure
 	 * @return
 	 */
-	public SweData readSWEData(DOMHelper dom, Element paramsElt, DataComponent paramStructure) throws CDMException
+	public SWEData readSWEData(DOMHelper dom, Element paramsElt, DataComponent paramStructure) throws CDMException
 	{
 		// read encoding
 		Element encodingElt = dom.getElement(paramsElt, "encoding");
 		DataEncoding dataEncoding = encodingReader.readEncodingProperty(dom, encodingElt);
 		
 		// create SWEData object
-		SweData paramsData = new SweData();
+		SWEData paramsData = new SWEData();
 		paramsData.setDataComponents(paramStructure.copy());
 		paramsData.setDataEncoding(dataEncoding);
 		
@@ -122,7 +122,7 @@ public class SPSCommonReaderV11
 			if (reportParamsElt != null && paramStructure != null)
 			{
 				// parse data into a SWEData object
-				SweData reportData = readSWEData(dom, reportParamsElt, paramStructure);
+				SWEData reportData = readSWEData(dom, reportParamsElt, paramStructure);
 				report.setReportParameters(reportData);
 			}
 			
@@ -174,7 +174,7 @@ public class SPSCommonReaderV11
 			if (studyParamsElt != null && paramStructure != null)
 			{
 				// parse data into a SWEData object
-				SweData reportData = readSWEData(dom, studyParamsElt, paramStructure);
+				SWEData reportData = readSWEData(dom, studyParamsElt, paramStructure);
 				study.setStudyParameters(reportData);
 			}
 			

@@ -25,7 +25,7 @@ import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.sweCommon.DataSinkXML;
-import org.vast.sweCommon.SweData;
+import org.vast.sweCommon.SWEData;
 import org.vast.sweCommon.SweEncodingWriterV11;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
@@ -61,7 +61,7 @@ public class SPSCommonWriterV11
 	 * @param paramStructure
 	 * @throws CDMException
 	 */
-	public void writeSWEData(DOMHelper dom, Element parentElt, SweData paramsData) throws CDMException
+	public void writeSWEData(DOMHelper dom, Element parentElt, SWEData paramsData) throws CDMException
 	{
 		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.1"));
 		
@@ -113,7 +113,7 @@ public class SPSCommonWriterV11
 					DateTimeFormat.formatIso(date.getJulianTime(), 0));
 		
 		// report parameters
-		SweData reportParams = report.getReportParameters();
+		SWEData reportParams = report.getReportParameters();
 		if (reportParams != null)
 		{
 			Element reportParamsElt = dom.addElement(reportElt, "sps:reportParameters");
@@ -157,7 +157,7 @@ public class SPSCommonWriterV11
 			dom.setElementValue(studyElt, "sps:description", val);
 		
 		// study parameters
-		SweData studyParams = study.getStudyParameters();
+		SWEData studyParams = study.getStudyParameters();
 		if (studyParams != null)
 		{
 			Element studyParamsElt = dom.addElement(studyElt, "sps:studyParameters");

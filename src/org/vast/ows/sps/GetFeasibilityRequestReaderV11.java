@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 import org.vast.cdm.common.DataComponent;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
-import org.vast.sweCommon.SweData;
+import org.vast.sweCommon.SWEData;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
@@ -87,7 +87,7 @@ public class GetFeasibilityRequestReaderV11 extends ParameterizedRequestReader<G
 			if (taskingParamsElt != null && taskingParamStructure != null)
 			{
 				// parse data into a SWEData object
-				SweData taskingParams = commonReader.readSWEData(dom, taskingParamsElt, taskingParamStructure);
+				SWEData taskingParams = commonReader.readSWEData(dom, taskingParamsElt, taskingParamStructure);
 				request.setTaskingParameters(taskingParams);
 			}
 			
@@ -96,7 +96,7 @@ public class GetFeasibilityRequestReaderV11 extends ParameterizedRequestReader<G
 			if (extParamsElt != null && additionalParamStructure != null)
 			{
 				// parse data into a SWEData object
-				SweData extParams = commonReader.readSWEData(dom, extParamsElt, additionalParamStructure);
+				SWEData extParams = commonReader.readSWEData(dom, extParamsElt, additionalParamStructure);
 				request.setAdditionalParameters(extParams);
 			}
 			

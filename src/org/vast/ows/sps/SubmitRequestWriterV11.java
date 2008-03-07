@@ -27,7 +27,7 @@ import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
-import org.vast.sweCommon.SweData;
+import org.vast.sweCommon.SWEData;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
@@ -89,7 +89,7 @@ public class SubmitRequestWriterV11 extends AbstractRequestWriter<SubmitRequest>
 					dom.setElementValue(rootElt, "sps:sensorID", request.getSensorID());
 				
 				// tasking parameters
-				SweData taskingParams = request.getTaskingParameters();
+				SWEData taskingParams = request.getTaskingParameters();
 				if (taskingParams != null)
 				{
 					Element taskingParamsElt = dom.addElement(rootElt, "sps:taskingParameters");
@@ -98,7 +98,7 @@ public class SubmitRequestWriterV11 extends AbstractRequestWriter<SubmitRequest>
 			}
 			
 			// additional parameters
-			SweData extParams = request.getAdditionalParameters();
+			SWEData extParams = request.getAdditionalParameters();
 			if (extParams != null)
 			{
 				Element taskingParamsElt = dom.addElement(rootElt, "sps:additionalParameters");

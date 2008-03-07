@@ -22,7 +22,7 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import org.vast.sweCommon.SweData;
+import org.vast.sweCommon.SWEData;
 
 
 /**
@@ -44,8 +44,8 @@ public class Alternative
 	protected String id;
 	protected double successRate = Double.NaN;
 	protected String description;
-	protected SweData taskingParameters;
-	protected SweData studyParameters;
+	protected SWEData taskingParameters;
+	protected SWEData studyParameters;
 
 
 	public String getId()
@@ -84,25 +84,25 @@ public class Alternative
 	}
 	
 	
-	public SweData getTaskingParameters()
+	public SWEData getTaskingParameters()
 	{
 		return taskingParameters;
 	}
 
 
-	public void setTaskingParameters(SweData taskingParameters)
+	public void setTaskingParameters(SWEData taskingParameters)
 	{
 		this.taskingParameters = taskingParameters;
 	}
 
 
-	public SweData getStudyParameters()
+	public SWEData getStudyParameters()
 	{
 		return studyParameters;
 	}
 
 
-	public void setStudyParameters(SweData studyParameters)
+	public void setStudyParameters(SWEData studyParameters)
 	{
 		this.studyParameters = studyParameters;
 	}
