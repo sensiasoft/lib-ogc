@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
 public class SPSCommonReaderV11
 {
 	protected SweEncodingReaderV11 encodingReader = new SweEncodingReaderV11();
-	
+		
 	
 	/**
 	 * USed to read SWE Data stream such as inside taskingParameters or reportParameters

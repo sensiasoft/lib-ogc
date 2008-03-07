@@ -23,7 +23,6 @@
 package org.vast.ows.sps;
 
 import org.vast.cdm.common.DataComponent;
-import org.vast.ows.AbstractResponseReader;
 import org.vast.ows.OWSException;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -44,13 +43,13 @@ import org.w3c.dom.Element;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class GetStatusResponseReaderV11 extends AbstractResponseReader<GetStatusResponse>
+public class GetStatusResponseReaderV11 extends ParameterizedResponseReader<GetStatusResponse>
 {
 	protected SPSCommonReaderV11 commonReader = new SPSCommonReaderV11();
 	protected DataComponent paramStructure;
 	
 	
-	public void setReportParamStructure(DataComponent paramStructure)
+	public void setParamStructure(DataComponent paramStructure)
 	{
 		this.paramStructure = paramStructure;
 	}
@@ -60,7 +59,7 @@ public class GetStatusResponseReaderV11 extends AbstractResponseReader<GetStatus
 	{
 		try
 		{
-			assert(this.paramStructure != null);
+			assert(paramStructure != null);
 			
 			GetStatusResponse response = new GetStatusResponse();
 			response.setVersion("1.1");

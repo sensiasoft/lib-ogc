@@ -23,7 +23,6 @@
 package org.vast.ows.sps;
 
 import org.vast.cdm.common.DataComponent;
-import org.vast.ows.AbstractResponseReader;
 import org.vast.ows.OWSException;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
@@ -46,13 +45,13 @@ import org.w3c.dom.Element;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class GetFeasibilityResponseReaderV11 extends AbstractResponseReader<GetFeasibilityResponse>
+public class GetFeasibilityResponseReaderV11 extends ParameterizedResponseReader<GetFeasibilityResponse>
 {
 	protected SPSCommonReaderV11 commonReader = new SPSCommonReaderV11();
 	protected DataComponent paramStructure;
 	
 	
-	public void setStudyParamStructure(DataComponent paramStructure)
+	public void setParamStructure(DataComponent paramStructure)
 	{
 		this.paramStructure = paramStructure;
 	}
@@ -62,7 +61,7 @@ public class GetFeasibilityResponseReaderV11 extends AbstractResponseReader<GetF
 	{
 		try
 		{
-			assert(this.paramStructure != null) : "paramStructure should be set";
+			assert(paramStructure != null);
 			
 			GetFeasibilityResponse response = new GetFeasibilityResponse();
 			response.setVersion("1.1");

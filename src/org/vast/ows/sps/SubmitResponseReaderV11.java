@@ -23,7 +23,6 @@
 package org.vast.ows.sps;
 
 import org.vast.cdm.common.DataComponent;
-import org.vast.ows.AbstractResponseReader;
 import org.vast.ows.OWSException;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
@@ -46,13 +45,13 @@ import org.w3c.dom.Element;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class SubmitResponseReaderV11 extends AbstractResponseReader<SubmitResponse>
+public class SubmitResponseReaderV11 extends ParameterizedResponseReader<SubmitResponse>
 {
 	protected SPSCommonReaderV11 commonReader = new SPSCommonReaderV11();
 	protected DataComponent paramStructure;
 	
 	
-	public void setReportParamStructure(DataComponent paramStructure)
+	public void setParamStructure(DataComponent paramStructure)
 	{
 		this.paramStructure = paramStructure;
 	}
