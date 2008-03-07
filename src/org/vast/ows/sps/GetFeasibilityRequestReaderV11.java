@@ -78,17 +78,25 @@ public class GetFeasibilityRequestReaderV11 extends ParameterizedRequestReader<G
 			// do common stuffs like version, request name and service type
 			readCommonXML(dom, requestElt, request);
 
-			// sensor ID
-			String sensorID = dom.getElementValue(requestElt, "sensorID");
-			request.setSensorID(sensorID);
+			// feasibility ID
+			String feasibilityID = dom.getElementValue(requestElt, "ID");
+			request.setID(feasibilityID);
 			
-			// tasking parameters
-			Element taskingParamsElt = dom.getElement(requestElt, "taskingParameters");
-			if (taskingParamsElt != null && taskingParamStructure != null)
+			// parse only if no ID was provided (choice)
+			if (feasibilityID == null)
 			{
-				// parse data into a SWEData object
-				SWEData taskingParams = commonReader.readSWEData(dom, taskingParamsElt, taskingParamStructure);
-				request.setTaskingParameters(taskingParams);
+				// sensor ID
+				String sensorID = dom.getElementValue(requestElt, "sensorID");
+				request.setSensorID(sensorID);
+				
+				// tasking parameters
+				Element taskingParamsElt = dom.getElement(requestElt, "taskingParameters");
+				if (taskingParamsElt != null && taskingParamStructure != null)
+				{
+					// parse data into a SWEData object
+					SWEData taskingParams = commonReader.readSWEData(dom, taskingParamsElt, taskingParamStructure);
+					request.setTaskingParameters(taskingParams);
+				}
 			}
 			
 			// additional parameters

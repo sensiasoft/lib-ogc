@@ -43,6 +43,7 @@ import org.vast.util.DateTime;
  */
 public class GetFeasibilityRequest extends OWSRequest
 {
+	protected String ID;
 	protected String sensorID;
 	protected SWEData taskingParameters;
 	protected SWEData additionalParameters;
@@ -56,6 +57,18 @@ public class GetFeasibilityRequest extends OWSRequest
 	}
 	
 	
+	public String getID()
+	{
+		return ID;
+	}
+
+
+	public void setID(String id)
+	{
+		ID = id;
+	}
+
+
 	public String getSensorID()
 	{
 		return sensorID;

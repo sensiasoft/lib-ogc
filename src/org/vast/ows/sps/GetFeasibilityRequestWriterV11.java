@@ -77,16 +77,24 @@ public class GetFeasibilityRequestWriterV11 extends AbstractRequestWriter<GetFea
 			Element rootElt = dom.createElement("sps:" + request.getOperation());
 			addCommonXML(dom, rootElt, request);
 
-			// sensorID
-			if (request.getSensorID() != null)
-				dom.setElementValue(rootElt, "sps:sensorID", request.getSensorID());
-			
-			// tasking parameters
-			SWEData taskingParams = request.getTaskingParameters();
-			if (taskingParams != null)
+			// feasibility ID
+			if (request.getID() != null)
 			{
-				Element taskingParamsElt = dom.addElement(rootElt, "sps:taskingParameters");
-				commonWriter.writeSWEData(dom, taskingParamsElt, taskingParams);
+				dom.setElementValue(rootElt, "sps:ID", request.getID());
+			}
+			else // write only if ID was not set (choice)
+			{
+				// sensorID
+				if (request.getSensorID() != null)
+					dom.setElementValue(rootElt, "sps:sensorID", request.getSensorID());
+				
+				// tasking parameters
+				SWEData taskingParams = request.getTaskingParameters();
+				if (taskingParams != null)
+				{
+					Element taskingParamsElt = dom.addElement(rootElt, "sps:taskingParameters");
+					commonWriter.writeSWEData(dom, taskingParamsElt, taskingParams);
+				}
 			}
 			
 			// additional parameters

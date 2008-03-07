@@ -193,4 +193,16 @@ public class TMLStreamParser implements StreamDemux, DataStreamParser
         // TODO Auto-generated method stub
         
     }
+
+
+	public void parseNextElement() throws CDMException
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void setInput(InputStream inputStream) throws CDMException
+	{		
+	}
 }

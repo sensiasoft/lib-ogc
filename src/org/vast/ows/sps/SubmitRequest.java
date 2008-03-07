@@ -43,8 +43,8 @@ import org.vast.util.DateTime;
  */
 public class SubmitRequest extends OWSRequest
 {
+	protected String ID;
 	protected String sensorID;
-	protected String feasibilityID;
 	protected SWEData taskingParameters;
 	protected SWEData additionalParameters;
 	protected DateTime timeFrame;
@@ -54,6 +54,18 @@ public class SubmitRequest extends OWSRequest
 	{
 		setService("SPS");
 		setOperation("Submit");
+	}
+
+
+	public String getID()
+	{
+		return ID;
+	}
+
+
+	public void setID(String feasibilityStudyID)
+	{
+		this.ID = feasibilityStudyID;
 	}
 	
 	
@@ -67,19 +79,7 @@ public class SubmitRequest extends OWSRequest
 	{
 		this.sensorID = sensorID;
 	}
-
-
-	public String getFeasibilityID()
-	{
-		return feasibilityID;
-	}
-
-
-	public void setFeasibilityID(String feasibilityStudyID)
-	{
-		this.feasibilityID = feasibilityStudyID;
-	}
-
+	
 
 	public SWEData getTaskingParameters()
 	{

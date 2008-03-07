@@ -105,10 +105,6 @@ public class SPSCommonReaderV11
 			String statusCode = dom.getElementValue(reportElt, "statusCode");
 			report.setStatusCode(statusCode);
 			
-			// description
-			String description = dom.getElementValue(reportElt, "description");
-			report.setDescription(description);
-			
 			// estimatedToC
 			String isoDate = dom.getElementValue(reportElt, "estimatedToC");
 			if (isoDate != null)
@@ -116,6 +112,10 @@ public class SPSCommonReaderV11
 				DateTime estimatedToC = new DateTime(DateTimeFormat.parseIso(isoDate));
 				report.setEstimatedToC(estimatedToC);
 			}
+			
+			// description
+			String description = dom.getElementValue(reportElt, "description");
+			report.setDescription(description);
 			
 			// report parameters
 			Element reportParamsElt = dom.getElement(reportElt, "reportParameters");
@@ -153,9 +153,17 @@ public class SPSCommonReaderV11
 			String id = dom.getElementValue(reportElt, "ID");
 			study.setId(id);
 			
-			// statusCode
+			// feasibilityCode
 			String feasibilityCode = dom.getElementValue(reportElt, "feasibilityCode");
 			study.setFeasibilityCode(feasibilityCode);
+			
+			// estimatedToC
+			String isoDate = dom.getElementValue(reportElt, "estimatedToC");
+			if (isoDate != null)
+			{
+				DateTime estimatedToC = new DateTime(DateTimeFormat.parseIso(isoDate));
+				study.setEstimatedToC(estimatedToC);
+			}
 			
 			// successRate
 			String rateText = dom.getElementValue(reportElt, "successRate");

@@ -77,12 +77,12 @@ public class SubmitRequestWriterV11 extends AbstractRequestWriter<SubmitRequest>
 			Element rootElt = dom.createElement("sps:" + request.getOperation());
 			addCommonXML(dom, rootElt, request);
 
-			// feasibility ID
-			if (request.getFeasibilityID() != null)
+			// feasibility/reservation ID
+			if (request.getID() != null)
 			{
-				dom.setElementValue(rootElt, "sps:ID", request.getFeasibilityID());
+				dom.setElementValue(rootElt, "sps:ID", request.getID());
 			}
-			else
+			else // write only if ID was not set (choice)
 			{
 				// sensorID
 				if (request.getSensorID() != null)

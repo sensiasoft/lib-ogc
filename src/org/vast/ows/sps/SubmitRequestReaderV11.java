@@ -78,12 +78,12 @@ public class SubmitRequestReaderV11 extends ParameterizedRequestReader<SubmitReq
 			// do common stuffs like version, request name and service type
 			readCommonXML(dom, requestElt, request);
 
-			// feasibility ID
+			// feasibility/reservation ID
 			String feasibilityID = dom.getElementValue(requestElt, "ID");
-			request.setFeasibilityID(feasibilityID);
+			request.setID(feasibilityID);
 			
 			// parse only if no ID was provided (choice)
-			if (feasibilityID != null)
+			if (feasibilityID == null)
 			{
 				// Sensor ID
 				String sensorID = dom.getElementValue(requestElt, "sensorID");
@@ -137,7 +137,7 @@ public class SubmitRequestReaderV11 extends ParameterizedRequestReader<SubmitReq
 		checkParameters(request, report, "SPS");
 
 		// Check if either ID or SensorID + taskingParameters are present
-		if (request.getFeasibilityID() == null)
+		if (request.getID() == null)
 		{
 			// Check that sensorID is present
 			if (request.getSensorID() == null)

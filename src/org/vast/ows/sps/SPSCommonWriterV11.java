@@ -101,16 +101,16 @@ public class SPSCommonWriterV11
 		if (val != null)
 			dom.setElementValue(reportElt, "sps:statusCode", val);
 		
-		// description
-		val = report.getDescription();
-		if (val != null)
-			dom.setElementValue(reportElt, "sps:description", val);
-		
 		// estimated time of completion
 		DateTime date = report.getEstimatedToC();
 		if (date != null)
 			dom.setElementValue(reportElt, "sps:estimatedToC",
 					DateTimeFormat.formatIso(date.getJulianTime(), 0));
+		
+		// description
+		val = report.getDescription();
+		if (val != null)
+			dom.setElementValue(reportElt, "sps:description", val);
 		
 		// report parameters
 		SWEData reportParams = report.getReportParameters();
@@ -145,6 +145,12 @@ public class SPSCommonWriterV11
 		val = study.getFeasibilityCode();
 		if (val != null)
 			dom.setElementValue(studyElt, "sps:feasibilityCode", val);
+		
+		// estimated time of completion
+		DateTime date = study.getEstimatedToC();
+		if (date != null)
+			dom.setElementValue(studyElt, "sps:estimatedToC",
+					DateTimeFormat.formatIso(date.getJulianTime(), 0));
 		
 		// success rate
 		double successRate = study.getSuccessRate();

@@ -23,6 +23,7 @@ Contributor(s):
 package org.vast.ows.sps;
 
 import org.vast.sweCommon.SWEData;
+import org.vast.util.DateTime;
 
 
 /**
@@ -47,6 +48,7 @@ public class FeasibilityStudy
 
 	protected String id;
 	protected String feasibilityCode;
+	protected DateTime estimatedToC;
 	protected double successRate = Double.NaN;
 	protected String description;
 	protected SWEData studyParameters;
@@ -109,5 +111,17 @@ public class FeasibilityStudy
 	public void setStudyParameters(SWEData studyParameters)
 	{
 		this.studyParameters = studyParameters;
+	}
+
+
+	public DateTime getEstimatedToC()
+	{
+		return estimatedToC;
+	}
+
+
+	public void setEstimatedToC(DateTime estimatedToC)
+	{
+		this.estimatedToC = estimatedToC;
 	}
 }
