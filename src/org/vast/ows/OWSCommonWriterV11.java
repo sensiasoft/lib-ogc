@@ -61,7 +61,7 @@ public class OWSCommonWriterV11
     	if (!Double.isNaN(bbox.getMinZ()))
     		lowCoords += " " + bbox.getMinZ();
     	
-        dom.setElementValue(bboxElt, "LowerCorner", lowCoords);
+        dom.setElementValue(bboxElt, "ows:LowerCorner", lowCoords);
                     
         // write upper corner
         String upCoords = Double.toString(bbox.getMaxX());
@@ -69,7 +69,7 @@ public class OWSCommonWriterV11
     		upCoords += " " + bbox.getMaxY();
     	if (!Double.isNaN(bbox.getMaxZ()))
     		upCoords += " " + bbox.getMaxZ();
-        dom.setElementValue(bboxElt, "UpperCorner", upCoords);
+        dom.setElementValue(bboxElt, "ows:UpperCorner", upCoords);
         
         return bboxElt;
     }

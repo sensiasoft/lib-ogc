@@ -86,7 +86,8 @@ public class CoverageDescriptionsReaderV11 extends AbstractResponseReader<Covera
 		Element spDomainElt = dom.getElement(descElt, "Domain/SpatialDomain");
 					
 		// bbox list
-		NodeList bboxElts = dom.getElements(spDomainElt, "BoundingBox");
+		// TODO handle WGS84BoundingBox allowed here by substitution!
+		NodeList bboxElts = dom.getElements(spDomainElt, "BoundingBox");		
 		for (int j=0; j<bboxElts.getLength(); j++)
 		{
 			Element bboxElt = (Element)bboxElts.item(j);
