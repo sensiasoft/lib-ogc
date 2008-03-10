@@ -121,7 +121,13 @@ public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<Covera
 				for (int k=0; k<field.getInterpolationMethods().size(); k++)
 				{
 					Element interpMethodElt = dom.addElement(fieldElt, "InterpolationMethods/+InterpolationMethod");
-					dom.setElementValue(interpMethodElt, field.getInterpolationMethods().get(k));
+					String interpMethod = field.getInterpolationMethods().get(k);
+					
+					// hack to handle differente value properly (change btw 1.0 and 1.1)
+					if (interpMethod.startsWith("nearest"))
+						interpMethod = "nearest";
+					
+					dom.setElementValue(interpMethodElt, interpMethod);
 					
 					// TODO write nullResilience
 				}
