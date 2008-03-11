@@ -54,7 +54,7 @@ public class DescribeTaskingResponseWriterV11 extends AbstractResponseWriter<Des
 	{
 		try
 		{
-			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI(OGCRegistry.SPS, response.getVersion()));
+			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI(OGCRegistry.SPS, version));
 			
 			// root element
 			Element rootElt = dom.createElement("sps:" + response.getMessageType());

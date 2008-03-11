@@ -54,7 +54,7 @@ public class SubmitResponseWriterV11 extends AbstractResponseWriter<SubmitRespon
 	{
 		try
 		{
-			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", response.getVersion()));
+			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", version));
 			
 			// root element
 			Element rootElt = dom.createElement("sps:" + response.getMessageType());

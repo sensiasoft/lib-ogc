@@ -54,7 +54,7 @@ public class GetFeasibilityResponseWriterV11 extends AbstractResponseWriter<GetF
 	{
 		try
 		{
-			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", response.getVersion()));
+			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", version));
 			
 			// root element
 			Element rootElt = dom.createElement("sps:" + response.getMessageType());
