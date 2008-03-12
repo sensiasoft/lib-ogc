@@ -15,8 +15,8 @@
  Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
  
- Contributor(s): 
-    Philippe Merigot <philippe.merigot@spotimage.fr>
+ Contributor(s):
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 

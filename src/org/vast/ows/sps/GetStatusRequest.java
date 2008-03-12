@@ -17,6 +17,7 @@
  
  Contributor(s): 
     Alexandre Robin <alexandre.robin@spotimage.fr>
+ 	Philippe Merigot <philippe.merigot@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
