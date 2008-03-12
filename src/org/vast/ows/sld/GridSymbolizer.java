@@ -37,7 +37,7 @@ package org.vast.ows.sld;
  */
 public class GridSymbolizer extends Symbolizer
 {
-    protected Dimensions dimensions;
+    protected Dimensions dimensions; // width, length, depth
 
 
     public Dimensions getDimensions()

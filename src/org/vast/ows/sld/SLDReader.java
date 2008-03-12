@@ -106,6 +106,11 @@ public class SLDReader
 		LineSymbolizer lineSym = new LineSymbolizer();
 		readGeometryElt(lineSym, dom, symElt);
 		
+		// read dimensions
+        Element dimElt = dom.getElement(symElt, "Dimensions");
+        Dimensions dims = readDimensions(dom, dimElt);
+        lineSym.setDimensions(dims);
+        
 		// read stroke
 		Element strokeElt = dom.getElement(symElt, "Stroke");
 		Stroke stroke = readStroke(dom, strokeElt);
@@ -120,6 +125,11 @@ public class SLDReader
 		PolygonSymbolizer polygonSym = new PolygonSymbolizer();
 		readGeometryElt(polygonSym, dom, symElt);
 		
+		// read dimensions
+        Element dimElt = dom.getElement(symElt, "Dimensions");
+        Dimensions dims = readDimensions(dom, dimElt);
+        polygonSym.setDimensions(dims);
+        
 		// read stroke
 		Element strokeElt = dom.getElement(symElt, "Stroke");
 		Stroke stroke = readStroke(dom, strokeElt);
@@ -491,7 +501,10 @@ public class SLDReader
      */
     public Dimensions readDimensions(DOMHelper dom, Element dimElt)
     {
-        Dimensions dim = new Dimensions();
+        if (dimElt == null)
+        	return null;
+    	
+    	Dimensions dim = new Dimensions();
         
         // read all css parameters
         NodeList axisElts = dom.getElements(dimElt, "Axis");

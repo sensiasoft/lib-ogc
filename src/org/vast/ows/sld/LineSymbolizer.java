@@ -37,6 +37,7 @@ package org.vast.ows.sld;
  */
 public class LineSymbolizer extends Symbolizer
 {
+	protected Dimensions dimensions; // numPoints, numSegments
 	protected Stroke stroke;
 
 
@@ -52,6 +53,18 @@ public class LineSymbolizer extends Symbolizer
 	public void setStroke(Stroke stroke)
 	{
 		this.stroke = stroke;
+	}
+
+
+	public Dimensions getDimensions()
+	{
+		return dimensions;
+	}
+
+
+	public void setDimensions(Dimensions dimensions)
+	{
+		this.dimensions = dimensions;
 	}
 
 }
