@@ -66,11 +66,13 @@ public abstract class SOSServlet extends OWSServlet
 	protected Hashtable<String, String> sensorMLUrls = new Hashtable<String, String>();
 	protected OWSUtils owsUtils = new OWSUtils();
     
+	
 	protected void processQuery(GetCapabilitiesRequest query) throws Exception
     {
 	    sendCapabilities("ALL", query.getResponseStream());
     }
 	    
+	
 	protected void processQuery(DescribeSensorRequest query) throws Exception
 	{
 		String sensorId = query.getProcedure();
@@ -81,9 +83,11 @@ public abstract class SOSServlet extends OWSServlet
 		String smlUrl = sensorMLUrls.get(sensorId);
 		if(smlUrl == null)
 			throw new SOSException("SensorML description for " + sensorId + " not available");
+		
 		DOMHelper dom = new DOMHelper(smlUrl, false);				
         dom.serialize(dom.getBaseElement(), query.getResponseStream() , null);		
 	}
+	
 	
 	/**
 	 * Decode the query, check validity and call the right handler

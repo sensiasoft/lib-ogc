@@ -40,7 +40,7 @@ import org.vast.ows.sos.GetResultRequest;
  */
 public interface SOSHandler
 {
-	public abstract void getObservation(GetObservationRequest query) throws Exception;
-	public abstract void getResult(GetResultRequest query) throws Exception;
-	public abstract void describeSensor(DescribeSensorRequest query) throws Exception;
+	public abstract void getObservation(GetObservationRequest request) throws Exception;
+	public abstract void getResult(GetResultRequest request) throws Exception;
+	public abstract void describeSensor(DescribeSensorRequest request) throws Exception;
 }
