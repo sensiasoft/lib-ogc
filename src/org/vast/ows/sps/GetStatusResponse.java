@@ -48,6 +48,7 @@ public class GetStatusResponse extends OWSResponse
 	{
 		this.service = "SPS";
         this.messageType = "GetStatusResponse";
+        progressReport = new ProgressReport();
 	}
 
 

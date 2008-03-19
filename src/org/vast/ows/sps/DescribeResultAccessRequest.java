@@ -43,7 +43,7 @@ import org.vast.ows.OWSRequest;
 public class DescribeResultAccessRequest extends OWSRequest
 {
 	protected String sensorID;
-	protected String ID;
+	protected String taskID;
 	
 	
 	public DescribeResultAccessRequest()
@@ -65,14 +65,14 @@ public class DescribeResultAccessRequest extends OWSRequest
 	}
 
 
-	public String getID()
+	public String getTaskID()
 	{
-		return ID;
+		return taskID;
 	}
 
 
-	public void setID(String id)
+	public void setTaskID(String id)
 	{
-		ID = id;
+		taskID = id;
 	}
 }

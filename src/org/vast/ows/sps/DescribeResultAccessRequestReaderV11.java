@@ -98,9 +98,9 @@ public class DescribeResultAccessRequestReaderV11 extends AbstractRequestReader<
 			}
 			
 			// ID
-			else if (argName.equalsIgnoreCase("id"))
+			else if (argName.equalsIgnoreCase("taskID"))
 			{
-				request.setID(argValue);
+				request.setTaskID(argValue);
 			}
 
 			else
@@ -122,7 +122,7 @@ public class DescribeResultAccessRequestReaderV11 extends AbstractRequestReader<
 
 		// ID
 		String ID = dom.getElementValue(requestElt, "ID");
-		request.setID(ID);
+		request.setTaskID(ID);
 		
 		// parse sensorID only if no ID was provided (choice)
 		if (ID != null)
@@ -147,7 +147,7 @@ public class DescribeResultAccessRequestReaderV11 extends AbstractRequestReader<
 		checkParameters(request, report, "SPS");
 
 		// Check that at least one ID is present
-		if (request.getSensorID() == null && request.getID() == null)
+		if (request.getSensorID() == null && request.getTaskID() == null)
 		{
 			report.add(new OWSException(OWSException.missing_param_code, "ID"));
 		}

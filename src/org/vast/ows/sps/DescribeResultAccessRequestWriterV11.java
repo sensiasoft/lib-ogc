@@ -31,12 +31,12 @@ import org.vast.xml.DOMHelper;
 
 /**
 * <p><b>Title:</b><br/>
-* SPS DescribeTasking Request Writer v1.1
+* SPS DescribeResultAccess Request Writer v1.1
 * </p>
 *
 * <p><b>Description:</b><br/>
-* Provides methods to generate a KVP or XML SPS DescribeTasking
-* request based on values contained in a DescribeTaskingRequest
+* Provides methods to generate a KVP or XML SPS DescribeResultAccess
+* request based on values contained in a DescribeResultAccessRequest
 * object for version 1.1
 * </p>
 *
@@ -45,14 +45,14 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 28 2008
 * @version 1.0
 */
-public class DescribeTaskingRequestWriterV11 extends AbstractRequestWriter<DescribeTaskingRequest>
+public class DescribeResultAccessRequestWriterV11 extends AbstractRequestWriter<DescribeResultAccessRequest>
 {
 
 	/**
 	 * KVP Request
 	 */
 	@Override
-	public String buildURLQuery(DescribeTaskingRequest request) throws OWSException
+	public String buildURLQuery(DescribeResultAccessRequest request) throws OWSException
 	{
 		StringBuffer urlBuff;
 
@@ -61,9 +61,14 @@ public class DescribeTaskingRequestWriterV11 extends AbstractRequestWriter<Descr
 		urlBuff.append("&version=" + request.getVersion());
 		urlBuff.append("&request=" + request.getOperation());
 
+		// taskID
+		if (request.getTaskID() != null)
+			urlBuff.append("&taskID=" + request.getTaskID());
+		
 		// sensorID
-		urlBuff.append("&sensorID=" + request.getSensorID());
-
+		else if (request.getSensorID() != null)
+			urlBuff.append("&sensorID=" + request.getSensorID());
+		
 		String url = urlBuff.toString();
 		url = url.replaceAll(" ", "%20");
 		return url;
@@ -74,7 +79,7 @@ public class DescribeTaskingRequestWriterV11 extends AbstractRequestWriter<Descr
 	 * XML Request
 	 */
 	@Override
-	public Element buildXMLQuery(DOMHelper dom, DescribeTaskingRequest request) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, DescribeResultAccessRequest request) throws OWSException
 	{
 		dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", request.getVersion()));
 
@@ -82,9 +87,14 @@ public class DescribeTaskingRequestWriterV11 extends AbstractRequestWriter<Descr
 		Element rootElt = dom.createElement("sps:" + request.getOperation());
 		addCommonXML(dom, rootElt, request);
 
+		// ID
+		if (request.getTaskID() != null)
+			dom.setElementValue(rootElt, "sps:ID", request.getTaskID());
+		
 		// sensorID
-		if (request.getSensorID() != null)
+		else if (request.getSensorID() != null)
 			dom.setElementValue(rootElt, "sps:sensorID", request.getSensorID());
+		
 
 		return rootElt;
 	}

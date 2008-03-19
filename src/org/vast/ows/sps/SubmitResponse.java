@@ -48,6 +48,7 @@ public class SubmitResponse extends GetStatusResponse
 	{
 		this.service = "SPS";
         this.messageType = "SubmitResponse";
+        progressReport = new ProgressReport();
 	}
 
 
