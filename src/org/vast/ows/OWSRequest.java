@@ -94,7 +94,10 @@ public class OWSRequest
 	
 	public String getGetServer()
 	{
-		return getServer;
+		if (getServer == null)
+			return postServer;
+		else
+			return getServer;
 	}
 
 
@@ -106,7 +109,10 @@ public class OWSRequest
 
 	public String getPostServer()
 	{
-		return postServer;
+		if (postServer == null)
+			return getServer;
+		else	
+			return postServer;
 	}
 
 
