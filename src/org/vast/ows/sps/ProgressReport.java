@@ -42,13 +42,14 @@ import org.vast.util.DateTime;
  */
 public class ProgressReport
 {
+	public final static String UNKNOWN = "UNKNOWN";
 	public final static String PENDING = "PENDING";
 	public final static String CONFIRMED = "CONFIRMED";
 	public final static String CANCELLED = "CANCELLED";
 	public final static String FAILED = "FAILED";
 	public final static String DELAYED = "DELAYED";
-	public final static String STARTED = "STARTED";
-	public final static String FINISHED = "FINISHED";
+	public final static String IN_PROGRESS = "IN PROGRESS";
+	public final static String COMPLETED = "COMPLETED";
 
 	protected String id;
 	protected String statusCode;
