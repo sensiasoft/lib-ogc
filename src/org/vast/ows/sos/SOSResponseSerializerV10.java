@@ -41,6 +41,12 @@ import org.vast.xml.DOMHelper;
  * methods to easily change the corresponding parameters in the XML
  * response and overrides the <swe:result> element serialization by
  * calling the attached SweDataWriter to handle the job. 
+ * 
+ * 
+ * NOTE:  Renamed the original SOSResponseSerialzier to V10.
+ *        I am keeping this in the codebase temporarily while I update 
+ *        to SOS 1.0 and OM 1.0.  Will probably remove it at that point,
+ *        unless we decide to maintain support for pre v1.0 SOS.  TC
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -48,12 +54,12 @@ import org.vast.xml.DOMHelper;
  * @date Feb 10, 2006
  * @version 1.0
  */
-public class SOSResponseSerializer extends SweResponseSerializer
+public class SOSResponseSerializerV10 extends SweResponseSerializer
 {
 	protected Element obsElt;
     
 	
-    public SOSResponseSerializer()
+    public SOSResponseSerializerV10()
 	{		
 	}
     
@@ -65,23 +71,15 @@ public class SOSResponseSerializer extends SweResponseSerializer
         dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
         dom.addUserPrefix("om", OGCRegistry.getNamespaceURI(OGCRegistry.OM, "1.0"));
         dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.0"));
+        //  I Think we need to be on OM 1.0 now...
         NodeList elts = dom.getDocument().getElementsByTagNameNS("http://www.opengis.net/om/1.0", "Observation");
         obsElt = (Element)elts.item(0);
     }
     
-    /**
-     * Changes Id attribute for the ObservationCollection element
-     * @param id
-     */
-    public void setRootID(String id){
-    	dom.setAttributeValue(dom.getRootElement(), "gml:id", id);
-    }
-    
     
     /**
-     * Changes Id attribute for an individual Observation in the ObservationCollection
+     * Changes Id attribute in the Observation XML
      * @param id
-     * @todo  support setting ID of any Observation in the ObsCollections
      */
     public void setID(String id)
     {
@@ -118,7 +116,6 @@ public class SOSResponseSerializer extends SweResponseSerializer
      * Set Foi parameters name and location
      * @param name
      * @param location
-     * @todo verify 1.0 works
      */
     public void setFoi(String name, Vector3d location)
     {
@@ -138,6 +135,27 @@ public class SOSResponseSerializer extends SweResponseSerializer
         }
     }
 	
+	//  Is there a way to automate writing the number of Records?  Note that some observations
+    //  have nested DataArrays, and some may have NO data arrays at all.  
+    //  The way I have done it, every Handler has to call 
+    //      writer.setQuery(query)
+    //  then compute its number of records, then call 
+    //      serializer.setArrayCount(writer.numRecords())
+    //  which is kind of ugly.  Only the specific writer knows his template structure AND number
+    //  of records though.
+    public void setArrayCount(int count){
+    	 try
+         {
+             Element cntElt = dom.getElement(obsElt, "om:result/DataArray/elementCount/Count/value");
+             
+             dom.setElementValue(cntElt, "" + count);
+         }
+         catch (Exception e)
+         {
+             e.printStackTrace();
+         }
+    }
+    
 	/**
 	 * Adds a hook to override serialization of the result element
      * Uses the DataWriter to write the content of the element.
@@ -146,24 +164,22 @@ public class SOSResponseSerializer extends SweResponseSerializer
 	{
 		if (elt.getLocalName().equals("values"))
 		{
-			String swePrefix = "swe";
+			String omPrefix = "swe";//dom.getXmlDocument().getNSPrefix(OGCRegistry.OM_NS);
             
             this._format.setIndenting(false);
-			this._printer.printText("\n<" + swePrefix + ":values>");
+			this._printer.printText("\n<" + omPrefix + ":values>");
 			this._printer.flush();
 			
             dataWriter.write();
 			
-			this._printer.printText("\n</" + swePrefix + ":values>");
+			this._printer.printText("\n</" + omPrefix + ":values>");
 			this._printer.flush();
-			//  Probably need to turn this off- some parsers have had issues wiht added line breaks
 			this._format.setIndenting(true);
-		}
+		} 
 		else
 		{
 			super.serializeElement(elt);
 		}
 	}	
-	
 	
 }
