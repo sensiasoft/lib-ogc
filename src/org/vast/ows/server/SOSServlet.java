@@ -343,7 +343,10 @@ public abstract class SOSServlet extends OWSServlet
             
             // parse query arguments
             logger.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
-            query = (OWSRequest)owsUtils.readURLQuery(queryString, "SOS");			
+            query = (OWSRequest)owsUtils.readURLQuery(queryString, "SOS");
+            
+            // setup response stream
+            resp.setContentType("text/xml");
 			query.setResponseStream(resp.getOutputStream());
 			
 			if (query instanceof GetCapabilitiesRequest)
@@ -383,6 +386,7 @@ public abstract class SOSServlet extends OWSServlet
         {
             try
             {
+                resp.getOutputStream().flush();
                 resp.getOutputStream().close();
             }
             catch (IOException e)
@@ -406,7 +410,10 @@ public abstract class SOSServlet extends OWSServlet
 			InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
             DOMHelper dom = new DOMHelper(xmlRequest, false);
             query = (OWSRequest)owsUtils.readXMLQuery(dom, dom.getBaseElement());
-			query.setResponseStream(resp.getOutputStream());
+            
+            // setup response stream
+            resp.setContentType("text/xml");
+            query.setResponseStream(resp.getOutputStream());
 			
 			if (query instanceof GetCapabilitiesRequest)
 	        	processQuery((GetCapabilitiesRequest)query);
