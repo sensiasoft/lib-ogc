@@ -55,7 +55,7 @@ public class SOSResponseReaderV10 extends SWEReader
 		try
 		{
 			streamFilter = new SWEFilter(inputStream);
-			streamFilter.setDataElementName("result");
+			streamFilter.setDataElementName("obs");
 			
 			// parse xml header using DOMReader
 			DOMHelper dom = new DOMHelper(streamFilter, false);
@@ -87,7 +87,7 @@ public class SOSResponseReaderV10 extends SWEReader
             // read resultDefinition
 			Element defElt = dom.getElement(obsElt, "result");           
             
-			Element encElt = dom.getElement(defElt, "encoding");		
+			Element encElt = dom.getElement(obsElt, "result/DataArray/encoding");		
             SWECommonUtils utils = new SWECommonUtils();
             this.dataComponents = utils.readComponentProperty(dom, defElt);
             this.dataEncoding = utils.readEncodingProperty(dom, encElt);
