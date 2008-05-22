@@ -56,13 +56,13 @@ import org.w3c.dom.*;
  * @date Feb 23, 2007
  * @version 1.0
  */
-public class ObservationReaderV01 implements ObservationReader
+public class ObservationReaderV10 implements ObservationReader
 {
 	protected SWEFilter streamFilter;
     protected GMLTimeReader timeReader;
     
     
-    public ObservationReaderV01()
+    public ObservationReaderV10()
     {
         timeReader = new GMLTimeReader();
     }
@@ -74,7 +74,7 @@ public class ObservationReaderV01 implements ObservationReader
         {
             // install SWE Filter to skip inline data
             streamFilter = new SWEFilter(inputStream);
-            streamFilter.setDataElementName("result");
+            streamFilter.setDataElementName("values");
             
             // parse xml header using DOMReader
             DOMHelper dom = new DOMHelper(streamFilter, false);
@@ -194,15 +194,15 @@ public class ObservationReaderV01 implements ObservationReader
     protected ObservationStream readObsStream(DOMHelper dom, Element obsElt) throws OMException
     {
         ObservationStream observation = new ObservationStream();
+        Element resElt = dom.getElement(obsElt, "result/DataArray");
         
-        // read resultDefinition
+        // read result definition
         try
         {
-            Element defElt = dom.getElement(obsElt, "resultDefinition/DataBlockDefinition");
-            Element dataElt = dom.getElement(defElt, "components");
-            Element encElt = dom.getElement(defElt, "encoding");        
+            Element defElt = dom.getElement(resElt, "elementType");
+            Element encElt = dom.getElement(resElt, "encoding");
             SWECommonUtils sweUtils = new SWECommonUtils();
-            DataComponent dataComponents = sweUtils.readComponentProperty(dom, dataElt);
+            DataComponent dataComponents = sweUtils.readComponentProperty(dom, defElt);
             DataEncoding dataEncoding = sweUtils.readEncodingProperty(dom, encElt);
             observation.getResult().setDataComponents(dataComponents);
             observation.getResult().setDataEncoding(dataEncoding);
@@ -212,11 +212,11 @@ public class ObservationReaderV01 implements ObservationReader
             throw new OMException("Error while parsing data definition", e);
         }
         
-        // read result
-        Element resultElt = dom.getElement(obsElt, "result");
+        // read result values
+        Element resultElt = dom.getElement(resElt, "values");
         DataSource dataSrc = readResultSource(dom, resultElt);
-        observation.getResult().setDataSource(dataSrc);        
-        
+        observation.getResult().setDataSource(dataSrc);
+    
         return observation;
     }
     

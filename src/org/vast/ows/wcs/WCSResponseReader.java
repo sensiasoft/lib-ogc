@@ -20,10 +20,10 @@
 
 package org.vast.ows.wcs;
 
-import org.vast.ows.sos.SOSResponseReader;
+import org.vast.ows.om.ObservationStreamReaderV0;
 
 
-public class WCSResponseReader extends SOSResponseReader
+public class WCSResponseReader extends ObservationStreamReaderV0
 {
 	
 }

@@ -23,6 +23,7 @@ package org.vast.ows.wcs;
 
 import java.io.*;
 import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataHandler;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.vast.ows.OWSException;
@@ -40,11 +41,12 @@ public class CoverageReader extends SWEReader
 	SWEFilter streamFilter;
 	
 	
-	public void parse(InputStream inputStream) throws CDMException
+	public void parse(InputStream inputStream, DataHandler handler) throws CDMException
 	{		
 		try
 		{
-			streamFilter = new SWEFilter(inputStream);
+			dataHandler = handler;
+		    streamFilter = new SWEFilter(inputStream);
 			streamFilter.setDataElementName("value");
 						
 //			int val;

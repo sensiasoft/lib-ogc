@@ -21,21 +21,20 @@
 package org.vast.ows.om;
 
 import java.io.*;
-
 import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataHandler;
 import org.vast.math.Vector3d;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReader;
 import org.vast.ows.gml.GMLGeometryReader;
 import org.vast.sweCommon.SWEFilter;
-import org.vast.sweCommon.SWEReader;
 import org.vast.sweCommon.SWECommonUtils;
 import org.vast.sweCommon.URIStreamHandler;
 import org.vast.xml.*;
 import org.w3c.dom.*;
 
 
-public class ObservationStreamReaderV0 extends SWEReader
+public class ObservationStreamReaderV0 extends ObservationStreamReader
 {
 	protected String resultUri;
 	protected SWEFilter streamFilter;
@@ -50,21 +49,28 @@ public class ObservationStreamReaderV0 extends SWEReader
     }
     
     
-    public void parse(InputStream inputStream) throws CDMException
+    public void parse(InputStream inputStream, DataHandler handler) throws CDMException
 	{
 		try
 		{
-			streamFilter = new SWEFilter(inputStream);
+		    dataHandler = handler;
+		    streamFilter = new SWEFilter(inputStream);
 			streamFilter.setDataElementName("result");
 			
 			// parse xml header using DOMReader
 			DOMHelper dom = new DOMHelper(streamFilter, false);
 			OWSExceptionReader.checkException(dom);
 			
-			// find first observation element
+			// find first Observation OR CommonObservation element
 			Element rootElement = dom.getRootElement();
 			NodeList elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om", "CommonObservation");
-			Element obsElt = (Element)elts.item(0);			
+            if (elts.getLength() == 0)
+                elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om", "Observation");
+            if (elts.getLength() == 0)
+                elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om/0.0", "Observation");
+            if (elts.getLength() == 0)
+                elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om/1.0", "Observation");
+			Element obsElt = (Element)elts.item(0);	
 			if (obsElt == null)
 				throw new CDMException("XML Response doesn't contain any Observation");
 			
@@ -80,14 +86,27 @@ public class ObservationStreamReaderV0 extends SWEReader
             
             // read resultDefinition
 			Element defElt = dom.getElement(obsElt, "resultDefinition/DataDefinition");
+            if (defElt == null)
+                defElt = dom.getElement(obsElt, "resultDefinition/DataBlockDefinition");            
 			Element dataElt = dom.getElement(defElt, "dataComponents");
+            if (dataElt == null)
+                dataElt = dom.getElement(defElt, "components");
+            
 			Element encElt = dom.getElement(defElt, "encoding");		
             SWECommonUtils utils = new SWECommonUtils();
             this.dataComponents = utils.readComponentProperty(dom, dataElt);
             this.dataEncoding = utils.readEncodingProperty(dom, encElt);
-			
+            this.dataParser = createDataParser();
+            
 			// read external link if present
 			resultUri = dom.getAttributeValue(obsElt, "result/externalLink");
+			
+			// launch data stream parser if handler was provided
+            if (dataHandler != null)
+            {
+                dataParser.setDataHandler(dataHandler);
+                dataParser.parse(getDataStream());
+            }
 		}
         catch (IllegalStateException e)
         {

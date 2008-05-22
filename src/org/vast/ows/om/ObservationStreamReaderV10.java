@@ -18,58 +18,67 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows.om;
 
 import java.io.*;
-
 import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataHandler;
 import org.vast.math.Vector3d;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReader;
 import org.vast.ows.gml.GMLGeometryReader;
 import org.vast.sweCommon.SWEFilter;
-import org.vast.sweCommon.SWEReader;
 import org.vast.sweCommon.SWECommonUtils;
 import org.vast.sweCommon.URIStreamHandler;
 import org.vast.xml.*;
 import org.w3c.dom.*;
 
 
-public class SOSResponseReader extends SWEReader
+/**
+ * <p><b>Title:</b>
+ * SOSResponseReaderV10
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Streaming reader for OM V1.0 responses with a result expressed in SWE Common.
+ * This won't deal with Observation Collections properly.
+ * </p>
+ *
+ * <p>Copyright (c) 2008</p>
+ * @author Alexandre Robin
+ * @date May 22, 2008
+ * @version 1.0
+ */
+public class ObservationStreamReaderV10 extends ObservationStreamReader
 {
-	protected String resultUri;
 	protected SWEFilter streamFilter;
 	protected Vector3d foiLocation;
     protected String procedure;
     protected String observationName;
        
     
-    public SOSResponseReader()
+    public ObservationStreamReaderV10()
     {
         foiLocation = new Vector3d();
     }
     
     
-    public void parse(InputStream inputStream) throws CDMException
-	{
+    @Override
+    public void parse(InputStream inputStream, DataHandler handler) throws CDMException
+    {
 		try
 		{
-			streamFilter = new SWEFilter(inputStream);
-			streamFilter.setDataElementName("result");
+		    dataHandler = handler;
+		    streamFilter = new SWEFilter(inputStream);
+			streamFilter.setDataElementName("values");
 			
 			// parse xml header using DOMReader
 			DOMHelper dom = new DOMHelper(streamFilter, false);
 			OWSExceptionReader.checkException(dom);
 			
-			// find first Observation OR CommonObservation element
+			// find first Observation element
 			Element rootElement = dom.getRootElement();
-			NodeList elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om", "CommonObservation");
-            if (elts.getLength() == 0)
-                elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om", "Observation");
-            if (elts.getLength() == 0)
-                elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om/0.0", "Observation");
-            if (elts.getLength() == 0)
-                elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om/1.0", "Observation");
+			NodeList elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om/1.0", "Observation");
 			Element obsElt = (Element)elts.item(0);	
 			if (obsElt == null)
 				throw new CDMException("XML Response doesn't contain any Observation");
@@ -84,21 +93,38 @@ public class SOSResponseReader extends SWEReader
             procedure = dom.getAttributeValue(obsElt, "procedure/@href");
             observationName = dom.getElementValue(obsElt, "featureOfInterest/*/name");
             
-            // read resultDefinition
-			Element defElt = dom.getElement(obsElt, "resultDefinition/DataDefinition");
-            if (defElt == null)
-                defElt = dom.getElement(obsElt, "resultDefinition/DataBlockDefinition");            
-			Element dataElt = dom.getElement(defElt, "dataComponents");
-            if (dataElt == null)
-                dataElt = dom.getElement(defElt, "components");
-            
-			Element encElt = dom.getElement(defElt, "encoding");		
+            // read result
+            Element resultObjElt = dom.getElement(obsElt, "result/*");
             SWECommonUtils utils = new SWECommonUtils();
-            this.dataComponents = utils.readComponentProperty(dom, dataElt);
-            this.dataEncoding = utils.readEncodingProperty(dom, encElt);
-			
-			// read external link if present
-			resultUri = dom.getAttributeValue(obsElt, "result/externalLink");
+            
+            // case of DataArray (DataStream)
+            if (resultObjElt.getLocalName().equals("DataArray"))
+            {
+                Element defElt = dom.getElement(resultObjElt, "elementType");
+    			Element encElt = dom.getElement(resultObjElt, "encoding");
+    			
+    			// read structure and encoding                
+                this.dataComponents = utils.readComponentProperty(dom, defElt);
+                this.dataEncoding = utils.readEncodingProperty(dom, encElt);
+    			this.dataParser = createDataParser();
+    			
+    			// read external link if present
+    			valuesUri = dom.getAttributeValue(obsElt, "values/externalLink");
+    			
+    			// launch data stream parser if handler was provided
+    			if (dataHandler != null)
+    			{
+    			    dataParser.setDataHandler(dataHandler);
+    		        dataParser.parse(getDataStream());
+    			}
+            }
+            
+            // case of data embedded in the DataComponent
+            else
+            {
+                this.dataComponents = utils.readComponentProperty(dom, resultObjElt);
+                this.dataEncoding = null;
+            }
 		}
         catch (IllegalStateException e)
         {
@@ -107,7 +133,7 @@ public class SOSResponseReader extends SWEReader
 		catch (DOMHelperException e)
 		{
 			throw new CDMException("Error while parsing Observation XML", e);
-		}
+		}		
 		catch (OWSException e)
 		{
 			throw new CDMException(e.getMessage());
@@ -117,7 +143,7 @@ public class SOSResponseReader extends SWEReader
 	
 	public InputStream getDataStream() throws CDMException
 	{
-		if (resultUri != null)
+		if (valuesUri != null)
 		{
 			try
 			{
@@ -129,7 +155,7 @@ public class SOSResponseReader extends SWEReader
 				e.printStackTrace();
 			}
 			
-			return URIStreamHandler.openStream(resultUri);
+			return URIStreamHandler.openStream(valuesUri);
 		}
 		else
 		{
