@@ -115,7 +115,7 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
     			if (dataHandler != null)
     			{
     			    dataParser.setDataHandler(dataHandler);
-    		        dataParser.parse(getDataStream());
+    		        dataParser.parse(new BufferedInputStream(getDataStream()));
     			}
             }
             

@@ -105,7 +105,7 @@ public class ObservationStreamReaderV0 extends ObservationStreamReader
             if (dataHandler != null)
             {
                 dataParser.setDataHandler(dataHandler);
-                dataParser.parse(getDataStream());
+                dataParser.parse(new BufferedInputStream(getDataStream()));
             }
 		}
         catch (IllegalStateException e)

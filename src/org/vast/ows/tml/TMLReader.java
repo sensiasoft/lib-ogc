@@ -75,14 +75,14 @@ public class TMLReader implements InputStreamProvider
 			
 			// create and register a parser for each product
             SWECommonUtils utils = new SWECommonUtils();
-			NodeList products = dom.getElements("product/DataDefinition");
+			NodeList products = dom.getElements("product/DataBlockDefinition");
 			for (int i=0; i<products.getLength(); i++)
 			{
 				Element defElt = (Element)products.item(i);
 				String clusterID = dom.getAttributeValue(defElt, "id");
 				
 				// get structure and encoding elements
-				Element dataElt = dom.getElement(defElt, "dataComponents");
+				Element dataElt = dom.getElement(defElt, "components");
 				Element encElt = dom.getElement(defElt, "encoding");
 				
 				// parse structure and encoding                
