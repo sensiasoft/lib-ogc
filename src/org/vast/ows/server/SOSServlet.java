@@ -98,8 +98,8 @@ public abstract class SOSServlet extends OWSServlet
 		if (query.getOffering() == null)
 			throw new SOSException("A GetObservation SOS request must specify an offeringId argument");
 		
-		//if (query.observables.isEmpty())
-		//	throw new SOSException("An SOS request must contain at least one observable ID");
+		if (query.getObservables().isEmpty())
+			throw new SOSException("An SOS request must contain at least one observable ID");
 		
 		if (query.getFormat() == null)
 			throw new SOSException("A GetObservation SOS request must specify a format argument");
