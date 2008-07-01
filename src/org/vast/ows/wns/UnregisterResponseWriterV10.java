@@ -9,9 +9,11 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "OGC Service Framework".
+ The Original Code part of the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
     Alexandre Robin <alexandre.robin@spotimage.fr>
@@ -38,7 +40,7 @@ import org.vast.xml.QName;
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
  * @date Jan 16, 2008
  * @version 1.0
  */

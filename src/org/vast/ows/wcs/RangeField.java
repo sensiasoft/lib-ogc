@@ -19,7 +19,6 @@
     Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
-
 package org.vast.ows.wcs;
 
 import java.util.ArrayList;
