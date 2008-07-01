@@ -21,7 +21,7 @@
 
 package org.vast.ows.util;
 
-import org.vast.physics.SpatialExtent;
+import org.vast.util.SpatialExtent;
 
 /**
  * <p>Title:

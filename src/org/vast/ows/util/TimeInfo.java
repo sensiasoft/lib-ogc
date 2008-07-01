@@ -21,8 +21,8 @@
 
 package org.vast.ows.util;
 
-import org.vast.physics.TimeExtent;
 import org.vast.util.DateTimeFormat;
+import org.vast.util.TimeExtent;
 
 
 /**
