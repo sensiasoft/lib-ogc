@@ -50,9 +50,9 @@ public class GetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilities
 	{
 		StringBuffer urlBuff = new StringBuffer(query.getGetServer());
 		
-        urlBuff.append("SERVICE=" + query.getService());
-        urlBuff.append("&VERSION=" + query.getVersion());
-        urlBuff.append("&REQUEST=" + query.getOperation());
+        urlBuff.append("service=" + query.getService());
+        urlBuff.append("&version=" + query.getVersion());
+        urlBuff.append("&request=" + query.getOperation());
 		
         if (query.getSection() != null)
         	urlBuff.append("&SECTION=" + query.getSection());

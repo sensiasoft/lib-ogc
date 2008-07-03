@@ -138,14 +138,14 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 	{
 		// need SERVICE
 		if (request.getService() == null)
-			report.add(new OWSException(OWSException.missing_param_code, "SERVICE"));
+			report.add(new OWSException(OWSException.missing_param_code, "service"));
 		
 		// must be correct service 
 		else if (serviceType != null)
 		{
 			String reqService = request.getService();
 			if (!reqService.equalsIgnoreCase(serviceType))
-				report.add(new OWSException(OWSException.invalid_param_code, "SERVICE", reqService, ""));
+				report.add(new OWSException(OWSException.invalid_param_code, "service", reqService, ""));
 		}
 		
 		// if version is present, check version validity
@@ -153,7 +153,7 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 		{
 			if (!request.getVersion().matches(versionRegex))
 			{
-				OWSException ex = new OWSException(OWSException.invalid_param_code, "VERSION");
+				OWSException ex = new OWSException(OWSException.invalid_param_code, "version");
 				ex.setBadValue(request.getVersion());
 				report.add(ex);
 			}
@@ -161,6 +161,6 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 		
 		// need REQUEST
 		if (request.getOperation() == null)
-			report.add(new OWSException(OWSException.missing_param_code, "REQUEST"));
+			report.add(new OWSException(OWSException.missing_param_code, "request"));
 	}
 }

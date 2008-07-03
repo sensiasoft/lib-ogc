@@ -253,19 +253,19 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
             }
             
             // service ID
-            if (argName.equalsIgnoreCase("SERVICE"))
+            if (argName.equalsIgnoreCase("service"))
             {
                 request.setService(argValue);
             }
             
             // service version
-            else if (argName.equalsIgnoreCase("VERSION"))
+            else if (argName.equalsIgnoreCase("version"))
             {
                 request.setVersion(argValue);
             }
 
             // request argument
-            else if (argName.equalsIgnoreCase("REQUEST"))
+            else if (argName.equalsIgnoreCase("request"))
             {
                 request.setOperation(argValue);
             }
