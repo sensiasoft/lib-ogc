@@ -71,8 +71,8 @@ public class SASRequestWriter extends AbstractRequestWriter<SASQuery>
 		
 		// Sub ID
 		if(query.getSubscriptionId() != null)
-			dom.setElementValue(rootElt, "sas:SubscriptionOfferingID", query.getSubscriptionId());
-        
+			dom.setElementValue(rootElt, "sas:EventFilter/sas:SubscriptionOfferingID", query.getSubscriptionId());
+
 		//  FeatureOfInterest
 		if(query.getFeatureOfInterest() != null)
 			dom.setElementValue(rootElt, "sas:FeatureOfInterestName", query.getFeatureOfInterest());

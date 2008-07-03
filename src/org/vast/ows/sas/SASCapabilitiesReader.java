@@ -20,6 +20,7 @@
 
 package org.vast.ows.sas;
 
+import org.vast.util.ExceptionSystem;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.AbstractCapabilitiesReader;
 import org.vast.ows.OWSException;
@@ -37,8 +38,8 @@ import org.w3c.dom.NodeList;
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Tony Cook
- * @date Nov 21, 2006
+ * @author Gregoire Berthiau
+ * @date Jul 2, 2008
  * @version 1.0
  */
 public class SASCapabilitiesReader extends AbstractCapabilitiesReader
@@ -47,7 +48,6 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
     public SASCapabilitiesReader()
     {
     }
-
     
     @Override
     protected void readContents(DOMHelper dom, Element capsElt) throws OWSException
@@ -57,37 +57,45 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
         for (int i=0; i<subList.getLength(); i++)
         {
             Element subElt = (Element)subList.item(i);
-            System.out.println(dom.getAttributeValue(subElt, "@id"));
-           // String offeringName = dom.getElementValue(offeringElt, "name");
             
-           // if (offeringName == null)
-           // 	offeringName = "Offering " + i + 1;
+            String subName = "Subscription " + i + 1; 
             
-//            String id = dom.getAttributeValue(offeringElt, "id");
-//            
-//            SOSLayerCapabilities layerCaps = new SOSLayerCapabilities();           
-//            
-//            try
-//            {
-//	            layerCaps.setName(offeringName);
-//	            layerCaps.setId(id);
-//	            getFormatList(offeringElt, layerCaps);
-//	            getObservableList(offeringElt, layerCaps);
-//	            getProcedureList(offeringElt, layerCaps);
-//	            getTimeList(offeringElt, layerCaps);
-//	            layerCaps.setParent(serviceCaps);
-//            }
-//            catch (GMLException e)
-//            {
-//            	String message = parsingError + " in offering " + layerCaps.getId();
-//                ExceptionSystem.display(new OWSException(message, e));
-//				continue;
-//            }
-//            
-//            serviceCaps.getLayers().add(layerCaps);
+            SASLayerCapabilities layerCaps = new SASLayerCapabilities();           
+            
+            try
+            {
+            
+            	String subscriptionID = dom.getElementValue("SubscriptionOfferingID");             
+            	if(subscriptionID == null)
+            		throw new SASException("a subscriptionID must be specified");
+            
+            	String sensorID = dom.getElementValue(subElt, "member/SensorID");
+            	if(sensorID == null)
+            		throw new SASException("a sensorID must be specified");
+            
+            	String frequencyUnit = dom.getElementValue(subElt, "member/reportingFrequency/Quantity/value");
+            	String frequencyValue = dom.getAttributeValue("member/reportingFrequency/Quantity/uom");  
+            
+            // plenty of other element and attribute to be added. subscription offering and sensor ID are required	
+            	
+	            layerCaps.setTitle(subName);
+	            layerCaps.setSubscriptionOfferingID(subscriptionID);
+	            layerCaps.setSensorID(sensorID);
+	            layerCaps.setFrequencyUnit(frequencyUnit);
+	            layerCaps.setFrequencyValue(frequencyValue);
+	            layerCaps.setParent(serviceCaps);
+            }
+            catch (SASException e)
+            {
+            	String message = parsingError + " in subscription " + layerCaps.getSubscriptionOfferingID();
+                ExceptionSystem.display(new SASException(message, e));
+				continue;
+            }
+            
+            serviceCaps.getLayers().add(layerCaps);
         }
     }
-
+    
 
 	@Override
 	public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
