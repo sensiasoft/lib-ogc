@@ -188,15 +188,16 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         String version = dom.getAttributeValue(objectElt, "@version");
         
         // if version is still null get it from namespace of elt
-        if (version == null)
+        if (version == null || version.length() == 0)
         {
         	String nsUri = objectElt.getNamespaceURI();
         	version = nsUri.substring(nsUri.lastIndexOf('/') + 1);
         }
         
         // throw exception if no version is specified
-        if (version == null || version.length() == 0)
+        if (version == null || version.length() == 0) {
             throw new OWSException("Cannot figure out document version");
+        }
         
         return version;
     }
@@ -547,7 +548,6 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         	request.setService(serviceType);
         	request.setVersion(version);
         	
-        	// send request and build DOM
         	URLConnection connection = this.sendGetRequest(request);
     		DOMHelper dom = new DOMHelper(connection.getInputStream(), false);
     		
