@@ -20,8 +20,9 @@
 
 package org.vast.ows.sas;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.vast.ows.OWSLayerCapabilities;
-
 
 
 /**
@@ -41,69 +42,69 @@ import org.vast.ows.OWSLayerCapabilities;
  */
 public class SASLayerCapabilities extends OWSLayerCapabilities
 {
-    protected String subscriptionOfferingID;
-    protected String sensorID;
-    protected String messageStructure;
-    protected String messageStructureName;
-    protected String frequency;
+	protected List<String> subscriptionOfferingIDList;
+    protected List<String> sensorIDList;
+    protected List<String> messageStructureList;
+    protected List<String> messageStructureNameList;
+    protected List<String> frequencyList;
     
     public SASLayerCapabilities()
     {
-    	messageStructureName = null; 
-    	messageStructure = null;
-    	subscriptionOfferingID = null;
-    	sensorID = null;
-        frequency = null;
+    	subscriptionOfferingIDList = new ArrayList<String>(1);
+    	sensorIDList = new ArrayList<String>(1);
+    	messageStructureList = new ArrayList<String>(1);
+    	messageStructureNameList = new ArrayList<String>(1);
+    	frequencyList = new ArrayList<String>(1);
     }
 
-    public String getMessageStructureName()
+    public List<String> getMessageStructureNameList()
 	{
-		return messageStructureName;
+		return messageStructureNameList;
 	}
 
 	public void setMessageStructureName(String messageStructureName)
 	{
-		this.messageStructureName = messageStructureName;
+		(this.messageStructureNameList).add(messageStructureName);
 	}
     
-    public String getMessageStructure()
+    public List<String> getMessageStructureList()
 	{
-		return messageStructure;
+		return messageStructureList;
 	}
 
 	public void setMessageStructure(String messageStructure)
 	{
-		this.messageStructure = messageStructure;
+		this.messageStructureList.add(messageStructure);
 	}
     
-	public String getSubscriptionOfferingID()
+	public List<String> getSubscriptionOfferingIDList()
 	{
-		return subscriptionOfferingID;
+		return subscriptionOfferingIDList;
 	}
 
 	public void setSubscriptionOfferingID(String subscriptionOfferingID)
 	{
-		this.subscriptionOfferingID = subscriptionOfferingID;
+		this.subscriptionOfferingIDList.add(subscriptionOfferingID);
 	}
 	
-	public String getFrequency()
+	public List<String> getFrequencyList()
 	{
-		return frequency;
+		return frequencyList;
 	}
 
 	public void setFrequency(String frequency)
 	{
-		this.frequency = frequency;
+		this.frequencyList.add(frequency);
 	}
 
-	public String getSensorID()
+	public List<String> getSensorIDList()
 	{
-		return sensorID;
+		return sensorIDList;
 	}
 
 	public void setSensorID(String sensorID)
 	{
-		this.sensorID = sensorID;
+		this.sensorIDList.add(sensorID);
 	}
 	
 }

@@ -21,7 +21,6 @@
 package org.vast.ows.sas;
 
 import java.io.StringWriter;
-
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -29,18 +28,13 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.vast.util.ExceptionSystem;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.XMLDocument;
 import org.vast.ows.AbstractCapabilitiesReader;
-import org.vast.ows.OWSCapabilitiesReaderV11;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSServiceCapabilities;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import com.sun.org.apache.xerces.internal.dom.ElementNSImpl;
 
 
 /**
@@ -51,7 +45,7 @@ import com.sun.org.apache.xerces.internal.dom.ElementNSImpl;
  * <p><b>Description:</b><br/>
  * </p>
  *
- * <p>Copyright (c) 2007</p>
+ * <p>Copyright (c) 2008</p>
  * @author Gregoire Berthiau
  * @date Jul 2, 2008
  * @version 1.0
@@ -109,8 +103,12 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
 					e.printStackTrace();
 				}
 				
-				int initialIndex = messageStructure.indexOf("?", 5)+2;
+				int initialIndex = messageStructure.indexOf("?", 5)+2;				
 				messageStructure = messageStructure.substring(initialIndex);
+				
+				int startIndex = messageStructure.indexOf(">")+3;
+				int lastIndex = messageStructure.lastIndexOf("<");
+				messageStructure = messageStructure.substring(startIndex, lastIndex);
 				
             	String sensorID = dom.getElementValue(subElt, "member/SensorID");
             	if(sensorID == null)
@@ -135,7 +133,7 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
             }
             catch (SASException e)
             {
-            	String message = parsingError + " in subscription " + layerCaps.getSubscriptionOfferingID();
+            	String message = parsingError + " in subscription " + layerCaps.getSubscriptionOfferingIDList().get(0);
                 ExceptionSystem.display(new SASException(message, e));
 				continue;
             }
