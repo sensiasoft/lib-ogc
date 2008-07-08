@@ -43,17 +43,29 @@ public class SASLayerCapabilities extends OWSLayerCapabilities
 {
     protected String subscriptionOfferingID;
     protected String sensorID;
+    protected String messageStructure;
     protected String frequencyUnit;
     protected String frequencyValue;
     
     public SASLayerCapabilities()
     {
+    	messageStructure = null;
     	subscriptionOfferingID = null;
     	sensorID = null;
         frequencyUnit = null;
         frequencyValue = null;	
     }
 
+    public String getMessageStructure()
+	{
+		return messageStructure;
+	}
+
+	public void setMessageStructure(String messageStructure)
+	{
+		this.messageStructure = messageStructure;
+	}
+    
 	public String getSubscriptionOfferingID()
 	{
 		return subscriptionOfferingID;

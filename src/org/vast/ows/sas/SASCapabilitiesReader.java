@@ -20,9 +20,21 @@
 
 package org.vast.ows.sas;
 
+import java.io.StringWriter;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.vast.util.ExceptionSystem;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLDocument;
 import org.vast.ows.AbstractCapabilitiesReader;
+import org.vast.ows.OWSCapabilitiesReaderV11;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSServiceCapabilities;
 import org.w3c.dom.Element;
@@ -53,28 +65,52 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
     protected void readContents(DOMHelper dom, Element capsElt) throws OWSException
     {
         NodeList subList = dom.getElements(capsElt, "Contents/SubscriptionOfferingList/SubscriptionOffering");
+        if(subList == null)
+    		throw new SASException("Capabilities from an SAS service must have subscription offering");
         
         for (int i=0; i<subList.getLength(); i++)
         {
             Element subElt = (Element)subList.item(i);
             
-            String subName = "Subscription " + i + 1; 
+            String subName = "Subscription " + Integer.toString(i + 1); 
             
             SASLayerCapabilities layerCaps = new SASLayerCapabilities();           
             
             try
-            {
-            
-            	String subscriptionID = dom.getElementValue("SubscriptionOfferingID");             
+            {        
+            	String subscriptionID = dom.getElementValue(subElt, "SubscriptionOfferingID");             
             	if(subscriptionID == null)
             		throw new SASException("a subscriptionID must be specified");
+            	
+            	Element messageStructureElement = dom.getElement(subElt, "messageStructure/DataBlockDefinition/components");  
+            	if(messageStructureElement == null)
+            		throw new SASException("a message structure in SWEcommon must be specified");
             
+            	String messageStructure = "";
+            	
+            	try {
+					TransformerFactory tf = TransformerFactory.newInstance();
+					Transformer trans = tf.newTransformer();
+					StringWriter sw = new StringWriter();
+					trans.transform(new DOMSource(messageStructureElement.getFirstChild()), new StreamResult(sw));
+					messageStructure = sw.toString();
+				} catch (TransformerConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerFactoryConfigurationError e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
             	String sensorID = dom.getElementValue(subElt, "member/SensorID");
             	if(sensorID == null)
             		throw new SASException("a sensorID must be specified");
             
             	String frequencyUnit = dom.getElementValue(subElt, "member/reportingFrequency/Quantity/value");
-            	String frequencyValue = dom.getAttributeValue("member/reportingFrequency/Quantity/uom");  
+            	String frequencyValue = dom.getAttributeValue(subElt, "member/reportingFrequency/Quantity/uom");  
             
             // plenty of other element and attribute to be added. subscription offering and sensor ID are required	
             	
@@ -95,13 +131,20 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
             serviceCaps.getLayers().add(layerCaps);
         }
     }
-    
 
 	@Override
-	public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
-	{
-		// TODO Auto-generated method stub
-		return null;
+	public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException {
+
+		serviceCaps = new OWSServiceCapabilities();
+    	
+    	// Version
+        String version = dom.getAttributeValue(capabilitiesElt, "version");
+        serviceCaps.setVersion(version);
+
+        // Contents section
+        readContents(dom, capabilitiesElt);
+        
+        return serviceCaps;
 	}
     
 }
