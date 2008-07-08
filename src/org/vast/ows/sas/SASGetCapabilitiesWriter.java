@@ -19,10 +19,13 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows;
+package org.vast.ows.sas;
 
 import org.w3c.dom.*;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ows.AbstractRequestWriter;
+import org.vast.ows.GetCapabilitiesRequest;
+import org.vast.ows.OWSException;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 
