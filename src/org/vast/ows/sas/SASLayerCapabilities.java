@@ -44,18 +44,28 @@ public class SASLayerCapabilities extends OWSLayerCapabilities
     protected String subscriptionOfferingID;
     protected String sensorID;
     protected String messageStructure;
-    protected String frequencyUnit;
-    protected String frequencyValue;
+    protected String messageStructureName;
+    protected String frequency;
     
     public SASLayerCapabilities()
     {
+    	messageStructureName = null; 
     	messageStructure = null;
     	subscriptionOfferingID = null;
     	sensorID = null;
-        frequencyUnit = null;
-        frequencyValue = null;	
+        frequency = null;
     }
 
+    public String getMessageStructureName()
+	{
+		return messageStructureName;
+	}
+
+	public void setMessageStructureName(String messageStructureName)
+	{
+		this.messageStructureName = messageStructureName;
+	}
+    
     public String getMessageStructure()
 	{
 		return messageStructure;
@@ -76,14 +86,14 @@ public class SASLayerCapabilities extends OWSLayerCapabilities
 		this.subscriptionOfferingID = subscriptionOfferingID;
 	}
 	
-	public String getFrequencyUnit()
+	public String getFrequency()
 	{
-		return frequencyUnit;
+		return frequency;
 	}
 
-	public void setFrequencyUnit(String frequencyUnit)
+	public void setFrequency(String frequency)
 	{
-		this.frequencyUnit = frequencyUnit;
+		this.frequency = frequency;
 	}
 
 	public String getSensorID()
@@ -94,16 +104,6 @@ public class SASLayerCapabilities extends OWSLayerCapabilities
 	public void setSensorID(String sensorID)
 	{
 		this.sensorID = sensorID;
-	}
-	
-	public String getFrequencyValue()
-	{
-		return frequencyValue;
-	}
-
-	public void setFrequencyValue(String frequencyValue)
-	{
-		this.frequencyValue = frequencyValue;
 	}
 	
 }

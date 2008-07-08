@@ -40,6 +40,8 @@ import org.vast.ows.OWSServiceCapabilities;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.sun.org.apache.xerces.internal.dom.ElementNSImpl;
+
 
 /**
  * <p><b>Title:</b><br/>
@@ -82,18 +84,20 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
             	if(subscriptionID == null)
             		throw new SASException("a subscriptionID must be specified");
             	
-            	Element messageStructureElement = dom.getElement(subElt, "messageStructure/DataBlockDefinition/components");  
-            	if(messageStructureElement == null)
+            	Element messageStructureElt = dom.getElement(subElt, "messageStructure/DataBlockDefinition/components");  
+            	if(messageStructureElt == null)
             		throw new SASException("a message structure in SWEcommon must be specified");
-            
+            	
+            	String messageStructureName =  dom.getAttributeValue(messageStructureElt, "name");
             	String messageStructure = "";
             	
             	try {
 					TransformerFactory tf = TransformerFactory.newInstance();
 					Transformer trans = tf.newTransformer();
 					StringWriter sw = new StringWriter();
-					trans.transform(new DOMSource(messageStructureElement.getFirstChild()), new StreamResult(sw));
+					trans.transform(new DOMSource(messageStructureElt), new StreamResult(sw));
 					messageStructure = sw.toString();
+					messageStructure.substring(messageStructure.indexOf("?", 5)+1);
 				} catch (TransformerConfigurationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -104,21 +108,29 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
+				
+				int initialIndex = messageStructure.indexOf("?", 5)+2;
+				messageStructure = messageStructure.substring(initialIndex);
+				
             	String sensorID = dom.getElementValue(subElt, "member/SensorID");
             	if(sensorID == null)
             		throw new SASException("a sensorID must be specified");
             
-            	String frequencyUnit = dom.getElementValue(subElt, "member/reportingFrequency/Quantity/value");
-            	String frequencyValue = dom.getAttributeValue(subElt, "member/reportingFrequency/Quantity/uom");  
-            
-            // plenty of other element and attribute to be added. subscription offering and sensor ID are required	
+            	String frequency = null;
+            	Element frequencyElt = dom.getElement(subElt, "member/reportingFrequency/Quantity"); 
+            	if(frequencyElt!=null){
+            	String frequencyValue = dom.getElementValue(frequencyElt, "value");
+            	String frequencyUnit = dom.getAttributeValue(frequencyElt, "uom/code");  
+            	frequency = frequencyValue + " " + frequencyUnit;
+            	}
             	
+            // plenty of other element and attribute to be added. message structure, subscription offering and sensor ID are required	
+            	layerCaps.setMessageStructureName(messageStructureName);
+            	layerCaps.setMessageStructure(messageStructure);
 	            layerCaps.setTitle(subName);
 	            layerCaps.setSubscriptionOfferingID(subscriptionID);
 	            layerCaps.setSensorID(sensorID);
-	            layerCaps.setFrequencyUnit(frequencyUnit);
-	            layerCaps.setFrequencyValue(frequencyValue);
+	            layerCaps.setFrequency(frequency);
 	            layerCaps.setParent(serviceCaps);
             }
             catch (SASException e)
