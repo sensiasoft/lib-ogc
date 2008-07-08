@@ -29,7 +29,7 @@ import org.vast.xml.QName;
 
 /**
  * <p><b>Title:</b><br/>
- * GetCapabilities Request Builder v1.0
+ * SAS GetCapabilities Request Builder v1.0
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -42,7 +42,7 @@ import org.vast.xml.QName;
  * @date Sep 21, 2007
  * @version 1.0
  */
-public class GetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilitiesRequest>
+public class SASGetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilitiesRequest>
 {
 	
 	@Override
@@ -50,9 +50,9 @@ public class GetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilities
 	{
 		StringBuffer urlBuff = new StringBuffer(query.getGetServer());
 		
-        urlBuff.append("SERVICE=" + query.getService());
-        urlBuff.append("&VERSION=" + query.getVersion());
-        urlBuff.append("&REQUEST=" + query.getOperation());
+        urlBuff.append("service=" + query.getService());
+        urlBuff.append("&version=" + query.getVersion());
+        urlBuff.append("&request=" + query.getOperation());
 		
         if (query.getSection() != null)
         	urlBuff.append("&SECTION=" + query.getSection());
