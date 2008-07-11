@@ -47,11 +47,22 @@ public class SASSubscribeResponse
     protected String subscriptionOfferingID = null;
 	protected String expiration = null;
 	protected String XMPPURI = null;
+	protected String status = null;
 	
 	public SASSubscribeResponse()
 	{
 	}
+	
+	public String getStatus()
+	{
+		return status;
+	}
 
+	public void setStatus(String status)
+	{
+		this.status = status;
+	}
+	
 	public String getSubscriptionOfferingID()
 	{
 		return subscriptionOfferingID;

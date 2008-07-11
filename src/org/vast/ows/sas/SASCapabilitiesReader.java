@@ -78,20 +78,26 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
             	if(subscriptionID == null)
             		throw new SASException("a subscriptionID must be specified");
             	
-            	Element messageStructureElt = dom.getElement(subElt, "messageStructure/DataBlockDefinition/components");  
+
+            	Element messageStructureElt = dom.getElement(subElt, "messageStructure");  
             	if(messageStructureElt == null)
             		throw new SASException("a message structure in SWEcommon must be specified");
-            	
-            	String messageStructureName =  dom.getAttributeValue(messageStructureElt, "name");
+            	          	
+            	Element sweBlockElt = dom.getElement(messageStructureElt, "DataBlockDefinition/components");  
+
+            	String messageStructureName =  dom.getAttributeValue(sweBlockElt, "name");
             	String messageStructure = "";
+            	String SweDataComponent = "";
             	
             	try {
 					TransformerFactory tf = TransformerFactory.newInstance();
 					Transformer trans = tf.newTransformer();
-					StringWriter sw = new StringWriter();
-					trans.transform(new DOMSource(messageStructureElt), new StreamResult(sw));
-					messageStructure = sw.toString();
-					messageStructure.substring(messageStructure.indexOf("?", 5)+1);
+					StringWriter sw1 = new StringWriter();
+					trans.transform(new DOMSource(messageStructureElt), new StreamResult(sw1));
+					messageStructure = sw1.toString();
+					StringWriter sw2 = new StringWriter();
+					trans.transform(new DOMSource(sweBlockElt), new StreamResult(sw2));
+					SweDataComponent = sw2.toString();
 				} catch (TransformerConfigurationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -103,12 +109,12 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
 					e.printStackTrace();
 				}
 				
-				int initialIndex = messageStructure.indexOf("?", 5)+2;				
-				messageStructure = messageStructure.substring(initialIndex);
-				
-				int startIndex = messageStructure.indexOf(">")+3;
-				int lastIndex = messageStructure.lastIndexOf("<");
-				messageStructure = messageStructure.substring(startIndex, lastIndex);
+				int initialIndex = SweDataComponent.indexOf("?", 5)+2;				
+				SweDataComponent = SweDataComponent.substring(initialIndex);
+
+				int startIndex = SweDataComponent.indexOf(">")+3;
+				int lastIndex = SweDataComponent.lastIndexOf("<");
+				SweDataComponent = SweDataComponent.substring(startIndex, lastIndex);
 				
             	String sensorID = dom.getElementValue(subElt, "member/SensorID");
             	if(sensorID == null)
@@ -125,6 +131,7 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
             // plenty of other element and attribute to be added. message structure, subscription offering and sensor ID are required	
             	layerCaps.setMessageStructureName(messageStructureName);
             	layerCaps.setMessageStructure(messageStructure);
+            	layerCaps.setSweDataComponentString(SweDataComponent);
 	            layerCaps.setTitle(subName);
 	            layerCaps.setSubscriptionOfferingID(subscriptionID);
 	            layerCaps.setSensorID(sensorID);

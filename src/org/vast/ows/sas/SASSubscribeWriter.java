@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * <p>Copyright (c) 2007</p>
  * @author Gregoire Berthiau
- * @date Oct 10, 2007
+ * @date Jul 10, 2008
  * @version 1.0
  */
 public class SASSubscribeWriter extends AbstractRequestWriter<SASSubscribeRequest>

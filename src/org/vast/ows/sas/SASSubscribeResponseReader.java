@@ -60,10 +60,11 @@ public class SASSubscribeResponseReader
 		
 		response.setSubscriptionOfferingID(dom.getAttributeValue(subscribeResponseElt, "SubscriptionID"));
 		response.setExpiration(dom.getAttributeValue(subscribeResponseElt, "expires"));
-		
+		response.setStatus(dom.getElementValue("Status"));
 		if(dom.existElement("XMPPResponse/XMPPURI"))
 				response.setXMPPURI(dom.getElementValue("XMPPResponse/XMPPURI"));
-		
+		else if(dom.existElement("XMPPURI"))
+			response.setXMPPURI(dom.getElementValue("XMPPURI"));
 		return response;			
 	}
 	

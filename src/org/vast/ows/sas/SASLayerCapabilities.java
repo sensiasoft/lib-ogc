@@ -23,6 +23,7 @@ package org.vast.ows.sas;
 import java.util.ArrayList;
 import java.util.List;
 import org.vast.ows.OWSLayerCapabilities;
+import org.w3c.dom.Element;
 
 
 /**
@@ -44,19 +45,51 @@ public class SASLayerCapabilities extends OWSLayerCapabilities
 {
 	protected List<String> subscriptionOfferingIDList;
     protected List<String> sensorIDList;
-    protected List<String> messageStructureList;
+    protected List<String> SweDataComponentList;
     protected List<String> messageStructureNameList;
     protected List<String> frequencyList;
+    protected String messageStructure = null;
+    protected String XMPPURI = null;
     
     public SASLayerCapabilities()
     {
     	subscriptionOfferingIDList = new ArrayList<String>(1);
     	sensorIDList = new ArrayList<String>(1);
-    	messageStructureList = new ArrayList<String>(1);
+    	SweDataComponentList = new ArrayList<String>(1);
     	messageStructureNameList = new ArrayList<String>(1);
     	frequencyList = new ArrayList<String>(1);
     }
 
+    public String getXMPPURI()
+	{
+		return XMPPURI;
+	}
+
+	public void setXMPPURI(String XMPPURI)
+	{
+		this.XMPPURI = XMPPURI;
+	}
+    
+    public List<String> getSweDataComponentList()
+	{
+		return SweDataComponentList;
+	}
+
+	public void setSweDataComponentString(String SweDataComponent)
+	{
+		this.SweDataComponentList.add(SweDataComponent);
+	}
+    
+    public String getMessageStructure()
+	{
+		return messageStructure;
+	}
+
+	public void setMessageStructure(String messageStructure)
+	{
+		this.messageStructure = messageStructure;
+	}
+	
     public List<String> getMessageStructureNameList()
 	{
 		return messageStructureNameList;
@@ -65,16 +98,6 @@ public class SASLayerCapabilities extends OWSLayerCapabilities
 	public void setMessageStructureName(String messageStructureName)
 	{
 		(this.messageStructureNameList).add(messageStructureName);
-	}
-    
-    public List<String> getMessageStructureList()
-	{
-		return messageStructureList;
-	}
-
-	public void setMessageStructure(String messageStructure)
-	{
-		this.messageStructureList.add(messageStructure);
 	}
     
 	public List<String> getSubscriptionOfferingIDList()
