@@ -14,38 +14,72 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
-    Kevin Carter <kcarter@nsstc.uah.edu>
-    Tony Cook <tcook@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.sas;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.*;
+import org.vast.ows.OWSRequest;
+import org.vast.ows.util.Bbox;
+import org.vast.ows.util.TimeInfo;
 
-import org.vast.xml.DOMHelperException;
 
 /**
- * <p><b>Title:</b>
- *  WRSResponseReader
+ * <p><b>Title:</b><br/>
+ * SAS Subscribe Response
  * </p>
  *
  * <p><b>Description:</b><br/>
+ * Container for SAS Subscribe request parameters
  * </p>
  *
- * <p>Copyright (c) 2006</p>
- * @author Tony Cook
- * @date Nov 28, 2006
+ * <p>Copyright (c) 2007</p>
+ * @author Gregoire Berthiau
+ * @date Jul 09, 2008
  * @version 1.0
  */
-
-public class SASResponseReader {
+public class SASSubscribeResponse
+{
+	protected String service = "SAS";
+	protected String operation = "Subscribe";
+    protected String subscriptionOfferingID = null;
+	protected String expiration = null;
+	protected String XMPPURI = null;
 	
-	public String parseSASSubscribeResponse(InputStream inputStream) throws IOException, DOMHelperException {
-		String subId = "toDo";
-		return subId;
+	public SASSubscribeResponse()
+	{
 	}
-}
 
+	public String getSubscriptionOfferingID()
+	{
+		return subscriptionOfferingID;
+	}
+
+	public void setSubscriptionOfferingID(String subscriptionOfferingID)
+	{
+		this.subscriptionOfferingID = subscriptionOfferingID;
+	}
+	
+	public String getExpiration()
+	{
+		return expiration;
+	}
+
+	public void setExpiration(String expiration)
+	{
+		this.expiration = expiration;
+	}
+
+	public String getXMPPURI()
+	{
+		return XMPPURI;
+	}
+
+	public void setXMPPURI(String XMPPURI)
+	{
+		this.XMPPURI = XMPPURI;
+	}
+	
+}

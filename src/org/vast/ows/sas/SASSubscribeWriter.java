@@ -14,7 +14,7 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -22,64 +22,60 @@ package org.vast.ows.sas;
 
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.OWSException;
 import org.vast.ows.AbstractRequestWriter;
+import org.vast.ows.OWSException;
 import org.w3c.dom.Element;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Provides methods to build a GET or POST SAS request and
- * using an SASQuery object for OWS4 version 0.0.31
+ * SAS Subscribe Request Writer v1.0
  * </p>
  *
  * <p><b>Description:</b><br/>
+ * Provides methods to generate a KVP or XML SAS Subscribe
+ * request based on values contained in a SASSubscribeRequest
+ * object
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Tony Cook
- * @date Nov 21, 2006
+ * @author Gregoire Berthiau
+ * @date Oct 10, 2007
  * @version 1.0
  */
-public class SASRequestWriter extends AbstractRequestWriter<SASQuery>
+public class SASSubscribeWriter extends AbstractRequestWriter<SASSubscribeRequest>
 {
-	public SASRequestWriter()
-	{
-	}
-
-	
-	@Override
-	public String buildURLQuery(SASQuery query)
-	{
-		//  Some SAS ops don't support KVP, so I'm not dealing with it yet
-		return null;
+    
+	public SASSubscribeWriter(){
+		
 	}
 	
-	
-	//  Initially, just try to do a Subscribe request
 	@Override
-	public Element buildXMLQuery(DOMHelper dom, SASQuery query) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, SASSubscribeRequest request) throws OWSException
 	{
-		dom.addUserPrefix("sas", OGCRegistry.getNamespaceURI(OGCRegistry.SAS, query.getVersion()));
+		dom.addUserPrefix("sas", OGCRegistry.getNamespaceURI(OGCRegistry.SAS, request.getVersion()));
 		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
-//		domWriter.addNS("http://www.opengeospatial.net/swe", "swe");
 		
 		// root element
-		Element rootElt = dom.createElement("sas:Subscribe");
-		dom.setAttributeValue(rootElt, "version", query.getVersion());
-		dom.setAttributeValue(rootElt, "service", query.getService());
+		Element rootElt = dom.createElement("Subscribe");
+		addCommonXML(dom, rootElt, request);
 		
-		// Sub ID
-		if(query.getSubscriptionId() != null)
-			dom.setElementValue(rootElt, "sas:EventFilter/sas:SubscriptionOfferingID", query.getSubscriptionId());
-
-		//  FeatureOfInterest
-		if(query.getFeatureOfInterest() != null)
-			dom.setElementValue(rootElt, "sas:FeatureOfInterestName", query.getFeatureOfInterest());
-		// display request
-       // try {domWriter.writeDOM(rootElt, System.out, null);}
-       // catch (Exception e) {e.printStackTrace();}        
-        
+		// SubscriptionOfferingID
+		if(request.getSubscriptionOfferingID()!=null)
+			dom.setElementValue(rootElt, "sas:EventFilter/sas:SubscriptionOfferingID", request.getSubscriptionOfferingID());
+		
+		// FeatureOfInterestName
+		if(request.getSubscriptionOfferingID()!=null)
+			dom.setElementValue(rootElt, "sas:FeatureOfInterestName", request.getfoiName());
+		
 		return rootElt;
+	}
+    
+
+	@Override
+	public String buildURLQuery(SASSubscribeRequest request)
+			throws OWSException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

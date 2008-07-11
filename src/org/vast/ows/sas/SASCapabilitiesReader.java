@@ -114,7 +114,7 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
             	if(sensorID == null)
             		throw new SASException("a sensorID must be specified");
             
-            	String frequency = null;
+            	String frequency = "unknown";
             	Element frequencyElt = dom.getElement(subElt, "member/reportingFrequency/Quantity"); 
             	if(frequencyElt!=null){
             	String frequencyValue = dom.getElementValue(frequencyElt, "value");

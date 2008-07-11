@@ -15,50 +15,57 @@
  
  Contributor(s): 
     Alexandre Robin <robin@nsstc.uah.edu>
+    Kevin Carter <kcarter@nsstc.uah.edu>
+    Tony Cook <tcook@nsstc.uah.edu>
  
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.sas;
 
-import org.vast.ows.OWSRequest;
+import java.io.IOException;
+import java.io.InputStream;
 
+import org.vast.ows.AbstractRequestReader;
+import org.vast.ows.OWSException;
+import org.vast.ows.OWSServiceCapabilities;
+import org.vast.ows.sos.GetObservationRequest;
+import org.vast.xml.DOMHelper;
+import org.vast.xml.DOMHelperException;
+import org.w3c.dom.Element;
 
 /**
- * <p><b>Title:</b><br/>
- * SASQuery
+ * <p><b>Title:</b>
+ *  SAS Subscribe Response reader
  * </p>
  *
  * <p><b>Description:</b><br/>
+ * reads the SAS Subscribe XML response
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Tony Cook
- * @date Nov 21, 2006
+ * <p>Copyright (c) 2006</p>
+ * @author Gregoire Berthiau
+ * @date Jul 9, 2008
  * @version 1.0
  */
-public class SASQuery extends OWSRequest
+
+public class SASSubscribeResponseReader
 {
-    protected String featureOfInterest;
-    protected String subscriptionId;
+	public SASSubscribeResponseReader(){
+		
+	}
 	
-	public SASQuery()
-	{
-		service = "SAS";
+	public SASSubscribeResponse parseSASSubscribeXMLResponse(DOMHelper dom, Element subscribeResponseElt) throws  OWSException {
+		
+		SASSubscribeResponse response = new SASSubscribeResponse();
+		
+		response.setSubscriptionOfferingID(dom.getAttributeValue(subscribeResponseElt, "SubscriptionID"));
+		response.setExpiration(dom.getAttributeValue(subscribeResponseElt, "expires"));
+		
+		if(dom.existElement("XMPPResponse/XMPPURI"))
+				response.setXMPPURI(dom.getElementValue("XMPPResponse/XMPPURI"));
+		
+		return response;			
 	}
-
-	public String getSubscriptionId() {
-		return subscriptionId;
-	}
-
-	public void setSubscriptionId(String subscriptionId) {
-		this.subscriptionId = subscriptionId;
-	}
-
-	public String getFeatureOfInterest() {
-		return featureOfInterest;
-	}
-
-	public void setFeatureOfInterest(String featureOfInterest) {
-		this.featureOfInterest = featureOfInterest;
-	}
+	
 }
+
