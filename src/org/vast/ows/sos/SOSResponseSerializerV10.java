@@ -125,7 +125,7 @@ public class SOSResponseSerializerV10 extends SweResponseSerializer
             dom.setElementValue(foiElt, "gml:name", name);
             
             Element pointElt = dom.addElement(foiElt, "gml:location/gml:Point");
-            dom.setAttributeValue(pointElt, "@srsName", "urn:ogc:def:crs:EPSG:6.1:4329");
+            dom.setAttributeValue(pointElt, "@srsName", "urn:ogc:def:crs:EPSG:6.14:4979");
             
             dom.setElementValue(pointElt, "gml:coordinates", location.x + " " + location.y + " " + location.z);
         }
@@ -162,6 +162,9 @@ public class SOSResponseSerializerV10 extends SweResponseSerializer
 	 */
 	protected void serializeElement(Element elt) throws IOException
 	{
+		//  This will be a problem if more than one swe:values element appears 
+		//  in the response. Should not be a big deal, though, to just ensure 
+		//  that this method finds the right swe:values to overwrite.  TC
 		if (elt.getLocalName().equals("values"))
 		{
 			String omPrefix = "swe";//dom.getXmlDocument().getNSPrefix(OGCRegistry.OM_NS);
