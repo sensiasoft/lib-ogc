@@ -21,7 +21,7 @@
 
 package org.vast.ows.wcs;
 
-import org.vast.ows.sos.SOSResponseSerializer;
+import org.vast.ows.sos.SOSResponseSerializerV10;
 
 
 /**
@@ -38,7 +38,7 @@ import org.vast.ows.sos.SOSResponseSerializer;
  * @date Jun 21, 2005
  * @version 1.0
  */
-public class WCSResponseSerializer extends SOSResponseSerializer
+public class WCSResponseSerializer extends SOSResponseSerializerV10
 {
     int bytesPerPoint; //  used only by BinaryBlock encoding?
 
