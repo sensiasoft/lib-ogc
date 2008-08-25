@@ -54,18 +54,17 @@ public class SASSubscribeWriter extends AbstractRequestWriter<SASSubscribeReques
 	public Element buildXMLQuery(DOMHelper dom, SASSubscribeRequest request) throws OWSException
 	{
 		dom.addUserPrefix("sas", OGCRegistry.getNamespaceURI(OGCRegistry.SAS, request.getVersion()));
-		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
-		
-		// root element
-		Element rootElt = dom.createElement("Subscribe");
+		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.0"));
+		// root element		
+		Element rootElt = dom.createElement("sas:Subscribe");
 		addCommonXML(dom, rootElt, request);
-		
+		//dom.
 		// SubscriptionOfferingID
 		if(request.getSubscriptionOfferingID()!=null)
-			dom.setElementValue(rootElt, "sas:EventFilter/sas:SubscriptionOfferingID", request.getSubscriptionOfferingID());
+			dom.setElementValue(rootElt, "sas:EventFilter/sas:SensorID", request.getSubscriptionOfferingID());
 		
 		// FeatureOfInterestName
-		if(request.getSubscriptionOfferingID()!=null)
+		if(request.getfoiName()!=null)
 			dom.setElementValue(rootElt, "sas:FeatureOfInterestName", request.getfoiName());
 		
 		return rootElt;

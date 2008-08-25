@@ -44,7 +44,7 @@ public class SASSubscribeResponse
 {
 	protected String service = "SAS";
 	protected String operation = "Subscribe";
-    protected String subscriptionOfferingID = null;
+    protected String subscriptionID = null;
 	protected String expiration = null;
 	protected String XMPPURI = null;
 	protected String status = null;
@@ -63,14 +63,14 @@ public class SASSubscribeResponse
 		this.status = status;
 	}
 	
-	public String getSubscriptionOfferingID()
+	public String getSubscriptionID()
 	{
-		return subscriptionOfferingID;
+		return subscriptionID;
 	}
 
-	public void setSubscriptionOfferingID(String subscriptionOfferingID)
+	public void setSubscriptionOfferingID(String subscriptionID)
 	{
-		this.subscriptionOfferingID = subscriptionOfferingID;
+		this.subscriptionID = subscriptionID;
 	}
 	
 	public String getExpiration()
