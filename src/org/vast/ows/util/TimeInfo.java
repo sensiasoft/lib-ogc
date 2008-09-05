@@ -37,7 +37,6 @@ import org.vast.util.TimeExtent;
  * @author Alexandre Robin
  * @since Aug 9, 2005
  * @version 1.0
- * @deprecated Use TimeExtent instead
  */
 public class TimeInfo extends TimeExtent
 {
