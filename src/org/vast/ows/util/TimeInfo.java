@@ -21,7 +21,6 @@
 
 package org.vast.ows.util;
 
-import org.vast.util.DateTimeFormat;
 import org.vast.util.TimeExtent;
 
 
@@ -38,13 +37,12 @@ import org.vast.util.TimeExtent;
  * @author Alexandre Robin
  * @since Aug 9, 2005
  * @version 1.0
+ * @deprecated Use TimeExtent instead
  */
 public class TimeInfo extends TimeExtent
 {
-    protected int timeZone = 0;
     
-    
-    @Override
+	@Override
     public TimeInfo copy()
     {
         TimeInfo timeInfo = new TimeInfo();
@@ -60,116 +58,5 @@ public class TimeInfo extends TimeExtent
         timeInfo.timeZone = this.timeZone;
         
         return timeInfo;
-    }
-    
-    
-    public double getStartTime()
-    {
-        return getAdjustedLagTime();
-    }
-    
-    
-    /**
-     * Helper method to set start time
-     * @param startTime
-     */
-    public void setStartTime(double startTime)
-    {
-        beginNow = false;
-        
-        if (Double.isNaN(baseTime) || baseAtNow)
-        {
-            baseTime = startTime;
-            lagTimeDelta = 0.0;
-            baseAtNow = false;
-        }
-        
-        else if (startTime > baseTime)
-        {
-            double stopTime = baseTime + leadTimeDelta;
-            baseTime = startTime;
-            leadTimeDelta = Math.max(0.0, stopTime - baseTime);
-            lagTimeDelta = 0.0;
-        }
-        
-        else
-        {
-            lagTimeDelta = baseTime - startTime;
-        }
-    }
-
-
-    public double getStopTime()
-    {
-        return getAdjustedLeadTime();
-    }
-    
-    
-    /**
-     * Helper method to set stop time
-     * @param stopTime
-     */
-    public void setStopTime(double stopTime)
-    {
-        endNow = false;
-        
-        if (Double.isNaN(baseTime) || baseAtNow)
-        {
-            baseTime = stopTime;
-            leadTimeDelta = 0.0;
-            baseAtNow = false;
-        }
-        
-        else if (stopTime < baseTime)
-        {
-            double startTime = baseTime - lagTimeDelta;
-            baseTime = stopTime;
-            lagTimeDelta = Math.max(0.0, baseTime - startTime);
-            leadTimeDelta = 0.0;
-        }
-        
-        else
-        {
-            leadTimeDelta = stopTime - baseTime;
-        }
-    }
-	
-	
-	public boolean isTimeInstant()
-	{
-        if (leadTimeDelta == 0 && lagTimeDelta == 0)
-			return true;
-		else
-			return false; 
-	}
-    
-    
-    public String getIsoString(int zone)
-    {
-        if (baseAtNow)
-        {
-            String start = beginNow ? "now" : "unknown";
-            String stop = endNow ? "now" : "unknown";
-            String duration = DateTimeFormat.formatIsoPeriod(getTimeRange());
-            return start + "/" + stop + "/" + duration;
-        }
-        else
-        {
-            String start = beginNow ? "now" : DateTimeFormat.formatIso(getStartTime(), zone);
-            String stop = endNow ? "now" : DateTimeFormat.formatIso(getStopTime(), zone);
-            return start + "/" + stop;
-        }
-    }
-
-
-    public int getTimeZone()
-    {
-        return timeZone;
-    }
-
-
-    public void setTimeZone(int timeZone)
-    {
-        this.timeZone = timeZone;
     }
 }
