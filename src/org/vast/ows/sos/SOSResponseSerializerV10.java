@@ -57,7 +57,7 @@ import org.vast.xml.DOMHelper;
 public class SOSResponseSerializerV10 extends SweResponseSerializer
 {
 	protected Element obsElt;
-    
+    protected String resultUrl;
 	
     public SOSResponseSerializerV10()
 	{		
@@ -162,27 +162,43 @@ public class SOSResponseSerializerV10 extends SweResponseSerializer
 	 */
 	protected void serializeElement(Element elt) throws IOException
 	{
+		
 		//  This will be a problem if more than one swe:values element appears 
 		//  in the response. Should not be a big deal, though, to just ensure 
 		//  that this method finds the right swe:values to overwrite.  TC
 		if (elt.getLocalName().equals("values"))
 		{
-			String omPrefix = "swe";//dom.getXmlDocument().getNSPrefix(OGCRegistry.OM_NS);
-            
-            this._format.setIndenting(false);
-			this._printer.printText("\n<" + omPrefix + ":values>");
-			this._printer.flush();
-			
-            dataWriter.write();
-			
-			this._printer.printText("\n</" + omPrefix + ":values>");
-			this._printer.flush();
-			this._format.setIndenting(true);
+			if(resultUrl != null)
+			{
+				elt.setAttribute("externalLink", resultUrl);
+				super.serializeElement(elt);
+			}
+			else
+			{
+				String omPrefix = "swe";//dom.getXmlDocument().getNSPrefix(OGCRegistry.OM_NS);
+           
+				this._format.setIndenting(false);
+				this._printer.printText("\n<" + omPrefix + ":values>");
+				this._printer.flush();
+		
+				dataWriter.write();
+		
+				this._printer.printText("\n</" + omPrefix + ":values>");
+				this._printer.flush();
+				this._format.setIndenting(true);
+			}
 		} 
 		else
 		{
 			super.serializeElement(elt);
 		}
-	}	
+			
+	}
+	
+
+	public void setResultURL(String url)
+	{
+		this.resultUrl = url;
+	}
 	
 }

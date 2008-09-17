@@ -22,6 +22,9 @@ package org.vast.ows;
 
 import java.io.*;
 import java.util.Hashtable;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.vast.ogc.OGCRegistry;
 
 
@@ -43,7 +46,7 @@ public class OWSRequest
 {
 	protected final static String EXCEPTION_MIME_TYPE = "application/vnd.ogc.se_xml";
 	
-	protected OutputStream responseStream;
+	protected HttpServletResponse response;
 	protected String getServer;
 	protected String postServer;
 	protected String service;
@@ -82,15 +85,14 @@ public class OWSRequest
 	
 	public OutputStream getResponseStream()
 	{
-		return responseStream;
+		try {
+			return response.getOutputStream();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-
-	public void setResponseStream(OutputStream responseStream)
-	{
-		this.responseStream = responseStream;
-	}
-	
 	
 	public String getGetServer()
 	{
@@ -180,4 +182,16 @@ public class OWSRequest
 	{
 		return vendorParameters;
 	}
+
+
+	public HttpServletResponse getResponse() {
+		return response;
+	}
+
+
+	public void setResponse(HttpServletResponse response) {
+		this.response = response;
+	}
+
+
 }

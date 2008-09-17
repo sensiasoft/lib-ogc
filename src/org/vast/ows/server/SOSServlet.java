@@ -38,6 +38,7 @@ import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLTimeReader;
 import org.vast.ows.sos.DescribeSensorRequest;
 import org.vast.ows.sos.GetObservationRequest;
+import org.vast.ows.sos.GetResultRequest;
 import org.vast.ows.sos.SOSException;
 import org.vast.ows.util.PostRequestFilter;
 import org.vast.ows.util.TimeInfo;
@@ -88,6 +89,32 @@ public abstract class SOSServlet extends OWSServlet
         dom.serialize(dom.getBaseElement(), query.getResponseStream() , null);		
 	}
 	
+	/**
+	 * Decode the query, check validity and call the right handler
+	 * @param query
+	 */
+	protected void processQuery(GetResultRequest query) throws Exception
+	{
+		if (query.getOffering() == null)
+			throw new SOSException("A GetResult SOS request must specify an offeringId argument");
+		
+		if (query.getObservables().isEmpty())
+			throw new SOSException("An SOS request must contain at least one observable ID");
+		
+		if (query.getFormat() == null)
+			throw new SOSException("A GetResult SOS request must specify a format argument");
+		
+					
+		SOSHandler handler = dataSetHandlers.get(query.getOffering());
+
+		if (handler != null)
+		{
+			// then retrieve observation data
+            handler.getResult(query);				
+		}
+		else
+			throw new SOSException("Data for observation " + query.getOffering() + " is unavailable on this server");
+	}
 	
 	/**
 	 * Decode the query, check validity and call the right handler
@@ -336,6 +363,8 @@ public abstract class SOSServlet extends OWSServlet
 		
 		try
 		{
+			//  get request URL
+			String requestURL = req.getRequestURL().toString();   
 			//  get query string
 			String queryString = req.getQueryString();            
             if (queryString == null)
@@ -347,7 +376,8 @@ public abstract class SOSServlet extends OWSServlet
             
             // setup response stream
             resp.setContentType("text/xml");
-			query.setResponseStream(resp.getOutputStream());
+            query.setResponse(resp);
+			query.setGetServer(requestURL);
 			
 			if (query instanceof GetCapabilitiesRequest)
 	        	processQuery((GetCapabilitiesRequest)query);
@@ -355,6 +385,8 @@ public abstract class SOSServlet extends OWSServlet
 	        	processQuery((DescribeSensorRequest)query);
 	        else if (query instanceof GetObservationRequest)
 	        	processQuery((GetObservationRequest)query);
+	        else if (query instanceof GetResultRequest)
+	        	processQuery((GetResultRequest)query);
 		}
 		catch (SOSException e)
 		{
@@ -405,6 +437,9 @@ public abstract class SOSServlet extends OWSServlet
 		OWSRequest query = null;
 		logger.info("POST REQUEST from IP " + req.getRemoteAddr());
 		
+		//  get request URL
+		String requestURL = req.getRequestURL().toString();
+		
 		try
 		{
 			InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
@@ -413,7 +448,8 @@ public abstract class SOSServlet extends OWSServlet
             
             // setup response stream
             resp.setContentType("text/xml");
-            query.setResponseStream(resp.getOutputStream());
+            query.setResponse(resp);
+			query.setPostServer(requestURL);
 			
 			if (query instanceof GetCapabilitiesRequest)
 	        	processQuery((GetCapabilitiesRequest)query);
@@ -421,6 +457,8 @@ public abstract class SOSServlet extends OWSServlet
 	        	processQuery((DescribeSensorRequest)query);
 	        else if (query instanceof GetObservationRequest)
 	        	processQuery((GetObservationRequest)query);
+	        else if (query instanceof GetResultRequest)
+	        	processQuery((GetResultRequest)query);
 		}
         catch (SOSException e)
 		{

@@ -20,7 +20,11 @@
 
 package org.vast.ows.sos;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.vast.ows.OWSRequest;
+import org.vast.ows.util.Bbox;
+import org.vast.ows.util.TimeInfo;
 
 
 /**
@@ -39,4 +43,95 @@ import org.vast.ows.OWSRequest;
  */
 public class GetResultRequest extends OWSRequest
 {
+    protected String offering;
+	protected TimeInfo time;
+	protected Bbox bbox;
+	protected String foiId;
+    protected String format;
+	protected List<String> observables;
+	protected List<String> procedures;
+
+	
+	public GetResultRequest()
+	{
+		service = "SOS";
+		operation = "GetResult";
+		observables = new ArrayList<String>(2);
+		procedures = new ArrayList<String>(2);
+		bbox = new Bbox();
+		time = new TimeInfo();
+	}
+	
+	
+	public String getFormat()
+	{
+		return format;
+	}
+
+
+	public void setFormat(String format)
+	{
+		this.format = format;
+	}
+
+
+	public String getOffering()
+	{
+		return offering;
+	}
+
+
+	public void setOffering(String offering)
+	{
+		this.offering = offering;
+	}
+	
+	
+	public List<String> getObservables()
+	{
+		return observables;
+	}
+
+
+	public void setObservables(List<String> observables)
+	{
+		this.observables = observables;
+	}
+
+
+	public List<String> getProcedures()
+	{
+		return procedures;
+	}
+
+
+	public void setProcedures(List<String> procedures)
+	{
+		this.procedures = procedures;
+	}
+
+
+	public TimeInfo getTime()
+	{
+		return time;
+	}
+
+
+	public void setTime(TimeInfo time)
+	{
+		this.time = time;
+	}	
+
+
+	public Bbox getBbox()
+	{
+		return bbox;
+	}
+
+
+	public void setBbox(Bbox bbox)
+	{
+		this.bbox = bbox;
+	}
+	
 }
