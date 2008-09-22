@@ -299,6 +299,8 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 		}
 		
 		// need VERSION
+		//  VERSION is no longer required parameter for all services.  SOS doesn't use it at all
+		//  
 		if (request.getVersion() == null)
 		{
 			report.add(new OWSException(OWSException.missing_param_code, "VERSION"));
