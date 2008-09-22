@@ -102,6 +102,7 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
             {
                 Element defElt = dom.getElement(resultObjElt, "elementType");
     			Element encElt = dom.getElement(resultObjElt, "encoding");
+    			Element valElt = dom.getElement(resultObjElt, "values");
     			
     			// read structure and encoding                
                 this.dataComponents = utils.readComponentProperty(dom, defElt);
@@ -109,8 +110,14 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
     			this.dataParser = createDataParser();
     			
     			// read external link if present
-    			valuesUri = dom.getAttributeValue(obsElt, "values/externalLink");
-    			
+    			if(obsElt.getNodeName().equalsIgnoreCase("om:Observation"))
+    			{
+    				valuesUri = dom.getAttributeValue(valElt, "externalLink");
+    			}
+    			else
+    			{
+    				valuesUri = dom.getAttributeValue(obsElt, "values/externalLink");
+    			}
     			// launch data stream parser if handler was provided
     			if (dataHandler != null)
     			{
