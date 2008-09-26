@@ -110,13 +110,17 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
     			this.dataParser = createDataParser();
     			
     			// read external link if present
-    			if(obsElt.getNodeName().equalsIgnoreCase("om:Observation"))
+    			if(obsElt.getNodeName().equalsIgnoreCase("om:Observation") || obsElt.getNodeName().equalsIgnoreCase("Observation"))
     			{
-    				valuesUri = dom.getAttributeValue(valElt, "externalLink");
+    				if(dom.existAttribute(valElt, "externalLink"))
+    					valuesUri = dom.getAttributeValue(valElt, "externalLink");
+    				else valuesUri = valElt.getAttribute("xlink:href");
     			}
     			else
     			{
-    				valuesUri = dom.getAttributeValue(obsElt, "values/externalLink");
+    				if(dom.existAttribute("externalLink"))
+    					valuesUri = dom.getAttributeValue(obsElt, "values/externalLink");
+    				else valuesUri = valElt.getAttribute("xlink:href");
     			}
     			// launch data stream parser if handler was provided
     			if (dataHandler != null)
