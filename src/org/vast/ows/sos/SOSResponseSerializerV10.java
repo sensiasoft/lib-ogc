@@ -24,9 +24,9 @@ import java.io.*;
 import org.w3c.dom.*;
 import org.vast.math.Vector3d;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.gml.GMLTimeWriter;
 import org.vast.ows.SweResponseSerializer;
-import org.vast.ows.gml.GMLTimeWriter;
-import org.vast.ows.util.TimeInfo;
+import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
 
 

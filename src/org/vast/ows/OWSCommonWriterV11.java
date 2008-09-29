@@ -23,8 +23,8 @@ package org.vast.ows;
 import java.util.List;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSReference;
-import org.vast.ows.util.Bbox;
 import org.w3c.dom.*;
+import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 
 /**

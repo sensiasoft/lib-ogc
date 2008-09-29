@@ -24,11 +24,11 @@ package org.vast.ows.wcs;
 
 import java.util.List;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.gml.GMLEnvelopeWriter;
 import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSException;
-import org.vast.ows.gml.GMLEnvelopeWriter;
-import org.vast.ows.util.Bbox;
 import org.w3c.dom.*;
+import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 

@@ -22,11 +22,11 @@ package org.vast.ows.wfs;
 
 import java.util.*;
 import org.w3c.dom.*;
+import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.AbstractCapabilitiesReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSServiceCapabilities;
-import org.vast.ows.util.Bbox;
 
 
 /**

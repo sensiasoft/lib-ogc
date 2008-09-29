@@ -25,23 +25,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.vast.ogc.gml.GMLException;
+import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
-import org.vast.ows.gml.GMLException;
-import org.vast.ows.gml.GMLTimeReader;
 import org.vast.ows.sos.DescribeSensorRequest;
 import org.vast.ows.sos.GetObservationRequest;
 import org.vast.ows.sos.GetResultRequest;
 import org.vast.ows.sos.SOSException;
 import org.vast.ows.util.PostRequestFilter;
-import org.vast.ows.util.TimeInfo;
+import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.w3c.dom.Element;
@@ -61,12 +59,15 @@ import org.w3c.dom.NodeList;
  */
 public abstract class SOSServlet extends OWSServlet
 {
-    // Table of SOS handlers: 1 for each ObservationSet
+    private static final long serialVersionUID = 6940984824581209178L;
+    protected OWSUtils owsUtils = new OWSUtils();
+    
+	// Table of SOS handlers: 1 for each observation offering
 	protected Hashtable<String, SOSHandler> dataSetHandlers = new Hashtable<String, SOSHandler>();
+	
 	// Table of <ProcedureId, SensorMLUrl> - 1 per procedure 
 	protected Hashtable<String, String> sensorMLUrls = new Hashtable<String, String>();
-	protected OWSUtils owsUtils = new OWSUtils();
-    
+	    
 	
 	protected void processQuery(GetCapabilitiesRequest query) throws Exception
     {

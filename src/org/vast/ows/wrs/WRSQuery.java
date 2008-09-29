@@ -22,7 +22,7 @@ package org.vast.ows.wrs;
 
 import java.util.List;
 import org.vast.ows.OWSRequest;
-import org.vast.ows.util.Bbox;
+import org.vast.util.Bbox;
 
 
 /**

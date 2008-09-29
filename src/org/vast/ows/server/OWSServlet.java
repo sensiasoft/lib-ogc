@@ -41,7 +41,8 @@ import org.vast.xml.DOMHelperException;
  */
 public abstract class OWSServlet extends HttpServlet
 {
-    protected final static String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
+    private static final long serialVersionUID = 4970153267344348035L;
+	protected final static String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
     protected DOMHelper capsHelper;
     protected Logger logger = Logger.getRootLogger();
     

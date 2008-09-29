@@ -23,7 +23,7 @@ package org.vast.ows.wcs;
 
 import java.util.ArrayList;
 import org.vast.ows.OWSIdentification;
-import org.vast.ows.util.Interval;
+import org.vast.util.Interval;
 
 
 /**

@@ -23,8 +23,8 @@ package org.vast.ows.sos;
 import java.util.*;
 
 import org.vast.ows.OWSLayerCapabilities;
-import org.vast.ows.util.Bbox;
-import org.vast.ows.util.TimeInfo;
+import org.vast.util.Bbox;
+import org.vast.util.TimeInfo;
 
 
 /**

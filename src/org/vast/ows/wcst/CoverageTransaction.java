@@ -22,8 +22,8 @@
 
 package org.vast.ows.wcst;
 
-import org.vast.ows.util.Bbox;
 import org.vast.ows.wcs.CoverageRefGroup;
+import org.vast.util.Bbox;
 
 
 /**

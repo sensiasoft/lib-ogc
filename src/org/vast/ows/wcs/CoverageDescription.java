@@ -25,8 +25,8 @@ package org.vast.ows.wcs;
 import java.util.ArrayList;
 import java.util.List;
 import org.vast.ows.OWSIdentification;
-import org.vast.ows.util.Bbox;
-import org.vast.ows.util.TimeInfo;
+import org.vast.util.Bbox;
+import org.vast.util.TimeInfo;
 
 
 /**

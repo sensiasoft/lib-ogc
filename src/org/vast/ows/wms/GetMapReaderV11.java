@@ -21,11 +21,11 @@
 package org.vast.ows.wms;
 
 import java.util.StringTokenizer;
+import org.vast.util.Bbox;
+import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 import org.vast.ows.*;
-import org.vast.ows.util.Bbox;
-import org.vast.ows.util.TimeInfo;
 
 
 /**

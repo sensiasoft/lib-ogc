@@ -23,9 +23,9 @@ package org.vast.ows;
 import java.io.*;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.vast.ows.util.Bbox;
-import org.vast.ows.util.TimeInfo;
+import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
+import org.vast.util.TimeInfo;
 
 
 /**

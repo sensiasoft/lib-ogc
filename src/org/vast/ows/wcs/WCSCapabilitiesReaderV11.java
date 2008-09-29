@@ -23,10 +23,10 @@
 package org.vast.ows.wcs;
 
 import org.w3c.dom.*;
+import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSCapabilitiesReaderV11;
 import org.vast.ows.OWSException;
-import org.vast.ows.util.Bbox;
 
 
 /**

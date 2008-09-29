@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import org.vast.ows.OWSRequest;
-import org.vast.ows.util.Bbox;
-import org.vast.ows.util.TimeInfo;
+import org.vast.util.Bbox;
+import org.vast.util.TimeInfo;
 
 
 /**

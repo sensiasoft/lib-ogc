@@ -26,7 +26,7 @@ package org.vast.ows.sps;
 
 import java.util.List;
 import org.vast.ows.OWSLayerCapabilities;
-import org.vast.ows.util.Bbox;
+import org.vast.util.Bbox;
 
 
 /**

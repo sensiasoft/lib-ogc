@@ -34,10 +34,10 @@ import org.vast.xml.DOMHelper;
 import org.vast.ows.AbstractCapabilitiesReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSServiceCapabilities;
-import org.vast.ows.util.Bbox;
-import org.vast.ows.util.TimeInfo;
+import org.vast.util.Bbox;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
+import org.vast.util.TimeInfo;
 
 
 /**

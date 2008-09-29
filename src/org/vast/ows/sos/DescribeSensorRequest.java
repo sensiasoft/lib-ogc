@@ -21,7 +21,7 @@
 package org.vast.ows.sos;
 
 import org.vast.ows.OWSRequest;
-import org.vast.ows.util.TimeInfo;
+import org.vast.util.TimeInfo;
 
 
 /**

@@ -22,12 +22,12 @@
 
 package org.vast.ows.wcs;
 
+import org.vast.ogc.gml.GMLEnvelopeReader;
 import org.vast.ows.AbstractResponseReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSIdentification;
-import org.vast.ows.gml.GMLEnvelopeReader;
-import org.vast.ows.util.Bbox;
 import org.w3c.dom.*;
+import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 
 

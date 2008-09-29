@@ -23,7 +23,7 @@ package org.vast.ows.wfs;
 import java.util.*;
 
 import org.vast.ows.OWSLayerCapabilities;
-import org.vast.ows.util.Bbox;
+import org.vast.util.Bbox;
 
 
 /**

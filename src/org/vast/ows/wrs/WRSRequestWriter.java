@@ -23,11 +23,11 @@
 package org.vast.ows.wrs;
 
 import java.util.List;
+import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.AbstractRequestWriter;
-import org.vast.ows.util.Bbox;
 import org.vast.ows.wrs.WRSQuery.QueryType;
 import org.w3c.dom.Element;
 

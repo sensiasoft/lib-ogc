@@ -30,7 +30,6 @@ import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
-import org.vast.ows.util.TimeInfo;
 import org.vast.ows.wcs.DescribeCoverageRequest;
 import org.vast.ows.wcs.GetCoverageRequest;
 import org.vast.ows.wcs.WCSException;
@@ -52,10 +51,12 @@ import org.vast.util.*;
  */
 public abstract class WCSServlet extends OWSServlet
 {
-    // Table of WCS handlers: 1 for each ObservationSet
-    protected Hashtable<String, WCSHandler> dataSetHandlers = new Hashtable<String, WCSHandler>();
+    private static final long serialVersionUID = 7155979257491196521L;
     protected OWSUtils owsUtils = new OWSUtils();
     
+	// Table of WCS handlers: 1 for each coverage offering
+    protected Hashtable<String, WCSHandler> dataSetHandlers = new Hashtable<String, WCSHandler>();
+        
 
     // Sends an XML Exception to the user
     protected void sendErrorMessage(OutputStream resp, String message)

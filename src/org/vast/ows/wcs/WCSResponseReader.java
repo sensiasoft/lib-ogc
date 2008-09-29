@@ -20,7 +20,7 @@
 
 package org.vast.ows.wcs;
 
-import org.vast.ows.om.ObservationStreamReaderV0;
+import org.vast.ogc.om.ObservationStreamReaderV0;
 
 
 public class WCSResponseReader extends ObservationStreamReaderV0

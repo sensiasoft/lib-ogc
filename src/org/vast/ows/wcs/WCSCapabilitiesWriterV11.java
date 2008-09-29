@@ -25,7 +25,7 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSCapabilitiesWriterV11;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSServiceCapabilities;
-import org.vast.ows.util.Bbox;
+import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 import org.w3c.dom.Element;

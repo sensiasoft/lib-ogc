@@ -25,12 +25,12 @@ package org.vast.ows.wcs;
 import java.text.NumberFormat;
 import java.util.Enumeration;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.gml.GMLEnvelopeWriter;
 import org.vast.ows.*;
-import org.vast.ows.gml.GMLEnvelopeWriter;
-import org.vast.ows.util.Interval;
-import org.vast.ows.util.TimeInfo;
 import org.w3c.dom.*;
 import org.vast.util.DateTimeFormat;
+import org.vast.util.Interval;
+import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 

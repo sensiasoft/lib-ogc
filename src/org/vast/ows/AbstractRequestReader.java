@@ -26,9 +26,9 @@ import java.text.ParseException;
 import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
-import org.vast.ows.util.Bbox;
-import org.vast.ows.util.TimeInfo;
+import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
+import org.vast.util.TimeInfo;
 import org.w3c.dom.Element;
 
 
