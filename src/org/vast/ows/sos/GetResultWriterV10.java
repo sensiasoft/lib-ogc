@@ -168,19 +168,12 @@ public class GetResultWriterV10 extends AbstractRequestWriter<GetResultRequest>
 			dom.setElementValue(rootElt, "+sos:observedProperty", request.getObservables().get(i));
 		
         // foi bbox
-        try
+		Bbox bbox = request.getBbox();
+        if (bbox != null && !bbox.isNull())
         {
-            Bbox bbox = request.getBbox();
-            if (bbox != null && !bbox.isNull())
-            {
-                Element envelopeElt = bboxWriter.writeEnvelope(dom, bbox);
-                Element elt = dom.addElement(rootElt, "sos:featureOfInterest/ogc:BBOX");
-                elt.appendChild(envelopeElt);
-            }
-        }
-        catch (GMLException e)
-        {
-            throw new SOSException("Error while writing bbox", e);
+            Element envelopeElt = bboxWriter.writeEnvelope(dom, bbox);
+            Element elt = dom.addElement(rootElt, "sos:featureOfInterest/ogc:BBOX");
+            elt.appendChild(envelopeElt);
         }
 		
 		// response format

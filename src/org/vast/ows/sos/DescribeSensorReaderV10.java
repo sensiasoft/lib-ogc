@@ -25,6 +25,7 @@ import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.*;
 
@@ -140,11 +141,18 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 		request.setProcedure(procedure);
 		
 		// time
-		Element timeElt = dom.getElement(requestElt, "time/*");
-		if (timeElt != null)
+		try
 		{
-			TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
-			request.setTime(time);
+			Element timeElt = dom.getElement(requestElt, "time/*");
+			if (timeElt != null)
+			{
+				TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
+				request.setTime(time);
+			}
+		}
+		catch (GMLException e)
+		{
+			report.add(new OWSException(OWSException.invalid_param_code, "TIME"));
 		}
 		
 		// format

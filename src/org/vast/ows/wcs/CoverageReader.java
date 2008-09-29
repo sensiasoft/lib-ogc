@@ -26,8 +26,8 @@ import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataHandler;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
-import org.vast.ows.OWSException;
-import org.vast.ows.OWSExceptionReader;
+import org.vast.ogc.OGCException;
+import org.vast.ogc.OGCExceptionReader;
 import org.vast.sweCommon.SWEFilter;
 import org.vast.sweCommon.SWEReader;
 import org.vast.sweCommon.SWECommonUtils;
@@ -60,7 +60,7 @@ public class CoverageReader extends SWEReader
 			
 			// parse xml header using DataComponent and DataEncoding readers
 			DOMHelper dom = new DOMHelper(streamFilter, false);
-            OWSExceptionReader.checkException(dom);
+            OGCExceptionReader.checkException(dom);
 			
 			// get structure and encoding elements
 			Element defElt = dom.getElement("result/Data/definition/DataDefinition");
@@ -79,7 +79,7 @@ public class CoverageReader extends SWEReader
 		{
 			throw new CDMException("Error while parsing Coverage XML", e);
 		}
-        catch (OWSException e)
+        catch (OGCException e)
         {
             throw new CDMException(e.getMessage());
         }

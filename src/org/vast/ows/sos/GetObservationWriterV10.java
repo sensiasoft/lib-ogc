@@ -156,12 +156,12 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
             {
                 Element timeElt = timeWriter.writeTime(dom, timeInfo);
                 Element opElt = null;
-                double re = timeInfo.getBaseTime();
+
                 if(timeInfo.isBaseAtNow())
-                {
                 	opElt = dom.addElement(rootElt, "sos:eventTime/ogc:TM_After");
-                }
-                else opElt = dom.addElement(rootElt, "sos:eventTime/ogc:TM_During");
+                else
+                	opElt = dom.addElement(rootElt, "sos:eventTime/ogc:TM_During");
+                
                 dom.setElementValue(opElt, "ogc:PropertyName", "om:samplingTime");                
                 opElt.appendChild(timeElt);
             }
@@ -182,19 +182,12 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
 			dom.setElementValue(rootElt, "+sos:observedProperty", request.getObservables().get(i));
 		
         // foi bbox
-        try
+		Bbox bbox = request.getBbox();
+        if (bbox != null && !bbox.isNull())
         {
-            Bbox bbox = request.getBbox();
-            if (bbox != null && !bbox.isNull())
-            {
-                Element envelopeElt = bboxWriter.writeEnvelope(dom, bbox);
-                Element elt = dom.addElement(rootElt, "sos:featureOfInterest/ogc:BBOX");
-                elt.appendChild(envelopeElt);
-            }
-        }
-        catch (GMLException e)
-        {
-            throw new SOSException("Error while writing bbox", e);
+            Element envelopeElt = bboxWriter.writeEnvelope(dom, bbox);
+            Element elt = dom.addElement(rootElt, "sos:featureOfInterest/ogc:BBOX");
+            elt.appendChild(envelopeElt);
         }
 		
 		// response format

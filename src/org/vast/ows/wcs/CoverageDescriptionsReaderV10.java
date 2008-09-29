@@ -23,6 +23,7 @@
 package org.vast.ows.wcs;
 
 import org.vast.ogc.gml.GMLEnvelopeReader;
+import org.vast.ogc.gml.GMLException;
 import org.vast.ows.AbstractResponseReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSIdentification;
@@ -88,12 +89,19 @@ public class CoverageDescriptionsReaderV10 extends AbstractResponseReader<Covera
 		Element spDomainElt = dom.getElement(offeringElt, "domainSet/spatialDomain");
 
 		// envelope
-		NodeList envElts = dom.getElements(spDomainElt, "Envelope");
-		for (int j = 0; j < envElts.getLength(); j++)
+		try
 		{
-			Element envElt = (Element) envElts.item(j);
-			Bbox bbox = gmlReader.readEnvelope(dom, envElt);
-			desc.getBboxList().add(bbox);
+			NodeList envElts = dom.getElements(spDomainElt, "Envelope");
+			for (int j = 0; j < envElts.getLength(); j++)
+			{
+				Element envElt = (Element) envElts.item(j);
+				Bbox bbox = gmlReader.readEnvelope(dom, envElt);
+				desc.getBboxList().add(bbox);
+			}
+		}
+		catch (GMLException e)
+		{
+			throw new OWSException("Invalid Envelope", e);
 		}
 
 		// TODO read gml:Grids

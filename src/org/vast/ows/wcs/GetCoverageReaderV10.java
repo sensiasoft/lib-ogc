@@ -32,6 +32,7 @@ import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLEnvelopeReader;
+import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.*;
 
@@ -274,11 +275,18 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 		// envelope
 		Element spatialElt = dom.getElement(requestElt, "domainSubset/spatialSubset");
 		
-		Element envelopeElt = dom.getElement(spatialElt, "gml:Envelope");
-		if (envelopeElt != null)
+		try
 		{
-			Bbox bbox = envelopeReader.readEnvelope(dom, envelopeElt);
-			request.setBbox(bbox);
+			Element envelopeElt = dom.getElement(spatialElt, "gml:Envelope");
+			if (envelopeElt != null)
+			{
+				Bbox bbox = envelopeReader.readEnvelope(dom, envelopeElt);
+				request.setBbox(bbox);
+			}
+		}
+		catch (GMLException e1)
+		{
+			report.add(new WCSException(invalidXML + ": Invalid Envelope"));
 		}
 		
 		// rectified grid
@@ -315,7 +323,14 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 			
 			if (timeElt.getLocalName().equals("timePosition"))
 			{
-				request.getTimes().add(timeReader.readTimeInstant(dom, timeElt));
+				try
+				{
+					request.getTimes().add(timeReader.readTimeInstant(dom, timeElt));
+				}
+				catch (GMLException e)
+				{
+					report.add(new WCSException(invalidXML + ": Invalid TimeInstant"));
+				}
 			}
 			else
 			{

@@ -30,6 +30,7 @@ import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.*;
 
@@ -219,7 +220,14 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 			
 			if (timeElt.getLocalName().equals("timePosition"))
 			{
-				request.getTimes().add(timeReader.readTimeInstant(dom, timeElt));
+				try
+				{
+					request.getTimes().add(timeReader.readTimeInstant(dom, timeElt));
+				}
+				catch (GMLException e)
+				{
+					report.add(new WCSException(invalidXML + ": Invalid TimeInstant"));
+				}
 			}
 			
 			else if (timeElt.getLocalName().equals("TimePeriod"))
