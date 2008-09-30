@@ -58,7 +58,13 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     public final static String ioError = "IO Error while sending request:";
     
     
-    static
+    public OWSUtils()
+    {
+    	OWSUtils.loadMaps();
+    }
+    
+    
+    public static void loadMaps()
     {
     	String mapFileUrl = OWSUtils.class.getResource("OWSRegistry.xml").toString();
     	OGCRegistry.loadMaps(mapFileUrl, false);
