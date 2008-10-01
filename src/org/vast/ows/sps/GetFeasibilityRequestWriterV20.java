@@ -35,12 +35,12 @@ import org.vast.xml.DOMHelper;
 
 /**
 * <p><b>Title:</b><br/>
-* SPS GetFeasibility Request Writer v1.1
+* SPS GetFeasibility Request Writer v2.0
 * </p>
 *
 * <p><b>Description:</b><br/>
 * Provides methods to generate a SPS GetFeasibility request based
-* on values contained in a GetFeasibility object for version 1.1
+* on values contained in a GetFeasibility object for version 2.0
 * </p>
 *
 * <p>Copyright (c) 2008</p>

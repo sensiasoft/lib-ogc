@@ -33,7 +33,7 @@ import org.w3c.dom.NodeList;
 
 /**
  * <p><b>Title:</b>
- * DescribeResultAccess Response Reader v1.1
+ * DescribeResultAccess Response Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -53,7 +53,7 @@ public class DescribeResultAccessResponseReaderV20 extends AbstractResponseReade
 	public DescribeResultAccessResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 		DescribeResultAccessResponse response = new DescribeResultAccessResponse();
-		response.setVersion("1.1");
+		response.setVersion("2.0");
 		
 		// case of no data available
 		Element noDataElt = dom.getElement(responseElt, "DataNotAvailable");

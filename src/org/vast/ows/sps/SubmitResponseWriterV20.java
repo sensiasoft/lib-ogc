@@ -32,12 +32,12 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * Submit Response Writer v1.1
+ * Submit Response Writer v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Writer to generate an XML Submit response based
- * on values contained in a SubmitResponse object for SPS v1.1
+ * on values contained in a SubmitResponse object for SPS v2.0
  * </p>
  *
  * <p>Copyright (c) 2008</p>

@@ -31,13 +31,13 @@ import org.vast.xml.DOMHelper;
 
 /**
 * <p><b>Title:</b><br/>
-* SPS DescribeTasking Request Writer v1.1
+* SPS DescribeTasking Request Writer v2.0
 * </p>
 *
 * <p><b>Description:</b><br/>
 * Provides methods to generate a KVP or XML SPS DescribeTasking
 * request based on values contained in a DescribeTaskingRequest
-* object for version 1.1
+* object for version 2.0
 * </p>
 *
 * <p>Copyright (c) 2008</p>

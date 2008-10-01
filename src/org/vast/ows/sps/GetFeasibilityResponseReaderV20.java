@@ -32,11 +32,11 @@ import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b>
- * GetFeasibility Response Reader v1.1
+ * GetFeasibility Response Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Used to read a version 1.1 SPS GetFeasibility Response into
+ * Used to read a version 2.0 SPS GetFeasibility Response into
  * a GetFeasibilityResponse object
  * </p>
  *
@@ -64,7 +64,7 @@ public class GetFeasibilityResponseReaderV20 extends ParameterizedResponseReader
 			assert(paramStructure != null);
 			
 			GetFeasibilityResponse response = new GetFeasibilityResponse();
-			response.setVersion("1.1");
+			response.setVersion("2.0");
 			
 			// feasibility study
 			Element studyElt = dom.getElement(responseElt, "FeasibilityStudy");

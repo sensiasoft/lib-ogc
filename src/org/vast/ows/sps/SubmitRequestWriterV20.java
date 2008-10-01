@@ -35,12 +35,12 @@ import org.vast.xml.DOMHelper;
 
 /**
 * <p><b>Title:</b><br/>
-* SPS Submit Request Writer v1.1
+* SPS Submit Request Writer v2.0
 * </p>
 *
 * <p><b>Description:</b><br/>
 * Provides methods to generate a SPS Submit request based
-* on values contained in a Submit object for version 1.1
+* on values contained in a Submit object for version 2.0
 * </p>
 *
 * <p>Copyright (c) 2008</p>

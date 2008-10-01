@@ -30,11 +30,11 @@ import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b>
- * GetStatus Response Reader v1.1
+ * GetStatus Response Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Used to read a version 1.1 SPS GetStatus Response into
+ * Used to read a version 2.0 SPS GetStatus Response into
  * a GetStatusResponse object
  * </p>
  *
@@ -62,7 +62,7 @@ public class GetStatusResponseReaderV20 extends ParameterizedResponseReader<GetS
 			assert(paramStructure != null);
 			
 			GetStatusResponse response = new GetStatusResponse();
-			response.setVersion("1.1");
+			response.setVersion("2.0");
 			
 			// progress report
 			Element reportElt = dom.getElement(responseElt, "ProgressReport");

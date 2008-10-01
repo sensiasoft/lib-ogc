@@ -34,12 +34,12 @@ import org.vast.xml.DOMHelper;
 
 /**
 * <p><b>Title:</b><br/>
-* SPS GetFeasibility Request Reader v1.1
+* SPS GetFeasibility Request Reader v2.0
 * </p>
 *
 * <p><b>Description:</b><br/>
 * Provides methods to parse an XML SPS GetFeasibility
-* request and create a GetFeasibilityRequest object for version 1.1
+* request and create a GetFeasibilityRequest object for version 2.0
 * </p>
 *
 * <p>Copyright (c) 2008</p>

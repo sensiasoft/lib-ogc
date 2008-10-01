@@ -31,13 +31,13 @@ import org.vast.xml.DOMHelper;
 
 /**
 * <p><b>Title:</b><br/>
-* SPS GetStatus Request Writer v1.1
+* SPS GetStatus Request Writer v2.0
 * </p>
 *
 * <p><b>Description:</b><br/>
 * Provides methods to generate a KVP or XML SPS GetStatus
 * request based on values contained in a GetStatus object
-* for version 1.1
+* for version 2.0
 * </p>
 *
 * <p>Copyright (c) 2008</p>

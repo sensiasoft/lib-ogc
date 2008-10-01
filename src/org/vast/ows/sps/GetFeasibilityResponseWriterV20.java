@@ -32,12 +32,12 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * GetFeasibility Response Writer v1.1
+ * GetFeasibility Response Writer v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Writer to generate an XML GetFeasibility response based
- * on values contained in a GetFeasibilityResponse object for SPS v1.1
+ * on values contained in a GetFeasibilityResponse object for SPS v2.0
  * </p>
  *
  * <p>Copyright (c) 2008</p>

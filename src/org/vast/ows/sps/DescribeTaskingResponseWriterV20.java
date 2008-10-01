@@ -25,19 +25,19 @@ import org.vast.cdm.common.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSException;
-import org.vast.sweCommon.SweComponentWriterV11;
+import org.vast.sweCommon.SweComponentWriterV20;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 
 
 /**
  * <p><b>Title:</b><br/>
- * DescribeTasking Response Writer v1.1
+ * DescribeTasking Response Writer v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Writer to generate an XML DescribeTasking response based
- * on values contained in a DescribeTaskingResponse object for SPS v1.1
+ * on values contained in a DescribeTaskingResponse object for SPS v2.0
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -47,7 +47,7 @@ import org.vast.xml.DOMHelper;
  */
 public class DescribeTaskingResponseWriterV20 extends AbstractResponseWriter<DescribeTaskingResponse>
 {
-	protected SweComponentWriterV11 componentWriter = new SweComponentWriterV11();
+	protected SweComponentWriterV20 componentWriter = new SweComponentWriterV20();
 	
 	
 	public Element buildXMLResponse(DOMHelper dom, DescribeTaskingResponse response, String version) throws OWSException

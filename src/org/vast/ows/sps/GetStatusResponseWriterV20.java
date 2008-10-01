@@ -30,12 +30,12 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * GetStatus Response Writer v1.1
+ * GetStatus Response Writer v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Writer to generate an XML GetStatus response based
- * on values contained in a GetStatusResponse object for SPS v1.1
+ * on values contained in a GetStatusResponse object for SPS v2.0
  * </p>
  *
  * <p>Copyright (c) 2008</p>

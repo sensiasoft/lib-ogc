@@ -26,7 +26,7 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.sweCommon.DataSinkXML;
 import org.vast.sweCommon.SWEData;
-import org.vast.sweCommon.SweEncodingWriterV11;
+import org.vast.sweCommon.SweEncodingWriterV20;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b><br/>
- * SPS Common Writer v1.1
+ * SPS Common Writer v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -50,7 +50,7 @@ import org.w3c.dom.Element;
  */
 public class SPSCommonWriterV20
 {
-	protected SweEncodingWriterV11 encodingWriter = new SweEncodingWriterV11();
+	protected SweEncodingWriterV20 encodingWriter = new SweEncodingWriterV20();
 	
 	
 	/**
@@ -63,7 +63,7 @@ public class SPSCommonWriterV20
 	 */
 	public void writeSWEData(DOMHelper dom, Element parentElt, SWEData paramsData) throws CDMException
 	{
-		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.1"));
+		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "2.0"));
 		
 		// write encoding
 		Element encodingPropertyElt = dom.addElement(parentElt, "swe:encoding");
@@ -80,7 +80,7 @@ public class SPSCommonWriterV20
 	
 	
 	/**
-	 * Writes a Progress Report as a DOM element according to SPS v1.1 schema
+	 * Writes a Progress Report as a DOM element according to SPS v2.0 schema
 	 * @param dom
 	 * @param report
 	 * @return
@@ -125,7 +125,7 @@ public class SPSCommonWriterV20
 	
 	
 	/**
-	 * Writes a Feasibility Study as a DOM element according to SPS v1.1 schema
+	 * Writes a Feasibility Study as a DOM element according to SPS v2.0 schema
 	 * @param dom
 	 * @param study
 	 * @return

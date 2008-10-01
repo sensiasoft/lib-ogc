@@ -32,11 +32,11 @@ import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b>
- * Submit Response Reader v1.1
+ * Submit Response Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Used to read a version 1.1 SPS Submit Response into
+ * Used to read a version 2.0 SPS Submit Response into
  * a SubmitResponse object
  * </p>
  *
@@ -64,7 +64,7 @@ public class SubmitResponseReaderV20 extends ParameterizedResponseReader<SubmitR
 			assert(this.paramStructure != null);
 			
 			SubmitResponse response = new SubmitResponse();
-			response.setVersion("1.1");
+			response.setVersion("2.0");
 			
 			// progress report
 			Element reportElt = dom.getElement(responseElt, "ProgressReport");

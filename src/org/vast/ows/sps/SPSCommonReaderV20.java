@@ -27,7 +27,7 @@ import org.vast.cdm.common.DataEncoding;
 import org.vast.ows.OWSException;
 import org.vast.sweCommon.DataSourceXML;
 import org.vast.sweCommon.SWEData;
-import org.vast.sweCommon.SweEncodingReaderV11;
+import org.vast.sweCommon.SweEncodingReaderV20;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b><br/>
- * SPS Common Reader v1.1
+ * SPS Common Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
  */
 public class SPSCommonReaderV20
 {
-	protected SweEncodingReaderV11 encodingReader = new SweEncodingReaderV11();
+	protected SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
 		
 	
 	/**

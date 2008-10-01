@@ -31,12 +31,12 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * DescribeResultAccess Response Writer v1.1
+ * DescribeResultAccess Response Writer v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Writer to generate an XML DescribeResultAccess response based
- * on values contained in a DescribeResultAccessResponse object for SPS v1.1
+ * on values contained in a DescribeResultAccessResponse object for SPS v2.0
  * </p>
  *
  * <p>Copyright (c) 2008</p>

@@ -25,14 +25,14 @@ package org.vast.ows.sps;
 import org.vast.cdm.common.DataComponent;
 import org.vast.ows.AbstractResponseReader;
 import org.vast.ows.OWSException;
-import org.vast.sweCommon.SweComponentReaderV11;
+import org.vast.sweCommon.SweComponentReaderV20;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
 
 /**
  * <p><b>Title:</b>
- * DescribeFeasibility Response Reader v1.1
+ * DescribeFeasibility Response Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  */
 public class DescribeTaskingResponseReaderV20 extends AbstractResponseReader<DescribeTaskingResponse>
 {
-	protected SweComponentReaderV11 componentReader = new SweComponentReaderV11();
+	protected SweComponentReaderV20 componentReader = new SweComponentReaderV20();
 	
 	
 	public DescribeTaskingResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
@@ -54,7 +54,7 @@ public class DescribeTaskingResponseReaderV20 extends AbstractResponseReader<Des
 		try
 		{
 			DescribeTaskingResponse response = new DescribeTaskingResponse();
-			response.setVersion("1.1");
+			response.setVersion("2.0");
 			Element paramsElt;
 			DataComponent sweParams;
 			
