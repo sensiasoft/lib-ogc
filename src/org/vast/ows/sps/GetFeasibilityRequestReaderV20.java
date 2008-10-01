@@ -47,9 +47,9 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 29 2008
 * @version 1.0
 */
-public class GetFeasibilityRequestReaderV11 extends ParameterizedRequestReader<GetFeasibilityRequest>
+public class GetFeasibilityRequestReaderV20 extends ParameterizedRequestReader<GetFeasibilityRequest>
 {
-	protected SPSCommonReaderV11 commonReader = new SPSCommonReaderV11();
+	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
 	protected DataComponent taskingParamStructure;
 	protected DataComponent additionalParamStructure;
 	

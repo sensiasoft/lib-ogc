@@ -45,9 +45,9 @@ import org.vast.xml.DOMHelper;
  * @date Mar 04, 2008
  * @version 1.0
  */
-public class GetFeasibilityResponseWriterV11 extends AbstractResponseWriter<GetFeasibilityResponse>
+public class GetFeasibilityResponseWriterV20 extends AbstractResponseWriter<GetFeasibilityResponse>
 {
-	protected SPSCommonWriterV11 commonWriter = new SPSCommonWriterV11();
+	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
 	
 	
 	public Element buildXMLResponse(DOMHelper dom, GetFeasibilityResponse response, String version) throws OWSException

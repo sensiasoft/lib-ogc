@@ -45,7 +45,7 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 28 2008
 * @version 1.0
 */
-public class DescribeTaskingRequestWriterV11 extends AbstractRequestWriter<DescribeTaskingRequest>
+public class DescribeTaskingRequestWriterV20 extends AbstractRequestWriter<DescribeTaskingRequest>
 {
 
 	/**

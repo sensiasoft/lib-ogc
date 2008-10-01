@@ -46,7 +46,7 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 258 2008
 * @version 1.0
 */
-public class GetStatusRequestReaderV11 extends AbstractRequestReader<GetStatusRequest>
+public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRequest>
 {
 
 	@Override

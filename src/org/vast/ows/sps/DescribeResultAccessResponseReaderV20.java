@@ -45,7 +45,7 @@ import org.w3c.dom.NodeList;
  * @date Mar, 19 2008
  * @version 1.0
  */
-public class DescribeResultAccessResponseReaderV11 extends AbstractResponseReader<DescribeResultAccessResponse>
+public class DescribeResultAccessResponseReaderV20 extends AbstractResponseReader<DescribeResultAccessResponse>
 {
 	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();
 	

@@ -45,7 +45,7 @@ import org.vast.xml.DOMHelper;
  * @date Feb 29, 2008
  * @version 1.0
  */
-public class DescribeTaskingResponseWriterV11 extends AbstractResponseWriter<DescribeTaskingResponse>
+public class DescribeTaskingResponseWriterV20 extends AbstractResponseWriter<DescribeTaskingResponse>
 {
 	protected SweComponentWriterV11 componentWriter = new SweComponentWriterV11();
 	

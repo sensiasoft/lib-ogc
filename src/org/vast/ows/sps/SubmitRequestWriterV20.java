@@ -48,9 +48,9 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 28 2008
 * @version 1.0
 */
-public class SubmitRequestWriterV11 extends AbstractRequestWriter<SubmitRequest>
+public class SubmitRequestWriterV20 extends AbstractRequestWriter<SubmitRequest>
 {
-	protected SPSCommonWriterV11 commonWriter = new SPSCommonWriterV11();
+	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
 	
 	
 	/**

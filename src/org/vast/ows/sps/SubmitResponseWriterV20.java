@@ -25,17 +25,19 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSException;
 import org.w3c.dom.*;
+import org.vast.util.DateTime;
+import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 
 
 /**
  * <p><b>Title:</b><br/>
- * GetStatus Response Writer v1.1
+ * Submit Response Writer v1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Writer to generate an XML GetStatus response based
- * on values contained in a GetStatusResponse object for SPS v1.1
+ * Writer to generate an XML Submit response based
+ * on values contained in a SubmitResponse object for SPS v1.1
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -43,12 +45,12 @@ import org.vast.xml.DOMHelper;
  * @date Mar 04, 2008
  * @version 1.0
  */
-public class GetStatusResponseWriterV11 extends AbstractResponseWriter<GetStatusResponse>
+public class SubmitResponseWriterV20 extends AbstractResponseWriter<SubmitResponse>
 {
-	protected SPSCommonWriterV11 commonWriter = new SPSCommonWriterV11();
+	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
 	
 	
-	public Element buildXMLResponse(DOMHelper dom, GetStatusResponse response, String version) throws OWSException
+	public Element buildXMLResponse(DOMHelper dom, SubmitResponse response, String version) throws OWSException
 	{
 		try
 		{
@@ -60,6 +62,12 @@ public class GetStatusResponseWriterV11 extends AbstractResponseWriter<GetStatus
 			// progress report
 			Element reportElt = commonWriter.writeProgressReport(dom, response.getProgressReport());
 			rootElt.appendChild(reportElt);
+			
+			// latest response time
+			DateTime latestResp = response.getLatestResponseTime();
+			if (latestResp != null)
+				dom.setElementValue(rootElt, "sps:LatestResponseTime",
+						DateTimeFormat.formatIso(latestResp.getJulianTime(), 0));
 			
 			return rootElt;
 		}

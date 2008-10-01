@@ -15,9 +15,9 @@ The Initial Developer of the Original Code is Spotimage S.A.
 Portions created by the Initial Developer are Copyright (C) 2007
 the Initial Developer. All Rights Reserved.
 
-Contributor(s): 
+Contributor(s):
    Alexandre Robin <alexandre.robin@spotimage.fr>
-   Philippe Merigot <philippe.merigot@spotimage.fr>   
+   Philippe Merigot <philippe.merigot@spotimage.fr>
 
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -33,26 +33,26 @@ import org.vast.xml.DOMHelper;
 
 /**
 * <p><b>Title:</b><br/>
-* SPS DescribeTasking Request Reader v1.1
+* SPS DescribeResultAccess Request Reader v1.1
 * </p>
 *
 * <p><b>Description:</b><br/>
-* Provides methods to parse a KVP or XML SPS DescribeTasking
-* request and create a DescribeTasking object for version 1.1
+* Provides methods to parse a KVP or XML SPS DescribeResultAccess
+* request and create a DescribeResultAccess object for version 1.1
 * </p>
 *
 * <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
-* @date Feb, 25 2008
+* @date Mar, 04 2008
 * @version 1.0
 */
-public class DescribeTaskingRequestReaderV11 extends AbstractRequestReader<DescribeTaskingRequest>
+public class DescribeResultAccessRequestReaderV20 extends AbstractRequestReader<DescribeResultAccessRequest>
 {
 
 	@Override
-	public DescribeTaskingRequest readURLQuery(String queryString) throws OWSException
+	public DescribeResultAccessRequest readURLQuery(String queryString) throws OWSException
 	{
-		DescribeTaskingRequest request = new DescribeTaskingRequest();
+		DescribeResultAccessRequest request = new DescribeResultAccessRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
 
 		while (st.hasMoreTokens())
@@ -96,6 +96,12 @@ public class DescribeTaskingRequestReaderV11 extends AbstractRequestReader<Descr
 			{
 				request.setSensorID(argValue);
 			}
+			
+			// ID
+			else if (argName.equalsIgnoreCase("taskID"))
+			{
+				request.setTaskID(argValue);
+			}
 
 			else
 				throw new OWSException(invalidKVP + ": Unknown Argument " + argName);
@@ -107,16 +113,23 @@ public class DescribeTaskingRequestReaderV11 extends AbstractRequestReader<Descr
 
 
 	@Override
-	public DescribeTaskingRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+	public DescribeResultAccessRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		DescribeTaskingRequest request = new DescribeTaskingRequest();
+		DescribeResultAccessRequest request = new DescribeResultAccessRequest();
 
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
 
-		// Sensor ID
-		String sensorID = dom.getElementValue(requestElt, "sensorID");
-		request.setSensorID(sensorID);
+		// ID
+		String ID = dom.getElementValue(requestElt, "ID");
+		request.setTaskID(ID);
+		
+		// parse sensorID only if no ID was provided (choice)
+		if (ID != null)
+		{
+			String sensorID = dom.getElementValue(requestElt, "sensorID");
+			request.setSensorID(sensorID);
+		}
 
 		checkParameters(request, new OWSExceptionReport());
 		return request;
@@ -124,19 +137,19 @@ public class DescribeTaskingRequestReaderV11 extends AbstractRequestReader<Descr
 
 
 	/**
-	 * Checks that DescribeTasking mandatory parameters are present
+	 * Checks that DescribeResultAccess mandatory parameters are present
 	 * @param request
 	 * @throws OWSException
 	 */
-	protected void checkParameters(DescribeTaskingRequest request, OWSExceptionReport report) throws OWSException
+	protected void checkParameters(DescribeResultAccessRequest request, OWSExceptionReport report) throws OWSException
 	{
 		// check common params + generate exception
 		checkParameters(request, report, "SPS");
 
-		// Check sensorID
-		if (request.getSensorID() == null)
+		// Check that at least one ID is present
+		if (request.getSensorID() == null && request.getTaskID() == null)
 		{
-			report.add(new OWSException(OWSException.missing_param_code, "sensorID"));
+			report.add(new OWSException(OWSException.missing_param_code, "ID"));
 		}
 
 		report.process();

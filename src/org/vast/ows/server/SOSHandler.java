@@ -20,9 +20,9 @@
 
 package org.vast.ows.server;
 
-import org.vast.ows.sos.DescribeSensorRequest;
 import org.vast.ows.sos.GetObservationRequest;
 import org.vast.ows.sos.GetResultRequest;
+import org.vast.ows.swe.DescribeSensorRequest;
 
 
 

@@ -18,7 +18,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows.swe;
 
 import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
@@ -28,6 +28,7 @@ import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeWriter;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.sos.SOSException;
 import org.w3c.dom.Element;
 
 

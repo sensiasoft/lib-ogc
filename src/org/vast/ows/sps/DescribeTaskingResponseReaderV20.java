@@ -44,7 +44,7 @@ import org.w3c.dom.Element;
  * @date Feb, 25 2008
  * @version 1.0
  */
-public class DescribeTaskingResponseReaderV11 extends AbstractResponseReader<DescribeTaskingResponse>
+public class DescribeTaskingResponseReaderV20 extends AbstractResponseReader<DescribeTaskingResponse>
 {
 	protected SweComponentReaderV11 componentReader = new SweComponentReaderV11();
 	

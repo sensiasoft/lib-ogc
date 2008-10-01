@@ -44,7 +44,7 @@ import org.vast.xml.DOMHelper;
  * @date Mar 19, 2008
  * @version 1.0
  */
-public class DescribeResultAccessResponseWriterV11 extends AbstractResponseWriter<DescribeResultAccessResponse>
+public class DescribeResultAccessResponseWriterV20 extends AbstractResponseWriter<DescribeResultAccessResponse>
 {
 	protected OWSCommonWriterV11 owsWriter = new OWSCommonWriterV11();
 	

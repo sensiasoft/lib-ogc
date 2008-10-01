@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class SPSCommonWriterV11
+public class SPSCommonWriterV20
 {
 	protected SweEncodingWriterV11 encodingWriter = new SweEncodingWriterV11();
 	

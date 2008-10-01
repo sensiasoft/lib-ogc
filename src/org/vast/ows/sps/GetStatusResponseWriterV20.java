@@ -18,76 +18,55 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows.sps;
 
-import org.vast.ows.OWSRequest;
-import org.vast.util.TimeInfo;
+import org.vast.cdm.common.CDMException;
+import org.vast.ogc.OGCRegistry;
+import org.vast.ows.AbstractResponseWriter;
+import org.vast.ows.OWSException;
+import org.w3c.dom.*;
+import org.vast.xml.DOMHelper;
 
 
 /**
  * <p><b>Title:</b><br/>
- * DescribeSensor Request
+ * GetStatus Response Writer v1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for SOS Describe Sensor request parameters
+ * Writer to generate an XML GetStatus response based
+ * on values contained in a GetStatusResponse object for SPS v1.1
  * </p>
  *
- * <p>Copyright (c) 2007</p>
+ * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin
- * @date Oct 09, 2007
+ * @date Mar 04, 2008
  * @version 1.0
  */
-public class DescribeSensorRequest extends OWSRequest
+public class GetStatusResponseWriterV20 extends AbstractResponseWriter<GetStatusResponse>
 {
-    public final static String SENSORML_FORMAT = "text/xml;subType=\"SensorML/1.0\"";
-    public final static String TML_FORMAT = "text/xml;subType=\"TML/1.0\"";
-	
-	protected String procedure;	
-	protected TimeInfo time; //TODO Recommend RWG to add DescribeSensor time in SOS 1.1
-    protected String format;
-
-	
-	public DescribeSensorRequest()
-	{
-		service = "SOS";
-		operation = "DescribeSensor";
-		format = SENSORML_FORMAT;
-	}
+	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
 	
 	
-	public String getFormat()
+	public Element buildXMLResponse(DOMHelper dom, GetStatusResponse response, String version) throws OWSException
 	{
-		return format;
-	}
-
-
-	public void setFormat(String format)
-	{
-		this.format = format;
-	}
-
-
-	public String getProcedure()
-	{
-		return procedure;
-	}
-
-
-	public void setProcedure(String procedure)
-	{
-		this.procedure = procedure;
+		try
+		{
+			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", version));
+			
+			// root element
+			Element rootElt = dom.createElement("sps:" + response.getMessageType());
+			
+			// progress report
+			Element reportElt = commonWriter.writeProgressReport(dom, response.getProgressReport());
+			rootElt.appendChild(reportElt);
+			
+			return rootElt;
+		}
+		catch (CDMException e)
+		{
+			throw new SPSException(e);
+		}
 	}
 	
-	
-	public TimeInfo getTime()
-	{
-		return time;
-	}
-
-
-	public void setTime(TimeInfo time)
-	{
-		this.time = time;
-	}	
 }

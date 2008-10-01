@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class SPSCommonReaderV11
+public class SPSCommonReaderV20
 {
 	protected SweEncodingReaderV11 encodingReader = new SweEncodingReaderV11();
 		

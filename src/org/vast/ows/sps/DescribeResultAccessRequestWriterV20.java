@@ -16,7 +16,7 @@ Portions created by the Initial Developer are Copyright (C) 2007
 the Initial Developer. All Rights Reserved.
 
 Contributor(s): 
-   Philippe Merigot <philippe.merigot@spotimage.fr>
+   Alexandre Robin <alexandre.robin@spotimage.fr>
 
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -31,28 +31,28 @@ import org.vast.xml.DOMHelper;
 
 /**
 * <p><b>Title:</b><br/>
-* SPS GetStatus Request Writer v1.1
+* SPS DescribeResultAccess Request Writer v1.1
 * </p>
 *
 * <p><b>Description:</b><br/>
-* Provides methods to generate a KVP or XML SPS GetStatus
-* request based on values contained in a GetStatus object
-* for version 1.1
+* Provides methods to generate a KVP or XML SPS DescribeResultAccess
+* request based on values contained in a DescribeResultAccessRequest
+* object for version 1.1
 * </p>
 *
 * <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
-* @date Feb, 258 2008
+* @date Feb, 28 2008
 * @version 1.0
 */
-public class GetStatusRequestWriterV11 extends AbstractRequestWriter<GetStatusRequest>
+public class DescribeResultAccessRequestWriterV20 extends AbstractRequestWriter<DescribeResultAccessRequest>
 {
 
 	/**
 	 * KVP Request
 	 */
 	@Override
-	public String buildURLQuery(GetStatusRequest request) throws OWSException
+	public String buildURLQuery(DescribeResultAccessRequest request) throws OWSException
 	{
 		StringBuffer urlBuff;
 
@@ -61,9 +61,14 @@ public class GetStatusRequestWriterV11 extends AbstractRequestWriter<GetStatusRe
 		urlBuff.append("&version=" + request.getVersion());
 		urlBuff.append("&request=" + request.getOperation());
 
+		// taskID
+		if (request.getTaskID() != null)
+			urlBuff.append("&taskID=" + request.getTaskID());
+		
 		// sensorID
-		urlBuff.append("&id=" + request.getId());
-
+		else if (request.getSensorID() != null)
+			urlBuff.append("&sensorID=" + request.getSensorID());
+		
 		String url = urlBuff.toString();
 		url = url.replaceAll(" ", "%20");
 		return url;
@@ -74,7 +79,7 @@ public class GetStatusRequestWriterV11 extends AbstractRequestWriter<GetStatusRe
 	 * XML Request
 	 */
 	@Override
-	public Element buildXMLQuery(DOMHelper dom, GetStatusRequest request) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, DescribeResultAccessRequest request) throws OWSException
 	{
 		dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", request.getVersion()));
 
@@ -83,7 +88,13 @@ public class GetStatusRequestWriterV11 extends AbstractRequestWriter<GetStatusRe
 		addCommonXML(dom, rootElt, request);
 
 		// ID
-		dom.setElementValue(rootElt, "sps:ID", request.getId());
+		if (request.getTaskID() != null)
+			dom.setElementValue(rootElt, "sps:ID", request.getTaskID());
+		
+		// sensorID
+		else if (request.getSensorID() != null)
+			dom.setElementValue(rootElt, "sps:sensorID", request.getSensorID());
+		
 
 		return rootElt;
 	}

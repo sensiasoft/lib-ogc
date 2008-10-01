@@ -45,9 +45,9 @@ import org.w3c.dom.Element;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class SubmitResponseReaderV11 extends ParameterizedResponseReader<SubmitResponse>
+public class SubmitResponseReaderV20 extends ParameterizedResponseReader<SubmitResponse>
 {
-	protected SPSCommonReaderV11 commonReader = new SPSCommonReaderV11();
+	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
 	protected DataComponent paramStructure;
 	
 	

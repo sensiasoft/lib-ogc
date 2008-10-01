@@ -18,7 +18,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows.swe;
 
 import java.util.StringTokenizer;
 import org.vast.util.TimeInfo;
@@ -28,6 +28,7 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.*;
+import org.vast.ows.sos.SOSException;
 
 
 /**

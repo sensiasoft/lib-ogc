@@ -48,9 +48,9 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 28 2008
 * @version 1.0
 */
-public class GetFeasibilityRequestWriterV11 extends AbstractRequestWriter<GetFeasibilityRequest>
+public class GetFeasibilityRequestWriterV20 extends AbstractRequestWriter<GetFeasibilityRequest>
 {
-	protected SPSCommonWriterV11 commonWriter = new SPSCommonWriterV11();
+	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
 	
 	
 	/**

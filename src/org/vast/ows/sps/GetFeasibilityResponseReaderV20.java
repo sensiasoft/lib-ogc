@@ -24,18 +24,20 @@ package org.vast.ows.sps;
 
 import org.vast.cdm.common.DataComponent;
 import org.vast.ows.OWSException;
+import org.vast.util.DateTime;
+import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
 
 /**
  * <p><b>Title:</b>
- * GetStatus Response Reader v1.1
+ * GetFeasibility Response Reader v1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Used to read a version 1.1 SPS GetStatus Response into
- * a GetStatusResponse object
+ * Used to read a version 1.1 SPS GetFeasibility Response into
+ * a GetFeasibilityResponse object
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -43,9 +45,9 @@ import org.w3c.dom.Element;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class GetStatusResponseReaderV11 extends ParameterizedResponseReader<GetStatusResponse>
+public class GetFeasibilityResponseReaderV20 extends ParameterizedResponseReader<GetFeasibilityResponse>
 {
-	protected SPSCommonReaderV11 commonReader = new SPSCommonReaderV11();
+	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
 	protected DataComponent paramStructure;
 	
 	
@@ -55,21 +57,32 @@ public class GetStatusResponseReaderV11 extends ParameterizedResponseReader<GetS
 	}
 	
 	
-	public GetStatusResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+	public GetFeasibilityResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 		try
 		{
 			assert(paramStructure != null);
 			
-			GetStatusResponse response = new GetStatusResponse();
+			GetFeasibilityResponse response = new GetFeasibilityResponse();
 			response.setVersion("1.1");
 			
-			// progress report
-			Element reportElt = dom.getElement(responseElt, "ProgressReport");
-			if (reportElt != null)
+			// feasibility study
+			Element studyElt = dom.getElement(responseElt, "FeasibilityStudy");
+			if (studyElt != null)
 			{
-				ProgressReport report = commonReader.readProgressReport(dom, reportElt, paramStructure);
-				response.setProgressReport(report);
+				FeasibilityStudy study = commonReader.readFeasibilityStudy(dom, studyElt, paramStructure);
+				response.setFeasibilityStudy(study);
+			}
+			
+			// alternatives
+			// TODO read alternatives
+			
+			// latest response time
+			String isoDate = dom.getElementValue(responseElt, "LatestResponseTime");
+			if (isoDate != null)
+			{
+				DateTime latestResponseTime = new DateTime(DateTimeFormat.parseIso(isoDate));
+				response.setLatestResponseTime(latestResponseTime);
 			}
 			
 			return response;
