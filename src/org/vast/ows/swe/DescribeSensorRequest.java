@@ -44,7 +44,7 @@ public class DescribeSensorRequest extends OWSRequest
     public final static String TML_FORMAT = "text/xml;subType=\"TML/1.0\"";
 	
 	protected String procedure;	
-	protected TimeInfo time; //TODO Recommend RWG to add DescribeSensor time in SOS 1.1
+	protected TimeInfo time;
     protected String format;
 
 	

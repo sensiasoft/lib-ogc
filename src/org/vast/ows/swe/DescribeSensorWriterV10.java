@@ -23,7 +23,6 @@ package org.vast.ows.swe;
 import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ogc.gml.GMLEnvelopeWriter;
 import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeWriter;
 import org.vast.ows.AbstractRequestWriter;
@@ -50,13 +49,11 @@ import org.w3c.dom.Element;
  */
 public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSensorRequest>
 {
-	protected GMLEnvelopeWriter bboxWriter;
-    protected GMLTimeWriter timeWriter;
+	protected GMLTimeWriter timeWriter;
     
     
 	public DescribeSensorWriterV10()
 	{
-        bboxWriter = new GMLEnvelopeWriter();
         timeWriter = new GMLTimeWriter();
 	}
 

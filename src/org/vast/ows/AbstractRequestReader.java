@@ -275,7 +275,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 	
     public static void checkParameters(OWSRequest request, OWSExceptionReport report) throws OWSException
     {
-    	checkParameters(request, report);
+    	checkParameters(request, report, null);
     }
     
     
