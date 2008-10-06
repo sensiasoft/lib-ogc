@@ -24,7 +24,7 @@ package org.vast.ows.sps;
 import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
-import org.vast.sweCommon.DataSinkXML;
+import org.vast.sweCommon.DataSinkDOM;
 import org.vast.sweCommon.SWEData;
 import org.vast.sweCommon.SweEncodingWriterV20;
 import org.vast.util.DateTime;
@@ -72,7 +72,7 @@ public class SPSCommonWriterV20
 		
 		// write values
 		Element valuesElt = dom.addElement(parentElt, "swe:values");
-		DataSinkXML dataSink = new DataSinkXML(valuesElt);
+		DataSinkDOM dataSink = new DataSinkDOM(dom, valuesElt);
 		
 		// launch serializer to write data to the XML doc
 		paramsData.writeData(dataSink);
