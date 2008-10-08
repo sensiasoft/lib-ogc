@@ -67,35 +67,35 @@ public class DescribeTaskingResponseReaderV20 extends AbstractResponseReader<Des
 			}
 			
 			// additional feasibility parameters
-			paramsElt = dom.getElement(responseElt, "AdditionalFeasibilitytParameters");
+			paramsElt = dom.getElement(responseElt, "AuxiliaryFeasibilitytParameters");
 			if (paramsElt != null)
 			{
 				sweParams = componentReader.readComponentProperty(dom, paramsElt);
-				response.setAdditionalFeasibilityParameters(sweParams);
+				response.setAuxiliaryFeasibilityParameters(sweParams);
 			}
 			
 			// additional submit parameters
-			paramsElt = dom.getElement(responseElt, "AdditionalSubmitParameters");
+			paramsElt = dom.getElement(responseElt, "AuxiliarySubmitParameters");
 			if (paramsElt != null)
 			{
 				sweParams = componentReader.readComponentProperty(dom, paramsElt);
-				response.setAdditionalSubmitParameters(sweParams);
+				response.setAuxiliarySubmitParameters(sweParams);
 			}
 			
 			// Feasibility Study parameters
-			paramsElt = dom.getElement(responseElt, "FeasibilityStudyParameters");
+			paramsElt = dom.getElement(responseElt, "FeasibilityStudyExtendedData");
 			if (paramsElt != null)
 			{
 				sweParams = componentReader.readComponentProperty(dom, paramsElt);
-				response.setFeasibilityStudyParameters(sweParams);
+				response.setFeasibilityStudyExtendedData(sweParams);
 			}
 			
 			// Progress Report parameters
-			paramsElt = dom.getElement(responseElt, "ProgressReportParameters");
+			paramsElt = dom.getElement(responseElt, "ProgressReportExtendedData");
 			if (paramsElt != null)
 			{
 				sweParams = componentReader.readComponentProperty(dom, paramsElt);
-				response.setProgressReportParameters(sweParams);
+				response.setProgressReportExtendedData(sweParams);
 			}
 			
 			return response;

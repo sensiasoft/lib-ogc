@@ -73,37 +73,37 @@ public class DescribeTaskingResponseWriterV20 extends AbstractResponseWriter<Des
 				throw new SPSException("Common Tasking Parameters must be provided");
 			
 			// additional feasibility parameters
-			params = response.getAdditionalFeasibilityParameters();
+			params = response.getAuxiliaryFeasibilityParameters();
 			if (params != null)
 			{
-				Element paramsElt = dom.addElement(rootElt, "sps:AdditionalFeasibilityParameters");
+				Element paramsElt = dom.addElement(rootElt, "sps:AuxiliaryFeasibilityParameters");
 				componentElt = componentWriter.writeComponent(dom, params);
 				paramsElt.appendChild(componentElt);
 			}
 			
 			// additional submit parameters
-			params = response.getAdditionalSubmitParameters();
+			params = response.getAuxiliarySubmitParameters();
 			if (params != null)
 			{
-				Element paramsElt = dom.addElement(rootElt, "sps:AdditionalSubmitParameters");
+				Element paramsElt = dom.addElement(rootElt, "sps:AuxiliarySubmitParameters");
 				componentElt = componentWriter.writeComponent(dom, params);
 				paramsElt.appendChild(componentElt);
 			}
 			
 			// feasibility study parameters
-			params = response.getFeasibilityStudyParameters();
+			params = response.getFeasibilityStudyExtendedData();
 			if (params != null)
 			{
-				Element paramsElt = dom.addElement(rootElt, "sps:FeasibilityStudyParameters");
+				Element paramsElt = dom.addElement(rootElt, "sps:FeasibilityStudyExtendedData");
 				componentElt = componentWriter.writeComponent(dom, params);
 				paramsElt.appendChild(componentElt);
 			}
 			
 			// progress report parameters
-			params = response.getProgressReportParameters();
+			params = response.getProgressReportExtendedData();
 			if (params != null)
 			{
-				Element paramsElt = dom.addElement(rootElt, "sps:ProgressReportParameters");
+				Element paramsElt = dom.addElement(rootElt, "sps:ProgressReportExtendedData");
 				componentElt = componentWriter.writeComponent(dom, params);
 				paramsElt.appendChild(componentElt);
 			}

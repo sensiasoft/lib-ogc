@@ -79,6 +79,42 @@ public class SPSCommonWriterV20
 	}
 	
 	
+	protected void writeBaseReportAttributes(DOMHelper dom, Element reportElt, ProgressReport report) throws CDMException
+	{
+		String val;
+		
+		// job ID
+		val = report.getId();
+		if (val != null)
+			dom.setElementValue(reportElt, "sps:jobID", val);
+		
+		// sensor ID
+		val = report.getSensorId();
+		if (val != null)
+			dom.setElementValue(reportElt, "sps:sensorID", val);
+		
+		// last update
+		DateTime date = report.getLastUpdate();
+		if (date != null)
+			dom.setElementValue(reportElt, "sps:lastUpdate", DateTimeFormat.formatIso(date.getJulianTime(), 0));
+		
+		// status code
+		val = report.getStatusCode();
+		if (val != null)
+			dom.setElementValue(reportElt, "sps:statusCode", val);
+		
+		// estimated time of completion
+		date = report.getEstimatedToC();
+		if (date != null)
+			dom.setElementValue(reportElt, "sps:estimatedToC", DateTimeFormat.formatIso(date.getJulianTime(), 0));
+		
+		// description
+		val = report.getDescription();
+		if (val != null)
+			dom.setElementValue(reportElt, "sps:description", val);
+	}
+	
+	
 	/**
 	 * Writes a Progress Report as a DOM element according to SPS v2.0 schema
 	 * @param dom
@@ -89,35 +125,14 @@ public class SPSCommonWriterV20
 	public Element writeProgressReport(DOMHelper dom, ProgressReport report) throws CDMException
 	{
 		Element reportElt = dom.createElement("sps:ProgressReport");
-		String val;
+		writeBaseReportAttributes(dom, reportElt, report);
 		
-		// task/reservation ID
-		val = report.getId();
-		if (val != null)
-			dom.setElementValue(reportElt, "sps:ID", val);
-		
-		// status code
-		val = report.getStatusCode();
-		if (val != null)
-			dom.setElementValue(reportElt, "sps:statusCode", val);
-		
-		// estimated time of completion
-		DateTime date = report.getEstimatedToC();
-		if (date != null)
-			dom.setElementValue(reportElt, "sps:estimatedToC",
-					DateTimeFormat.formatIso(date.getJulianTime(), 0));
-		
-		// description
-		val = report.getDescription();
-		if (val != null)
-			dom.setElementValue(reportElt, "sps:description", val);
-		
-		// report parameters
-		SWEData reportParams = report.getReportParameters();
-		if (reportParams != null)
+		// extended data
+		SWEData extData = report.getExtendedData();
+		if (extData != null)
 		{
-			Element reportParamsElt = dom.addElement(reportElt, "sps:reportParameters");
-			writeSWEData(dom, reportParamsElt, reportParams);
+			Element extDataElt = dom.addElement(reportElt, "sps:extendedData");
+			writeSWEData(dom, extDataElt, extData);
 		}
 		
 		return reportElt;
@@ -134,40 +149,18 @@ public class SPSCommonWriterV20
 	public Element writeFeasibilityStudy(DOMHelper dom, FeasibilityStudy study) throws CDMException
 	{
 		Element studyElt = dom.createElement("sps:FeasibilityStudy");
-		String val;
-		
-		// task/reservation ID
-		val = study.getId();
-		if (val != null)
-			dom.setElementValue(studyElt, "sps:ID", val);
-		
-		// feasibility code
-		val = study.getFeasibilityCode();
-		if (val != null)
-			dom.setElementValue(studyElt, "sps:feasibilityCode", val);
-		
-		// estimated time of completion
-		DateTime date = study.getEstimatedToC();
-		if (date != null)
-			dom.setElementValue(studyElt, "sps:estimatedToC",
-					DateTimeFormat.formatIso(date.getJulianTime(), 0));
+		writeBaseReportAttributes(dom, studyElt, study);
 		
 		// success rate
 		double successRate = study.getSuccessRate();
-		if (!Double.isNaN(successRate))
-			dom.setElementValue(studyElt, "sps:successRate", Double.toString(successRate));
+		dom.setElementValue(studyElt, "sps:successRate", Double.toString(successRate));
 		
-		// description
-		val = study.getDescription();
-		if (val != null)
-			dom.setElementValue(studyElt, "sps:description", val);
-		
-		// study parameters
-		SWEData studyParams = study.getStudyParameters();
-		if (studyParams != null)
+		// extended data
+		SWEData extData = study.getExtendedData();
+		if (extData != null)
 		{
-			Element studyParamsElt = dom.addElement(studyElt, "sps:studyParameters");
-			writeSWEData(dom, studyParamsElt, studyParams);
+			Element extDataElt = dom.addElement(studyElt, "sps:extendedData");
+			writeSWEData(dom, extDataElt, extData);
 		}
 		
 		return studyElt;

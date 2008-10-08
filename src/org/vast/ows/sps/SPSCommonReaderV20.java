@@ -25,7 +25,7 @@ import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.ows.OWSException;
-import org.vast.sweCommon.DataSourceXML;
+import org.vast.sweCommon.DataSourceDOM;
 import org.vast.sweCommon.SWEData;
 import org.vast.sweCommon.SweEncodingReaderV20;
 import org.vast.util.DateTime;
@@ -74,12 +74,74 @@ public class SPSCommonReaderV20
 		
 		// data source is the content of an XML element!
 		Element valuesElt = dom.getElement(paramsElt, "values");
-		DataSourceXML dataSource = new DataSourceXML(valuesElt);
+		DataSourceDOM dataSource = new DataSourceDOM(dom, valuesElt);
 				
 		// launch parser to fill up the DataList inside the SWEData object
 		paramsData.parseData(dataSource);
 		
 		return paramsData;
+	}
+	
+	
+	/**
+	 * Reads common report attributes and add them to
+	 * the given ProgressReport object
+	 * @param dom
+	 * @param reportElt
+	 * @param report
+	 * @param report
+	 * @param paramStructure
+	 * @throws OWSException
+	 */
+	protected void readProgressReport(DOMHelper dom, Element reportElt, ProgressReport report, DataComponent paramStructure) throws OWSException
+	{
+		try
+		{
+			// ID
+			String id = dom.getElementValue(reportElt, "jobID");
+			report.setId(id);
+			
+			// sensorID
+			String sensorID = dom.getElementValue(reportElt, "sensorID");
+			report.setSensorId(sensorID);
+			
+			// last update
+			String isoDate = dom.getElementValue(reportElt, "lastUpdate");
+			if (isoDate != null)
+			{
+				DateTime lastUpdate = new DateTime(DateTimeFormat.parseIso(isoDate));
+				report.setLastUpdate(lastUpdate);
+			}
+			
+			// statusCode
+			String statusCode = dom.getElementValue(reportElt, "statusCode");
+			report.setStatusCode(statusCode);
+			
+			// estimatedToC
+			isoDate = dom.getElementValue(reportElt, "estimatedToC");
+			if (isoDate != null)
+			{
+				DateTime estimatedToC = new DateTime(DateTimeFormat.parseIso(isoDate));
+				report.setEstimatedToC(estimatedToC);
+			}
+			
+			// description
+			String description = dom.getElementValue(reportElt, "description");
+			report.setDescription(description);
+			
+			// extended data
+			Element extDataElt = dom.getElement(reportElt, "extendedData");
+			if (extDataElt != null && paramStructure != null)
+			{
+				// parse data into a SWEData object
+				SWEData extData = readSWEData(dom, extDataElt, paramStructure);
+				report.setExtendedData(extData);
+			}
+		}
+		catch (Exception e)
+		{
+			throw new OWSException(e);
+		}
 	}
 	
 	
@@ -93,45 +155,9 @@ public class SPSCommonReaderV20
 	 */
 	public ProgressReport readProgressReport(DOMHelper dom, Element reportElt, DataComponent paramStructure) throws OWSException
 	{
-		try
-		{
-			ProgressReport report = new ProgressReport();
-			
-			// ID
-			String id = dom.getElementValue(reportElt, "ID");
-			report.setId(id);
-			
-			// statusCode
-			String statusCode = dom.getElementValue(reportElt, "statusCode");
-			report.setStatusCode(statusCode);
-			
-			// estimatedToC
-			String isoDate = dom.getElementValue(reportElt, "estimatedToC");
-			if (isoDate != null)
-			{
-				DateTime estimatedToC = new DateTime(DateTimeFormat.parseIso(isoDate));
-				report.setEstimatedToC(estimatedToC);
-			}
-			
-			// description
-			String description = dom.getElementValue(reportElt, "description");
-			report.setDescription(description);
-			
-			// report parameters
-			Element reportParamsElt = dom.getElement(reportElt, "reportParameters");
-			if (reportParamsElt != null && paramStructure != null)
-			{
-				// parse data into a SWEData object
-				SWEData reportData = readSWEData(dom, reportParamsElt, paramStructure);
-				report.setReportParameters(reportData);
-			}
-			
-			return report;
-		}
-		catch (Exception e)
-		{
-			throw new OWSException(e);
-		}
+		ProgressReport report = new ProgressReport();
+		readProgressReport(dom, reportElt, report, paramStructure);
+		return report;
 	}
 	
 	
@@ -148,22 +174,7 @@ public class SPSCommonReaderV20
 		try
 		{
 			FeasibilityStudy study = new FeasibilityStudy();
-			
-			// ID
-			String id = dom.getElementValue(reportElt, "ID");
-			study.setId(id);
-			
-			// feasibilityCode
-			String feasibilityCode = dom.getElementValue(reportElt, "feasibilityCode");
-			study.setFeasibilityCode(feasibilityCode);
-			
-			// estimatedToC
-			String isoDate = dom.getElementValue(reportElt, "estimatedToC");
-			if (isoDate != null)
-			{
-				DateTime estimatedToC = new DateTime(DateTimeFormat.parseIso(isoDate));
-				study.setEstimatedToC(estimatedToC);
-			}
+			readProgressReport(dom, reportElt, study, paramStructure);
 			
 			// successRate
 			String rateText = dom.getElementValue(reportElt, "successRate");
@@ -171,20 +182,7 @@ public class SPSCommonReaderV20
 			{
 				double successRate = Double.parseDouble(rateText);
 				study.setSuccessRate(successRate);
-			}
-			
-			// description
-			String description = dom.getElementValue(reportElt, "description");
-			study.setDescription(description);
-			
-			// study parameters
-			Element studyParamsElt = dom.getElement(reportElt, "studyParameters");
-			if (studyParamsElt != null && paramStructure != null)
-			{
-				// parse data into a SWEData object
-				SWEData reportData = readSWEData(dom, studyParamsElt, paramStructure);
-				study.setStudyParameters(reportData);
-			}
+			}			
 			
 			return study;
 		}

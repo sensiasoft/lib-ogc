@@ -41,7 +41,7 @@ import org.vast.util.DateTime;
  * @date Feb 25, 2008
  * @version 1.0
  */
-public class GetFeasibilityRequest extends OWSRequest
+public class GetFeasibilityRequest extends OWSRequest implements ParameterizedRequest
 {
 	protected String ID;
 	protected String sensorID;

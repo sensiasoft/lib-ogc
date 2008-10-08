@@ -52,10 +52,12 @@ public class ProgressReport
 	public final static String COMPLETED = "COMPLETED";
 
 	protected String id;
+	protected String sensorId;
+	protected DateTime lastUpdate;
 	protected String statusCode;
 	protected String description;
-	protected DateTime estimatedToC;
-	protected SWEData reportParameters;
+	protected DateTime estimatedToC;	
+	protected SWEData extendedData;
 
 
 	public String getId()
@@ -67,6 +69,30 @@ public class ProgressReport
 	public void setId(String id)
 	{
 		this.id = id;
+	}
+
+
+	public String getSensorId()
+	{
+		return sensorId;
+	}
+
+
+	public void setSensorId(String sensorId)
+	{
+		this.sensorId = sensorId;
+	}
+
+
+	public DateTime getLastUpdate()
+	{
+		return lastUpdate;
+	}
+
+
+	public void setLastUpdate(DateTime lastUpdate)
+	{
+		this.lastUpdate = lastUpdate;
 	}
 
 
@@ -106,14 +132,14 @@ public class ProgressReport
 	}
 
 
-	public SWEData getReportParameters()
+	public SWEData getExtendedData()
 	{
-		return reportParameters;
+		return extendedData;
 	}
 
 
-	public void setReportParameters(SWEData reportParameters)
+	public void setExtendedData(SWEData extendedData)
 	{
-		this.reportParameters = reportParameters;
+		this.extendedData = extendedData;
 	}
 }

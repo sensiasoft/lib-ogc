@@ -53,6 +53,7 @@ public class GetFeasibilityResponse extends OWSResponse
 	{
 		this.service = "SPS";
         this.messageType = "GetFeasibilityResponse";
+        this.feasibilityStudy = new FeasibilityStudy();
         this.alternatives = new ArrayList<Alternative>();
 	}
 

@@ -22,9 +22,6 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import org.vast.sweCommon.SWEData;
-import org.vast.util.DateTime;
-
 
 /**
  * <p><b>Title:</b><br/>
@@ -40,42 +37,12 @@ import org.vast.util.DateTime;
  * @date Feb, 25 2008
  * @version 1.0
  */
-public class FeasibilityStudy
+public class FeasibilityStudy extends ProgressReport
 {
 	public final static String FEASIBLE = "FEASIBLE";
 	public final static String NOT_FEASIBLE = "NOT_FEASIBLE";
-	public final static String DELAYED = "delayed";
 
-	protected String id;
-	protected String feasibilityCode;
-	protected DateTime estimatedToC;
 	protected double successRate = Double.NaN;
-	protected String description;
-	protected SWEData studyParameters;
-
-
-	public String getId()
-	{
-		return id;
-	}
-
-
-	public void setId(String id)
-	{
-		this.id = id;
-	}
-
-
-	public String getFeasibilityCode()
-	{
-		return feasibilityCode;
-	}
-
-
-	public void setFeasibilityCode(String feasibilityCode)
-	{
-		this.feasibilityCode = feasibilityCode;
-	}
 
 
 	public double getSuccessRate()
@@ -87,41 +54,5 @@ public class FeasibilityStudy
 	public void setSuccessRate(double successRate)
 	{
 		this.successRate = successRate;
-	}
-
-
-	public String getDescription()
-	{
-		return description;
-	}
-
-
-	public void setDescription(String description)
-	{
-		this.description = description;
-	}
-
-
-	public SWEData getStudyParameters()
-	{
-		return studyParameters;
-	}
-
-
-	public void setStudyParameters(SWEData studyParameters)
-	{
-		this.studyParameters = studyParameters;
-	}
-
-
-	public DateTime getEstimatedToC()
-	{
-		return estimatedToC;
-	}
-
-
-	public void setEstimatedToC(DateTime estimatedToC)
-	{
-		this.estimatedToC = estimatedToC;
 	}
 }

@@ -43,10 +43,10 @@ import org.vast.ows.OWSResponse;
 public class DescribeTaskingResponse extends OWSResponse
 {
 	protected DataComponent commonTaskingParameters;
-	protected DataComponent additionalFeasibilityParameters;
-	protected DataComponent additionalSubmitParameters;
-	protected DataComponent feasibilityStudyParameters;
-	protected DataComponent progressReportParameters;
+	protected DataComponent auxiliaryFeasibilityParameters;
+	protected DataComponent auxiliarySubmitParameters;
+	protected DataComponent feasibilityStudyExtendedData;
+	protected DataComponent progressReportExtendedData;
 	
 
 	public DescribeTaskingResponse()
@@ -68,50 +68,50 @@ public class DescribeTaskingResponse extends OWSResponse
 	}
 
 
-	public DataComponent getAdditionalFeasibilityParameters()
+	public DataComponent getAuxiliaryFeasibilityParameters()
 	{
-		return additionalFeasibilityParameters;
+		return auxiliaryFeasibilityParameters;
 	}
 
 
-	public void setAdditionalFeasibilityParameters(DataComponent additionalFeasibilityParameters)
+	public void setAuxiliaryFeasibilityParameters(DataComponent auxiliaryFeasibilityParameters)
 	{
-		this.additionalFeasibilityParameters = additionalFeasibilityParameters;
+		this.auxiliaryFeasibilityParameters = auxiliaryFeasibilityParameters;
 	}
 
 
-	public DataComponent getAdditionalSubmitParameters()
+	public DataComponent getAuxiliarySubmitParameters()
 	{
-		return additionalSubmitParameters;
+		return auxiliarySubmitParameters;
 	}
 
 
-	public void setAdditionalSubmitParameters(DataComponent additionalSubmitParameters)
+	public void setAuxiliarySubmitParameters(DataComponent auxiliarySubmitParameters)
 	{
-		this.additionalSubmitParameters = additionalSubmitParameters;
+		this.auxiliarySubmitParameters = auxiliarySubmitParameters;
 	}
 
 
-	public DataComponent getFeasibilityStudyParameters()
+	public DataComponent getFeasibilityStudyExtendedData()
 	{
-		return feasibilityStudyParameters;
+		return feasibilityStudyExtendedData;
 	}
 
 
-	public void setFeasibilityStudyParameters(DataComponent feasibilityStudyParameters)
+	public void setFeasibilityStudyExtendedData(DataComponent feasibilityStudyParameters)
 	{
-		this.feasibilityStudyParameters = feasibilityStudyParameters;
+		this.feasibilityStudyExtendedData = feasibilityStudyParameters;
 	}
 
 
-	public DataComponent getProgressReportParameters()
+	public DataComponent getProgressReportExtendedData()
 	{
-		return progressReportParameters;
+		return progressReportExtendedData;
 	}
 
 
-	public void setProgressReportParameters(DataComponent progressReportParameters)
+	public void setProgressReportExtendedData(DataComponent progressReportParameters)
 	{
-		this.progressReportParameters = progressReportParameters;
+		this.progressReportExtendedData = progressReportParameters;
 	}	
 }
