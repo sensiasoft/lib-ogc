@@ -170,7 +170,7 @@ public class SOSResponseSerializerV10 extends SweResponseSerializer
 		{
 			if(resultUrl != null)
 			{
-				elt.setAttribute("externalLink", resultUrl);
+				elt.setAttribute("xlink:href", resultUrl);
 				super.serializeElement(elt);
 			}
 			else
