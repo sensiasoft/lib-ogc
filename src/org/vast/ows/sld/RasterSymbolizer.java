@@ -44,8 +44,9 @@ public class RasterSymbolizer extends Symbolizer
     protected ScalarParameter opacity;
     protected Dimensions rasterDimensions;
     protected boolean normalizedColors;
+    protected int RasterPoolSize;
 
-
+    
     public RasterChannel getAlphaChannel()
     {
         return alphaChannel;
@@ -140,4 +141,17 @@ public class RasterSymbolizer extends Symbolizer
     {
         this.normalizedColors = normalizedColors;
     }
+
+
+	public void setTexPoolSize(int rasterPoolSize) 
+	{
+		this.RasterPoolSize = rasterPoolSize; 
+	}
+	
+	
+	public int getTexPoolSize() 
+	{
+		return this.RasterPoolSize; 
+	}
+	
 }

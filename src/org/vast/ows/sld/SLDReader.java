@@ -319,6 +319,12 @@ public class SLDReader
         ScalarParameter opacity = cssReader.readCssParameter(dom, opacityElt);
         rasterSym.setOpacity(opacity);
         
+        // read raster pool size
+        String rasterPoolSize = dom.getElementValue(symElt, "RasterPoolSize");
+        if(rasterPoolSize!=null){
+        	rasterSym.setTexPoolSize(Integer.parseInt(rasterPoolSize));
+        }
+        
         // read raster dimensions
         Element dimElt = dom.getElement(symElt, "Dimensions");
         Dimensions dim = readDimensions(dom, dimElt);
