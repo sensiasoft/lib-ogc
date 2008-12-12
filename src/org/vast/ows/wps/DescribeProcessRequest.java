@@ -41,10 +41,7 @@ import org.vast.ows.OWSRequest;
 public class DescribeProcessRequest extends OWSRequest
 {
     protected String offering;
-    protected String responseFormat;
-    protected String requestFormat;
-	protected String responseMode;
-	protected String requestMode;
+	protected String requestFormat;
 
 	
 	public DescribeProcessRequest()
@@ -62,6 +59,15 @@ public class DescribeProcessRequest extends OWSRequest
 
 	public void setOffering(String offering) {
 		this.offering = offering;
+	}
+	
+    public String getRequestFormat() {
+		return requestFormat;
+	}
+
+
+	public void setRequestFormat(String requestFormat) {
+		this.requestFormat = requestFormat;
 	}
 	
 }

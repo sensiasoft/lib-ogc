@@ -97,7 +97,13 @@ public class DescribeProcessReader extends AbstractRequestReader<DescribeProcess
 			{
 				request.setOffering(argValue);
 			}
-
+			
+			// requestFormat argument
+			else if (argName.equalsIgnoreCase("requestFormat"))
+			{
+				request.setRequestFormat(argValue);
+			}
+			
 			else
 				throw new WPSException(invalidKVP + ": Unknown Argument " + argName);
 		}
@@ -120,6 +126,10 @@ public class DescribeProcessReader extends AbstractRequestReader<DescribeProcess
 		String offering = dom.getElementValue(requestElt, "offering");
 		request.setOffering(offering);
 
+		// offering
+		String requestFormat = dom.getElementValue(requestElt, "requestFormat");
+		request.setRequestFormat(requestFormat);
+		
         checkParameters(request, report);
         return request;
 	}

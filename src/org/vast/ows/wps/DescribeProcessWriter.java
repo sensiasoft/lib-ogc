@@ -59,6 +59,9 @@ public class DescribeProcessWriter extends AbstractRequestWriter<DescribeProcess
 		// offering
 		urlBuff.append("&offering=" + request.getOffering());
      
+		// offering
+		urlBuff.append("&requestFormat=" + request.getRequestFormat());
+		
         String url = urlBuff.toString();
         url = url.replaceAll(" ","%20");
 		return url;
@@ -77,6 +80,9 @@ public class DescribeProcessWriter extends AbstractRequestWriter<DescribeProcess
 		
 		// offering
 		dom.setElementValue(rootElt, "wps:offering", request.getOffering());
+
+		// offering
+		dom.setElementValue(rootElt, "wps:requestFormat", request.getRequestFormat());
 
 		return rootElt;
 	}
