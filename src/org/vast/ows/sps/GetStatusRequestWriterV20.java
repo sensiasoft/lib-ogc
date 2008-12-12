@@ -62,7 +62,7 @@ public class GetStatusRequestWriterV20 extends AbstractRequestWriter<GetStatusRe
 		urlBuff.append("&request=" + request.getOperation());
 
 		// sensorID
-		urlBuff.append("&id=" + request.getId());
+		urlBuff.append("&id=" + request.getTaskID());
 
 		String url = urlBuff.toString();
 		url = url.replaceAll(" ", "%20");
@@ -83,7 +83,7 @@ public class GetStatusRequestWriterV20 extends AbstractRequestWriter<GetStatusRe
 		addCommonXML(dom, rootElt, request);
 
 		// ID
-		dom.setElementValue(rootElt, "sps:ID", request.getId());
+		dom.setElementValue(rootElt, "sps:ID", request.getTaskID());
 
 		return rootElt;
 	}

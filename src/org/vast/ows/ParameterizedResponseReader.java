@@ -20,21 +20,19 @@ Contributor(s):
 
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sps;
+package org.vast.ows;
 
 import org.vast.cdm.common.DataComponent;
-import org.vast.ows.AbstractRequestReader;
-import org.vast.ows.OWSRequest;
 
 
 /**
 * <p><b>Title:</b><br/>
-* Parameterized Request Reader
+* Parameterized Response Reader
 * </p>
 *
 * <p><b>Description:</b><br/>
-* Base class for readers of request containing SWE Common data.
-* (i.e. GetFeasibility, Submit, Update)
+* Base class for readers of response containing SWE Common data.
+* (i.e. GetFeasibilityResponse, SubmitResponse, UpdateResponse, GetStatusResponse)
 * </p>
 *
 * <p>Copyright (c) 2008</p>
@@ -42,9 +40,7 @@ import org.vast.ows.OWSRequest;
 * @date Feb, 29 2008
 * @version 1.0
 */
-public abstract class ParameterizedRequestReader<RequestType extends OWSRequest> extends AbstractRequestReader<RequestType>
+public abstract class ParameterizedResponseReader<ResponseType extends OWSResponse> extends AbstractResponseReader<ResponseType>
 {
-		
-	public abstract void setParamStructure(DataComponent taskingParamStructure, DataComponent additionalParamStructure);
-	
+	public abstract void setParamStructure(DataComponent paramStructure);
 }

@@ -20,6 +20,7 @@
 
 package org.vast.ows;
 
+import java.util.Hashtable;
 import org.vast.ogc.OGCRegistry;
 
 
@@ -43,10 +44,12 @@ public class OWSResponse
 	protected String service;
 	protected String version;
 	protected String messageType;
-    
+	protected Hashtable<String, Object> extensions;
+	
 	
     public OWSResponse()
-    {    	
+    {
+    	extensions = new Hashtable<String, Object>();
     }
 	
 
@@ -85,4 +88,9 @@ public class OWSResponse
 		return messageType;
 	}
     
+	
+    public Hashtable<String, Object> getExtensions()
+	{
+		return extensions;
+	}
 }

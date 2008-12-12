@@ -22,46 +22,64 @@
 
 package org.vast.ows.sps;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+import org.vast.ows.OWSResponse;
+import org.vast.util.DateTime;
 
 
 /**
  * <p><b>Title:</b>
- * GetFeasibility Response
+ * Submit Response
  * </p>
  *
  * <p><b>Description:</b><br/>
- * TODO GetFeasibilityResponse type description
+ * Container for a Submit response
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date Feb, 25 2008
+ * @date Feb, 29 2008
  * @version 1.0
  */
-public class GetFeasibilityResponse extends TaskingResponse<FeasibilityReport>
+public abstract class TaskingResponse<Report extends StatusReport> extends OWSResponse
 {
-	protected List<Alternative> alternatives;
-		
+	protected DateTime latestResponseTime;
+	protected Report report;
 
-	public GetFeasibilityResponse()
+
+	public DateTime getLatestResponseTime()
 	{
-		this.service = "SPS";
-        this.messageType = "GetFeasibilityResponse";
-        this.report = new FeasibilityReport();
-        this.alternatives = new ArrayList<Alternative>();
+		return latestResponseTime;
 	}
 
 
-	public List<Alternative> getAlternatives()
+	public void setLatestResponseTime(DateTime latestResponseTime)
 	{
-		return alternatives;
+		this.latestResponseTime = latestResponseTime;
+	}
+	
+	
+	public void setMaxResponseDelay(int seconds)
+	{
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(new Date());
+		cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+		cal.add(Calendar.SECOND, seconds);
+		this.latestResponseTime = new DateTime(cal.getTimeInMillis());
+	}
+	
+	
+	public Report getReport()
+	{
+		return report;
 	}
 
 
-	public void setAlternatives(List<Alternative> alternatives)
+	public void setReport(Report report)
 	{
-		this.alternatives = alternatives;
+		this.report = report;
 	}
 }

@@ -59,15 +59,15 @@ public class SubmitResponseWriterV20 extends AbstractResponseWriter<SubmitRespon
 			// root element
 			Element rootElt = dom.createElement("sps:" + response.getMessageType());
 			
-			// progress report
-			Element reportElt = commonWriter.writeProgressReport(dom, response.getProgressReport());
-			rootElt.appendChild(reportElt);
-			
 			// latest response time
 			DateTime latestResp = response.getLatestResponseTime();
-			if (latestResp != null)
-				dom.setElementValue(rootElt, "sps:LatestResponseTime",
-						DateTimeFormat.formatIso(latestResp.getJulianTime(), 0));
+			dom.setElementValue(rootElt, "sps:latestResponseTime",
+				DateTimeFormat.formatIso(latestResp.getJulianTime(), 0));
+			
+			// feasibility report
+			Element reportElt = commonWriter.writeStatusReport(dom, response.getReport());
+			Element resElt = dom.addElement(rootElt, "sps:result");
+			resElt.appendChild(reportElt);
 			
 			return rootElt;
 		}

@@ -24,6 +24,7 @@ package org.vast.ows.sps;
 
 import org.vast.cdm.common.DataComponent;
 import org.vast.ows.OWSException;
+import org.vast.ows.ParameterizedResponseReader;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
@@ -66,20 +67,20 @@ public class SubmitResponseReaderV20 extends ParameterizedResponseReader<SubmitR
 			SubmitResponse response = new SubmitResponse();
 			response.setVersion("2.0");
 			
-			// progress report
-			Element reportElt = dom.getElement(responseElt, "ProgressReport");
-			if (reportElt != null)
-			{
-				ProgressReport report = commonReader.readProgressReport(dom, reportElt, paramStructure);
-				response.setProgressReport(report);
-			}
-			
 			// latest response time
-			String isoDate = dom.getElementValue(responseElt, "LatestResponseTime");
+			String isoDate = dom.getElementValue(responseElt, "latestResponseTime");
 			if (isoDate != null)
 			{
 				DateTime latestResponseTime = new DateTime(DateTimeFormat.parseIso(isoDate));
 				response.setLatestResponseTime(latestResponseTime);
+			}
+			
+			// status report
+			Element reportElt = dom.getElement(responseElt, "result/StatusReport");
+			if (reportElt != null)
+			{
+				StatusReport report = commonReader.readStatusReport(dom, reportElt, paramStructure);
+				response.setReport(report);
 			}
 			
 			return response;

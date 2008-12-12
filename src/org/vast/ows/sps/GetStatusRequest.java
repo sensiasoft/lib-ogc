@@ -42,9 +42,9 @@ import org.vast.ows.OWSRequest;
  */
 public class GetStatusRequest extends OWSRequest
 {
-	protected String id;
+	protected String taskID;
 	protected double since;
-	
+		
 	
 	public GetStatusRequest()
 	{
@@ -53,15 +53,15 @@ public class GetStatusRequest extends OWSRequest
 	}
 	
 	
-	public String getId()
+	public String getTaskID()
 	{
-		return id;
+		return taskID;
 	}
 
 
-	public void setId(String taskID)
+	public void setTaskID(String taskID)
 	{
-		this.id = taskID;
+		this.taskID = taskID;
 	}
 	
 	

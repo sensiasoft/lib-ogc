@@ -64,14 +64,15 @@ public class SPSCommonWriterV20
 	public void writeSWEData(DOMHelper dom, Element parentElt, SWEData paramsData) throws CDMException
 	{
 		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "2.0"));
+		Element paramDataElt = dom.addElement(parentElt, "sps:ParameterData");
 		
 		// write encoding
-		Element encodingPropertyElt = dom.addElement(parentElt, "swe:encoding");
+		Element encodingPropertyElt = dom.addElement(paramDataElt, "swe:encoding");
 		Element encodingElt = encodingWriter.writeEncoding(dom, paramsData.getDataEncoding());
 		encodingPropertyElt.appendChild(encodingElt);
 		
 		// write values
-		Element valuesElt = dom.addElement(parentElt, "swe:values");
+		Element valuesElt = dom.addElement(paramDataElt, "swe:values");
 		DataSinkDOM dataSink = new DataSinkDOM(dom, valuesElt);
 		
 		// launch serializer to write data to the XML doc
@@ -79,24 +80,34 @@ public class SPSCommonWriterV20
 	}
 	
 	
-	protected void writeBaseReportAttributes(DOMHelper dom, Element reportElt, ProgressReport report) throws CDMException
+	protected void writeBaseReportAttributes(DOMHelper dom, Element reportElt, AbstractReport report) throws CDMException
 	{
 		String val;
 		
-		// job ID
-		val = report.getId();
+		// title
+		val = report.getTitle();
 		if (val != null)
-			dom.setElementValue(reportElt, "sps:jobID", val);
+			dom.setElementValue(reportElt, "sps:title", val);
+		
+		// abstract
+		val = report.getDescription();
+		if (val != null)
+			dom.setElementValue(reportElt, "sps:abstract", val);
 		
 		// sensor ID
-		val = report.getSensorId();
+		val = report.getSensorID();
 		if (val != null)
 			dom.setElementValue(reportElt, "sps:sensorID", val);
+		
+		// task ID
+		val = report.getTaskID();
+		if (val != null)
+			dom.setElementValue(reportElt, "sps:taskID", val);
 		
 		// last update
 		DateTime date = report.getLastUpdate();
 		if (date != null)
-			dom.setElementValue(reportElt, "sps:lastUpdate", DateTimeFormat.formatIso(date.getJulianTime(), 0));
+			dom.setElementValue(reportElt, "sps:updateTime", DateTimeFormat.formatIso(date.getJulianTime(), 0));
 		
 		// status code
 		val = report.getStatusCode();
@@ -107,11 +118,6 @@ public class SPSCommonWriterV20
 		date = report.getEstimatedToC();
 		if (date != null)
 			dom.setElementValue(reportElt, "sps:estimatedToC", DateTimeFormat.formatIso(date.getJulianTime(), 0));
-		
-		// description
-		val = report.getDescription();
-		if (val != null)
-			dom.setElementValue(reportElt, "sps:description", val);
 	}
 	
 	
@@ -122,9 +128,9 @@ public class SPSCommonWriterV20
 	 * @return
 	 * @throws OWSException
 	 */
-	public Element writeProgressReport(DOMHelper dom, ProgressReport report) throws CDMException
+	public Element writeStatusReport(DOMHelper dom, StatusReport report) throws CDMException
 	{
-		Element reportElt = dom.createElement("sps:ProgressReport");
+		Element reportElt = dom.createElement("sps:StatusReport");
 		writeBaseReportAttributes(dom, reportElt, report);
 		
 		// extended data
@@ -146,23 +152,19 @@ public class SPSCommonWriterV20
 	 * @return
 	 * @throws OWSException
 	 */
-	public Element writeFeasibilityStudy(DOMHelper dom, FeasibilityStudy study) throws CDMException
+	public Element writeFeasibilityReport(DOMHelper dom, FeasibilityReport report) throws CDMException
 	{
-		Element studyElt = dom.createElement("sps:FeasibilityStudy");
-		writeBaseReportAttributes(dom, studyElt, study);
-		
-		// success rate
-		double successRate = study.getSuccessRate();
-		dom.setElementValue(studyElt, "sps:successRate", Double.toString(successRate));
+		Element reportElt = dom.createElement("sps:FeasibilityReport");
+		writeBaseReportAttributes(dom, reportElt, report);
 		
 		// extended data
-		SWEData extData = study.getExtendedData();
+		SWEData extData = report.getExtendedData();
 		if (extData != null)
 		{
-			Element extDataElt = dom.addElement(studyElt, "sps:extendedData");
+			Element extDataElt = dom.addElement(reportElt, "sps:extendedData");
 			writeSWEData(dom, extDataElt, extData);
 		}
 		
-		return studyElt;
+		return reportElt;
 	}
 }

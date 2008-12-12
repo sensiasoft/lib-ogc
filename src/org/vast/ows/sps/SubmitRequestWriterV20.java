@@ -22,15 +22,7 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import org.w3c.dom.Element;
-import org.vast.cdm.common.CDMException;
-import org.vast.ogc.OGCRegistry;
-import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
-import org.vast.sweCommon.SWEData;
-import org.vast.util.DateTime;
-import org.vast.util.DateTimeFormat;
-import org.vast.xml.DOMHelper;
 
 
 /**
@@ -48,76 +40,15 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 28 2008
 * @version 1.0
 */
-public class SubmitRequestWriterV20 extends AbstractRequestWriter<SubmitRequest>
+public class SubmitRequestWriterV20 extends TaskingRequestWriterV20<SubmitRequest>
 {
-	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
-	
-	
+
 	/**
 	 * KVP Request
 	 */
 	@Override
 	public String buildURLQuery(SubmitRequest request) throws OWSException
 	{
-		throw new SPSException(noKVP + "SPS 1.1 Submit");
-	}
-
-
-	/**
-	 * XML Request
-	 */
-	@Override
-	public Element buildXMLQuery(DOMHelper dom, SubmitRequest request) throws OWSException
-	{
-		try
-		{
-			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", request.getVersion()));
-
-			// root element
-			Element rootElt = dom.createElement("sps:" + request.getOperation());
-			addCommonXML(dom, rootElt, request);
-
-			// feasibility/reservation ID
-			if (request.getID() != null)
-			{
-				dom.setElementValue(rootElt, "sps:ID", request.getID());
-			}
-			else // write only if ID was not set (choice)
-			{
-				// sensorID
-				if (request.getSensorID() != null)
-					dom.setElementValue(rootElt, "sps:sensorID", request.getSensorID());
-				
-				// tasking parameters
-				SWEData taskingParams = request.getTaskingParameters();
-				if (taskingParams != null)
-				{
-					Element taskingParamsElt = dom.addElement(rootElt, "sps:taskingParameters");
-					commonWriter.writeSWEData(dom, taskingParamsElt, taskingParams);
-				}					
-			}
-			
-			// additional parameters
-			SWEData extParams = request.getAdditionalParameters();
-			if (extParams != null)
-			{
-				Element taskingParamsElt = dom.addElement(rootElt, "sps:additionalParameters");
-				commonWriter.writeSWEData(dom, taskingParamsElt, extParams);
-			}
-			
-			// time frame
-			DateTime timeFrame = request.getTimeFrame();
-			if (timeFrame != null)
-			{
-				String isoTime = DateTimeFormat.formatIso(timeFrame.getJulianTime(), 0);
-				dom.setElementValue(rootElt, "sps:timeFrame", isoTime);
-			}
-
-			return rootElt;
-		}
-		catch (CDMException e)
-		{
-			throw new SPSException(e);
-		}
+		throw new SPSException(noKVP + "SPS 2.0 Submit");
 	}
 }

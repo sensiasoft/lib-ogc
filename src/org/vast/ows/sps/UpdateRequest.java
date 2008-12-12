@@ -17,51 +17,47 @@
  
  Contributor(s): 
     Alexandre Robin <alexandre.robin@spotimage.fr>
+    Philippe Merigot <philippe.merigot@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.sps;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
- * <p><b>Title:</b>
- * GetFeasibility Response
+ * <p><b>Title:</b><br/>
+ * Update Request
  * </p>
  *
  * <p><b>Description:</b><br/>
- * TODO GetFeasibilityResponse type description
+ * Container for SPS update request parameters
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date Feb, 25 2008
+ * @date Dec 10, 2008
  * @version 1.0
  */
-public class GetFeasibilityResponse extends TaskingResponse<FeasibilityReport>
+public class UpdateRequest extends TaskingRequest
 {
-	protected List<Alternative> alternatives;
-		
-
-	public GetFeasibilityResponse()
+	protected String taskID;
+	
+	
+	public UpdateRequest()
 	{
-		this.service = "SPS";
-        this.messageType = "GetFeasibilityResponse";
-        this.report = new FeasibilityReport();
-        this.alternatives = new ArrayList<Alternative>();
+		setService("SPS");
+		setOperation("Update");
+	}
+	
+	
+	public String getTaskID()
+	{
+		return taskID;
 	}
 
 
-	public List<Alternative> getAlternatives()
+	public void setTaskID(String taskID)
 	{
-		return alternatives;
-	}
-
-
-	public void setAlternatives(List<Alternative> alternatives)
-	{
-		this.alternatives = alternatives;
+		this.taskID = taskID;
 	}
 }

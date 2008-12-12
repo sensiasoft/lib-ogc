@@ -39,6 +39,9 @@ package org.vast.ows;
 public class OWSException extends Exception
 {
 	static final long serialVersionUID = 0xED126190670F4F6AL;
+	
+	public final static String invalid_request_code = "InvalidRequest";	
+	public final static String invalid_request_text = "Invalid Request";
 	public final static String invalid_param_code = "InvalidParameterValue";
 	public final static String invalid_param_text = "Invalid Parameter Value: ";
 	public final static String missing_param_code = "MissingParameterValue";
@@ -163,6 +166,8 @@ public class OWSException extends Exception
 			return message;
 		
 		// otherwise build generic message
+		else if (this.code == invalid_request_code)
+			return invalid_request_text;
 		else if (this.code == missing_param_code)
 			return missing_param_text + locator;
 		else if (this.code == invalid_param_code)

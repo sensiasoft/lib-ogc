@@ -42,11 +42,10 @@ import org.vast.ows.OWSResponse;
  */
 public class DescribeTaskingResponse extends OWSResponse
 {
-	protected DataComponent commonTaskingParameters;
-	protected DataComponent auxiliaryFeasibilityParameters;
-	protected DataComponent auxiliarySubmitParameters;
-	protected DataComponent feasibilityStudyExtendedData;
-	protected DataComponent progressReportExtendedData;
+	protected DataComponent taskingParameters;
+	protected DataComponent updatableParameters;
+	protected DataComponent feasibilityReportExtendedData;
+	protected DataComponent statusReportExtendedData;
 	
 
 	public DescribeTaskingResponse()
@@ -56,62 +55,50 @@ public class DescribeTaskingResponse extends OWSResponse
 	}
 
 
-	public DataComponent getCommonTaskingParameters()
+	public DataComponent getTaskingParameters()
 	{
-		return commonTaskingParameters;
+		return taskingParameters;
 	}
 
 
-	public void setCommonTaskingParameters(DataComponent commonTaskingParameters)
+	public void setTaskingParameters(DataComponent taskingParameters)
 	{
-		this.commonTaskingParameters = commonTaskingParameters;
+		this.taskingParameters = taskingParameters;
 	}
 
 
-	public DataComponent getAuxiliaryFeasibilityParameters()
+	public DataComponent getUpdatableParameters()
 	{
-		return auxiliaryFeasibilityParameters;
+		return updatableParameters;
 	}
 
 
-	public void setAuxiliaryFeasibilityParameters(DataComponent auxiliaryFeasibilityParameters)
+	public void setUpdatableParameters(DataComponent updatableParameters)
 	{
-		this.auxiliaryFeasibilityParameters = auxiliaryFeasibilityParameters;
+		this.updatableParameters = updatableParameters;
 	}
 
 
-	public DataComponent getAuxiliarySubmitParameters()
+	public DataComponent getFeasibilityReportExtendedData()
 	{
-		return auxiliarySubmitParameters;
+		return feasibilityReportExtendedData;
 	}
 
 
-	public void setAuxiliarySubmitParameters(DataComponent auxiliarySubmitParameters)
+	public void setFeasibilityReportExtendedData(DataComponent feasibilityReportParameters)
 	{
-		this.auxiliarySubmitParameters = auxiliarySubmitParameters;
+		this.feasibilityReportExtendedData = feasibilityReportParameters;
 	}
 
 
-	public DataComponent getFeasibilityStudyExtendedData()
+	public DataComponent getStatusReportExtendedData()
 	{
-		return feasibilityStudyExtendedData;
+		return statusReportExtendedData;
 	}
 
 
-	public void setFeasibilityStudyExtendedData(DataComponent feasibilityStudyParameters)
+	public void setStatusReportExtendedData(DataComponent statusReportParameters)
 	{
-		this.feasibilityStudyExtendedData = feasibilityStudyParameters;
-	}
-
-
-	public DataComponent getProgressReportExtendedData()
-	{
-		return progressReportExtendedData;
-	}
-
-
-	public void setProgressReportExtendedData(DataComponent progressReportParameters)
-	{
-		this.progressReportExtendedData = progressReportParameters;
+		this.statusReportExtendedData = statusReportParameters;
 	}	
 }

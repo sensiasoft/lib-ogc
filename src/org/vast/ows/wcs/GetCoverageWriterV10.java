@@ -134,12 +134,13 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
         urlBuff.append("&FORMAT=" + request.getFormat());
         
         // vendor parameters
-        Enumeration<String> paramEnum = request.getVendorParameters().keys();
+        Enumeration<String> paramEnum = request.getExtensions().keys();
         while (paramEnum.hasMoreElements())
         {
         	String key = paramEnum.nextElement();
-        	String val = request.getVendorParameters().get(key);
-        	urlBuff.append("&" + key.toUpperCase() + "=" + val);
+        	Object obj = request.getExtensions().get(key);
+        	if (obj instanceof String)
+        		urlBuff.append("&" + key.toUpperCase() + "=" + (String)obj);
         }        	
         
         // EXCEPTIONS

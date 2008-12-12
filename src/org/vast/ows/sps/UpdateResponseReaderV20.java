@@ -33,12 +33,12 @@ import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b>
- * GetFeasibility Response Reader v2.0
+ * Submit Response Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Used to read a version 2.0 SPS GetFeasibility Response into
- * a GetFeasibilityResponse object
+ * Used to read a version 2.0 SPS Submit Response into
+ * a SubmitResponse object
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class GetFeasibilityResponseReaderV20 extends ParameterizedResponseReader<GetFeasibilityResponse>
+public class UpdateResponseReaderV20 extends ParameterizedResponseReader<UpdateResponse>
 {
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
 	protected DataComponent paramStructure;
@@ -58,13 +58,13 @@ public class GetFeasibilityResponseReaderV20 extends ParameterizedResponseReader
 	}
 	
 	
-	public GetFeasibilityResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+	public UpdateResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 		try
 		{
-			assert(paramStructure != null);
+			assert(this.paramStructure != null);
 			
-			GetFeasibilityResponse response = new GetFeasibilityResponse();
+			UpdateResponse response = new UpdateResponse();
 			response.setVersion("2.0");
 			
 			// latest response time
@@ -75,16 +75,13 @@ public class GetFeasibilityResponseReaderV20 extends ParameterizedResponseReader
 				response.setLatestResponseTime(latestResponseTime);
 			}
 			
-			// feasibility report
-			Element reportElt = dom.getElement(responseElt, "result/FeasibilityReport");
+			// progress report
+			Element reportElt = dom.getElement(responseElt, "result/StatusReport");
 			if (reportElt != null)
 			{
-				FeasibilityReport report = commonReader.readFeasibilityReport(dom, reportElt, paramStructure);
+				StatusReport report = commonReader.readStatusReport(dom, reportElt, paramStructure);
 				response.setReport(report);
 			}
-			
-			// alternatives
-			// TODO read alternatives
 			
 			return response;
 		}

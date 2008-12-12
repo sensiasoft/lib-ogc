@@ -41,7 +41,7 @@ import org.vast.ows.OWSResponse;
  */
 public class CancelResponse extends OWSResponse
 {
-	protected ProgressReport progressReport;
+	protected StatusReport statusReport;
 		
 
 	public CancelResponse()
@@ -51,14 +51,14 @@ public class CancelResponse extends OWSResponse
 	}
 
 
-	public ProgressReport getProgressReport()
+	public StatusReport getStatusReport()
 	{
-		return progressReport;
+		return statusReport;
 	}
 
 
-	public void setProgressReport(ProgressReport progressReport)
+	public void setStatusReport(StatusReport statusReport)
 	{
-		this.progressReport = progressReport;
+		this.statusReport = statusReport;
 	}
 }

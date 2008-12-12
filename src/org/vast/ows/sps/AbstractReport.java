@@ -22,65 +22,44 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import org.vast.sweCommon.SWEData;
 import org.vast.util.DateTime;
 
 
-/**
- * <p><b>Title:</b><br/>
- * Progress Report
- * </p>
- *
- * <p><b>Description:</b><br/>
- * 
- * </p>
- *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date Feb 25, 2008
- * @version 1.0
- */
-public class ProgressReport
+public class AbstractReport
 {
-	public final static String UNKNOWN = "UNKNOWN";
-	public final static String PENDING = "PENDING";
-	public final static String CONFIRMED = "CONFIRMED";
-	public final static String CANCELLED = "CANCELLED";
-	public final static String FAILED = "FAILED";
-	public final static String DELAYED = "DELAYED";
-	public final static String IN_PROGRESS = "IN PROGRESS";
-	public final static String COMPLETED = "COMPLETED";
-
-	protected String id;
-	protected String sensorId;
+	public static final String PENDING = "PENDING";
+	public static final String ACCEPTED = "ACCEPTED";
+	
+	protected String taskID;
+	protected String sensorID;
+	protected String title;
+	protected String description;
 	protected DateTime lastUpdate;
 	protected String statusCode;
-	protected String description;
-	protected DateTime estimatedToC;	
-	protected SWEData extendedData;
+	protected DateTime estimatedToC;
 
 
-	public String getId()
+	public String getTaskID()
 	{
-		return id;
+		return taskID;
 	}
 
 
-	public void setId(String id)
+	public void setTaskID(String id)
 	{
-		this.id = id;
+		this.taskID = id;
 	}
 
 
-	public String getSensorId()
+	public String getSensorID()
 	{
-		return sensorId;
+		return sensorID;
 	}
 
 
-	public void setSensorId(String sensorId)
+	public void setSensorID(String sensorId)
 	{
-		this.sensorId = sensorId;
+		this.sensorID = sensorId;
 	}
 
 
@@ -108,6 +87,18 @@ public class ProgressReport
 	}
 
 
+	public String getTitle()
+	{
+		return title;
+	}
+
+
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
+
+
 	public String getDescription()
 	{
 		return description;
@@ -130,16 +121,10 @@ public class ProgressReport
 	{
 		this.estimatedToC = estimatedToC;
 	}
-
-
-	public SWEData getExtendedData()
+	
+	
+	public void touch()
 	{
-		return extendedData;
-	}
-
-
-	public void setExtendedData(SWEData extendedData)
-	{
-		this.extendedData = extendedData;
+		this.lastUpdate = new DateTime();
 	}
 }

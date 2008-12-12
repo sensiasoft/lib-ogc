@@ -62,48 +62,30 @@ public class DescribeTaskingResponseWriterV20 extends AbstractResponseWriter<Des
 			Element componentElt;
 			
 			// common tasking parameters
-			params = response.getCommonTaskingParameters();
+			params = response.getTaskingParameters();
 			if (params != null)
 			{
-				Element paramsElt = dom.addElement(rootElt, "sps:CommonTaskingParameters");
+				Element paramsElt = dom.addElement(rootElt, "sps:taskingParameters");
 				componentElt = componentWriter.writeComponent(dom, params);
 				paramsElt.appendChild(componentElt);
 			}
 			else
-				throw new SPSException("Common Tasking Parameters must be provided");
-			
-			// additional feasibility parameters
-			params = response.getAuxiliaryFeasibilityParameters();
-			if (params != null)
-			{
-				Element paramsElt = dom.addElement(rootElt, "sps:AuxiliaryFeasibilityParameters");
-				componentElt = componentWriter.writeComponent(dom, params);
-				paramsElt.appendChild(componentElt);
-			}
-			
-			// additional submit parameters
-			params = response.getAuxiliarySubmitParameters();
-			if (params != null)
-			{
-				Element paramsElt = dom.addElement(rootElt, "sps:AuxiliarySubmitParameters");
-				componentElt = componentWriter.writeComponent(dom, params);
-				paramsElt.appendChild(componentElt);
-			}
+				throw new SPSException("Tasking Parameters must be provided");
 			
 			// feasibility study parameters
-			params = response.getFeasibilityStudyExtendedData();
+			params = response.getFeasibilityReportExtendedData();
 			if (params != null)
 			{
-				Element paramsElt = dom.addElement(rootElt, "sps:FeasibilityStudyExtendedData");
+				Element paramsElt = dom.addElement(rootElt, "sps:feasibilityReportExtendedData");
 				componentElt = componentWriter.writeComponent(dom, params);
 				paramsElt.appendChild(componentElt);
 			}
 			
 			// progress report parameters
-			params = response.getProgressReportExtendedData();
+			params = response.getStatusReportExtendedData();
 			if (params != null)
 			{
-				Element paramsElt = dom.addElement(rootElt, "sps:ProgressReportExtendedData");
+				Element paramsElt = dom.addElement(rootElt, "sps:statusReportExtendedData");
 				componentElt = componentWriter.writeComponent(dom, params);
 				paramsElt.appendChild(componentElt);
 			}

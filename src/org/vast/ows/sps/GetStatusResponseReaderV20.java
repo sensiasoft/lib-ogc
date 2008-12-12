@@ -24,6 +24,7 @@ package org.vast.ows.sps;
 
 import org.vast.cdm.common.DataComponent;
 import org.vast.ows.OWSException;
+import org.vast.ows.ParameterizedResponseReader;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -68,8 +69,8 @@ public class GetStatusResponseReaderV20 extends ParameterizedResponseReader<GetS
 			Element reportElt = dom.getElement(responseElt, "ProgressReport");
 			if (reportElt != null)
 			{
-				ProgressReport report = commonReader.readProgressReport(dom, reportElt, paramStructure);
-				response.setProgressReport(report);
+				StatusReport report = (StatusReport)commonReader.readReport(dom, reportElt, paramStructure);
+				response.setReport(report);
 			}
 			
 			return response;

@@ -41,7 +41,7 @@ import org.vast.ows.OWSRequest;
  */
 public class CancelRequest extends OWSRequest
 {
-	protected String ID;
+	protected String taskID;
 	
 	
 	public CancelRequest()
@@ -51,14 +51,14 @@ public class CancelRequest extends OWSRequest
 	}
 	
 	
-	public String getID()
+	public String getTaskID()
 	{
-		return ID;
+		return taskID;
 	}
 
 
-	public void setID(String id)
+	public void setTaskID(String id)
 	{
-		this.ID = id;
+		this.taskID = id;
 	}
 }

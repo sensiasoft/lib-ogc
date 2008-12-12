@@ -41,25 +41,25 @@ import org.vast.ows.OWSResponse;
  */
 public class GetStatusResponse extends OWSResponse
 {
-	protected ProgressReport progressReport;
+	protected StatusReport report;
 		
 
 	public GetStatusResponse()
 	{
 		this.service = "SPS";
         this.messageType = "GetStatusResponse";
-        progressReport = new ProgressReport();
+        report = new StatusReport();
 	}
 
 
-	public ProgressReport getProgressReport()
+	public StatusReport getReport()
 	{
-		return progressReport;
+		return report;
 	}
 
 
-	public void setProgressReport(ProgressReport progressReport)
+	public void setReport(StatusReport report)
 	{
-		this.progressReport = progressReport;
+		this.report = report;
 	}
 }

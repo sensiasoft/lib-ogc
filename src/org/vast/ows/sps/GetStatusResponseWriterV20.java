@@ -58,7 +58,7 @@ public class GetStatusResponseWriterV20 extends AbstractResponseWriter<GetStatus
 			Element rootElt = dom.createElement("sps:" + response.getMessageType());
 			
 			// progress report
-			Element reportElt = commonWriter.writeProgressReport(dom, response.getProgressReport());
+			Element reportElt = commonWriter.writeStatusReport(dom, response.getReport());
 			rootElt.appendChild(reportElt);
 			
 			return rootElt;

@@ -91,14 +91,14 @@ public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRe
 				request.setOperation(argValue);
 			}
 
-			// task/reservation ID
-			else if (argName.equalsIgnoreCase("id"))
+			// task ID
+			else if (argName.equalsIgnoreCase("taskID"))
 			{
-				request.setId(argValue);
+				request.setTaskID(argValue);
 			}
 
 			else
-				throw new OWSException(invalidKVP + ": Unknown Argument " + argName);
+				throw new SPSException(invalidKVP + ": Unknown Argument " + argName);
 		}
 
 		checkParameters(request, new OWSExceptionReport());
@@ -116,7 +116,7 @@ public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRe
 
 		// task/reservation ID
 		String ID = dom.getElementValue(requestElt, "ID");
-		request.setId(ID);
+		request.setTaskID(ID);
 
 		checkParameters(request, new OWSExceptionReport());
 		return request;
@@ -134,7 +134,7 @@ public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRe
 		checkParameters(request, report, "SPS");
 
 		// Check that ID is present
-		if (request.getId() == null)
+		if (request.getTaskID() == null)
 			report.add(new OWSException(OWSException.missing_param_code, "ID"));
 
 		report.process();

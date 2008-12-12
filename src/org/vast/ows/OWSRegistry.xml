@@ -49,6 +49,12 @@
    <Reader type="SPS" subType="GetStatusResponse" version="2.0" class="org.vast.ows.sps.GetStatusResponseReaderV20"/>
    <Reader type="SPS" subType="Submit" version="2.0" class="org.vast.ows.sps.SubmitRequestReaderV20"/>
    <Reader type="SPS" subType="SubmitResponse" version="2.0" class="org.vast.ows.sps.SubmitResponseReaderV20"/>
+   <Reader type="SPS" subType="Update" version="2.0" class="org.vast.ows.sps.UpdateRequestReaderV20"/>
+   <Reader type="SPS" subType="UpdateResponse" version="2.0" class="org.vast.ows.sps.UpdateResponseReaderV20"/>
+   <Reader type="SPS" subType="Reserve" version="2.0" class="org.vast.ows.sps.ReserveRequestReaderV20"/>
+   <Reader type="SPS" subType="ReserveResponse" version="2.0" class="org.vast.ows.sps.ReserveResponseReaderV20"/>   
+   <Reader type="SPS" subType="Cancel" version="2.0" class="org.vast.ows.sps.CancelRequestReaderV20"/>
+   <Reader type="SPS" subType="CancelResponse" version="2.0" class="org.vast.ows.sps.CancelResponseReaderV20"/>   
    <Reader type="SPS" subType="DescribeResultAccess" version="2.0" class="org.vast.ows.sps.DescribeResultAccessRequestReaderV20"/>
    <Reader type="SPS" subType="DescribeResultAccessResponse" version="2.0" class="org.vast.ows.sps.DescribeResultAccessResponseReaderV20"/>
    <!-- -->
@@ -61,6 +67,12 @@
    <Writer type="SPS" subType="GetStatusResponse" version="2.0" class="org.vast.ows.sps.GetStatusResponseWriterV20"/>
    <Writer type="SPS" subType="Submit" version="2.0" class="org.vast.ows.sps.SubmitRequestWriterV20"/>
    <Writer type="SPS" subType="SubmitResponse" version="2.0" class="org.vast.ows.sps.SubmitResponseWriterV20"/>
+   <Writer type="SPS" subType="Update" version="2.0" class="org.vast.ows.sps.UpdateRequestWriterV20"/>
+   <Writer type="SPS" subType="UpdateResponse" version="2.0" class="org.vast.ows.sps.UpdateResponseWriterV20"/>
+   <Writer type="SPS" subType="Reserve" version="2.0" class="org.vast.ows.sps.ReserveRequestWriterV20"/>
+   <Writer type="SPS" subType="ReserveResponse" version="2.0" class="org.vast.ows.sps.ReserveResponseWriterV20"/>   
+   <Writer type="SPS" subType="Cancel" version="2.0" class="org.vast.ows.sps.CancelRequestWriterV20"/>
+   <Writer type="SPS" subType="CancelResponse" version="2.0" class="org.vast.ows.sps.CancelResponseWriterV20"/>   
    <Writer type="SPS" subType="DescribeResultAccess" version="2.0" class="org.vast.ows.sps.DescribeResultAccessRequestWriterV20"/>
    <Writer type="SPS" subType="DescribeResultAccessResponse" version="2.0" class="org.vast.ows.sps.DescribeResultAccessResponseWriterV20"/>
    <!-- -->

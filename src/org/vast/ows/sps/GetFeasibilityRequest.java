@@ -22,10 +22,6 @@
 
 package org.vast.ows.sps;
 
-import org.vast.ows.OWSRequest;
-import org.vast.sweCommon.SWEData;
-import org.vast.util.DateTime;
-
 
 /**
  * <p><b>Title:</b><br/>
@@ -41,78 +37,12 @@ import org.vast.util.DateTime;
  * @date Feb 25, 2008
  * @version 1.0
  */
-public class GetFeasibilityRequest extends OWSRequest implements ParameterizedRequest
+public class GetFeasibilityRequest extends TaskingRequest
 {
-	protected String ID;
-	protected String sensorID;
-	protected SWEData taskingParameters;
-	protected SWEData additionalParameters;
-	protected DateTime timeFrame;
-	
-	
+		
 	public GetFeasibilityRequest()
 	{
 		setService("SPS");
 		setOperation("GetFeasibility");
-	}
-	
-	
-	public String getID()
-	{
-		return ID;
-	}
-
-
-	public void setID(String id)
-	{
-		ID = id;
-	}
-
-
-	public String getSensorID()
-	{
-		return sensorID;
-	}
-
-
-	public void setSensorID(String sensorID)
-	{
-		this.sensorID = sensorID;
-	}
-
-
-	public SWEData getTaskingParameters()
-	{
-		return taskingParameters;
-	}
-
-
-	public void setTaskingParameters(SWEData taskingParameters)
-	{
-		this.taskingParameters = taskingParameters;
-	}
-
-
-	public SWEData getAdditionalParameters()
-	{
-		return additionalParameters;
-	}
-
-
-	public void setAdditionalParameters(SWEData additionalParameters)
-	{
-		this.additionalParameters = additionalParameters;
-	}
-
-
-	public DateTime getTimeFrame()
-	{
-		return timeFrame;
-	}
-
-
-	public void setTimeFrame(DateTime timeFrame)
-	{
-		this.timeFrame = timeFrame;
 	}
 }

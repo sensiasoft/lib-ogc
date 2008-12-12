@@ -172,7 +172,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
             // other axis subsets and vendor specific parameters
             else
             {
-            	request.getVendorParameters().put(argName.toUpperCase(), argValue);
+            	request.getExtensions().put(argName.toUpperCase(), argValue);
             }
         }
 		

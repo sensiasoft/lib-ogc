@@ -53,7 +53,10 @@ public class OWSServiceCapabilities extends OWSResponse
 	
 	// service provider
 	protected ResponsibleParty serviceProvider;
-		
+	
+	// notification capabilities
+	protected OWSNotificationService notificationCapabilities;
+	
 	// list of layers
 	protected List<OWSLayerCapabilities> layers;
 	
@@ -159,7 +162,19 @@ public class OWSServiceCapabilities extends OWSResponse
 	}
     
     
-    public Hashtable<String, String> getGetServers()
+    public OWSNotificationService getNotificationCapabilities()
+	{
+		return notificationCapabilities;
+	}
+
+
+	public void setNotificationCapabilities(OWSNotificationService notificationCapabilities)
+	{
+		this.notificationCapabilities = notificationCapabilities;
+	}
+
+
+	public Hashtable<String, String> getGetServers()
 	{
 		return getServers;
 	}

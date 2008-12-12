@@ -69,7 +69,7 @@ public class SPSCommonReaderV20
 		
 		// create SWEData object
 		SWEData paramsData = new SWEData();
-		paramsData.setDataComponents(paramStructure.copy());
+		paramsData.setDataComponents(paramStructure.copy()); // important to copy here in case we parse two things using the same params !!
 		paramsData.setDataEncoding(dataEncoding);
 		
 		// data source is the content of an XML element!
@@ -85,7 +85,7 @@ public class SPSCommonReaderV20
 	
 	/**
 	 * Reads common report attributes and add them to
-	 * the given ProgressReport object
+	 * the given StatusReport object
 	 * @param dom
 	 * @param reportElt
 	 * @param report
@@ -93,20 +93,28 @@ public class SPSCommonReaderV20
 	 * @param paramStructure
 	 * @throws OWSException
 	 */
-	protected void readProgressReport(DOMHelper dom, Element reportElt, ProgressReport report, DataComponent paramStructure) throws OWSException
+	protected void readReportXML(DOMHelper dom, Element reportElt, StatusReport report, DataComponent paramStructure) throws OWSException
 	{
 		try
 		{
-			// ID
-			String id = dom.getElementValue(reportElt, "jobID");
-			report.setId(id);
+			// title
+			String title = dom.getElementValue(reportElt, "title");
+			report.setTitle(title);
+			
+			// abstract
+			String description = dom.getElementValue(reportElt, "abstract");
+			report.setDescription(description);
+			
+			// taskID
+			String id = dom.getElementValue(reportElt, "taskID");
+			report.setTaskID(id);
 			
 			// sensorID
 			String sensorID = dom.getElementValue(reportElt, "sensorID");
-			report.setSensorId(sensorID);
+			report.setSensorID(sensorID);
 			
-			// last update
-			String isoDate = dom.getElementValue(reportElt, "lastUpdate");
+			// update time
+			String isoDate = dom.getElementValue(reportElt, "updateTime");
 			if (isoDate != null)
 			{
 				DateTime lastUpdate = new DateTime(DateTimeFormat.parseIso(isoDate));
@@ -125,12 +133,8 @@ public class SPSCommonReaderV20
 				report.setEstimatedToC(estimatedToC);
 			}
 			
-			// description
-			String description = dom.getElementValue(reportElt, "description");
-			report.setDescription(description);
-			
 			// extended data
-			Element extDataElt = dom.getElement(reportElt, "extendedData");
+			Element extDataElt = dom.getElement(reportElt, "extendedData/*");
 			if (extDataElt != null && paramStructure != null)
 			{
 				// parse data into a SWEData object
@@ -140,55 +144,100 @@ public class SPSCommonReaderV20
 		}
 		catch (Exception e)
 		{
-			throw new OWSException(e);
+			throw new SPSException(e);
 		}
 	}
 	
 	
-	/**
-	 * Reads a ProgressReport using the provided structure for report parameters
-	 * @param dom
-	 * @param reportElt
-	 * @param paramStructure
-	 * @return
-	 * @throws OWSException
-	 */
-	public ProgressReport readProgressReport(DOMHelper dom, Element reportElt, DataComponent paramStructure) throws OWSException
+	public AbstractReport readReport(DOMHelper dom, Element reportElt, DataComponent paramStructure) throws OWSException
 	{
-		ProgressReport report = new ProgressReport();
-		readProgressReport(dom, reportElt, report, paramStructure);
+		AbstractReport report = null;
+		
+		if (dom.hasQName(reportElt, "sps:StatusNotification"))
+			report = readStatusReport(dom, reportElt, paramStructure);
+		else if (dom.hasQName(reportElt, "sps:StatusReport"))
+			report = readStatusReport(dom, reportElt, paramStructure);
+		else if (dom.hasQName(reportElt, "sps:ReservationReport"))
+			report = readReservationReport(dom, reportElt, paramStructure);
+		else if (dom.hasQName(reportElt, "sps:FeasibilityReport"))
+			report = readFeasibilityReport(dom, reportElt, paramStructure);
+		else
+			throw new SPSException(SPSException.invalid_request_code, null, null, "Invalid Report Type");
+			
 		return report;
 	}
 	
 	
 	/**
-	 * Reads a FeasibilityStudy using the provided structure for study parameters
+	 * Reads a StatusReport using the provided structure for report parameters
 	 * @param dom
 	 * @param reportElt
 	 * @param paramStructure
 	 * @return
 	 * @throws OWSException
 	 */
-	public FeasibilityStudy readFeasibilityStudy(DOMHelper dom, Element reportElt, DataComponent paramStructure) throws OWSException
+	public StatusReport readStatusReport(DOMHelper dom, Element reportElt, DataComponent paramStructure) throws OWSException
+	{
+		StatusReport report = new StatusReport();
+		readReportXML(dom, reportElt, report, paramStructure);
+		return report;
+	}
+	
+	
+	/**
+	 * Reads a ReservationReport using the provided structure for report parameters
+	 * @param dom
+	 * @param reportElt
+	 * @param paramStructure
+	 * @return
+	 * @throws OWSException
+	 */
+	public ReservationReport readReservationReport(DOMHelper dom, Element reportElt, DataComponent paramStructure) throws OWSException
 	{
 		try
 		{
-			FeasibilityStudy study = new FeasibilityStudy();
-			readProgressReport(dom, reportElt, study, paramStructure);
+			ReservationReport report = new ReservationReport();
+			readReportXML(dom, reportElt, report, paramStructure);
 			
-			// successRate
-			String rateText = dom.getElementValue(reportElt, "successRate");
-			if (rateText != null)
+			// expiration time
+			String isoDate = dom.getElementValue(reportElt, "reservationExpiration");
+			if (isoDate != null)
 			{
-				double successRate = Double.parseDouble(rateText);
-				study.setSuccessRate(successRate);
-			}			
+				DateTime expiration = new DateTime(DateTimeFormat.parseIso(isoDate));
+				report.setReservationExpiration(expiration);
+			}
+			
+			return report;
+		}
+		catch (Exception e)
+		{
+			throw new SPSException(e);
+		}
+	}
+	
+	
+	/**
+	 * Reads a FeasibilityReport using the provided structure for study parameters
+	 * @param dom
+	 * @param reportElt
+	 * @param paramStructure
+	 * @return
+	 * @throws OWSException
+	 */
+	public FeasibilityReport readFeasibilityReport(DOMHelper dom, Element reportElt, DataComponent paramStructure) throws OWSException
+	{
+		try
+		{
+			FeasibilityReport study = new FeasibilityReport();
+			readReportXML(dom, reportElt, study, paramStructure);
+			
+			// TODO read alternatives
 			
 			return study;
 		}
 		catch (Exception e)
 		{
-			throw new OWSException(e);
+			throw new SPSException(e);
 		}
 	}
 }

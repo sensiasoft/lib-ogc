@@ -22,46 +22,28 @@
 
 package org.vast.ows.sps;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * <p><b>Title:</b>
- * GetFeasibility Response
+ * Reserve Response
  * </p>
  *
  * <p><b>Description:</b><br/>
- * TODO GetFeasibilityResponse type description
+ * Container for a Reserve response
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date Feb, 25 2008
+ * @date Dec, 10 2008
  * @version 1.0
  */
-public class GetFeasibilityResponse extends TaskingResponse<FeasibilityReport>
+public class ReserveResponse extends TaskingResponse<ReservationReport>
 {
-	protected List<Alternative> alternatives;
-		
 
-	public GetFeasibilityResponse()
+	public ReserveResponse()
 	{
 		this.service = "SPS";
-        this.messageType = "GetFeasibilityResponse";
-        this.report = new FeasibilityReport();
-        this.alternatives = new ArrayList<Alternative>();
-	}
-
-
-	public List<Alternative> getAlternatives()
-	{
-		return alternatives;
-	}
-
-
-	public void setAlternatives(List<Alternative> alternatives)
-	{
-		this.alternatives = alternatives;
+        this.messageType = "ReserveResponse";
+        report = new ReservationReport();
 	}
 }

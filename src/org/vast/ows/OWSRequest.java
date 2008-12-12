@@ -53,12 +53,13 @@ public class OWSRequest
 	protected String version;
 	protected String operation;
     protected String exceptionType;
-    protected Hashtable<String, String> vendorParameters;
+    protected Hashtable<String, Object> extensions;
     
 	
     public OWSRequest()
     {
     	exceptionType = EXCEPTION_MIME_TYPE;
+    	extensions = new Hashtable<String, Object>();
     }
     
     
@@ -178,20 +179,20 @@ public class OWSRequest
     }
     
     
-    public Hashtable<String, String> getVendorParameters()
+    public Hashtable<String, Object> getExtensions()
 	{
-		return vendorParameters;
+		return extensions;
 	}
+    
 
-
-	public HttpServletResponse getResponse() {
+	public HttpServletResponse getResponse()
+	{
 		return response;
 	}
 
 
-	public void setResponse(HttpServletResponse response) {
+	public void setResponse(HttpServletResponse response)
+	{
 		this.response = response;
 	}
-
-
 }

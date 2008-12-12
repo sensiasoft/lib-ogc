@@ -56,7 +56,7 @@ public class SPSException extends OWSException
 	
 	public SPSException(String code, String locator)
 	{
-		this(code, locator, null, null);
+		super(code, locator, null);
 	}
 	
 	

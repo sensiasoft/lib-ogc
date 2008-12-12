@@ -59,18 +59,18 @@ public class GetFeasibilityResponseWriterV20 extends AbstractResponseWriter<GetF
 			// root element
 			Element rootElt = dom.createElement("sps:" + response.getMessageType());
 			
-			// feasibility study
-			Element studyElt = commonWriter.writeFeasibilityStudy(dom, response.getFeasibilityStudy());
-			rootElt.appendChild(studyElt);
+			// latest response time
+			DateTime latestResp = response.getLatestResponseTime();
+			dom.setElementValue(rootElt, "sps:latestResponseTime",
+				DateTimeFormat.formatIso(latestResp.getJulianTime(), 0));
+			
+			// feasibility report
+			Element reportElt = commonWriter.writeFeasibilityReport(dom, response.getReport());
+			Element resElt = dom.addElement(rootElt, "sps:result");
+			resElt.appendChild(reportElt);
 			
 			// alternatives
 			// TODO write alternatives
-			
-			// latest response time
-			DateTime latestResp = response.getLatestResponseTime();
-			if (latestResp != null)
-				dom.setElementValue(rootElt, "sps:LatestResponseTime",
-						DateTimeFormat.formatIso(latestResp.getJulianTime(), 0));
 			
 			return rootElt;
 		}

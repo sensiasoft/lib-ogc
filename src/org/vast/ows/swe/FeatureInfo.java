@@ -20,35 +20,42 @@ Contributor(s):
 
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sps;
-
-import org.vast.ows.OWSException;
+package org.vast.ows.swe;
 
 
-/**
-* <p><b>Title:</b><br/>
-* SPS GetFeasibility Request Writer v2.0
-* </p>
-*
-* <p><b>Description:</b><br/>
-* Provides methods to generate a SPS GetFeasibility request based
-* on values contained in a GetFeasibility object for version 2.0
-* </p>
-*
-* <p>Copyright (c) 2008</p>
-* @author Alexandre Robin <alexandre.robin@spotimage.fr>
-* @date Feb, 28 2008
-* @version 1.0
-*/
-public class GetFeasibilityRequestWriterV20 extends TaskingRequestWriterV20<GetFeasibilityRequest>
+public class FeatureInfo
 {
-	
-	/**
-	 * KVP Request
-	 */
-	@Override
-	public String buildURLQuery(GetFeasibilityRequest request) throws OWSException
+	protected String uid;
+	protected String href;
+
+
+	public FeatureInfo(String uid, String href)
 	{
-		throw new SPSException(noKVP + "SPS 2.0 GetFeasibility");
+		this.uid = uid;
+		this.href = href;
+	}
+	
+	
+	public String getUID()
+	{
+		return uid;
+	}
+
+
+	public void setUID(String uid)
+	{
+		this.uid = uid;
+	}
+
+
+	public String getHref()
+	{
+		return href;
+	}
+
+
+	public void setHref(String href)
+	{
+		this.href = href;
 	}
 }

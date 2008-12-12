@@ -31,6 +31,8 @@ import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
+import org.vast.ows.ParameterizedRequest;
+import org.vast.ows.ParameterizedRequestReader;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -51,19 +53,13 @@ import org.w3c.dom.Element;
 public class SPSUtils extends OWSUtils
 {
 	
-	public ParameterizedRequest readParameterizedRequest(DOMHelper dom, Element requestElt, DataComponent params) throws OWSException
-	{
-		return this.readParameterizedRequest(dom, requestElt, params, null);
-	}
-	
-	
-	public ParameterizedRequest readParameterizedRequest(DOMHelper dom, Element requestElt, DataComponent mainParams, DataComponent auxParams) throws OWSException
+	public ParameterizedRequest readParameterizedRequest(DOMHelper dom, Element requestElt, DataComponent mainParams) throws OWSException
 	{
 		OWSRequest tempReq = new OWSRequest();
 		AbstractRequestReader.readCommonXML(dom, requestElt, tempReq);
 		
 		ParameterizedRequestReader reader = (ParameterizedRequestReader)OGCRegistry.createReader(OGCRegistry.SPS, tempReq.getOperation(), tempReq.getVersion());
-		reader.setParamStructure(mainParams, auxParams);
+		reader.setParamStructure(mainParams);
 		ParameterizedRequest request = (GetFeasibilityRequest)reader.readXMLQuery(dom, dom.getRootElement());
 		
 		return request;

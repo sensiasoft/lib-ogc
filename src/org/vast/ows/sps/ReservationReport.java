@@ -22,27 +22,39 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import org.vast.cdm.common.DataComponent;
-import org.vast.ows.AbstractResponseReader;
-import org.vast.ows.OWSResponse;
+import org.vast.util.DateTime;
 
 
 /**
-* <p><b>Title:</b><br/>
-* Parameterized Response Reader
-* </p>
-*
-* <p><b>Description:</b><br/>
-* Base class for readers of response containing SWE Common data.
-* (i.e. GetFeasibilityResponse, SubmitResponse, UpdateResponse, GetStatusResponse)
-* </p>
-*
-* <p>Copyright (c) 2008</p>
-* @author Alexandre Robin <alexandre.robin@spotimage.fr>
-* @date Feb, 29 2008
-* @version 1.0
-*/
-public abstract class ParameterizedResponseReader<ResponseType extends OWSResponse> extends AbstractResponseReader<ResponseType>
+ * <p><b>Title:</b><br/>
+ * Reservation Report
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * 
+ * </p>
+ *
+ * <p>Copyright (c) 2008</p>
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date Dec, 10 2008
+ * @version 1.0
+ */
+public class ReservationReport extends StatusReport
 {
-	public abstract void setParamStructure(DataComponent paramStructure);
+	public final static String RESERVED = "RESERVED";
+	public final static String EXPIRED = "EXPIRED";
+	
+	public DateTime reservationExpiration;
+
+	
+	public DateTime getReservationExpiration()
+	{
+		return reservationExpiration;
+	}
+
+
+	public void setReservationExpiration(DateTime reservationExpiration)
+	{
+		this.reservationExpiration = reservationExpiration;
+	}
 }

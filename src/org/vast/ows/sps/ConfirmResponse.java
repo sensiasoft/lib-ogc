@@ -22,46 +22,28 @@
 
 package org.vast.ows.sps;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * <p><b>Title:</b>
- * GetFeasibility Response
+ * Confirm Response
  * </p>
  *
  * <p><b>Description:</b><br/>
- * TODO GetFeasibilityResponse type description
+ * Container for a Confirm response
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date Feb, 25 2008
+ * @date Dec, 10 2008
  * @version 1.0
  */
-public class GetFeasibilityResponse extends TaskingResponse<FeasibilityReport>
+public class ConfirmResponse extends TaskingResponse<StatusReport>
 {
-	protected List<Alternative> alternatives;
-		
 
-	public GetFeasibilityResponse()
+	public ConfirmResponse()
 	{
 		this.service = "SPS";
-        this.messageType = "GetFeasibilityResponse";
-        this.report = new FeasibilityReport();
-        this.alternatives = new ArrayList<Alternative>();
-	}
-
-
-	public List<Alternative> getAlternatives()
-	{
-		return alternatives;
-	}
-
-
-	public void setAlternatives(List<Alternative> alternatives)
-	{
-		this.alternatives = alternatives;
+        this.messageType = "ConfirmResponse";
+        report = new StatusReport();
 	}
 }

@@ -22,33 +22,41 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import org.vast.ows.OWSException;
+import org.vast.sweCommon.SWEData;
 
 
 /**
-* <p><b>Title:</b><br/>
-* SPS GetFeasibility Request Writer v2.0
-* </p>
-*
-* <p><b>Description:</b><br/>
-* Provides methods to generate a SPS GetFeasibility request based
-* on values contained in a GetFeasibility object for version 2.0
-* </p>
-*
-* <p>Copyright (c) 2008</p>
-* @author Alexandre Robin <alexandre.robin@spotimage.fr>
-* @date Feb, 28 2008
-* @version 1.0
-*/
-public class GetFeasibilityRequestWriterV20 extends TaskingRequestWriterV20<GetFeasibilityRequest>
+ * <p><b>Title:</b><br/>
+ * Status Report
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * 
+ * </p>
+ *
+ * <p>Copyright (c) 2008</p>
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date Feb 25, 2008
+ * @version 1.0
+ */
+public class StatusReport extends AbstractReport
 {
+	public static final String IN_PROGRESS = "other:IN_PROGRESS";
+	public static final String CANCELLED = "CANCELLED";
+	public static final String FAILED = "FAILED";
+	public static final String COMPLETED= "COMPLETED";
 	
-	/**
-	 * KVP Request
-	 */
-	@Override
-	public String buildURLQuery(GetFeasibilityRequest request) throws OWSException
+	protected SWEData extendedData;
+
+
+	public SWEData getExtendedData()
 	{
-		throw new SPSException(noKVP + "SPS 2.0 GetFeasibility");
+		return extendedData;
+	}
+
+
+	public void setExtendedData(SWEData extendedData)
+	{
+		this.extendedData = extendedData;
 	}
 }

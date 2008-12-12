@@ -22,33 +22,38 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import org.vast.ows.OWSException;
+import java.util.List;
 
 
 /**
-* <p><b>Title:</b><br/>
-* SPS GetFeasibility Request Writer v2.0
-* </p>
-*
-* <p><b>Description:</b><br/>
-* Provides methods to generate a SPS GetFeasibility request based
-* on values contained in a GetFeasibility object for version 2.0
-* </p>
-*
-* <p>Copyright (c) 2008</p>
-* @author Alexandre Robin <alexandre.robin@spotimage.fr>
-* @date Feb, 28 2008
-* @version 1.0
-*/
-public class GetFeasibilityRequestWriterV20 extends TaskingRequestWriterV20<GetFeasibilityRequest>
+ * <p><b>Title:</b><br/>
+ * Feasibility Report
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * 
+ * </p>
+ *
+ * <p>Copyright (c) 2008</p>
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date Feb, 25 2008
+ * @version 1.0
+ */
+public class FeasibilityReport extends StatusReport
 {
+	public final static String FEASIBLE = "FEASIBLE";
 	
-	/**
-	 * KVP Request
-	 */
-	@Override
-	public String buildURLQuery(GetFeasibilityRequest request) throws OWSException
+	public List<Alternative> alternatives;
+
+	
+	public List<Alternative> getAlternatives()
 	{
-		throw new SPSException(noKVP + "SPS 2.0 GetFeasibility");
+		return alternatives;
 	}
+
+	
+	public void setAlternatives(List<Alternative> alternatives)
+	{
+		this.alternatives = alternatives;
+	}	
 }

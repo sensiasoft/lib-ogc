@@ -20,39 +20,29 @@ Contributor(s):
 
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sps;
+package org.vast.ows;
+
+import org.vast.cdm.common.DataComponent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Feasibility Study
- * </p>
- *
- * <p><b>Description:</b><br/>
- * 
- * </p>
- *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date Feb, 25 2008
- * @version 1.0
- */
-public class FeasibilityStudy extends ProgressReport
+* <p><b>Title:</b><br/>
+* Parameterized Request Reader
+* </p>
+*
+* <p><b>Description:</b><br/>
+* Base class for readers of request containing SWE Common data.
+* (i.e. GetFeasibility, Submit, Update)
+* </p>
+*
+* <p>Copyright (c) 2008</p>
+* @author Alexandre Robin <alexandre.robin@spotimage.fr>
+* @date Feb, 29 2008
+* @version 1.0
+*/
+public abstract class ParameterizedRequestReader<RequestType extends OWSRequest> extends AbstractRequestReader<RequestType>
 {
-	public final static String FEASIBLE = "FEASIBLE";
-	public final static String NOT_FEASIBLE = "NOT_FEASIBLE";
-
-	protected double successRate = Double.NaN;
-
-
-	public double getSuccessRate()
-	{
-		return successRate;
-	}
-
-
-	public void setSuccessRate(double successRate)
-	{
-		this.successRate = successRate;
-	}
+		
+	public abstract void setParamStructure(DataComponent paramStructure);
+	
 }
