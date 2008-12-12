@@ -43,8 +43,6 @@ public class WPSLayerCapabilities extends OWSLayerCapabilities
 	protected String method;
 	protected List<String> responseformatList;
 	protected List<String> requestformatList;
-	protected List<String> requestModeList;
-    protected List<String> responseModeList;
     
 
     public WPSLayerCapabilities()
@@ -52,8 +50,6 @@ public class WPSLayerCapabilities extends OWSLayerCapabilities
     	method = new String();
     	responseformatList = new ArrayList<String>(2);
     	requestformatList = new ArrayList<String>(2);
-    	responseModeList = new ArrayList<String>(2);
-    	requestModeList = new ArrayList<String>(2);
 
     }
 
@@ -88,30 +84,6 @@ public class WPSLayerCapabilities extends OWSLayerCapabilities
 	public void setResponseFormatList(List<String> responseformatList)
 	{
 		this.responseformatList = responseformatList;
-	}
-
-
-	public List<String> getResponseModeList()
-	{
-		return responseModeList;
-	}
-
-
-	public void setResponseModeList(List<String> responseModeList)
-	{
-		this.responseModeList = responseModeList;
-	}
-
-
-	public List<String> getRequestModeList()
-	{
-		return responseModeList;
-	}
-
-
-	public void setRequestModeList(List<String> requestModeList)
-	{
-		this.requestModeList = requestModeList;
 	}
 
 }

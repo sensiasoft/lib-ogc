@@ -72,8 +72,6 @@ public class WPSCapabilitiesReader extends OWSCapabilitiesReaderV11
             layerCaps.setTitle(offeringName);
 	        layerCaps.setIdentifier(id);
 	        layerCaps.setMethod(methodURI);
-	        getResponseModeList(dom, offeringElt, layerCaps);
-	        getRequestModeList(dom, offeringElt, layerCaps);
 	        getResponseFormatList(dom, offeringElt, layerCaps);
 	        getRequestFormatList(dom, offeringElt, layerCaps);
 	        
@@ -82,52 +80,7 @@ public class WPSCapabilitiesReader extends OWSCapabilitiesReaderV11
             serviceCaps.getLayers().add(layerCaps);
         }
     }
-    
-    
-    /**
-     * Creates format list array
-     * @param parentElement
-     * @return
-     */
-    protected void getResponseModeList(DOMHelper dom, Element parentElement, WPSLayerCapabilities layerCaps) throws WPSException
-    {
-    	NodeList responseModeElts = dom.getElements(parentElement, "responseMode");
-        int listSize = responseModeElts.getLength();
-
-        ArrayList<String> responseModeList = new ArrayList<String>(listSize);
-        layerCaps.setResponseModeList(responseModeList);
-        
-        for(int i = 0; i < listSize; i++)
-        {
-            Element responseModeElt = (Element)responseModeElts.item(i);
-            String responseMode = dom.getElementValue(responseModeElt, "");
-            responseModeList.add(responseMode);
-        }
-    }
-
-    
-    /**
-     * Creates format list array
-     * @param parentElement
-     * @return
-     */
-    protected void getRequestModeList(DOMHelper dom, Element parentElement, WPSLayerCapabilities layerCaps) throws WPSException
-    {
-    	NodeList requestModeElts = dom.getElements(parentElement, "requestMode");
-        int listSize = requestModeElts.getLength();
-
-        ArrayList<String> requestModeList = new ArrayList<String>(listSize);
-        layerCaps.setRequestModeList(requestModeList);
-        
-        for(int i = 0; i < listSize; i++)
-        {
-            Element requestModeElt = (Element)requestModeElts.item(i);
-            String requestMode = dom.getElementValue(requestModeElt, "");
-            requestModeList.add(requestMode);
-        }
-    }
-    
-    
+ 
     /**
      * Creates format list array
      * @param parentElement
