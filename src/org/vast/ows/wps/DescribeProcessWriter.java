@@ -24,6 +24,7 @@ import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSUtils;
 import org.w3c.dom.Element;
 
 
@@ -71,7 +72,7 @@ public class DescribeProcessWriter extends AbstractRequestWriter<DescribeProcess
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, DescribeProcessRequest request) throws OWSException
 	{
-		dom.addUserPrefix("wps", OGCRegistry.getNamespaceURI(OGCRegistry.WPS, request.getVersion()));
+		dom.addUserPrefix("wps", OGCRegistry.getNamespaceURI(OWSUtils.WPS, request.getVersion()));
 		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
 		
 		// root element

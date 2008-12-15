@@ -24,7 +24,6 @@ import java.util.StringTokenizer;
 import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
-import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.*;
@@ -173,7 +172,7 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 	protected void checkParameters(DescribeSensorRequest request, OWSExceptionReport report) throws OWSException
 	{
 		// check common params + generate exception
-		super.checkParameters(request, report, OGCRegistry.SOS);
+		super.checkParameters(request, report, OWSUtils.SOS);
 		
 		// need procedure
 		if (request.getProcedure() == null)

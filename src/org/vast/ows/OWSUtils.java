@@ -52,7 +52,18 @@ import org.w3c.dom.Element;
  */
 public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<OWSRequest>
 {
-    public final static String soapUri = "http://schemas.xmlsoap.org/soap/envelope/";
+	public final static String OWS = "OWS";
+	public final static String WMS = "WMS";
+	public final static String WFS = "WFS";
+	public final static String WCS = "WCS";
+	public final static String SOS = "SOS";
+	public final static String CSW = "CSW";
+	public final static String WNS = "WNS";
+	public final static String SAS = "SAS";	
+	public final static String SPS = "SPS";
+	public final static String WPS = "WPS";	
+	
+	public final static String soapUri = "http://schemas.xmlsoap.org/soap/envelope/";
 	public final static String unsupportedSpec = "No support for ";
     public final static String invalidEndpoint = "No Endpoint URL specified in request object";
     public final static String ioError = "IO Error while sending request:";

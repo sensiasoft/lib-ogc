@@ -46,7 +46,7 @@ public class OWSCommonWriterV11
 
 	public Element buildBbox(DOMHelper dom, Bbox bbox) throws OWSException
     {
-		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS, "1.1"));
 		Element bboxElt = dom.createElement("ows:BoundingBox");
         
         // set crs
@@ -77,7 +77,7 @@ public class OWSCommonWriterV11
 	
 	public void buildRefGroup(DOMHelper dom, Element refGroupElt, OWSReferenceGroup refGroup) throws OWSException
 	{
-		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS, "1.1"));
 		
 		// read identification elements
 		buildIdentification(dom, refGroupElt, refGroup);
@@ -94,7 +94,7 @@ public class OWSCommonWriterV11
 	
 	public Element buildReference(DOMHelper dom, OWSReference ref) throws OWSException
 	{
-		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS, "1.1"));
 		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
 		
 		Element requestXML = ref.getRequestXML();
@@ -140,7 +140,7 @@ public class OWSCommonWriterV11
 	
 	public void buildIdentification(DOMHelper dom, Element parentElt, OWSIdentification idObject) throws OWSException
 	{
-		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS, "1.1"));
 		
 		// title, abstract, keywords
 		buildDescription(dom, parentElt, idObject);
@@ -155,7 +155,7 @@ public class OWSCommonWriterV11
 	
 	public void buildDescription(DOMHelper dom, Element parentElt, OWSIdentification idObject) throws OWSException
 	{
-		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS, "1.1"));
 		
 		// title
 		if (idObject.getTitle() != null)

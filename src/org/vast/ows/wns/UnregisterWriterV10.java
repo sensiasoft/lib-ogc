@@ -57,7 +57,7 @@ public class UnregisterWriterV10 extends AbstractRequestWriter<UnregisterRequest
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, UnregisterRequest request) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WNS));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WNS));
 		
 		// root element
 		Element rootElt = dom.createElement("Unregister");

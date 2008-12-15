@@ -28,6 +28,7 @@ import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.AbstractRequestWriter;
+import org.vast.ows.OWSUtils;
 import org.vast.ows.wrs.WRSQuery.QueryType;
 import org.w3c.dom.Element;
 
@@ -65,7 +66,7 @@ public class WRSRequestWriter extends AbstractRequestWriter<WRSQuery>
 	}
 	
 	protected Element buildQueryRootElement(DOMHelper domWriter) throws OWSException {
-		domWriter.addUserPrefix("csw", OGCRegistry.getNamespaceURI(OGCRegistry.CSW));
+		domWriter.addUserPrefix("csw", OGCRegistry.getNamespaceURI(OWSUtils.CSW));
 		domWriter.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
 		domWriter.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
 		

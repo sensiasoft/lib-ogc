@@ -25,6 +25,7 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSCapabilitiesWriterV0;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSServiceCapabilities;
+import org.vast.ows.OWSUtils;
 import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
@@ -53,7 +54,7 @@ public class WCSCapabilitiesWriterV10 extends OWSCapabilitiesWriterV0
 	@Override
 	public Element buildXMLResponse(DOMHelper dom, OWSServiceCapabilities caps, String version) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS));
 		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
 		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
 		

@@ -23,6 +23,7 @@ package org.vast.ows.wms;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSUtils;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -84,7 +85,7 @@ public class GetMapWriterV11 extends AbstractRequestWriter<GetMapRequest>
     @Override
     public Element buildXMLQuery(DOMHelper dom, GetMapRequest request) throws OWSException
     {
-        dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS));
+        dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS));
         dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
         dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
         dom.addUserPrefix("sld", OGCRegistry.getNamespaceURI(OGCRegistry.SLD));

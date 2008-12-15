@@ -76,7 +76,7 @@ public class DescribeCoverageWriterV10 extends AbstractRequestWriter<DescribeCov
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, DescribeCoverageRequest request) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS));
 		
 		// root element
 		Element rootElt = dom.createElement("DescribeCoverage");

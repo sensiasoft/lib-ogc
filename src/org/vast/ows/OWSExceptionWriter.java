@@ -60,9 +60,9 @@ public class OWSExceptionWriter
 			// use right namespace depending on version
 			String version = report.getVersion();
 			if (version == null || version.equals(OWSException.VERSION_10))
-				dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS));
+				dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS));
 			else
-				dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, version));
+				dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS, version));
 			
 			Element reportElt = dom.createElement("ows:ExceptionReport");
 			dom.setAttributeValue(reportElt, "@version", version);

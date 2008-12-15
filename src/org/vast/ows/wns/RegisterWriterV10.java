@@ -59,7 +59,7 @@ public class RegisterWriterV10 extends AbstractRequestWriter<RegisterRequest>
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, RegisterRequest request) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WNS));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WNS));
 		
 		// root element
 		Element rootElt = dom.createElement("Register");

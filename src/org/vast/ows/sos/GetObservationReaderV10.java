@@ -26,7 +26,6 @@ import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLEnvelopeReader;
 import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeReader;
@@ -326,7 +325,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
     protected void checkParameters(GetObservationRequest request, OWSExceptionReport report) throws OWSException
     {
     	// check common params
-		super.checkParameters(request, report, OGCRegistry.SOS);
+		super.checkParameters(request, report, OWSUtils.SOS);
     	
     	// need offering
 		if (request.getOffering() == null)

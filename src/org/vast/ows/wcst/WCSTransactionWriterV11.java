@@ -60,7 +60,7 @@ public class WCSTransactionWriterV11 extends AbstractRequestWriter<WCSTransactio
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, WCSTransactionRequest request) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, request.getVersion()));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, request.getVersion()));
 		
 		// root element
 		Element rootElt = dom.createElement("Transaction");

@@ -25,10 +25,10 @@ package org.vast.ows.wcs;
 import org.w3c.dom.*;
 import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
-import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSCapabilitiesReaderV0;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSServiceCapabilities;
+import org.vast.ows.OWSUtils;
 
 
 /**
@@ -59,7 +59,7 @@ public class WCSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV0
 	public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
 	{
 		OWSServiceCapabilities caps = super.readXMLResponse(dom, capabilitiesElt);
-		caps.setService(OGCRegistry.WCS);
+		caps.setService(OWSUtils.WCS);
 		return caps;
 	}
 	

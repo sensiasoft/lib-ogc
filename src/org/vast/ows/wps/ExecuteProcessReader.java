@@ -23,7 +23,6 @@ package org.vast.ows.wps;
 import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
-import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
 
 
@@ -145,7 +144,7 @@ public class ExecuteProcessReader extends AbstractRequestReader<DescribeProcessR
     protected void checkParameters(DescribeProcessRequest request, OWSExceptionReport report) throws OWSException
     {
     	// check common params
-		super.checkParameters(request, report, OGCRegistry.WPS);
+		super.checkParameters(request, report, OWSUtils.WPS);
     	
     	// need offering
 		if (request.getOffering() == null)

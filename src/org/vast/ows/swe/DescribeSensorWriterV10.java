@@ -27,6 +27,7 @@ import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeWriter;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSUtils;
 import org.vast.ows.sos.SOSException;
 import org.w3c.dom.Element;
 
@@ -85,7 +86,7 @@ public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSenso
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, DescribeSensorRequest request) throws OWSException
 	{
-		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(OGCRegistry.SOS, request.getVersion()));			
+		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(OWSUtils.SOS, request.getVersion()));			
 		
 		// root element
 		Element rootElt = dom.createElement("sos:GetObservation");

@@ -25,6 +25,7 @@ import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSCommonWriterV11;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSReferenceGroup;
+import org.vast.ows.OWSUtils;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 
@@ -51,8 +52,8 @@ public class DescribeResultAccessResponseWriterV20 extends AbstractResponseWrite
 	
 	public Element buildXMLResponse(DOMHelper dom, DescribeResultAccessResponse response, String version) throws OWSException
 	{
-		dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI(OGCRegistry.SPS, version));
-		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
+		dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI(OWSUtils.SPS, version));
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS, "1.1"));
 		
 		// root element
 		Element rootElt = dom.createElement("sps:" + response.getMessageType());

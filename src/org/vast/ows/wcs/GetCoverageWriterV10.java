@@ -157,7 +157,7 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, GetCoverageRequest request) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS));
 		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
 		
 		// root element

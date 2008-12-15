@@ -458,7 +458,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 	protected void checkParameters(GetCoverageRequest request, OWSExceptionReport report) throws OWSException
     {
 		// check common params
-		super.checkParameters(request, report, OGCRegistry.WCS);
+		super.checkParameters(request, report, OWSUtils.WCS);
 		
 		// need coverage
 		if (request.getCoverage() == null)

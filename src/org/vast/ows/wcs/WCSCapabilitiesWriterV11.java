@@ -25,6 +25,7 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSCapabilitiesWriterV11;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSServiceCapabilities;
+import org.vast.ows.OWSUtils;
 import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
@@ -53,8 +54,8 @@ public class WCSCapabilitiesWriterV11 extends OWSCapabilitiesWriterV11
 	@Override
 	public Element buildXMLResponse(DOMHelper dom, OWSServiceCapabilities caps, String version) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, version));
-		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OGCRegistry.OWS, "1.1"));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, version));
+		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS, "1.1"));
 		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
 		
 		Element capsElt = dom.createElement("Capabilities");

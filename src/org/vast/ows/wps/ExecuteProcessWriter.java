@@ -24,6 +24,7 @@ import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSUtils;
 import org.w3c.dom.Element;
 
 
@@ -61,7 +62,7 @@ public class ExecuteProcessWriter extends AbstractRequestWriter<ExecuteProcessRe
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, ExecuteProcessRequest request) throws OWSException
 	{
-		dom.addUserPrefix("wps", OGCRegistry.getNamespaceURI(OGCRegistry.WPS, request.getVersion()));
+		dom.addUserPrefix("wps", OGCRegistry.getNamespaceURI(OWSUtils.WPS, request.getVersion()));
 		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
 		
 		// root element
@@ -83,7 +84,7 @@ public class ExecuteProcessWriter extends AbstractRequestWriter<ExecuteProcessRe
 	
 	public Element addEncoding(DOMHelper dom, ExecuteProcessRequest request) throws OWSException
 	{
-		dom.addUserPrefix("wps", OGCRegistry.getNamespaceURI(OGCRegistry.WPS, request.getVersion()));
+		dom.addUserPrefix("wps", OGCRegistry.getNamespaceURI(OWSUtils.WPS, request.getVersion()));
 		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
 		
 		// root element
@@ -105,7 +106,7 @@ public class ExecuteProcessWriter extends AbstractRequestWriter<ExecuteProcessRe
 	
 	public Element addValues(DOMHelper dom, ExecuteProcessRequest request) throws OWSException
 	{
-		dom.addUserPrefix("wps", OGCRegistry.getNamespaceURI(OGCRegistry.WPS, request.getVersion()));
+		dom.addUserPrefix("wps", OGCRegistry.getNamespaceURI(OWSUtils.WPS, request.getVersion()));
 		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
 		
 		// root element

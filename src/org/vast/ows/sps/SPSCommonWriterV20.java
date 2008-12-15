@@ -25,6 +25,7 @@ import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.sweCommon.DataSinkDOM;
+import org.vast.sweCommon.SWECommonUtils;
 import org.vast.sweCommon.SWEData;
 import org.vast.sweCommon.SweEncodingWriterV20;
 import org.vast.util.DateTime;
@@ -63,7 +64,7 @@ public class SPSCommonWriterV20
 	 */
 	public void writeSWEData(DOMHelper dom, Element parentElt, SWEData paramsData) throws CDMException
 	{
-		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "2.0"));
+		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0"));
 		Element paramDataElt = dom.addElement(parentElt, "sps:ParameterData");
 		
 		// write encoding

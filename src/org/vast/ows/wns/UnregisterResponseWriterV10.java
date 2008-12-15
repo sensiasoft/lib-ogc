@@ -50,7 +50,7 @@ public class UnregisterResponseWriterV10 extends AbstractResponseWriter<Unregist
 	@Override
 	public Element buildXMLResponse(DOMHelper dom, UnregisterResponse response, String version) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WNS));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WNS));
 		
 		// root element
 		Element respElt = dom.createElement("UnregisterResponse");

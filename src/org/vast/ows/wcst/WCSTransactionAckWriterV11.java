@@ -53,7 +53,7 @@ public class WCSTransactionAckWriterV11 extends AbstractResponseWriter<WCSTransa
 	public Element buildXMLResponse(DOMHelper dom, WCSTransactionAck response, String version) throws OWSException
 	{
 		WCSTransactionRequest request = response.getRequest();
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OGCRegistry.WCS, request.getVersion()));
+		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, request.getVersion()));
 		
 		// root element
 		Element rootElt = dom.createElement("Acknowledgement");
