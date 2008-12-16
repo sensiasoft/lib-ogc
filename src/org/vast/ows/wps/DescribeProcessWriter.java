@@ -56,10 +56,7 @@ public class DescribeProcessWriter extends AbstractRequestWriter<DescribeProcess
 	{
 		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
         addCommonArgs(urlBuff, request);
-		
-		// offering
-		urlBuff.append("&offering=" + request.getOffering());
-     
+
 		// offering
 		urlBuff.append("&requestFormat=" + request.getRequestFormat());
 		
@@ -78,9 +75,6 @@ public class DescribeProcessWriter extends AbstractRequestWriter<DescribeProcess
 		// root element
 		Element rootElt = dom.createElement("wps:DescribeProcess");
 		addCommonXML(dom, rootElt, request);
-		
-		// offering
-		dom.setElementValue(rootElt, "wps:offering", request.getOffering());
 
 		// offering
 		dom.setElementValue(rootElt, "wps:requestFormat", request.getRequestFormat());

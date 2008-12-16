@@ -91,12 +91,6 @@ public class DescribeProcessReader extends AbstractRequestReader<DescribeProcess
 				request.setOperation(argValue);
 			}
 
-			// offering argument
-			else if (argName.equalsIgnoreCase("offering"))
-			{
-				request.setOffering(argValue);
-			}
-			
 			// requestFormat argument
 			else if (argName.equalsIgnoreCase("requestFormat"))
 			{
@@ -120,10 +114,6 @@ public class DescribeProcessReader extends AbstractRequestReader<DescribeProcess
 		
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
-		
-		// offering
-		String offering = dom.getElementValue(requestElt, "offering");
-		request.setOffering(offering);
 
 		// offering
 		String requestFormat = dom.getElementValue(requestElt, "requestFormat");
@@ -145,8 +135,8 @@ public class DescribeProcessReader extends AbstractRequestReader<DescribeProcess
 		super.checkParameters(request, report, OWSUtils.WPS);
     	
     	// need offering
-		if (request.getOffering() == null)
-			report.add(new OWSException(OWSException.missing_param_code, "OFFERING"));
+		if (request.getRequestFormat() == null)
+			report.add(new OWSException(OWSException.missing_param_code, "REQUEST_FORMAT"));
 
 		report.process();
     }

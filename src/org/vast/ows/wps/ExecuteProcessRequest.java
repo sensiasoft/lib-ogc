@@ -20,6 +20,8 @@
 
 package org.vast.ows.wps;
 
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataEncoding;
 import org.vast.ows.OWSRequest;
 
 
@@ -30,83 +32,57 @@ import org.vast.ows.OWSRequest;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for SOS GetResult request parameters
+ * Container for WPS ExecuteProcess request parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @date Oct 09, 2007
+ * <p>Copyright (c) 2008</p>
+ * @author Gregoire Berthiau
+ * @date Dec 15, 2008
  * @version 1.0
  */
 
 public class ExecuteProcessRequest extends OWSRequest
 {
     protected String offering;
-    protected String responseFormat;
-    protected String requestFormat;
-	protected String responseMode;
-	protected String requestMode;
-
+    protected DataComponent inputDataComponent;
+	protected DataEncoding inputDataEncoding;
+ 
 	
 	public ExecuteProcessRequest()
 	{
 		service = "WPS";
-		operation = "DescribeProcess";
-		offering = new String();
-		responseMode = new String();
-		responseFormat = new String();
-		requestMode = new String();
-		requestFormat = new String();
+		operation = "ExecuteProcess";
+	}
+	
+	
+	public ExecuteProcessRequest(DataComponent inputDataComponent, DataEncoding inputDataEncoding)
+	{
+		service = "WPS";
+		operation = "ExecuteProcess";
+		this.inputDataEncoding = inputDataEncoding;
+		this.inputDataComponent = inputDataComponent;
 	}
 
 
-	public String getOffering() {
-		return offering;
+	public DataComponent getInputDataComponent() {
+		return inputDataComponent;
 	}
 
 
-	public void setOffering(String offering) {
-		this.offering = offering;
+	public void setInputDataComponent(DataComponent inputDataComponent) {
+		this.inputDataComponent = inputDataComponent;
 	}
 
 
-	public String getResponseFormat() {
-		return responseFormat;
+	public DataEncoding getInputDataEncoding() {
+		return inputDataEncoding;
 	}
 
 
-	public void setResponseFormat(String responseFormat) {
-		this.responseFormat = responseFormat;
+	public void setInputDataEncoding(DataEncoding inputDataEncoding) {
+		this.inputDataEncoding = inputDataEncoding;
 	}
 
 
-	public String getRequestFormat() {
-		return requestFormat;
-	}
-
-
-	public void setRequestFormat(String requestFormat) {
-		this.requestFormat = requestFormat;
-	}
-
-
-	public String getResponseMode() {
-		return responseMode;
-	}
-
-
-	public void setResponseMode(String responseMode) {
-		this.responseMode = responseMode;
-	}
-
-
-	public String getRequestMode() {
-		return requestMode;
-	}
-
-
-	public void setRequestMode(String requestMode) {
-		this.requestMode = requestMode;
-	}
-		
+	
 }

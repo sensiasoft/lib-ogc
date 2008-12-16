@@ -40,7 +40,6 @@ import org.vast.ows.OWSRequest;
  */
 public class DescribeProcessRequest extends OWSRequest
 {
-    protected String offering;
 	protected String requestFormat;
 
 	
@@ -48,19 +47,8 @@ public class DescribeProcessRequest extends OWSRequest
 	{
 		service = "WPS";
 		operation = "DescribeProcess";
-		offering = new String();
 	}
 
-
-	public String getOffering() {
-		return offering;
-	}
-
-
-	public void setOffering(String offering) {
-		this.offering = offering;
-	}
-	
     public String getRequestFormat() {
 		return requestFormat;
 	}
