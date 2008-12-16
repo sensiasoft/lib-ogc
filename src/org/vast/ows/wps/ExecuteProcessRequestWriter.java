@@ -90,7 +90,7 @@ public class ExecuteProcessRequestWriter
             else throw new IOException(ioError + "\n" + "this content-type is not handled. " +
             		"The content type can only be ascii (text/plain), text/xml or application/binary");
             
-            AbstractDataWriter writer = (AbstractDataWriter)SWEFactory.createDataParser(request.getInputDataEncoding());
+            AbstractDataWriter writer = (AbstractDataWriter)SWEFactory.createDataWriter(request.getInputDataEncoding());
     		writer.setDataEncoding(request.getInputDataEncoding());
     		writer.setDataComponents(request.getInputDataComponent());
     		writer.write(out);

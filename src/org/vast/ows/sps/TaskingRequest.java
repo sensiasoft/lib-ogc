@@ -81,7 +81,7 @@ public abstract class TaskingRequest extends OWSRequest implements Parameterized
 		{
 			String loc = errorList.get(i).getLocator();
 			String msg = errorList.get(i).getMessage();
-			report.add(new SPSException(SPSException.invalid_param_code, "TaskingParameters:" + loc, null, msg));
+			report.add(new SPSException(SPSException.invalid_param_code, "TaskingParameters/" + loc, null, msg));
 		}		
 		throw report;
 	}

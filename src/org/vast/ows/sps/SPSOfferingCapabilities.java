@@ -43,7 +43,6 @@ import org.vast.util.Bbox;
  */
 public class SPSOfferingCapabilities extends OWSLayerCapabilities
 {
-	protected String sensorID;
 	protected Bbox areaOfService;
 	protected List<String> observableList;
 	protected DescribeTaskingResponse parametersDescription;
@@ -52,13 +51,13 @@ public class SPSOfferingCapabilities extends OWSLayerCapabilities
 
 	public String getSensorID()
 	{
-		return sensorID;
+		return getIdentifier();
 	}
 
 
 	public void setSensorID(String sensorID)
 	{
-		this.sensorID = sensorID;
+		this.setIdentifier(sensorID);
 	}
 
 

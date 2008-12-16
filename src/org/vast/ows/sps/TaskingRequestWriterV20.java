@@ -74,7 +74,7 @@ public abstract class TaskingRequestWriterV20<RequestType extends TaskingRequest
 			SWEData taskingParams = request.getParameters();
 			if (taskingParams != null)
 			{
-				Element taskingParamsElt = dom.addElement(rootElt, "sps:taskingParameters/sps:ParameterData");
+				Element taskingParamsElt = dom.addElement(rootElt, "sps:taskingParameters");
 				commonWriter.writeSWEData(dom, taskingParamsElt, taskingParams);
 			}
 			
