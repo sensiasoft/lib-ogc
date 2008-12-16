@@ -68,12 +68,12 @@ public class SPSCommonWriterV20
 		Element paramDataElt = dom.addElement(parentElt, "sps:ParameterData");
 		
 		// write encoding
-		Element encodingPropertyElt = dom.addElement(paramDataElt, "swe:encoding");
+		Element encodingPropertyElt = dom.addElement(paramDataElt, "sps:encoding");
 		Element encodingElt = encodingWriter.writeEncoding(dom, paramsData.getDataEncoding());
 		encodingPropertyElt.appendChild(encodingElt);
 		
 		// write values
-		Element valuesElt = dom.addElement(paramDataElt, "swe:values");
+		Element valuesElt = dom.addElement(paramDataElt, "sps:values");
 		DataSinkDOM dataSink = new DataSinkDOM(dom, valuesElt);
 		
 		// launch serializer to write data to the XML doc

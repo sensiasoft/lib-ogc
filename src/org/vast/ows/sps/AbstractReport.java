@@ -29,6 +29,7 @@ public class AbstractReport
 {
 	public static final String PENDING = "PENDING";
 	public static final String ACCEPTED = "ACCEPTED";
+	public static final String REJECTED = "REJECTED";
 	
 	protected String taskID;
 	protected String sensorID;

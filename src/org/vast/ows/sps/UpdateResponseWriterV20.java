@@ -47,12 +47,12 @@ import org.vast.xml.DOMHelper;
  * @date Mar 04, 2008
  * @version 1.0
  */
-public class SubmitResponseWriterV20 extends AbstractResponseWriter<SubmitResponse>
+public class UpdateResponseWriterV20 extends AbstractResponseWriter<UpdateResponse>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
 	
 	
-	public Element buildXMLResponse(DOMHelper dom, SubmitResponse response, String version) throws OWSException
+	public Element buildXMLResponse(DOMHelper dom, UpdateResponse response, String version) throws OWSException
 	{
 		try
 		{

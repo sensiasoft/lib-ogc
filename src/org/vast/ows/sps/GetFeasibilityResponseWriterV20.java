@@ -61,8 +61,9 @@ public class GetFeasibilityResponseWriterV20 extends AbstractResponseWriter<GetF
 			
 			// latest response time
 			DateTime latestResp = response.getLatestResponseTime();
-			dom.setElementValue(rootElt, "sps:latestResponseTime",
-				DateTimeFormat.formatIso(latestResp.getJulianTime(), 0));
+			if (latestResp != null)
+				dom.setElementValue(rootElt, "sps:latestResponseTime",
+						DateTimeFormat.formatIso(latestResp.getJulianTime(), 0));
 			
 			// feasibility report
 			Element reportElt = commonWriter.writeFeasibilityReport(dom, response.getReport());
