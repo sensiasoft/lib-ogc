@@ -49,18 +49,15 @@ import org.w3c.dom.*;
 public class DescribeProcessResponseReader
 {
 	
-	protected DataHandler dataHandler;
 	protected DataEncoding outputDataEncoding;
 	protected DataComponent inputDataComponent;
 	protected DataEncoding inputDataEncoding;
 	protected DataComponent outputDataComponent;       
     
-    public void parse(InputStream inputStream, DataHandler handler) throws CDMException
+    public void parse(InputStream inputStream) throws CDMException
     {
 		try
 		{
-		    dataHandler = handler;
-			
 			// parse xml header using DOMReader
 			DOMHelper dom = new DOMHelper(inputStream, false);
 			OGCExceptionReader.checkException(dom);
