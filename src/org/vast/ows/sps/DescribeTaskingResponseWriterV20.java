@@ -25,7 +25,6 @@ import org.vast.cdm.common.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSUtils;
 import org.vast.sweCommon.SweComponentWriterV20;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
@@ -55,7 +54,7 @@ public class DescribeTaskingResponseWriterV20 extends AbstractResponseWriter<Des
 	{
 		try
 		{
-			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI(OWSUtils.SPS, version));
+			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI(SPSUtils.SPS, version));
 			
 			// root element
 			Element rootElt = dom.createElement("sps:" + response.getMessageType());

@@ -87,8 +87,7 @@ public class SPSCommonWriterV20
 		
 		// title
 		val = report.getTitle();
-		if (val != null)
-			dom.setElementValue(reportElt, "sps:title", val);
+		dom.setElementValue(reportElt, "sps:title", val);
 		
 		// abstract
 		val = report.getDescription();
@@ -97,23 +96,19 @@ public class SPSCommonWriterV20
 		
 		// sensor ID
 		val = report.getSensorID();
-		if (val != null)
-			dom.setElementValue(reportElt, "sps:sensorID", val);
+		dom.setElementValue(reportElt, "sps:sensorID", val);
 		
 		// task ID
 		val = report.getTaskID();
-		if (val != null)
-			dom.setElementValue(reportElt, "sps:taskID", val);
+		dom.setElementValue(reportElt, "sps:taskID", val);
 		
-		// last update
+		// update time
 		DateTime date = report.getLastUpdate();
-		if (date != null)
-			dom.setElementValue(reportElt, "sps:updateTime", DateTimeFormat.formatIso(date.getJulianTime(), 0));
+		dom.setElementValue(reportElt, "sps:updateTime", DateTimeFormat.formatIso(date.getJulianTime(), 0));
 		
 		// status code
 		val = report.getStatusCode();
-		if (val != null)
-			dom.setElementValue(reportElt, "sps:statusCode", val);
+		dom.setElementValue(reportElt, "sps:statusCode", val);
 		
 		// estimated time of completion
 		date = report.getEstimatedToC();

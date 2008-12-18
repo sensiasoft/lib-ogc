@@ -3,6 +3,7 @@
    <!-- -->
    <Namespace type="OWS" version="*" uri="http://www.opengis.net/ows"/>
    <Namespace type="OWS" version="1.1" uri="http://www.opengis.net/ows/1.1"/>
+   <Namespace type="SWES" version="1.0" uri="http://www.opengis.net/sweService/1.0"/>
    <Namespace type="SLD" version="*" uri="http://www.opengis.net/sld"/>
    <Namespace type="WMS" version="*" uri="http://www.opengis.net/wms"/>
    <Namespace type="WCS" version="*" uri="http://www.opengis.net/wcs"/>

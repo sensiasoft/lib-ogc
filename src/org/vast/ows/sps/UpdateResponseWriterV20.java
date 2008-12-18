@@ -56,7 +56,7 @@ public class UpdateResponseWriterV20 extends AbstractResponseWriter<UpdateRespon
 	{
 		try
 		{
-			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", version));
+			dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI(SPSUtils.SPS, version));
 			
 			// root element
 			Element rootElt = dom.createElement("sps:" + response.getMessageType());

@@ -22,7 +22,6 @@
 
 package org.vast.ows.wcs;
 
-import java.util.Enumeration;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
 import org.w3c.dom.*;
@@ -99,16 +98,6 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
         
         // FORMAT
         urlBuff.append("&FORMAT=" + request.getFormat());
-        
-        // vendor parameters
-        Enumeration<String> paramEnum = request.getExtensions().keys();
-        while (paramEnum.hasMoreElements())
-        {
-        	String key = paramEnum.nextElement();
-        	Object obj = request.getExtensions().get(key);
-        	if (obj instanceof String)
-        		urlBuff.append("&" + key.toUpperCase() + "=" + (String)obj);
-        }        	
         
         // EXCEPTIONS
         if (request.getExceptionType() != null)

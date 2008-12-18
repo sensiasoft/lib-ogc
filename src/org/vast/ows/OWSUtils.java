@@ -56,6 +56,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
 	public final static String WMS = "WMS";
 	public final static String WFS = "WFS";
 	public final static String WCS = "WCS";
+	public final static String SWES = "SWES";
 	public final static String SOS = "SOS";
 	public final static String CSW = "CSW";
 	public final static String WNS = "WNS";

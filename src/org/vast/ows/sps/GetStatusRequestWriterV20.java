@@ -26,6 +26,7 @@ import org.w3c.dom.Element;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
+import org.vast.util.DateTime;
 import org.vast.xml.DOMHelper;
 
 
@@ -61,9 +62,14 @@ public class GetStatusRequestWriterV20 extends AbstractRequestWriter<GetStatusRe
 		urlBuff.append("&version=" + request.getVersion());
 		urlBuff.append("&request=" + request.getOperation());
 
-		// sensorID
-		urlBuff.append("&id=" + request.getTaskID());
+		// taskID
+		urlBuff.append("&taskID=" + request.getTaskID());
 
+		// since
+		DateTime since = request.getSince();
+		if (since != null)
+			urlBuff.append("&since=" + since.formatIso(0));
+		
 		String url = urlBuff.toString();
 		url = url.replaceAll(" ", "%20");
 		return url;
@@ -82,9 +88,14 @@ public class GetStatusRequestWriterV20 extends AbstractRequestWriter<GetStatusRe
 		Element rootElt = dom.createElement("sps:" + request.getOperation());
 		addCommonXML(dom, rootElt, request);
 
-		// ID
-		dom.setElementValue(rootElt, "sps:ID", request.getTaskID());
+		// taskID
+		dom.setElementValue(rootElt, "sps:taskID", request.getTaskID());
 
+		// since
+		DateTime since = request.getSince();
+		if (since != null)
+			dom.setElementValue(rootElt, "sps:since", since.formatIso(0));
+		
 		return rootElt;
 	}
 }

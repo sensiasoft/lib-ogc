@@ -76,7 +76,7 @@ public class DescribeTaskingRequestWriterV20 extends AbstractRequestWriter<Descr
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, DescribeTaskingRequest request) throws OWSException
 	{
-		dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", request.getVersion()));
+		dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI(SPSUtils.SPS, request.getVersion()));
 
 		// root element
 		Element rootElt = dom.createElement("sps:" + request.getOperation());

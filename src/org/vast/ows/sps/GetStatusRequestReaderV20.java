@@ -28,6 +28,7 @@ import java.util.StringTokenizer;
 import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
+import org.vast.util.DateTime;
 import org.vast.xml.DOMHelper;
 
 
@@ -96,6 +97,12 @@ public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRe
 			{
 				request.setTaskID(argValue);
 			}
+			
+			// since
+			else if (argName.equalsIgnoreCase("since"))
+			{
+				request.setSince(new DateTime(argValue));
+			}
 
 			else
 				throw new SPSException(invalidKVP + ": Unknown Argument " + argName);
@@ -114,9 +121,14 @@ public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRe
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
 
-		// task/reservation ID
-		String ID = dom.getElementValue(requestElt, "ID");
-		request.setTaskID(ID);
+		// taskID
+		String taskID = dom.getElementValue(requestElt, "taskID");
+		request.setTaskID(taskID);
+		
+		// since
+		String isoTime = dom.getElementValue(requestElt, "since");
+		if (isoTime != null)
+			request.setSince(new DateTime(isoTime));
 
 		checkParameters(request, new OWSExceptionReport());
 		return request;
@@ -133,9 +145,9 @@ public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRe
 		// check common params + generate exception
 		checkParameters(request, report, "SPS");
 
-		// Check that ID is present
+		// Check that taskID is present
 		if (request.getTaskID() == null)
-			report.add(new OWSException(OWSException.missing_param_code, "ID"));
+			report.add(new OWSException(OWSException.missing_param_code, "TaskID"));
 
 		report.process();
 	}
