@@ -15,14 +15,16 @@ The Initial Developer of the Original Code is Spotimage S.A.
 Portions created by the Initial Developer are Copyright (C) 2007
 the Initial Developer. All Rights Reserved.
 
-Contributor(s): 
+Contributor(s):
    Alexandre Robin <alexandre.robin@spotimage.fr>
+   Philippe Merigot <philippe.merigot@spotimage.fr>
 
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.sps;
 
 import org.w3c.dom.Element;
+import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.xml.DOMHelper;
@@ -30,35 +32,60 @@ import org.vast.xml.DOMHelper;
 
 /**
 * <p><b>Title:</b><br/>
-* SPS GetFeasibility Request Reader v2.0
+* SPS Confirm Request Reader v2.0
 * </p>
 *
 * <p><b>Description:</b><br/>
-* Provides methods to parse an XML SPS GetFeasibility
-* request and create a GetFeasibilityRequest object for version 2.0
+* Provides methods to parse a KVP or XML SPS Confirm
+* request and create a ConfirmRequest object for version 2.0
 * </p>
 *
 * <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
-* @date Feb, 29 2008
+* @date Dec, 18 2008
 * @version 1.0
 */
-public class GetFeasibilityRequestReaderV20 extends TaskingRequestReaderV20<GetFeasibilityRequest>
+public class ConfirmRequestReaderV20 extends AbstractRequestReader<ConfirmRequest>
 {
-	
+
 	@Override
-	public GetFeasibilityRequest readURLQuery(String queryString) throws OWSException
+	public ConfirmRequest readURLQuery(String queryString) throws OWSException
 	{
-		throw new SPSException(noKVP + "SPS 2.0 GetFeasibility");
+		throw new SPSException(noKVP + "SPS 2.0 Confirm");
 	}
 
 
 	@Override
-	public GetFeasibilityRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+	public ConfirmRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		GetFeasibilityRequest request = new GetFeasibilityRequest();
-		readTaskingRequestXML(dom, requestElt, request);
+		ConfirmRequest request = new ConfirmRequest();
+
+		// do common stuffs like version, request name and service type
+		readCommonXML(dom, requestElt, request);
+
+		// taskID
+		String taskID = dom.getElementValue(requestElt, "taskID");
+		request.setTaskID(taskID);
+
 		checkParameters(request, new OWSExceptionReport());
-		return request;		
+		return request;
+	}
+
+
+	/**
+	 * Checks that GetStatus mandatory parameters are present
+	 * @param request
+	 * @throws OWSException
+	 */
+	protected void checkParameters(ConfirmRequest request, OWSExceptionReport report) throws OWSException
+	{
+		// check common params + generate exception
+		checkParameters(request, report, "SPS");
+
+		// Check that taskID is present
+		if (request.getTaskID() == null)
+			report.add(new OWSException(OWSException.missing_param_code, "TaskID"));
+
+		report.process();
 	}
 }

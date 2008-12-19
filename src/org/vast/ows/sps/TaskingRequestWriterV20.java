@@ -69,7 +69,7 @@ public abstract class TaskingRequestWriterV20<RequestType extends TaskingRequest
 			// sensorID
 			if (request.getSensorID() != null)
 				dom.setElementValue(rootElt, "sps:sensorID", request.getSensorID());
-			
+							
 			// tasking parameters
 			SWEData taskingParams = request.getParameters();
 			if (taskingParams != null)

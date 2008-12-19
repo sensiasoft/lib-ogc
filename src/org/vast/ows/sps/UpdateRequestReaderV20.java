@@ -24,6 +24,7 @@ package org.vast.ows.sps;
 
 import org.w3c.dom.Element;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSExceptionReport;
 import org.vast.xml.DOMHelper;
 
 
@@ -34,7 +35,7 @@ import org.vast.xml.DOMHelper;
 *
 * <p><b>Description:</b><br/>
 * Provides methods to parse an XML SPS Update
-* request and create a SubmitRequest object for version 2.0
+* request and create an UpdateRequest object for version 2.0
 * </p>
 *
 * <p>Copyright (c) 2008</p>
@@ -57,6 +58,26 @@ public class UpdateRequestReaderV20 extends TaskingRequestReaderV20<UpdateReques
 	{
 		UpdateRequest request = new UpdateRequest();
 		readTaskingRequestXML(dom, requestElt, request);
+		
+		// task ID
+		String taskID = dom.getElementValue(requestElt, "taskID");
+		request.setTaskID(taskID);
+		
+		checkParameters(request, new OWSExceptionReport());
+		
 		return request;		
+	}
+	
+	
+	@Override
+	protected void checkParameters(UpdateRequest request, OWSExceptionReport report) throws OWSException
+	{
+		super.checkParameters(request, report);
+
+		// Check that taskID is present
+		if (request.getTaskID() == null)
+			report.add(new SPSException(SPSException.missing_param_code, "TaskID"));
+		
+		report.process();
 	}
 }

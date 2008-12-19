@@ -23,6 +23,8 @@ Contributor(s):
 package org.vast.ows.sps;
 
 import org.vast.ows.OWSException;
+import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
 
 
 /**
@@ -32,7 +34,7 @@ import org.vast.ows.OWSException;
 *
 * <p><b>Description:</b><br/>
 * Provides methods to generate a SPS Update request based
-* on values contained in a Submit object for version 2.0
+* on values contained in a UpdateRequest object for version 2.0
 * </p>
 *
 * <p>Copyright (c) 2008</p>
@@ -43,12 +45,22 @@ import org.vast.ows.OWSException;
 public class UpdateRequestWriterV20 extends TaskingRequestWriterV20<UpdateRequest>
 {
 
-	/**
-	 * KVP Request
-	 */
 	@Override
 	public String buildURLQuery(UpdateRequest request) throws OWSException
 	{
-		throw new SPSException(noKVP + "SPS 2.0 Update");
+		throw new SPSException(noKVP + "SPS 2.0 " + request.getOperation());
+	}
+	
+	
+	@Override
+	public Element buildXMLQuery(DOMHelper dom, UpdateRequest request) throws OWSException
+	{
+		Element requestElt = super.buildXMLQuery(dom, request);
+		
+		// taskID
+		if (request.getTaskID() != null)
+			dom.setElementValue(requestElt, "sps:taskID", request.getTaskID());
+		
+		return requestElt;
 	}
 }

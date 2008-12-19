@@ -49,6 +49,6 @@ public class GetFeasibilityRequestWriterV20 extends TaskingRequestWriterV20<GetF
 	@Override
 	public String buildURLQuery(GetFeasibilityRequest request) throws OWSException
 	{
-		throw new SPSException(noKVP + "SPS 2.0 GetFeasibility");
+		throw new SPSException(noKVP + "SPS 2.0 " + request.getOperation());
 	}
 }

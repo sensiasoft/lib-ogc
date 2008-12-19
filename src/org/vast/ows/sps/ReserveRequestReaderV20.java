@@ -22,43 +22,63 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
+import java.text.ParseException;
 import org.w3c.dom.Element;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
+import org.vast.util.DateTime;
+import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 
 
 /**
 * <p><b>Title:</b><br/>
-* SPS Submit Request Reader v2.0
+* SPS Reserve Request Reader v2.0
 * </p>
 *
 * <p><b>Description:</b><br/>
-* Provides methods to parse an XML SPS Submit
-* request and create a SubmitRequest object for version 2.0
+* Provides methods to parse an XML SPS Reserve
+* request and create an ReserveRequest object for version 2.0
 * </p>
 *
 * <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
-* @date Feb, 29 2008
+* @date Dec, 10 2008
 * @version 1.0
 */
-public class SubmitRequestReaderV20 extends TaskingRequestReaderV20<SubmitRequest>
+public class ReserveRequestReaderV20 extends TaskingRequestReaderV20<ReserveRequest>
 {
 		
 	@Override
-	public SubmitRequest readURLQuery(String queryString) throws OWSException
+	public ReserveRequest readURLQuery(String queryString) throws OWSException
 	{
-		throw new SPSException(noKVP + "SPS 2.0 Submit");
+		throw new SPSException(noKVP + "SPS 2.0 Reserve");
 	}
 
 
 	@Override
-	public SubmitRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+	public ReserveRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		SubmitRequest request = new SubmitRequest();		
+		ReserveRequest request = new ReserveRequest();
 		readTaskingRequestXML(dom, requestElt, request);
-		checkParameters(request, new OWSExceptionReport());		
+		
+		// expiration
+		try
+		{
+			String isoDate = dom.getElementValue(requestElt, "desiredReservationExpiration");
+			if (isoDate != null)
+			{
+				DateTime expirationDate = new DateTime(DateTimeFormat.parseIso(isoDate));
+				request.setDesiredExpiration(expirationDate);
+			}
+		}
+		catch (ParseException e)
+		{
+			throw new SPSException(invalidXML + ": " + e.getMessage());
+		}
+		
+		checkParameters(request, new OWSExceptionReport());
+		
 		return request;		
 	}
 }

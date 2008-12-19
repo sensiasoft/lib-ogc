@@ -22,43 +22,51 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import org.w3c.dom.Element;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSExceptionReport;
+import org.vast.util.DateTime;
+import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
 
 
 /**
 * <p><b>Title:</b><br/>
-* SPS Submit Request Reader v2.0
+* SPS Reserve Request Writer v2.0
 * </p>
 *
 * <p><b>Description:</b><br/>
-* Provides methods to parse an XML SPS Submit
-* request and create a SubmitRequest object for version 2.0
+* Provides methods to generate a SPS Reserve request based
+* on values contained in a ReserveRequest object for version 2.0
 * </p>
 *
 * <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
-* @date Feb, 29 2008
+* @date Feb, 28 2008
 * @version 1.0
 */
-public class SubmitRequestReaderV20 extends TaskingRequestReaderV20<SubmitRequest>
+public class ReserveRequestWriterV20 extends TaskingRequestWriterV20<ReserveRequest>
 {
-		
+
 	@Override
-	public SubmitRequest readURLQuery(String queryString) throws OWSException
+	public String buildURLQuery(ReserveRequest request) throws OWSException
 	{
-		throw new SPSException(noKVP + "SPS 2.0 Submit");
+		throw new SPSException(noKVP + "SPS 2.0 " + request.getOperation());
 	}
-
-
+	
+	
 	@Override
-	public SubmitRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+	public Element buildXMLQuery(DOMHelper dom, ReserveRequest request) throws OWSException
 	{
-		SubmitRequest request = new SubmitRequest();		
-		readTaskingRequestXML(dom, requestElt, request);
-		checkParameters(request, new OWSExceptionReport());		
-		return request;		
+		Element requestElt = super.buildXMLQuery(dom, request);
+		
+		// expiration
+		DateTime expirationDate = request.getDesiredExpiration();
+		if (expirationDate != null)
+		{
+			String isoTime = DateTimeFormat.formatIso(expirationDate.getJulianTime(), 0);
+			dom.setElementValue(requestElt, "sps:desiredReservationExpiration", isoTime);
+		}
+		
+		return requestElt;
 	}
 }

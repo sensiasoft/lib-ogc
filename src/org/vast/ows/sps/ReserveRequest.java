@@ -23,6 +23,8 @@
 
 package org.vast.ows.sps;
 
+import org.vast.util.DateTime;
+
 
 /**
  * <p><b>Title:</b><br/>
@@ -40,10 +42,24 @@ package org.vast.ows.sps;
  */
 public class ReserveRequest extends TaskingRequest
 {
-		
+	protected DateTime desiredExpiration;
+	
+	
 	public ReserveRequest()
 	{
 		setService("SPS");
 		setOperation("Reserve");
+	}
+
+
+	public DateTime getDesiredExpiration()
+	{
+		return desiredExpiration;
+	}
+
+
+	public void setDesiredExpiration(DateTime desiredExpiration)
+	{
+		this.desiredExpiration = desiredExpiration;
 	}
 }

@@ -86,8 +86,6 @@ public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest
 				DateTime latestResponseTime = new DateTime(DateTimeFormat.parseIso(isoDate));
 				request.setLatestResponseTime(latestResponseTime);
 			}
-			
-			checkParameters(request, new OWSExceptionReport());
 		}
 		catch (Exception e)
 		{

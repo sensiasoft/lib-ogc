@@ -49,6 +49,6 @@ public class SubmitRequestWriterV20 extends TaskingRequestWriterV20<SubmitReques
 	@Override
 	public String buildURLQuery(SubmitRequest request) throws OWSException
 	{
-		throw new SPSException(noKVP + "SPS 2.0 Submit");
+		throw new SPSException(noKVP + "SPS 2.0 " + request.getOperation());
 	}
 }
