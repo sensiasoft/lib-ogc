@@ -14,7 +14,7 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <robin@nsstc.uah.edu>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -22,17 +22,15 @@ package org.vast.ows.wps;
 
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
-import org.vast.ows.OWSRequest;
-
-
+import org.vast.ows.OWSResponse;
 
 /**
- * <p><b>Title:</b><br/>
- * GetResult Request
+ * <p><b>Title:</b>
+ * Describe Process Response Reader
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for WPS ExecuteProcess request parameters
+ * reader for WPS Describe Process responses with a input/output expressed in SWE Common.
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -40,28 +38,22 @@ import org.vast.ows.OWSRequest;
  * @date Dec 15, 2008
  * @version 1.0
  */
-
-public class ExecuteProcessRequest extends OWSRequest
+public class DescribeProcessResponse extends OWSResponse
 {
-
-	protected String offering;
-    protected DataComponent inputDataComponent;
+	
+	protected DataEncoding outputDataEncoding;
+	protected DataComponent inputDataComponent;
 	protected DataEncoding inputDataEncoding;
-
+	protected DataComponent outputDataComponent;       
+ 
 	
-	public ExecuteProcessRequest()
-	{
-		service = "WPS";
-		operation = "ExecuteProcess";
+	public DataEncoding getOutputDataEncoding() {
+		return outputDataEncoding;
 	}
-	
-	
-	public ExecuteProcessRequest(DataComponent inputDataComponent, DataEncoding inputDataEncoding)
-	{
-		service = "WPS";
-		operation = "ExecuteProcess";
-		this.inputDataEncoding = inputDataEncoding;
-		this.inputDataComponent = inputDataComponent;
+
+
+	public void setOutputDataEncoding(DataEncoding outputDataEncoding) {
+		this.outputDataEncoding = outputDataEncoding;
 	}
 
 
@@ -70,7 +62,7 @@ public class ExecuteProcessRequest extends OWSRequest
 	}
 
 
-	public void setInputDataComponent(DataComponent inputDataComponent) {
+	public void setInputDataComponents(DataComponent inputDataComponent) {
 		this.inputDataComponent = inputDataComponent;
 	}
 
@@ -84,13 +76,14 @@ public class ExecuteProcessRequest extends OWSRequest
 		this.inputDataEncoding = inputDataEncoding;
 	}
 
-    public String getOffering() {
-		return offering;
+
+	public DataComponent getOutputDataComponent() {
+		return outputDataComponent;
 	}
 
 
-	public void setOffering(String offering) {
-		this.offering = offering;
+	public void setOutputDataComponents(DataComponent outputDataComponent) {
+		this.outputDataComponent = outputDataComponent;
 	}
-	
+    
 }

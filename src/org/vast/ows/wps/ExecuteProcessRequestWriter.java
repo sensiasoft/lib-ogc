@@ -20,16 +20,20 @@
 
 package org.vast.ows.wps;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.InputStream;
 
 import org.vast.cdm.common.CDMException;
+import org.vast.ogc.OGCRegistry;
+import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSUtils;
 import org.vast.sweCommon.AbstractDataWriter;
 import org.vast.sweCommon.SWEFactory;
+import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
 
 
 /**
@@ -46,68 +50,81 @@ import org.vast.sweCommon.SWEFactory;
  * @date Dec 15, 2008
  * @version 1.0
  */
-public class ExecuteProcessRequestWriter
+public class ExecuteProcessRequestWriter extends AbstractRequestWriter<ExecuteProcessRequest>
 {
 
     public final static String invalidEndpoint = "No Endpoint URL specified in request object";
     public final static String ioError = "IO Error while sending request:";
 	
     
-	public HttpURLConnection sendRequest(ExecuteProcessRequest request) throws OWSException, CDMException
+	public static InputStream writeData(ExecuteProcessRequest request) throws OWSException, CDMException
     {
-	    try
-        {
-        	URL url;
-        	String endpoint = request.getPostServer();
-        	
-        	if (endpoint == null)
-        		endpoint = request.getGetServer();
-        	
-        	if (endpoint == null)
-        		throw new OWSException(invalidEndpoint);
-        	
-            // remove ? at the end of Endpoint URL
-            if (endpoint.endsWith("?"))
-                url = new URL(endpoint.substring(0, endpoint.length()-1));
-            else
-                url = new URL(endpoint);
-           
-            // initiatlize HTTP connection
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            PrintStream out = new PrintStream(connection.getOutputStream());
-            
-            String encodingType = request.inputDataEncoding.getEncodingType().toString();
-            
-            if(encodingType.equalsIgnoreCase("ascii"))
-            	connection.setRequestProperty("Content-type", "text/plain"); 
-            else if(encodingType.equalsIgnoreCase("xml"))
-            	connection.setRequestProperty("Content-type", "text/xml");
-            else if(encodingType.equalsIgnoreCase("binary"))
-            	connection.setRequestProperty("Content-type", "application/binary");            	
-            else throw new IOException(ioError + "\n" + "this content-type is not handled. " +
-            		"The content type can only be ascii (text/plain), text/xml or application/binary");
-            
+			ByteArrayOutputStream  out = new ByteArrayOutputStream ();
             AbstractDataWriter writer = (AbstractDataWriter)SWEFactory.createDataWriter(request.getInputDataEncoding());
     		writer.setDataEncoding(request.getInputDataEncoding());
     		writer.setDataComponents(request.getInputDataComponent());
     		writer.write(out);
-            
-            // send post data                       
-            out.flush();
-            connection.connect();
-            out.close();
-            
-            // return server response stream
-            return connection;
-        }
-        catch (IOException e)
-        {
-        	ByteArrayOutputStream buf = new ByteArrayOutputStream();
-        	throw new OWSException(ioError + "\n" + buf, e);
-        }
-    }
+    		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
 
+    		return in;
+    }
+	
+	
+	@Override
+	public Element buildXMLQuery(DOMHelper dom, ExecuteProcessRequest request) throws OWSException 
+	{
+		dom.addUserPrefix("wps", OGCRegistry.getNamespaceURI(OWSUtils.WPS, request.getVersion()));
+		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
+		
+		// root element
+		Element rootElt = dom.createElement("wps:executeProcess");
+		addCommonXML(dom, rootElt, request);
+
+		// offering
+		dom.setElementValue(rootElt, "wps:requestFormat", request.getOffering());
+		
+		// request format
+		dom.setElementValue(rootElt, "wps:requestFormat", getContentType(request));
+
+		return rootElt;
+	}
+	
+
+	public Element buildXMLQuery(ExecuteProcessRequest request) throws OWSException
+	{
+		DOMHelper dom = new DOMHelper();
+		return buildXMLQuery(dom, request);
+	}
+
+	
+	@Override
+	public String buildURLQuery(ExecuteProcessRequest request)
+			throws OWSException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public static String getContentType(ExecuteProcessRequest request) throws OWSException
+	{
+		// request format
+		String encodingType = request.getInputDataEncoding().getEncodingType().toString();
+        String requestFormat = null;
+        
+        if(encodingType.equalsIgnoreCase("ascii"))
+        	requestFormat = "text/plain"; 
+        else if(encodingType.equalsIgnoreCase("xml"))
+        	requestFormat = "text/xml";
+        else if(encodingType.equalsIgnoreCase("binary"))
+        	requestFormat = "application/binary";
+		else
+			try {
+				throw new IOException(ioError + "\n" + "this content-type is not handled. " +
+						"The content type can only be ascii (text/plain), xml (text/xml)" +
+						" or pure binary (application/binary)");
+			} catch (IOException e) {
+				throw new OWSException(e);
+			}
+		return requestFormat;
+	}
+	
 }

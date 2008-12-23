@@ -20,13 +20,9 @@
 
 package org.vast.ows.wps;
 
-import java.io.*;
 import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
-import org.vast.cdm.common.DataHandler;
-import org.vast.ogc.OGCException;
-import org.vast.ogc.OGCExceptionReader;
+import org.vast.ows.AbstractResponseReader;
+import org.vast.ows.OWSException;
 import org.vast.sweCommon.SWECommonUtils;
 import org.vast.xml.*;
 import org.w3c.dom.*;
@@ -46,103 +42,47 @@ import org.w3c.dom.*;
  * @date Dec 15, 2008
  * @version 1.0
  */
-public class DescribeProcessResponseReader
+public class DescribeProcessResponseReader  extends AbstractResponseReader<DescribeProcessResponse>
 {
+
 	
-	protected DataEncoding outputDataEncoding;
-	protected DataComponent inputDataComponent;
-	protected DataEncoding inputDataEncoding;
-	protected DataComponent outputDataComponent;       
-    
-    public void parse(InputStream inputStream) throws CDMException
-    {
+	public DescribeProcessResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException 
+	{
+		
+		DescribeProcessResponse response = new DescribeProcessResponse();
 		try
 		{
-			// parse xml header using DOMReader
-			DOMHelper dom = new DOMHelper(inputStream, false);
-			OGCExceptionReader.checkException(dom);
-			
-			// find first Observation element
-			Element rootElement = dom.getRootElement();
-			NodeList elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/wps/2.0", "ProcessDescription");
-			Element obsElt = (Element)elts.item(0);	
-			if (obsElt == null)
-				throw new CDMException("XML Response doesn't contain any Process Description");
-
 			SWECommonUtils utils = new SWECommonUtils();
 			
             // read input
-            Element inputObjElt = dom.getElement(obsElt, "input/*");
+            Element inputObjElt = dom.getElement(responseElt, "input/*");
             
             Element inputEncElt = dom.getElement(inputObjElt, "encoding");
-            this.inputDataEncoding = utils.readEncodingProperty(dom, inputEncElt);
+            response.inputDataEncoding = utils.readEncodingProperty(dom, inputEncElt);
             
             Element inputDefElt = dom.getElement(inputObjElt, "elementType");
-            this.inputDataComponent = utils.readComponentProperty(dom, inputDefElt);
+            response.inputDataComponent = utils.readComponentProperty(dom, inputDefElt);
 
          // read output
-            Element outputObjElt = dom.getElement(obsElt, "output/*");
+            Element outputObjElt = dom.getElement(responseElt, "output/*");
             
             Element outputEncElt = dom.getElement(outputObjElt, "encoding");
-            this.outputDataEncoding = utils.readEncodingProperty(dom, outputEncElt);
+            response.outputDataEncoding = utils.readEncodingProperty(dom, outputEncElt);
             
             Element outputDefElt = dom.getElement(outputObjElt, "elementType");
-            this.outputDataComponent = utils.readComponentProperty(dom, outputDefElt);
-                
+            response.outputDataComponent = utils.readComponentProperty(dom, outputDefElt);
+		
+		return null;
     		
 		}
         catch (IllegalStateException e)
         {
-            throw new CDMException("No reader found for SWECommon", e);
+            throw new OWSException("No reader found for SWECommon", e);
         }
-		catch (DOMHelperException e)
+		catch (CDMException e)
 		{
-			throw new CDMException("Error while parsing Observation XML", e);
-		}		
-		catch (OGCException e)
-		{
-			throw new CDMException(e.getMessage());
+			throw new OWSException(e.getMessage());
 		}
-	}
-
-    
-	public DataEncoding getOutputDataEncoding() {
-		return outputDataEncoding;
-	}
-
-
-	public void setOutputDataEncoding(DataEncoding outputDataEncoding) {
-		this.outputDataEncoding = outputDataEncoding;
-	}
-
-
-	public DataComponent getInputDataComponent() {
-		return inputDataComponent;
-	}
-
-
-	public void setInputDataComponents(DataComponent inputDataComponent) {
-		this.inputDataComponent = inputDataComponent;
-	}
-
-
-	public DataEncoding getInputDataEncoding() {
-		return inputDataEncoding;
-	}
-
-
-	public void setInputDataEncoding(DataEncoding inputDataEncoding) {
-		this.inputDataEncoding = inputDataEncoding;
-	}
-
-
-	public DataComponent getOutputDataComponent() {
-		return outputDataComponent;
-	}
-
-
-	public void setOutputDataComponents(DataComponent outputDataComponent) {
-		this.outputDataComponent = outputDataComponent;
 	}
     
 }

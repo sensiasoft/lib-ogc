@@ -14,25 +14,25 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <robin@nsstc.uah.edu>
  
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.wps;
 
+import java.io.InputStream;
+
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
-import org.vast.ows.OWSRequest;
-
-
+import org.vast.ows.OWSResponse;
 
 /**
- * <p><b>Title:</b><br/>
- * GetResult Request
+ * <p><b>Title:</b>
+ * Describe Process Response Reader
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for WPS ExecuteProcess request parameters
+ * reader for WPS Describe Process responses with a input/output expressed in SWE Common.
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -40,57 +40,41 @@ import org.vast.ows.OWSRequest;
  * @date Dec 15, 2008
  * @version 1.0
  */
-
-public class ExecuteProcessRequest extends OWSRequest
+public class ExecuteProcessResponse extends OWSResponse
 {
-
-	protected String offering;
-    protected DataComponent inputDataComponent;
-	protected DataEncoding inputDataEncoding;
+	
+	protected DataEncoding dataEncoding;
+	protected DataComponent dataComponent;
+	protected InputStream dataStream;
 
 	
-	public ExecuteProcessRequest()
-	{
-		service = "WPS";
-		operation = "ExecuteProcess";
+	public DataEncoding getDataEncoding() {
+		return dataEncoding;
+	}
+
+
+	public void setDataEncoding(DataEncoding dataEncoding) {
+		this.dataEncoding = dataEncoding;
+	}
+
+
+	public DataComponent getDataComponent() {
+		return dataComponent;
+	}
+
+
+	public void setDataComponent(DataComponent dataComponent) {
+		this.dataComponent = dataComponent;
 	}
 	
 	
-	public ExecuteProcessRequest(DataComponent inputDataComponent, DataEncoding inputDataEncoding)
-	{
-		service = "WPS";
-		operation = "ExecuteProcess";
-		this.inputDataEncoding = inputDataEncoding;
-		this.inputDataComponent = inputDataComponent;
+	public void setDataStream(InputStream dataStream) {
+		this.dataStream = dataStream;
 	}
 
-
-	public DataComponent getInputDataComponent() {
-		return inputDataComponent;
-	}
-
-
-	public void setInputDataComponent(DataComponent inputDataComponent) {
-		this.inputDataComponent = inputDataComponent;
-	}
-
-
-	public DataEncoding getInputDataEncoding() {
-		return inputDataEncoding;
-	}
-
-
-	public void setInputDataEncoding(DataEncoding inputDataEncoding) {
-		this.inputDataEncoding = inputDataEncoding;
-	}
-
-    public String getOffering() {
-		return offering;
-	}
-
-
-	public void setOffering(String offering) {
-		this.offering = offering;
-	}
 	
+	public InputStream getDataStream() {
+		return dataStream;
+	}
+
 }
