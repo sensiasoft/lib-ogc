@@ -33,6 +33,8 @@ import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.ParameterizedRequest;
 import org.vast.ows.ParameterizedRequestReader;
+import org.vast.ows.ParameterizedResponse;
+import org.vast.ows.ParameterizedResponseReader;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -63,6 +65,16 @@ public class SPSUtils extends OWSUtils
 		ParameterizedRequest request = (ParameterizedRequest)reader.readXMLQuery(dom, dom.getRootElement());
 		
 		return request;
+	}
+	
+	
+	public ParameterizedResponse readParameterizedResponse(DOMHelper dom, Element responseElt, DataComponent mainParams, String version) throws OWSException
+	{
+		ParameterizedResponseReader reader = (ParameterizedResponseReader)OGCRegistry.createReader(OWSUtils.SPS, responseElt.getLocalName(), version);
+		reader.setParamStructure(mainParams);
+		ParameterizedResponse response = (ParameterizedResponse)reader.readXMLResponse(dom, dom.getRootElement());
+		
+		return response;
 	}
 	
 }

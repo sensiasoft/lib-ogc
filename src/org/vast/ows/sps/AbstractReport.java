@@ -22,6 +22,10 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 import org.vast.util.DateTime;
 
 
@@ -121,6 +125,17 @@ public class AbstractReport
 	public void setEstimatedToC(DateTime estimatedToC)
 	{
 		this.estimatedToC = estimatedToC;
+	}
+	
+	
+	public void setEstimatedDelay(int seconds)
+	{
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(new Date());
+		cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+		cal.add(Calendar.SECOND, seconds);
+		cal.set(Calendar.MILLISECOND, 0);
+		this.estimatedToC = new DateTime(cal.getTimeInMillis());
 	}
 	
 	

@@ -11,7 +11,9 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
     Alexandre Robin <alexandre.robin@spotimage.fr>
@@ -25,17 +27,19 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSException;
 import org.w3c.dom.*;
+import org.vast.util.DateTime;
+import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 
 
 /**
  * <p><b>Title:</b><br/>
- * GetStatus Response Writer v2.0
+ * Reserve Response Writer v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Writer to generate an XML GetStatus response based
- * on values contained in a GetStatusResponse object for SPS v2.0
+ * Writer to generate an XML Reserve response based
+ * on values contained in a ReserveResponse object for SPS v2.0
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -43,12 +47,12 @@ import org.vast.xml.DOMHelper;
  * @date Mar 04, 2008
  * @version 1.0
  */
-public class GetStatusResponseWriterV20 extends AbstractResponseWriter<GetStatusResponse>
+public class ReserveResponseWriterV20 extends AbstractResponseWriter<ReserveResponse>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
 	
 	
-	public Element buildXMLResponse(DOMHelper dom, GetStatusResponse response, String version) throws OWSException
+	public Element buildXMLResponse(DOMHelper dom, ReserveResponse response, String version) throws OWSException
 	{
 		try
 		{
@@ -57,8 +61,14 @@ public class GetStatusResponseWriterV20 extends AbstractResponseWriter<GetStatus
 			// root element
 			Element rootElt = dom.createElement("sps:" + response.getMessageType());
 			
-			// status report
-			Element reportElt = commonWriter.writeReport(dom, response.getReport());
+			// latest response time
+			DateTime latestResp = response.getLatestResponseTime();
+			if (latestResp != null)
+				dom.setElementValue(rootElt, "sps:latestResponseTime",
+						DateTimeFormat.formatIso(latestResp.getJulianTime(), 0));
+			
+			// reservation report
+			Element reportElt = commonWriter.writeReservationReport(dom, response.getReport());
 			Element resElt = dom.addElement(rootElt, "sps:result");
 			resElt.appendChild(reportElt);
 			

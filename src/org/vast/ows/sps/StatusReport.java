@@ -22,6 +22,11 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.vast.cdm.common.CDMException;
+import org.vast.ows.OWSException;
+import org.vast.ows.OWSExceptionReport;
 import org.vast.sweCommon.SWEData;
 
 
@@ -44,7 +49,7 @@ public class StatusReport extends AbstractReport
 	public static final String IN_PROGRESS = "other:IN_PROGRESS";
 	public static final String CANCELLED = "CANCELLED";
 	public static final String FAILED = "FAILED";
-	public static final String COMPLETED= "COMPLETED";
+	public static final String COMPLETED = "COMPLETED";
 	
 	protected SWEData extendedData;
 
@@ -58,5 +63,23 @@ public class StatusReport extends AbstractReport
 	public void setExtendedData(SWEData extendedData)
 	{
 		this.extendedData = extendedData;
+	}
+	
+	
+	public void validate() throws OWSException
+	{
+		List<CDMException> errorList = new ArrayList<CDMException>();
+		extendedData.validateData(errorList);
+		if (errorList.size() == 0)
+			return;
+		
+		OWSExceptionReport report = new OWSExceptionReport();
+		for (int i=0; i<errorList.size(); i++)
+		{
+			String loc = errorList.get(i).getLocator();
+			String msg = errorList.get(i).getMessage();
+			report.add(new SPSException(SPSException.invalid_param_code, "ReportData/" + loc, null, msg));
+		}		
+		throw report;
 	}
 }

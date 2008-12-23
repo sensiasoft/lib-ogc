@@ -25,18 +25,20 @@ package org.vast.ows.sps;
 import org.vast.cdm.common.DataComponent;
 import org.vast.ows.OWSException;
 import org.vast.ows.ParameterizedResponseReader;
+import org.vast.util.DateTime;
+import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
 
 /**
  * <p><b>Title:</b>
- * GetStatus Response Reader v2.0
+ * Submit Response Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Used to read a version 2.0 SPS GetStatus Response into
- * a GetStatusResponse object
+ * Used to read a version 2.0 SPS Submit Response into
+ * a SubmitResponse object
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -44,7 +46,7 @@ import org.w3c.dom.Element;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class GetStatusResponseReaderV20 extends ParameterizedResponseReader<GetStatusResponse>
+public class ReserveResponseReaderV20 extends ParameterizedResponseReader<SubmitResponse>
 {
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
 	protected DataComponent paramStructure;
@@ -56,20 +58,28 @@ public class GetStatusResponseReaderV20 extends ParameterizedResponseReader<GetS
 	}
 	
 	
-	public GetStatusResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+	public SubmitResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 		try
 		{
-			assert(paramStructure != null);
+			assert(this.paramStructure != null);
 			
-			GetStatusResponse response = new GetStatusResponse();
+			SubmitResponse response = new SubmitResponse();
 			response.setVersion("2.0");
 			
-			// status or feasibility report
-			Element reportElt = dom.getElement(responseElt, "result/*");
+			// latest response time
+			String isoDate = dom.getElementValue(responseElt, "latestResponseTime");
+			if (isoDate != null)
+			{
+				DateTime latestResponseTime = new DateTime(DateTimeFormat.parseIso(isoDate));
+				response.setLatestResponseTime(latestResponseTime);
+			}
+			
+			// status report
+			Element reportElt = dom.getElement(responseElt, "result/ReservationReport");
 			if (reportElt != null)
 			{
-				StatusReport report = (StatusReport)commonReader.readReport(dom, reportElt, paramStructure);
+				StatusReport report = commonReader.readReservationReport(dom, reportElt, paramStructure);
 				response.setReport(report);
 			}
 			

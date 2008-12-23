@@ -2,7 +2,11 @@
 package org.vast.ows.sps;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 import org.vast.cdm.common.CDMException;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
@@ -66,6 +70,17 @@ public abstract class TaskingRequest extends OWSRequest implements Parameterized
 	public void setLatestResponseTime(DateTime latestResponseTime)
 	{
 		this.latestResponseTime = latestResponseTime;
+	}
+	
+	
+	public void setMaxResponseDelay(int seconds)
+	{
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(new Date());
+		cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+		cal.add(Calendar.SECOND, seconds);
+		cal.set(Calendar.MILLISECOND, 0);
+		this.latestResponseTime = new DateTime(cal.getTimeInMillis());
 	}
 	
 	

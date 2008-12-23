@@ -228,12 +228,12 @@ public class SPSCommonReaderV20
 	{
 		try
 		{
-			FeasibilityReport study = new FeasibilityReport();
-			readReportXML(dom, reportElt, study, paramStructure);
+			FeasibilityReport report = new FeasibilityReport();
+			readReportXML(dom, reportElt, report, paramStructure);
 			
 			// TODO read alternatives
 			
-			return study;
+			return report;
 		}
 		catch (Exception e)
 		{

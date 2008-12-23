@@ -118,7 +118,25 @@ public class SPSCommonWriterV20
 	
 	
 	/**
-	 * Writes a Progress Report as a DOM element according to SPS v2.0 schema
+	 * Writes any status report to the DOM
+	 * @param dom
+	 * @param report
+	 * @return
+	 * @throws CDMException
+	 */
+	public Element writeReport(DOMHelper dom, StatusReport report) throws CDMException
+	{
+		if (report instanceof FeasibilityReport)
+			return writeFeasibilityReport(dom, (FeasibilityReport)report);
+		else if (report instanceof ReservationReport)
+			return writeReservationReport(dom, (ReservationReport)report);
+		else
+			return writeStatusReport(dom, report);
+	}
+	
+	
+	/**
+	 * Writes a Status Report as a DOM element according to SPS v2.0 schema
 	 * @param dom
 	 * @param report
 	 * @return
@@ -142,9 +160,9 @@ public class SPSCommonWriterV20
 	
 	
 	/**
-	 * Writes a Feasibility Study as a DOM element according to SPS v2.0 schema
+	 * Writes a Feasibility Report as a DOM element according to SPS v2.0 schema
 	 * @param dom
-	 * @param study
+	 * @param report
 	 * @return
 	 * @throws OWSException
 	 */
@@ -160,6 +178,37 @@ public class SPSCommonWriterV20
 			Element extDataElt = dom.addElement(reportElt, "sps:extendedData");
 			writeSWEData(dom, extDataElt, extData);
 		}
+		
+		// TODO write feasible alternatives
+		
+		return reportElt;
+	}
+	
+	
+	/**
+	 * Writes a Reservation report as a DOM element according to SPS v2.0 schema
+	 * @param dom
+	 * @param report
+	 * @return
+	 * @throws OWSException
+	 */
+	public Element writeReservationReport(DOMHelper dom, ReservationReport report) throws CDMException
+	{
+		Element reportElt = dom.createElement("sps:ReservationReport");
+		writeBaseReportAttributes(dom, reportElt, report);
+		
+		// extended data
+		SWEData extData = report.getExtendedData();
+		if (extData != null)
+		{
+			Element extDataElt = dom.addElement(reportElt, "sps:extendedData");
+			writeSWEData(dom, extDataElt, extData);
+		}
+		
+		// expiration
+		DateTime expDate = report.getReservationExpiration();
+		if (expDate != null)
+			dom.setElementValue(reportElt, "sps:reservationExpiration", expDate.formatIso(0));
 		
 		return reportElt;
 	}

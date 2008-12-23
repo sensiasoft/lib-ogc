@@ -22,6 +22,10 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 import org.vast.util.DateTime;
 
 
@@ -56,5 +60,16 @@ public class ReservationReport extends StatusReport
 	public void setReservationExpiration(DateTime reservationExpiration)
 	{
 		this.reservationExpiration = reservationExpiration;
+	}
+	
+	
+	public void setMaxExpirationDelay(int seconds)
+	{
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(new Date());
+		cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+		cal.add(Calendar.SECOND, seconds);
+		cal.set(Calendar.MILLISECOND, 0);
+		this.reservationExpiration = new DateTime(cal.getTimeInMillis());
 	}
 }
