@@ -66,6 +66,7 @@ public class DescribeTaskingResponseWriterV20 extends AbstractResponseWriter<Des
 			if (params != null)
 			{
 				Element paramsElt = dom.addElement(rootElt, "sps:taskingParameters");
+				dom.setAttributeValue(paramsElt, "name", params.getName());
 				componentElt = componentWriter.writeComponent(dom, params);
 				paramsElt.appendChild(componentElt);
 			}
@@ -77,6 +78,7 @@ public class DescribeTaskingResponseWriterV20 extends AbstractResponseWriter<Des
 			if (params != null)
 			{
 				Element paramsElt = dom.addElement(rootElt, "sps:feasibilityReportExtendedData");
+				dom.setAttributeValue(paramsElt, "name", params.getName());
 				componentElt = componentWriter.writeComponent(dom, params);
 				paramsElt.appendChild(componentElt);
 			}
@@ -86,6 +88,7 @@ public class DescribeTaskingResponseWriterV20 extends AbstractResponseWriter<Des
 			if (params != null)
 			{
 				Element paramsElt = dom.addElement(rootElt, "sps:statusReportExtendedData");
+				dom.setAttributeValue(paramsElt, "name", params.getName());
 				componentElt = componentWriter.writeComponent(dom, params);
 				paramsElt.appendChild(componentElt);
 			}
