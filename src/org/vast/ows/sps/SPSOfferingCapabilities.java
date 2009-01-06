@@ -46,6 +46,7 @@ public class SPSOfferingCapabilities extends OWSLayerCapabilities
 	protected Bbox areaOfService;
 	protected List<String> observableList;
 	protected DescribeTaskingResponse parametersDescription;
+	protected String sensorDescriptionURL;
 	protected Object sensorDescription;
 
 
@@ -106,6 +107,18 @@ public class SPSOfferingCapabilities extends OWSLayerCapabilities
 	public void setSensorDescription(Object sensorDescription)
 	{
 		this.sensorDescription = sensorDescription;
+	}
+
+
+	public String getSensorDescriptionURL()
+	{
+		return sensorDescriptionURL;
+	}
+
+
+	public void setSensorDescriptionURL(String sensorDescriptionURL)
+	{
+		this.sensorDescriptionURL = sensorDescriptionURL;
 	}
 
 }

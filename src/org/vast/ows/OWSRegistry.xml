@@ -41,6 +41,7 @@
    <Writer type="SAS" subType="GetCapabilities" version="0" class="org.vast.ows.sas.SASGetCapabilitiesWriter"/> 
    <Writer type="SAS" subType="Subscribe" version="0.0" class="org.vast.ows.sas.SASSubscribeWriter"/>
    <!-- -->
+   <Reader type="SPS" subType="Capabilities" version="2.0" class="org.vast.ows.sps.SPSCapabilitiesReaderV20"/>
    <Reader type="SPS" subType="DescribeTasking" version="2.0" class="org.vast.ows.sps.DescribeTaskingRequestReaderV20"/>
    <Reader type="SPS" subType="DescribeTaskingResponse" version="2.0" class="org.vast.ows.sps.DescribeTaskingResponseReaderV20"/>
    <Reader type="SPS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorReaderV10"/>
@@ -61,6 +62,7 @@
    <Reader type="SPS" subType="Confirm" version="2.0" class="org.vast.ows.sps.ConfirmRequestReaderV20"/>
    <Reader type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.ConfirmResponseReaderV20"/>     
    <!-- -->
+   <Writer type="SPS" subType="Capabilities" version="2.0" class="org.vast.ows.sps.SPSCapabilitiesWriterV20"/>
    <Writer type="SPS" subType="DescribeTasking" version="2.0" class="org.vast.ows.sps.DescribeTaskingRequestWriterV20"/>
    <Writer type="SPS" subType="DescribeTaskingResponse" version="2.0" class="org.vast.ows.sps.DescribeTaskingResponseWriterV20"/>
    <Writer type="SPS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorWriterV10"/>

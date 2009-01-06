@@ -172,7 +172,7 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 	protected void checkParameters(DescribeSensorRequest request, OWSExceptionReport report) throws OWSException
 	{
 		// check common params + generate exception
-		super.checkParameters(request, report, OWSUtils.SOS);
+		super.checkParameters(request, report);
 		
 		// need procedure
 		if (request.getProcedure() == null)
