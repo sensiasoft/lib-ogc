@@ -24,15 +24,8 @@ import java.io.*;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataHandler;
 import org.vast.math.Vector3d;
-import org.vast.ogc.gml.GMLGeometryReader;
-import org.vast.ogc.OGCException;
-import org.vast.ogc.OGCExceptionReader;
 import org.vast.sweCommon.SWEFilter;
-import org.vast.sweCommon.SWECommonUtils;
 import org.vast.sweCommon.SWEReader;
-import org.vast.sweCommon.URIStreamHandler;
-import org.vast.xml.*;
-import org.w3c.dom.*;
 
 
 /**

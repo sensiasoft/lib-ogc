@@ -20,6 +20,8 @@
 
 package org.vast.ows.wps;
 
+import javax.xml.soap.AttachmentPart;
+
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.ows.OWSRequest;
@@ -44,10 +46,11 @@ import org.vast.ows.OWSRequest;
 public class ExecuteProcessRequest extends OWSRequest
 {
 
-	protected String offering;
+	protected String offering, requestFormat;
     protected DataComponent inputDataComponent;
 	protected DataEncoding inputDataEncoding;
-
+	protected AttachmentPart attachmentPart;
+	
 	
 	public ExecuteProcessRequest()
 	{
@@ -84,6 +87,7 @@ public class ExecuteProcessRequest extends OWSRequest
 		this.inputDataEncoding = inputDataEncoding;
 	}
 
+	
     public String getOffering() {
 		return offering;
 	}
@@ -92,5 +96,25 @@ public class ExecuteProcessRequest extends OWSRequest
 	public void setOffering(String offering) {
 		this.offering = offering;
 	}
-	
+
+
+	public AttachmentPart getAttachmentPart() {
+		return attachmentPart;
+	}
+
+
+	public void setAttachmentPart(AttachmentPart attachmentPart) {
+		this.attachmentPart = attachmentPart;
+	}
+
+
+	public String getRequestFormat() {
+		return requestFormat;
+	}
+
+
+	public void setRequestFormat(String requestFormat) {
+		this.requestFormat = requestFormat;
+	}
+
 }

@@ -26,11 +26,11 @@ import org.vast.ows.OWSResponse;
 
 /**
  * <p><b>Title:</b>
- * Describe Process Response Reader
+ * Describe Process Response
  * </p>
  *
  * <p><b>Description:</b><br/>
- * reader for WPS Describe Process responses with a input/output expressed in SWE Common.
+ * container for WPS Describe Process responses with a input/output expressed in SWE Common.
  * </p>
  *
  * <p>Copyright (c) 2008</p>

@@ -20,20 +20,27 @@
 
 package org.vast.ows.wps;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.soap.*;
+
 import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSRequestWriter;
 import org.vast.ows.OWSResponse;
 import org.vast.ows.OWSResponseReader;
+import org.vast.ows.OWSUtils;
+import org.vast.ows.util.PostRequestFilter;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.DOMHelperException;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -44,7 +51,7 @@ import org.w3c.dom.Element;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Utility methods for common stuffs in OGC services
+ * Utility methods for common stuffs for WPS and SOAP binding and attachment
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -52,11 +59,13 @@ import org.w3c.dom.Element;
  * @date Dec 22, 2008
  * @version 1.0
  */
+
 public class WPSUtils
 {
     public final static String ioError = "IO Error while sending request:";
     protected MessageFactory soapMessageFactory;
     protected SOAPConnectionFactory soapConnectionFactory;
+	private OWSUtils owsUtils;
     
     public WPSUtils() throws SOAPException
     {
@@ -106,6 +115,14 @@ public class WPSUtils
     }
 
     
+    public SOAPMessage createSoapMessage(DOMHelper dom) throws SOAPException
+    {
+    	SOAPMessage soapMessage = soapMessageFactory.createMessage();
+    	soapMessage.getSOAPHeader().detachNode();
+    	soapMessage.getSOAPBody().addDocument((Document)dom.getDocument());
+		return soapMessage;  	
+    }
+    
     @SuppressWarnings("unchecked")
 	public SOAPMessage createSoapMessage(OWSRequest request) throws SOAPException
     {
@@ -137,6 +154,41 @@ public class WPSUtils
     	
     	return soapMessage; 
     }
+    
+    
+    public OWSRequest extractWPSRequest(InputStream inputStream) throws SOAPException, OWSException, CDMException 
+    {
+    	OWSRequest request = null;
+    	MimeHeaders header = null;
+    	
+    	try {
+			SOAPMessage soapMessage = soapMessageFactory.createMessage(header,inputStream);
+			
+			String bodyContent = soapMessage.getSOAPBody().getTextContent();
+			byte[] bytes = bodyContent.getBytes("UTF-8");
+			InputStream input = new ByteArrayInputStream(bytes);
+			InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(input));
+			DOMHelper dom = new DOMHelper(xmlRequest, false);
+			request = (OWSRequest)owsUtils.readXMLQuery(dom, dom.getBaseElement());
+
+			if (request instanceof ExecuteProcessRequest)
+				{
+					AttachmentPart attachment = (AttachmentPart) soapMessage.getAttachments().next();
+					((ExecuteProcessRequest)request).setAttachmentPart(attachment);
+				}
+			
+		} catch (DOMException e) {
+			throw new SOAPException(e);
+		} catch (UnsupportedEncodingException e) {
+			throw new SOAPException(e);
+		} catch (IOException e) {
+			throw new SOAPException(e);
+		} catch (DOMHelperException e) {
+			throw new SOAPException(e);
+		}	
+		
+		return request;
+	}
     
     
     private SOAPMessage attachInputData(ExecuteProcessRequest request, SOAPMessage soapMessage) throws SOAPException, OWSException, CDMException 
