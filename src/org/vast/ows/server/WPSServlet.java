@@ -24,12 +24,11 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Hashtable;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
@@ -37,12 +36,11 @@ import org.vast.ows.OWSUtils;
 import org.vast.ows.util.PostRequestFilter;
 import org.vast.ows.wps.DescribeProcessRequest;
 import org.vast.ows.wps.ExecuteProcessRequest;
-import org.vast.ows.wps.WPSDescribeProcessResponseSerializer;
 import org.vast.ows.wps.WPSException;
+import org.vast.ows.wps.WPSUtils;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.apache.xml.serialize.XMLSerializer;
 
 
 /**
@@ -56,17 +54,14 @@ import org.w3c.dom.NodeList;
  * @author Alexandre Robin
  * @version 1.0
  */
+@SuppressWarnings("deprecation")
 public abstract class WPSServlet extends OWSServlet
 {
     private static final long serialVersionUID = 6940984824581209178L;
     protected OWSUtils owsUtils = new OWSUtils();
-    
-	// Table of SOS handlers: 1 for each observation offering
-	protected Hashtable<String, WPSHandler> dataSetHandlers = new Hashtable<String, WPSHandler>();
+	private WPSUtils wpsUtils;
+	protected DOMHelper describeProcessDomHelper;
 	
-	// Table of <ProcedureId, SensorMLUrl> - 1 per procedure 
-	protected Hashtable<String, String> sensorMLUrls = new Hashtable<String, String>();
-	    
 	
 	protected void processQuery(GetCapabilitiesRequest query) throws Exception
     {
@@ -80,90 +75,31 @@ public abstract class WPSServlet extends OWSServlet
 	 */
 	protected void processQuery(DescribeProcessRequest query) throws Exception
 	{
+		if (query.getRequestFormat() == null)
+			throw new WPSException("A DescribeProcess WPS request must specify an request format argument");
 		if (query.getOffering() == null)
-			throw new WPSException("A DescribeProcess WPS request must specify an offeringId argument");
-			
-		sendDescribeProcess("ALL", query.getResponseStream());
+			throw new WPSException("A DescribeProcess WPS request must specify an request offering argument");
+
+		SOAPMessage describeProcessSOAPMessage = wpsUtils.createSoapMessage(describeProcessDomHelper);
+		describeProcessSOAPMessage.writeTo(query.getResponseStream());
 	}
+
 	
-	
+	private void sendDescribeProcess(String string, OutputStream responseStream) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	/**
 	 * Decode the query, check validity and call the right handler
 	 * @param query
-	 */
-	protected void processQuery(ExecuteProcessRequest query) throws Exception
-	{
-		if (query.getOffering() == null)
-			throw new WPSException("An ExecuteProcess WPS request must specify an offeringId argument");
+	 */	
+	protected void processQuery(ExecuteProcessRequest query) {
+		// TODO Auto-generated method stub
 		
-		if (query.getResponseMode() == null)
-			throw new WPSException("An ExecuteProcessRequest WPS request must specify a response mode");
-		
-		if (query.getResponseFormat() == null)
-			throw new WPSException("An ExecuteProcess WPS request must specify a response mode");
-		
-					
-		WPSHandler handler = dataSetHandlers.get(query.getOffering());
-
-		if (handler != null)
-		{
-			checkQueryFormat(query, capsHelper);
-            handler.executeProcess(query);				
-		}
-		else
-			throw new WPSException("Data for observation " + query.getOffering() + " is unavailable on this server");
 	}
 
-	
-	/**
-	 * Checks if selected format is available in this offering
-	 * @param query
-	 * @param capsReader
-	 * @throws WPSException
-	 */
-	protected void checkQueryFormat(ExecuteProcessRequest query, DOMHelper capsReader) throws WPSException
-	{
-		Element offeringElt = getOffering(query.getOffering(), capsReader);
-        
-    	NodeList formatElts =  capsReader.getElements(offeringElt, "responseFormat");
-        
-        // check query format vs. each supported format in the capabilities
-        int listSize = formatElts.getLength();
-		for (int i=0; i<listSize; i++)
-		{
-			String formatString = capsReader.getElementValue((Element)formatElts.item(i), "");
-			
-			if (formatString.equals(query.getResponseFormat()))
-				return;
-		}
-		
-		throw new WPSException("Format - " + query.getResponseFormat() + " - is not available for offering " + query.getOffering());
-	}
-	
-	
-    /**
-     * Lookup offering element in caps using ID
-     * @param obsID
-     * @param capsReader
-     * @return
-     * @throws WPSException
-     */
-	protected Element getOffering(String obsID, DOMHelper capsReader) throws WPSException
-	{
-		Element obsElt = null;
-		
-		try
-		{
-			obsElt = capsReader.getXmlDocument().getElementByID(obsID);
-		}
-		catch (Exception e)
-		{
-			throw new WPSException("No observation with ID " + obsID + " available on this server");
-		}
-		
-		return obsElt;
-	}
-	
 	
 	/**
 	 * Parse and process HTTP GET request
@@ -192,10 +128,8 @@ public abstract class WPSServlet extends OWSServlet
 			
 			if (query instanceof GetCapabilitiesRequest)
 	        	processQuery((GetCapabilitiesRequest)query);
-	        else if (query instanceof DescribeProcessRequest)
-	        	processQuery((DescribeProcessRequest)query);
-	        else if (query instanceof ExecuteProcessRequest)
-	        	processQuery((ExecuteProcessRequest)query);
+        	else throw new ServletException("WPS accept request of content type 'text/xml' only for the" +
+				"GetCapabilities request");
 		}
 		catch (WPSException e)
 		{
@@ -236,7 +170,7 @@ public abstract class WPSServlet extends OWSServlet
             }
         }
 	}
-
+	
 
 	/**
 	 * Parse and process HTTP POST request
@@ -249,107 +183,144 @@ public abstract class WPSServlet extends OWSServlet
 		//  get request URL
 		String requestURL = req.getRequestURL().toString();
 		
-		try
+		if(req.getContentType().equalsIgnoreCase("text/xml"))
 		{
-			InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
-            DOMHelper dom = new DOMHelper(xmlRequest, false);
-            query = (OWSRequest)owsUtils.readXMLQuery(dom, dom.getBaseElement());
-            
-            // setup response stream
-            resp.setContentType("text/xml");
-            query.setResponse(resp);
-			query.setPostServer(requestURL);
+			try 
+			{
+				InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
+				DOMHelper dom = new DOMHelper(xmlRequest, false);
+				query = (OWSRequest)owsUtils.readXMLQuery(dom, dom.getBaseElement());
+				
+				// setup response stream
+				resp.setContentType("text/xml");
+				query.setResponse(resp);
+				query.setPostServer(requestURL);
+				
+				if (query instanceof GetCapabilitiesRequest)
+					processQuery((GetCapabilitiesRequest)query);
+				else throw new ServletException("WPS accepts requests of content type 'text/xml' only for the" +
+						"GetCapabilities request");
+			}
 			
-			if (query instanceof GetCapabilitiesRequest)
-	        	processQuery((GetCapabilitiesRequest)query);
-	        else if (query instanceof DescribeProcessRequest)
-	        	processQuery((DescribeProcessRequest)query);
-	        else if (query instanceof ExecuteProcessRequest)
-	        	processQuery((ExecuteProcessRequest)query);
+			catch (WPSException e)
+			{
+				try
+		        {
+		            sendErrorMessage(resp.getOutputStream(), e.getMessage());
+		        }
+		        catch (IOException e1)
+		        {
+		            e.printStackTrace();
+		        }
+			}
+		    catch (OWSException e)
+		    {
+		        try
+		        {
+		            sendErrorMessage(resp.getOutputStream(), e.getMessage());
+		        }
+		        catch (IOException e1)
+		        {
+		            e.printStackTrace();
+		        }            
+		    }
+			catch (Exception e)
+			{
+				throw new ServletException(internalErrorMsg, e);
+			}
+		    finally
+		    {
+		        try
+		        {
+		            resp.getOutputStream().flush();
+		            resp.getOutputStream().close();
+		        }
+		        catch (IOException e)
+		        {
+		            throw new ServletException(e);
+		        }
+		    }					
 		}
-        catch (WPSException e)
+		
+		else if(req.getContentType().equalsIgnoreCase("application/soap+xml"))
 		{
-            try
-            {
-                sendErrorMessage(resp.getOutputStream(), e.getMessage());
-            }
-            catch (IOException e1)
-            {
-                e.printStackTrace();
-            }
-		}
-        catch (OWSException e)
-        {
-            try
-            {
-                sendErrorMessage(resp.getOutputStream(), "Invalid request or unrecognized version");
-            }
-            catch (IOException e1)
-            {
-                e.printStackTrace();
-            }            
-        }
-		catch (DOMHelperException e)
-		{
-            try
-            {
-                sendErrorMessage(resp.getOutputStream(), "Invalid XML request. Please check request format");
-            }
-            catch (IOException e1)
-            {
-                e.printStackTrace();
-            }
-		}
-		catch (Exception e)
-		{
-			throw new ServletException(internalErrorMsg, e);
-		}
-        finally
-        {
-            try
-            {
-                resp.getOutputStream().close();
-            }
-            catch (IOException e)
-            {
-                throw new ServletException(e);
-            }
-        }
-	}
 
-	
-	/**
-	 * Adds a new handler or the given observation ID
-	 * @param obsID
-	 * @param handlerClass
-	 */
-	public void addDataSetHandler(String obsID, WPSHandler handlerClass)
-	{
-		dataSetHandlers.put(obsID, handlerClass);
-	}
+			try
+			{
+				InputStream soapRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));				
+				query = wpsUtils.extractWPSRequest(soapRequest);
 
-
-	public void removeDataSetHandler(String dataSetID)
-	{
-		dataSetHandlers.remove(dataSetID);
-	}
-	
-	
-	/**
-	 * Sends the whole DescribeProcess document in response to DescribeProcess request
-	 * @param resp
-	 * @throws IOException
-	 */
-	protected void sendDescribeProcess(String section, OutputStream resp)
-	{
-		try
-		{
-            WPSDescribeProcessResponseSerializer serializer = new WPSDescribeProcessResponseSerializer();
-            serializer.setOutputByteStream(resp);
-            serializer.serialize(capsHelper.getRootElement());
-		}
-		catch (IOException e)
-		{
+				// setup response stream
+				resp.setContentType(req.getContentType());
+				query.setResponse(resp);
+				query.setPostServer(requestURL);
+			
+				if (query instanceof GetCapabilitiesRequest)
+					processQuery((GetCapabilitiesRequest)query);
+				else if (query instanceof DescribeProcessRequest)
+					processQuery((DescribeProcessRequest)query);
+				else if (query instanceof DescribeProcessRequest)
+					processQuery((ExecuteProcessRequest)query);
+			}
+			catch (WPSException e)
+			{
+				try
+				{
+					sendErrorMessage(resp.getOutputStream(), e.getMessage());
+				}
+				catch (IOException e1)
+				{
+					e.printStackTrace();
+				}
+			}
+			catch (SOAPException e)
+			{
+				try
+				{
+					sendErrorMessage(resp.getOutputStream(), e.getMessage());
+				}
+				catch (IOException e1)
+				{
+					e.printStackTrace();
+				}
+			}
+			catch (OWSException e)
+			{
+				try
+				{
+					sendErrorMessage(resp.getOutputStream(), "Invalid request or unrecognized version");
+				}
+				catch (IOException e1)
+				{
+					e.printStackTrace();
+				}            
+			}
+			catch (DOMHelperException e)
+			{
+				try
+				{
+					sendErrorMessage(resp.getOutputStream(), "Invalid XML request. Please check request format");
+				}
+				catch (IOException e1)
+				{
+					e.printStackTrace();
+				}
+			}
+			catch (Exception e)
+			{
+				throw new ServletException(internalErrorMsg, e);
+			}
+			finally
+			{
+				try
+				{
+					resp.getOutputStream().close();
+				}
+				catch (IOException e)
+				{
+					throw new ServletException(e);
+				}
+			}
 		}
 	}
 	
