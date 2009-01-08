@@ -25,6 +25,7 @@ package org.vast.ows.sps;
 import java.util.ArrayList;
 import java.util.List;
 import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataComponent;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.sweCommon.SWEData;
@@ -63,6 +64,14 @@ public class StatusReport extends AbstractReport
 	public void setExtendedData(SWEData extendedData)
 	{
 		this.extendedData = extendedData;
+	}
+	
+	
+	public void initExtentedData(DataComponent dataStructure)
+	{
+		SWEData reportData = new SWEData();
+		reportData.setDataComponents(dataStructure);
+		setExtendedData(reportData);
 	}
 	
 	

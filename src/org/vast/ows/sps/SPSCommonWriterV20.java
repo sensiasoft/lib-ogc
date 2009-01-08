@@ -117,8 +117,22 @@ public class SPSCommonWriterV20
 	}
 	
 	
+	protected void writeStatusReportData(DOMHelper dom, Element reportElt, StatusReport report) throws CDMException
+	{
+		writeBaseReportAttributes(dom, reportElt, report);
+		
+		// extended data
+		SWEData extData = report.getExtendedData();
+		if (extData != null && extData.getDataList().getComponentCount() > 0)
+		{
+			Element extDataElt = dom.addElement(reportElt, "sps:extendedData");
+			writeSWEData(dom, extDataElt, extData);
+		}
+	}
+	
+	
 	/**
-	 * Writes any status report to the DOM
+	 * Writes any report to the DOM
 	 * @param dom
 	 * @param report
 	 * @return
@@ -145,16 +159,7 @@ public class SPSCommonWriterV20
 	public Element writeStatusReport(DOMHelper dom, StatusReport report) throws CDMException
 	{
 		Element reportElt = dom.createElement("sps:StatusReport");
-		writeBaseReportAttributes(dom, reportElt, report);
-		
-		// extended data
-		SWEData extData = report.getExtendedData();
-		if (extData != null)
-		{
-			Element extDataElt = dom.addElement(reportElt, "sps:extendedData");
-			writeSWEData(dom, extDataElt, extData);
-		}
-		
+		writeStatusReportData(dom, reportElt, report);
 		return reportElt;
 	}
 	
@@ -169,15 +174,7 @@ public class SPSCommonWriterV20
 	public Element writeFeasibilityReport(DOMHelper dom, FeasibilityReport report) throws CDMException
 	{
 		Element reportElt = dom.createElement("sps:FeasibilityReport");
-		writeBaseReportAttributes(dom, reportElt, report);
-		
-		// extended data
-		SWEData extData = report.getExtendedData();
-		if (extData != null)
-		{
-			Element extDataElt = dom.addElement(reportElt, "sps:extendedData");
-			writeSWEData(dom, extDataElt, extData);
-		}
+		writeStatusReportData(dom, reportElt, report);
 		
 		// TODO write feasible alternatives
 		
@@ -195,15 +192,7 @@ public class SPSCommonWriterV20
 	public Element writeReservationReport(DOMHelper dom, ReservationReport report) throws CDMException
 	{
 		Element reportElt = dom.createElement("sps:ReservationReport");
-		writeBaseReportAttributes(dom, reportElt, report);
-		
-		// extended data
-		SWEData extData = report.getExtendedData();
-		if (extData != null)
-		{
-			Element extDataElt = dom.addElement(reportElt, "sps:extendedData");
-			writeSWEData(dom, extDataElt, extData);
-		}
+		writeStatusReportData(dom, reportElt, report);
 		
 		// expiration
 		DateTime expDate = report.getReservationExpiration();

@@ -62,7 +62,7 @@ public class SPSUtils extends OWSUtils
 		
 		ParameterizedRequestReader reader = (ParameterizedRequestReader)OGCRegistry.createReader(OWSUtils.SPS, tempReq.getOperation(), tempReq.getVersion());
 		reader.setParamStructure(mainParams);
-		ParameterizedRequest request = (ParameterizedRequest)reader.readXMLQuery(dom, dom.getRootElement());
+		ParameterizedRequest request = (ParameterizedRequest)reader.readXMLQuery(dom, requestElt);
 		
 		return request;
 	}
@@ -72,7 +72,7 @@ public class SPSUtils extends OWSUtils
 	{
 		ParameterizedResponseReader reader = (ParameterizedResponseReader)OGCRegistry.createReader(OWSUtils.SPS, responseElt.getLocalName(), version);
 		reader.setParamStructure(mainParams);
-		ParameterizedResponse response = (ParameterizedResponse)reader.readXMLResponse(dom, dom.getRootElement());
+		ParameterizedResponse response = (ParameterizedResponse)reader.readXMLResponse(dom, responseElt);
 		
 		return response;
 	}
