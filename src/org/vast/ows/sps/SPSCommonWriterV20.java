@@ -201,4 +201,19 @@ public class SPSCommonWriterV20
 		
 		return reportElt;
 	}
+	
+	
+	/**
+	 * Writes a Status Notification Report as a DOM element according to SPS v2.0 schema
+	 * @param dom
+	 * @param report
+	 * @return
+	 * @throws OWSException
+	 */
+	public Element writeStatusNotification(DOMHelper dom, StatusReport report) throws CDMException
+	{
+		Element reportElt = dom.createElement("sps:StatusNotification");
+		writeBaseReportAttributes(dom, reportElt, report);
+		return reportElt;
+	}
 }
