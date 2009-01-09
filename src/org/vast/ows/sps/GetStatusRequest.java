@@ -45,7 +45,8 @@ public class GetStatusRequest extends OWSRequest
 {
 	protected String taskID;
 	protected DateTime since;
-		
+	protected String format;
+	
 	
 	public GetStatusRequest()
 	{
@@ -75,5 +76,17 @@ public class GetStatusRequest extends OWSRequest
 	public void setSince(DateTime since)
 	{
 		this.since = since;
+	}
+
+
+	public String getFormat()
+	{
+		return format;
+	}
+
+
+	public void setFormat(String format)
+	{
+		this.format = format;
 	}
 }

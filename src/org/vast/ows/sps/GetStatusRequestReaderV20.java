@@ -103,6 +103,12 @@ public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRe
 			{
 				request.setSince(new DateTime(argValue));
 			}
+			
+			// format
+			else if (argName.equalsIgnoreCase("format"))
+			{
+				request.setFormat(argValue);
+			}
 
 			else
 				throw new SPSException(invalidKVP + ": Unknown Argument " + argName);

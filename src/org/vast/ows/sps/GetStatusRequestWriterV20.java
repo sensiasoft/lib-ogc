@@ -70,6 +70,11 @@ public class GetStatusRequestWriterV20 extends AbstractRequestWriter<GetStatusRe
 		if (since != null)
 			urlBuff.append("&since=" + since.formatIso(0));
 		
+		// format
+		String format = request.getFormat();
+		if (format != null)
+			urlBuff.append("&format=" + format);
+		
 		String url = urlBuff.toString();
 		url = url.replaceAll(" ", "%20");
 		return url;
