@@ -54,6 +54,14 @@ import org.w3c.dom.Element;
  */
 public class SPSUtils extends OWSUtils
 {
+	public static String EVENT_TASK_FEASIBLE = "TASK_FEASIBLE";
+	public static String EVENT_TASK_ACCEPTED = "TASK_ACCEPTED";
+	public static String EVENT_TASK_REJECTED = "TASK_REJECTED";
+	public static String EVENT_TASK_COMPLETED = "TASK_COMPLETED";
+	public static String EVENT_TASK_RESERVED = "TASK_RESERVED";
+	public static String EVENT_TASK_CANCELLED = "TASK_CANCELLED";
+	public static String EVENT_TASK_FAILED = "TASK_FAILED";
+	
 	
 	public ParameterizedRequest readParameterizedRequest(DOMHelper dom, Element requestElt, DataComponent mainParams) throws OWSException
 	{

@@ -70,7 +70,7 @@ public class StatusReport extends AbstractReport
 	public void initExtentedData(DataComponent dataStructure)
 	{
 		SWEData reportData = new SWEData();
-		reportData.setDataComponents(dataStructure);
+		reportData.setDataComponents(dataStructure.copy());
 		setExtendedData(reportData);
 	}
 	
