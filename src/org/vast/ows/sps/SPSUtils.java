@@ -86,11 +86,17 @@ public class SPSUtils extends OWSUtils
 	}
 	
 	
+	public DescribeTaskingResponse readDescribeTaskingResponse(DOMHelper dom, Element respElt) throws OWSException
+	{
+		DescribeTaskingResponse resp = (DescribeTaskingResponse)readXMLResponse(dom, respElt, SPSUtils.SPS, "DescribeTaskingResponse");
+		return resp;
+	}
+	
+	
 	public DescribeTaskingResponse readDescribeTaskingResponse(Element respElt) throws OWSException
 	{
 		DOMHelper dom = new DOMHelper(respElt.getOwnerDocument());
-		DescribeTaskingResponse resp = (DescribeTaskingResponse)readXMLResponse(dom, respElt, SPSUtils.SPS, "DescribeTaskingResponse");
-		return resp;
+		return readDescribeTaskingResponse(dom, respElt);
 	}
 	
 }

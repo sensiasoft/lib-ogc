@@ -70,16 +70,21 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     public final static String ioError = "IO Error while sending request:";
     
     
-    public OWSUtils()
+    static
     {
-    	OWSUtils.loadMaps();
+    	loadRegistry();
     }
     
     
-    public static void loadMaps()
+    public static void loadRegistry()
     {
     	String mapFileUrl = OWSUtils.class.getResource("OWSRegistry.xml").toString();
     	OGCRegistry.loadMaps(mapFileUrl, false);
+    }
+    
+    
+    public OWSUtils()
+    {    	
     }
     
     
@@ -187,9 +192,9 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
      * Helper method to parse any OWS query from a URL query string
      * The service type is also specified in case it is missing in the query
      */
-    public OWSRequest readURLQuery(String queryString, String service) throws OWSException
+    public OWSRequest readURLQuery(String queryString, String serviceType) throws OWSException
     {
-    	return readURLQuery(queryString, service, null);
+    	return readURLQuery(queryString, serviceType, null);
     }
     
     
