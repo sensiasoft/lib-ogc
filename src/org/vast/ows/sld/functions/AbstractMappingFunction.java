@@ -42,21 +42,18 @@ import org.vast.ows.sld.MappingFunction;
 public class AbstractMappingFunction implements MappingFunction
 {
 
-    @Override
     public double compute(double input)
     {
         return Double.NaN;
     }
 
 
-    @Override
     public double compute(String input)
     {
         return Double.NaN;
     }
     
     
-    @Override
     public boolean hasCategoricalInput()
     {
         return false;
