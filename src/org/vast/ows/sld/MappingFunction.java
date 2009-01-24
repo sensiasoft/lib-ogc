@@ -23,4 +23,8 @@ package org.vast.ows.sld;
 public interface MappingFunction
 {
     public double compute(double input);
+    
+    public double compute(String input);
+    
+    public boolean hasCategoricalInput();
 }

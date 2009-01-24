@@ -20,8 +20,6 @@
 
 package org.vast.ows.sld.functions;
 
-import org.vast.ows.sld.MappingFunction;
-
 
 /**
  * <p><b>Title:</b><br/>
@@ -39,7 +37,7 @@ import org.vast.ows.sld.MappingFunction;
  * @date Apr 3, 2006
  * @version 1.0
  */
-public class LookUpTable0D implements MappingFunction
+public class LookUpTable0D extends AbstractMappingFunction
 {
     protected double[][] tableData;
     
@@ -50,6 +48,7 @@ public class LookUpTable0D implements MappingFunction
     }
     
     
+    @Override
     public double compute(double indexVal)
     {
         if (tableData == null)

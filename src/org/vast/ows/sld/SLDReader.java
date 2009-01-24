@@ -24,6 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.sld.VectorSymbolizer.DirectionType;
+import org.vast.ows.sld.functions.StringIdProvider;
 import org.vast.util.MessageSystem;
 import org.vast.util.URIResolver;
 import org.w3c.dom.Element;
@@ -48,11 +49,19 @@ import org.w3c.dom.NodeList;
 public class SLDReader
 {
 	private ParameterReader cssReader;
-    	
+    protected StringIdProvider iconIdProvider;
 	
-	public SLDReader()
+	
+    public SLDReader()
+    {
+        this.cssReader = new ParameterReader();
+    }
+    
+    
+	public SLDReader(StringIdProvider iconIdProvider)
 	{
-		cssReader = new ParameterReader();        
+		this();
+		this.iconIdProvider = iconIdProvider;
 	}
 	
 	
@@ -569,11 +578,6 @@ public class SLDReader
             // image format
 			img.setFormat(dom.getElementValue(graphicElt, "ExternalGraphic/Format"));
             
-            // image url
-            Element urlElt = dom.getElement(graphicElt, "ExternalGraphic/OnlineResource");
-            ScalarParameter url = cssReader.readCssParameter(dom, urlElt);            
-            img.setUrl(url);
-            
             // set base folder
             String baseFolder = dom.getElementValue(graphicElt, "ExternalGraphic/Base");
             if (baseFolder != null)
@@ -587,6 +591,12 @@ public class SLDReader
                 }
                 catch (URISyntaxException e){}
             }
+            
+            // image url
+            iconIdProvider.setPrefix(img.getBaseFolder());
+            Element urlElt = dom.getElement(graphicElt, "ExternalGraphic/OnlineResource");
+            ScalarParameter url = cssReader.readCssParameter(dom, urlElt, iconIdProvider);            
+            img.setUrl(url);
 			
 			graphic.getGlyphs().add(img);
 		}
@@ -605,6 +615,11 @@ public class SLDReader
 		Element rotationElt = dom.getElement(graphicElt, "Rotation");
 		ScalarParameter rotation = cssReader.readCssParameter(dom, rotationElt);
 		graphic.setRotation(rotation);
+		
+		// read spacing
+        Element spacingElt = dom.getElement(graphicElt, "Spacing");
+        ScalarParameter spacing = cssReader.readCssParameter(dom, spacingElt);
+        graphic.setSpacing(spacing);
 		
 		return graphic;
 	}

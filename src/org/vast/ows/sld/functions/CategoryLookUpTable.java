@@ -20,14 +20,17 @@
 
 package org.vast.ows.sld.functions;
 
+import java.util.Hashtable;
+
 
 /**
  * <p><b>Title:</b><br/>
- * Linear Adjustment
+ * Category LookUp Table
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Linear Adjustment function of the form y = a*x + b.
+ * This uses a String input value and maps it to a numerical value.
+ * This is used to map categorical values
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -35,47 +38,56 @@ package org.vast.ows.sld.functions;
  * @date Apr 3, 2006
  * @version 1.0
  */
-public class LinearAdjustment extends AbstractMappingFunction
+public class CategoryLookUpTable extends AbstractMappingFunction
 {
-    protected double gain;
-    protected double offset;
+    protected Hashtable<String, Double> mappingTable;
+    protected double defaultValue = Double.NaN;
     
     
-    public LinearAdjustment(double gain, double offset)
+    public CategoryLookUpTable()
     {
-        this.gain = gain;
-        this.offset = offset;
+        this.mappingTable = new Hashtable<String, Double>();
     }
     
     
     @Override
-    public double compute(double inVal)
+    public double compute(String indexVal)
     {
-        return inVal * gain + offset;
+        Double val = mappingTable.get(indexVal);
+        if (val != null)
+            return val;
+        else
+            return defaultValue;
+    }
+    
+    
+    @Override
+    public boolean hasCategoricalInput()
+    {
+        return true;
     }
 
 
-    public double getGain()
+    public Hashtable<String, Double> getMappingTable()
     {
-        return gain;
+        return mappingTable;
     }
 
 
-    public void setGain(double gain)
+    public void addMapping(String text, double val)
     {
-        this.gain = gain;
+        mappingTable.put(text, val);
     }
 
 
-    public double getOffset()
+    public double getDefaultValue()
     {
-        return offset;
+        return defaultValue;
     }
 
 
-    public void setOffset(double offset)
+    public void setDefaultValue(double defaultValue)
     {
-        this.offset = offset;
+        this.defaultValue = defaultValue;
     }
-
 }

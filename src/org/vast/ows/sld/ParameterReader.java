@@ -21,7 +21,9 @@
 package org.vast.ows.sld;
 
 import org.vast.xml.DOMHelper;
+import org.vast.ows.sld.functions.FunctionReader;
 import org.vast.ows.sld.functions.LookUpTable1D;
+import org.vast.ows.sld.functions.StringIdProvider;
 import org.w3c.dom.Element;
 
 
@@ -65,7 +67,7 @@ public class ParameterReader
     }
     
     
-    public ScalarParameter readCssParameter(DOMHelper dom, Element paramElt)
+    public ScalarParameter readCssParameter(DOMHelper dom, Element paramElt, StringIdProvider stringIdProvider)
 	{
 		ScalarParameter param;
         
@@ -82,7 +84,7 @@ public class ParameterReader
         // case of mapping through a mapping function
         else if (dom.existElement(paramElt, "*"))
         {
-            param = readParamWithMappingFunction(dom, paramElt);
+            param = readParamWithMappingFunction(dom, paramElt, stringIdProvider);
         }
         
 		// otherwise case of a constant
@@ -95,6 +97,12 @@ public class ParameterReader
 	}
     
     
+    public ScalarParameter readCssParameter(DOMHelper dom, Element paramElt)
+    {
+        return this.readCssParameter(dom, paramElt, null);
+    }
+    
+    
     public ScalarParameter readCssParameterValue(DOMHelper dom, Element paramElt)
     {
         String val = dom.getElementValue(paramElt, "");
@@ -104,7 +112,7 @@ public class ParameterReader
         {
             // case of numeric value
             float numVal = Float.parseFloat(val);
-            param.setConstantValue(new Float(numVal));
+            param.setConstantValue(numVal);
         }
         catch (NumberFormatException e)
         {
@@ -116,7 +124,7 @@ public class ParameterReader
     }
     
     
-    public ScalarParameter readParamWithMappingFunction(DOMHelper dom, Element paramElt)
+    public ScalarParameter readParamWithMappingFunction(DOMHelper dom, Element paramElt, StringIdProvider stringIdProvider)
     {
         ScalarParameter param = new ScalarParameter();
         
@@ -126,7 +134,7 @@ public class ParameterReader
         param.setPropertyName(pName);
         
         // then read the function
-        MappingFunction function = functionReader.readFunction(dom, funcElt);
+        MappingFunction function = functionReader.readFunction(dom, funcElt, stringIdProvider);
         param.setMappingFunction(function);
         
         return param;
