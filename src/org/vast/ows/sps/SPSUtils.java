@@ -68,7 +68,7 @@ public class SPSUtils extends OWSUtils
 		OWSRequest tempReq = new OWSRequest();
 		AbstractRequestReader.readCommonXML(dom, requestElt, tempReq);
 		
-		ParameterizedRequestReader reader = (ParameterizedRequestReader)OGCRegistry.createReader(OWSUtils.SPS, tempReq.getOperation(), tempReq.getVersion());
+		ParameterizedRequestReader<?> reader = (ParameterizedRequestReader<?>)OGCRegistry.createReader(OWSUtils.SPS, tempReq.getOperation(), tempReq.getVersion());
 		reader.setParamStructure(mainParams);
 		ParameterizedRequest request = (ParameterizedRequest)reader.readXMLQuery(dom, requestElt);
 		
@@ -78,7 +78,7 @@ public class SPSUtils extends OWSUtils
 	
 	public ParameterizedResponse readParameterizedResponse(DOMHelper dom, Element responseElt, DataComponent mainParams, String version) throws OWSException
 	{
-		ParameterizedResponseReader reader = (ParameterizedResponseReader)OGCRegistry.createReader(OWSUtils.SPS, responseElt.getLocalName(), version);
+		ParameterizedResponseReader<?> reader = (ParameterizedResponseReader<?>)OGCRegistry.createReader(OWSUtils.SPS, responseElt.getLocalName(), version);
 		reader.setParamStructure(mainParams);
 		ParameterizedResponse response = (ParameterizedResponse)reader.readXMLResponse(dom, responseElt);
 		
