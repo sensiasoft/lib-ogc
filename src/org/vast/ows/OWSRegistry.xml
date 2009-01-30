@@ -21,8 +21,8 @@
    <!-- -->
    <Reader type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.GetObservationReaderV10"/>
    <Reader type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationReaderV10"/>
-   <Reader type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.swe.DescribeSensorReaderV10"/>
-   <Reader type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.swe.DescribeSensorReaderV10"/>   
+   <Reader type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.DescribeSensorReaderV10"/>
+   <Reader type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorReaderV10"/>   
    <Reader type="SOS" subType="Capabilities" version="0.0.31" class="org.vast.ows.sos.SOSCapabilitiesReaderV031"/>
    <Reader type="SOS" subType="Capabilities" version="1.0" class="org.vast.ows.sos.SOSCapabilitiesReaderV10"/>
    <Reader type="SOS" subType="GetResult" version="1.0" class="org.vast.ows.sos.GetResultReaderV10"/>
@@ -30,8 +30,8 @@
    <Writer type="SOS" subType="GetResult" version="1.0" class="org.vast.ows.sos.GetResultWriterV10"/>   
    <Writer type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.GetObservationWriterV10"/>
    <Writer type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationWriterV10"/>
-   <Writer type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.swe.DescribeSensorWriterV10"/>
-   <Writer type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.swe.DescribeSensorWriterV10"/>
+   <Writer type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.DescribeSensorWriterV10"/>
+   <Writer type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorWriterV10"/>
    <!-- -->
    <Reader type="SAS" subType="Capabilities" version="*" class="org.vast.ows.sas.SASCapabilitiesReader"/>
    <Reader type="SAS" subType="Capabilities" version="0.0" class="org.vast.ows.sas.SASCapabilitiesReader"/>
@@ -42,9 +42,9 @@
    <Writer type="SAS" subType="Subscribe" version="0.0" class="org.vast.ows.sas.SASSubscribeWriter"/>
    <!-- -->
    <Reader type="SPS" subType="Capabilities" version="2.0" class="org.vast.ows.sps.SPSCapabilitiesReaderV20"/>
+   <Reader type="SPS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorReaderV10"/> 
    <Reader type="SPS" subType="DescribeTasking" version="2.0" class="org.vast.ows.sps.DescribeTaskingRequestReaderV20"/>
    <Reader type="SPS" subType="DescribeTaskingResponse" version="2.0" class="org.vast.ows.sps.DescribeTaskingResponseReaderV20"/>
-   <Reader type="SPS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorReaderV10"/>
    <Reader type="SPS" subType="GetFeasibility" version="2.0" class="org.vast.ows.sps.GetFeasibilityRequestReaderV20"/>
    <Reader type="SPS" subType="GetFeasibilityResponse" version="2.0" class="org.vast.ows.sps.GetFeasibilityResponseReaderV20"/>
    <Reader type="SPS" subType="GetStatus" version="2.0" class="org.vast.ows.sps.GetStatusRequestReaderV20"/>
@@ -63,9 +63,9 @@
    <Reader type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.ConfirmResponseReaderV20"/>     
    <!-- -->
    <Writer type="SPS" subType="Capabilities" version="2.0" class="org.vast.ows.sps.SPSCapabilitiesWriterV20"/>
+   <Writer type="SPS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorWriterV10"/>  
    <Writer type="SPS" subType="DescribeTasking" version="2.0" class="org.vast.ows.sps.DescribeTaskingRequestWriterV20"/>
    <Writer type="SPS" subType="DescribeTaskingResponse" version="2.0" class="org.vast.ows.sps.DescribeTaskingResponseWriterV20"/>
-   <Writer type="SPS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorWriterV10"/>
    <Writer type="SPS" subType="GetFeasibility" version="2.0" class="org.vast.ows.sps.GetFeasibilityRequestWriterV20"/>
    <Writer type="SPS" subType="GetFeasibilityResponse" version="2.0" class="org.vast.ows.sps.GetFeasibilityResponseWriterV20"/>
    <Writer type="SPS" subType="GetStatus" version="2.0" class="org.vast.ows.sps.GetStatusRequestWriterV20"/>
@@ -82,7 +82,7 @@
    <Writer type="SPS" subType="ReserveResponse" version="2.0" class="org.vast.ows.sps.ReserveResponseWriterV20"/>   
    <Writer type="SPS" subType="Confirm" version="2.0" class="org.vast.ows.sps.ConfirmRequestWriterV20"/>
    <Writer type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.ConfirmResponseWriterV20"/>   
-   <!-- -->
+   <!-- -->   
    <Reader type="WCS" subType="GetCoverage" version="0.7" class="org.vast.ows.wcs.WCSRequestReaderV07"/>
    <Reader type="WCS" subType="GetCoverage" version="1.0" class="org.vast.ows.wcs.GetCoverageReaderV10"/>
    <Reader type="WCS" subType="GetCoverage" version="1.1.1" class="org.vast.ows.wcs.GetCoverageReaderV11"/>

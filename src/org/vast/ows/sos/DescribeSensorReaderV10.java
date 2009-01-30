@@ -18,16 +18,15 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.swe;
+package org.vast.ows.sos;
 
 import java.util.StringTokenizer;
 import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
-import org.vast.ogc.gml.GMLException;
-import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.*;
 import org.vast.ows.sos.SOSException;
+import org.vast.ows.swe.DescribeSensorRequest;
 
 
 /**
@@ -47,12 +46,10 @@ import org.vast.ows.sos.SOSException;
  */
 public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSensorRequest>
 {
-	protected GMLTimeReader timeReader;
 	
 	
 	public DescribeSensorReaderV10()
 	{
-        timeReader = new GMLTimeReader();
 	}
 	
 	
@@ -98,16 +95,22 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 			{
 				request.setOperation(argValue);
 			}
+
+			// format argument
+			else if (argName.equalsIgnoreCase("format"))
+			{
+				request.setFormat(argValue);
+			}
 			
 			// time
-			else if (argName.equalsIgnoreCase("validTime"))
+			else if (argName.equalsIgnoreCase("time"))
 			{
 				TimeInfo time = parseTimeArg(argValue);
             	request.setTime(time);
 			}
 			
 			// procedure
-			else if (argName.equalsIgnoreCase("sensorID"))
+			else if (argName.equalsIgnoreCase("procedure"))
 			{
 				request.setProcedure(argValue);
 			}
@@ -131,23 +134,12 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 		readCommonXML(dom, requestElt, request);
 		
         // procedure
-		String procedure = dom.getElementValue(requestElt, "sensorID");
+		String procedure = dom.getElementValue(requestElt, "procedure");
 		request.setProcedure(procedure);
 		
-		// time
-		try
-		{
-			Element timeElt = dom.getElement(requestElt, "validTime/*");
-			if (timeElt != null)
-			{
-				TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
-				request.setTime(time);
-			}
-		}
-		catch (GMLException e)
-		{
-			report.add(new OWSException(OWSException.invalid_param_code, "ValidTime"));
-		}
+		// format
+		String format = dom.getAttributeValue(requestElt, "@outputFormat");
+		request.setFormat(format);
 		
 		this.checkParameters(request, report); 
 		return request;
@@ -166,7 +158,11 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 		
 		// need procedure
 		if (request.getProcedure() == null)
-			report.add(new OWSException(OWSException.missing_param_code, "SensorID"));
+			report.add(new OWSException(OWSException.missing_param_code, "PROCEDURE"));
+		
+		// need format
+		if (request.getProcedure() == null)
+			report.add(new OWSException(OWSException.missing_param_code, "FORMAT"));
 		
 		report.process();
 	}

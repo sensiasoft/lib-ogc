@@ -107,7 +107,9 @@ public class OWSCommonWriterV11
 			refElt = dom.createElement("ows:Reference");			
 		
 		// mandatory role
-		dom.setAttributeValue(refElt, "@xlink:role", ref.getRole());
+		String role = ref.getRole();
+		if (role != null)
+			dom.setAttributeValue(refElt, "@xlink:role", ref.role);
 		
 		// mandatory href
 		dom.setAttributeValue(refElt, "@xlink:href", ref.getHref());
