@@ -67,7 +67,7 @@ public class DescribeTaskingResponseWriterV20 extends AbstractResponseWriter<Des
 			{
 				Element paramsElt = dom.addElement(rootElt, "sps:taskingParameters");
 				dom.setAttributeValue(paramsElt, "name", params.getName());
-				componentElt = componentWriter.writeComponent(dom, params);
+				componentElt = componentWriter.writeComponent(dom, params, true);
 				paramsElt.appendChild(componentElt);
 			}
 			else
