@@ -48,7 +48,7 @@ public class DescribeResultAccessRequest extends OWSRequest
 	
 	public DescribeResultAccessRequest()
 	{
-		setService("SPS");
+		setService(SPSUtils.SPS);
 		setOperation("DescribeResultAccess");
 	}
 	

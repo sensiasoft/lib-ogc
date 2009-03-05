@@ -102,7 +102,7 @@ public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest
 	protected void checkParameters(RequestType request, OWSExceptionReport report) throws OWSException
 	{
 		// check common params + generate exception
-		checkParameters(request, report, "SPS");
+		checkParameters(request, report, SPSUtils.SPS);
 
 		// Check that sensorID is present
 		if (request.getSensorID() == null)

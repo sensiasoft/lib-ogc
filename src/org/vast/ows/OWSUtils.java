@@ -30,6 +30,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import org.vast.ogc.OGCException;
+import org.vast.ogc.OGCExceptionReader;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
@@ -420,8 +422,18 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             
             requestString = buildURLQuery(request);                
             URL url = new URL(requestString);
-            return (HttpURLConnection)url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            
+            // catch server side exceptions
+            if (connection.getResponseCode() > 202)
+            	OGCExceptionReader.parseException(connection.getErrorStream());
+            
+            return connection;
         }
+        catch (OGCException e)
+		{
+	    	throw new OWSException(e.getMessage());
+		}
         catch (IOException e)
         {
             throw new OWSException(ioError + "\n" + requestString, e);
@@ -468,9 +480,17 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             connection.connect();
             out.close();
             
+            // catch server side exceptions
+            if (connection.getResponseCode() > 202)
+            	OGCExceptionReader.parseException(connection.getErrorStream());
+            
             // return server response stream
             return connection;
         }
+	    catch (OGCException e)
+		{
+	    	throw new OWSException(e.getMessage());
+		}
         catch (IOException e)
         {
         	ByteArrayOutputStream buf = new ByteArrayOutputStream();
@@ -505,7 +525,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             else
                 url = new URL(endpoint);
             
-            // initiatlize HTTP connection
+            // initialize HTTP connection
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setDoInput(true);
             connection.setDoOutput(true);
@@ -525,9 +545,17 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             connection.connect();
             out.close();
             
+            // catch server side exceptions
+            if (connection.getResponseCode() > 202)
+            	OGCExceptionReader.parseException(connection.getErrorStream());
+                        
             // return server response stream
             return connection;
         }
+	    catch (OGCException e)
+		{
+	    	throw new OWSException(e.getMessage());
+		}
         catch (IOException e)
         {
         	ByteArrayOutputStream buf = new ByteArrayOutputStream();

@@ -43,7 +43,7 @@ public class SubmitRequest extends TaskingRequest
 		
 	public SubmitRequest()
 	{
-		setService("SPS");
+		setService(SPSUtils.SPS);
 		setOperation("Submit");
 	}
 }

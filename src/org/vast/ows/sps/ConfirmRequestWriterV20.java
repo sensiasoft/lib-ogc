@@ -64,7 +64,7 @@ public class ConfirmRequestWriterV20 extends AbstractRequestWriter<ConfirmReques
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, ConfirmRequest request) throws OWSException
 	{
-		dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI("SPS", request.getVersion()));
+		dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI(SPSUtils.SPS, request.getVersion()));
 
 		// root element
 		Element rootElt = dom.createElement("sps:" + request.getOperation());

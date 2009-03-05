@@ -47,7 +47,7 @@ public class GetFeasibilityResponse extends TaskingResponse<FeasibilityReport>
 
 	public GetFeasibilityResponse()
 	{
-		this.service = "SPS";
+		this.service = SPSUtils.SPS;
         this.messageType = "GetFeasibilityResponse";
         this.report = new FeasibilityReport();
         this.alternatives = new ArrayList<Alternative>();

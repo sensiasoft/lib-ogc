@@ -42,7 +42,7 @@ public class GetStatusResponse extends TaskingResponse<StatusReport>
 	
 	public GetStatusResponse()
 	{
-		this.service = "SPS";
+		this.service = SPSUtils.SPS;
         this.messageType = "GetStatusResponse";
         report = new StatusReport();
 	}

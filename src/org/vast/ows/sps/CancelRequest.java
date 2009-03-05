@@ -46,7 +46,7 @@ public class CancelRequest extends OWSRequest
 	
 	public CancelRequest()
 	{
-		setService("SPS");
+		setService(SPSUtils.SPS);
 		setOperation("Cancel");
 	}
 	

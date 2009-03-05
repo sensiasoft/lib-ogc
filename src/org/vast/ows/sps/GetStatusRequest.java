@@ -50,7 +50,7 @@ public class GetStatusRequest extends OWSRequest
 	
 	public GetStatusRequest()
 	{
-		setService("SPS");
+		setService(SPSUtils.SPS);
 		setOperation("GetStatus");
 	}
 	

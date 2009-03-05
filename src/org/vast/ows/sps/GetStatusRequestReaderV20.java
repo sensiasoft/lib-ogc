@@ -149,7 +149,7 @@ public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRe
 	protected void checkParameters(GetStatusRequest request, OWSExceptionReport report) throws OWSException
 	{
 		// check common params + generate exception
-		checkParameters(request, report, "SPS");
+		checkParameters(request, report, SPSUtils.SPS);
 
 		// Check that taskID is present
 		if (request.getTaskID() == null)

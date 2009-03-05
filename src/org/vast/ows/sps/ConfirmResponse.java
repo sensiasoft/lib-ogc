@@ -42,7 +42,7 @@ public class ConfirmResponse extends TaskingResponse<StatusReport>
 
 	public ConfirmResponse()
 	{
-		this.service = "SPS";
+		this.service = SPSUtils.SPS;
         this.messageType = "ConfirmResponse";
         report = new StatusReport();
 	}

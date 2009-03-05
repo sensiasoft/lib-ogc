@@ -46,7 +46,7 @@ public class CancelResponse extends OWSResponse
 
 	public CancelResponse()
 	{
-		this.service = "SPS";
+		this.service = SPSUtils.SPS;
         this.messageType = "CancelResponse";
 	}
 

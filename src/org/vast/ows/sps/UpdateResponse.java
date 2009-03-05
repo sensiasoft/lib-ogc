@@ -42,7 +42,7 @@ public class UpdateResponse extends TaskingResponse<StatusReport>
 
 	public UpdateResponse()
 	{
-		this.service = "SPS";
+		this.service = SPSUtils.SPS;
         this.messageType = "UpdateResponse";
         report = new StatusReport();
 	}

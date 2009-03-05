@@ -89,7 +89,7 @@ public class DescribeResultAccessRequestWriterV20 extends AbstractRequestWriter<
 
 		// ID
 		if (request.getTaskID() != null)
-			dom.setElementValue(rootElt, "sps:ID", request.getTaskID());
+			dom.setElementValue(rootElt, "sps:taskID", request.getTaskID());
 		
 		// sensorID
 		else if (request.getSensorID() != null)

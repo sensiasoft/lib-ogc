@@ -47,7 +47,7 @@ public class ConfirmRequest extends OWSRequest
 	
 	public ConfirmRequest()
 	{
-		setService("SPS");
+		setService(SPSUtils.SPS);
 		setOperation("Confirm");
 	}
 	

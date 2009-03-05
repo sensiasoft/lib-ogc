@@ -50,7 +50,7 @@ public class DescribeTaskingResponse extends OWSResponse
 
 	public DescribeTaskingResponse()
 	{
-		this.service = "SPS";
+		this.service = SPSUtils.SPS;
         this.messageType = "DescribeTaskingResponse";
 	}
 

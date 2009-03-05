@@ -32,11 +32,11 @@ import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b>
- * DescribeFeasibility Response Reader v2.0
+ * DescribeTasking Response Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * TODO DescribeFeasibilityResponseReaderV11 type description
+ * TODO DescribeTaskingResponseReaderV20 type description
  * </p>
  *
  * <p>Copyright (c) 2008</p>

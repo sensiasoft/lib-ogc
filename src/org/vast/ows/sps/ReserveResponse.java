@@ -42,7 +42,7 @@ public class ReserveResponse extends TaskingResponse<ReservationReport>
 
 	public ReserveResponse()
 	{
-		this.service = "SPS";
+		this.service = SPSUtils.SPS;
         this.messageType = "ReserveResponse";
         report = new ReservationReport();
 	}

@@ -42,7 +42,7 @@ public class GetFeasibilityRequest extends TaskingRequest
 		
 	public GetFeasibilityRequest()
 	{
-		setService("SPS");
+		setService(SPSUtils.SPS);
 		setOperation("GetFeasibility");
 	}
 }

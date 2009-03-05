@@ -131,7 +131,7 @@ public class DescribeTaskingRequestReaderV20 extends AbstractRequestReader<Descr
 	protected void checkParameters(DescribeTaskingRequest request, OWSExceptionReport report) throws OWSException
 	{
 		// check common params + generate exception
-		checkParameters(request, report, "SPS");
+		checkParameters(request, report, SPSUtils.SPS);
 
 		// Check sensorID
 		if (request.getSensorID() == null)

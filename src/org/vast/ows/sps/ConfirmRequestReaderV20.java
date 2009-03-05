@@ -80,7 +80,7 @@ public class ConfirmRequestReaderV20 extends AbstractRequestReader<ConfirmReques
 	protected void checkParameters(ConfirmRequest request, OWSExceptionReport report) throws OWSException
 	{
 		// check common params + generate exception
-		checkParameters(request, report, "SPS");
+		checkParameters(request, report, SPSUtils.SPS);
 
 		// Check that taskID is present
 		if (request.getTaskID() == null)

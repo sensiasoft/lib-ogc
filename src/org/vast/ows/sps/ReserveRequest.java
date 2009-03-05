@@ -47,7 +47,7 @@ public class ReserveRequest extends TaskingRequest
 	
 	public ReserveRequest()
 	{
-		setService("SPS");
+		setService(SPSUtils.SPS);
 		setOperation("Reserve");
 	}
 

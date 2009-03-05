@@ -33,12 +33,12 @@ import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b>
- * Submit Response Reader v2.0
+ * Update Response Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Used to read a version 2.0 SPS Submit Response into
- * a SubmitResponse object
+ * Used to read a version 2.0 SPS Update Response into
+ * an UpdateResponse object
  * </p>
  *
  * <p>Copyright (c) 2008</p>

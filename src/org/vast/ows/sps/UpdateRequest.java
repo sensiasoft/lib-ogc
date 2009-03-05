@@ -45,7 +45,7 @@ public class UpdateRequest extends TaskingRequest
 	
 	public UpdateRequest()
 	{
-		setService("SPS");
+		setService(SPSUtils.SPS);
 		setOperation("Update");
 	}
 	

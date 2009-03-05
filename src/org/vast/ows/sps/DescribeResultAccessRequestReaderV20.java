@@ -120,8 +120,8 @@ public class DescribeResultAccessRequestReaderV20 extends AbstractRequestReader<
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
 
-		// ID
-		String ID = dom.getElementValue(requestElt, "ID");
+		// task ID
+		String ID = dom.getElementValue(requestElt, "taskID");
 		request.setTaskID(ID);
 		
 		// parse sensorID only if no ID was provided (choice)
@@ -144,12 +144,12 @@ public class DescribeResultAccessRequestReaderV20 extends AbstractRequestReader<
 	protected void checkParameters(DescribeResultAccessRequest request, OWSExceptionReport report) throws OWSException
 	{
 		// check common params + generate exception
-		checkParameters(request, report, "SPS");
+		checkParameters(request, report, SPSUtils.SPS);
 
 		// Check that at least one ID is present
 		if (request.getSensorID() == null && request.getTaskID() == null)
 		{
-			report.add(new OWSException(OWSException.missing_param_code, "ID"));
+			report.add(new OWSException(OWSException.missing_param_code, "TaskID OR SensorID"));
 		}
 
 		report.process();
