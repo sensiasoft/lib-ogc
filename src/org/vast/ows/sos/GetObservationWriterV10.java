@@ -101,7 +101,8 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
 		for (int i=0; i<obsCount; i++)
 		{
 			if (i == 0)
-				urlBuff.append("&observables=");
+				//urlBuff.append("&observables=");
+				urlBuff.append("&observedProperty=");
 			
             String nextObs = request.getObservables().get(i);            
 			try {urlBuff.append(URLEncoder.encode(nextObs, "UTF-8"));}
