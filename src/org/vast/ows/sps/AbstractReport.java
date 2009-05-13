@@ -120,6 +120,14 @@ public class AbstractReport
 	{
 		return estimatedToC;
 	}
+	
+	
+	public double getEstimatedDelay()
+	{
+		double toc = estimatedToC.getJulianTime();
+		double now = new DateTime().getJulianTime();
+		return toc - now;
+	}
 
 
 	public void setEstimatedToC(DateTime estimatedToC)
