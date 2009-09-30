@@ -111,7 +111,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 			}
 			
 			// time
-			else if (argName.equalsIgnoreCase("time"))
+			else if (argName.equalsIgnoreCase("time") || argName.equalsIgnoreCase("eventTime"))
 			{
 				TimeInfo timeInfo = parseTimeArg(argValue);
 				request.setTime(timeInfo);
@@ -143,7 +143,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
             }
 
 			// format argument
-			else if (argName.equalsIgnoreCase("format") || argName.equalsIgnoreCase("response_format"))
+			else if (argName.equalsIgnoreCase("format") || argName.equalsIgnoreCase("responseFormat"))
 			{
 				request.setFormat(argValue);
 			}
