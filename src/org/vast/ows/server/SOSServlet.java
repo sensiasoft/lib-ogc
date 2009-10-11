@@ -369,7 +369,7 @@ public abstract class SOSServlet extends OWSServlet
 			//  get query string
 			String queryString = req.getQueryString();            
             if (queryString == null)
-                sendErrorMessage(resp.getOutputStream(), "Invalid request");
+                throw new OWSException("Invalid KVP Request");
             
             // parse query arguments
             logger.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
@@ -389,21 +389,11 @@ public abstract class SOSServlet extends OWSServlet
 	        else if (query instanceof GetResultRequest)
 	        	processQuery((GetResultRequest)query);
 		}
-		catch (SOSException e)
-		{
-			try
-            {
-                sendErrorMessage(resp.getOutputStream(), e.getMessage());
-            }
-            catch (IOException e1)
-            {
-                e.printStackTrace();
-            }
-		}
         catch (OWSException e)
         {
             try
             {
+                resp.setContentType("text/xml");
                 sendErrorMessage(resp.getOutputStream(), e.getMessage());
             }
             catch (IOException e1)
@@ -461,21 +451,11 @@ public abstract class SOSServlet extends OWSServlet
 	        else if (query instanceof GetResultRequest)
 	        	processQuery((GetResultRequest)query);
 		}
-        catch (SOSException e)
-		{
-            try
-            {
-                sendErrorMessage(resp.getOutputStream(), e.getMessage());
-            }
-            catch (IOException e1)
-            {
-                e.printStackTrace();
-            }
-		}
         catch (OWSException e)
         {
             try
             {
+                resp.setContentType("text/xml");
                 sendErrorMessage(resp.getOutputStream(), "Invalid request or unrecognized version");
             }
             catch (IOException e1)
@@ -502,6 +482,7 @@ public abstract class SOSServlet extends OWSServlet
         {
             try
             {
+                resp.getOutputStream().flush();
                 resp.getOutputStream().close();
             }
             catch (IOException e)
