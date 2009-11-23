@@ -60,13 +60,14 @@ import org.w3c.dom.Element;
  * @version 1.0
  */
 
-public class WPSUtils
+public class WPSUtils extends OWSUtils
 {
     public final static String ioError = "IO Error while sending request:";
     protected MessageFactory soapMessageFactory;
     protected SOAPConnectionFactory soapConnectionFactory;
 	private OWSUtils owsUtils;
     
+	
     public WPSUtils() throws SOAPException
     {
 		soapMessageFactory = MessageFactory.newInstance();

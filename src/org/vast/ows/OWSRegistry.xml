@@ -48,19 +48,19 @@
    <Reader type="SPS" subType="GetFeasibility" version="2.0" class="org.vast.ows.sps.GetFeasibilityRequestReaderV20"/>
    <Reader type="SPS" subType="GetFeasibilityResponse" version="2.0" class="org.vast.ows.sps.GetFeasibilityResponseReaderV20"/>
    <Reader type="SPS" subType="GetStatus" version="2.0" class="org.vast.ows.sps.GetStatusRequestReaderV20"/>
-   <Reader type="SPS" subType="GetStatusResponse" version="2.0" class="org.vast.ows.sps.GetStatusResponseReaderV20"/>
+   <Reader type="SPS" subType="GetStatusResponse" version="2.0" class="org.vast.ows.sps.StatusResponseReaderV20"/>
    <Reader type="SPS" subType="Submit" version="2.0" class="org.vast.ows.sps.SubmitRequestReaderV20"/>
-   <Reader type="SPS" subType="SubmitResponse" version="2.0" class="org.vast.ows.sps.SubmitResponseReaderV20"/>
+   <Reader type="SPS" subType="SubmitResponse" version="2.0" class="org.vast.ows.sps.StatusResponseReaderV20"/>
    <Reader type="SPS" subType="Update" version="2.0" class="org.vast.ows.sps.UpdateRequestReaderV20"/>
-   <Reader type="SPS" subType="UpdateResponse" version="2.0" class="org.vast.ows.sps.UpdateResponseReaderV20"/>
+   <Reader type="SPS" subType="UpdateResponse" version="2.0" class="org.vast.ows.sps.StatusResponseReaderV20"/>
    <Reader type="SPS" subType="Cancel" version="2.0" class="org.vast.ows.sps.CancelRequestReaderV20"/>
-   <Reader type="SPS" subType="CancelResponse" version="2.0" class="org.vast.ows.sps.CancelResponseReaderV20"/>   
+   <Reader type="SPS" subType="CancelResponse" version="2.0" class="org.vast.ows.sps.StatusResponseReaderV20"/>   
    <Reader type="SPS" subType="DescribeResultAccess" version="2.0" class="org.vast.ows.sps.DescribeResultAccessRequestReaderV20"/>
    <Reader type="SPS" subType="DescribeResultAccessResponse" version="2.0" class="org.vast.ows.sps.DescribeResultAccessResponseReaderV20"/>
    <Reader type="SPS" subType="Reserve" version="2.0" class="org.vast.ows.sps.ReserveRequestReaderV20"/>
-   <Reader type="SPS" subType="ReserveResponse" version="2.0" class="org.vast.ows.sps.ReserveResponseReaderV20"/>   
+   <Reader type="SPS" subType="ReserveResponse" version="2.0" class="org.vast.ows.sps.StatusResponseReaderV20"/>   
    <Reader type="SPS" subType="Confirm" version="2.0" class="org.vast.ows.sps.ConfirmRequestReaderV20"/>
-   <Reader type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.ConfirmResponseReaderV20"/>     
+   <Reader type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.StatusResponseReaderV20"/>     
    <!-- -->
    <Writer type="SPS" subType="Capabilities" version="2.0" class="org.vast.ows.sps.SPSCapabilitiesWriterV20"/>
    <Writer type="SPS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorWriterV10"/>  
@@ -69,19 +69,19 @@
    <Writer type="SPS" subType="GetFeasibility" version="2.0" class="org.vast.ows.sps.GetFeasibilityRequestWriterV20"/>
    <Writer type="SPS" subType="GetFeasibilityResponse" version="2.0" class="org.vast.ows.sps.GetFeasibilityResponseWriterV20"/>
    <Writer type="SPS" subType="GetStatus" version="2.0" class="org.vast.ows.sps.GetStatusRequestWriterV20"/>
-   <Writer type="SPS" subType="GetStatusResponse" version="2.0" class="org.vast.ows.sps.GetStatusResponseWriterV20"/>
+   <Writer type="SPS" subType="GetStatusResponse" version="2.0" class="org.vast.ows.sps.StatusResponseWriterV20"/>
    <Writer type="SPS" subType="Submit" version="2.0" class="org.vast.ows.sps.SubmitRequestWriterV20"/>
-   <Writer type="SPS" subType="SubmitResponse" version="2.0" class="org.vast.ows.sps.SubmitResponseWriterV20"/>
+   <Writer type="SPS" subType="SubmitResponse" version="2.0" class="org.vast.ows.sps.StatusResponseWriterV20"/>
    <Writer type="SPS" subType="Update" version="2.0" class="org.vast.ows.sps.UpdateRequestWriterV20"/>
-   <Writer type="SPS" subType="UpdateResponse" version="2.0" class="org.vast.ows.sps.UpdateResponseWriterV20"/>
+   <Writer type="SPS" subType="UpdateResponse" version="2.0" class="org.vast.ows.sps.StatusResponseWriterV20"/>
    <Writer type="SPS" subType="Cancel" version="2.0" class="org.vast.ows.sps.CancelRequestWriterV20"/>
-   <Writer type="SPS" subType="CancelResponse" version="2.0" class="org.vast.ows.sps.CancelResponseWriterV20"/>   
+   <Writer type="SPS" subType="CancelResponse" version="2.0" class="org.vast.ows.sps.StatusResponseWriterV20"/>   
    <Writer type="SPS" subType="DescribeResultAccess" version="2.0" class="org.vast.ows.sps.DescribeResultAccessRequestWriterV20"/>
    <Writer type="SPS" subType="DescribeResultAccessResponse" version="2.0" class="org.vast.ows.sps.DescribeResultAccessResponseWriterV20"/>
    <Writer type="SPS" subType="Reserve" version="2.0" class="org.vast.ows.sps.ReserveRequestWriterV20"/>
-   <Writer type="SPS" subType="ReserveResponse" version="2.0" class="org.vast.ows.sps.ReserveResponseWriterV20"/>   
+   <Writer type="SPS" subType="ReserveResponse" version="2.0" class="org.vast.ows.sps.StatusResponseWriterV20"/>   
    <Writer type="SPS" subType="Confirm" version="2.0" class="org.vast.ows.sps.ConfirmRequestWriterV20"/>
-   <Writer type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.ConfirmResponseWriterV20"/>   
+   <Writer type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.StatusResponseWriterV20"/>   
    <!-- -->   
    <Reader type="WCS" subType="GetCoverage" version="0.7" class="org.vast.ows.wcs.WCSRequestReaderV07"/>
    <Reader type="WCS" subType="GetCoverage" version="1.0" class="org.vast.ows.wcs.GetCoverageReaderV10"/>
@@ -132,8 +132,8 @@
    <Writer type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.GetMapWriterV11"/>
    <!-- -->
    <Reader type="WPS" subType="Capabilities" version="2.0" class="org.vast.ows.wps.WPSCapabilitiesReader"/>
-   <Reader type="WPS" subType="DescribeProcess" version="2.0" class="org.vast.ows.wps.DescribeProcessResponseWriter"/>
-   <Reader type="WPS" subType="ExecuteProcess" version="2.0" class="org.vast.ows.wps.ExecuteProcessResponseWriter"/>
+   <Reader type="WPS" subType="DescribeProcess" version="2.0" class="org.vast.ows.wps.DescribeProcessResponseReader"/>
+   <Reader type="WPS" subType="ExecuteProcess" version="2.0" class="org.vast.ows.wps.ExecuteProcessResponseReader"/>
    <!-- -->
    <Writer type="WPS" subType="DescribeProcess" version="2.0" class="org.vast.ows.wps.DescribeProcessRequestWriter"/>
    <Writer type="WPS" subType="ExecuteProcess" version="2.0" class="org.vast.ows.wps.ExecuteProcessRequestWriter"/>

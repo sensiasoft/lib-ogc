@@ -63,7 +63,7 @@ public class DescribeProcessResponseReader  extends AbstractResponseReader<Descr
             Element inputDefElt = dom.getElement(inputObjElt, "elementType");
             response.inputDataComponent = utils.readComponentProperty(dom, inputDefElt);
 
-         // read output
+            // read output
             Element outputObjElt = dom.getElement(responseElt, "output/*");
             
             Element outputEncElt = dom.getElement(outputObjElt, "encoding");
