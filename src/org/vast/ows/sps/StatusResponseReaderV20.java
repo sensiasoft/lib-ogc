@@ -63,7 +63,7 @@ public class StatusResponseReaderV20 extends ParameterizedResponseReader<Tasking
 			assert(paramStructure != null);
 			TaskingResponse<StatusReport> response;			
 			String respName = responseElt.getLocalName();
-			String className = getClass().getPackage() + "." + respName;
+			String className = getClass().getPackage().getName() + "." + respName;
 			
 			try
 	        {
