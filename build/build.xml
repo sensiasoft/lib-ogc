@@ -11,11 +11,9 @@
 	<property name="dist.dir" value="." />
 	<property name="temp.dir" value="temp" />
 	
-	<property name="swe-common-src" value="../../ogc-swe-common/src" />
-	<property name="swe-common-lib" value="../../ogc-swe-common/lib" /> 
-	
-	<property name="sensorml-src" value="../ogc-sensorml-core/src" />
-	<property name="sensorml-lib" value="../ogc-sensorml-core/lib" /> 
+	<property name="swe-common-libs.dir" value="../../ogc-swe-common/lib" /> 
+	<property name="swe-common-lib" value="../../ogc-swe-common/build/swe-common-core-0.8.2.jar" />	
+	<property name="sensorml-core-lib" value="../../ogc-sensorml-core/build/sensorml-core-0.8.2.jar" /> 
 	
 
 	<target name="inc_major_ver_number">
@@ -65,7 +63,14 @@
         <dirset dir="${src.dir}"/>
       </src>
       <classpath>
+      	<filelist>
+      	  <file name="${swe-common-lib}"/>
+      		<file name="${sensorml-core-lib}"/>
+      	</filelist>
       	<fileset dir="${lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      	<fileset dir="${swe-common-libs.dir}">
           <include name="*.jar"/>
         </fileset>
       </classpath>
@@ -74,6 +79,9 @@
     <!-- Copy xml files -->
     <copy todir="${temp.dir}">
       <fileset dir="${src.dir}">
+        <include name="**/*.xml"/>
+      </fileset>
+    	<fileset dir="${src.dir}">
         <include name="**/*.xml"/>
       </fileset>
     </copy>

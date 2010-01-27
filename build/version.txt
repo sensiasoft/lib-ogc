@@ -1,4 +1,4 @@
-#Fri Jan 09 14:25:28 CET 2009
+#Wed Jan 27 15:48:26 CET 2010
 min.ver=2
-build.num=1
+build.num=2
 maj.ver=0
