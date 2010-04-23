@@ -78,6 +78,20 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
     
     
     /**
+     * Helper method to properly encode certain URL query parameters
+     * @param urlParam
+     * @return
+     */
+    protected String urlEncode(String urlParam)
+    {
+        urlParam = urlParam.replaceAll(" ", "%20");
+        urlParam = urlParam.replaceAll("\\+", "%2B");
+        //urlParam = urlParam.replaceAll("\\/", "%2F");
+        return urlParam;
+    }
+    
+    
+    /**
      * Utility method to add time argument to a GET request
      * Format is YYYY-MM-DDTHH:MM:SS.sss/YYYY-MM-DDTHH:MM:SS.sss/PYMDTHMS
      * @param buffer

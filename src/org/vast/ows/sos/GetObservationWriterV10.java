@@ -20,9 +20,6 @@
 
 package org.vast.ows.sos;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import org.vast.util.Bbox;
 import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
@@ -89,8 +86,7 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
                 urlBuff.append("&procedures=");
             
             String nextProc = request.getProcedures().get(i);            
-            try {urlBuff.append(URLEncoder.encode(nextProc, "UTF-8"));}
-            catch (UnsupportedEncodingException e) {e.printStackTrace();}
+            urlBuff.append(urlEncode(nextProc));
             
             if (i != procCount-1)
                 urlBuff.append(',');                
@@ -105,8 +101,7 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
 				urlBuff.append("&observedProperty=");
 			
             String nextObs = request.getObservables().get(i);            
-			try {urlBuff.append(URLEncoder.encode(nextObs, "UTF-8"));}
-            catch (UnsupportedEncodingException e) {e.printStackTrace();}
+            urlBuff.append(urlEncode(nextObs));
 			
 			if (i != obsCount-1)
 				urlBuff.append(',');				
@@ -121,7 +116,7 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
         }
         
         // format
-        urlBuff.append("&format=" + request.getFormat());
+        urlBuff.append("&format=" + urlEncode(request.getFormat()));
         
         // response mode
         if (request.getResponseMode() != null)
@@ -131,9 +126,7 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
         if (request.getResultModel() != null)
             urlBuff.append("&resultModel=" + request.getResultModel());
 		
-        String url = urlBuff.toString();
-        url = url.replaceAll(" ","%20");
-		return url;
+        return urlBuff.toString();
 	}
 	
 	
