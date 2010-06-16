@@ -174,6 +174,7 @@ public class SLDReader
         
         // read length
         NodeList cssElts = dom.getElements(symElt, "Direction/CssParameter");
+        
         for (int i=0; i<cssElts.getLength(); i++)
         {
             Element cssElt = (Element)cssElts.item(i);
@@ -182,6 +183,11 @@ public class SLDReader
             {
                 ScalarParameter lengthData = cssReader.readCssParameter(dom, cssElt);
                 vectorSym.setLength(lengthData);
+            }
+            if (paramName.equalsIgnoreCase("vector-steps"))
+            {
+            	ScalarParameter stepData = cssReader.readCssParameter(dom, cssElt);
+            	vectorSym.setNumberOfSteps(stepData);
             }
         }
         
@@ -396,6 +402,7 @@ public class SLDReader
         
         return texSym;
     }
+
     
     
     public void readTexCoords(TextureSymbolizer texSym, DOMHelper dom, Element gridElt)

@@ -43,7 +43,8 @@ public class VectorSymbolizer extends Symbolizer
     protected DirectionType directionType = DirectionType.DIFF;
     protected ScalarParameter length;
     protected Stroke stroke;
-    protected Fill fill;
+    protected ScalarParameter numberOfSteps;
+	protected Fill fill;
     protected Graphic graphic;
 
 
@@ -51,9 +52,21 @@ public class VectorSymbolizer extends Symbolizer
     {
         length = new ScalarParameter();
         length.setConstantValue(new Double(1.0));
+        numberOfSteps = new ScalarParameter();
+        numberOfSteps.setConstantValue(new Float(10.0));
     }
     
     
+    public ScalarParameter getNumberOfSteps() {
+		return numberOfSteps;
+	}
+
+    
+	public void setNumberOfSteps(ScalarParameter numberOfSteps) {
+		this.numberOfSteps = numberOfSteps;
+	}
+
+
     public Geometry getDirection()
     {
         if (direction == null)
