@@ -14,84 +14,51 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <robin@nsstc.uah.edu>
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows;
+package org.vast.ows.swe;
 
-import java.util.ArrayList;
 import java.util.List;
-import org.vast.ogc.OGCRegistry;
+import org.w3c.dom.*;
+import org.vast.xml.DOMHelper;
+import org.vast.ows.AbstractResponseWriter;
+import org.vast.ows.OWSResponse;
 
 
 /**
- * 
  * <p><b>Title:</b><br/>
- * OWS Response
+ * SWES Response Writer
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base class for all OWS service responses
+ * Base abstract class for SWE services XML response writers
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 21 nov. 07
+ * @author Alexandre Robin
+ * @date Oct 30, 2005
  * @version 1.0
  */
-public class OWSResponse
-{
-	protected String service;
-	protected String version;
-	protected String messageType;
-	protected List<Object> extensions;
+public abstract class SWEResponseWriter<ResponseType extends OWSResponse> extends AbstractResponseWriter<ResponseType>
+{	
 	
-	
-    public OWSResponse()
-    {
-    	extensions = new ArrayList<Object>();
-    }
-	
-
-	public String getService()
-	{
-		return service;
-	}
-
-
-	public void setService(String service)
-	{
-		this.service = service;
-	}
-
-
-	public String getVersion()
-	{
-		return version;
+	public SWEResponseWriter()
+	{	
 	}
 	
-	
-	public String getNormalizedVersion()
+	    
+    /**
+     * Adds common attributes and elements to XML response
+     * @param dom
+     * @param responseElt
+     * @param response
+     */
+    protected void writeExtensions(DOMHelper dom, Element responseElt, OWSResponse response)
 	{
-		return OGCRegistry.normalizeVersionString(version);
-	}
-
-
-	public void setVersion(String version)
-	{
-		this.version = version;
-	}
-
-
-	public String getMessageType()
-	{
-		return messageType;
-	}
-    
-	
-    public List<Object> getExtensions()
-	{
-		return extensions;
+    	// write extensions
+    	List<Object> extObjs = response.getExtensions();
+        SWESUtils.writeExtensions(dom, responseElt, response.getVersion(), extObjs);
 	}
 }

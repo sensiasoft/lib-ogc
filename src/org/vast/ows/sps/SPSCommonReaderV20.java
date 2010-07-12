@@ -21,10 +21,14 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.ows.sps;
 
+import java.util.List;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.ows.OWSException;
+import org.vast.ows.sps.StatusReport.RequestStatus;
+import org.vast.ows.sps.StatusReport.TaskStatus;
+import org.vast.ows.swe.SWESUtils;
 import org.vast.sweCommon.DataSourceDOM;
 import org.vast.sweCommon.SWEData;
 import org.vast.sweCommon.SweEncodingReaderV20;
@@ -40,8 +44,8 @@ import org.w3c.dom.Element;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Helper routines for parsing common info present
- * in several SPS requests/responses (i.e. SWE Data)
+ * Helper routines for parsing common structures present
+ * in several SPS requests/responses
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -93,53 +97,71 @@ public class SPSCommonReaderV20
 	 * @param paramStructure
 	 * @throws OWSException
 	 */
-	protected void readReportXML(DOMHelper dom, Element reportElt, StatusReport report, DataComponent paramStructure) throws OWSException
+	protected void readReportXML(DOMHelper dom, Element reportElt, StatusReport report) throws OWSException
 	{
 		try
 		{
-			// title
-			String title = dom.getElementValue(reportElt, "title");
-			report.setTitle(title);
+			String val;
 			
-			// abstract
-			String description = dom.getElementValue(reportElt, "abstract");
-			report.setDescription(description);
+			// name
+			val = dom.getElementValue(reportElt, "name");
+			report.setTitle(val);
+			
+			// description
+			val = dom.getElementValue(reportElt, "description");
+			report.setDescription(val);
+			
+			// read XML content of extensions
+			List<Element> extObjs = SWESUtils.readExtensions(dom, reportElt);
+			report.getExtensions().addAll(extObjs);
 			
 			// taskID
-			String id = dom.getElementValue(reportElt, "taskID");
-			report.setTaskID(id);
+			val = dom.getElementValue(reportElt, "taskIdentifier");
+			report.setTaskID(val);
 			
 			// sensorID
-			String sensorID = dom.getElementValue(reportElt, "sensorID");
-			report.setSensorID(sensorID);
+			val = dom.getElementValue(reportElt, "sensorIdentifier");
+			report.setSensorID(val);
+			
+			/*// requestStatus
+			val = dom.getElementValue(reportElt, "requestStatus");
+			if (val != null)
+				report.setRequestStatus(RequestStatus.valueOf(val));
+			
+			// taskStatus
+			val = dom.getElementValue(reportElt, "taskStatus");
+			if (val != null)
+				report.setTaskStatus(TaskStatus.valueOf(val));*/
+			val = dom.getElementValue(reportElt, "status");
+			if (val != null)
+			{
+				for (RequestStatus code: RequestStatus.values())
+					if (val.equals(code.name()))
+						report.setRequestStatus(RequestStatus.valueOf(val));
+				
+				for (TaskStatus code: TaskStatus.values())
+					if (val.equals(code.name()))
+						report.setTaskStatus(TaskStatus.valueOf(val));
+			}
 			
 			// update time
-			String isoDate = dom.getElementValue(reportElt, "updateTime");
-			if (isoDate != null)
+			val = dom.getElementValue(reportElt, "updateTime");
+			if (val != null)
 			{
-				DateTime lastUpdate = new DateTime(DateTimeFormat.parseIso(isoDate));
+				DateTime lastUpdate = new DateTime(DateTimeFormat.parseIso(val));
 				report.setLastUpdate(lastUpdate);
 			}
 			
-			// statusCode
-			String statusCode = dom.getElementValue(reportElt, "statusCode");
-			report.setStatusCode(statusCode);
+			// statusMessage
+			val = dom.getElementValue(reportElt, "statusMessage");
+			report.setStatusMessage(val);
 			
 			// estimatedToC
-			isoDate = dom.getElementValue(reportElt, "estimatedToC");
-			if (isoDate != null)
+			val = dom.getElementValue(reportElt, "estimatedToC");
+			if (val != null)
 			{
-				DateTime estimatedToC = new DateTime(DateTimeFormat.parseIso(isoDate));
+				DateTime estimatedToC = new DateTime(DateTimeFormat.parseIso(val));
 				report.setEstimatedToC(estimatedToC);
-			}
-			
-			// extended data
-			Element extDataElt = dom.getElement(reportElt, "extendedData/*");
-			if (extDataElt != null && paramStructure != null)
-			{
-				// parse data into a SWEData object
-				SWEData extData = readSWEData(dom, extDataElt, paramStructure);
-				report.setExtendedData(extData);
 			}
 		}
 		catch (Exception e)
@@ -149,18 +171,18 @@ public class SPSCommonReaderV20
 	}
 	
 	
-	public AbstractReport readReport(DOMHelper dom, Element reportElt, DataComponent paramStructure) throws OWSException
+	public StatusReport readReport(DOMHelper dom, Element reportElt) throws OWSException
 	{
-		AbstractReport report = null;
+		StatusReport report = null;
 		
 		if (dom.hasQName(reportElt, "sps:StatusNotification"))
-			report = readStatusReport(dom, reportElt, paramStructure);
+			report = readStatusReport(dom, reportElt);
 		else if (dom.hasQName(reportElt, "sps:StatusReport"))
-			report = readStatusReport(dom, reportElt, paramStructure);
+			report = readStatusReport(dom, reportElt);
 		else if (dom.hasQName(reportElt, "sps:ReservationReport"))
-			report = readReservationReport(dom, reportElt, paramStructure);
+			report = readReservationReport(dom, reportElt);
 		else if (dom.hasQName(reportElt, "sps:FeasibilityReport"))
-			report = readFeasibilityReport(dom, reportElt, paramStructure);
+			report = readFeasibilityReport(dom, reportElt);
 		else
 			throw new SPSException(SPSException.invalid_request_code, null, null, "Invalid Report Type");
 			
@@ -176,10 +198,10 @@ public class SPSCommonReaderV20
 	 * @return
 	 * @throws OWSException
 	 */
-	public StatusReport readStatusReport(DOMHelper dom, Element reportElt, DataComponent paramStructure) throws OWSException
+	public StatusReport readStatusReport(DOMHelper dom, Element reportElt) throws OWSException
 	{
 		StatusReport report = new StatusReport();
-		readReportXML(dom, reportElt, report, paramStructure);
+		readReportXML(dom, reportElt, report);
 		return report;
 	}
 	
@@ -192,12 +214,12 @@ public class SPSCommonReaderV20
 	 * @return
 	 * @throws OWSException
 	 */
-	public ReservationReport readReservationReport(DOMHelper dom, Element reportElt, DataComponent paramStructure) throws OWSException
+	public ReservationReport readReservationReport(DOMHelper dom, Element reportElt) throws OWSException
 	{
 		try
 		{
 			ReservationReport report = new ReservationReport();
-			readReportXML(dom, reportElt, report, paramStructure);
+			readReportXML(dom, reportElt, report);
 			
 			// expiration time
 			String isoDate = dom.getElementValue(reportElt, "reservationExpiration");
@@ -224,12 +246,12 @@ public class SPSCommonReaderV20
 	 * @return
 	 * @throws OWSException
 	 */
-	public FeasibilityReport readFeasibilityReport(DOMHelper dom, Element reportElt, DataComponent paramStructure) throws OWSException
+	public FeasibilityReport readFeasibilityReport(DOMHelper dom, Element reportElt) throws OWSException
 	{
 		try
 		{
 			FeasibilityReport report = new FeasibilityReport();
-			readReportXML(dom, reportElt, report, paramStructure);
+			readReportXML(dom, reportElt, report);
 			
 			// TODO read alternatives
 			
@@ -240,4 +262,7 @@ public class SPSCommonReaderV20
 			throw new SPSException(e);
 		}
 	}
+	
+	
+	
 }

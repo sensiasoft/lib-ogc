@@ -45,7 +45,7 @@ import org.vast.ows.sos.SOSException;
  * @date Oct 10, 2007
  * @version 1.0
  */
-public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSensorRequest>
+public class DescribeSensorReaderV10 extends SWERequestReader<DescribeSensorRequest>
 {
 	protected GMLTimeReader timeReader;
 	

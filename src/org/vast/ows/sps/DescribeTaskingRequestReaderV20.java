@@ -25,9 +25,9 @@ package org.vast.ows.sps;
 
 import org.w3c.dom.Element;
 import java.util.StringTokenizer;
-import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
+import org.vast.ows.swe.SWERequestReader;
 import org.vast.xml.DOMHelper;
 
 
@@ -46,7 +46,7 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 25 2008
 * @version 1.0
 */
-public class DescribeTaskingRequestReaderV20 extends AbstractRequestReader<DescribeTaskingRequest>
+public class DescribeTaskingRequestReaderV20 extends SWERequestReader<DescribeTaskingRequest>
 {
 
 	@Override
@@ -115,7 +115,7 @@ public class DescribeTaskingRequestReaderV20 extends AbstractRequestReader<Descr
 		readCommonXML(dom, requestElt, request);
 
 		// Sensor ID
-		String sensorID = dom.getElementValue(requestElt, "sensorID");
+		String sensorID = dom.getElementValue(requestElt, "sensorIdentifier");
 		request.setSensorID(sensorID);
 
 		checkParameters(request, new OWSExceptionReport());
@@ -136,7 +136,7 @@ public class DescribeTaskingRequestReaderV20 extends AbstractRequestReader<Descr
 		// Check sensorID
 		if (request.getSensorID() == null)
 		{
-			report.add(new OWSException(OWSException.missing_param_code, "sensorID"));
+			report.add(new OWSException(OWSException.missing_param_code, "sensorIdentifier"));
 		}
 
 		report.process();

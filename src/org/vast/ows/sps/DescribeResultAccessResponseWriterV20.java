@@ -21,10 +21,10 @@
 package org.vast.ows.sps;
 
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSCommonWriterV11;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSReferenceGroup;
+import org.vast.ows.swe.SWEResponseWriter;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 
@@ -44,7 +44,7 @@ import org.vast.xml.DOMHelper;
  * @date Mar 19, 2008
  * @version 1.0
  */
-public class DescribeResultAccessResponseWriterV20 extends AbstractResponseWriter<DescribeResultAccessResponse>
+public class DescribeResultAccessResponseWriterV20 extends SWEResponseWriter<DescribeResultAccessResponse>
 {
 	protected OWSCommonWriterV11 owsWriter = new OWSCommonWriterV11();
 	
@@ -56,6 +56,9 @@ public class DescribeResultAccessResponseWriterV20 extends AbstractResponseWrite
 		
 		// root element
 		Element rootElt = dom.createElement("sps:" + response.getMessageType());
+		
+		// write extensions
+		writeExtensions(dom, rootElt, response);
 		
 		// case of no data available
 		if (response.getReasonCode() != null)

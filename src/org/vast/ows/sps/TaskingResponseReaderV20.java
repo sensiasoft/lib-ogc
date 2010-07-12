@@ -22,9 +22,8 @@
 
 package org.vast.ows.sps;
 
-import org.vast.cdm.common.DataComponent;
 import org.vast.ows.OWSException;
-import org.vast.ows.ParameterizedResponseReader;
+import org.vast.ows.swe.SWEResponseReader;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -44,23 +43,15 @@ import org.w3c.dom.Element;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class StatusResponseReaderV20 extends ParameterizedResponseReader<TaskingResponse<?>>
+public class TaskingResponseReaderV20 extends SWEResponseReader<TaskingResponse<?>>
 {
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
-	protected DataComponent paramStructure;
-	
-	
-	public void setParamStructure(DataComponent paramStructure)
-	{
-		this.paramStructure = paramStructure;
-	}
 	
 	
 	public TaskingResponse<StatusReport> readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 		try
 		{
-			assert(paramStructure != null);
 			TaskingResponse<StatusReport> response;			
 			String respName = responseElt.getLocalName();
 			String className = getClass().getPackage().getName() + "." + respName;
@@ -72,12 +63,20 @@ public class StatusResponseReaderV20 extends ParameterizedResponseReader<Tasking
 	            response.setVersion("2.0");
 	            
 	            // status or feasibility report
-	            Element reportElt = dom.getElement(responseElt, "result/*");
+	            Element reportElt;
+	            if (response instanceof GetStatusResponse)
+	            	reportElt = dom.getElement(responseElt, "status/*");
+				else
+					reportElt = dom.getElement(responseElt, "result/*");
+	            
 	            if (reportElt != null)
 	            {
-	                StatusReport report = (StatusReport)commonReader.readReport(dom, reportElt, paramStructure);
+	                StatusReport report = (StatusReport)commonReader.readReport(dom, reportElt);
 	                response.setReport(report);
 	            }
+	            
+	            // read extensions
+	            readExtensions(dom, responseElt, response);
 	            
 	            return response;
 	        }
@@ -93,6 +92,5 @@ public class StatusResponseReaderV20 extends ParameterizedResponseReader<Tasking
 		{
 			throw new SPSException(e);
 		}
-	}
-	
+	}	
 }

@@ -41,8 +41,6 @@ import java.util.List;
  */
 public class FeasibilityReport extends StatusReport
 {
-	public final static String FEASIBLE = "FEASIBLE";
-	
 	public List<Alternative> alternatives;
 
 	

@@ -44,8 +44,6 @@ public class DescribeTaskingResponse extends OWSResponse
 {
 	protected DataComponent taskingParameters;
 	protected DataComponent updatableParameters;
-	protected DataComponent feasibilityReportExtendedData;
-	protected DataComponent statusReportExtendedData;
 	
 
 	public DescribeTaskingResponse()
@@ -77,28 +75,4 @@ public class DescribeTaskingResponse extends OWSResponse
 	{
 		this.updatableParameters = updatableParameters;
 	}
-
-
-	public DataComponent getFeasibilityReportExtendedData()
-	{
-		return feasibilityReportExtendedData;
-	}
-
-
-	public void setFeasibilityReportExtendedData(DataComponent feasibilityReportParameters)
-	{
-		this.feasibilityReportExtendedData = feasibilityReportParameters;
-	}
-
-
-	public DataComponent getStatusReportExtendedData()
-	{
-		return statusReportExtendedData;
-	}
-
-
-	public void setStatusReportExtendedData(DataComponent statusReportParameters)
-	{
-		this.statusReportExtendedData = statusReportParameters;
-	}	
 }

@@ -25,9 +25,9 @@ package org.vast.ows.sps;
 
 import org.w3c.dom.Element;
 import java.util.StringTokenizer;
-import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
+import org.vast.ows.swe.SWERequestReader;
 import org.vast.xml.DOMHelper;
 
 
@@ -46,7 +46,7 @@ import org.vast.xml.DOMHelper;
 * @date Mar, 04 2008
 * @version 1.0
 */
-public class DescribeResultAccessRequestReaderV20 extends AbstractRequestReader<DescribeResultAccessRequest>
+public class DescribeResultAccessRequestReaderV20 extends SWERequestReader<DescribeResultAccessRequest>
 {
 
 	@Override
@@ -120,17 +120,12 @@ public class DescribeResultAccessRequestReaderV20 extends AbstractRequestReader<
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
 
-		// task ID
-		String ID = dom.getElementValue(requestElt, "taskID");
+		// task or sensor ID
+		String ID = dom.getElementValue(requestElt, "identifier");
 		request.setTaskID(ID);
 		
-		// parse sensorID only if no ID was provided (choice)
-		if (ID != null)
-		{
-			String sensorID = dom.getElementValue(requestElt, "sensorID");
-			request.setSensorID(sensorID);
-		}
-
+		// TODO how do we know if it's a sensor identifier??
+		
 		checkParameters(request, new OWSExceptionReport());
 		return request;
 	}
@@ -149,7 +144,7 @@ public class DescribeResultAccessRequestReaderV20 extends AbstractRequestReader<
 		// Check that at least one ID is present
 		if (request.getSensorID() == null && request.getTaskID() == null)
 		{
-			report.add(new OWSException(OWSException.missing_param_code, "TaskID OR SensorID"));
+			report.add(new OWSException(OWSException.missing_param_code, "identifier"));
 		}
 
 		report.process();

@@ -27,18 +27,17 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import org.vast.ows.OWSResponse;
-import org.vast.ows.ParameterizedResponse;
-import org.vast.sweCommon.SWEData;
 import org.vast.util.DateTime;
 
 
 /**
  * <p><b>Title:</b>
- * Submit Response
+ * Tasking Response
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for a Submit response
+ * Container for a tasking response.
+ * (i.e. GetFeasibility, Submit, Update, Reserve or Confirm operations)
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -46,7 +45,7 @@ import org.vast.util.DateTime;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public abstract class TaskingResponse<Report extends StatusReport> extends OWSResponse implements ParameterizedResponse
+public abstract class TaskingResponse<Report extends StatusReport> extends OWSResponse
 {
 	protected DateTime latestResponseTime;
 	protected Report report;
@@ -84,14 +83,5 @@ public abstract class TaskingResponse<Report extends StatusReport> extends OWSRe
 	public void setReport(Report report)
 	{
 		this.report = report;
-	}
-	
-	
-	public SWEData getParameters()
-	{
-		if (this.report == null)
-			return null;
-		
-		return report.getExtendedData();
 	}
 }

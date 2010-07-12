@@ -24,7 +24,6 @@ package org.vast.ows.wcs;
 
 import java.text.ParseException;
 import java.util.StringTokenizer;
-import org.vast.xml.QName;
 import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.Interval;
@@ -249,9 +248,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
             
             // other axis subsets and vendor specific parameters
             else
-            {
-            	request.getExtensions().put(new QName(argName.toUpperCase()), argValue);
-            }
+            	addKVPExtension(argName, argValue, request);
         }
 		
         this.checkParameters(request, report);

@@ -14,84 +14,53 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <robin@nsstc.uah.edu>
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows;
+package org.vast.ows.swe;
 
-import java.util.ArrayList;
 import java.util.List;
-import org.vast.ogc.OGCRegistry;
+import org.w3c.dom.*;
+import org.vast.xml.DOMHelper;
+import org.vast.ows.AbstractRequestWriter;
+import org.vast.ows.OWSRequest;
 
 
 /**
- * 
  * <p><b>Title:</b><br/>
- * OWS Response
+ * SWES Request Builder
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base class for all OWS service responses
+ * Base abstract class for SWE services POST/GET request builders
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 21 nov. 07
+ * @author Alexandre Robin
+ * @date Oct 30, 2005
  * @version 1.0
  */
-public class OWSResponse
-{
-	protected String service;
-	protected String version;
-	protected String messageType;
-	protected List<Object> extensions;
+public abstract class SWERequestWriter<RequestType extends OWSRequest> extends AbstractRequestWriter<RequestType>
+{	
 	
-	
-    public OWSResponse()
-    {
-    	extensions = new ArrayList<Object>();
-    }
-	
-
-	public String getService()
-	{
-		return service;
-	}
-
-
-	public void setService(String service)
-	{
-		this.service = service;
-	}
-
-
-	public String getVersion()
-	{
-		return version;
+	public SWERequestWriter()
+	{	
 	}
 	
-	
-	public String getNormalizedVersion()
+	    
+    /**
+     * Adds common attributes and elements to XML request
+     * @param dom
+     * @param requestElt
+     * @param request
+     */
+    protected void addCommonXML(DOMHelper dom, Element requestElt, OWSRequest request)
 	{
-		return OGCRegistry.normalizeVersionString(version);
-	}
-
-
-	public void setVersion(String version)
-	{
-		this.version = version;
-	}
-
-
-	public String getMessageType()
-	{
-		return messageType;
-	}
-    
-	
-    public List<Object> getExtensions()
-	{
-		return extensions;
+    	super.addCommonXML(dom, requestElt, request);
+    	
+    	// write extensions
+    	List<Object> extObjs = request.getExtensions();
+        SWESUtils.writeExtensions(dom, requestElt, request.getVersion(), extObjs);
 	}
 }

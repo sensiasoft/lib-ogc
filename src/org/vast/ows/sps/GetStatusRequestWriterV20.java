@@ -24,8 +24,8 @@ package org.vast.ows.sps;
 
 import org.w3c.dom.Element;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.swe.SWERequestWriter;
 import org.vast.util.DateTime;
 import org.vast.xml.DOMHelper;
 
@@ -46,7 +46,7 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 258 2008
 * @version 1.0
 */
-public class GetStatusRequestWriterV20 extends AbstractRequestWriter<GetStatusRequest>
+public class GetStatusRequestWriterV20 extends SWERequestWriter<GetStatusRequest>
 {
 
 	/**
@@ -70,11 +70,6 @@ public class GetStatusRequestWriterV20 extends AbstractRequestWriter<GetStatusRe
 		if (since != null)
 			urlBuff.append("&since=" + since.formatIso(0));
 		
-		// format
-		String format = request.getFormat();
-		if (format != null)
-			urlBuff.append("&format=" + format);
-		
 		String url = urlBuff.toString();
 		url = url.replaceAll(" ", "%20");
 		return url;
@@ -94,7 +89,7 @@ public class GetStatusRequestWriterV20 extends AbstractRequestWriter<GetStatusRe
 		addCommonXML(dom, rootElt, request);
 
 		// taskID
-		dom.setElementValue(rootElt, "sps:taskID", request.getTaskID());
+		dom.setElementValue(rootElt, "sps:taskIdentifier", request.getTaskID());
 
 		// since
 		DateTime since = request.getSince();

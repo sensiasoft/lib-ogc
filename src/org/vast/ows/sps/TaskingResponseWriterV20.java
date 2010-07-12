@@ -24,8 +24,8 @@ package org.vast.ows.sps;
 
 import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.swe.SWEResponseWriter;
 import org.w3c.dom.*;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
@@ -47,7 +47,7 @@ import org.vast.xml.DOMHelper;
  * @date Mar 04, 2008
  * @version 1.0
  */
-public class StatusResponseWriterV20 extends AbstractResponseWriter<TaskingResponse<?>>
+public class TaskingResponseWriterV20 extends SWEResponseWriter<TaskingResponse<?>>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
 	
@@ -61,6 +61,9 @@ public class StatusResponseWriterV20 extends AbstractResponseWriter<TaskingRespo
 			// root element
 			Element rootElt = dom.createElement("sps:" + response.getMessageType());
 			
+			// write extensions
+			writeExtensions(dom, rootElt, response);
+			
 			// latest response time
 			DateTime latestResp = response.getLatestResponseTime();
 			if (latestResp != null)
@@ -68,8 +71,14 @@ public class StatusResponseWriterV20 extends AbstractResponseWriter<TaskingRespo
 						DateTimeFormat.formatIso(latestResp.getJulianTime(), 0));
 			
 			// status report
-			Element reportElt = commonWriter.writeStatusReport(dom, response.getReport());
-			Element resElt = dom.addElement(rootElt, "sps:result");
+			Element reportElt = commonWriter.writeReport(dom, response.getReport());
+			
+			// case of getStatus or tasking
+			Element resElt;
+			if (response instanceof GetStatusResponse)
+				resElt = dom.addElement(rootElt, "sps:status");
+			else
+				resElt = dom.addElement(rootElt, "sps:result");
 			resElt.appendChild(reportElt);
 			
 			return rootElt;

@@ -25,9 +25,9 @@ package org.vast.ows.sps;
 
 import org.w3c.dom.Element;
 import java.util.StringTokenizer;
-import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
+import org.vast.ows.swe.SWERequestReader;
 import org.vast.util.DateTime;
 import org.vast.xml.DOMHelper;
 
@@ -47,7 +47,7 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 258 2008
 * @version 1.0
 */
-public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRequest>
+public class GetStatusRequestReaderV20 extends SWERequestReader<GetStatusRequest>
 {
 
 	@Override
@@ -103,15 +103,9 @@ public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRe
 			{
 				request.setSince(new DateTime(argValue));
 			}
-			
-			// format
-			else if (argName.equalsIgnoreCase("format"))
-			{
-				request.setFormat(argValue);
-			}
 
 			else
-				throw new SPSException(invalidKVP + ": Unknown Argument " + argName);
+				addKVPExtension(argName, argValue, request);
 		}
 
 		checkParameters(request, new OWSExceptionReport());
@@ -128,7 +122,7 @@ public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRe
 		readCommonXML(dom, requestElt, request);
 
 		// taskID
-		String taskID = dom.getElementValue(requestElt, "taskID");
+		String taskID = dom.getElementValue(requestElt, "taskIdentifier");
 		request.setTaskID(taskID);
 		
 		// since
@@ -153,7 +147,7 @@ public class GetStatusRequestReaderV20 extends AbstractRequestReader<GetStatusRe
 
 		// Check that taskID is present
 		if (request.getTaskID() == null)
-			report.add(new OWSException(OWSException.missing_param_code, "TaskID"));
+			report.add(new OWSException(OWSException.missing_param_code, "taskIdentifier"));
 
 		report.process();
 	}

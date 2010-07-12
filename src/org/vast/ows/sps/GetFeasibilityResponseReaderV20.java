@@ -22,9 +22,8 @@
 
 package org.vast.ows.sps;
 
-import org.vast.cdm.common.DataComponent;
 import org.vast.ows.OWSException;
-import org.vast.ows.ParameterizedResponseReader;
+import org.vast.ows.swe.SWEResponseReader;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
@@ -46,24 +45,15 @@ import org.w3c.dom.Element;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class GetFeasibilityResponseReaderV20 extends ParameterizedResponseReader<GetFeasibilityResponse>
+public class GetFeasibilityResponseReaderV20 extends SWEResponseReader<GetFeasibilityResponse>
 {
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
-	protected DataComponent paramStructure;
-	
-	
-	public void setParamStructure(DataComponent paramStructure)
-	{
-		this.paramStructure = paramStructure;
-	}
 	
 	
 	public GetFeasibilityResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 		try
 		{
-			assert(paramStructure != null);
-			
 			GetFeasibilityResponse response = new GetFeasibilityResponse();
 			response.setVersion("2.0");
 			
@@ -79,7 +69,7 @@ public class GetFeasibilityResponseReaderV20 extends ParameterizedResponseReader
 			Element reportElt = dom.getElement(responseElt, "result/FeasibilityReport");
 			if (reportElt != null)
 			{
-				FeasibilityReport report = commonReader.readFeasibilityReport(dom, reportElt, paramStructure);
+				FeasibilityReport report = commonReader.readFeasibilityReport(dom, reportElt);
 				response.setReport(report);
 			}
 			

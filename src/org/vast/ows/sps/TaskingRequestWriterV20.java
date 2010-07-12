@@ -25,8 +25,8 @@ package org.vast.ows.sps;
 import org.w3c.dom.Element;
 import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.swe.SWERequestWriter;
 import org.vast.sweCommon.SWEData;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
@@ -47,7 +47,7 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 28 2008
 * @version 1.0
 */
-public abstract class TaskingRequestWriterV20<RequestType extends TaskingRequest> extends AbstractRequestWriter<RequestType>
+public abstract class TaskingRequestWriterV20<RequestType extends TaskingRequest> extends SWERequestWriter<RequestType>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
 	
@@ -65,10 +65,10 @@ public abstract class TaskingRequestWriterV20<RequestType extends TaskingRequest
 			// root element
 			Element rootElt = dom.createElement("sps:" + request.getOperation());
 			addCommonXML(dom, rootElt, request);
-
+			
 			// sensorID
 			if (request.getSensorID() != null)
-				dom.setElementValue(rootElt, "sps:sensorID", request.getSensorID());
+				dom.setElementValue(rootElt, "sps:sensorIdentifier", request.getSensorID());
 							
 			// tasking parameters
 			SWEData taskingParams = request.getParameters();

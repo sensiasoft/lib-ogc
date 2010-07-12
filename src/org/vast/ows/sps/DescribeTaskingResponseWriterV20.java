@@ -23,8 +23,8 @@ package org.vast.ows.sps;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.swe.SWEResponseWriter;
 import org.vast.sweCommon.SweComponentWriterV20;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
@@ -45,7 +45,7 @@ import org.vast.xml.DOMHelper;
  * @date Feb 29, 2008
  * @version 1.0
  */
-public class DescribeTaskingResponseWriterV20 extends AbstractResponseWriter<DescribeTaskingResponse>
+public class DescribeTaskingResponseWriterV20 extends SWEResponseWriter<DescribeTaskingResponse>
 {
 	protected SweComponentWriterV20 componentWriter = new SweComponentWriterV20();
 	
@@ -61,6 +61,9 @@ public class DescribeTaskingResponseWriterV20 extends AbstractResponseWriter<Des
 			DataComponent params;
 			Element componentElt;
 			
+			// write extensions
+			writeExtensions(dom, rootElt, response);
+            
 			// common tasking parameters
 			params = response.getTaskingParameters();
 			if (params != null)
@@ -72,26 +75,6 @@ public class DescribeTaskingResponseWriterV20 extends AbstractResponseWriter<Des
 			}
 			else
 				throw new SPSException("Tasking Parameters must be provided");
-			
-			// feasibility study parameters
-			params = response.getFeasibilityReportExtendedData();
-			if (params != null)
-			{
-				Element paramsElt = dom.addElement(rootElt, "sps:feasibilityReportExtendedData");
-				dom.setAttributeValue(paramsElt, "name", params.getName());
-				componentElt = componentWriter.writeComponent(dom, params);
-				paramsElt.appendChild(componentElt);
-			}
-			
-			// progress report parameters
-			params = response.getStatusReportExtendedData();
-			if (params != null)
-			{
-				Element paramsElt = dom.addElement(rootElt, "sps:statusReportExtendedData");
-				dom.setAttributeValue(paramsElt, "name", params.getName());
-				componentElt = componentWriter.writeComponent(dom, params);
-				paramsElt.appendChild(componentElt);
-			}
 			
 			return rootElt;
 		}

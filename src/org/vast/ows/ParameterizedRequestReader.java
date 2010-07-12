@@ -40,7 +40,7 @@ import org.vast.cdm.common.DataComponent;
 * @date Feb, 29 2008
 * @version 1.0
 */
-public abstract class ParameterizedRequestReader<RequestType extends OWSRequest> extends AbstractRequestReader<RequestType>
+public interface ParameterizedRequestReader
 {
-	public abstract void setParamStructure(DataComponent paramStructure);	
+	public void setParamStructure(DataComponent paramStructure);	
 }

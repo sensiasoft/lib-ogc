@@ -22,8 +22,8 @@ package org.vast.ows.sps;
 
 import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.swe.SWEResponseWriter;
 import org.w3c.dom.*;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
@@ -45,7 +45,7 @@ import org.vast.xml.DOMHelper;
  * @date Mar 04, 2008
  * @version 1.0
  */
-public class GetFeasibilityResponseWriterV20 extends AbstractResponseWriter<GetFeasibilityResponse>
+public class GetFeasibilityResponseWriterV20 extends SWEResponseWriter<GetFeasibilityResponse>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
 	
@@ -58,6 +58,9 @@ public class GetFeasibilityResponseWriterV20 extends AbstractResponseWriter<GetF
 			
 			// root element
 			Element rootElt = dom.createElement("sps:" + response.getMessageType());
+			
+			// write extensions
+			writeExtensions(dom, rootElt, response);
 			
 			// latest response time
 			DateTime latestResp = response.getLatestResponseTime();

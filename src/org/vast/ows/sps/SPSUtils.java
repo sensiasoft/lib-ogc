@@ -25,16 +25,17 @@
 
 package org.vast.ows.sps;
 
+import java.util.List;
 import org.vast.cdm.common.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
+import org.vast.ows.OWSRequestReader;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.ParameterizedRequest;
 import org.vast.ows.ParameterizedRequestReader;
-import org.vast.ows.ParameterizedResponse;
-import org.vast.ows.ParameterizedResponseReader;
+import org.vast.ows.swe.SWESUtils;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -68,21 +69,11 @@ public class SPSUtils extends OWSUtils
 		OWSRequest tempReq = new OWSRequest();
 		AbstractRequestReader.readCommonXML(dom, requestElt, tempReq);
 		
-		ParameterizedRequestReader<?> reader = (ParameterizedRequestReader<?>)OGCRegistry.createReader(OWSUtils.SPS, tempReq.getOperation(), tempReq.getVersion());
-		reader.setParamStructure(mainParams);
+		OWSRequestReader<?> reader = (OWSRequestReader<?>)OGCRegistry.createReader(SPSUtils.SPS, tempReq.getOperation(), tempReq.getVersion());
+		((ParameterizedRequestReader)reader).setParamStructure(mainParams);
 		ParameterizedRequest request = (ParameterizedRequest)reader.readXMLQuery(dom, requestElt);
 		
 		return request;
-	}
-	
-	
-	public ParameterizedResponse readParameterizedResponse(DOMHelper dom, Element responseElt, DataComponent mainParams, String version) throws OWSException
-	{
-		ParameterizedResponseReader<?> reader = (ParameterizedResponseReader<?>)OGCRegistry.createReader(OWSUtils.SPS, responseElt.getLocalName(), version);
-		reader.setParamStructure(mainParams);
-		ParameterizedResponse response = (ParameterizedResponse)reader.readXMLResponse(dom, responseElt);
-		
-		return response;
 	}
 	
 	
@@ -97,6 +88,19 @@ public class SPSUtils extends OWSUtils
 	{
 		DOMHelper dom = new DOMHelper(respElt.getOwnerDocument());
 		return readDescribeTaskingResponse(dom, respElt);
+	}
+	
+	
+	public TaskingResponse readTaskingResponse(DOMHelper dom, Element respElt, String version) throws OWSException
+	{
+		return (TaskingResponse)super.readXMLResponse(dom, respElt, SPSUtils.SPS, respElt.getLocalName(), version);
+	}
+	
+	
+	public static void writeExtensions(DOMHelper dom, Element parentElt, String version, List<? extends Object> extObjs)
+	{
+		String spsUri = OGCRegistry.getNamespaceURI(OWSUtils.SPS, version);
+		SWESUtils.writeExtensions(dom, parentElt, "sps", spsUri, extObjs);
 	}
 	
 }

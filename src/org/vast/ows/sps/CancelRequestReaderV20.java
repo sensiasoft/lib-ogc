@@ -24,9 +24,9 @@ Contributor(s):
 package org.vast.ows.sps;
 
 import org.w3c.dom.Element;
-import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
+import org.vast.ows.swe.SWERequestReader;
 import org.vast.xml.DOMHelper;
 
 
@@ -45,7 +45,7 @@ import org.vast.xml.DOMHelper;
 * @date Dec, 18 2008
 * @version 1.0
 */
-public class CancelRequestReaderV20 extends AbstractRequestReader<CancelRequest>
+public class CancelRequestReaderV20 extends SWERequestReader<CancelRequest>
 {
 
 	@Override
@@ -64,7 +64,7 @@ public class CancelRequestReaderV20 extends AbstractRequestReader<CancelRequest>
 		readCommonXML(dom, requestElt, request);
 
 		// taskID
-		String taskID = dom.getElementValue(requestElt, "taskID");
+		String taskID = dom.getElementValue(requestElt, "taskIdentifier");
 		request.setTaskID(taskID);
 
 		checkParameters(request, new OWSExceptionReport());
@@ -84,7 +84,7 @@ public class CancelRequestReaderV20 extends AbstractRequestReader<CancelRequest>
 
 		// Check that taskID is present
 		if (request.getTaskID() == null)
-			report.add(new OWSException(OWSException.missing_param_code, "TaskID"));
+			report.add(new OWSException(OWSException.missing_param_code, "taskIdentifier"));
 
 		report.process();
 	}

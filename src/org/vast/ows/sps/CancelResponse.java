@@ -22,8 +22,6 @@
 
 package org.vast.ows.sps;
 
-import org.vast.ows.OWSResponse;
-
 
 /**
  * <p><b>Title:</b>
@@ -39,26 +37,13 @@ import org.vast.ows.OWSResponse;
  * @date Mar, 03 2008
  * @version 1.0
  */
-public class CancelResponse extends OWSResponse
+public class CancelResponse extends TaskingResponse<StatusReport>
 {
-	protected StatusReport statusReport;
-		
-
+	
 	public CancelResponse()
 	{
 		this.service = SPSUtils.SPS;
         this.messageType = "CancelResponse";
-	}
-
-
-	public StatusReport getStatusReport()
-	{
-		return statusReport;
-	}
-
-
-	public void setStatusReport(StatusReport statusReport)
-	{
-		this.statusReport = statusReport;
+        report = new StatusReport();
 	}
 }

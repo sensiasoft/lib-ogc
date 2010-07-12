@@ -30,6 +30,7 @@ package org.vast.ows.sps;
  *
  * <p><b>Description:</b><br/>
  * Container for a Reserve response
+ * It can contain either a StatusReport 
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -37,7 +38,7 @@ package org.vast.ows.sps;
  * @date Dec, 10 2008
  * @version 1.0
  */
-public class ReserveResponse extends TaskingResponse<ReservationReport>
+public class ReserveResponse extends TaskingResponse<StatusReport>
 {
 
 	public ReserveResponse()

@@ -23,12 +23,13 @@ Contributor(s):
 package org.vast.ows.sps;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
-import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataComponent;
-import org.vast.ows.OWSException;
-import org.vast.ows.OWSExceptionReport;
-import org.vast.sweCommon.SWEData;
+import java.util.TimeZone;
+import org.vast.util.DateTime;
+import org.w3c.dom.Element;
 
 
 /**
@@ -45,50 +46,186 @@ import org.vast.sweCommon.SWEData;
  * @date Feb 25, 2008
  * @version 1.0
  */
-public class StatusReport extends AbstractReport
+public class StatusReport
 {
-	public static final String IN_PROGRESS = "other:IN_PROGRESS";
-	public static final String CANCELLED = "CANCELLED";
-	public static final String FAILED = "FAILED";
-	public static final String COMPLETED = "COMPLETED";
+	// request status codes
+	public enum RequestStatus {Pending, Accepted, Rejected, Cancelled, Expired};
 	
-	protected SWEData extendedData;
-
-
-	public SWEData getExtendedData()
-	{
-		return extendedData;
-	}
-
-
-	public void setExtendedData(SWEData extendedData)
-	{
-		this.extendedData = extendedData;
-	}
+	// task status codes
+	public enum TaskStatus {Reserved, InExecution, Completed, Cancelled, Failed};
 	
-	
-	public void initExtentedData(DataComponent dataStructure)
-	{
-		SWEData reportData = new SWEData();
-		reportData.setDataComponents(dataStructure.copy());
-		setExtendedData(reportData);
-	}
-	
-	
-	public void validate() throws OWSException
-	{
-		List<CDMException> errorList = new ArrayList<CDMException>();
-		extendedData.validateData(errorList);
-		if (errorList.size() == 0)
-			return;
+	protected String taskID;
+	protected String sensorID;
+	protected String title;
+	protected String description;
+	protected DateTime lastUpdate;
+	protected RequestStatus requestStatus;
+	protected TaskStatus taskStatus;
+	protected float percentCompletion = Float.NaN;
+	protected String statusMessage;
+	protected DateTime estimatedToC;
+	protected List<Object> extensions;
 		
-		OWSExceptionReport report = new OWSExceptionReport();
-		for (int i=0; i<errorList.size(); i++)
-		{
-			String loc = errorList.get(i).getLocator();
-			String msg = errorList.get(i).getMessage();
-			report.add(new SPSException(SPSException.invalid_param_code, "ReportData/" + loc, null, msg));
-		}		
-		throw report;
+
+	public StatusReport()
+	{
+		extensions = new ArrayList<Object>();
+	}
+	
+	
+	public String getTaskID()
+	{
+		return taskID;
+	}
+
+
+	public void setTaskID(String id)
+	{
+		this.taskID = id;
+	}
+
+
+	public String getSensorID()
+	{
+		return sensorID;
+	}
+
+
+	public void setSensorID(String sensorId)
+	{
+		this.sensorID = sensorId;
+	}
+
+
+	public DateTime getLastUpdate()
+	{
+		return lastUpdate;
+	}
+
+
+	public void setLastUpdate(DateTime lastUpdate)
+	{
+		this.lastUpdate = lastUpdate;
+	}
+
+
+	public RequestStatus getRequestStatus()
+	{
+		return requestStatus;
+	}
+
+
+	public void setRequestStatus(RequestStatus statusCode)
+	{
+		this.requestStatus = statusCode;
+	}
+	
+	
+	public TaskStatus getTaskStatus()
+	{
+		return taskStatus;
+	}
+
+
+	public void setTaskStatus(TaskStatus statusCode)
+	{
+		this.taskStatus = statusCode;
+	}
+	
+	
+	public float getPercentCompletion()
+	{
+		return percentCompletion;
+	}
+
+
+	public void setPercentCompletion(float percentCompletion)
+	{
+		this.percentCompletion = percentCompletion;
+	}
+
+
+	public String getStatusMessage()
+	{
+		return statusMessage;
+	}
+
+
+	public void setStatusMessage(String statusMessage)
+	{
+		this.statusMessage = statusMessage;
+	}
+
+
+	public String getTitle()
+	{
+		return title;
+	}
+
+
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
+
+
+	public String getDescription()
+	{
+		return description;
+	}
+
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+
+	public DateTime getEstimatedToC()
+	{
+		return estimatedToC;
+	}
+	
+	
+	public double getEstimatedDelay()
+	{
+		double toc = estimatedToC.getJulianTime();
+		double now = new DateTime().getJulianTime();
+		return toc - now;
+	}
+
+
+	public void setEstimatedToC(DateTime estimatedToC)
+	{
+		this.estimatedToC = estimatedToC;
+	}
+	
+	
+	public void setEstimatedDelay(int seconds)
+	{
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(new Date());
+		cal.setTimeZone(TimeZone.getTimeZone("GMT"));
+		cal.add(Calendar.SECOND, seconds);
+		cal.set(Calendar.MILLISECOND, 0);
+		this.estimatedToC = new DateTime(cal.getTimeInMillis());
+	}
+	
+	
+	public void touch()
+	{
+		this.lastUpdate = new DateTime();
+	}
+
+
+	public List<Object> getExtensions()
+	{
+		return extensions;
+	}
+
+
+	public void addExtension(Element extensionElt)
+	{
+		extensions.add(extensionElt);
 	}
 }

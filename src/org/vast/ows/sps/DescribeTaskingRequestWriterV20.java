@@ -24,8 +24,8 @@ package org.vast.ows.sps;
 
 import org.w3c.dom.Element;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.swe.SWERequestWriter;
 import org.vast.xml.DOMHelper;
 
 
@@ -45,7 +45,7 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 28 2008
 * @version 1.0
 */
-public class DescribeTaskingRequestWriterV20 extends AbstractRequestWriter<DescribeTaskingRequest>
+public class DescribeTaskingRequestWriterV20 extends SWERequestWriter<DescribeTaskingRequest>
 {
 
 	/**
@@ -84,7 +84,7 @@ public class DescribeTaskingRequestWriterV20 extends AbstractRequestWriter<Descr
 
 		// sensorID
 		if (request.getSensorID() != null)
-			dom.setElementValue(rootElt, "sps:sensorID", request.getSensorID());
+			dom.setElementValue(rootElt, "sps:sensorIdentifier", request.getSensorID());
 
 		return rootElt;
 	}

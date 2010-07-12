@@ -27,6 +27,7 @@ import org.vast.cdm.common.DataComponent;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.ParameterizedRequestReader;
+import org.vast.ows.swe.SWERequestReader;
 import org.vast.sweCommon.SWEData;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
@@ -47,7 +48,7 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 29 2008
 * @version 1.0
 */
-public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest> extends ParameterizedRequestReader<RequestType>
+public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest> extends SWERequestReader<RequestType> implements ParameterizedRequestReader
 {
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
 	protected DataComponent taskingParamStructure;
@@ -67,7 +68,7 @@ public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest
 			readCommonXML(dom, requestElt, request);
 
 			// sensor ID
-			String sensorID = dom.getElementValue(requestElt, "sensorID");
+			String sensorID = dom.getElementValue(requestElt, "sensorIdentifier");
 			request.setSensorID(sensorID);
 			
 			// tasking parameters
@@ -106,11 +107,11 @@ public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest
 
 		// Check that sensorID is present
 		if (request.getSensorID() == null)
-			report.add(new SPSException(SPSException.missing_param_code, "SensorID"));
+			report.add(new SPSException(SPSException.missing_param_code, "sensorIdentifier"));
 
 		// Check that tasking parameters are present
 		if (request.getParameters() == null)
-			report.add(new SPSException(SPSException.missing_param_code, "TaskingParameters"));
+			report.add(new SPSException(SPSException.missing_param_code, "taskingParameters"));
 		
 		report.process();
 	}

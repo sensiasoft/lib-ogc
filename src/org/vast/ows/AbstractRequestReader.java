@@ -26,12 +26,10 @@ import java.text.ParseException;
 import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
-import org.vast.xml.QName;
 import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.TimeInfo;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 
 /**
@@ -221,20 +219,6 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 		request.setOperation(requestElt.getLocalName());
 		request.setService(dom.getAttributeValue(requestElt, "service"));
 		request.setVersion(dom.getAttributeValue(requestElt, "version"));
-		
-		// read simple extensions
-		NodeList extElts = dom.getElements(requestElt, "extension/*");
-		for (int i=0; i<extElts.getLength(); i++)
-		{
-			Element nextExt = (Element)extElts.item(i);
-			String val = dom.getElementValue(nextExt);
-			if (val != null && !val.trim().equals(""))
-			{
-				String uri = nextExt.getNamespaceURI();
-				String name = nextExt.getLocalName();
-				request.getExtensions().put(new QName(uri, name), val);
-			}
-		}
 	}
 	
 	
@@ -286,6 +270,19 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
                 request.setOperation(argValue);
             }
         }
+    }
+    
+    
+	/**
+	 * Helper method to read KVP extensions
+	 * @param argName
+	 * @param argValue
+	 * @param request
+	 * @throws OWSException
+	 */
+    public static void addKVPExtension(String argName, String argValue, OWSRequest request) throws OWSException
+    {
+    	request.getExtensions().add((argName + "=" + argValue));
     }
     	
 	

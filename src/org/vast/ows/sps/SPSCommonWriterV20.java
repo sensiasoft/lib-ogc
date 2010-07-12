@@ -24,6 +24,10 @@ package org.vast.ows.sps;
 import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSUtils;
+import org.vast.ows.sps.StatusReport.RequestStatus;
+import org.vast.ows.sps.StatusReport.TaskStatus;
+import org.vast.ows.swe.SWESUtils;
 import org.vast.sweCommon.DataSinkDOM;
 import org.vast.sweCommon.SWECommonUtils;
 import org.vast.sweCommon.SWEData;
@@ -81,39 +85,57 @@ public class SPSCommonWriterV20
 	}
 	
 	
-	protected void writeBaseReportAttributes(DOMHelper dom, Element reportElt, AbstractReport report) throws CDMException
+	protected void writeBaseReportAttributes(DOMHelper dom, Element reportElt, StatusReport report) throws CDMException
 	{
 		String val;
+		dom.addUserPrefix("swes", OGCRegistry.getNamespaceURI(OWSUtils.SWES, "2.0"));
 		
-		// title
+		// name
 		val = report.getTitle();
-		dom.setElementValue(reportElt, "sps:title", val);
+		dom.setElementValue(reportElt, "swes:name", val);
 		
-		// abstract
+		// description
 		val = report.getDescription();
 		if (val != null)
-			dom.setElementValue(reportElt, "sps:abstract", val);
+			dom.setElementValue(reportElt, "swes:description", val);
 		
-		// sensor ID
-		val = report.getSensorID();
-		dom.setElementValue(reportElt, "sps:sensorID", val);
+		// extensions
+		SWESUtils.writeExtensions(dom, reportElt, "2.0", report.getExtensions());
 		
 		// task ID
 		val = report.getTaskID();
-		dom.setElementValue(reportElt, "sps:taskID", val);
+		if (val != null)
+			dom.setElementValue(reportElt, "sps:taskIdentifier", val);
+		
+		// sensor ID
+		val = report.getSensorID();
+		dom.setElementValue(reportElt, "sps:sensorIdentifier", val);
+		
+		// request status
+		RequestStatus reqStatus = report.getRequestStatus();
+		if (reqStatus != null)
+			//dom.setElementValue(reportElt, "sps:requestStatus", reqStatus.name());
+			dom.setElementValue(reportElt, "sps:status", reqStatus.name());
+		
+		// task status
+		TaskStatus taskStatus = report.getTaskStatus();
+		if (taskStatus != null)
+			//dom.setElementValue(reportElt, "sps:taskStatus", taskStatus.name());
+			dom.setElementValue(reportElt, "sps:status", taskStatus.name());
 		
 		// update time
 		DateTime date = report.getLastUpdate();
 		dom.setElementValue(reportElt, "sps:updateTime", DateTimeFormat.formatIso(date.getJulianTime(), 0));
 		
-		// status code
-		val = report.getStatusCode();
-		dom.setElementValue(reportElt, "sps:statusCode", val);
+		// status message
+		val = report.getStatusMessage();
+		if (val != null)
+			dom.setElementValue(reportElt, "sps:statusMessage", val);
 		
 		// estimated time of completion
 		date = report.getEstimatedToC();
 		if (date != null)
-			dom.setElementValue(reportElt, "sps:estimatedToC", DateTimeFormat.formatIso(date.getJulianTime(), 0));
+			dom.setElementValue(reportElt, "sps:estimatedToC", DateTimeFormat.formatIso(date.getJulianTime(), 0)); 
 	}
 	
 	
@@ -121,13 +143,10 @@ public class SPSCommonWriterV20
 	{
 		writeBaseReportAttributes(dom, reportElt, report);
 		
-		// extended data
-		SWEData extData = report.getExtendedData();
-		if (extData != null && extData.getDataList().getComponentCount() > 0)
-		{
-			Element extDataElt = dom.addElement(reportElt, "sps:extendedData");
-			writeSWEData(dom, extDataElt, extData);
-		}
+		// percent completion
+		float val = report.getPercentCompletion();
+		if (!Float.isNaN(val))
+			dom.setElementValue(reportElt, "sps:percentCompletion", Float.toString(val));
 	}
 	
 	
@@ -173,7 +192,8 @@ public class SPSCommonWriterV20
 	 */
 	public Element writeFeasibilityReport(DOMHelper dom, FeasibilityReport report) throws CDMException
 	{
-		Element reportElt = dom.createElement("sps:FeasibilityReport");
+		//Element reportElt = dom.createElement("sps:FeasibilityReport");
+		Element reportElt = dom.createElement("sps:StatusReport");
 		writeStatusReportData(dom, reportElt, report);
 		
 		// TODO write feasible alternatives

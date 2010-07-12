@@ -24,8 +24,8 @@ package org.vast.ows.sps;
 
 import org.w3c.dom.Element;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
+import org.vast.ows.swe.SWERequestWriter;
 import org.vast.xml.DOMHelper;
 
 
@@ -45,7 +45,7 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 258 2008
 * @version 1.0
 */
-public class CancelRequestWriterV20 extends AbstractRequestWriter<CancelRequest>
+public class CancelRequestWriterV20 extends SWERequestWriter<CancelRequest>
 {
 
 	/**
@@ -71,7 +71,7 @@ public class CancelRequestWriterV20 extends AbstractRequestWriter<CancelRequest>
 		addCommonXML(dom, rootElt, request);
 
 		// taskID
-		dom.setElementValue(rootElt, "sps:taskID", request.getTaskID());
+		dom.setElementValue(rootElt, "sps:taskIdentifier", request.getTaskID());
 	
 		return rootElt;
 	}

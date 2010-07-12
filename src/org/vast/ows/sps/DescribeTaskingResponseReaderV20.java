@@ -23,9 +23,12 @@
 package org.vast.ows.sps;
 
 import org.vast.cdm.common.DataComponent;
-import org.vast.ows.AbstractResponseReader;
+import org.vast.data.AbstractDataComponent;
+import org.vast.data.DataIterator;
 import org.vast.ows.OWSException;
+import org.vast.ows.swe.SWEResponseReader;
 import org.vast.sweCommon.SweComponentReaderV20;
+import org.vast.sweCommon.SweConstants;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -44,7 +47,7 @@ import org.w3c.dom.Element;
  * @date Feb, 25 2008
  * @version 1.0
  */
-public class DescribeTaskingResponseReaderV20 extends AbstractResponseReader<DescribeTaskingResponse>
+public class DescribeTaskingResponseReaderV20 extends SWEResponseReader<DescribeTaskingResponse>
 {
 	protected SweComponentReaderV20 componentReader = new SweComponentReaderV20();
 	
@@ -60,34 +63,33 @@ public class DescribeTaskingResponseReaderV20 extends AbstractResponseReader<Des
 			
 			// common tasking parameters
 			paramsElt = dom.getElement(responseElt, "taskingParameters");
-			if (paramsElt != null)
+			sweParams = componentReader.readComponentProperty(dom, paramsElt);
+			response.setTaskingParameters(sweParams);
+
+			// generate filtered updatable parameters
+			DataComponent updatableParams = sweParams.copy();
+			DataIterator it = new DataIterator(updatableParams);
+			while (it.hasNext())
 			{
-				sweParams = componentReader.readComponentProperty(dom, paramsElt);
-				response.setTaskingParameters(sweParams);
+				DataComponent nextComp = it.next();
+				Boolean updatable = (Boolean)nextComp.getProperty(SweConstants.UPDATABLE);
+				if (updatable != null && updatable == true)
+				{
+					AbstractDataComponent parent = ((AbstractDataComponent)nextComp.getParent());
+					int compIndex = parent.getComponentIndex(nextComp.getName());
+					parent.removeComponent(compIndex);
+				}
 			}
+			response.setUpdatableParameters(updatableParams);
 			
-			// Feasibility Study parameters
-			paramsElt = dom.getElement(responseElt, "feasibilityReportExtendedData");
-			if (paramsElt != null)
-			{
-				sweParams = componentReader.readComponentProperty(dom, paramsElt);
-				response.setFeasibilityReportExtendedData(sweParams);
-			}
-			
-			// Progress Report parameters
-			paramsElt = dom.getElement(responseElt, "statusReportExtendedData");
-			if (paramsElt != null)
-			{
-				sweParams = componentReader.readComponentProperty(dom, paramsElt);
-				response.setStatusReportExtendedData(sweParams);
-			}
-			
+			// read extensions
+            readExtensions(dom, responseElt, response);
+            
 			return response;
 		}
 		catch (Exception e)
 		{
 			throw new SPSException(e);
 		}
-	}
-	
+	}	
 }

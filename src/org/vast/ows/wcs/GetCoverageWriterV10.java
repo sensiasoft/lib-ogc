@@ -136,6 +136,9 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
         if (request.getExceptionType() != null)
         	urlBuff.append("&EXCEPTIONS=" + request.getExceptionType());
         
+        // vendor parameters
+        writeKVPExtensions(urlBuff, request);
+        
         // replace spaces
         String url = urlBuff.toString();
         url = url.replaceAll(" ","%20");

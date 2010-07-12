@@ -21,14 +21,12 @@
 package org.vast.ows;
 
 import java.io.*;
-import java.util.Enumeration;
+import java.util.List;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.vast.ogc.OGCRegistry;
 import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.TimeInfo;
-import org.vast.xml.QName;
 
 
 /**
@@ -175,27 +173,6 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
 	{
     	requestElt.setAttribute("service", request.getService());
     	requestElt.setAttribute("version", request.getVersion());
-    	
-    	// write simple extensions
-    	Element extElt = null;
-    	Enumeration<QName> paramEnum = request.getExtensions().keys();
-        while (paramEnum.hasMoreElements())
-        {
-        	QName qname = paramEnum.nextElement();
-        	Object obj = request.getExtensions().get(qname);
-        	if (obj instanceof String)
-        	{
-        		if (extElt == null)
-            	{
-            		// TODO update to OWS namespace when available in OWS!!
-            		dom.addUserPrefix("swes", OGCRegistry.getNamespaceURI(OWSUtils.SWES, "1.0"));
-            		extElt = dom.addElement(requestElt, "swes:extension");
-            	}
-        		
-        		dom.addUserPrefix(qname.getPrefix(), qname.getNsUri());
-        		dom.setElementValue(extElt, qname.getFullName(), (String)obj);
-        	}
-        }
 	}
     
     
@@ -209,15 +186,22 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
         urlBuff.append("service=" + request.getService());
         urlBuff.append("&version=" + request.getVersion());
         urlBuff.append("&request=" + request.getOperation());
-        
-        // write simple extensions
-        Enumeration<QName> paramEnum = request.getExtensions().keys();
-        while (paramEnum.hasMoreElements())
+    }
+    
+    
+    /**
+     * Helper method to append vendor extensions at the end of URL query
+     * @param urlBuff
+     * @param request
+     */
+    protected void writeKVPExtensions(StringBuffer urlBuff, OWSRequest request)
+    {
+    	List<Object> extObjs = request.getExtensions();
+        for (Object obj: extObjs)
         {
-        	String key = paramEnum.nextElement().getLocalName();
-        	Object obj = request.getExtensions().get(key);
         	if (obj instanceof String)
-        		urlBuff.append("&" + key.toUpperCase() + "=" + (String)obj);
+        		if (((String)obj).contains("="))
+        			urlBuff.append("&" + (String)obj);
         }
     }
 }

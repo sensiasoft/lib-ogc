@@ -22,10 +22,10 @@
 
 package org.vast.ows.sps;
 
-import org.vast.ows.AbstractResponseReader;
 import org.vast.ows.OWSCommonReaderV11;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSReferenceGroup;
+import org.vast.ows.swe.SWEResponseReader;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -45,7 +45,7 @@ import org.w3c.dom.NodeList;
  * @date Mar, 19 2008
  * @version 1.0
  */
-public class DescribeResultAccessResponseReaderV20 extends AbstractResponseReader<DescribeResultAccessResponse>
+public class DescribeResultAccessResponseReaderV20 extends SWEResponseReader<DescribeResultAccessResponse>
 {
 	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();
 	
@@ -77,6 +77,9 @@ public class DescribeResultAccessResponseReaderV20 extends AbstractResponseReade
 				response.getResultGroups().add(refGroup);
 			}				
 		}
+		
+		// read extensions
+		readExtensions(dom, responseElt, response);
 		
 		return response;
 	}	
