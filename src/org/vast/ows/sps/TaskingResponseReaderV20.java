@@ -76,7 +76,7 @@ public class TaskingResponseReaderV20 extends SWEResponseReader<TaskingResponse<
 	            }
 	            
 	            // read extensions
-	            readExtensions(dom, responseElt, response);
+	            readXMLExtensions(dom, responseElt, response);
 	            
 	            return response;
 	        }

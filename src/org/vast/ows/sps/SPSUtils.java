@@ -25,7 +25,7 @@
 
 package org.vast.ows.sps;
 
-import java.util.List;
+import java.util.Map;
 import org.vast.cdm.common.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestReader;
@@ -37,6 +37,7 @@ import org.vast.ows.ParameterizedRequest;
 import org.vast.ows.ParameterizedRequestReader;
 import org.vast.ows.swe.SWESUtils;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.QName;
 import org.w3c.dom.Element;
 
 
@@ -97,10 +98,10 @@ public class SPSUtils extends OWSUtils
 	}
 	
 	
-	public static void writeExtensions(DOMHelper dom, Element parentElt, String version, List<? extends Object> extObjs)
+	public static void writeXMLExtensions(DOMHelper dom, Element parentElt, String version, Map<QName, Object> extObjs)
 	{
 		String spsUri = OGCRegistry.getNamespaceURI(OWSUtils.SPS, version);
-		SWESUtils.writeExtensions(dom, parentElt, "sps", spsUri, extObjs);
+		SWESUtils.writeXMLExtensions(dom, parentElt, "sps", spsUri, extObjs);
 	}
 	
 }

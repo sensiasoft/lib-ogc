@@ -20,9 +20,10 @@
 
 package org.vast.ows.swe;
 
-import java.util.List;
+import java.util.Map;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.QName;
 import org.vast.ows.AbstractResponseReader;
 import org.vast.ows.OWSResponse;
 
@@ -55,10 +56,10 @@ public abstract class SWEResponseReader<ResponseType extends OWSResponse> extend
      * @param responseElt
      * @param response
      */
-    protected void readExtensions(DOMHelper dom, Element responseElt, OWSResponse response)
+    protected void readXMLExtensions(DOMHelper dom, Element responseElt, OWSResponse response)
 	{
     	// read extensions
-    	List<Element> extObjs = SWESUtils.readExtensions(dom, responseElt);
-    	response.getExtensions().addAll(extObjs);
+    	Map<QName, Object> extObjs = SWESUtils.readXMLExtensions(dom, responseElt);
+    	response.getExtensions().putAll(extObjs);
 	}
 }

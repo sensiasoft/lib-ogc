@@ -20,8 +20,9 @@
 
 package org.vast.ows.swe;
 
-import java.util.List;
+import java.util.Map;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.QName;
 import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSRequest;
 import org.w3c.dom.Element;
@@ -55,8 +56,8 @@ public abstract class SWERequestReader<RequestType extends OWSRequest> extends A
 	{
 		AbstractRequestReader.readCommonXML(dom, requestElt, request);
 		
-		// read simple extensions
-		List<Element> extensions = SWESUtils.readExtensions(dom, requestElt);
-		request.getExtensions().addAll(extensions);
+		// read extensions
+    	Map<QName, Object> extObjs = SWESUtils.readXMLExtensions(dom, requestElt);
+    	request.getExtensions().putAll(extObjs);
 	}
 }

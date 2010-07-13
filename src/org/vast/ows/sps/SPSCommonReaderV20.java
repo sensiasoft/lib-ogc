@@ -21,7 +21,7 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.ows.sps;
 
-import java.util.List;
+import java.util.Map;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
@@ -35,6 +35,7 @@ import org.vast.sweCommon.SweEncodingReaderV20;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.QName;
 import org.w3c.dom.Element;
 
 
@@ -112,8 +113,8 @@ public class SPSCommonReaderV20
 			report.setDescription(val);
 			
 			// read XML content of extensions
-			List<Element> extObjs = SWESUtils.readExtensions(dom, reportElt);
-			report.getExtensions().addAll(extObjs);
+			Map<QName, Object> extObjs = SWESUtils.readXMLExtensions(dom, reportElt);
+			report.getExtensions().putAll(extObjs);
 			
 			// taskID
 			val = dom.getElementValue(reportElt, "taskIdentifier");

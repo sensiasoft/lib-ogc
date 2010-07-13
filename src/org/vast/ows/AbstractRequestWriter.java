@@ -21,9 +21,11 @@
 package org.vast.ows;
 
 import java.io.*;
-import java.util.List;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.QName;
 import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.TimeInfo;
@@ -196,12 +198,17 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
      */
     protected void writeKVPExtensions(StringBuffer urlBuff, OWSRequest request)
     {
-    	List<Object> extObjs = request.getExtensions();
-        for (Object obj: extObjs)
+    	Iterator<Entry<QName, Object>> extObjs = request.getExtensions().entrySet().iterator();
+        while (extObjs.hasNext())
         {
-        	if (obj instanceof String)
-        		if (((String)obj).contains("="))
-        			urlBuff.append("&" + (String)obj);
+        	Entry<QName, Object> ext = extObjs.next();
+        	if (ext.getValue() instanceof String)
+        	{
+        		urlBuff.append('&');
+        		urlBuff.append(ext.getKey().toString());
+        		urlBuff.append('=');
+        		urlBuff.append(ext.getValue().toString());
+        	}
         }
     }
 }

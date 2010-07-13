@@ -20,9 +20,10 @@
 
 package org.vast.ows.swe;
 
-import java.util.List;
+import java.util.Map;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.QName;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSRequest;
 
@@ -60,7 +61,7 @@ public abstract class SWERequestWriter<RequestType extends OWSRequest> extends A
     	super.addCommonXML(dom, requestElt, request);
     	
     	// write extensions
-    	List<Object> extObjs = request.getExtensions();
-        SWESUtils.writeExtensions(dom, requestElt, request.getVersion(), extObjs);
+    	Map<QName, Object> extObjs = request.getExtensions();
+        SWESUtils.writeXMLExtensions(dom, requestElt, request.getVersion(), extObjs);
 	}
 }

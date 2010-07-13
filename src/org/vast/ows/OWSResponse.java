@@ -20,9 +20,10 @@
 
 package org.vast.ows;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import org.vast.ogc.OGCRegistry;
+import org.vast.xml.QName;
 
 
 /**
@@ -45,12 +46,12 @@ public class OWSResponse
 	protected String service;
 	protected String version;
 	protected String messageType;
-	protected List<Object> extensions;
+	protected Map<QName, Object> extensions;
 	
 	
     public OWSResponse()
     {
-    	extensions = new ArrayList<Object>();
+    	extensions = new HashMap<QName, Object>();
     }
 	
 
@@ -90,7 +91,7 @@ public class OWSResponse
 	}
     
 	
-    public List<Object> getExtensions()
+    public Map<QName, Object> getExtensions()
 	{
 		return extensions;
 	}

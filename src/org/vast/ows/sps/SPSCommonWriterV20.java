@@ -100,7 +100,7 @@ public class SPSCommonWriterV20
 			dom.setElementValue(reportElt, "swes:description", val);
 		
 		// extensions
-		SWESUtils.writeExtensions(dom, reportElt, "2.0", report.getExtensions());
+		SWESUtils.writeXMLExtensions(dom, reportElt, "2.0", report.getExtensions());
 		
 		// task ID
 		val = report.getTaskID();

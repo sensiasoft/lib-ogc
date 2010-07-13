@@ -66,7 +66,7 @@ public class GetFeasibilityResponseReaderV20 extends SWEResponseReader<GetFeasib
 			}
 			
 			// feasibility report
-			Element reportElt = dom.getElement(responseElt, "result/FeasibilityReport");
+			Element reportElt = dom.getElement(responseElt, "result/StatusReport");
 			if (reportElt != null)
 			{
 				FeasibilityReport report = commonReader.readFeasibilityReport(dom, reportElt);

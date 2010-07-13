@@ -22,13 +22,14 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 import org.vast.util.DateTime;
+import org.vast.xml.QName;
 import org.w3c.dom.Element;
 
 
@@ -64,12 +65,12 @@ public class StatusReport
 	protected float percentCompletion = Float.NaN;
 	protected String statusMessage;
 	protected DateTime estimatedToC;
-	protected List<Object> extensions;
+	protected Map<QName, Object> extensions;
 		
 
 	public StatusReport()
 	{
-		extensions = new ArrayList<Object>();
+		extensions = new HashMap<QName, Object>();
 	}
 	
 	
@@ -218,14 +219,15 @@ public class StatusReport
 	}
 
 
-	public List<Object> getExtensions()
+	public Map<QName, Object> getExtensions()
 	{
 		return extensions;
 	}
 
 
-	public void addExtension(Element extensionElt)
+	public void addExtension(Element extElt)
 	{
-		extensions.add(extensionElt);
+		QName qname = new QName(extElt.getNamespaceURI(), extElt.getLocalName());
+		extensions.put(qname, extElt);
 	}
 }

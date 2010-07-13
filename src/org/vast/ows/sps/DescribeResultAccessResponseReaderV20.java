@@ -79,7 +79,7 @@ public class DescribeResultAccessResponseReaderV20 extends SWEResponseReader<Des
 		}
 		
 		// read extensions
-		readExtensions(dom, responseElt, response);
+		readXMLExtensions(dom, responseElt, response);
 		
 		return response;
 	}	

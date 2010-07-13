@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
+import org.vast.xml.QName;
 import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.TimeInfo;
@@ -282,7 +283,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 	 */
     public static void addKVPExtension(String argName, String argValue, OWSRequest request) throws OWSException
     {
-    	request.getExtensions().add((argName + "=" + argValue));
+    	request.getExtensions().put(new QName(argName), argValue);
     }
     	
 	

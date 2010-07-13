@@ -83,7 +83,7 @@ public class DescribeTaskingResponseReaderV20 extends SWEResponseReader<Describe
 			response.setUpdatableParameters(updatableParams);
 			
 			// read extensions
-            readExtensions(dom, responseElt, response);
+            readXMLExtensions(dom, responseElt, response);
             
 			return response;
 		}

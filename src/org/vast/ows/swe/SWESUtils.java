@@ -20,11 +20,13 @@
 
 package org.vast.ows.swe;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSUtils;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -46,33 +48,35 @@ import org.w3c.dom.NodeList;
 public class SWESUtils
 {
 		
-	public static List<Element> readExtensions(DOMHelper dom, Element parentElt)
+	public static Map<QName, Object> readXMLExtensions(DOMHelper dom, Element parentElt)
 	{
 		NodeList extensions = dom.getElements(parentElt, "extension");
-		List<Element> extList = new ArrayList<Element>();
+		Map<QName, Object> extList = new HashMap<QName, Object>();
 		
 		for (int i=0; i<extensions.getLength(); i++)
 		{
 			Element extElt = (Element)extensions.item(i);
 			Element contentElt = dom.getFirstChildElement(extElt);
 			contentElt = (Element)extElt.removeChild(contentElt);
-			extList.add(contentElt);
+			QName extName = new QName(contentElt.getNamespaceURI(), contentElt.getLocalName()); 
+			extList.put(extName, contentElt);
 		}
 		
 		return extList;
 	}
 	
 	
-	public static void writeExtensions(DOMHelper dom, Element parentElt, String prefix, String nsUri, List<? extends Object> extObjs)
+	public static void writeXMLExtensions(DOMHelper dom, Element parentElt, String prefix, String nsUri, Map<QName, Object> extObjs)
 	{
 		if (extObjs == null)
 			return;
 		
 		dom.addUserPrefix(prefix, nsUri);
-    	
-		for (Object obj: extObjs)
+    	Iterator<Object> it = extObjs.values().iterator();
+		while (it.hasNext())
         {
-        	if (obj instanceof Element)
+        	Object obj = it.next();
+			if (obj instanceof Element)
         	{
         		Element extContent = (Element)obj;
         		dom.getDocument().adoptNode(extContent);
@@ -84,25 +88,17 @@ public class SWESUtils
 	}
 	
 	
-	public static void writeExtensions(DOMHelper dom, Element parentElt, String version, List<? extends Object> extObjs)
+	public static void writeXMLExtensions(DOMHelper dom, Element parentElt, String version, Map<QName, Object> extObjs)
 	{
 		String swesUri = OGCRegistry.getNamespaceURI(OWSUtils.SWES, version);
-		writeExtensions(dom, parentElt, "swes", swesUri, extObjs);
+		writeXMLExtensions(dom, parentElt, "swes", swesUri, extObjs);
 	}
 	
 	
-	public static Element findExtension(String nsUri, String localName, List<? extends Object> extObjs)
+	public static Element findExtension(String nsUri, String localName, Map<QName, Object> extObjs)
 	{
-		for (Object obj: extObjs)
-        {
-        	if (obj instanceof Element)
-        	{
-        		if (((Element)obj).getNamespaceURI().equals(nsUri) &&
-        			((Element)obj).getLocalName().equals(localName))
-        			return (Element)obj;
-        	}
-        }
-		
-		return null;
+		QName qname = new QName(nsUri, localName);
+		Object obj = extObjs.get(qname);
+		return (Element)obj;
 	}
 }
