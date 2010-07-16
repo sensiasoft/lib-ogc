@@ -283,7 +283,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         {
             DOMHelper dom = new DOMHelper();
             Element requestElt = buildXMLQuery(dom, request);
-            dom.serialize(requestElt, os, null);
+            dom.serialize(requestElt, os, true);
         }
         catch (IOException e)
         {
@@ -381,7 +381,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         {
             DOMHelper dom = new DOMHelper();
             Element responseElt = buildXMLResponse(dom, response, version);
-            dom.serialize(responseElt, os, null);
+            dom.serialize(responseElt, os, true);
         }
         catch (IOException e)
         {
@@ -540,7 +540,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
 			Element bodyElt = dom.addElement(envElt, "soap:Body");
 			Element reqElt = buildXMLQuery(dom, request);
             bodyElt.appendChild(reqElt);
-            dom.serialize(envElt, out, false);
+            dom.serialize(envElt, out, true);
             out.flush();
             connection.connect();
             out.close();
