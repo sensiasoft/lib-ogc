@@ -92,9 +92,9 @@ public class DescribeTaskingRequestReaderV20 extends SWERequestReader<DescribeTa
 			}
 
 			// sensor ID
-			else if (argName.equalsIgnoreCase("sensorID"))
+			else if (argName.equalsIgnoreCase("procedure"))
 			{
-				request.setSensorID(argValue);
+				request.setProcedureID(argValue);
 			}
 
 			else
@@ -114,9 +114,9 @@ public class DescribeTaskingRequestReaderV20 extends SWERequestReader<DescribeTa
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
 
-		// Sensor ID
-		String sensorID = dom.getElementValue(requestElt, "sensorIdentifier");
-		request.setSensorID(sensorID);
+		// Procedure ID
+		String procedureID = dom.getElementValue(requestElt, "procedure");
+		request.setProcedureID(procedureID);
 
 		checkParameters(request, new OWSExceptionReport());
 		return request;
@@ -133,10 +133,10 @@ public class DescribeTaskingRequestReaderV20 extends SWERequestReader<DescribeTa
 		// check common params + generate exception
 		checkParameters(request, report, SPSUtils.SPS);
 
-		// Check sensorID
-		if (request.getSensorID() == null)
+		// Check Procedure ID
+		if (request.getProcedureID() == null)
 		{
-			report.add(new OWSException(OWSException.missing_param_code, "sensorIdentifier"));
+			report.add(new OWSException(OWSException.missing_param_code, "procedure"));
 		}
 
 		report.process();

@@ -45,12 +45,12 @@ import org.vast.ows.sos.SOSException;
  * @date Oct 10, 2007
  * @version 1.0
  */
-public class DescribeSensorReaderV10 extends SWERequestReader<DescribeSensorRequest>
+public class DescribeSensorReaderV20 extends SWERequestReader<DescribeSensorRequest>
 {
 	protected GMLTimeReader timeReader;
 	
 	
-	public DescribeSensorReaderV10()
+	public DescribeSensorReaderV20()
 	{
         timeReader = new GMLTimeReader();
 	}
@@ -107,9 +107,15 @@ public class DescribeSensorReaderV10 extends SWERequestReader<DescribeSensorRequ
 			}
 			
 			// procedure
-			else if (argName.equalsIgnoreCase("sensorID"))
+			else if (argName.equalsIgnoreCase("procedure"))
 			{
-				request.setProcedure(argValue);
+				request.setProcedureID(argValue);
+			}
+			
+			// format
+			else if (argName.equalsIgnoreCase("format"))
+			{
+				request.setFormat(argValue);
 			}
 			
 			else
@@ -131,8 +137,12 @@ public class DescribeSensorReaderV10 extends SWERequestReader<DescribeSensorRequ
 		readCommonXML(dom, requestElt, request);
 		
         // procedure
-		String procedure = dom.getElementValue(requestElt, "sensorID");
-		request.setProcedure(procedure);
+		String procedure = dom.getElementValue(requestElt, "procedure");
+		request.setProcedureID(procedure);
+		
+		// format
+		String format = dom.getElementValue(requestElt, "procedureDescriptionFormat");
+		request.setFormat(format);
 		
 		// time
 		try
@@ -146,7 +156,7 @@ public class DescribeSensorReaderV10 extends SWERequestReader<DescribeSensorRequ
 		}
 		catch (GMLException e)
 		{
-			report.add(new OWSException(OWSException.invalid_param_code, "ValidTime"));
+			report.add(new OWSException(OWSException.invalid_param_code, "validTime"));
 		}
 		
 		this.checkParameters(request, report); 
@@ -165,8 +175,8 @@ public class DescribeSensorReaderV10 extends SWERequestReader<DescribeSensorRequ
 		super.checkParameters(request, report);
 		
 		// need procedure
-		if (request.getProcedure() == null)
-			report.add(new OWSException(OWSException.missing_param_code, "SensorID"));
+		if (request.getProcedureID() == null)
+			report.add(new OWSException(OWSException.missing_param_code, "procedure"));
 		
 		report.process();
 	}

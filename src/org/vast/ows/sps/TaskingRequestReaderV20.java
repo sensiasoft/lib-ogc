@@ -68,7 +68,7 @@ public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest
 			readCommonXML(dom, requestElt, request);
 
 			// sensor ID
-			String sensorID = dom.getElementValue(requestElt, "sensorIdentifier");
+			String sensorID = dom.getElementValue(requestElt, "procedure");
 			request.setSensorID(sensorID);
 			
 			// tasking parameters
@@ -107,7 +107,7 @@ public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest
 
 		// Check that sensorID is present
 		if (request.getSensorID() == null)
-			report.add(new SPSException(SPSException.missing_param_code, "sensorIdentifier"));
+			report.add(new SPSException(SPSException.missing_param_code, "procedure"));
 
 		// Check that tasking parameters are present
 		if (request.getParameters() == null)

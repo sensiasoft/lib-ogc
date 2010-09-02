@@ -42,7 +42,7 @@ import org.vast.ows.OWSRequest;
  */
 public class DescribeResultAccessRequest extends OWSRequest
 {
-	protected String sensorID;
+	protected String procedureID;
 	protected String taskID;
 	
 	
@@ -53,15 +53,15 @@ public class DescribeResultAccessRequest extends OWSRequest
 	}
 	
 	
-	public String getSensorID()
+	public String getProcedureID()
 	{
-		return sensorID;
+		return procedureID;
 	}
 
 
-	public void setSensorID(String sensorID)
+	public void setProcedureID(String sensorID)
 	{
-		this.sensorID = sensorID;
+		this.procedureID = sensorID;
 	}
 
 

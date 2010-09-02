@@ -23,6 +23,7 @@ package org.vast.ows;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.QName;
@@ -46,6 +47,7 @@ public class OWSRequest
 {
 	protected final static String EXCEPTION_MIME_TYPE = "application/vnd.ogc.se_xml";
 	
+	protected HttpServletRequest httpRequest;
 	protected HttpServletResponse response;
 	protected String getServer;
 	protected String postServer;
@@ -185,6 +187,18 @@ public class OWSRequest
 	}
     
 
+    public HttpServletRequest getHttpRequest()
+	{
+		return httpRequest;
+	}
+
+
+	public void setHttpRequest(HttpServletRequest httpRequest)
+	{
+		this.httpRequest = httpRequest;
+	}
+	
+	
 	public HttpServletResponse getResponse()
 	{
 		return response;

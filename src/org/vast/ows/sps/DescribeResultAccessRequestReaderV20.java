@@ -92,13 +92,13 @@ public class DescribeResultAccessRequestReaderV20 extends SWERequestReader<Descr
 			}
 
 			// sensor ID
-			else if (argName.equalsIgnoreCase("sensorID"))
+			else if (argName.equalsIgnoreCase("procedure"))
 			{
-				request.setSensorID(argValue);
+				request.setProcedureID(argValue);
 			}
 			
 			// ID
-			else if (argName.equalsIgnoreCase("taskID"))
+			else if (argName.equalsIgnoreCase("task"))
 			{
 				request.setTaskID(argValue);
 			}
@@ -120,11 +120,13 @@ public class DescribeResultAccessRequestReaderV20 extends SWERequestReader<Descr
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
 
-		// task or sensor ID
-		String ID = dom.getElementValue(requestElt, "identifier");
-		request.setTaskID(ID);
+		// task ID
+		String taskID = dom.getElementValue(requestElt, "target/task");
+		request.setTaskID(taskID);
 		
-		// TODO how do we know if it's a sensor identifier??
+		// procedure ID
+		String procedureID = dom.getElementValue(requestElt, "target/procedure");
+		request.setProcedureID(procedureID);
 		
 		checkParameters(request, new OWSExceptionReport());
 		return request;
@@ -142,9 +144,9 @@ public class DescribeResultAccessRequestReaderV20 extends SWERequestReader<Descr
 		checkParameters(request, report, SPSUtils.SPS);
 
 		// Check that at least one ID is present
-		if (request.getSensorID() == null && request.getTaskID() == null)
+		if (request.getProcedureID() == null && request.getTaskID() == null)
 		{
-			report.add(new OWSException(OWSException.missing_param_code, "identifier"));
+			report.add(new OWSException(OWSException.missing_param_code, "task OR procedure"));
 		}
 
 		report.process();

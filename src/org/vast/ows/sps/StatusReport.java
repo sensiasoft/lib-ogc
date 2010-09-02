@@ -50,10 +50,10 @@ import org.w3c.dom.Element;
 public class StatusReport
 {
 	// request status codes
-	public enum RequestStatus {Pending, Accepted, Rejected, Cancelled, Expired};
+	public enum RequestStatus {Pending, Accepted, Rejected};
 	
 	// task status codes
-	public enum TaskStatus {Reserved, InExecution, Completed, Cancelled, Failed};
+	public enum TaskStatus {Reserved, InExecution, Completed, Cancelled, Expired, Failed};
 	
 	protected String taskID;
 	protected String sensorID;
@@ -62,6 +62,7 @@ public class StatusReport
 	protected DateTime lastUpdate;
 	protected RequestStatus requestStatus;
 	protected TaskStatus taskStatus;
+	protected String eventCode;
 	protected float percentCompletion = Float.NaN;
 	protected String statusMessage;
 	protected DateTime estimatedToC;
@@ -134,6 +135,18 @@ public class StatusReport
 	}
 	
 	
+	public String getEventCode()
+	{
+		return eventCode;
+	}
+
+
+	public void setEventCode(String eventCode)
+	{
+		this.eventCode = eventCode;
+	}
+
+
 	public float getPercentCompletion()
 	{
 		return percentCompletion;

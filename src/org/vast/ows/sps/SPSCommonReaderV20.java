@@ -117,45 +117,8 @@ public class SPSCommonReaderV20
 			report.getExtensions().putAll(extObjs);
 			
 			// taskID
-			val = dom.getElementValue(reportElt, "taskIdentifier");
+			val = dom.getElementValue(reportElt, "task");
 			report.setTaskID(val);
-			
-			// sensorID
-			val = dom.getElementValue(reportElt, "sensorIdentifier");
-			report.setSensorID(val);
-			
-			/*// requestStatus
-			val = dom.getElementValue(reportElt, "requestStatus");
-			if (val != null)
-				report.setRequestStatus(RequestStatus.valueOf(val));
-			
-			// taskStatus
-			val = dom.getElementValue(reportElt, "taskStatus");
-			if (val != null)
-				report.setTaskStatus(TaskStatus.valueOf(val));*/
-			val = dom.getElementValue(reportElt, "status");
-			if (val != null)
-			{
-				for (RequestStatus code: RequestStatus.values())
-					if (val.equals(code.name()))
-						report.setRequestStatus(RequestStatus.valueOf(val));
-				
-				for (TaskStatus code: TaskStatus.values())
-					if (val.equals(code.name()))
-						report.setTaskStatus(TaskStatus.valueOf(val));
-			}
-			
-			// update time
-			val = dom.getElementValue(reportElt, "updateTime");
-			if (val != null)
-			{
-				DateTime lastUpdate = new DateTime(DateTimeFormat.parseIso(val));
-				report.setLastUpdate(lastUpdate);
-			}
-			
-			// statusMessage
-			val = dom.getElementValue(reportElt, "statusMessage");
-			report.setStatusMessage(val);
 			
 			// estimatedToC
 			val = dom.getElementValue(reportElt, "estimatedToC");
@@ -163,6 +126,44 @@ public class SPSCommonReaderV20
 			{
 				DateTime estimatedToC = new DateTime(DateTimeFormat.parseIso(val));
 				report.setEstimatedToC(estimatedToC);
+			}
+			
+			// event code
+			val = dom.getElementValue(reportElt, "event");
+			report.setEventCode(val);
+			
+			// percent completion
+			val = dom.getElementValue(reportElt, "percentCompletion");
+			if (val != null)
+			{
+				float pc = Float.parseFloat(val);
+				report.setPercentCompletion(pc);
+			}
+			
+			// procedure
+			val = dom.getElementValue(reportElt, "procedure");
+			report.setSensorID(val);
+			
+			// requestStatus
+			val = dom.getElementValue(reportElt, "requestStatus");
+			if (val != null)
+				report.setRequestStatus(RequestStatus.valueOf(val));
+			
+			// statusMessage
+			val = dom.getElementValue(reportElt, "statusMessage");
+			report.setStatusMessage(val);
+			
+			// taskStatus
+			val = dom.getElementValue(reportElt, "taskStatus");
+			if (val != null)
+				report.setTaskStatus(TaskStatus.valueOf(val));
+						
+			// update time
+			val = dom.getElementValue(reportElt, "updateTime");
+			if (val != null)
+			{
+				DateTime lastUpdate = new DateTime(DateTimeFormat.parseIso(val));
+				report.setLastUpdate(lastUpdate);
 			}
 		}
 		catch (Exception e)

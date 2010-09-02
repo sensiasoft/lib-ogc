@@ -65,11 +65,11 @@ public class ReserveRequestReaderV20 extends TaskingRequestReaderV20<ReserveRequ
 		// expiration
 		try
 		{
-			String isoDate = dom.getElementValue(requestElt, "desiredReservationExpiration");
+			String isoDate = dom.getElementValue(requestElt, "reservationExpiration");
 			if (isoDate != null)
 			{
 				DateTime expirationDate = new DateTime(DateTimeFormat.parseIso(isoDate));
-				request.setDesiredExpiration(expirationDate);
+				request.setReservationExpiration(expirationDate);
 			}
 		}
 		catch (ParseException e)

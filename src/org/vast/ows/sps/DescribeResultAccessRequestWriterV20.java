@@ -61,13 +61,13 @@ public class DescribeResultAccessRequestWriterV20 extends SWERequestWriter<Descr
 		urlBuff.append("&version=" + request.getVersion());
 		urlBuff.append("&request=" + request.getOperation());
 
-		// taskID
+		// task ID
 		if (request.getTaskID() != null)
-			urlBuff.append("&taskID=" + request.getTaskID());
+			urlBuff.append("&task=" + request.getTaskID());
 		
-		// sensorID
-		else if (request.getSensorID() != null)
-			urlBuff.append("&sensorID=" + request.getSensorID());
+		// procedure ID
+		else if (request.getProcedureID() != null)
+			urlBuff.append("&procedure=" + request.getProcedureID());
 		
 		String url = urlBuff.toString();
 		url = url.replaceAll(" ", "%20");
@@ -89,13 +89,12 @@ public class DescribeResultAccessRequestWriterV20 extends SWERequestWriter<Descr
 
 		// task ID
 		if (request.getTaskID() != null)
-			dom.setElementValue(rootElt, "sps:identifier", request.getTaskID());
+			dom.setElementValue(rootElt, "sps:target/sps:task", request.getTaskID());
 		
-		// sensorID
-		else if (request.getSensorID() != null)
-			dom.setElementValue(rootElt, "sps:identifier", request.getSensorID());
+		// procedure ID
+		else if (request.getProcedureID() != null)
+			dom.setElementValue(rootElt, "sps:target/sps:procedure", request.getProcedureID());
 		
-
 		return rootElt;
 	}
 }

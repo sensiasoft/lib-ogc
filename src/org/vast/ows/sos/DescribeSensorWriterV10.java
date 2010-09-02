@@ -64,7 +64,7 @@ public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSenso
         addCommonArgs(urlBuff, request);
         
 		// procedure
-        urlBuff.append("&procedure=" + request.getProcedure());
+        urlBuff.append("&procedure=" + request.getProcedureID());
         
         if (request.getTime() != null)
         {
@@ -91,8 +91,8 @@ public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSenso
 		addCommonXML(dom, rootElt, request);
 		
 		// procedure
-        if (request.getProcedure() != null)
-        	dom.setElementValue(rootElt, "sos:procedure", request.getProcedure());
+        if (request.getProcedureID() != null)
+        	dom.setElementValue(rootElt, "sos:procedure", request.getProcedureID());
 		
 		// result format
 		dom.setAttributeValue(rootElt, "@resultFormat", request.getFormat());

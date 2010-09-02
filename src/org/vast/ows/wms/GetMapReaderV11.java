@@ -11,7 +11,12 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is the VAST team at the
+ University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
+
+ Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
     Alexandre Robin <alexandre.robin@spotimage.fr>
@@ -24,6 +29,7 @@ import java.util.StringTokenizer;
 import org.vast.util.Bbox;
 import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.QName;
 import org.w3c.dom.*;
 import org.vast.ows.*;
 
@@ -151,8 +157,14 @@ public class GetMapReaderV11 extends AbstractRequestReader<GetMapRequest>
                 request.setFormat(argValue);
             }
 
+            //srs
+            else if (argName.equalsIgnoreCase("srs"))
+            {
+                request.setSrs(argValue);
+            }
+
             else
-                throw new WMSException(invalidKVP + ": Unknown Argument " + argName);
+                request.getExtensions().put(new QName(argName), argValue);
         }
         
 		return request;

@@ -27,19 +27,17 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseWriter;
 import org.w3c.dom.*;
-import org.vast.util.DateTime;
-import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Tasking Response Writer v2.0
+ * Status Response Writer v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Writer to generate an adequate XML tasking response based on values
- * contained in concrete subclasses of TaskingResponse object for SPS v2.0
+ * Writer to generate an adequate XML status response based on values
+ * contained in a GetStatusResponse object for SPS v2.0
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -47,12 +45,12 @@ import org.vast.xml.DOMHelper;
  * @date Mar 04, 2008
  * @version 1.0
  */
-public class TaskingResponseWriterV20 extends SWEResponseWriter<TaskingResponse<?>>
+public class GetStatusResponseWriterV20 extends SWEResponseWriter<GetStatusResponse>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
 	
 	
-	public Element buildXMLResponse(DOMHelper dom, TaskingResponse<?> response, String version) throws OWSException
+	public Element buildXMLResponse(DOMHelper dom, GetStatusResponse response, String version) throws OWSException
 	{
 		try
 		{
@@ -64,18 +62,13 @@ public class TaskingResponseWriterV20 extends SWEResponseWriter<TaskingResponse<
 			// write extensions
 			writeExtensions(dom, rootElt, response);
 			
-			// latest response time
-			DateTime latestResp = response.getLatestResponseTime();
-			if (latestResp != null)
-				dom.setElementValue(rootElt, "sps:latestResponseTime",
-						DateTimeFormat.formatIso(latestResp.getJulianTime(), 0));
-			
-			// status report
-			Element reportElt = commonWriter.writeReport(dom, response.getReport());
-			
-			// case of getStatus or tasking
-			Element resElt = dom.addElement(rootElt, "sps:result");
-			resElt.appendChild(reportElt);
+			// status reports
+			for (StatusReport report: response.getReportList())
+			{
+				Element reportElt = commonWriter.writeReport(dom, report);
+				Element resElt = dom.addElement(rootElt, "+sps:status");
+				resElt.appendChild(reportElt);
+			}
 			
 			return rootElt;
 		}

@@ -43,7 +43,7 @@ public class DescribeSensorRequest extends OWSRequest
     public final static String SENSORML_FORMAT = "text/xml;subType=\"SensorML/1.0\"";
     public final static String TML_FORMAT = "text/xml;subType=\"TML/1.0\"";
 	
-	protected String procedure;	
+	protected String procedureID;	
 	protected TimeInfo time;
     protected String format;
 
@@ -68,15 +68,15 @@ public class DescribeSensorRequest extends OWSRequest
 	}
 
 
-	public String getProcedure()
+	public String getProcedureID()
 	{
-		return procedure;
+		return procedureID;
 	}
 
 
-	public void setProcedure(String procedure)
+	public void setProcedureID(String procedure)
 	{
-		this.procedure = procedure;
+		this.procedureID = procedure;
 	}
 	
 	

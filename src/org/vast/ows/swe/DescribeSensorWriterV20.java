@@ -48,14 +48,14 @@ import org.w3c.dom.Element;
  * @date Oct 10, 2008
  * @version 1.0
  */
-public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSensorRequest>
+public class DescribeSensorWriterV20 extends AbstractRequestWriter<DescribeSensorRequest>
 {
 	protected GMLTimeWriter timeWriter;
     
     
-	public DescribeSensorWriterV10()
+	public DescribeSensorWriterV20()
 	{
-        timeWriter = new GMLTimeWriter();
+        timeWriter = new GMLTimeWriter("3.2");
 	}
 
 	
@@ -66,8 +66,16 @@ public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSenso
         addCommonArgs(urlBuff, request);
         
 		// procedure
-        urlBuff.append("&sensorID=" + request.getProcedure());
+        urlBuff.append("&procedure=" + request.getProcedureID());
         
+        // format
+        if (request.getFormat() != null)
+        {
+        	urlBuff.append("&format=");
+        	urlBuff.append(request.getFormat());
+        }
+        
+        // validTime
         if (request.getTime() != null)
         {
         	urlBuff.append("&validTime=");
@@ -83,15 +91,19 @@ public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSenso
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, DescribeSensorRequest request) throws OWSException
 	{
-		dom.addUserPrefix("swes", OGCRegistry.getNamespaceURI(OWSUtils.SWES, "1"));			
+		dom.addUserPrefix("swes", OGCRegistry.getNamespaceURI(OWSUtils.SWES, "2.0"));			
 		
 		// root element
 		Element rootElt = dom.createElement("swes:DescribeSensor");
 		addCommonXML(dom, rootElt, request);
 		
 		// procedure
-        if (request.getProcedure() != null)
-        	dom.setElementValue(rootElt, "swes:sensorID", request.getProcedure());
+        if (request.getProcedureID() != null)
+        	dom.setElementValue(rootElt, "swes:procedure", request.getProcedureID());
+        
+        // procedure
+        if (request.getFormat() != null)
+        	dom.setElementValue(rootElt, "swes:procedureDescriptionFormat", request.getFormat());
         
 		// time instant or period
         try

@@ -105,48 +105,51 @@ public class SPSCommonWriterV20
 		// task ID
 		val = report.getTaskID();
 		if (val != null)
-			dom.setElementValue(reportElt, "sps:taskIdentifier", val);
+			dom.setElementValue(reportElt, "sps:task", val);
 		
-		// sensor ID
+		// estimated time of completion
+		DateTime date = report.getEstimatedToC();
+		if (date != null)
+			dom.setElementValue(reportElt, "sps:estimatedToC", DateTimeFormat.formatIso(date.getJulianTime(), 0)); 
+		
+		// event code
+		val = report.getEventCode();
+		if (val != null)
+			dom.setElementValue(reportElt, "sps:event", val);
+		
+		// percent completion
+		float fval = report.getPercentCompletion();
+		if (!Float.isNaN(fval))
+			dom.setElementValue(reportElt, "sps:percentCompletion", Float.toString(fval));
+		
+		// procedure ID
 		val = report.getSensorID();
-		dom.setElementValue(reportElt, "sps:sensorIdentifier", val);
+		dom.setElementValue(reportElt, "sps:procedure", val);
 		
 		// request status
 		RequestStatus reqStatus = report.getRequestStatus();
 		if (reqStatus != null)
-			//dom.setElementValue(reportElt, "sps:requestStatus", reqStatus.name());
-			dom.setElementValue(reportElt, "sps:status", reqStatus.name());
-		
-		// task status
-		TaskStatus taskStatus = report.getTaskStatus();
-		if (taskStatus != null)
-			//dom.setElementValue(reportElt, "sps:taskStatus", taskStatus.name());
-			dom.setElementValue(reportElt, "sps:status", taskStatus.name());
-		
-		// update time
-		DateTime date = report.getLastUpdate();
-		dom.setElementValue(reportElt, "sps:updateTime", DateTimeFormat.formatIso(date.getJulianTime(), 0));
+			dom.setElementValue(reportElt, "sps:requestStatus", reqStatus.name());
 		
 		// status message
 		val = report.getStatusMessage();
 		if (val != null)
 			dom.setElementValue(reportElt, "sps:statusMessage", val);
 		
-		// estimated time of completion
-		date = report.getEstimatedToC();
-		if (date != null)
-			dom.setElementValue(reportElt, "sps:estimatedToC", DateTimeFormat.formatIso(date.getJulianTime(), 0)); 
+		// task status
+		TaskStatus taskStatus = report.getTaskStatus();
+		if (taskStatus != null)
+			dom.setElementValue(reportElt, "sps:taskStatus", taskStatus.name());
+			
+		// update time
+		date = report.getLastUpdate();
+		dom.setElementValue(reportElt, "sps:updateTime", DateTimeFormat.formatIso(date.getJulianTime(), 0));
 	}
 	
 	
 	protected void writeStatusReportData(DOMHelper dom, Element reportElt, StatusReport report) throws CDMException
 	{
 		writeBaseReportAttributes(dom, reportElt, report);
-		
-		// percent completion
-		float val = report.getPercentCompletion();
-		if (!Float.isNaN(val))
-			dom.setElementValue(reportElt, "sps:percentCompletion", Float.toString(val));
 	}
 	
 	

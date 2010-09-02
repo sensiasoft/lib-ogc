@@ -22,6 +22,10 @@
 
 package org.vast.ows.sps;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.vast.ows.OWSResponse;
+
 
 /**
  * <p><b>Title:</b>
@@ -37,13 +41,27 @@ package org.vast.ows.sps;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class GetStatusResponse extends TaskingResponse<StatusReport>
+public class GetStatusResponse extends OWSResponse
 {
+	List<StatusReport> reportList;
+	
 	
 	public GetStatusResponse()
 	{
 		this.service = SPSUtils.SPS;
         this.messageType = "GetStatusResponse";
-        report = new StatusReport();
+        this.reportList = new ArrayList<StatusReport>();
 	}
+	
+	
+	public List<StatusReport> getReportList()
+	{
+		return this.reportList;
+	}
+	
+	
+	public void setReportList(List<StatusReport> reportList)
+	{
+		this.reportList = reportList;
+	}	
 }

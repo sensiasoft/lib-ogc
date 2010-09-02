@@ -77,7 +77,7 @@ public abstract class SOSServlet extends OWSServlet
 	
 	protected void processQuery(DescribeSensorRequest query) throws Exception
 	{
-		String sensorId = query.getProcedure();
+		String sensorId = query.getProcedureID();
 		if (sensorId == null)
 			throw new SOSException("A DescribeSensor request must specify a sensorId argument");
 		

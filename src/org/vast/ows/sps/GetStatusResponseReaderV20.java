@@ -26,16 +26,17 @@ import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseReader;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 
 /**
  * <p><b>Title:</b>
- * Tasking Response Reader v2.0
+ * Get Status Response Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Used to read a version 2.0 SPS tasking responses into
- * the corresponding object
+ * Used to read a version 2.0 SPS GetStatus Response into
+ * a GetStatusResponse object
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -43,45 +44,31 @@ import org.w3c.dom.Element;
  * @date Feb, 29 2008
  * @version 1.0
  */
-public class TaskingResponseReaderV20 extends SWEResponseReader<TaskingResponse<?>>
+public class GetStatusResponseReaderV20 extends SWEResponseReader<GetStatusResponse>
 {
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
 	
 	
-	public TaskingResponse<StatusReport> readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+	public GetStatusResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 		try
 		{
-			TaskingResponse<StatusReport> response;			
-			String respName = responseElt.getLocalName();
-			String className = getClass().getPackage().getName() + "." + respName;
-			
-			try
-	        {
-			    Class<?> respClass = Class.forName(className);
-			    response = (TaskingResponse<StatusReport>)respClass.newInstance();
-	            response.setVersion("2.0");
-	            
-	            // status or feasibility report
-	            Element reportElt = dom.getElement(responseElt, "result/*");	            
-	            if (reportElt != null)
-	            {
-	                StatusReport report = (StatusReport)commonReader.readReport(dom, reportElt);
-	                response.setReport(report);
-	            }
-	            
-	            // read extensions
-	            readXMLExtensions(dom, responseElt, response);
-	            
-	            return response;
-	        }
-	        catch (ClassNotFoundException e)
-	        {
-	            // problem if class is not found in class path
-	            throw new IllegalStateException("Error while instantiating SPS response Class " + className, e);
-	        }
-			
-			
+			GetStatusResponse response = new GetStatusResponse();
+            response.setVersion("2.0");
+            
+            // status reports
+            NodeList reportElts = dom.getElements(responseElt, "status/*");
+            for (int i=0; i<reportElts.getLength(); i++)
+            {
+                Element reportElt = (Element)reportElts.item(i);
+            	StatusReport report = (StatusReport)commonReader.readReport(dom, reportElt);
+                response.getReportList().add(report);
+            }
+            
+            // read extensions
+            readXMLExtensions(dom, responseElt, response);
+            
+            return response;
 		}
 		catch (Exception e)
 		{

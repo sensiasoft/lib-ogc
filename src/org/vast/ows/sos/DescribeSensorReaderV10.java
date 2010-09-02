@@ -112,7 +112,7 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 			// procedure
 			else if (argName.equalsIgnoreCase("procedure"))
 			{
-				request.setProcedure(argValue);
+				request.setProcedureID(argValue);
 			}
 			
 			else
@@ -135,7 +135,7 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 		
         // procedure
 		String procedure = dom.getElementValue(requestElt, "procedure");
-		request.setProcedure(procedure);
+		request.setProcedureID(procedure);
 		
 		// format
 		String format = dom.getAttributeValue(requestElt, "@outputFormat");
@@ -157,11 +157,11 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 		super.checkParameters(request, report);
 		
 		// need procedure
-		if (request.getProcedure() == null)
+		if (request.getProcedureID() == null)
 			report.add(new OWSException(OWSException.missing_param_code, "PROCEDURE"));
 		
 		// need format
-		if (request.getProcedure() == null)
+		if (request.getProcedureID() == null)
 			report.add(new OWSException(OWSException.missing_param_code, "FORMAT"));
 		
 		report.process();

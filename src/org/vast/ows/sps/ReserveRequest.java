@@ -42,7 +42,7 @@ import org.vast.util.DateTime;
  */
 public class ReserveRequest extends TaskingRequest
 {
-	protected DateTime desiredExpiration;
+	protected DateTime reservationExpiration;
 	
 	
 	public ReserveRequest()
@@ -52,14 +52,14 @@ public class ReserveRequest extends TaskingRequest
 	}
 
 
-	public DateTime getDesiredExpiration()
+	public DateTime getReservationExpiration()
 	{
-		return desiredExpiration;
+		return reservationExpiration;
 	}
 
 
-	public void setDesiredExpiration(DateTime desiredExpiration)
+	public void setReservationExpiration(DateTime desiredExpiration)
 	{
-		this.desiredExpiration = desiredExpiration;
+		this.reservationExpiration = desiredExpiration;
 	}
 }

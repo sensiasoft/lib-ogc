@@ -42,13 +42,13 @@
    <Writer type="SAS" subType="Subscribe" version="0.0" class="org.vast.ows.sas.SASSubscribeWriter"/>
    <!-- -->
    <Reader type="SPS" subType="Capabilities" version="2.0" class="org.vast.ows.sps.SPSCapabilitiesReaderV20"/>
-   <Reader type="SPS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorReaderV10"/> 
+   <Reader type="SPS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorReaderV20"/> 
    <Reader type="SPS" subType="DescribeTasking" version="2.0" class="org.vast.ows.sps.DescribeTaskingRequestReaderV20"/>
    <Reader type="SPS" subType="DescribeTaskingResponse" version="2.0" class="org.vast.ows.sps.DescribeTaskingResponseReaderV20"/>
    <Reader type="SPS" subType="GetFeasibility" version="2.0" class="org.vast.ows.sps.GetFeasibilityRequestReaderV20"/>
    <Reader type="SPS" subType="GetFeasibilityResponse" version="2.0" class="org.vast.ows.sps.GetFeasibilityResponseReaderV20"/>
    <Reader type="SPS" subType="GetStatus" version="2.0" class="org.vast.ows.sps.GetStatusRequestReaderV20"/>
-   <Reader type="SPS" subType="GetStatusResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseReaderV20"/>
+   <Reader type="SPS" subType="GetStatusResponse" version="2.0" class="org.vast.ows.sps.GetStatusResponseReaderV20"/>
    <Reader type="SPS" subType="Submit" version="2.0" class="org.vast.ows.sps.SubmitRequestReaderV20"/>
    <Reader type="SPS" subType="SubmitResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseReaderV20"/>
    <Reader type="SPS" subType="Update" version="2.0" class="org.vast.ows.sps.UpdateRequestReaderV20"/>
@@ -63,13 +63,13 @@
    <Reader type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseReaderV20"/>     
    <!-- -->
    <Writer type="SPS" subType="Capabilities" version="2.0" class="org.vast.ows.sps.SPSCapabilitiesWriterV20"/>
-   <Writer type="SPS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorWriterV10"/>  
+   <Writer type="SPS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorWriterV20"/>  
    <Writer type="SPS" subType="DescribeTasking" version="2.0" class="org.vast.ows.sps.DescribeTaskingRequestWriterV20"/>
    <Writer type="SPS" subType="DescribeTaskingResponse" version="2.0" class="org.vast.ows.sps.DescribeTaskingResponseWriterV20"/>
    <Writer type="SPS" subType="GetFeasibility" version="2.0" class="org.vast.ows.sps.GetFeasibilityRequestWriterV20"/>
    <Writer type="SPS" subType="GetFeasibilityResponse" version="2.0" class="org.vast.ows.sps.GetFeasibilityResponseWriterV20"/>
    <Writer type="SPS" subType="GetStatus" version="2.0" class="org.vast.ows.sps.GetStatusRequestWriterV20"/>
-   <Writer type="SPS" subType="GetStatusResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseWriterV20"/>
+   <Writer type="SPS" subType="GetStatusResponse" version="2.0" class="org.vast.ows.sps.GetStatusResponseWriterV20"/>
    <Writer type="SPS" subType="Submit" version="2.0" class="org.vast.ows.sps.SubmitRequestWriterV20"/>
    <Writer type="SPS" subType="SubmitResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseWriterV20"/>
    <Writer type="SPS" subType="Update" version="2.0" class="org.vast.ows.sps.UpdateRequestWriterV20"/>

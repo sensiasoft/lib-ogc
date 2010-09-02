@@ -62,7 +62,7 @@ public class DescribeTaskingRequestWriterV20 extends SWERequestWriter<DescribeTa
 		urlBuff.append("&request=" + request.getOperation());
 
 		// sensorID
-		urlBuff.append("&sensorID=" + request.getSensorID());
+		urlBuff.append("&procedure=" + request.getProcedureID());
 
 		String url = urlBuff.toString();
 		url = url.replaceAll(" ", "%20");
@@ -83,8 +83,8 @@ public class DescribeTaskingRequestWriterV20 extends SWERequestWriter<DescribeTa
 		addCommonXML(dom, rootElt, request);
 
 		// sensorID
-		if (request.getSensorID() != null)
-			dom.setElementValue(rootElt, "sps:sensorIdentifier", request.getSensorID());
+		if (request.getProcedureID() != null)
+			dom.setElementValue(rootElt, "sps:procedure", request.getProcedureID());
 
 		return rootElt;
 	}

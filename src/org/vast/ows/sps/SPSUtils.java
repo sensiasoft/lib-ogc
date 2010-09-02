@@ -98,6 +98,12 @@ public class SPSUtils extends OWSUtils
 	}
 	
 	
+	public GetStatusResponse readStatusResponse(DOMHelper dom, Element respElt, String version) throws OWSException
+	{
+		return (GetStatusResponse)super.readXMLResponse(dom, respElt, SPSUtils.SPS, respElt.getLocalName(), version);
+	}
+	
+	
 	public static void writeXMLExtensions(DOMHelper dom, Element parentElt, String version, Map<QName, Object> extObjs)
 	{
 		String spsUri = OGCRegistry.getNamespaceURI(OWSUtils.SPS, version);
