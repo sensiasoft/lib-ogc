@@ -38,7 +38,7 @@ package org.vast.ows.sps;
  * @date Dec, 10 2008
  * @version 1.0
  */
-public class ReserveResponse extends TaskingResponse<StatusReport>
+public class ReserveResponse extends TaskingResponse<ReservationReport>
 {
 
 	public ReserveResponse()
