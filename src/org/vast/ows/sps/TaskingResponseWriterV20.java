@@ -72,8 +72,6 @@ public class TaskingResponseWriterV20 extends SWEResponseWriter<TaskingResponse<
 			
 			// status report
 			Element reportElt = commonWriter.writeReport(dom, response.getReport());
-			
-			// case of getStatus or tasking
 			Element resElt = dom.addElement(rootElt, "sps:result");
 			resElt.appendChild(reportElt);
 			

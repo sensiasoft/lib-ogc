@@ -88,7 +88,8 @@ public abstract class WMSServlet extends OWSServlet
 		{
 			//this.log("GET REQUEST: " + query + " from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
 			OWSRequest query = (OWSRequest) owsUtils.readURLQuery(req.getQueryString());
-			query.setResponse(resp);
+			query.setHttpRequest(req);
+			query.setHttpResponse(resp);
 
 			if (query instanceof GetCapabilitiesRequest)
 			{

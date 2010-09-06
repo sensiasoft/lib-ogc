@@ -129,7 +129,8 @@ public abstract class WCSServlet extends OWSServlet
         {
 	        //this.log("GET REQUEST: " + query + " from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
 	        OWSRequest query = (OWSRequest) owsUtils.readURLQuery(req.getQueryString());
-	        query.setResponse(resp);
+	        query.setHttpRequest(req);
+            query.setHttpResponse(resp);
 	        resp.setContentType("text/xml");
 	        
 	        if (query instanceof GetCapabilitiesRequest)

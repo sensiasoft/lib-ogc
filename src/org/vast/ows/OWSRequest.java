@@ -47,8 +47,8 @@ public class OWSRequest
 {
 	protected final static String EXCEPTION_MIME_TYPE = "application/vnd.ogc.se_xml";
 	
-	protected HttpServletRequest httpRequest;
-	protected HttpServletResponse response;
+	protected transient HttpServletRequest httpRequest;
+	protected transient HttpServletResponse httpResponse;
 	protected String getServer;
 	protected String postServer;
 	protected String service;
@@ -89,7 +89,7 @@ public class OWSRequest
 	public OutputStream getResponseStream()
 	{
 		try {
-			return response.getOutputStream();
+			return httpResponse.getOutputStream();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
@@ -199,14 +199,32 @@ public class OWSRequest
 	}
 	
 	
-	public HttpServletResponse getResponse()
+	public HttpServletResponse getHttpResponse()
 	{
-		return response;
+		return httpResponse;
 	}
 
 
+	public void setHttpResponse(HttpServletResponse httpResponse)
+	{
+		this.httpResponse = httpResponse;
+	}
+	
+	
+	/**
+	 * @deprecated
+	 **/
+	public HttpServletResponse getResponse()
+	{
+		return httpResponse;
+	}
+
+
+	/**
+	 * @deprecated
+	 **/
 	public void setResponse(HttpServletResponse response)
 	{
-		this.response = response;
+		this.httpResponse = response;
 	}
 }

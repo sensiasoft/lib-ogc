@@ -377,7 +377,8 @@ public abstract class SOSServlet extends OWSServlet
             
             // setup response stream
             resp.setContentType("text/xml");
-            query.setResponse(resp);
+            query.setHttpRequest(req);
+            query.setHttpResponse(resp);
 			query.setGetServer(requestURL);
 			
 			if (query instanceof GetCapabilitiesRequest)
@@ -439,7 +440,8 @@ public abstract class SOSServlet extends OWSServlet
             
             // setup response stream
             resp.setContentType("text/xml");
-            query.setResponse(resp);
+            query.setHttpRequest(req);
+            query.setHttpResponse(resp);
 			query.setPostServer(requestURL);
 			
 			if (query instanceof GetCapabilitiesRequest)
