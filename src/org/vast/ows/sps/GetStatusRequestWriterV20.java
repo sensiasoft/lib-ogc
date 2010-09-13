@@ -89,7 +89,7 @@ public class GetStatusRequestWriterV20 extends SWERequestWriter<GetStatusRequest
 		addCommonXML(dom, rootElt, request);
 
 		// taskID
-		dom.setElementValue(rootElt, "sps:taskIdentifier", request.getTaskID());
+		dom.setElementValue(rootElt, "sps:task", request.getTaskID());
 
 		// since
 		DateTime since = request.getSince();

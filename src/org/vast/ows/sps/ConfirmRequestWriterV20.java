@@ -71,7 +71,7 @@ public class ConfirmRequestWriterV20 extends SWERequestWriter<ConfirmRequest>
 		addCommonXML(dom, rootElt, request);
 
 		// taskID
-		dom.setElementValue(rootElt, "sps:taskIdentifier", request.getTaskID());
+		dom.setElementValue(rootElt, "sps:task", request.getTaskID());
 	
 		return rootElt;
 	}

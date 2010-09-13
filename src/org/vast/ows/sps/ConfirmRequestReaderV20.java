@@ -64,7 +64,7 @@ public class ConfirmRequestReaderV20 extends SWERequestReader<ConfirmRequest>
 		readCommonXML(dom, requestElt, request);
 
 		// taskID
-		String taskID = dom.getElementValue(requestElt, "taskIdentifier");
+		String taskID = dom.getElementValue(requestElt, "task");
 		request.setTaskID(taskID);
 
 		checkParameters(request, new OWSExceptionReport());
@@ -84,7 +84,7 @@ public class ConfirmRequestReaderV20 extends SWERequestReader<ConfirmRequest>
 
 		// Check that taskID is present
 		if (request.getTaskID() == null)
-			report.add(new OWSException(OWSException.missing_param_code, "taskIdentifier"));
+			report.add(new OWSException(OWSException.missing_param_code, "task"));
 
 		report.process();
 	}

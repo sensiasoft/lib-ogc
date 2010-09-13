@@ -121,8 +121,8 @@ public class GetStatusRequestReaderV20 extends SWERequestReader<GetStatusRequest
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
 
-		// taskID
-		String taskID = dom.getElementValue(requestElt, "taskIdentifier");
+		// task
+		String taskID = dom.getElementValue(requestElt, "task");
 		request.setTaskID(taskID);
 		
 		// since
@@ -147,7 +147,7 @@ public class GetStatusRequestReaderV20 extends SWERequestReader<GetStatusRequest
 
 		// Check that taskID is present
 		if (request.getTaskID() == null)
-			report.add(new OWSException(OWSException.missing_param_code, "taskIdentifier"));
+			report.add(new OWSException(OWSException.missing_param_code, "task"));
 
 		report.process();
 	}
