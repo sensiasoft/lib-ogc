@@ -85,6 +85,12 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     }
     
     
+    public static String getNamespaceURI(String spec, String version)
+    {
+    	return OGCRegistry.getNamespaceURI(spec, version);
+    }
+    
+    
     public OWSUtils()
     {    	
     }
