@@ -90,14 +90,20 @@ public class SPSCommonWriterV20
 		String val;
 		dom.addUserPrefix("swes", OGCRegistry.getNamespaceURI(OWSUtils.SWES, "2.0"));
 		
-		// name
-		val = report.getTitle();
-		dom.setElementValue(reportElt, "swes:name", val);
-		
 		// description
 		val = report.getDescription();
 		if (val != null)
 			dom.setElementValue(reportElt, "swes:description", val);
+		
+		// identifier
+		val = report.getId();
+		if (val != null)
+			dom.setElementValue(reportElt, "swes:identifier", val);
+		
+		// name
+		val = report.getTitle();
+		if (val != null)
+			dom.setElementValue(reportElt, "swes:name", val);
 		
 		// extensions
 		SWESUtils.writeXMLExtensions(dom, reportElt, "2.0", report.getExtensions());
@@ -143,13 +149,95 @@ public class SPSCommonWriterV20
 			
 		// update time
 		date = report.getLastUpdate();
-		dom.setElementValue(reportElt, "sps:updateTime", DateTimeFormat.formatIso(date.getJulianTime(), 0));
+		dom.setElementValue(reportElt, "sps:updateTime", DateTimeFormat.formatIso(date.getJulianTime(), 0));		
 	}
 	
 	
 	protected void writeStatusReportData(DOMHelper dom, Element reportElt, StatusReport report) throws CDMException
 	{
 		writeBaseReportAttributes(dom, reportElt, report);
+	}
+	
+	
+	protected void writeAlternatives(DOMHelper dom, Element reportElt, FeasibilityReport report) throws CDMException
+	{
+		String val;
+		dom.addUserPrefix("swes", OGCRegistry.getNamespaceURI(OWSUtils.SWES, "2.0"));
+		
+		for (Alternative alt: report.getAlternatives())
+		{
+			Element altElt = dom.addElement(reportElt, "+sps:alternative/sps:Alternative");
+			
+			// description
+			val = alt.getDescription();
+			if (val != null)
+				dom.setElementValue(altElt, "swes:description", val);
+			
+			// identifier
+			val = alt.getId();
+			if (val != null)
+				dom.setElementValue(altElt, "swes:identifier", val);
+			
+			// name
+			val = alt.getTitle();
+			if (val != null)
+				dom.setElementValue(altElt, "swes:name", val);
+			
+			// extensions
+			SWESUtils.writeXMLExtensions(dom, altElt, "2.0", alt.getExtensions());
+			
+			// alternative tasking parameters (mandatory)
+			SWEData taskingParams = report.getTaskingParameters();
+			Element property = dom.addElement(reportElt, "sps:taskingParameters");
+			this.writeSWEData(dom, property, taskingParams);
+		}
+	}
+	
+	
+	protected void writeTaskParameters(DOMHelper dom, Element reportElt, StatusReport report) throws CDMException
+	{
+		// tasking parameters
+		SWEData taskingParams = report.getTaskingParameters();
+		if (taskingParams != null)
+		{
+			Element property = dom.addElement(reportElt, "sps:taskingParameters");
+			this.writeSWEData(dom, property, taskingParams);
+		}
+	}
+	
+	
+	protected Element writeTask(DOMHelper dom, Task task) throws CDMException
+	{
+		String val;
+		Element taskElt = dom.createElement("sps:Task");
+		dom.addUserPrefix("swes", OGCRegistry.getNamespaceURI(OWSUtils.SWES, "2.0"));
+		
+		// description
+		val = task.getDescription();
+		if (val != null)
+			dom.setElementValue(taskElt, "swes:description", val);
+		
+		// identifier
+		val = task.getId();
+		if (val != null)
+			dom.setElementValue(taskElt, "swes:identifier", val);
+		
+		// name
+		val = task.getTitle();
+		if (val != null)
+			dom.setElementValue(taskElt, "swes:name", val);
+		
+		// extensions
+		SWESUtils.writeXMLExtensions(dom, taskElt, "2.0", task.getExtensions());
+		
+		// write status reports
+		for (StatusReport report: task.getStatusReports())
+		{
+			Element reportElt = writeReport(dom, report);
+			writeTaskParameters(dom, reportElt, report);
+		}
+		
+		return taskElt;
 	}
 	
 	
@@ -195,12 +283,9 @@ public class SPSCommonWriterV20
 	 */
 	public Element writeFeasibilityReport(DOMHelper dom, FeasibilityReport report) throws CDMException
 	{
-		//Element reportElt = dom.createElement("sps:FeasibilityReport");
 		Element reportElt = dom.createElement("sps:StatusReport");
 		writeStatusReportData(dom, reportElt, report);
-		
-		// TODO write feasible alternatives
-		
+		writeAlternatives(dom, reportElt, report);
 		return reportElt;
 	}
 	

@@ -59,7 +59,7 @@ public class UpdateRequestWriterV20 extends TaskingRequestWriterV20<UpdateReques
 		
 		// taskID
 		if (request.getTaskID() != null)
-			dom.setElementValue(requestElt, "sps:task", request.getTaskID());
+			dom.setElementValue(requestElt, "sps:targetTask", request.getTaskID());
 		
 		return requestElt;
 	}

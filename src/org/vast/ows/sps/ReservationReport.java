@@ -45,9 +45,7 @@ import org.vast.util.DateTime;
  */
 public class ReservationReport extends StatusReport
 {
-	public final static String RESERVED = "RESERVED";
-	public final static String EXPIRED = "EXPIRED";
-	
+	private static final long serialVersionUID = 6127920340806597947L;
 	public DateTime reservationExpiration;
 
 	

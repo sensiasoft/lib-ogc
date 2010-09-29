@@ -22,12 +22,14 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+import org.vast.sweCommon.SWEData;
 import org.vast.util.DateTime;
 import org.vast.xml.QName;
 import org.w3c.dom.Element;
@@ -47,27 +49,31 @@ import org.w3c.dom.Element;
  * @date Feb 25, 2008
  * @version 1.0
  */
-public class StatusReport
+public class StatusReport implements Serializable
 {
+	private static final long serialVersionUID = -2881367421680156901L;
+
 	// request status codes
 	public enum RequestStatus {Pending, Accepted, Rejected};
 	
 	// task status codes
 	public enum TaskStatus {Reserved, InExecution, Completed, Cancelled, Expired, Failed};
 	
-	protected String taskID;
-	protected String sensorID;
-	protected String title;
 	protected String description;
-	protected DateTime lastUpdate;
-	protected RequestStatus requestStatus;
-	protected TaskStatus taskStatus;
+	protected String title;
+	protected String id;
+	protected Map<QName, Object> extensions;
+	protected String taskID;
+	protected DateTime estimatedToC;
 	protected String eventCode;
 	protected float percentCompletion = Float.NaN;
+	protected String sensorID;
+	protected RequestStatus requestStatus;
 	protected String statusMessage;
-	protected DateTime estimatedToC;
-	protected Map<QName, Object> extensions;
-		
+	protected TaskStatus taskStatus;
+	protected DateTime lastUpdate;
+	protected SWEData taskingParameters;
+	
 
 	public StatusReport()
 	{
@@ -75,6 +81,18 @@ public class StatusReport
 	}
 	
 	
+	public String getId()
+	{
+		return id;
+	}
+
+
+	public void setId(String id)
+	{
+		this.id = id;
+	}
+
+
 	public String getTaskID()
 	{
 		return taskID;
@@ -192,6 +210,18 @@ public class StatusReport
 	public void setDescription(String description)
 	{
 		this.description = description;
+	}
+
+
+	public SWEData getTaskingParameters()
+	{
+		return taskingParameters;
+	}
+
+
+	public void setTaskingParameters(SWEData taskingParameters)
+	{
+		this.taskingParameters = taskingParameters;
 	}
 
 

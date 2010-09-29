@@ -41,7 +41,8 @@ import java.util.List;
  */
 public class FeasibilityReport extends StatusReport
 {
-	public List<Alternative> alternatives;
+	private static final long serialVersionUID = -2981759440875957711L;
+	protected List<Alternative> alternatives;
 
 	
 	public List<Alternative> getAlternatives()

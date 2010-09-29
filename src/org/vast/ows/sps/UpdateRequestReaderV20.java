@@ -60,7 +60,7 @@ public class UpdateRequestReaderV20 extends TaskingRequestReaderV20<UpdateReques
 		readTaskingRequestXML(dom, requestElt, request);
 		
 		// task ID
-		String taskID = dom.getElementValue(requestElt, "task");
+		String taskID = dom.getElementValue(requestElt, "targetTask");
 		request.setTaskID(taskID);
 		
 		checkParameters(request, new OWSExceptionReport());

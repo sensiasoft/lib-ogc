@@ -104,13 +104,17 @@ public class SPSCommonReaderV20
 		{
 			String val;
 			
-			// name
-			val = dom.getElementValue(reportElt, "name");
-			report.setTitle(val);
-			
 			// description
 			val = dom.getElementValue(reportElt, "description");
 			report.setDescription(val);
+			
+			// identifier
+			val = dom.getElementValue(reportElt, "identifier");
+			report.setId(val);
+			
+			// name
+			val = dom.getElementValue(reportElt, "name");
+			report.setTitle(val);
 			
 			// read XML content of extensions
 			Map<QName, Object> extObjs = SWESUtils.readXMLExtensions(dom, reportElt);

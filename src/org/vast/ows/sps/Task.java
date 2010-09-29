@@ -22,19 +22,21 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import org.vast.sweCommon.SWEData;
 import org.vast.xml.QName;
 import org.w3c.dom.Element;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Alternative
+ * Task
  * </p>
  *
  * <p><b>Description:</b><br/>
- * 
+ * Class representing an SPS task as a chronological list of status changes.
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -42,15 +44,23 @@ import org.w3c.dom.Element;
  * @date Feb 25, 2008
  * @version 1.0
  */
-public class Alternative
+public class Task implements Serializable
 {
+	private static final long serialVersionUID = 1808382961794965581L;
+	
 	protected String id;
 	protected String title;
 	protected String description;
-	protected SWEData taskingParameters;
 	protected Map<QName, Object> extensions;
+	protected List<StatusReport> statusReports;
 	
-
+	
+	public Task()
+	{
+		statusReports = new LinkedList<StatusReport>();
+	}
+	
+	
 	public String getId()
 	{
 		return id;
@@ -87,18 +97,24 @@ public class Alternative
 	}
 	
 	
-	public SWEData getTaskingParameters()
+	public List<StatusReport> getStatusReports()
 	{
-		return taskingParameters;
+		return statusReports;
 	}
 
 
-	public void setTaskingParameters(SWEData taskingParameters)
+	public void setStatusReports(List<StatusReport> statusReports)
 	{
-		this.taskingParameters = taskingParameters;
+		this.statusReports = statusReports;
 	}
 	
 	
+	public void addStatusReport(StatusReport report)
+	{
+		this.statusReports.add(report);
+	}
+
+
 	public Map<QName, Object> getExtensions()
 	{
 		return extensions;
