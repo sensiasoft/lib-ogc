@@ -23,12 +23,9 @@
 package org.vast.ows.sps;
 
 import org.vast.cdm.common.DataComponent;
-import org.vast.data.AbstractDataComponent;
-import org.vast.data.DataIterator;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseReader;
 import org.vast.sweCommon.SweComponentReaderV20;
-import org.vast.sweCommon.SweConstants;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -39,7 +36,8 @@ import org.w3c.dom.Element;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * TODO DescribeTaskingResponseReaderV20 type description
+ * Used to read a version 2.0 SPS DescribeTasking Response into
+ * a DescribeTaskingResponse object
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -59,28 +57,11 @@ public class DescribeTaskingResponseReaderV20 extends SWEResponseReader<Describe
 			DescribeTaskingResponse response = new DescribeTaskingResponse();
 			response.setVersion("2.0");
 			Element paramsElt;
-			DataComponent sweParams;
 			
 			// common tasking parameters
 			paramsElt = dom.getElement(responseElt, "taskingParameters");
-			sweParams = componentReader.readComponentProperty(dom, paramsElt);
-			response.setTaskingParameters(sweParams);
-
-			// generate filtered updatable parameters
-			DataComponent updatableParams = sweParams.copy();
-			DataIterator it = new DataIterator(updatableParams);
-			while (it.hasNext())
-			{
-				DataComponent nextComp = it.next();
-				Boolean updatable = (Boolean)nextComp.getProperty(SweConstants.UPDATABLE);
-				if (updatable != null && updatable == true)
-				{
-					AbstractDataComponent parent = ((AbstractDataComponent)nextComp.getParent());
-					int compIndex = parent.getComponentIndex(nextComp.getName());
-					parent.removeComponent(compIndex);
-				}
-			}
-			response.setUpdatableParameters(updatableParams);
+			DataComponent taskingParams = componentReader.readComponentProperty(dom, paramsElt);
+			response.setTaskingParameters(taskingParams);
 			
 			// read extensions
             readXMLExtensions(dom, responseElt, response);
@@ -91,5 +72,5 @@ public class DescribeTaskingResponseReaderV20 extends SWEResponseReader<Describe
 		{
 			throw new SPSException(e);
 		}
-	}	
+	}
 }

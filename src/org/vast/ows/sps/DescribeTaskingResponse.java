@@ -22,8 +22,12 @@
 
 package org.vast.ows.sps;
 
+import java.util.ArrayList;
 import org.vast.cdm.common.DataComponent;
+import org.vast.data.AbstractDataComponent;
+import org.vast.data.DataIterator;
 import org.vast.ows.OWSResponse;
+import org.vast.sweCommon.SweConstants;
 
 
 /**
@@ -67,6 +71,43 @@ public class DescribeTaskingResponse extends OWSResponse
 
 	public DataComponent getUpdatableParameters()
 	{
+		if (updatableParameters != null)
+			return updatableParameters;
+		
+		updatableParameters = taskingParameters.copy();
+		updatableParameters.clearData();
+		
+		DataIterator it = new DataIterator(updatableParameters);
+		ArrayList<DataComponent> componentsToDelete = new ArrayList<DataComponent>();
+		while (it.hasNext())
+		{
+			DataComponent nextComp = it.next();
+			Boolean updatable = (Boolean)nextComp.getProperty(SweConstants.UPDATABLE);
+			if (updatable != null && updatable == false)
+			{
+				componentsToDelete.add(nextComp);
+				if (nextComp.getComponentCount() > 0)
+					it.skipChildren();
+			}
+		}
+		
+		// remove non-unupdatable parameters from tree
+		for (DataComponent component: componentsToDelete)
+		{
+			AbstractDataComponent parent = ((AbstractDataComponent)component.getParent());
+			
+			if (parent == null)
+				return null;
+			
+			// problem if it's the only child
+			if (parent.getComponentCount() <= 1)
+				throw new IllegalStateException("Component " + component.getName() +
+						" should be updatable since its parent is updatable");
+			
+			int compIndex = parent.getComponentIndex(component.getName());
+			parent.removeComponent(compIndex);
+		}
+		
 		return updatableParameters;
 	}
 

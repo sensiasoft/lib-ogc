@@ -76,7 +76,7 @@ public class UpdateRequestReaderV20 extends TaskingRequestReaderV20<UpdateReques
 
 		// Check that taskID is present
 		if (request.getTaskID() == null)
-			report.add(new SPSException(SPSException.missing_param_code, "task"));
+			report.add(new SPSException(SPSException.missing_param_code, "targetTask"));
 		
 		report.process();
 	}

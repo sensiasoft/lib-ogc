@@ -107,7 +107,7 @@ public abstract class WMSServlet extends OWSServlet
 			try
 			{
 				resp.setContentType("text/xml");
-				sendErrorMessage(resp.getOutputStream(), e.getMessage());
+				sendErrorMessage(resp.getOutputStream(), "Invalid request or unrecognized version");
 			}
 			catch (IOException e1)
 			{
