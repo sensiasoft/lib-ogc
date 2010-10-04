@@ -40,9 +40,8 @@ import org.vast.util.TimeInfo;
  */
 public class DescribeSensorRequest extends OWSRequest
 {
-    public final static String SENSORML_FORMAT = "text/xml;subType=\"SensorML/1.0\"";
-    public final static String TML_FORMAT = "text/xml;subType=\"TML/1.0\"";
-	
+    public final static String SENSORML_10_FORMAT = "http://www.opengis.net/SensorML/1.0";
+    	
 	protected String procedureID;	
 	protected TimeInfo time;
     protected String format;
@@ -52,7 +51,7 @@ public class DescribeSensorRequest extends OWSRequest
 	{
 		service = "SOS";
 		operation = "DescribeSensor";
-		format = SENSORML_FORMAT;
+		format = SENSORML_10_FORMAT;
 	}
 	
 	

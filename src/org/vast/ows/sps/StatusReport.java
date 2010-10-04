@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
  * @date Feb 25, 2008
  * @version 1.0
  */
-public class StatusReport implements Serializable
+public class StatusReport implements Serializable, Cloneable
 {
 	private static final long serialVersionUID = -2881367421680156901L;
 
@@ -272,5 +272,19 @@ public class StatusReport implements Serializable
 	{
 		QName qname = new QName(extElt.getNamespaceURI(), extElt.getLocalName());
 		extensions.put(qname, extElt);
+	}
+	
+	
+	@Override
+	public StatusReport clone()
+	{
+		try
+		{
+			return (StatusReport)super.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			return null;
+		}
 	}
 }

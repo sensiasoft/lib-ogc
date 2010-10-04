@@ -56,13 +56,16 @@ import org.w3c.dom.Element;
  */
 public class SPSUtils extends OWSUtils
 {
-	public static String EVENT_TASK_FEASIBLE = "TASK_FEASIBLE";
-	public static String EVENT_TASK_ACCEPTED = "TASK_ACCEPTED";
-	public static String EVENT_TASK_REJECTED = "TASK_REJECTED";
-	public static String EVENT_TASK_COMPLETED = "TASK_COMPLETED";
-	public static String EVENT_TASK_RESERVED = "TASK_RESERVED";
-	public static String EVENT_TASK_CANCELLED = "TASK_CANCELLED";
-	public static String EVENT_TASK_FAILED = "TASK_FAILED";
+	public static String EVENT_TASK_EXPIRED = "TaskingRequestExpired";
+	public static String EVENT_TASK_SUBMITTED = "TaskSubmitted";
+	public static String EVENT_TASK_COMPLETED = "TaskCompleted";
+	public static String EVENT_DATA_PUBLISHED = "DataPublished";
+	public static String EVENT_TASK_FAILED = "TaskFailed";
+	public static String EVENT_TASK_CANCELLED = "TaskCancelled";
+	public static String EVENT_TASK_UPDATED = "TaskUpdated";	
+	public static String EVENT_TASK_RESERVED = "TaskReserved";
+	public static String EVENT_TASK_CONFIRMED = "TaskConfirmed";
+	public static String EVENT_RESERVATION_EXPIRED = "ReservationExpired";
 	
 	
 	public ParameterizedRequest readParameterizedRequest(DOMHelper dom, Element requestElt, DataComponent mainParams) throws OWSException
