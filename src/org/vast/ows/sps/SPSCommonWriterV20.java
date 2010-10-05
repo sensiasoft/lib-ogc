@@ -285,7 +285,10 @@ public class SPSCommonWriterV20
 	{
 		Element reportElt = dom.createElement("sps:StatusReport");
 		writeStatusReportData(dom, reportElt, report);
-		writeAlternatives(dom, reportElt, report);
+		
+		if (report.getAlternatives() != null)
+			writeAlternatives(dom, reportElt, report);
+		
 		return reportElt;
 	}
 	
