@@ -67,15 +67,15 @@ public class SPSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
 			offering.setParent(serviceCaps);
 			
 			// title
-			String title = dom.getElementValue(offeringElt, "title");
+			String title = dom.getElementValue(offeringElt, "identifier");
 			offering.setTitle(title);
 			
 			// abstract
-			String description = dom.getElementValue(offeringElt, "abstract");
+			String description = dom.getElementValue(offeringElt, "description");
 			offering.setDescription(description);
 			
 			// sensorID
-			String sensorID = dom.getElementValue(offeringElt, "sensorID");
+			String sensorID = dom.getElementValue(offeringElt, "procedure");
 			offering.setSensorID(sensorID);
 			
 			readROI(offering, dom, offeringElt);
