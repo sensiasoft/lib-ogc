@@ -63,19 +63,19 @@ public class DescribeResultAccessResponseWriterV20 extends SWEResponseWriter<Des
 		// case of no data available
 		if (response.getReasonCode() != null)
 		{
-			Element noDataElt = dom.addElement(rootElt, "sps:DataNotAvailable");
-			dom.setElementValue(noDataElt, "sps:reasonCode", response.getReasonCode());
-			
+			Element noDataElt = dom.addElement(rootElt, "sps:availability/sps:unavailable/sps:DataNotAvailable");
+			dom.setElementValue(noDataElt, "sps:unavailableCode", response.getReasonCode());			
 			if (response.getDescription() != null)
-				dom.setElementValue(noDataElt, "sps:description", response.getDescription());
+				dom.setElementValue(noDataElt, "sps:message", response.getDescription());
 		}
 		
 		// case of list of OWS reference groups
 		else
 		{
+			Element dataElt = dom.addElement(rootElt, "sps:availability/sps:available/sps:DataAvailable");			
 			for (OWSReferenceGroup refGroup: response.getResultGroups())
-			{
-				Element refGroupElt = dom.addElement(rootElt, "+ows:ReferenceGroup");
+			{				
+				Element refGroupElt = dom.addElement(dataElt, "+sps:dataReference/ows:ReferenceGroup");
 				owsWriter.buildRefGroup(dom, refGroupElt, refGroup);
 			}
 		}

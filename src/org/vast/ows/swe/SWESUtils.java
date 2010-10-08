@@ -95,10 +95,17 @@ public class SWESUtils
 	}
 	
 	
-	public static Element findExtension(String nsUri, String localName, Map<QName, Object> extObjs)
+	public static Object findExtension(String nsUri, String localName, Map<QName, Object> extObjs)
 	{
 		QName qname = new QName(nsUri, localName);
 		Object obj = extObjs.get(qname);
-		return (Element)obj;
+		return obj;
+	}
+	
+	
+	public static void addExtension(String nsUri, String localName, Object ext, Map<QName, Object> extObjs)
+	{
+		QName qname = new QName(nsUri, localName);
+		extObjs.put(qname, ext);
 	}
 }

@@ -129,11 +129,23 @@ public class OWSCommonWriterV11
 		if (format != null)
 			dom.setElementValue(refElt, "ows:Format", format);
 		
+		// metadata
+		for (Object obj: ref.getMetadata())
+		{
+			if (obj instanceof Element)
+			{
+				Element metaElt = dom.addElement(refElt, "+ows:Metadata");
+				Node newElt = refElt.getOwnerDocument().importNode((Element)obj, true);
+				metaElt.appendChild(newElt);
+			}
+		}
+		
 		// optional XML request message
 		if (requestXML != null)
 		{
 			Element msgElt = dom.addElement(refElt, "ows:RequestMessage");
-			msgElt.appendChild(requestXML);
+			Node newElt = refElt.getOwnerDocument().importNode(requestXML, true);
+			msgElt.appendChild(newElt);
 		}
 				
 		return refElt;

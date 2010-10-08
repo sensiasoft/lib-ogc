@@ -56,19 +56,20 @@ public class DescribeResultAccessResponseReaderV20 extends SWEResponseReader<Des
 		response.setVersion("2.0");
 		
 		// case of no data available
-		Element noDataElt = dom.getElement(responseElt, "DataNotAvailable");
+		Element noDataElt = dom.getElement(responseElt, "availability/unavailable/DataNotAvailable");
 		if (noDataElt != null)
 		{
-			String reasonCode = dom.getElementValue(noDataElt, "reasonCode");
+			String reasonCode = dom.getElementValue(noDataElt, "unavailableCode");
 			response.setReasonCode(reasonCode);				
-			String description = dom.getElementValue(noDataElt, "description");
+			String description = dom.getElementValue(noDataElt, "message");
 			response.setDescription(description);
 		}
 		
 		// case of list of OWS reference groups
 		else
 		{
-			NodeList refGroupElts = dom.getElements(responseElt, "ReferenceGroup");
+			Element dataElt = dom.addElement(responseElt, "availability/available/DataAvailable");
+			NodeList refGroupElts = dom.getElements(dataElt, "dataReference/ReferenceGroup");
 			for (int i=0; i<refGroupElts.getLength(); i++)
 			{
 				OWSReferenceGroup refGroup = new OWSReferenceGroup();

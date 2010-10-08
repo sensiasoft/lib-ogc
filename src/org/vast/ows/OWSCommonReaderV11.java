@@ -126,6 +126,22 @@ public class OWSCommonReaderV11
 		String format = dom.getElementValue(refElt, "Format");
 		ref.setFormat(format);
 		
+		// metadata
+		NodeList metaElts = dom.getElements("Metadata/*");
+		for (int i=0; i<metaElts.getLength(); i++)
+		{
+			Element metaElt = (Element)metaElts.item(i).cloneNode(true);
+			ref.getMetadata().add(metaElt);
+		}
+		
+		// POST request XML
+		Element msgElt = dom.getElement(refElt, "RequestMessage/*");
+		if (msgElt != null)
+		{
+			msgElt = (Element)msgElt.cloneNode(true);
+			ref.setRequestXML(msgElt);
+		}
+		
 		return ref;
 	}
 	
