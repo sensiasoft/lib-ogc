@@ -121,7 +121,15 @@ public class OWSCommonReaderV11
 		// role
 		String role = dom.getAttributeValue(refElt, "@role");
 		ref.setRole(role);
-					
+		
+		// identifier
+		String id = dom.getElementValue(refElt, "Identifier");
+		ref.setIdentifier(id);
+		
+		// description
+		String desc = dom.getElementValue(refElt, "Abstract");
+		ref.setDescription(desc);
+		
 		// format
 		String format = dom.getElementValue(refElt, "Format");
 		ref.setFormat(format);

@@ -104,15 +104,17 @@ public class OWSCommonWriterV11
 		if (requestXML != null)
 			refElt = dom.createElement("ows:ServiceReference");
 		else
-			refElt = dom.createElement("ows:Reference");			
+			refElt = dom.createElement("ows:Reference");
 		
 		// mandatory role
 		String role = ref.getRole();
 		if (role != null)
-			dom.setAttributeValue(refElt, "@xlink:role", ref.role);
+			dom.setAttributeValue(refElt, "@xlink:role", role);
 		
 		// mandatory href
-		dom.setAttributeValue(refElt, "@xlink:href", ref.getHref());
+		String href = ref.getHref();
+		if (href != null)
+		dom.setAttributeValue(refElt, "@xlink:href", href);
 		
 		// optional identifier
 		String identifier = ref.getIdentifier();
