@@ -116,10 +116,6 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
             throw new OWSException(invalidKVP + ": Invalid Time: " + argValue);
         }
         
-        // make sure deltas are null for time instant
-        if (timeRange.length == 1)
-            timeInfo.setDeltaTimes(0, 0);
-        
         return timeInfo;
     }
     

@@ -27,13 +27,11 @@ package org.vast.ows.server;
 import javax.servlet.http.*;
 import javax.servlet.*;
 import java.io.*;
-import java.text.ParseException;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.wms.GetMapRequest;
-import org.vast.util.*;
 
 
 /**
@@ -142,62 +140,5 @@ public abstract class WMSServlet extends OWSServlet
 		//this.log("POST REQUEST from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
 		/** Your code **/
 		/** Should parse request and call processQuery(queryInfo) **/
-	}
-
-
-	/**
-	 * Utility method to parse time argument from GET request.
-	 * Format is YYYY-MM-DDTHH:MM:SS.sss/YYYY-MM-DDTHH:MM:SS.sss/PYMDTHMS
-	 * @param timeInfo
-	 * @param argValue
-	 */
-	protected void parseTimeArg(TimeInfo timeInfo, String argValue) throws OWSException
-	{
-		String[] timeRange = argValue.split("/");
-		double now = System.currentTimeMillis() / 1000;
-
-		try
-		{
-			// parse start time
-			if (timeRange[0].equalsIgnoreCase("now"))
-			{
-				timeInfo.setBeginNow(true);
-				timeInfo.setStartTime(now);
-			}
-			else
-			{
-				timeInfo.setStartTime(DateTimeFormat.parseIso(timeRange[0]));
-			}
-
-			// parse stop time if present
-			if (timeRange.length > 1)
-			{
-				if (timeRange[1].equalsIgnoreCase("now"))
-				{
-					timeInfo.setEndNow(true);
-					timeInfo.setStopTime(now);
-				}
-				else
-				{
-					timeInfo.setStopTime(DateTimeFormat.parseIso(timeRange[1]));
-				}
-			}
-
-			// parse step time if present
-			if (timeRange.length > 2)
-			{
-				timeInfo.setTimeStep(DateTimeFormat.parseIsoPeriod(timeRange[2]));
-			}
-		}
-		catch (ParseException e)
-		{
-			throw new OWSException("Invalid WMS Get Request: Invalid Time: " + argValue);
-		}
-
-		// copy start to stop
-		if (timeRange.length == 1)
-		{
-			timeInfo.setStopTime(timeInfo.getStartTime());
-		}
 	}
 }
