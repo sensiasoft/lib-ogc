@@ -177,6 +177,10 @@ public class DescribeSensorReaderV20 extends SWERequestReader<DescribeSensorRequ
 		// need procedure
 		if (request.getProcedureID() == null)
 			report.add(new OWSException(OWSException.missing_param_code, "procedure"));
+			
+	    // need format
+		if (request.getFormat() == null)
+			report.add(new OWSException(OWSException.missing_param_code, "procedureDescriptionFormat"));
 		
 		report.process();
 	}

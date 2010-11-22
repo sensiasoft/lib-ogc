@@ -98,12 +98,10 @@ public class DescribeSensorWriterV20 extends AbstractRequestWriter<DescribeSenso
 		addCommonXML(dom, rootElt, request);
 		
 		// procedure
-        if (request.getProcedureID() != null)
-        	dom.setElementValue(rootElt, "swes:procedure", request.getProcedureID());
+        dom.setElementValue(rootElt, "swes:procedure", request.getProcedureID());
         
-        // procedure
-        if (request.getFormat() != null)
-        	dom.setElementValue(rootElt, "swes:procedureDescriptionFormat", request.getFormat());
+        // format
+        dom.setElementValue(rootElt, "swes:procedureDescriptionFormat", request.getFormat());
         
 		// time instant or period
         try
