@@ -60,6 +60,6 @@ public abstract class SWEResponseWriter<ResponseType extends OWSResponse> extend
 	{
     	// write extensions
     	Map<QName, Object> extObjs = response.getExtensions();
-        SWESUtils.writeXMLExtensions(dom, responseElt, response.getVersion(), extObjs);
+        SWESUtils.writeXMLExtensions(dom, responseElt, "2.0", extObjs);
 	}
 }

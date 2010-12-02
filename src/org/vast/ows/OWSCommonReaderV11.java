@@ -135,7 +135,7 @@ public class OWSCommonReaderV11
 		ref.setFormat(format);
 		
 		// metadata
-		NodeList metaElts = dom.getElements("Metadata/*");
+		NodeList metaElts = dom.getElements(refElt, "Metadata/*");
 		for (int i=0; i<metaElts.getLength(); i++)
 		{
 			Element metaElt = (Element)metaElts.item(i).cloneNode(true);
