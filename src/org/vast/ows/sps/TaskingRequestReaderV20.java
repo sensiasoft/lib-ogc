@@ -72,12 +72,22 @@ public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest
 			request.setSensorID(sensorID);
 			
 			// tasking parameters
-			Element taskingParamsElt = dom.getElement(requestElt, "taskingParameters/*");
-			if (taskingParamsElt != null && taskingParamStructure != null)
+			try
 			{
-				// parse data into a SWEData object
-				SWEData taskingParams = commonReader.readSWEData(dom, taskingParamsElt, taskingParamStructure);
-				request.setParameters(taskingParams);
+				Element taskingParamsElt = dom.getElement(requestElt, "taskingParameters/*");
+				if (taskingParamsElt != null && taskingParamStructure != null)
+				{
+					// parse data into a SWEData object
+					SWEData taskingParams = commonReader.readSWEData(dom, taskingParamsElt, taskingParamStructure);
+					request.setParameters(taskingParams);
+				}
+			}
+			catch (Exception e)
+			{
+				String code = SPSException.invalid_param_code;
+				String locator = "taskingParameters";
+				String badValue = null;
+				throw new SPSException(code, locator, badValue, invalidXML + ": " + e.getMessage());
 			}
 			
 			// latest response time
