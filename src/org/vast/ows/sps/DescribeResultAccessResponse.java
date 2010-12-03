@@ -44,6 +44,9 @@ import org.vast.ows.OWSResponse;
  */
 public class DescribeResultAccessResponse extends OWSResponse
 {
+	public final static String DATA_NOT_AVAILABLE_CODE = "DataNotAvailable";
+	public final static String DATA_SERVICE_NOT_AVAILABLE_CODE = "DataServiceUnavailable";
+	
 	protected List<OWSReferenceGroup> resultGroups;
 	
 	// when data is not available
