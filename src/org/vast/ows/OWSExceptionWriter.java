@@ -20,6 +20,8 @@
 
 package org.vast.ows;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
@@ -91,5 +93,24 @@ public class OWSExceptionWriter
 		}
 		else
 			return buildXML(new OWSExceptionReport(e));
+	}
+	
+	
+	/**
+	 * Creates an OWS XML exception and serializes it to the output stream
+	 * @param os
+	 * @param e
+	 */
+	public void writeException(OutputStream os, OWSException e)
+	{
+		try
+		{
+			Element reportElt = (new OWSExceptionWriter()).buildXML(e);
+			dom.serialize(reportElt, os, true);
+		}
+		catch (IOException e1)
+		{
+			e1.printStackTrace();
+		}
 	}
 }

@@ -296,6 +296,10 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 	 */
 	public static void checkParameters(OWSRequest request, OWSExceptionReport report, String serviceType) throws OWSException
 	{
+		// special case for WMS 1.1
+		if (serviceType != null && serviceType.equals(OWSUtils.WMS) && request.getNormalizedVersion().equals("1.1.1"))
+			request.setService(OWSUtils.WMS);
+		
 		// need SERVICE
 		if (request.getService() == null)
 			report.add(new OWSException(OWSException.missing_param_code, "SERVICE"));

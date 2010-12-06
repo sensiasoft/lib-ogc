@@ -29,6 +29,7 @@ import javax.servlet.*;
 import java.io.*;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSExceptionWriter;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.wms.GetMapRequest;
@@ -84,8 +85,7 @@ public abstract class WMSServlet extends OWSServlet
 		// parse query arguments
 		try
 		{
-			//this.log("GET REQUEST: " + query + " from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
-			OWSRequest query = (OWSRequest) owsUtils.readURLQuery(req.getQueryString());
+			OWSRequest query = (OWSRequest) owsUtils.readURLQuery(req.getQueryString(), OWSUtils.WMS);
 			query.setHttpRequest(req);
 			query.setHttpResponse(resp);
 
@@ -105,7 +105,8 @@ public abstract class WMSServlet extends OWSServlet
 			try
 			{
 				resp.setContentType("text/xml");
-				sendErrorMessage(resp.getOutputStream(), "Invalid request or unrecognized version");
+				OWSExceptionWriter writer = new OWSExceptionWriter();
+				writer.writeException(resp.getOutputStream(), e);
 			}
 			catch (IOException e1)
 			{
@@ -114,6 +115,15 @@ public abstract class WMSServlet extends OWSServlet
 		}
 		catch (Exception e)
 		{
+			try
+			{
+				this.sendErrorMessage(resp.getOutputStream(), "Internal Server Error");
+			}
+			catch (IOException e1)
+			{
+				e1.printStackTrace();
+			}
+			
 			throw new ServletException(e);
 		}
 		finally
