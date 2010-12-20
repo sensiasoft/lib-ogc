@@ -164,7 +164,11 @@ public class GetMapReaderV11 extends AbstractRequestReader<GetMapRequest>
             }
 
             else
-                request.getExtensions().put(new QName(argName), argValue);
+            {
+                if (argValue == null)
+                	argValue = "";
+            	request.getExtensions().put(new QName(argName), argValue);
+            }
         }
         
 		return request;

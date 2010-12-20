@@ -58,10 +58,16 @@ public class WFSException extends OWSException
 	{
 		super(message, e);
 	}
+	
+	
+	public WFSException(String code, String locator)
+	{
+		super(code, locator, (String)null, (String)null);
+	}
 
 	
-	public WFSException(String code, String locator, String badValue, String message)
+	public WFSException(String code, String locator, String badValue)
 	{
-		super(code, locator, badValue, message);
+		super(code, locator, badValue, (String)null);
 	}
 }

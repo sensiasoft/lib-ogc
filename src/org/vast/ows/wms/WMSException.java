@@ -60,8 +60,14 @@ public class WMSException extends OWSException
 	}
 	
 	
-	public WMSException(String code, String locator, String badValue, String message)
+	public WMSException(String code, String locator)
 	{
-		super(code, locator, badValue, message);
+		super(code, locator, (String)null, (String)null);
+	}
+	
+	
+	public WMSException(String code, String locator, String badValue)
+	{
+		super(code, locator, badValue, (String)null);
 	}
 }

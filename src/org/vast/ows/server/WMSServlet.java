@@ -52,21 +52,6 @@ public abstract class WMSServlet extends OWSServlet
 	protected OWSUtils owsUtils = new OWSUtils();
 
 
-	// Sends an XML Exception to the user
-	@Override
-	protected void sendErrorMessage(OutputStream resp, String message)
-	{
-		PrintWriter buffer = new PrintWriter(resp);
-		buffer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		buffer.println("<ServiceException>");
-		buffer.println("\t" + message);
-		buffer.println("</ServiceException>");
-		buffer.flush();
-		buffer.close();
-		//this.log(message);
-	}
-
-
 	public void processQuery(GetCapabilitiesRequest query) throws Exception
 	{
 		sendCapabilities("ALL", query.getResponseStream());
@@ -110,21 +95,17 @@ public abstract class WMSServlet extends OWSServlet
 			}
 			catch (IOException e1)
 			{
-				e.printStackTrace();
 			}
 		}
 		catch (Exception e)
 		{
 			try
 			{
-				this.sendErrorMessage(resp.getOutputStream(), "Internal Server Error");
+				resp.sendError(404, "Internal Server Error");
 			}
 			catch (IOException e1)
 			{
-				e1.printStackTrace();
 			}
-			
-			throw new ServletException(e);
 		}
 		finally
 		{
@@ -135,7 +116,6 @@ public abstract class WMSServlet extends OWSServlet
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
 			}
 		}
 	}
