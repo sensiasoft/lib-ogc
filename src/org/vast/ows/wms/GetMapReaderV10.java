@@ -55,7 +55,9 @@ public class GetMapReaderV10 extends AbstractRequestReader<GetMapRequest>
 	{
 		GetMapRequest request = new GetMapRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
-        
+		OWSExceptionReport report = new OWSExceptionReport();
+		report.setVersion("1.0");
+		
         while (st.hasMoreTokens())
         {
             String argName = null;
@@ -71,76 +73,81 @@ public class GetMapReaderV10 extends AbstractRequestReader<GetMapRequest>
             }
             catch (IndexOutOfBoundsException e)
             {
-                throw new WMSException(invalidKVP);
+                throw new WMSException(OWSException.invalid_request_code, null, null, invalidKVP);
             }
             
-            // service version
-            if (argName.equalsIgnoreCase("wmtver"))
-            {
-                request.setVersion(argValue);
-            }
+            try
+			{
+				// service version
+				if (argName.equalsIgnoreCase("wmtver"))
+				{
+				    request.setVersion(argValue);
+				}
 
-            // request argument
-            else if (argName.equalsIgnoreCase("request"))
-            {
-                request.setOperation(argValue);
-            }
-            
-            // layers argument
-            else if (argName.equalsIgnoreCase("layers"))
-            {
-                String[] layerList = argValue.split(",");
-                request.getLayers().clear();                 
-                for (int i=0; i<layerList.length; i++)
-                    request.getLayers().add(layerList[i]);
-            }
-            
-            // styles argument
-            else if (argName.equalsIgnoreCase("styles"))
-            {
-                String[] styleList = argValue.split(",");
-                request.getStyles().clear();                 
-                for (int i=0; i<styleList.length; i++)
-                    request.getStyles().add(styleList[i]);
-            }
-            
-            // bbox
-            else if (argName.equalsIgnoreCase("bbox"))
-            {
-            	Bbox bbox = parseBboxArg(argValue);
-                request.setBbox(bbox);
-            }
-            
-            // width
-            else if (argName.equalsIgnoreCase("width"))
-            {
-                try {request.setWidth(Integer.parseInt(argValue));}
-                catch (NumberFormatException e) {throw new WMSException(invalidKVP + "Width should be an integer value");}
-            }
-            
-            // height
-            else if (argName.equalsIgnoreCase("height"))
-            {
-                try {request.setHeight(Integer.parseInt(argValue));}
-                catch (NumberFormatException e) {throw new WMSException(invalidKVP + "Height should be an integer value");}
-            }
-            
-            // transparency
-            else if (argName.equalsIgnoreCase("transparent"))
-            {
-                request.setTransparent(Boolean.parseBoolean(argValue));
-            }
-            
-            // format argument
-            else if (argName.equalsIgnoreCase("format"))
-            {
-                request.setFormat(argValue);
-            }
-
-            else
-                throw new WMSException(invalidKVP + ": Unknown Argument " + argName);
+				// request argument
+				else if (argName.equalsIgnoreCase("request"))
+				{
+				    request.setOperation(argValue);
+				}
+				
+				// layers argument
+				else if (argName.equalsIgnoreCase("layers"))
+				{
+				    String[] layerList = argValue.split(",");
+				    request.getLayers().clear();                 
+				    for (int i=0; i<layerList.length; i++)
+				        request.getLayers().add(layerList[i]);
+				}
+				
+				// styles argument
+				else if (argName.equalsIgnoreCase("styles"))
+				{
+				    String[] styleList = argValue.split(",");
+				    request.getStyles().clear();                 
+				    for (int i=0; i<styleList.length; i++)
+				        request.getStyles().add(styleList[i]);
+				}
+				
+				// bbox
+				else if (argName.equalsIgnoreCase("bbox"))
+				{
+					Bbox bbox = parseBboxArg(argValue);
+				    request.setBbox(bbox);
+				}
+				
+				// width
+				else if (argName.equalsIgnoreCase("width"))
+				{
+				    try {request.setWidth(Integer.parseInt(argValue));}
+				    catch (NumberFormatException e) {throw new WMSException(OWSException.invalid_param_code, "WIDTH", argValue, null);}
+				}
+				
+				// height
+				else if (argName.equalsIgnoreCase("height"))
+				{
+				    try {request.setHeight(Integer.parseInt(argValue));}
+				    catch (NumberFormatException e) {throw new WMSException(OWSException.invalid_param_code, "HEIGHT", argValue, null);}
+				}
+				
+				// transparency
+				else if (argName.equalsIgnoreCase("transparent"))
+				{
+				    request.setTransparent(Boolean.parseBoolean(argValue));
+				}
+				
+				// format argument
+				else if (argName.equalsIgnoreCase("format"))
+				{
+				    request.setFormat(argValue);
+				}
+			}
+			catch (Exception e)
+			{
+				report.add(new WMSException(OWSException.invalid_param_code, argName.toUpperCase(), argValue, null));
+			}
         }
         
+        report.process();
 		return request;
 	}
 	

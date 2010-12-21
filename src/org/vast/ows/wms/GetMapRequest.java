@@ -20,6 +20,7 @@
 
 package org.vast.ows.wms;
 
+import java.awt.Color;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -51,6 +52,7 @@ public class GetMapRequest extends OWSRequest
 	protected int width;
 	protected int height;
 	protected boolean transparent;
+	protected Color backgroundColor;
 
 	protected List<String> layers;
 	protected List<String> styles;
@@ -60,8 +62,22 @@ public class GetMapRequest extends OWSRequest
 	{
 		service = "WMS";
         operation = "GetMap";
-		layers = new ArrayList<String>(2);
-		styles = new ArrayList<String>(2);		
+		layers = new ArrayList<String>(1);
+		styles = new ArrayList<String>(1);
+		transparent = false;
+		backgroundColor = Color.WHITE;
+	}
+	
+	
+	public Color getBackgroundColor()
+	{
+		return backgroundColor;
+	}
+
+
+	public void setBackgroundColor(Color backgroundColor)
+	{
+		this.backgroundColor = backgroundColor;
 	}
 	
 

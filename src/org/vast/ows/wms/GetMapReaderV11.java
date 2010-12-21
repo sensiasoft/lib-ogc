@@ -25,6 +25,7 @@
 
 package org.vast.ows.wms;
 
+import java.awt.Color;
 import java.util.StringTokenizer;
 import org.vast.util.Bbox;
 import org.vast.util.TimeInfo;
@@ -62,7 +63,9 @@ public class GetMapReaderV11 extends AbstractRequestReader<GetMapRequest>
 	{
 		GetMapRequest request = new GetMapRequest();
 		StringTokenizer st = new StringTokenizer(queryString, "&");
-        
+		OWSExceptionReport report = new OWSExceptionReport();
+		report.setVersion("1.0");
+		
         while (st.hasMoreTokens())
         {
             String argName = null;
@@ -81,96 +84,113 @@ public class GetMapReaderV11 extends AbstractRequestReader<GetMapRequest>
                 throw new WMSException(invalidKVP);
             }
             
-            // service ID
-            if (argName.equalsIgnoreCase("service"))
-            {
-                request.setService(argValue);
-            }
-            
-            // service version
-            else if (argName.equalsIgnoreCase("version"))
-            {
-                request.setVersion(argValue);
-            }
+            try
+			{
+				// service ID
+				if (argName.equalsIgnoreCase("service"))
+				{
+				    request.setService(argValue);
+				}
+				
+				// service version
+				else if (argName.equalsIgnoreCase("version"))
+				{
+				    request.setVersion(argValue);
+				}
 
-            // request argument
-            else if (argName.equalsIgnoreCase("request"))
-            {
-                request.setOperation(argValue);
-            }
-            
-            // layers argument
-            else if (argName.equalsIgnoreCase("layers"))
-            {
-                String[] layerList = argValue.split(",");
-                request.getLayers().clear();                 
-                for (int i=0; i<layerList.length; i++)
-                    request.getLayers().add(layerList[i]);
-            }
-            
-            // styles argument
-            else if (argName.equalsIgnoreCase("styles"))
-            {
-                String[] styleList = argValue.split(",");
-                request.getStyles().clear();                 
-                for (int i=0; i<styleList.length; i++)
-                    request.getStyles().add(styleList[i]);
-            }
-            
-            // time
-            else if (argName.equalsIgnoreCase("time"))
-            {
-            	TimeInfo time = parseTimeArg(argValue);
-            	request.setTime(time);
-            }
-            
-            // bbox
-            else if (argName.equalsIgnoreCase("bbox"))
-            {
-            	Bbox bbox = parseBboxArg(argValue);
-                request.setBbox(bbox);
-            }
-            
-            // width
-            else if (argName.equalsIgnoreCase("width"))
-            {
-                try {request.setWidth(Integer.parseInt(argValue));}
-                catch (NumberFormatException e) {throw new WMSException(invalidKVP + "Width should be an integer value");}
-            }
-            
-            // height
-            else if (argName.equalsIgnoreCase("height"))
-            {
-                try {request.setHeight(Integer.parseInt(argValue));}
-                catch (NumberFormatException e) {throw new WMSException(invalidKVP + "Height should be an integer value");}
-            }
-            
-            // transparency
-            else if (argName.equalsIgnoreCase("transparent"))
-            {
-                request.setTransparent(Boolean.parseBoolean(argValue));
-            }
-            
-            // format argument
-            else if (argName.equalsIgnoreCase("format"))
-            {
-                request.setFormat(argValue);
-            }
+				// request argument
+				else if (argName.equalsIgnoreCase("request"))
+				{
+				    request.setOperation(argValue);
+				}
+				
+				// layers argument
+				else if (argName.equalsIgnoreCase("layers"))
+				{
+					String[] layerList = argValue.split(",");
+					request.getLayers().clear();
+					for (int i=0; i<layerList.length; i++)
+					    request.getLayers().add(layerList[i]);
+				}
+				
+				// styles argument
+				else if (argName.equalsIgnoreCase("styles"))
+				{
+					String[] styleList = argValue.split(",");
+					request.getStyles().clear();   
+					for (int i=0; i<styleList.length; i++)
+					    request.getStyles().add(styleList[i]);
+				}
+				
+				// srs
+				else if (argName.equalsIgnoreCase("srs"))
+				{
+				    request.setSrs(argValue);
+				}
+				
+				// bbox
+				else if (argName.equalsIgnoreCase("bbox"))
+				{
+					Bbox bbox = parseBboxArg(argValue);
+					request.setBbox(bbox);
+				}
+				
+				// width
+				else if (argName.equalsIgnoreCase("width"))
+				{
+				    request.setWidth(Integer.parseInt(argValue));
+				    if (request.getWidth() <= 0)
+						throw new IllegalArgumentException();
+				}
+				
+				// height
+				else if (argName.equalsIgnoreCase("height"))
+				{
+				    request.setHeight(Integer.parseInt(argValue));
+				    if (request.getHeight() <= 0)
+				    	throw new IllegalArgumentException();
+				}
+				
+				// format
+				else if (argName.equalsIgnoreCase("format"))
+				{
+				    request.setFormat(argValue);
+				}
+				
+				// transparency
+				else if (argName.equalsIgnoreCase("transparent"))
+				{
+				    request.setTransparent(Boolean.parseBoolean(argValue));
+				}
+								
+				// bgcolor
+				else if (argName.equalsIgnoreCase("bgcolor"))
+				{
+				    request.setBackgroundColor(parseBgColor(argValue));
+				}
 
-            //srs
-            else if (argName.equalsIgnoreCase("srs"))
-            {
-                request.setSrs(argValue);
-            }
-
-            else
-            {
-                if (argValue == null)
-                	argValue = "";
-            	request.getExtensions().put(new QName(argName), argValue);
-            }
+				// time
+				else if (argName.equalsIgnoreCase("time"))
+				{
+					TimeInfo time = parseTimeArg(argValue);
+			    	request.setTime(time);
+				}
+				
+				// vendor parameters
+				else
+				{
+				    if (argValue == null)
+				    	argValue = "";
+					request.getExtensions().put(new QName(argName), argValue);
+				}
+			}
+			catch (Exception e)
+			{
+				report.add(new WMSException(OWSException.invalid_param_code, argName.toUpperCase(), argValue, null));
+			}
         }
         
+        report.process();
 		return request;
 	}
 	
@@ -209,4 +229,58 @@ public class GetMapReaderV11 extends AbstractRequestReader<GetMapRequest>
 		
 		return request;
 	}
+	
+	
+	/**
+	 * Parses background color from RGB hexadecimal string (e.g. 0xA51CFF)
+	 * @param argValue
+	 * @return
+	 */
+	protected Color parseBgColor(String argValue)
+	{
+		argValue.replaceFirst("0x|0X", "");
+		return Color.decode(argValue);
+	}
+	
+	
+	/**
+     * Checks that GetMap mandatory parameters are present
+     * @param request
+     * @throws OWSException
+     */
+    protected void checkParameters(GetMapRequest request, OWSExceptionReport report) throws OWSException
+    {
+    	// check common params
+		super.checkParameters(request, report, OWSUtils.WMS);
+    	
+    	// need layer
+		if (request.getLayers() == null || request.getLayers().isEmpty())
+			report.add(new WMSException(OWSException.missing_param_code, "LAYERS"));
+		
+		// need at least BBOX
+		if (request.getBbox() == null || request.getBbox().isNull())
+			report.add(new WMSException(OWSException.missing_param_code, "BBOX"));
+		
+		// need format
+		if (request.getFormat() == null || request.getFormat().length() == 0)
+			report.add(new WMSException(OWSException.missing_param_code, "FORMAT"));
+		
+		// need SRS
+		if (request.getSrs() == null || request.getSrs().length() == 0)
+			report.add(new WMSException(OWSException.missing_param_code, "SRS"));
+		
+		// need style
+		if (request.getStyles() == null)
+			report.add(new WMSException(OWSException.missing_param_code, "STYLES"));
+		
+		// width is positive
+		if (request.getWidth() <= 0)
+			report.add(new WMSException(OWSException.missing_param_code, "WIDTH"));
+		
+		// height is positive
+		if (request.getHeight() <= 0)
+			report.add(new WMSException(OWSException.missing_param_code, "HEIGHT"));
+		
+		report.process();
+    }
 }

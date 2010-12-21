@@ -40,7 +40,15 @@ import org.vast.ows.OWSException;
 public class WMSException extends OWSException
 {
 	static final long serialVersionUID = 0x0D57D045A3588AE34L;
-		
+	public final static String invalid_format_code = "InvalidFormat";
+	public final static String invalid_format_text = "Invalid Format: ";
+	public final static String invalid_srs_code = "InvalidSRS";
+	public final static String invalid_srs_text = "Invalid SRS: ";
+	public final static String invalid_layer_code = "LayerNotDefined";
+	public final static String invalid_layer_text = "Unknown Layer: ";
+	public final static String invalid_style_code = "StyleNotDefined";
+	public final static String invalid_style_text = "Unknown Style: ";
+	
 	
 	public WMSException(String message)
 	{
@@ -66,8 +74,31 @@ public class WMSException extends OWSException
 	}
 	
 	
-	public WMSException(String code, String locator, String badValue)
+	public WMSException(String code, String locator, String badValue, String message)
 	{
-		super(code, locator, badValue, (String)null);
+		super(code, locator, badValue, message);
+	}
+	
+	
+	@Override
+	public String getMessage()
+	{
+		String message = super.getMessage();
+		
+		// first try to use OWS message if specified
+		if (message != null && !message.equals(""))
+			return message;
+		
+		// otherwise build generic message
+		else if (this.code == invalid_format_code)
+			return invalid_format_text + ((badValue == null) ? "" : badValue);
+		else if (this.code == invalid_srs_code)
+			return invalid_srs_text + ((badValue == null) ? "" : badValue);
+		else if (this.code == invalid_layer_code)
+			return invalid_layer_text + ((badValue == null) ? "" : badValue);
+		else if (this.code == invalid_style_code)
+			return invalid_style_text + ((badValue == null) ? "" : badValue);
+		else
+			return null;
 	}
 }
