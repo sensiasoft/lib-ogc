@@ -297,7 +297,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 	public static void checkParameters(OWSRequest request, OWSExceptionReport report, String serviceType) throws OWSException
 	{
 		// special case for WMS 1.1
-		if (serviceType != null && serviceType.equals(OWSUtils.WMS) && request.getNormalizedVersion().equals("1.1.1"))
+		if (serviceType != null && serviceType.equals(OWSUtils.WMS))
 			request.setService(OWSUtils.WMS);
 		
 		// need SERVICE
@@ -315,9 +315,10 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 		// need VERSION
 		// VERSION is no longer required parameter for all services.  SOS doesn't use it at all
 		// in any case it's not mandatory for GetCapabilities
-		if (request.getVersion() == null && !request.getOperation().equalsIgnoreCase("GetCapabilities"))
+		if (request.getVersion() == null)
 		{
-			report.add(new OWSException(OWSException.missing_param_code, "VERSION"));
+			if (!request.getOperation().equalsIgnoreCase("GetCapabilities"))
+				report.add(new OWSException(OWSException.missing_param_code, "VERSION"));
 		}
 		
 		// check version validity

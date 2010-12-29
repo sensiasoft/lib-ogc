@@ -101,7 +101,7 @@ public abstract class WMSServlet extends OWSServlet
 		{
 			try
 			{
-				resp.sendError(404, "Internal Server Error");
+				resp.sendError(404, internalErrorMsg);
 			}
 			catch (IOException e1)
 			{

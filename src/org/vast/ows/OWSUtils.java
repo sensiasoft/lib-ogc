@@ -171,7 +171,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     public OWSRequest readURLQuery(String queryString, String serviceType, String defaultVersion) throws OWSException
     {
     	OWSRequest request = new OWSRequest();
-    	request.setVersion(defaultVersion);
+    	if (request.getVersion() == null)
+    		request.setVersion(defaultVersion);
     	
     	try
         {
