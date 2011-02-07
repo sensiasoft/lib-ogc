@@ -171,16 +171,18 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     public OWSRequest readURLQuery(String queryString, String serviceType, String defaultVersion) throws OWSException
     {
     	OWSRequest request = new OWSRequest();
-    	if (request.getVersion() == null)
-    		request.setVersion(defaultVersion);
+    	request.setVersion(defaultVersion);
     	
     	try
         {
-    		try {queryString = URLDecoder.decode(queryString, "UTF-8");}
-    		catch (UnsupportedEncodingException e){}
-    		
     		// read common params and check that they're present
-    		AbstractRequestReader.readCommonQueryArguments(queryString, request);
+    		if (queryString != null)
+    		{
+    			try {queryString = URLDecoder.decode(queryString, "UTF-8");}
+    			catch (UnsupportedEncodingException e){}
+    			AbstractRequestReader.readCommonQueryArguments(queryString, request);
+    		}
+    		
     		OWSExceptionReport report = new OWSExceptionReport();
     		AbstractRequestReader.checkParameters(request, report, serviceType);
             report.process();

@@ -66,19 +66,8 @@ public class OWSExceptionReport extends OWSException
 	public OWSExceptionReport(OWSException e)
 	{
 		this();
+		this.version = e.version;
 		exceptionList.add(e);
-	}
-
-
-	public String getVersion()
-	{
-		return version;
-	}
-
-
-	public void setVersion(String version)
-	{
-		this.version = version;
 	}
 	
 	

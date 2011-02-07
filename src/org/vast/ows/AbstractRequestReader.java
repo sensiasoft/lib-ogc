@@ -21,7 +21,6 @@
 package org.vast.ows;
 
 import java.io.*;
-import java.net.URLDecoder;
 import java.text.ParseException;
 import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
@@ -227,9 +226,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
      */
     public static void readCommonQueryArguments(String queryString, OWSRequest request) throws OWSException
     {
-    	try {queryString = URLDecoder.decode(queryString, "UTF-8");}
-        catch (UnsupportedEncodingException e) {};
-        StringTokenizer st = new StringTokenizer(queryString, "&");
+    	StringTokenizer st = new StringTokenizer(queryString, "&");
         
         while (st.hasMoreTokens())
         {
@@ -317,7 +314,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 		// in any case it's not mandatory for GetCapabilities
 		if (request.getVersion() == null)
 		{
-			if (!request.getOperation().equalsIgnoreCase("GetCapabilities"))
+			if (request.getOperation() != null && !request.getOperation().equalsIgnoreCase("GetCapabilities"))
 				report.add(new OWSException(OWSException.missing_param_code, "VERSION"));
 		}
 		

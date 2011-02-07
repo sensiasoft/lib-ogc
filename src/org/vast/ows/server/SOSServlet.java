@@ -28,6 +28,8 @@ import java.util.Hashtable;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.GetCapabilitiesRequest;
@@ -60,6 +62,7 @@ import org.w3c.dom.NodeList;
 public abstract class SOSServlet extends OWSServlet
 {
     private static final long serialVersionUID = 6940984824581209178L;
+    private static final Log log = LogFactory.getLog(SOSServlet.class);
     protected OWSUtils owsUtils = new OWSUtils();
     
 	// Table of SOS handlers: 1 for each observation offering
@@ -372,7 +375,7 @@ public abstract class SOSServlet extends OWSServlet
                 throw new OWSException("Invalid KVP Request");
             
             // parse query arguments
-            logger.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
+            log.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
             query = (OWSRequest)owsUtils.readURLQuery(queryString, "SOS");
             
             // setup response stream
@@ -427,7 +430,7 @@ public abstract class SOSServlet extends OWSServlet
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
 	{
 		OWSRequest query = null;
-		logger.info("POST REQUEST from IP " + req.getRemoteAddr());
+		log.info("POST REQUEST from IP " + req.getRemoteAddr());
 		
 		//  get request URL
 		String requestURL = req.getRequestURL().toString();

@@ -40,7 +40,8 @@ import org.vast.ows.wps.WPSException;
 import org.vast.ows.wps.WPSUtils;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
-import org.apache.xml.serialize.XMLSerializer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -58,6 +59,7 @@ import org.apache.xml.serialize.XMLSerializer;
 public abstract class WPSServlet extends OWSServlet
 {
     private static final long serialVersionUID = 6940984824581209178L;
+    private static final Log log = LogFactory.getLog(WPSServlet.class);
     protected OWSUtils owsUtils = new OWSUtils();
 	private WPSUtils wpsUtils;
 	protected DOMHelper describeProcessDomHelper;
@@ -118,7 +120,7 @@ public abstract class WPSServlet extends OWSServlet
                 sendErrorMessage(resp.getOutputStream(), "Invalid request");
             
             // parse query arguments
-            logger.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
+            log.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
             query = (OWSRequest)owsUtils.readURLQuery(queryString, "WPS");
             
             // setup response stream
@@ -178,7 +180,7 @@ public abstract class WPSServlet extends OWSServlet
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
 	{
 		OWSRequest query = null;
-		logger.info("POST REQUEST from IP " + req.getRemoteAddr());
+		log.info("POST REQUEST from IP " + req.getRemoteAddr());
 		
 		//  get request URL
 		String requestURL = req.getRequestURL().toString();

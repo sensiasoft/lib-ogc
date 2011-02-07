@@ -22,7 +22,8 @@ package org.vast.ows.server;
 
 import javax.servlet.http.*;
 import java.io.*;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 
@@ -44,7 +45,7 @@ public abstract class OWSServlet extends HttpServlet
     private static final long serialVersionUID = 4970153267344348035L;
 	protected final static String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
     protected DOMHelper capsHelper;
-    protected Logger logger = Logger.getRootLogger();
+    protected static final Log log = LogFactory.getLog(OWSServlet.class);
     
 
 	// Sends an OWS Service Exception to the user

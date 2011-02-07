@@ -27,6 +27,8 @@ package org.vast.ows.server;
 import javax.servlet.http.*;
 import javax.servlet.*;
 import java.io.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionWriter;
@@ -49,6 +51,7 @@ import org.vast.ows.wms.GetMapRequest;
 public abstract class WMSServlet extends OWSServlet
 {
 	private static final long serialVersionUID = 1265879257871196681L;
+	private static final Log log = LogFactory.getLog(WMSServlet.class);
 	protected OWSUtils owsUtils = new OWSUtils();
 
 
@@ -101,7 +104,8 @@ public abstract class WMSServlet extends OWSServlet
 		{
 			try
 			{
-				resp.sendError(404, internalErrorMsg);
+				resp.sendError(500, internalErrorMsg);
+				log.error(internalErrorMsg, e);
 			}
 			catch (IOException e1)
 			{
