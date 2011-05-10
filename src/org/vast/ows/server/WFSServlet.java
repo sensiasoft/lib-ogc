@@ -27,8 +27,11 @@ import javax.servlet.http.*;
 import javax.servlet.*;
 import java.io.*;
 import java.text.ParseException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSExceptionWriter;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.util.PostRequestFilter;
@@ -53,6 +56,7 @@ import org.vast.xml.DOMHelperException;
 public abstract class WFSServlet extends OWSServlet
 {
 	private static final long serialVersionUID = 1L;
+	private static final Log log = LogFactory.getLog(WFSServlet.class);
 	protected OWSUtils owsUtils = new OWSUtils();
 
 
@@ -96,16 +100,23 @@ public abstract class WFSServlet extends OWSServlet
 			try
 			{
 				resp.setContentType("text/xml");
-				sendErrorMessage(resp.getOutputStream(), e.getMessage());
+				OWSExceptionWriter writer = new OWSExceptionWriter();
+				writer.writeException(resp.getOutputStream(), e);
 			}
 			catch (IOException e1)
 			{
-				e.printStackTrace();
 			}
 		}
 		catch (Exception e)
 		{
-			throw new ServletException(e);
+			try
+			{
+				resp.sendError(500, internalErrorMsg);
+				log.error(internalErrorMsg, e);
+			}
+			catch (IOException e1)
+			{
+			}
 		}
 		finally
 		{
@@ -116,7 +127,6 @@ public abstract class WFSServlet extends OWSServlet
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
 			}
 		}
 	}
@@ -153,11 +163,11 @@ public abstract class WFSServlet extends OWSServlet
 			try
 			{
 				resp.setContentType("text/xml");
-				sendErrorMessage(resp.getOutputStream(), "Invalid request or unrecognized version");
+				OWSExceptionWriter writer = new OWSExceptionWriter();
+				writer.writeException(resp.getOutputStream(), e);
 			}
 			catch (IOException e1)
 			{
-				e.printStackTrace();
 			}
 		}
 		catch (DOMHelperException e)
@@ -168,12 +178,18 @@ public abstract class WFSServlet extends OWSServlet
             }
             catch (IOException e1)
             {
-                e.printStackTrace();
             }
 		}
 		catch (Exception e)
 		{
-			throw new ServletException(internalErrorMsg, e);
+			try
+			{
+				resp.sendError(500, internalErrorMsg);
+				log.error(internalErrorMsg, e);
+			}
+			catch (IOException e1)
+			{
+			}
 		}
 		finally
 		{
@@ -184,7 +200,6 @@ public abstract class WFSServlet extends OWSServlet
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
 			}
 		}
 	}
