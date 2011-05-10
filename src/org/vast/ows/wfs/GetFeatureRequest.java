@@ -48,7 +48,8 @@ public class GetFeatureRequest extends OWSRequest
 	protected Bbox bbox;
 	protected String srs;
 	protected String format;
-	protected List<String> features;
+	protected String typeName;
+	protected List<String> featureIds;
 	protected int maxFeatures;
 
 	
@@ -57,7 +58,7 @@ public class GetFeatureRequest extends OWSRequest
 		service = "WFS";
 		bbox = new Bbox();
 		time = new TimeInfo();
-		features = new ArrayList<String>(2);
+		featureIds = new ArrayList<String>(1);
 	}
 	
 
@@ -85,15 +86,27 @@ public class GetFeatureRequest extends OWSRequest
 	}
 
 
-	public List<String> getFeatures()
+	public String getTypeName()
 	{
-		return features;
+		return typeName;
 	}
 
 
-	public void setFeatures(List<String> layers)
+	public void setTypeName(String typeName)
 	{
-		this.features = layers;
+		this.typeName = typeName;
+	}
+
+
+	public List<String> getFeatureIds()
+	{
+		return featureIds;
+	}
+
+
+	public void setFeatureIds(List<String> fids)
+	{
+		this.featureIds = fids;
 	}
 
 
