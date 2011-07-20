@@ -56,6 +56,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
     protected final static String invalidValue = "Invalid Value for ";
     protected final static String noKVP = "KVP request not supported in ";
     protected final static String noXML = "XML request not supported in ";
+    protected String owsVersion = OWSException.VERSION_10;
     
     
     public abstract RequestType readURLQuery(String queryString) throws OWSException;

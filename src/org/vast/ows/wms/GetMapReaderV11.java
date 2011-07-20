@@ -25,14 +25,9 @@
 
 package org.vast.ows.wms;
 
-import java.awt.Color;
-import java.util.StringTokenizer;
-import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
-import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.w3c.dom.*;
 import org.vast.ows.*;
+import org.vast.xml.DOMHelper;
 
 
 /**
@@ -50,150 +45,15 @@ import org.vast.ows.*;
  * @date Oct 10, 2007
  * @version 1.0
  */
-public class GetMapReaderV11 extends AbstractRequestReader<GetMapRequest>
+public class GetMapReaderV11 extends GetMapReaderV10
 {
 	
+	
 	public GetMapReaderV11()
-	{	
-	}
-
-	
-	@Override
-	public GetMapRequest readURLQuery(String queryString) throws OWSException
 	{
-		GetMapRequest request = new GetMapRequest();
-		StringTokenizer st = new StringTokenizer(queryString, "&");
-		OWSExceptionReport report = new OWSExceptionReport();
-		report.setVersion("1.0");
-		
-        while (st.hasMoreTokens())
-        {
-            String argName = null;
-            String argValue = null;
-            String nextArg = st.nextToken();
-
-            // separate argument name and value
-            try
-            {
-                int sepIndex = nextArg.indexOf('=');
-                argName = nextArg.substring(0, sepIndex);
-                argValue = nextArg.substring(sepIndex + 1);
-            }
-            catch (IndexOutOfBoundsException e)
-            {
-                throw new WMSException(invalidKVP);
-            }
-            
-            try
-			{
-				// service ID
-				if (argName.equalsIgnoreCase("service"))
-				{
-				    request.setService(argValue);
-				}
-				
-				// service version
-				else if (argName.equalsIgnoreCase("version"))
-				{
-				    request.setVersion(argValue);
-				}
-
-				// request argument
-				else if (argName.equalsIgnoreCase("request"))
-				{
-				    request.setOperation(argValue);
-				}
-				
-				// layers argument
-				else if (argName.equalsIgnoreCase("layers"))
-				{
-					String[] layerList = argValue.split(",");
-					request.getLayers().clear();
-					for (int i=0; i<layerList.length; i++)
-					    request.getLayers().add(layerList[i]);
-				}
-				
-				// styles argument
-				else if (argName.equalsIgnoreCase("styles"))
-				{
-					String[] styleList = argValue.split(",");
-					request.getStyles().clear();   
-					for (int i=0; i<styleList.length; i++)
-					    request.getStyles().add(styleList[i]);
-				}
-				
-				// srs
-				else if (argName.equalsIgnoreCase("srs"))
-				{
-				    request.setSrs(argValue);
-				}
-				
-				// bbox
-				else if (argName.equalsIgnoreCase("bbox"))
-				{
-					Bbox bbox = parseBboxArg(argValue);
-					request.setBbox(bbox);
-				}
-				
-				// width
-				else if (argName.equalsIgnoreCase("width"))
-				{
-				    request.setWidth(Integer.parseInt(argValue));
-				    if (request.getWidth() <= 0)
-						throw new IllegalArgumentException();
-				}
-				
-				// height
-				else if (argName.equalsIgnoreCase("height"))
-				{
-				    request.setHeight(Integer.parseInt(argValue));
-				    if (request.getHeight() <= 0)
-				    	throw new IllegalArgumentException();
-				}
-				
-				// format
-				else if (argName.equalsIgnoreCase("format"))
-				{
-				    request.setFormat(argValue);
-				}
-				
-				// transparency
-				else if (argName.equalsIgnoreCase("transparent"))
-				{
-				    request.setTransparent(Boolean.parseBoolean(argValue));
-				}
-								
-				// bgcolor
-				else if (argName.equalsIgnoreCase("bgcolor"))
-				{
-				    request.setBackgroundColor(parseBgColor(argValue));
-				}
-
-				// time
-				else if (argName.equalsIgnoreCase("time"))
-				{
-					TimeInfo time = parseTimeArg(argValue);
-			    	request.setTime(time);
-				}
-				
-				// vendor parameters
-				else
-				{
-				    if (argValue == null)
-				    	argValue = "";
-					request.getExtensions().put(new QName(argName), argValue);
-				}
-			}
-			catch (Exception e)
-			{
-				report.add(new WMSException(OWSException.invalid_param_code, argName.toUpperCase(), argValue, null));
-			}
-        }
-        
-        report.process();
-		return request;
+		this.owsVersion = OWSException.VERSION_11;
 	}
-	
+
 	
 	@Override
 	public GetMapRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
@@ -227,60 +87,7 @@ public class GetMapReaderV11 extends AbstractRequestReader<GetMapRequest>
 		request.setHeight(Integer.parseInt(dom.getElementValue(requestElt, "Output/Size/Height")));
 		request.setExceptionType(dom.getElementValue(requestElt, "Exceptions"));
 		
+		this.checkParameters(request, new OWSExceptionReport(OWSException.VERSION_11));
 		return request;
 	}
-	
-	
-	/**
-	 * Parses background color from RGB hexadecimal string (e.g. 0xA51CFF)
-	 * @param argValue
-	 * @return
-	 */
-	protected Color parseBgColor(String argValue)
-	{
-		argValue.replaceFirst("0x|0X", "");
-		return Color.decode(argValue);
-	}
-	
-	
-	/**
-     * Checks that GetMap mandatory parameters are present
-     * @param request
-     * @throws OWSException
-     */
-    protected void checkParameters(GetMapRequest request, OWSExceptionReport report) throws OWSException
-    {
-    	// check common params
-		super.checkParameters(request, report, OWSUtils.WMS);
-    	
-    	// need layer
-		if (request.getLayers() == null || request.getLayers().isEmpty())
-			report.add(new WMSException(OWSException.missing_param_code, "LAYERS"));
-		
-		// need at least BBOX
-		if (request.getBbox() == null || request.getBbox().isNull())
-			report.add(new WMSException(OWSException.missing_param_code, "BBOX"));
-		
-		// need format
-		if (request.getFormat() == null || request.getFormat().length() == 0)
-			report.add(new WMSException(OWSException.missing_param_code, "FORMAT"));
-		
-		// need SRS
-		if (request.getSrs() == null || request.getSrs().length() == 0)
-			report.add(new WMSException(OWSException.missing_param_code, "SRS"));
-		
-		// need style
-		if (request.getStyles() == null)
-			report.add(new WMSException(OWSException.missing_param_code, "STYLES"));
-		
-		// width is positive
-		if (request.getWidth() <= 0)
-			report.add(new WMSException(OWSException.missing_param_code, "WIDTH"));
-		
-		// height is positive
-		if (request.getHeight() <= 0)
-			report.add(new WMSException(OWSException.missing_param_code, "HEIGHT"));
-		
-		report.process();
-    }
 }
