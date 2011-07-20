@@ -47,6 +47,12 @@ import org.w3c.dom.Element;
  */
 public class DescribeResultAccessReference extends OWSReference
 {
+	public static final String ROLE_RESOURCE = "http://www.opengis.net/spec/SPS/2.0/referenceType/Resource";
+	public static final String ROLE_FOLDER = "http://www.opengis.net/spec/SPS/2.0/referenceType/Folder";
+	public static final String ROLE_SERVICE_KVP = "http://www.opengis.net/spec/SPS/2.0/referenceType/FullURLAccess";
+	public static final String ROLE_SERVICE_POST = "http://www.opengis.net/spec/SPS/2.0/referenceType/FullServiceAccess";
+	public static final String ROLE_SERVICE_ENDPOINT = "http://www.opengis.net/spec/SPS/2.0/referenceType/ServiceURL";
+	
 	
 	public void setDataAccessType(String dataAccessType)
 	{
