@@ -71,36 +71,42 @@ public class DescribeCoverageReaderV11 extends AbstractRequestReader<DescribeCov
                 throw new WCSException(invalidKVP);
             }
             
-            // SERVICE
-            if (argName.equalsIgnoreCase("SERVICE"))
+            try
             {
-                request.setService(argValue);
-            }
-            
-            // VERSION
-            else if (argName.equalsIgnoreCase("VERSION"))
-            {
-                request.setVersion(argValue);
-            }
-
-            // REQUEST
-            else if (argName.equalsIgnoreCase("REQUEST"))
-            {
-                request.setOperation(argValue);
-            }
-            
-            // IDENTIFIER list
-            else if (argName.equalsIgnoreCase("IDENTIFIERS"))
-            {
-                String[] coverageList = argValue.split(",");
-                for (int i=0; i<coverageList.length; i++)
-                	request.getCoverages().add(coverageList[i]);
-            }
-        }
-
-        super.checkParameters(request, report, OWSUtils.WCS);
-        report.process();
-        
+	            // SERVICE
+	            if (argName.equalsIgnoreCase("SERVICE"))
+	            {
+	                request.setService(argValue);
+	            }
+	            
+	            // VERSION
+	            else if (argName.equalsIgnoreCase("VERSION"))
+	            {
+	                request.setVersion(argValue);
+	            }
+	
+	            // REQUEST
+	            else if (argName.equalsIgnoreCase("REQUEST"))
+	            {
+	                request.setOperation(argValue);
+	            }
+	            
+	            // IDENTIFIER list
+	            else if (argName.equalsIgnoreCase("IDENTIFIERS"))
+	            {
+	                String[] coverageList = argValue.split(",");
+	                for (int i=0; i<coverageList.length; i++)
+	                	request.getCoverages().add(coverageList[i]);
+	            }
+	        }
+	        catch (Exception e)
+			{
+				report.add(new WCSException(OWSException.invalid_param_code, argName.toUpperCase(), argValue, null));
+			}
+	    }
+		
+	    report.process();
+	    this.checkParameters(request, report);        
         return request;
 	}
 	
@@ -122,9 +128,27 @@ public class DescribeCoverageReaderV11 extends AbstractRequestReader<DescribeCov
 			request.getCoverages().add(val);
 		}
 		
-		super.checkParameters(request, report, OWSUtils.WCS);
+		this.checkParameters(request, report);
 		report.process();
 		
 		return request;
+	}
+	
+	
+	/**
+     * Checks that DescribeCoverage mandatory parameters are present
+     * @param request
+     * @throws OWSException
+     */
+	protected void checkParameters(DescribeCoverageRequest request, OWSExceptionReport report) throws OWSException
+    {
+		// check common params
+		super.checkParameters(request, report, OWSUtils.WCS);
+		
+		// need at least one identifier
+		if (request.getCoverages().isEmpty())
+			report.add(new OWSException(OWSException.missing_param_code, "identifiers"));
+		
+		report.process();
 	}
 }

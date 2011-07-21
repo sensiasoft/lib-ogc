@@ -84,173 +84,181 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
                 throw new WCSException(invalidKVP);
             }
             
-            // SERVICE
-            if (argName.equalsIgnoreCase("SERVICE"))
-            {
-                request.setService(argValue);
-            }
-            
-            // VERSION
-            else if (argName.equalsIgnoreCase("VERSION"))
-            {
-                request.setVersion(argValue);
-            }
-
-            // REQUEST
-            else if (argName.equalsIgnoreCase("REQUEST"))
-            {
-                request.setOperation(argValue);
-            }
-            
-            // COVERAGE
-            else if (argName.equalsIgnoreCase("COVERAGE"))
-            {
-                request.setCoverage(argValue);
-            }
-            
-            // TIME period or time list
-            else if (argName.equalsIgnoreCase("TIME"))
-            {
-                String[] timeList = argValue.split(",");
-                for (int i=0; i<timeList.length; i++)
-                {
-                	TimeInfo newTime = parseTimeArg(timeList[i]);
-                	request.getTimes().add(newTime);
-                }
-            }
-            
-            // BBOX
-            else if (argName.equalsIgnoreCase("BBOX"))
-            {
-            	Bbox bbox = parseBboxArg(argValue);
-                request.setBbox(bbox);
-                if (crs != null)
-                	bbox.setCrs(crs);
-            }
-            
-            // CRS
-            else if (argName.equalsIgnoreCase("CRS"))
-            {
-            	Bbox bbox = request.getBbox();
-            	if (bbox != null)
-            		bbox.setCrs(argValue);
-            	else
-            		crs = argValue;
-            }
-            
-            // RESPONSE_CRS
-            else if (argName.equalsIgnoreCase("RESPONSE_CRS"))
-            {
-            	request.getGridCrs().setBaseCrs(argValue);
-            }
-            
-            // RESX
-            else if (argName.equalsIgnoreCase("RESX"))
-            {
-                try
-				{
-					double resX = Double.parseDouble(argValue);
-					request.setResX(resX);
-				}
-				catch (NumberFormatException e)
-				{
-					throw new WCSException(invalidKVP + ": Invalid value for RESX: " + argValue);
-				}
-            }
-            
-            // RESY
-            else if (argName.equalsIgnoreCase("RESY"))
-            {
-                try
-				{
-					double resY = Double.parseDouble(argValue);
-					request.setResY(resY);
-				}
-				catch (NumberFormatException e)
-				{
-					throw new WCSException(invalidKVP + ": Invalid value for RESY: " + argValue);
-				}
-            }
-            
-            // RESZ
-            else if (argName.equalsIgnoreCase("RESZ"))
-            {
-                try
-				{
-					double resZ = Double.parseDouble(argValue);
-					request.setResZ(resZ);
-				}
-				catch (NumberFormatException e)
-				{
-					throw new WCSException(invalidKVP + ": Invalid value for RESZ: " + argValue);
-				}
-            }
-            
-            // WIDTH
-            else if (argName.equalsIgnoreCase("WIDTH"))
-            {
-                try
-				{
-					int width = Integer.parseInt(argValue);
-					request.setWidth(width);
-				}
-				catch (NumberFormatException e)
-				{
-					throw new WCSException(invalidKVP + ": Invalid value for WIDTH: " + argValue);
-				}
-            }
-            
-            // HEIGHT
-            else if (argName.equalsIgnoreCase("HEIGHT"))
-            {
-                try
-				{
-					int height = Integer.parseInt(argValue);
-					request.setHeight(height);
-				}
-				catch (NumberFormatException e)
-				{
-					throw new WCSException(invalidKVP + ": Invalid value for HEIGHT: " + argValue);
-				}
-            }
-            
-            // DEPTH
-            else if (argName.equalsIgnoreCase("DEPTH"))
-            {
-                try
-				{
-					int depth = Integer.parseInt(argValue);
-					request.setDepth(depth);
-				}
-				catch (NumberFormatException e)
-				{
-					throw new WCSException(invalidKVP + ": Invalid value for DEPTH: " + argValue);
-				}
-            }
-            
-            // INTERPOLATION
-            else if (argName.equalsIgnoreCase("INTERPOLATION"))
-            {
-                request.getFieldSubsets().get(0).setInterpolationMethod(argValue);
-            }
-            
-            // FORMAT
-            else if (argName.equalsIgnoreCase("FORMAT"))
-            {
-                request.setFormat(argValue);
-            }
-            
-            // EXCEPTIONS
-            else if (argName.equalsIgnoreCase("EXCEPTIONS"))
-            {
-                request.setExceptionType(argValue);
-            }
-            
-            // other axis subsets and vendor specific parameters
-            else
-            	addKVPExtension(argName, argValue, request);
+            try
+			{
+	            // SERVICE
+	            if (argName.equalsIgnoreCase("SERVICE"))
+	            {
+	                request.setService(argValue);
+	            }
+	            
+	            // VERSION
+	            else if (argName.equalsIgnoreCase("VERSION"))
+	            {
+	                request.setVersion(argValue);
+	            }
+	
+	            // REQUEST
+	            else if (argName.equalsIgnoreCase("REQUEST"))
+	            {
+	                request.setOperation(argValue);
+	            }
+	            
+	            // COVERAGE
+	            else if (argName.equalsIgnoreCase("COVERAGE"))
+	            {
+	                request.setCoverage(argValue);
+	            }
+	            
+	            // TIME period or time list
+	            else if (argName.equalsIgnoreCase("TIME"))
+	            {
+	                String[] timeList = argValue.split(",");
+	                for (int i=0; i<timeList.length; i++)
+	                {
+	                	TimeInfo newTime = parseTimeArg(timeList[i]);
+	                	request.getTimes().add(newTime);
+	                }
+	            }
+	            
+	            // BBOX
+	            else if (argName.equalsIgnoreCase("BBOX"))
+	            {
+	            	Bbox bbox = parseBboxArg(argValue);
+	                request.setBbox(bbox);
+	                if (crs != null)
+	                	bbox.setCrs(crs);
+	            }
+	            
+	            // CRS
+	            else if (argName.equalsIgnoreCase("CRS"))
+	            {
+	            	Bbox bbox = request.getBbox();
+	            	if (bbox != null)
+	            		bbox.setCrs(argValue);
+	            	else
+	            		crs = argValue;
+	            }
+	            
+	            // RESPONSE_CRS
+	            else if (argName.equalsIgnoreCase("RESPONSE_CRS"))
+	            {
+	            	request.getGridCrs().setBaseCrs(argValue);
+	            }
+	            
+	            // RESX
+	            else if (argName.equalsIgnoreCase("RESX"))
+	            {
+	                try
+					{
+						double resX = Double.parseDouble(argValue);
+						request.setResX(resX);
+					}
+					catch (NumberFormatException e)
+					{
+						throw new WCSException(invalidKVP + ": Invalid value for RESX: " + argValue);
+					}
+	            }
+	            
+	            // RESY
+	            else if (argName.equalsIgnoreCase("RESY"))
+	            {
+	                try
+					{
+						double resY = Double.parseDouble(argValue);
+						request.setResY(resY);
+					}
+					catch (NumberFormatException e)
+					{
+						throw new WCSException(invalidKVP + ": Invalid value for RESY: " + argValue);
+					}
+	            }
+	            
+	            // RESZ
+	            else if (argName.equalsIgnoreCase("RESZ"))
+	            {
+	                try
+					{
+						double resZ = Double.parseDouble(argValue);
+						request.setResZ(resZ);
+					}
+					catch (NumberFormatException e)
+					{
+						throw new WCSException(invalidKVP + ": Invalid value for RESZ: " + argValue);
+					}
+	            }
+	            
+	            // WIDTH
+	            else if (argName.equalsIgnoreCase("WIDTH"))
+	            {
+	                try
+					{
+						int width = Integer.parseInt(argValue);
+						request.setWidth(width);
+					}
+					catch (NumberFormatException e)
+					{
+						throw new WCSException(invalidKVP + ": Invalid value for WIDTH: " + argValue);
+					}
+	            }
+	            
+	            // HEIGHT
+	            else if (argName.equalsIgnoreCase("HEIGHT"))
+	            {
+	                try
+					{
+						int height = Integer.parseInt(argValue);
+						request.setHeight(height);
+					}
+					catch (NumberFormatException e)
+					{
+						throw new WCSException(invalidKVP + ": Invalid value for HEIGHT: " + argValue);
+					}
+	            }
+	            
+	            // DEPTH
+	            else if (argName.equalsIgnoreCase("DEPTH"))
+	            {
+	                try
+					{
+						int depth = Integer.parseInt(argValue);
+						request.setDepth(depth);
+					}
+					catch (NumberFormatException e)
+					{
+						throw new WCSException(invalidKVP + ": Invalid value for DEPTH: " + argValue);
+					}
+	            }
+	            
+	            // INTERPOLATION
+	            else if (argName.equalsIgnoreCase("INTERPOLATION"))
+	            {
+	                request.getFieldSubsets().get(0).setInterpolationMethod(argValue);
+	            }
+	            
+	            // FORMAT
+	            else if (argName.equalsIgnoreCase("FORMAT"))
+	            {
+	                request.setFormat(argValue);
+	            }
+	            
+	            // EXCEPTIONS
+	            else if (argName.equalsIgnoreCase("EXCEPTIONS"))
+	            {
+	                request.setExceptionType(argValue);
+	            }
+	            
+	            // other axis subsets and vendor specific parameters
+	            else
+	            	addKVPExtension(argName, argValue, request);
+			}
+            catch (Exception e)
+			{
+				report.add(new WCSException(OWSException.invalid_param_code, argName.toUpperCase(), argValue, null));
+			}
         }
 		
+        report.process();
         this.checkParameters(request, report);
         return request;
 	}
@@ -473,7 +481,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 				report.add(new OWSException(OWSException.missing_param_code, "CRS"));
 			
 			// copy crs to responseCrs if needed
-			else if (request.getGridCrs().getBaseCrs() == null && request.getBbox() != null)
+			else if (request.getGridCrs().getBaseCrs() == null)
 				request.getGridCrs().setBaseCrs(request.getBbox().getCrs());
 		}
 		

@@ -91,9 +91,9 @@ public class WCSException extends OWSException
 	{
 		// otherwise build generic message
 		if (this.code == invalid_coverage_code)
-			return invalid_coverage_text + ((badValue == null) ? "" : " = " + badValue);
+			return invalid_coverage_text + ((badValue == null) ? "" : badValue);
 		else if (this.code == invalid_format_code)
-			return invalid_format_text + ((badValue == null) ? "" : " = " + badValue);
+			return invalid_format_text + ((badValue == null) ? "" : badValue);
 		else
 			return super.getMessage();
 	}

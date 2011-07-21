@@ -66,7 +66,7 @@ public class OWSExceptionReport extends OWSException
 	public OWSExceptionReport(OWSException e)
 	{
 		this();
-		this.version = e.version;
+		e.version = version;
 		exceptionList.add(e);
 	}
 	

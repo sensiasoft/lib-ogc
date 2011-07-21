@@ -43,6 +43,7 @@ import org.vast.xml.DOMHelperException;
 public abstract class OWSServlet extends HttpServlet
 {
     private static final long serialVersionUID = 4970153267344348035L;
+    protected final static String XML_MIME_TYPE = "text/xml";
 	protected final static String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
     protected DOMHelper capsHelper;
     protected static final Log log = LogFactory.getLog(OWSServlet.class);

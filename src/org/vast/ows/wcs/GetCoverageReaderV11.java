@@ -82,98 +82,106 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
                 throw new WCSException(invalidKVP);
             }
             
-            // service
-            if (argName.equalsIgnoreCase("service"))
-            {
-                request.setService(argValue);
-            }
-            
-            // version
-            else if (argName.equalsIgnoreCase("version"))
-            {
-                request.setVersion(argValue);
-            }
-
-            // request
-            else if (argName.equalsIgnoreCase("request"))
-            {
-                request.setOperation(argValue);
-            }
-            
-            // Coverage Identifier
-            else if (argName.equalsIgnoreCase("identifier"))
-            {
-                request.setCoverage(argValue);
-            }
-            
-            // Sequence of time periods or instants
-            else if (argName.equalsIgnoreCase("TimeSequence"))
-            {
-            	String[] timeList = argValue.split(",");
-                for (int i=0; i<timeList.length; i++)
-                {
-                	TimeInfo newTime = parseTimeArg(timeList[i]);
-                	request.getTimes().add(newTime);
-                }
-            }
-            
-            // BoundingBox + integrated CRS
-            else if (argName.equalsIgnoreCase("BoundingBox"))
-            {
-            	Bbox bbox = parseBboxArg(argValue);
-                request.setBbox(bbox);
-            }
-            
-            // RangeSubset
-            else if (argName.equalsIgnoreCase("RangeSubset"))
-            {
-            	this.parseRangeSubset(request, argValue);
-            }
-            
-            // GridBaseCRS
-            else if (argName.equalsIgnoreCase("GridBaseCRS"))
-            {
-            	request.getGridCrs().setBaseCrs(argValue);
-            }
-            
-            // GridCS
-            else if (argName.equalsIgnoreCase("GridCS"))
-            {
-            	request.getGridCrs().setGridCs(argValue);
-            }
-            
-            // GridType
-            else if (argName.equalsIgnoreCase("GridType"))
-            {
-            	request.getGridCrs().setGridType(argValue);
-            }
-            
-            // GridOrigin
-            else if (argName.equalsIgnoreCase("GridOrigin"))
-            {
-            	double[] origin = parseVector(argValue);
-            	request.getGridCrs().setGridDimension(origin.length);
-            	request.getGridCrs().setGridOrigin(origin);
-            }
-            
-            // GridOffsets
-            else if (argName.equalsIgnoreCase("GridOffsets"))
-            {
-            	double[][] vectors = WCSCommonReaderV11.parseGridOffsets(argValue);
-            	request.getGridCrs().setGridOffsets(vectors);
-            }
-            
-            // format
-            else if (argName.equalsIgnoreCase("format"))
-            {
-                request.setFormat(argValue);
-            }
-            
-            // other axis subsets and vendor specific parameters
-            else
-            	addKVPExtension(argName, argValue, request);
+            try
+			{
+	            // service
+	            if (argName.equalsIgnoreCase("service"))
+	            {
+	                request.setService(argValue);
+	            }
+	            
+	            // version
+	            else if (argName.equalsIgnoreCase("version"))
+	            {
+	                request.setVersion(argValue);
+	            }
+	
+	            // request
+	            else if (argName.equalsIgnoreCase("request"))
+	            {
+	                request.setOperation(argValue);
+	            }
+	            
+	            // Coverage Identifier
+	            else if (argName.equalsIgnoreCase("identifier"))
+	            {
+	                request.setCoverage(argValue);
+	            }
+	            
+	            // Sequence of time periods or instants
+	            else if (argName.equalsIgnoreCase("TimeSequence"))
+	            {
+	            	String[] timeList = argValue.split(",");
+	                for (int i=0; i<timeList.length; i++)
+	                {
+	                	TimeInfo newTime = parseTimeArg(timeList[i]);
+	                	request.getTimes().add(newTime);
+	                }
+	            }
+	            
+	            // BoundingBox + integrated CRS
+	            else if (argName.equalsIgnoreCase("BoundingBox"))
+	            {
+	            	Bbox bbox = parseBboxArg(argValue);
+	                request.setBbox(bbox);
+	            }
+	            
+	            // RangeSubset
+	            else if (argName.equalsIgnoreCase("RangeSubset"))
+	            {
+	            	this.parseRangeSubset(request, argValue);
+	            }
+	            
+	            // GridBaseCRS
+	            else if (argName.equalsIgnoreCase("GridBaseCRS"))
+	            {
+	            	request.getGridCrs().setBaseCrs(argValue);
+	            }
+	            
+	            // GridCS
+	            else if (argName.equalsIgnoreCase("GridCS"))
+	            {
+	            	request.getGridCrs().setGridCs(argValue);
+	            }
+	            
+	            // GridType
+	            else if (argName.equalsIgnoreCase("GridType"))
+	            {
+	            	request.getGridCrs().setGridType(argValue);
+	            }
+	            
+	            // GridOrigin
+	            else if (argName.equalsIgnoreCase("GridOrigin"))
+	            {
+	            	double[] origin = parseVector(argValue);
+	            	request.getGridCrs().setGridDimension(origin.length);
+	            	request.getGridCrs().setGridOrigin(origin);
+	            }
+	            
+	            // GridOffsets
+	            else if (argName.equalsIgnoreCase("GridOffsets"))
+	            {
+	            	double[][] vectors = WCSCommonReaderV11.parseGridOffsets(argValue);
+	            	request.getGridCrs().setGridOffsets(vectors);
+	            }
+	            
+	            // format
+	            else if (argName.equalsIgnoreCase("format"))
+	            {
+	                request.setFormat(argValue);
+	            }
+	            
+	            // other axis subsets and vendor specific parameters
+	            else
+	            	addKVPExtension(argName, argValue, request);
+			}
+            catch (Exception e)
+			{
+				report.add(new WCSException(OWSException.invalid_param_code, argName.toUpperCase(), argValue, null));
+			}
         }
 		
+        report.process();
         this.checkParameters(request, report);
         return request;
 	}
@@ -307,7 +315,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 				field.getAxisSubsets().add(axisSubset);
 				
 				// title, abstract elts
-				owsReader.readIdentification(dom, axisElt, axisSubset);
+				axisSubset.setIdentifier(dom.getElementValue(axisElt, "Identifier"));
 				
 				// keys
 				NodeList keyElts = dom.getElements(axisElt, "Key");

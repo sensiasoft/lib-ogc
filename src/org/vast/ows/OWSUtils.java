@@ -409,6 +409,20 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     
     /**
+     * Helper method to write OWS exception reports
+     * @param os
+     * @param e
+     */
+    public void writeXMLException(OutputStream os, String serviceType, String version, OWSException e)
+    {
+    	OWSExceptionWriter writer = new OWSExceptionWriter();
+    	String owsVersion = OGCRegistry.getOWSVersion(serviceType, version);
+    	e.setVersion(owsVersion);    	
+		writer.writeException(os, e);
+    }
+    
+    
+    /**
      * Helper method to send any OWS request to the server URL using GET
      * @param request OWSQuery object
      * @param usePost true if using POST

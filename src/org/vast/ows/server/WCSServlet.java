@@ -26,17 +26,19 @@ import javax.servlet.*;
 import java.io.*;
 import java.text.ParseException;
 import java.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
+import org.vast.ows.util.PostRequestFilter;
 import org.vast.ows.wcs.DescribeCoverageRequest;
 import org.vast.ows.wcs.GetCoverageRequest;
 import org.vast.ows.wcs.WCSException;
 import org.vast.util.*;
+import org.vast.xml.DOMHelper;
 
-
-//import org.vast.io.xml.*;
 
 /**
  * <p>Title: WCSServlet</p>
@@ -52,24 +54,13 @@ import org.vast.util.*;
 public abstract class WCSServlet extends OWSServlet
 {
     private static final long serialVersionUID = 7155979257491196521L;
+    private static final Log log = LogFactory.getLog(WCSServlet.class);
+    protected String DEFAULT_VERSION = "1.0";
     protected OWSUtils owsUtils = new OWSUtils();
     
 	// Table of WCS handlers: 1 for each coverage offering
     protected Hashtable<String, WCSHandler> dataSetHandlers = new Hashtable<String, WCSHandler>();
         
-
-    // Sends an XML Exception to the user
-    protected void sendErrorMessage(OutputStream resp, String message)
-    {
-        PrintWriter buffer = new PrintWriter(resp);
-        buffer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        buffer.println("<ServiceException>");
-        buffer.println("\t" + message);
-        buffer.println("</ServiceException>");
-        buffer.flush();
-        buffer.close();
-        //this.log(message);
-    }
 
 
     protected void processQuery(GetCapabilitiesRequest query) throws Exception
@@ -124,38 +115,51 @@ public abstract class WCSServlet extends OWSServlet
      */
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException
     {
-        // parse query arguments
-        try
+        String version = DEFAULT_VERSION;
+    	try
         {
-	        //this.log("GET REQUEST: " + query + " from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
 	        OWSRequest query = (OWSRequest) owsUtils.readURLQuery(req.getQueryString());
+	        version = query.getVersion();
 	        query.setHttpRequest(req);
             query.setHttpResponse(resp);
-	        resp.setContentType("text/xml");
-	        
+	        	        
 	        if (query instanceof GetCapabilitiesRequest)
+	        {
+	        	resp.setContentType(XML_MIME_TYPE);
 	        	processQuery((GetCapabilitiesRequest)query);
-	        else if (query instanceof GetCoverageRequest)
-	        	processQuery((GetCoverageRequest)query);
+	        }
 	        else if (query instanceof DescribeCoverageRequest)
+	        {
+	        	resp.setContentType(XML_MIME_TYPE);
 	        	processQuery((DescribeCoverageRequest)query);
+	        }
+	        else if (query instanceof GetCoverageRequest)
+	        {
+	        	processQuery((GetCoverageRequest)query);
+	        }	        
         }
         catch (OWSException e)
-        {
-            try
-            {
-                resp.setContentType("text/xml");
-                sendErrorMessage(resp.getOutputStream(), e.getMessage());
-            }
-            catch (IOException e1)
-            {
-                e.printStackTrace();
-            }
-        }
-        catch (Exception e)
-        {
-        	throw new ServletException(e);
-        }
+		{
+			try
+			{
+				resp.setContentType(XML_MIME_TYPE);
+				owsUtils.writeXMLException(resp.getOutputStream(), OWSUtils.WCS, version, e);
+			}
+			catch (IOException e1)
+			{
+			}
+		}
+		catch (Exception e)
+		{
+			try
+			{
+				resp.sendError(500, internalErrorMsg);
+				log.error(internalErrorMsg, e);
+			}
+			catch (IOException e1)
+			{
+			}
+		}
         finally
         {
             try
@@ -176,11 +180,65 @@ public abstract class WCSServlet extends OWSServlet
      */
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
     {
-        //WCSQuery queryInfo = new WCSQuery();
-        this.log("POST REQUEST from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
-
-        /** Your code **/
-        /** Should parse request and call processQuery(queryInfo) **/
+    	String version = DEFAULT_VERSION;
+    	try
+        {
+    		InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
+            DOMHelper dom = new DOMHelper(xmlRequest, false);
+            OWSRequest query = (OWSRequest)owsUtils.readXMLQuery(dom, dom.getBaseElement());
+	        query.setHttpRequest(req);
+            query.setHttpResponse(resp);
+	        version = query.getVersion();
+	        
+	        if (query instanceof GetCapabilitiesRequest)
+	        {
+	        	resp.setContentType(XML_MIME_TYPE);
+	        	processQuery((GetCapabilitiesRequest)query);
+	        }
+	        else if (query instanceof DescribeCoverageRequest)
+	        {
+	        	resp.setContentType(XML_MIME_TYPE);
+	        	processQuery((DescribeCoverageRequest)query);
+	        }
+	        else if (query instanceof GetCoverageRequest)
+	        {
+	        	processQuery((GetCoverageRequest)query);
+	        }	        
+        }
+        catch (OWSException e)
+		{
+			try
+			{
+				resp.setContentType(XML_MIME_TYPE);
+				owsUtils.writeXMLException(resp.getOutputStream(), OWSUtils.WCS, version, e);
+			}
+			catch (IOException e1)
+			{
+			}
+		}
+		catch (Exception e)
+		{
+			try
+			{
+				resp.sendError(500, internalErrorMsg);
+				log.error(internalErrorMsg, e);
+			}
+			catch (IOException e1)
+			{
+			}
+		}
+        finally
+        {
+            try
+            {
+                resp.getOutputStream().flush();
+                resp.getOutputStream().close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
 

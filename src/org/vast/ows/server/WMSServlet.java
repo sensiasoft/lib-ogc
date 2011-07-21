@@ -130,9 +130,6 @@ public abstract class WMSServlet extends OWSServlet
 	 */
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
 	{
-		//WCSQuery queryInfo = new WCSQuery();
-		//this.log("POST REQUEST from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
-		/** Your code **/
-		/** Should parse request and call processQuery(queryInfo) **/
+		// TODO parse WMS xml request
 	}
 }
