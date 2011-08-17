@@ -125,9 +125,9 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 	            else if (argName.equalsIgnoreCase("BBOX"))
 	            {
 	            	Bbox bbox = parseBboxArg(argValue);
-	                request.setBbox(bbox);
 	                if (crs != null)
 	                	bbox.setCrs(crs);
+	                request.setBbox(bbox);
 	            }
 	            
 	            // CRS
@@ -135,9 +135,12 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 	            {
 	            	Bbox bbox = request.getBbox();
 	            	if (bbox != null)
+	            	{
 	            		bbox.setCrs(argValue);
+	            		request.setBbox(bbox);
+	            	}
 	            	else
-	            		crs = argValue;
+	            		crs = argValue;	            	
 	            }
 	            
 	            // RESPONSE_CRS

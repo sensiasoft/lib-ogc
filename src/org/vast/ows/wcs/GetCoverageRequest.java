@@ -46,15 +46,17 @@ import org.vast.util.TimeInfo;
 public class GetCoverageRequest extends OWSRequest
 {
     protected String coverage;
-	protected String format;	
-	protected Bbox bbox;
+	protected String format;
+	protected List<DimensionSubset> dimensionSubsets;
+	protected List<FieldSubset> fieldSubsets;
+	
+	// old stuffs for WCS 1.0 & 1.1
 	protected int width, height, depth;
 	protected int skipX, skipY, skipZ;
 	protected WCSRectifiedGridCrs gridCrs;
 	protected boolean store;
 	protected boolean useResolution;
-	protected List<FieldSubset> fieldSubsets;
-	protected List<TimeInfo> times;
+	
 		
 	
 	public GetCoverageRequest()
@@ -62,8 +64,9 @@ public class GetCoverageRequest extends OWSRequest
         service = "WCS";
         operation = "GetCoverage";
         
+        dimensionSubsets = new ArrayList<DimensionSubset>();
         fieldSubsets = new ArrayList<FieldSubset>();
-        times = new ArrayList<TimeInfo>();
+
         gridCrs = new WCSRectifiedGridCrs();
         
         width = height = depth = -1;
@@ -85,36 +88,107 @@ public class GetCoverageRequest extends OWSRequest
 	
 	public Bbox getBbox()
 	{
+		Bbox bbox = new Bbox();
+		
+		for (DimensionSubset range: dimensionSubsets)
+		{
+			String axisName = range.getAxis();
+			
+			if (axisName.equals(DimensionSubset.X))
+			{
+				bbox.setMinX(range.getMin());
+				bbox.setMaxX(range.getMax());
+				bbox.setCrs(range.getCrs());
+			}
+			
+			else if (axisName.equals(DimensionSubset.Y))
+			{
+				bbox.setMinY(range.getMin());
+				bbox.setMaxY(range.getMax());
+			}
+			
+			else if (axisName.equals(DimensionSubset.Z))
+			{
+				bbox.setMinZ(range.getMin());
+				bbox.setMaxZ(range.getMax());
+			}
+		}
+		
+		if (bbox.isNull())
+			return null;
+		
 		return bbox;
 	}
 
 
 	public void setBbox(Bbox bbox)
 	{
-		this.bbox = bbox;
+		String crs = bbox.getCrs();
+		
+		if (!Double.isNaN(bbox.getMinX()))
+			dimensionSubsets.add(new DimensionSubset(crs, DimensionSubset.X, bbox.getMinX(), bbox.getMaxX()));
+		
+		if (!Double.isNaN(bbox.getMinY()))
+			dimensionSubsets.add(new DimensionSubset(crs, DimensionSubset.Y, bbox.getMinY(), bbox.getMaxY()));
+		
+		if (!Double.isNaN(bbox.getMinZ()))
+			dimensionSubsets.add(new DimensionSubset(crs, DimensionSubset.Z, bbox.getMinZ(), bbox.getMaxZ()));
 	}
 	
 	
 	public TimeInfo getTime()
 	{
-		if (times.isEmpty())
-			return null;
-		return times.get(0);
+		for (DimensionSubset range: dimensionSubsets)
+		{
+			String axisName = range.getAxis();
+			
+			if (axisName.equals(DimensionSubset.T))
+			{
+				TimeInfo timeInfo = new TimeInfo();
+				timeInfo.setStartTime(range.getMin());
+				timeInfo.setStopTime(range.getMax());
+				return timeInfo;
+			}
+		}
+		
+		return null;
 	}
 	
 	
 	public void setTime(TimeInfo time)
 	{
-		this.times.add(time);
+		if (!time.isNull())
+			dimensionSubsets.add(new DimensionSubset(DimensionSubset.T, time.getStartTime(), time.getStopTime()));
 	}
 
 
 	public List<TimeInfo> getTimes()
 	{
+		ArrayList<TimeInfo> times = new ArrayList<TimeInfo>();
+		
+		for (DimensionSubset range: dimensionSubsets)
+		{
+			String axisName = range.getAxis();
+			
+			if (axisName.equals(DimensionSubset.T))
+			{
+				TimeInfo timeInfo = new TimeInfo();
+				timeInfo.setStartTime(range.getMin());
+				timeInfo.setStopTime(range.getMax());
+				times.add(timeInfo);
+			}
+		}
+		
 		return times;
 	}
 
 
+	public List<DimensionSubset> getDimensionSubsets()
+	{
+		return dimensionSubsets;
+	}
+	
+	
 	public List<FieldSubset> getFieldSubsets()
 	{
 		return fieldSubsets;
