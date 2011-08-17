@@ -50,7 +50,7 @@ public class GetFeatureRequest extends OWSRequest
 	protected String format;
 	protected String typeName;
 	protected List<String> featureIds;
-	protected int maxFeatures;
+	protected int maxFeatures = Integer.MAX_VALUE;
 
 	
 	public GetFeatureRequest()
