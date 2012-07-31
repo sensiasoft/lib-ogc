@@ -24,6 +24,7 @@ import java.util.*;
 import org.vast.ows.OWSRequest;
 import org.vast.util.Bbox;
 import org.vast.util.TimeInfo;
+import org.vast.xml.QName;
 
 
 /**
@@ -47,24 +48,30 @@ public class GetObservationRequest extends OWSRequest
     {
         INLINE, ATTACHED, OUT_OF_BAND, RESULT_TEMPLATE, RESULT_ONLY
     }
-    
-    protected String offering;
+        
+	protected List<String> procedures;
+	protected List<String> offerings;
+	protected List<String> observables;
+	protected List<String> fois;
+	
 	protected TimeInfo time;
 	protected Bbox bbox;
-	protected String foiId;
+	protected QName temporalProperty;
+	protected QName spatialProperty;
+		
     protected String format;
     protected String resultModel;
-    protected ResponseMode responseMode;
-	protected List<String> observables;
-	protected List<String> procedures;
-
+	protected ResponseMode responseMode;
+	
 	
 	public GetObservationRequest()
 	{
 		service = "SOS";
 		operation = "GetObservation";
-		observables = new ArrayList<String>(2);
 		procedures = new ArrayList<String>(2);
+		offerings = new ArrayList<String>(2);
+		observables = new ArrayList<String>(2);
+		fois = new ArrayList<String>(2);
 		bbox = new Bbox();
 		time = new TimeInfo();
 	}
@@ -84,25 +91,28 @@ public class GetObservationRequest extends OWSRequest
 
 	public String getOffering()
 	{
-		return offering;
+		if (offerings.size() == 0)
+		    return null;
+		else
+		    return offerings.get(0);
 	}
 
 
 	public void setOffering(String offering)
 	{
-		this.offering = offering;
+		this.offerings.add(offering);
 	}
 	
 	
-	public List<String> getObservables()
+	public List<String> getOfferings()
+    {
+        return offerings;
+    }
+
+
+    public List<String> getObservables()
 	{
 		return observables;
-	}
-
-
-	public void setObservables(List<String> observables)
-	{
-		this.observables = observables;
 	}
 
 
@@ -112,13 +122,13 @@ public class GetObservationRequest extends OWSRequest
 	}
 
 
-	public void setProcedures(List<String> procedures)
-	{
-		this.procedures = procedures;
-	}
+	public List<String> getFois()
+    {
+        return fois;
+    }
 
 
-	public TimeInfo getTime()
+    public TimeInfo getTime()
 	{
 		return time;
 	}
@@ -130,7 +140,19 @@ public class GetObservationRequest extends OWSRequest
 	}	
 
 
-	public Bbox getBbox()
+	public QName getTemporalProperty()
+    {
+        return temporalProperty;
+    }
+
+
+    public void setTemporalProperty(QName temporalProperty)
+    {
+        this.temporalProperty = temporalProperty;
+    }
+
+
+    public Bbox getBbox()
 	{
 		return bbox;
 	}
@@ -142,6 +164,18 @@ public class GetObservationRequest extends OWSRequest
 	}
 
 
+    public QName getSpatialProperty()
+    {
+        return spatialProperty;
+    }
+
+
+    public void setSpatialProperty(QName spatialProperty)
+    {
+        this.spatialProperty = spatialProperty;
+    }
+
+    
     public ResponseMode getResponseMode()
     {
         return responseMode;
