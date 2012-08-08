@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:GetResult service="SOS" version="2.0.0" xsi:schemaLocation="http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sos.xsd" xmlns:sos="http://www.opengis.net/sos/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<!--identifier of an observed property-->
+	<sos:offering>urn:nga:datasets:off1</sos:offering>	
+	
+	<!--identifier of an observed property-->
+	<sos:observedProperty>urn:nga:video</sos:observedProperty>
+
+    <sos:spatialFilter>
+      <fes:Within>
+         <fes:ValueReference>om:featureOfInterest/sams:SF_SpatialSamplingFeature/sams:shape</fes:ValueReference>
+         <gml:Polygon gml:id="Muenster" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:exterior>
+               <gml:LinearRing>
+                  <gml:posList>
+                    52.90 7.52 52.92 7.51 52.96 7.54 52.90 7.52
+                  </gml:posList>
+               </gml:LinearRing>
+            </gml:exterior>
+         </gml:Polygon>
+      </fes:Within>
+    </sos:spatialFilter>
+    
+</sos:GetResult>
