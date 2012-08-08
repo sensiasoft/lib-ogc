@@ -22,6 +22,8 @@ package org.vast.ows.sos;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.opengis.filter.spatial.BinarySpatialOperator;
+import org.opengis.filter.temporal.BinaryTemporalOperator;
 import org.vast.ows.OWSRequest;
 import org.vast.util.Bbox;
 import org.vast.util.TimeInfo;
@@ -44,94 +46,141 @@ import org.vast.util.TimeInfo;
 public class GetResultRequest extends OWSRequest
 {
     protected String offering;
-	protected TimeInfo time;
-	protected Bbox bbox;
-	protected String foiId;
+    protected List<String> procedures;
+    protected List<String> observables;
+    protected List<String> foiIDs;
+    protected BinaryTemporalOperator temporalFilter;
+    protected BinarySpatialOperator spatialFilter;
     protected String format;
-	protected List<String> observables;
-	protected List<String> procedures;
-
+    protected boolean xmlWrapper;
+    
 	
 	public GetResultRequest()
 	{
 		service = "SOS";
 		operation = "GetResult";
-		observables = new ArrayList<String>(2);
 		procedures = new ArrayList<String>(2);
-		bbox = new Bbox();
-		time = new TimeInfo();
-	}
-	
-	
-	public String getFormat()
-	{
-		return format;
-	}
-
-
-	public void setFormat(String format)
-	{
-		this.format = format;
+        observables = new ArrayList<String>(2);
+        foiIDs = new ArrayList<String>(2);
 	}
 
 
 	public String getOffering()
-	{
-		return offering;
-	}
+    {
+        return offering;
+    }
 
 
-	public void setOffering(String offering)
-	{
-		this.offering = offering;
-	}
-	
-	
-	public List<String> getObservables()
-	{
-		return observables;
-	}
+    public void setOffering(String offering)
+    {
+        this.offering = offering;
+    }
 
 
-	public void setObservables(List<String> observables)
-	{
-		this.observables = observables;
-	}
+    public List<String> getProcedures()
+    {
+        return procedures;
+    }
 
 
-	public List<String> getProcedures()
-	{
-		return procedures;
-	}
+    public void setProcedures(List<String> procedures)
+    {
+        this.procedures = procedures;
+    }
 
 
-	public void setProcedures(List<String> procedures)
-	{
-		this.procedures = procedures;
-	}
+    public List<String> getObservables()
+    {
+        return observables;
+    }
 
 
-	public TimeInfo getTime()
-	{
-		return time;
-	}
+    public void setObservables(List<String> observables)
+    {
+        this.observables = observables;
+    }
 
 
-	public void setTime(TimeInfo time)
-	{
-		this.time = time;
-	}	
+    public List<String> getFoiIDs()
+    {
+        return foiIDs;
+    }
 
 
-	public Bbox getBbox()
-	{
-		return bbox;
-	}
+    public void setFoiIDs(List<String> foiIDs)
+    {
+        this.foiIDs = foiIDs;
+    }
 
 
-	public void setBbox(Bbox bbox)
-	{
-		this.bbox = bbox;
-	}
-	
+    public BinaryTemporalOperator getTemporalFilter()
+    {
+        return temporalFilter;
+    }
+
+
+    public void setTemporalFilter(BinaryTemporalOperator temporalFilter)
+    {
+        this.temporalFilter = temporalFilter;
+    }
+
+
+    public TimeInfo getTime()
+    {
+        return FESUtils.filterToTimeInfo(temporalFilter);
+    }
+
+
+    public void setTime(TimeInfo time)
+    {
+        this.temporalFilter = FESUtils.timeInfoToFilter(time);
+    }   
+
+
+    public BinarySpatialOperator getSpatialFilter()
+    {
+        return spatialFilter;
+    }
+
+
+    public void setSpatialFilter(BinarySpatialOperator spatialFilter)
+    {
+        this.spatialFilter = spatialFilter;
+    }
+
+
+    public Bbox getBbox()
+    {
+        return FESUtils.filterToBbox(spatialFilter);
+    }
+
+
+    public void setBbox(Bbox bbox)
+    {
+        this.spatialFilter = FESUtils.bboxToFilter(bbox);
+    }
+
+
+    public String getFormat()
+    {
+        return format;
+    }
+
+
+    public void setFormat(String format)
+    {
+        this.format = format;
+    }
+
+
+    public boolean isXmlWrapper()
+    {
+        return xmlWrapper;
+    }
+
+
+    public void setXmlWrapper(boolean xmlWrapper)
+    {
+        this.xmlWrapper = xmlWrapper;
+    }
 }

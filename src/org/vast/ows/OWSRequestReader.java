@@ -20,6 +20,7 @@
 
 package org.vast.ows;
 
+import java.util.Map;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -48,6 +49,15 @@ public interface OWSRequestReader<QueryType extends OWSRequest>
      * @throws OWSException
      */
     public QueryType readURLQuery(String queryString) throws OWSException;
+    
+    
+    /**
+     * Decodes URL request parameters from the given map 
+     * @param queryParameters map containing a key value pair for each query parameter
+     * @return
+     * @throws OWSException
+     */
+    public QueryType readURLParameters(Map<String, String> queryParameters) throws OWSException;
 
 
     /**

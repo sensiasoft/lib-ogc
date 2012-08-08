@@ -22,6 +22,7 @@
 
 package org.vast.ows.wcst;
 
+import java.util.Map;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 import org.vast.ows.*;
@@ -49,7 +50,7 @@ public class WCSTransactionReaderV11 extends AbstractRequestReader<WCSTransactio
 	
 
 	@Override
-	public WCSTransactionRequest readURLQuery(String queryString) throws OWSException
+	public WCSTransactionRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		throw new WCSException(noKVP + "WCS 1.1 Transaction");
 	}

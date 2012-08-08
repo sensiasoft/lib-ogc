@@ -40,8 +40,8 @@ import org.w3c.dom.Element;
  *
  * <p><b>Description:</b><br/>
  * Provides methods to generate a KVP or XML SOS GetObservation
- * request based on values contained in a GetObservationRequest
- * object for version 1.0
+ * as defined in version 1.0 of the SOS standard using values
+ * contained in a GetObservationRequest object
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -65,7 +65,7 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
 	@Override
 	public String buildURLQuery(GetObservationRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
+	    StringBuilder urlBuff = new StringBuilder(request.getGetServer());
         addCommonArgs(urlBuff, request);
 		
 		// offering

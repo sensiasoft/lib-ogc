@@ -95,9 +95,9 @@ public class SPSUtils extends OWSUtils
 	}
 	
 	
-	public TaskingResponse readTaskingResponse(DOMHelper dom, Element respElt, String version) throws OWSException
+	public TaskingResponse<?> readTaskingResponse(DOMHelper dom, Element respElt, String version) throws OWSException
 	{
-		return (TaskingResponse)super.readXMLResponse(dom, respElt, SPSUtils.SPS, respElt.getLocalName(), version);
+		return (TaskingResponse<?>)super.readXMLResponse(dom, respElt, SPSUtils.SPS, respElt.getLocalName(), version);
 	}
 	
 	

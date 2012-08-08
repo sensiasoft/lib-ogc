@@ -68,7 +68,7 @@ public class GetResultWriterV10 extends AbstractRequestWriter<GetResultRequest>
 	@Override
 	public String buildURLQuery(GetResultRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
+	    StringBuilder urlBuff = new StringBuilder(request.getGetServer());
         addCommonArgs(urlBuff, request);
 		
 		// offering

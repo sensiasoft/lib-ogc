@@ -24,7 +24,9 @@ Contributor(s):
 package org.vast.ows.sps;
 
 import org.w3c.dom.Element;
-import java.util.StringTokenizer;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.swe.SWERequestReader;
@@ -50,28 +52,16 @@ public class DescribeTaskingRequestReaderV20 extends SWERequestReader<DescribeTa
 {
 
 	@Override
-	public DescribeTaskingRequest readURLQuery(String queryString) throws OWSException
+	public DescribeTaskingRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		DescribeTaskingRequest request = new DescribeTaskingRequest();
-		StringTokenizer st = new StringTokenizer(queryString, "&");
-
-		while (st.hasMoreTokens())
-		{
-			String argName = null;
-			String argValue = null;
-			String nextArg = st.nextToken();
-
-			// separate argument name and value
-			try
-			{
-				int sepIndex = nextArg.indexOf('=');
-				argName = nextArg.substring(0, sepIndex);
-				argValue = nextArg.substring(sepIndex + 1);
-			}
-			catch (IndexOutOfBoundsException e)
-			{
-				throw new OWSException(invalidKVP);
-			}
+		Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
+        
+        while (it.hasNext())
+        {
+            Entry<String, String> item = it.next();
+            String argName = item.getKey();
+            String argValue = item.getValue();
 
 			// service type
 			if (argName.equalsIgnoreCase("service"))

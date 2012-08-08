@@ -21,10 +21,11 @@
 package org.vast.ows.sos;
 
 import java.util.*;
+import org.opengis.filter.spatial.BinarySpatialOperator;
+import org.opengis.filter.temporal.BinaryTemporalOperator;
 import org.vast.ows.OWSRequest;
 import org.vast.util.Bbox;
 import org.vast.util.TimeInfo;
-import org.vast.xml.QName;
 
 
 /**
@@ -43,8 +44,7 @@ import org.vast.xml.QName;
  */
 public class GetObservationRequest extends OWSRequest
 {
-    
-	public enum ResponseMode
+    public enum ResponseMode
     {
         INLINE, ATTACHED, OUT_OF_BAND, RESULT_TEMPLATE, RESULT_ONLY
     }
@@ -52,13 +52,9 @@ public class GetObservationRequest extends OWSRequest
 	protected List<String> procedures;
 	protected List<String> offerings;
 	protected List<String> observables;
-	protected List<String> fois;
-	
-	protected TimeInfo time;
-	protected Bbox bbox;
-	protected QName temporalProperty;
-	protected QName spatialProperty;
-		
+	protected List<String> foiIDs;
+	protected BinaryTemporalOperator temporalFilter;
+	protected BinarySpatialOperator spatialFilter;
     protected String format;
     protected String resultModel;
 	protected ResponseMode responseMode;
@@ -71,24 +67,10 @@ public class GetObservationRequest extends OWSRequest
 		procedures = new ArrayList<String>(2);
 		offerings = new ArrayList<String>(2);
 		observables = new ArrayList<String>(2);
-		fois = new ArrayList<String>(2);
-		bbox = new Bbox();
-		time = new TimeInfo();
+		foiIDs = new ArrayList<String>(2);
 	}
 	
 	
-	public String getFormat()
-	{
-		return format;
-	}
-
-
-	public void setFormat(String format)
-	{
-		this.format = format;
-	}
-
-
 	public String getOffering()
 	{
 		if (offerings.size() == 0)
@@ -122,57 +104,69 @@ public class GetObservationRequest extends OWSRequest
 	}
 
 
-	public List<String> getFois()
+	public List<String> getFoiIDs()
     {
-        return fois;
+        return foiIDs;
+    }
+
+
+	public BinaryTemporalOperator getTemporalFilter()
+    {
+        return temporalFilter;
+    }
+
+
+    public void setTemporalFilter(BinaryTemporalOperator temporalFilter)
+    {
+        this.temporalFilter = temporalFilter;
     }
 
 
     public TimeInfo getTime()
 	{
-		return time;
+        return FESUtils.filterToTimeInfo(temporalFilter);
 	}
 
 
 	public void setTime(TimeInfo time)
 	{
-		this.time = time;
+	    this.temporalFilter = FESUtils.timeInfoToFilter(time);
 	}	
 
 
-	public QName getTemporalProperty()
+    public BinarySpatialOperator getSpatialFilter()
     {
-        return temporalProperty;
+        return spatialFilter;
     }
 
 
-    public void setTemporalProperty(QName temporalProperty)
+    public void setSpatialFilter(BinarySpatialOperator spatialFilter)
     {
-        this.temporalProperty = temporalProperty;
+        this.spatialFilter = spatialFilter;
     }
 
 
     public Bbox getBbox()
 	{
-		return bbox;
+        return FESUtils.filterToBbox(spatialFilter);
 	}
 
 
 	public void setBbox(Bbox bbox)
 	{
-		this.bbox = bbox;
+	    this.spatialFilter = FESUtils.bboxToFilter(bbox);
 	}
-
-
-    public QName getSpatialProperty()
+	
+	
+	public String getFormat()
     {
-        return spatialProperty;
+        return format;
     }
 
 
-    public void setSpatialProperty(QName spatialProperty)
+    public void setFormat(String format)
     {
-        this.spatialProperty = spatialProperty;
+        this.format = format;
     }
 
     

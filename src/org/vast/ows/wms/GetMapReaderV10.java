@@ -21,7 +21,9 @@
 package org.vast.ows.wms;
 
 import java.awt.Color;
-import java.util.StringTokenizer;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.vast.util.Bbox;
 import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
@@ -55,29 +57,17 @@ public class GetMapReaderV10 extends AbstractRequestReader<GetMapRequest>
 
 	
 	@Override
-	public GetMapRequest readURLQuery(String queryString) throws OWSException
+	public GetMapRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		GetMapRequest request = new GetMapRequest();
-		StringTokenizer st = new StringTokenizer(queryString, "&");
 		OWSExceptionReport report = new OWSExceptionReport(owsVersion);
-		
-        while (st.hasMoreTokens())
+		Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
+        
+        while (it.hasNext())
         {
-            String argName = null;
-            String argValue = null;
-            String nextArg = st.nextToken();
-
-            // separate argument name and value
-            try
-            {
-                int sepIndex = nextArg.indexOf('=');
-                argName = nextArg.substring(0, sepIndex);
-                argValue = nextArg.substring(sepIndex + 1);
-            }
-            catch (IndexOutOfBoundsException e)
-            {
-                throw new WMSException(invalidKVP);
-            }
+            Entry<String, String> item = it.next();
+            String argName = item.getKey();
+            String argValue = item.getValue();
             
             try
 			{

@@ -21,7 +21,9 @@
 
 package org.vast.ows;
 
-import java.util.StringTokenizer;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 
@@ -58,29 +60,17 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 
 	
 	@Override
-	public GetCapabilitiesRequest readURLQuery(String queryString) throws OWSException
+	public GetCapabilitiesRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		OWSExceptionReport report = new OWSExceptionReport();
 		GetCapabilitiesRequest request = new GetCapabilitiesRequest();
-		StringTokenizer st = new StringTokenizer(queryString, "&");
+		Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
         
-        while (st.hasMoreTokens())
+        while (it.hasNext())
         {
-            String argName = null;
-            String argValue = null;
-            String nextArg = st.nextToken();
-
-            // separate argument name and value
-            try
-            {
-                int sepIndex = nextArg.indexOf('=');
-                argName = nextArg.substring(0, sepIndex);
-                argValue = nextArg.substring(sepIndex + 1);
-            }
-            catch (IndexOutOfBoundsException e)
-            {
-                throw new OWSException(invalidKVP);
-            }
+            Entry<String, String> item = it.next();
+            String argName = item.getKey();
+            String argValue = item.getValue();
             
             // service ID
             if (argName.equalsIgnoreCase("service"))

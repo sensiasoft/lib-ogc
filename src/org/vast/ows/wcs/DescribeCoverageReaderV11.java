@@ -22,7 +22,9 @@
 
 package org.vast.ows.wcs;
 
-import java.util.StringTokenizer;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 import org.vast.ows.*;
@@ -47,29 +49,17 @@ public class DescribeCoverageReaderV11 extends AbstractRequestReader<DescribeCov
 {
 	
 	@Override
-	public DescribeCoverageRequest readURLQuery(String queryString) throws OWSException
+	public DescribeCoverageRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		DescribeCoverageRequest request = new DescribeCoverageRequest();
-		StringTokenizer st = new StringTokenizer(queryString, "&");
+		Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
         
-        while (st.hasMoreTokens())
+        while (it.hasNext())
         {
-            String argName = null;
-            String argValue = null;
-            String nextArg = st.nextToken();
-
-            // separate argument name and value
-            try
-            {
-                int sepIndex = nextArg.indexOf('=');
-                argName = nextArg.substring(0, sepIndex);
-                argValue = nextArg.substring(sepIndex + 1);
-            }
-            catch (IndexOutOfBoundsException e)
-            {
-                throw new WCSException(invalidKVP);
-            }
+            Entry<String, String> item = it.next();
+            String argName = item.getKey();
+            String argValue = item.getValue();
             
             try
             {

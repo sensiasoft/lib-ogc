@@ -60,7 +60,7 @@ public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSenso
 	@Override
 	public String buildURLQuery(DescribeSensorRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
+		StringBuilder urlBuff = new StringBuilder(request.getGetServer());
         addCommonArgs(urlBuff, request);
         
 		// procedure

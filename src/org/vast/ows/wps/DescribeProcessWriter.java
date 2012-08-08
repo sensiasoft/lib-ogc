@@ -54,7 +54,7 @@ public class DescribeProcessWriter extends AbstractRequestWriter<DescribeProcess
 	@Override
 	public String buildURLQuery(DescribeProcessRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
+	    StringBuilder urlBuff = new StringBuilder(request.getGetServer());
         addCommonArgs(urlBuff, request);
 
 		// offering

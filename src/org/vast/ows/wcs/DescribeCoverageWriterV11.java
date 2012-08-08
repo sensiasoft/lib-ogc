@@ -50,7 +50,7 @@ public class DescribeCoverageWriterV11 extends AbstractRequestWriter<DescribeCov
 	@Override
 	public String buildURLQuery(DescribeCoverageRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
+	    StringBuilder urlBuff = new StringBuilder(request.getGetServer());
         addCommonArgs(urlBuff, request);
         
         // add all requested coverage names

@@ -23,6 +23,7 @@ Contributor(s):
 package org.vast.ows.sps;
 
 import java.text.ParseException;
+import java.util.Map;
 import org.w3c.dom.Element;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
@@ -50,7 +51,7 @@ public class ReserveRequestReaderV20 extends TaskingRequestReaderV20<ReserveRequ
 {
 		
 	@Override
-	public ReserveRequest readURLQuery(String queryString) throws OWSException
+	public ReserveRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		throw new SPSException(noKVP + "SPS 2.0 Reserve");
 	}

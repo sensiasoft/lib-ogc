@@ -10,6 +10,7 @@
    <Namespace type="WCS" version="1.1.1" uri="http://www.opengis.net/wcs/1.1.1" ows="1.1"/>
    <Namespace type="CSW" version="1.0" uri="http://www.opengis.net/cat/csw"/>
    <Namespace type="SOS" version="1.0" uri="http://www.opengis.net/sos/1.0" ows="1.1"/>
+   <Namespace type="SOS" version="2.0" uri="http://www.opengis.net/sos/2.0"/>
    <Namespace type="SAS" version="0.0" uri="http://www.opengis.net/sas/0.0"/>  
    <Namespace type="SPS" version="2.0" uri="http://www.opengis.net/sps/2.0" ows="1.1"/>
    <Namespace type="WNS" version="*" uri="http://www.opengis.net/wns"/>
@@ -20,17 +21,25 @@
    <!-- -->
    <Reader type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.GetObservationReaderV10"/>
    <Reader type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationReaderV10"/>
+   <Reader type="SOS" subType="GetObservation" version="2.0" class="org.vast.ows.sos.GetObservationReaderV20"/>
    <Reader type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.DescribeSensorReaderV10"/>
-   <Reader type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorReaderV10"/>   
+   <Reader type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorReaderV10"/>
+   <Reader type="SOS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorReaderV20"/>
    <Reader type="SOS" subType="Capabilities" version="0.0.31" class="org.vast.ows.sos.SOSCapabilitiesReaderV031"/>
    <Reader type="SOS" subType="Capabilities" version="1.0" class="org.vast.ows.sos.SOSCapabilitiesReaderV10"/>
    <Reader type="SOS" subType="GetResult" version="1.0" class="org.vast.ows.sos.GetResultReaderV10"/>
+   <Reader type="SOS" subType="GetResult" version="2.0" class="org.vast.ows.sos.GetResultReaderV20"/>
+   <Reader type="SOS" subType="GetResultTemplate" version="2.0" class="org.vast.ows.sos.GetResultTemplateReaderV20"/>
    <!-- -->
-   <Writer type="SOS" subType="GetResult" version="1.0" class="org.vast.ows.sos.GetResultWriterV10"/>   
    <Writer type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.GetObservationWriterV10"/>
    <Writer type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationWriterV10"/>
+   <Writer type="SOS" subType="GetObservation" version="2.0" class="org.vast.ows.sos.GetObservationWriterV20"/>
    <Writer type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.DescribeSensorWriterV10"/>
    <Writer type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorWriterV10"/>
+   <Writer type="SOS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorWriterV20"/> 
+   <Writer type="SOS" subType="GetResult" version="1.0" class="org.vast.ows.sos.GetResultWriterV10"/>
+   <Writer type="SOS" subType="GetResult" version="2.0" class="org.vast.ows.sos.GetResultWriterV20"/>
+   <Writer type="SOS" subType="GetResultTemplate" version="2.0" class="org.vast.ows.sos.GetResultTemplateWriterV20"/> 
    <!-- -->
    <Reader type="SAS" subType="Capabilities" version="*" class="org.vast.ows.sas.SASCapabilitiesReader"/>
    <Reader type="SAS" subType="Capabilities" version="0.0" class="org.vast.ows.sas.SASCapabilitiesReader"/>

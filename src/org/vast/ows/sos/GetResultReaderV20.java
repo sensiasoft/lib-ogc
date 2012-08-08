@@ -33,19 +33,17 @@ import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.vast.ogc.OGCRegistry;
-import org.vast.ogc.om.OMUtils;
 import org.vast.ows.*;
 
 
 /**
  * <p><b>Title:</b><br/>
- * SOS GetObservation Request Reader v2.0
+ * SOS GetResult Request Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provides methods to parse a KVP or SOAP/XML SOS GetObservation
- * request and create a GetObservationRequest object for version 2.0
+ * Provides methods to parse a KVP or SOAP/XML SOS GetResult
+ * request and create a GetResultRequest object for version 2.0
  * </p>
  *
  * <p>Copyright (c) 2012</p>
@@ -53,12 +51,12 @@ import org.vast.ows.*;
  * @date Aug 1, 2012
  * @version 1.0
  */
-public class GetObservationReaderV20 extends AbstractRequestReader<GetObservationRequest>
+public class GetResultReaderV20 extends AbstractRequestReader<GetResultRequest>
 {
     protected Parser filterParser;
     
     
-    public GetObservationReaderV20()
+    public GetResultReaderV20()
 	{
         Configuration configuration = new org.geotools.filter.v2_0.FESConfiguration();
         filterParser = new Parser(configuration);
@@ -66,20 +64,20 @@ public class GetObservationReaderV20 extends AbstractRequestReader<GetObservatio
 
 	
 	@Override
-	public GetObservationRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
+	public GetResultRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
-		GetObservationRequest request = new GetObservationRequest();
+		GetResultRequest request = new GetResultRequest();
 		readCommonQueryArguments(queryParameters, request);
 				
 		// parse namespaces
-		Map<String, String> namespaceMap = null;
+        Map<String, String> namespaceMap = null;
         String nsList = queryParameters.remove("namespaces");
         if (nsList != null)
             namespaceMap = FESUtils.readKVPNamespaces(nsList);
-		
+        
         // parse other params
-        Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
+		Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
 		while (it.hasNext())
 		{
 		    Entry<String, String> item = it.next();
@@ -89,25 +87,13 @@ public class GetObservationReaderV20 extends AbstractRequestReader<GetObservatio
 			// offering argument
 			if (argName.equalsIgnoreCase("offering"))
 			{
-			    request.getOfferings().clear();
-                for (String off: argValue.split(","))
-                    request.getOfferings().add(off);
+			    request.setOffering(argValue);
 			}
 			
-			// observed properties
+			// observed property
             else if (argName.equalsIgnoreCase("observedProperty"))
             {
-                request.getObservables().clear();
-                for (String obs: argValue.split(","))
-                    request.getObservables().add(obs);
-            }
-			
-			// procedures
-            else if (argName.equalsIgnoreCase("procedure"))
-            {
-                request.getProcedures().clear();
-                for (String proc: argValue.split(","))
-                    request.getProcedures().add(proc);
+                request.getObservables().add(argValue);
             }
 			
 			// features of interest
@@ -119,38 +105,31 @@ public class GetObservationReaderV20 extends AbstractRequestReader<GetObservatio
             }
 			
 			// temporal filter
-            else if (argName.equalsIgnoreCase("temporalFilter"))
-            {
-                try
-                {
-                    BinaryTemporalOperator filter = FESUtils.readKVPTemporalFilter(argValue, namespaceMap);
-                    request.setTemporalFilter(filter);
-                }
-                catch (Exception e)
-                {
-                    throw new SOSException(SOSException.invalid_param_code, "temporalFilter", null, null);
-                }
-            }
-            
-            // spatial filter
+			else if (argName.equalsIgnoreCase("temporalFilter"))
+			{
+				BinaryTemporalOperator filter = FESUtils.readKVPTemporalFilter(argValue, namespaceMap);
+				request.setTemporalFilter(filter);
+			}
+			
+			// spatial filter
             else if (argName.equalsIgnoreCase("spatialFilter"))
             {
+                BinarySpatialOperator filter = FESUtils.readKVPSpatialFilter(argValue, namespaceMap);
+                request.setSpatialFilter(filter);
+            }
+			
+			// xml wrapper
+            else if (argName.equalsIgnoreCase("xmlWrapper"))
+            {
                 try
                 {
-                    BinarySpatialOperator filter = FESUtils.readKVPSpatialFilter(argValue, namespaceMap);
-                    request.setSpatialFilter(filter);
+                    request.setXmlWrapper(Boolean.parseBoolean(argValue));
                 }
                 catch (Exception e)
                 {
-                    throw new SOSException(SOSException.invalid_param_code, "spatialFilter", null, null);
+                    throw new SOSException(SOSException.invalid_param_code, "xmlWrapper", argValue, null);
                 }
             }
-
-			// format argument
-			else if (argName.equalsIgnoreCase("responseFormat"))
-			{
-				request.setFormat(argValue);
-			}
 
 			// vendor parameters
             else
@@ -167,37 +146,22 @@ public class GetObservationReaderV20 extends AbstractRequestReader<GetObservatio
 	
 	
 	@Override
-	public GetObservationRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
+	public GetResultRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
-		GetObservationRequest request = new GetObservationRequest();
+		GetResultRequest request = new GetResultRequest();
 		
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
+		String val;
 		
-		// procedures
-        NodeList procList = dom.getElements(requestElt, "procedure");
-        for (int i = 0; i < procList.getLength(); i++)
-        {
-            String val = dom.getElementValue((Element)procList.item(i));
-            request.getProcedures().add(val);
-        }
-        
-        // offerings
-        NodeList offList = dom.getElements(requestElt, "offering");
-        for (int i = 0; i < offList.getLength(); i++)
-        {
-            String val = dom.getElementValue((Element)offList.item(i));
-            request.getOfferings().add(val);
-        }        
+        // offering
+        val = dom.getElementValue(requestElt, "offering");
+        request.setOffering(val);        
 		
-        // observables
-		NodeList obsList = dom.getElements(requestElt, "observedProperty");
-		for (int i = 0; i < obsList.getLength(); i++)
-		{
-			String val = dom.getElementValue((Element)obsList.item(i));
-			request.getObservables().add(val);
-		}
+        // observed property
+		val = dom.getElementValue(requestElt, "observedProperty");
+        request.getObservables().add(val); 
 		
 		// temporal filter
         try
@@ -219,7 +183,7 @@ public class GetObservationReaderV20 extends AbstractRequestReader<GetObservatio
         NodeList foiList = dom.getElements(requestElt, "featureOfInterest");
         for (int i = 0; i < foiList.getLength(); i++)
         {
-            String val = dom.getElementValue((Element)foiList.item(i));
+            val = dom.getElementValue((Element)foiList.item(i));
             request.getFoiIDs().add(val);
         }
         
@@ -238,10 +202,6 @@ public class GetObservationReaderV20 extends AbstractRequestReader<GetObservatio
         {
             throw new SOSException(SOSException.invalid_param_code, "spatialFilter", null, null);
         }
-        
-		// response format
-		String resFormat = dom.getElementValue(requestElt, "responseFormat");
-		request.setFormat(resFormat);
 
         this.checkParameters(request, report);
         return request;
@@ -253,14 +213,19 @@ public class GetObservationReaderV20 extends AbstractRequestReader<GetObservatio
      * @param request
      * @throws OWSException
      */
-    protected void checkParameters(GetObservationRequest request, OWSExceptionReport report) throws OWSException
+    protected void checkParameters(GetResultRequest request, OWSExceptionReport report) throws OWSException
     {
     	// check common params
-		super.checkParameters(request, report, OWSUtils.SOS);		
-		report.process();
+		super.checkParameters(request, report, OWSUtils.SOS);
 		
-		// set default values
-		if (request.getFormat() == null)
-		    request.setFormat(OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0"));
+		// need offering
+        if (request.getOffering() == null)
+            report.add(new OWSException(OWSException.missing_param_code, "offering"));
+        
+        // need observedProperty
+        if (request.getObservables().size() != 1)
+            report.add(new OWSException(OWSException.missing_param_code, "observedProperty"));
+        
+		report.process();
     }
 }

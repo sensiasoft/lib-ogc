@@ -23,6 +23,7 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
+import java.util.Map;
 import org.w3c.dom.Element;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
@@ -49,7 +50,7 @@ public class CancelRequestReaderV20 extends SWERequestReader<CancelRequest>
 {
 
 	@Override
-	public CancelRequest readURLQuery(String queryString) throws OWSException
+	public CancelRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		throw new SPSException(noKVP + "SPS 2.0 Cancel");
 	}

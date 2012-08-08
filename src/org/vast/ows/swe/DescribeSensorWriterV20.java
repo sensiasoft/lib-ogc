@@ -11,15 +11,23 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is the VAST team at the
+ University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
+
+ Please Contact Mike Botts <mike.botts@uah.edu>
+ or Alexandre Robin <alex.robin@sensiasoftware.com> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <alex.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.swe;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
@@ -60,31 +68,26 @@ public class DescribeSensorWriterV20 extends AbstractRequestWriter<DescribeSenso
 
 	
 	@Override
-	public String buildURLQuery(DescribeSensorRequest request) throws OWSException
+	public Map<String, String> buildURLParameters(DescribeSensorRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
-        addCommonArgs(urlBuff, request);
+	    Map<String, String> urlParams = new LinkedHashMap<String, String>();
+        addCommonArgs(urlParams, request);
         
 		// procedure
-        urlBuff.append("&procedure=" + request.getProcedureID());
+        urlParams.put("procedure", request.getProcedureID());
         
         // format
-        if (request.getFormat() != null)
-        {
-        	urlBuff.append("&format=");
-        	urlBuff.append(request.getFormat());
-        }
+        urlParams.put("procedureDescriptionFormat", request.getFormat());
         
         // validTime
         if (request.getTime() != null)
         {
-        	urlBuff.append("&validTime=");
-        	this.writeTimeArgument(urlBuff, request.getTime());
+            StringBuilder buf = new StringBuilder();
+            writeTimeArgument(buf, request.getTime());
+            urlParams.put("validTime", buf.toString());
         }
-
-        String url = urlBuff.toString();
-        url = url.replaceAll(" ","%20");
-		return url;
+        
+		return urlParams;
 	}
 	
 	

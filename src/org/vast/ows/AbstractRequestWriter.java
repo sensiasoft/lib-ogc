@@ -21,7 +21,9 @@
 package org.vast.ows;
 
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
@@ -57,10 +59,35 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
 	{	
 	}
 
+	public Map<String, String> buildURLParameters(RequestType request) throws OWSException
+	{
+	    throw new RuntimeException("buildURLParameters() method not implemented");
+	}
 	
-	public abstract String buildURLQuery(RequestType request) throws OWSException;		
 	public abstract Element buildXMLQuery(DOMHelper dom, RequestType request) throws OWSException;
     
+	
+	public String buildURLQuery(RequestType request) throws OWSException
+	{
+	    Map<String, String> urlParams = buildURLParameters(request);
+	    StringBuffer urlBuff = new StringBuffer(request.getGetServer());
+	    Iterator<Entry<String, String>> it = urlParams.entrySet().iterator();
+	    
+	    while (it.hasNext())
+	    {
+	        Entry<String, String> arg = it.next();
+	        urlBuff.append(arg.getKey());
+	        urlBuff.append('=');
+	        
+	        // url encode parameter value
+	        urlBuff.append(urlEncode(arg.getValue()));
+	        urlBuff.append('&');
+	    }
+	    
+	    urlBuff.deleteCharAt(urlBuff.length()-1);
+	    return urlBuff.toString();
+	}
+	
     
     public void writeXMLQuery(OutputStream os, RequestType request) throws OWSException
     {
@@ -84,9 +111,16 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
      */
     protected String urlEncode(String urlParam)
     {
-        urlParam = urlParam.replaceAll(" ", "%20");
+        /*urlParam = urlParam.replaceAll(" ", "%20");
+        urlParam = urlParam.replaceAll("\"", "%22");
+        urlParam = urlParam.replaceAll("#", "%23");
+        urlParam = urlParam.replaceAll("%", "%25");
+        urlParam = urlParam.replaceAll("&", "%26");
         urlParam = urlParam.replaceAll("\\+", "%2B");
-        //urlParam = urlParam.replaceAll("\\/", "%2F");
+        urlParam = urlParam.replaceAll("\\?", "%3F");
+        //urlParam = urlParam.replaceAll("\\/", "%2F");*/
+        try { urlParam = URLEncoder.encode(urlParam, "UTF-8"); }
+        catch (UnsupportedEncodingException e) { }
         return urlParam;
     }
     
@@ -97,7 +131,7 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
      * @param buffer
      * @param time
      */
-    protected void writeTimeArgument(StringBuffer buffer, TimeInfo time)
+    protected void writeTimeArgument(StringBuilder buffer, TimeInfo time)
     {
         if (time.isTimeInstant())
         {
@@ -138,7 +172,7 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
      * @param buffer
      * @param bbox
      */
-    protected void writeBboxArgument(StringBuffer buffer, Bbox bbox)
+    protected void writeBboxArgument(StringBuilder buffer, Bbox bbox)
     {
         buffer.append(bbox.getMinX());
         buffer.append("," + bbox.getMinY());
@@ -179,15 +213,31 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
     
     
     /**
-     * Adds common arguments to URL query
-     * @param urlBuff
+     * Adds common arguments to the map of URL parameters
+     * @param urlParams
      * @param request
      */
-    protected void addCommonArgs(StringBuffer urlBuff, OWSRequest request)
+    protected void addCommonArgs(Map<String, String> urlParams, OWSRequest request)
     {
-        urlBuff.append("service=" + request.getService());
-        urlBuff.append("&version=" + request.getVersion());
-        urlBuff.append("&request=" + request.getOperation());
+        urlParams.put("service", request.getService());
+        urlParams.put("version", request.getVersion());
+        urlParams.put("request", request.getOperation());
+    }
+    
+    
+    /**
+     * Adds common arguments to the URL query string
+     * @param urlParams
+     * @param request
+     */
+    protected void addCommonArgs(StringBuilder buf, OWSRequest request)
+    {
+        buf.append("service=");
+        buf.append(request.getService());
+        buf.append("&version=");
+        buf.append(request.getVersion());
+        buf.append("&request=");
+        buf.append(request.getOperation());
     }
     
     
@@ -196,7 +246,7 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
      * @param urlBuff
      * @param request
      */
-    protected void writeKVPExtensions(StringBuffer urlBuff, OWSRequest request)
+    protected void writeKVPExtensions(StringBuilder urlBuff, OWSRequest request)
     {
     	Iterator<Entry<QName, Object>> extObjs = request.getExtensions().entrySet().iterator();
         while (extObjs.hasNext())

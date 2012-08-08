@@ -48,7 +48,7 @@ public class WCSRequestWriterV07 extends AbstractRequestWriter<GetCoverageReques
 	@Override
 	public String buildURLQuery(GetCoverageRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
+	    StringBuilder urlBuff = new StringBuilder(request.getGetServer());
 		
         urlBuff.append("service=WCS");
         urlBuff.append("&version=" + request.getVersion());

@@ -53,7 +53,7 @@ public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageReque
 	@Override
 	public String buildURLQuery(GetCoverageRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
+	    StringBuilder urlBuff = new StringBuilder(request.getGetServer());
         addCommonArgs(urlBuff, request);
         
         // COVERAGE

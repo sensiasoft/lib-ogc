@@ -54,7 +54,7 @@ public class GetMapWriterV11 extends AbstractRequestWriter<GetMapRequest>
 	@Override
 	public String buildURLQuery(GetMapRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
+	    StringBuilder urlBuff = new StringBuilder(request.getGetServer());
 		addCommonArgs(urlBuff, request);
 		
         urlBuff.append("&layers=" + createLayerList(request));

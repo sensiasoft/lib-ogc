@@ -11,16 +11,24 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is the VAST team at the
+ University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
+
+ Please Contact Mike Botts <mike.botts@uah.edu>
+ or Alexandre Robin <alex.robin@sensiasoftware.com> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <alex.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.swe;
 
-import java.util.StringTokenizer;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -57,50 +65,21 @@ public class DescribeSensorReaderV20 extends SWERequestReader<DescribeSensorRequ
 	
 	
 	@Override
-	public DescribeSensorRequest readURLQuery(String queryString) throws OWSException
+	public DescribeSensorRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		DescribeSensorRequest request = new DescribeSensorRequest();
-		StringTokenizer st = new StringTokenizer(queryString, "&");
+		Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
+		readCommonQueryArguments(queryParameters, request);
 		
-		while (st.hasMoreTokens())
-		{
-			String argName = null;
-			String argValue = null;
-			String nextArg = st.nextToken();
-
-			// separate argument name and value
-			try
-			{
-				int sepIndex = nextArg.indexOf('=');
-				argName = nextArg.substring(0, sepIndex);
-				argValue = nextArg.substring(sepIndex + 1);
-			}
-			catch (IndexOutOfBoundsException e)
-			{
-				throw new SOSException(invalidKVP);
-			}
-			
-			// service ID
-			if (argName.equalsIgnoreCase("service"))
-			{
-				request.setService(argValue);
-			}
-			
-			// service version
-			else if (argName.equalsIgnoreCase("version"))
-			{
-				request.setVersion(argValue);
-			}
-
-			// request argument
-			else if (argName.equalsIgnoreCase("request"))
-			{
-				request.setOperation(argValue);
-			}
+        while (it.hasNext())
+        {
+            Entry<String, String> item = it.next();
+            String argName = item.getKey();
+            String argValue = item.getValue();
 			
 			// time
-			else if (argName.equalsIgnoreCase("validTime"))
+			if (argName.equalsIgnoreCase("validTime"))
 			{
 				TimeInfo time = parseTimeArg(argValue);
             	request.setTime(time);
@@ -113,7 +92,7 @@ public class DescribeSensorReaderV20 extends SWERequestReader<DescribeSensorRequ
 			}
 			
 			// format
-			else if (argName.equalsIgnoreCase("format"))
+			else if (argName.equalsIgnoreCase("procedureDescriptionFormat"))
 			{
 				request.setFormat(argValue);
 			}

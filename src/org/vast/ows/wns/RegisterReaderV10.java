@@ -22,6 +22,7 @@
 
 package org.vast.ows.wns;
 
+import java.util.Map;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 import org.vast.ows.*;
@@ -46,7 +47,7 @@ public class RegisterReaderV10 extends AbstractRequestReader<RegisterRequest>
 {
 	
 	@Override
-	public RegisterRequest readURLQuery(String queryString) throws OWSException
+	public RegisterRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		throw new WNSException(noKVP + "WNS Register version 1.0");
 	}

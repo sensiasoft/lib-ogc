@@ -22,6 +22,7 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
+import java.util.Map;
 import org.w3c.dom.Element;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
@@ -47,7 +48,7 @@ public class UpdateRequestReaderV20 extends TaskingRequestReaderV20<UpdateReques
 {
 		
 	@Override
-	public UpdateRequest readURLQuery(String queryString) throws OWSException
+	public UpdateRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		throw new SPSException(noKVP + "SPS 2.0 Update");
 	}

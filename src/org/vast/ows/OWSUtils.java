@@ -25,11 +25,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLDecoder;
+import java.util.Map;
 import org.vast.ogc.OGCException;
 import org.vast.ogc.OGCExceptionReader;
 import org.vast.ogc.OGCRegistry;
@@ -66,7 +65,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
 	public final static String SPS = "SPS";
 	public final static String WPS = "WPS";	
 	
-	public final static String soapUri = "http://schemas.xmlsoap.org/soap/envelope/";
+	public final static String soap11Uri = "http://schemas.xmlsoap.org/soap/envelope/";
+	public final static String soap12Uri = "http://www.w3.org/2003/05/soap-envelope";
 	public final static String unsupportedSpec = "No support for ";
     public final static String invalidEndpoint = "No Endpoint URL specified in request object";
     public final static String ioError = "IO Error while sending request:";
@@ -105,6 +105,10 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     {
     	OWSRequest request = new OWSRequest();
     	request.setVersion(defaultVersion);
+    	
+    	// skip SOAP envelope if present
+    	if (requestElt.getNamespaceURI().equals(soap12Uri))
+    	    requestElt = dom.getElement(requestElt, "Body/*");
     	
     	// read common params and check that they're present
         AbstractRequestReader.readCommonXML(dom, requestElt, request);
@@ -170,32 +174,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
      */
     public OWSRequest readURLQuery(String queryString, String serviceType, String defaultVersion) throws OWSException
     {
-    	OWSRequest request = new OWSRequest();
-    	request.setVersion(defaultVersion);
-    	
-    	try
-        {
-    		// read common params and check that they're present
-    		if (queryString != null)
-    		{
-    			try {queryString = URLDecoder.decode(queryString, "UTF-8");}
-    			catch (UnsupportedEncodingException e){}
-    			AbstractRequestReader.readCommonQueryArguments(queryString, request);
-    		}
-    		
-    		OWSExceptionReport report = new OWSExceptionReport();
-    		AbstractRequestReader.checkParameters(request, report, serviceType);
-            report.process();
-        
-            OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(request.service, request.operation, request.version);
-            request = reader.readURLQuery(queryString);
-            return request;
-        }
-        catch (IllegalStateException e)
-        {
-        	String spec = request.service + " " + request.operation + " v" + request.version;
-        	throw new OWSException(unsupportedSpec + spec, e);
-        }
+        Map<String, String> queryParams = AbstractRequestReader.parseQueryParameters(queryString);
+       return readURLParameters(queryParams, serviceType, defaultVersion);
     }
     
     
@@ -215,6 +195,53 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     public OWSRequest readURLQuery(String queryString) throws OWSException
     {
         return readURLQuery(queryString, null);
+    }
+    
+    
+    /**
+     * Helper method to decode URL KVP parameters into the right request object
+     * @param queryParams
+     * @param serviceType
+     * @param defaultVersion
+     * @return
+     * @throws OWSException
+     */
+    public OWSRequest readURLParameters(Map<String, String> queryParams, String serviceType, String defaultVersion) throws OWSException
+    {
+        // init generic request object
+        OWSRequest request = new OWSRequest();
+        
+        try
+        {
+            // read common params to figure out what reader to use
+            request.setService(queryParams.get("service"));
+            request.setOperation(queryParams.get("request"));
+            request.setVersion(queryParams.get("version"));
+            if (request.getVersion() == null)
+                request.setVersion(defaultVersion);
+            
+            OWSExceptionReport report = new OWSExceptionReport();
+            AbstractRequestReader.checkParameters(request, report, serviceType);
+            report.process();
+        
+            OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(request.service, request.operation, request.version);
+            request = reader.readURLParameters(queryParams);
+            return request;
+        }
+        catch (IllegalStateException e)
+        {
+            String spec = request.service + " " + request.operation + " v" + request.version;
+            throw new OWSException(unsupportedSpec + spec, e);
+        }
+    }
+    
+    
+    /**
+     * Helper method to parse KVP arguments of any OWS query
+     */    
+    public OWSRequest readURLParameters(Map<String, String> queryParams) throws OWSException
+    {
+        return readURLParameters(queryParams, null, null);
     }
     
     
@@ -558,7 +585,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
             
             // send post data
             DOMHelper dom = new DOMHelper();
-            dom.addUserPrefix("soap", soapUri);
+            dom.addUserPrefix("soap", soap11Uri);
             Element envElt = dom.createElement("soap:Envelope");		
 			Element bodyElt = dom.addElement(envElt, "soap:Body");
 			Element reqElt = buildXMLQuery(dom, request);

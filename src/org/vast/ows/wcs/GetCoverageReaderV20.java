@@ -23,7 +23,9 @@
 package org.vast.ows.wcs;
 
 import java.text.ParseException;
-import java.util.StringTokenizer;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.vast.util.DateTimeFormat;
@@ -52,29 +54,17 @@ public class GetCoverageReaderV20 extends AbstractRequestReader<GetCoverageReque
 
 	
 	@Override
-	public GetCoverageRequest readURLQuery(String queryString) throws OWSException
+	public GetCoverageRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		GetCoverageRequest request = new GetCoverageRequest();
-		StringTokenizer st = new StringTokenizer(queryString, "&");
+		Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
         
-        while (st.hasMoreTokens())
+        while (it.hasNext())
         {
-            String argName = null;
-            String argValue = null;
-            String nextArg = st.nextToken();
-
-            // separate argument name and value
-            try
-            {
-                int sepIndex = nextArg.indexOf('=');
-                argName = nextArg.substring(0, sepIndex);
-                argValue = nextArg.substring(sepIndex + 1);
-            }
-            catch (IndexOutOfBoundsException e)
-            {
-                throw new WCSException(invalidKVP);
-            }
+            Entry<String, String> item = it.next();
+            String argName = item.getKey();
+            String argValue = item.getValue();
             
             try
 			{

@@ -20,7 +20,9 @@
 
 package org.vast.ows.sos;
 
-import java.util.StringTokenizer;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.vast.util.Bbox;
 import org.vast.util.TimeInfo;
 import org.vast.xml.DOMHelper;
@@ -61,29 +63,17 @@ public class GetResultReaderV10 extends AbstractRequestReader<GetResultRequest>
 
 	
 	@Override
-	public GetResultRequest readURLQuery(String queryString) throws OWSException
+	public GetResultRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		GetResultRequest request = new GetResultRequest();
-		StringTokenizer st = new StringTokenizer(queryString, "&");
-		
-		while (st.hasMoreTokens())
-		{
-			String argName = null;
-			String argValue = null;
-			String nextArg = st.nextToken();
-
-			// separate argument name and value
-			try
-			{
-				int sepIndex = nextArg.indexOf('=');
-				argName = nextArg.substring(0, sepIndex);
-				argValue = nextArg.substring(sepIndex + 1);
-			}
-			catch (IndexOutOfBoundsException e)
-			{
-				throw new SOSException(invalidKVP);
-			}
+		Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
+        
+        while (it.hasNext())
+        {
+            Entry<String, String> item = it.next();
+            String argName = item.getKey();
+            String argValue = item.getValue();
 			
 			// service ID
 			if (argName.equalsIgnoreCase("service"))
