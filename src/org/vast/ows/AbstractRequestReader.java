@@ -21,7 +21,10 @@
 package org.vast.ows;
 
 import java.io.*;
+import java.net.URLDecoder;
 import java.text.ParseException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
@@ -56,13 +59,21 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
     protected final static String invalidValue = "Invalid Value for ";
     protected final static String noKVP = "KVP request not supported in ";
     protected final static String noXML = "XML request not supported in ";
+
     protected String owsVersion = OWSException.VERSION_10;
     
     
-    public abstract RequestType readURLQuery(String queryString) throws OWSException;
+    public abstract RequestType readURLParameters(Map<String, String> queryParameters) throws OWSException;
 	public abstract RequestType readXMLQuery(DOMHelper domHelper, Element requestElt) throws OWSException;
 	
     
+	public RequestType readURLQuery(String queryString) throws OWSException
+	{
+	    Map<String, String> queryParams = parseQueryParameters(queryString); 
+	    return this.readURLParameters(queryParams);
+	}
+	
+	
     public RequestType readXMLQuery(InputStream input) throws OWSException
 	{
 		try
@@ -75,6 +86,38 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
 			throw new OWSException(e);
 		}
 	}
+    
+    
+    protected static Map<String, String> parseQueryParameters(String queryString) throws OWSException
+    {
+        StringTokenizer st = new StringTokenizer(queryString, "&");
+        Map<String, String> queryParams = new LinkedHashMap<String, String>();
+        
+        while (st.hasMoreTokens())
+        {
+            String nextArg = st.nextToken();
+
+            try
+            {
+                // separate argument name and value
+                int sepIndex = nextArg.indexOf('=');
+                String argName = nextArg.substring(0, sepIndex);
+                String argValue = nextArg.substring(sepIndex + 1);
+                
+                // URL decode
+                argValue = URLDecoder.decode(argValue, "UTF-8");
+                
+                // add to map
+                queryParams.put(argName.toLowerCase(), argValue);
+            }
+            catch (Exception e)
+            {
+                throw new OWSException(invalidKVP);
+            }
+        }
+        
+        return queryParams;
+    }
         
     
     /**
@@ -83,7 +126,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
      * @param timeInfo
      * @param argValue
      */
-    protected TimeInfo parseTimeArg(String argValue) throws OWSException
+    public static TimeInfo parseTimeArg(String argValue) throws OWSException
     {
     	TimeInfo timeInfo = new TimeInfo();
     	String[] timeRange = argValue.split("/");
@@ -126,7 +169,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
      * @param bbox
      * @param argValue
      */
-    protected Bbox parseBboxArg(String bboxText) throws OWSException
+    public static Bbox parseBboxArg(String bboxText) throws OWSException
     {
     	Bbox bbox = new Bbox();
     	
@@ -225,46 +268,21 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
      * @param queryString
      * @return
      */
-    public static void readCommonQueryArguments(String queryString, OWSRequest request) throws OWSException
+    public void readCommonQueryArguments(Map<String, String> queryParameters, OWSRequest request) throws OWSException
     {
-    	StringTokenizer st = new StringTokenizer(queryString, "&");
+    	String val;
+    	
+    	val = queryParameters.remove("service");
+    	if (val != null)
+    	    request.setService(val);
+    	
+    	val = queryParameters.remove("version");
+        if (val != null)
+            request.setVersion(val);
         
-        while (st.hasMoreTokens())
-        {
-            String argName = null;
-            String argValue = null;
-            String nextArg = st.nextToken();
-
-            // separate argument name and value
-            try
-            {
-                int sepIndex = nextArg.indexOf('=');
-                argName = nextArg.substring(0, sepIndex);
-                argValue = nextArg.substring(sepIndex + 1);
-            }
-            catch (IndexOutOfBoundsException e)
-            {
-                throw new OWSException(AbstractRequestReader.invalidKVP);
-            }
-            
-            // service ID
-            if (argName.equalsIgnoreCase("service"))
-            {
-                request.setService(argValue);
-            }
-            
-            // service version
-            else if (argName.equalsIgnoreCase("version"))
-            {
-                request.setVersion(argValue);
-            }
-
-            // request argument
-            else if (argName.equalsIgnoreCase("request"))
-            {
-                request.setOperation(argValue);
-            }
-        }
+        val = queryParameters.remove("request");
+        if (val != null)
+            request.setOperation(val);
     }
     
     
