@@ -23,9 +23,11 @@ package org.vast.ows.sos;
 import java.util.*;
 import org.opengis.filter.spatial.BinarySpatialOperator;
 import org.opengis.filter.temporal.BinaryTemporalOperator;
+import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.om.OMUtils;
 import org.vast.ows.OWSRequest;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -48,6 +50,8 @@ public class GetObservationRequest extends OWSRequest
     {
         INLINE, ATTACHED, OUT_OF_BAND, RESULT_TEMPLATE, RESULT_ONLY
     }
+    
+    public static String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0");
         
 	protected List<String> procedures;
 	protected List<String> offerings;
@@ -122,13 +126,13 @@ public class GetObservationRequest extends OWSRequest
     }
 
 
-    public TimeInfo getTime()
+    public TimeExtent getTime()
 	{
         return FESUtils.filterToTimeInfo(temporalFilter);
 	}
 
 
-	public void setTime(TimeInfo time)
+	public void setTime(TimeExtent time)
 	{
 	    this.temporalFilter = FESUtils.timeInfoToFilter(time);
 	}	

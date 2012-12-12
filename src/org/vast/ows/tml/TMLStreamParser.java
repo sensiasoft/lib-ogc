@@ -24,8 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.*;
-
-import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataHandler;
@@ -35,6 +34,7 @@ import org.vast.cdm.common.RawDataHandler;
 import org.vast.cdm.common.StreamDemux;
 import org.vast.data.DataArray;
 import org.vast.sweCommon.URIStreamHandler;
+import org.vast.util.ReaderException;
 
 
 public class TMLStreamParser implements StreamDemux, DataStreamParser
@@ -49,7 +49,7 @@ public class TMLStreamParser implements StreamDemux, DataStreamParser
 	}
 	
 	
-	public void parse(InputStream inputStream) throws CDMException
+	public void parse(InputStream inputStream) throws IOException
 	{
 		try
 		{
@@ -73,7 +73,7 @@ public class TMLStreamParser implements StreamDemux, DataStreamParser
 		}
 		catch (IOException e)
 		{
-			throw new CDMException("Error while parsing TML stream", e);
+			throw new ReaderException("Error while parsing TML stream", e);
 		}
 		finally
 		{
@@ -107,14 +107,14 @@ public class TMLStreamParser implements StreamDemux, DataStreamParser
 	}
 	
 	
-	public void parse(String uri) throws CDMException
+	public void parse(String uri) throws IOException
 	{
 		InputStream in = URIStreamHandler.openStream(uri);
 		this.parse(in);
 	}
 
 
-	public void parse(URI uri) throws CDMException
+	public void parse(URI uri) throws IOException
 	{
 		InputStream in = URIStreamHandler.openStream(uri);
 		this.parse(in);
@@ -195,14 +195,29 @@ public class TMLStreamParser implements StreamDemux, DataStreamParser
     }
 
 
-	public void parseNextElement() throws CDMException
+	public void parseNextElement() throws IOException
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
 
-	public void setInput(InputStream inputStream) throws CDMException
+	public void setInput(InputStream inputStream) throws IOException
 	{		
 	}
+
+
+    @Override
+    public DataBlock parseNextBlock() throws IOException
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public void close() throws IOException
+    {
+        // TODO Auto-generated method stub        
+    }
 }

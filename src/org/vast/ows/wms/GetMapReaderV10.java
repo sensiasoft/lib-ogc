@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 import org.w3c.dom.*;
@@ -157,7 +157,7 @@ public class GetMapReaderV10 extends AbstractRequestReader<GetMapRequest>
 				// time
 				else if (argName.equalsIgnoreCase("time"))
 				{
-					TimeInfo time = parseTimeArg(argValue);
+					TimeExtent time = parseTimeArg(argValue);
 			    	request.setTime(time);
 				}
 				

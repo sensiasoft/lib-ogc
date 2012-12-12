@@ -20,30 +20,20 @@
 
 package org.vast.ows.server;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.GetCapabilitiesRequest;
-import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.sos.GetObservationRequest;
 import org.vast.ows.sos.GetResultRequest;
 import org.vast.ows.sos.SOSException;
 import org.vast.ows.swe.DescribeSensorRequest;
-import org.vast.ows.util.PostRequestFilter;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.DOMHelperException;
+import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -62,7 +52,6 @@ import org.w3c.dom.NodeList;
 public abstract class SOSServlet extends OWSServlet
 {
     private static final long serialVersionUID = 6940984824581209178L;
-    private static final Log log = LogFactory.getLog(SOSServlet.class);
     protected OWSUtils owsUtils = new OWSUtils();
     
 	// Table of SOS handlers: 1 for each observation offering
@@ -72,13 +61,27 @@ public abstract class SOSServlet extends OWSServlet
 	protected Hashtable<String, String> sensorMLUrls = new Hashtable<String, String>();
 	    
 	
-	protected void processQuery(GetCapabilitiesRequest query) throws Exception
+	@Override
+    public void handleRequest(OWSRequest request) throws Exception
+    {
+	    if (request instanceof GetCapabilitiesRequest)
+            handleRequest((GetCapabilitiesRequest)request);
+        else if (request instanceof DescribeSensorRequest)
+            handleRequest((DescribeSensorRequest)request);
+        else if (request instanceof GetObservationRequest)
+            handleRequest((GetObservationRequest)request);
+        else if (request instanceof GetResultRequest)
+            handleRequest((GetResultRequest)request);
+    }
+
+
+    protected void handleRequest(GetCapabilitiesRequest query) throws Exception
     {
 	    sendCapabilities("ALL", query.getResponseStream());
     }
 	    
 	
-	protected void processQuery(DescribeSensorRequest query) throws Exception
+	protected void handleRequest(DescribeSensorRequest query) throws Exception
 	{
 		String sensorId = query.getProcedureID();
 		if (sensorId == null)
@@ -97,7 +100,7 @@ public abstract class SOSServlet extends OWSServlet
 	 * Decode the query, check validity and call the right handler
 	 * @param query
 	 */
-	protected void processQuery(GetResultRequest query) throws Exception
+	protected void handleRequest(GetResultRequest query) throws Exception
 	{
 		if (query.getOffering() == null)
 			throw new SOSException("A GetResult SOS request must specify an offeringId argument");
@@ -124,7 +127,7 @@ public abstract class SOSServlet extends OWSServlet
 	 * Decode the query, check validity and call the right handler
 	 * @param query
 	 */
-	protected void processQuery(GetObservationRequest query) throws Exception
+	protected void handleRequest(GetObservationRequest query) throws Exception
 	{
 		if (query.getOffering() == null)
 			throw new SOSException("A GetObservation SOS request must specify an offeringId argument");
@@ -277,7 +280,7 @@ public abstract class SOSServlet extends OWSServlet
         if(timeElt == null)
             throw new SOSException("Internal Error: No Time Present in Capabilities Document");        
         GMLTimeReader timeReader = new GMLTimeReader();
-        ArrayList<TimeInfo> timeList = new ArrayList<TimeInfo>();
+        ArrayList<TimeExtent> timeList = new ArrayList<TimeExtent>();
         
         try
         {
@@ -288,18 +291,18 @@ public abstract class SOSServlet extends OWSServlet
                 for(int i = 0; i < timeElts.getLength(); i++)
                 {
                     Element timeMemberElt = (Element)timeElts.item(i);
-                    TimeInfo time = timeReader.readTimePrimitive(dom, timeMemberElt);
+                    TimeExtent time = timeReader.readTimePrimitive(dom, timeMemberElt);
                     timeList.add(time);
                 }
             }            
             // case of single instant/period/grid
             else
             {
-                TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
+                TimeExtent time = timeReader.readTimePrimitive(dom, timeElt);
                 timeList.add(time);
             }
         }
-        catch (GMLException e)
+        catch (XMLReaderException e)
         {
             throw new SOSException("Internal Error: Invalid Time in Capabilities Document", e);
         }
@@ -358,144 +361,8 @@ public abstract class SOSServlet extends OWSServlet
 		return obsElt;
 	}
 	
-	/**
-	 * Parse and process HTTP GET request
-	 */
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException
-	{
-		OWSRequest query = null;
-		
-		try
-		{
-			//  get request URL
-			String requestURL = req.getRequestURL().toString();   
-			//  get query string
-			String queryString = req.getQueryString();            
-            if (queryString == null)
-                throw new OWSException("Invalid KVP Request");
-            
-            // parse query arguments
-            log.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
-            query = (OWSRequest)owsUtils.readURLQuery(queryString, "SOS");
-            
-            // setup response stream
-            resp.setContentType("text/xml");
-            query.setHttpRequest(req);
-            query.setHttpResponse(resp);
-			query.setGetServer(requestURL);
-			
-			if (query instanceof GetCapabilitiesRequest)
-	        	processQuery((GetCapabilitiesRequest)query);
-	        else if (query instanceof DescribeSensorRequest)
-	        	processQuery((DescribeSensorRequest)query);
-	        else if (query instanceof GetObservationRequest)
-	        	processQuery((GetObservationRequest)query);
-	        else if (query instanceof GetResultRequest)
-	        	processQuery((GetResultRequest)query);
-		}
-        catch (OWSException e)
-        {
-            try
-            {
-                resp.setContentType("text/xml");
-                sendErrorMessage(resp.getOutputStream(), e.getMessage());
-            }
-            catch (IOException e1)
-            {
-                e.printStackTrace();
-            }            
-        }
-		catch (Exception e)
-		{
-			throw new ServletException(internalErrorMsg, e);
-		}
-        finally
-        {
-            try
-            {
-                resp.getOutputStream().flush();
-                resp.getOutputStream().close();
-            }
-            catch (IOException e)
-            {
-                throw new ServletException(e);
-            }
-        }
-	}
-
-
-	/**
-	 * Parse and process HTTP POST request
-	 */
-	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
-	{
-		OWSRequest query = null;
-		log.info("POST REQUEST from IP " + req.getRemoteAddr());
-		
-		//  get request URL
-		String requestURL = req.getRequestURL().toString();
-		
-		try
-		{
-			InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
-            DOMHelper dom = new DOMHelper(xmlRequest, false);
-            query = (OWSRequest)owsUtils.readXMLQuery(dom, dom.getBaseElement());
-            
-            // setup response stream
-            resp.setContentType("text/xml");
-            query.setHttpRequest(req);
-            query.setHttpResponse(resp);
-			query.setPostServer(requestURL);
-			
-			if (query instanceof GetCapabilitiesRequest)
-	        	processQuery((GetCapabilitiesRequest)query);
-	        else if (query instanceof DescribeSensorRequest)
-	        	processQuery((DescribeSensorRequest)query);
-	        else if (query instanceof GetObservationRequest)
-	        	processQuery((GetObservationRequest)query);
-	        else if (query instanceof GetResultRequest)
-	        	processQuery((GetResultRequest)query);
-		}
-        catch (OWSException e)
-        {
-            try
-            {
-                resp.setContentType("text/xml");
-                sendErrorMessage(resp.getOutputStream(), "Invalid request or unrecognized version");
-            }
-            catch (IOException e1)
-            {
-                e.printStackTrace();
-            }            
-        }
-		catch (DOMHelperException e)
-		{
-            try
-            {
-                sendErrorMessage(resp.getOutputStream(), "Invalid XML request. Please check request format");
-            }
-            catch (IOException e1)
-            {
-                e.printStackTrace();
-            }
-		}
-		catch (Exception e)
-		{
-			throw new ServletException(internalErrorMsg, e);
-		}
-        finally
-        {
-            try
-            {
-                resp.getOutputStream().flush();
-                resp.getOutputStream().close();
-            }
-            catch (IOException e)
-            {
-                throw new ServletException(e);
-            }
-        }
-	}
+	
+	
 
 	@Override
 	/**

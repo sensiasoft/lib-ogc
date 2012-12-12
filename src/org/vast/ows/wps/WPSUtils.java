@@ -148,7 +148,7 @@ public class WPSUtils extends OWSUtils
 			} catch (OWSException e) {
 				// TODO Auto-generated catch block
 				throw new SOAPException(e);
-			} catch (CDMException e) {
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				throw new SOAPException(e);
 			}
@@ -192,7 +192,7 @@ public class WPSUtils extends OWSUtils
 	}
     
     
-    private SOAPMessage attachInputData(ExecuteProcessRequest request, SOAPMessage soapMessage) throws SOAPException, OWSException, CDMException 
+    private SOAPMessage attachInputData(ExecuteProcessRequest request, SOAPMessage soapMessage) throws SOAPException, OWSException, IOException 
     {
     	AttachmentPart attachmentPart = soapMessage.createAttachmentPart();
     	attachmentPart.setRawContent(ExecuteProcessRequestWriter.writeData(request), ExecuteProcessRequestWriter.getContentType(request));

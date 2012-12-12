@@ -24,11 +24,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLWriterException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLEnvelopeWriter;
-import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeWriter;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
@@ -144,7 +144,7 @@ public class GetResultWriterV10 extends AbstractRequestWriter<GetResultRequest>
 		// event time
         try
         {
-            TimeInfo timeInfo = request.getTime();
+            TimeExtent timeInfo = request.getTime();
             if (timeInfo != null)
             {
                 Element timeElt = timeWriter.writeTime(dom, timeInfo);
@@ -153,7 +153,7 @@ public class GetResultWriterV10 extends AbstractRequestWriter<GetResultRequest>
                 opElt.appendChild(timeElt);
             }
         }
-        catch (GMLException e)
+        catch (XMLWriterException e)
         {
             throw new SOSException("Error while writing time", e);
         }

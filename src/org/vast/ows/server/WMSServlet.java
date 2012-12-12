@@ -24,14 +24,7 @@ Alexandre Robin <alexandre.robin@spotimage.fr>
 
 package org.vast.ows.server;
 
-import javax.servlet.http.*;
-import javax.servlet.*;
-import java.io.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSExceptionWriter;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.wms.GetMapRequest;
@@ -51,85 +44,20 @@ import org.vast.ows.wms.GetMapRequest;
 public abstract class WMSServlet extends OWSServlet
 {
 	private static final long serialVersionUID = 1265879257871196681L;
-	private static final Log log = LogFactory.getLog(WMSServlet.class);
 	protected OWSUtils owsUtils = new OWSUtils();
+	
+	
+	@Override
+    public void handleRequest(OWSRequest request) throws Exception
+    {
+        if (request instanceof GetMapRequest)
+        {
+            processQuery((GetMapRequest) request);
+        }
+        else
+            throw new OWSException("Unsupported operation " + request.getOperation());
+    }
 
 
-	public void processQuery(GetCapabilitiesRequest query) throws Exception
-	{
-		sendCapabilities("ALL", query.getResponseStream());
-	}
-
-
-	public abstract void processQuery(GetMapRequest query) throws Exception;
-
-
-	/**
-	 * Parse and process HTTP GET request
-	 * TODO  Modify to use WCSRequestReader
-	 */
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException
-	{
-		// parse query arguments
-		try
-		{
-			OWSRequest query = (OWSRequest) owsUtils.readURLQuery(req.getQueryString(), OWSUtils.WMS);
-			query.setHttpRequest(req);
-			query.setHttpResponse(resp);
-
-			if (query instanceof GetCapabilitiesRequest)
-			{
-				resp.setContentType("text/xml");
-				processQuery((GetCapabilitiesRequest) query);
-			}
-			else if (query instanceof GetMapRequest)
-			{
-				resp.setContentType(((GetMapRequest) query).getFormat());
-				processQuery((GetMapRequest) query);
-			}
-		}
-		catch (OWSException e)
-		{
-			try
-			{
-				resp.setContentType("text/xml");
-				OWSExceptionWriter writer = new OWSExceptionWriter();
-				writer.writeException(resp.getOutputStream(), e);
-			}
-			catch (IOException e1)
-			{
-			}
-		}
-		catch (Exception e)
-		{
-			try
-			{
-				resp.sendError(500, internalErrorMsg);
-				log.error(internalErrorMsg, e);
-			}
-			catch (IOException e1)
-			{
-			}
-		}
-		finally
-		{
-			try
-			{
-				resp.getOutputStream().flush();
-				resp.getOutputStream().close();
-			}
-			catch (IOException e)
-			{
-			}
-		}
-	}
-
-
-	/**
-	 * Parse and process HTTP POST request
-	 */
-	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
-	{
-		// TODO parse WMS xml request
-	}
+    public abstract void processQuery(GetMapRequest request) throws Exception;
 }

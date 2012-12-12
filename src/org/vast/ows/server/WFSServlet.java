@@ -23,25 +23,12 @@ Alexandre Robin <alexandre.robin@spotimage.fr>
 
 package org.vast.ows.server;
 
-import javax.servlet.http.*;
-import javax.servlet.*;
-import java.io.*;
-import java.text.ParseException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSExceptionWriter;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
-import org.vast.ows.util.PostRequestFilter;
 import org.vast.ows.wfs.GetFeatureRequest;
-import org.vast.util.*;
-import org.vast.xml.DOMHelper;
-import org.vast.xml.DOMHelperException;
 
 
-//import org.vast.io.xml.*;
 /**
  * <p>Title: WFSServlet</p>
  *
@@ -56,208 +43,20 @@ import org.vast.xml.DOMHelperException;
 public abstract class WFSServlet extends OWSServlet
 {
 	private static final long serialVersionUID = 1L;
-	private static final Log log = LogFactory.getLog(WFSServlet.class);
 	protected OWSUtils owsUtils = new OWSUtils();
 
 
-	public void processQuery(GetCapabilitiesRequest query) throws Exception
-	{
-		sendCapabilities("ALL", query.getResponseStream());
-	}
+	@Override
+    public void handleRequest(OWSRequest request) throws OWSException
+    {
+	    if (request instanceof GetFeatureRequest)
+        {
+	        processQuery((GetFeatureRequest) request);
+        }
+	    else
+	        throw new OWSException("Unsupported operation " + request.getOperation());
+    }
 
 
-	public abstract void processQuery(GetFeatureRequest query) throws Exception;
-
-
-	/**
-	 * Parse and process HTTP GET request
-	 * TODO  Modify to use WCSRequestReader
-	 */
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException
-	{
-		// parse query arguments
-		try
-		{
-			//this.log("GET REQUEST: " + query + " from IP " + req.getRemoteAddr() + " (" + req.getRemoteHost() + ")");
-			OWSRequest query = (OWSRequest) owsUtils.readURLQuery(req.getQueryString());
-			query.setHttpRequest(req);
-            query.setHttpResponse(resp);
-
-			if (query instanceof GetCapabilitiesRequest)
-			{
-				resp.setContentType("text/xml");
-				processQuery((GetCapabilitiesRequest) query);
-			}
-			else if (query instanceof GetFeatureRequest)
-			{
-				//resp.setContentType(((GetFeatureRequest) query).getFormat());
-				resp.setContentType("text/xml");
-				processQuery((GetFeatureRequest) query);
-			}
-		}
-		catch (OWSException e)
-		{
-			try
-			{
-				resp.setContentType("text/xml");
-				OWSExceptionWriter writer = new OWSExceptionWriter();
-				writer.writeException(resp.getOutputStream(), e);
-			}
-			catch (IOException e1)
-			{
-			}
-		}
-		catch (Exception e)
-		{
-			try
-			{
-				resp.sendError(500, internalErrorMsg);
-				log.error(internalErrorMsg, e);
-			}
-			catch (IOException e1)
-			{
-			}
-		}
-		finally
-		{
-			try
-			{
-				resp.getOutputStream().flush();
-				resp.getOutputStream().close();
-			}
-			catch (IOException e)
-			{
-			}
-		}
-	}
-
-
-	/**
-	 * Parse and process HTTP POST request
-	 */
-	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
-	{
-		// parse query arguments
-		try
-		{
-			InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
-            DOMHelper dom = new DOMHelper(xmlRequest, false);
-            OWSRequest query = (OWSRequest)owsUtils.readXMLQuery(dom, dom.getBaseElement());
-			query.setHttpRequest(req);
-            query.setHttpResponse(resp);
-
-			if (query instanceof GetCapabilitiesRequest)
-			{
-				resp.setContentType("text/xml");
-				processQuery((GetCapabilitiesRequest) query);
-			}
-			else if (query instanceof GetFeatureRequest)
-			{
-				//resp.setContentType(((GetFeatureRequest) query).getFormat());
-				resp.setContentType("text/xml");
-				processQuery((GetFeatureRequest) query);
-			}
-		}
-		catch (OWSException e)
-		{
-			try
-			{
-				resp.setContentType("text/xml");
-				OWSExceptionWriter writer = new OWSExceptionWriter();
-				writer.writeException(resp.getOutputStream(), e);
-			}
-			catch (IOException e1)
-			{
-			}
-		}
-		catch (DOMHelperException e)
-		{
-            try
-            {
-                sendErrorMessage(resp.getOutputStream(), "Invalid XML request. Please check request format");
-            }
-            catch (IOException e1)
-            {
-            }
-		}
-		catch (Exception e)
-		{
-			try
-			{
-				resp.sendError(500, internalErrorMsg);
-				log.error(internalErrorMsg, e);
-			}
-			catch (IOException e1)
-			{
-			}
-		}
-		finally
-		{
-			try
-			{
-				resp.getOutputStream().flush();
-				resp.getOutputStream().close();
-			}
-			catch (IOException e)
-			{
-			}
-		}
-	}
-
-
-	/**
-	 * Utility method to parse time argument from GET request.
-	 * Format is YYYY-MM-DDTHH:MM:SS.sss/YYYY-MM-DDTHH:MM:SS.sss/PYMDTHMS
-	 * @param timeInfo
-	 * @param argValue
-	 */
-	protected void parseTimeArg(TimeInfo timeInfo, String argValue) throws OWSException
-	{
-		String[] timeRange = argValue.split("/");
-		double now = System.currentTimeMillis() / 1000;
-
-		try
-		{
-			// parse start time
-			if (timeRange[0].equalsIgnoreCase("now"))
-			{
-				timeInfo.setBeginNow(true);
-				timeInfo.setStartTime(now);
-			}
-			else
-			{
-				timeInfo.setStartTime(DateTimeFormat.parseIso(timeRange[0]));
-			}
-
-			// parse stop time if present
-			if (timeRange.length > 1)
-			{
-				if (timeRange[1].equalsIgnoreCase("now"))
-				{
-					timeInfo.setEndNow(true);
-					timeInfo.setStopTime(now);
-				}
-				else
-				{
-					timeInfo.setStopTime(DateTimeFormat.parseIso(timeRange[1]));
-				}
-			}
-
-			// parse step time if present
-			if (timeRange.length > 2)
-			{
-				timeInfo.setTimeStep(DateTimeFormat.parseIsoPeriod(timeRange[2]));
-			}
-		}
-		catch (ParseException e)
-		{
-			throw new OWSException("Invalid WMS Get Request: Invalid Time: " + argValue);
-		}
-
-		// copy start to stop
-		if (timeRange.length == 1)
-		{
-			timeInfo.setStopTime(timeInfo.getStartTime());
-		}
-	}
+	public abstract void processQuery(GetFeatureRequest request) throws OWSException;
 }

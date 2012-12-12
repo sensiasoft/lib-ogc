@@ -23,7 +23,7 @@ package org.vast.ows.sos;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 import org.vast.ows.*;
@@ -95,7 +95,7 @@ public class DescribeSensorReaderV10 extends AbstractRequestReader<DescribeSenso
 			// time
 			else if (argName.equalsIgnoreCase("time"))
 			{
-				TimeInfo time = parseTimeArg(argValue);
+				TimeExtent time = parseTimeArg(argValue);
             	request.setTime(time);
 			}
 			

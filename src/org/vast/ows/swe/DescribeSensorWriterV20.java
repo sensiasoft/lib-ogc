@@ -28,10 +28,10 @@ package org.vast.ows.swe;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLWriterException;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeWriter;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
@@ -63,7 +63,8 @@ public class DescribeSensorWriterV20 extends AbstractRequestWriter<DescribeSenso
     
 	public DescribeSensorWriterV20()
 	{
-        timeWriter = new GMLTimeWriter("3.2");
+        timeWriter = new GMLTimeWriter();
+        timeWriter.setGmlVersion("3.2");
 	}
 
 	
@@ -109,7 +110,7 @@ public class DescribeSensorWriterV20 extends AbstractRequestWriter<DescribeSenso
 		// time instant or period
         try
         {
-            TimeInfo timeInfo = request.getTime();
+            TimeExtent timeInfo = request.getTime();
             if (timeInfo != null)
             {
                 Element timeElt = timeWriter.writeTime(dom, timeInfo);
@@ -117,7 +118,7 @@ public class DescribeSensorWriterV20 extends AbstractRequestWriter<DescribeSenso
                 elt.appendChild(timeElt);
             }
         }
-        catch (GMLException e)
+        catch (XMLWriterException e)
         {
             throw new SOSException("Error while writing time", e);
         }

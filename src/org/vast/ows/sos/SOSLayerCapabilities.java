@@ -24,7 +24,7 @@ import java.util.*;
 
 import org.vast.ows.OWSLayerCapabilities;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -47,7 +47,7 @@ public class SOSLayerCapabilities extends OWSLayerCapabilities
     protected List<String> formatList;
     protected List<String> observableList;
     protected List<String> procedureList;
-    protected List<TimeInfo> timeList;
+    protected List<TimeExtent> timeList;
     protected List<Bbox> bboxList;
     
 
@@ -56,7 +56,7 @@ public class SOSLayerCapabilities extends OWSLayerCapabilities
     	formatList = new ArrayList<String>(2);
     	observableList = new ArrayList<String>(2);
     	procedureList = new ArrayList<String>(2);
-    	timeList = new ArrayList<TimeInfo>(1);
+    	timeList = new ArrayList<TimeExtent>(1);
     	bboxList = new ArrayList<Bbox>();
     }
 
@@ -97,13 +97,13 @@ public class SOSLayerCapabilities extends OWSLayerCapabilities
 	}
 
 
-	public List<TimeInfo> getTimeList()
+	public List<TimeExtent> getTimeList()
 	{
 		return timeList;
 	}
 
 
-	public void setTimeList(List<TimeInfo> timeList)
+	public void setTimeList(List<TimeExtent> timeList)
 	{
 		this.timeList = timeList;
 	}

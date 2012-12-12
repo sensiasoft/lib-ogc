@@ -47,7 +47,7 @@ import org.opengis.temporal.TemporalPrimitive;
 import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 public class FESUtils
@@ -71,7 +71,7 @@ public class FESUtils
         String isoTime = arg.substring(firstComma + 1);
         
         // parse iso time string
-        TimeInfo time = AbstractRequestReader.parseTimeArg(isoTime);
+        TimeExtent time = AbstractRequestReader.parseTimeArg(isoTime);
         BinaryTemporalOperator timeOp = timeInfoToFilter(time);
         
         // set value reference
@@ -135,9 +135,9 @@ public class FESUtils
      * @param temporalFilter
      * @return
      */
-    protected static TimeInfo filterToTimeInfo(BinaryTemporalOperator temporalFilter)
+    protected static TimeExtent filterToTimeInfo(BinaryTemporalOperator temporalFilter)
     {
-        TimeInfo time = new TimeInfo();
+        TimeExtent time = new TimeExtent();
         
         if (temporalFilter != null)
         {
@@ -159,11 +159,11 @@ public class FESUtils
     
     
     /**
-     * Utility method to convert a TimeInfo to a GeoTools TEquals or During operator
+     * Utility method to convert a TimeExtent to a GeoTools TEquals or During operator
      * @param time
      * @return
      */
-    protected static BinaryTemporalOperator timeInfoToFilter(TimeInfo time)
+    protected static BinaryTemporalOperator timeInfoToFilter(TimeExtent time)
     {
         Date begin = new Date((long)time.getStartTime()*1000);
         Date end = new Date((long)time.getStopTime()*1000);

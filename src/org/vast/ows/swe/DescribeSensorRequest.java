@@ -21,7 +21,7 @@
 package org.vast.ows.swe;
 
 import org.vast.ows.OWSRequest;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -43,7 +43,7 @@ public class DescribeSensorRequest extends OWSRequest
     public final static String SENSORML_10_FORMAT = "http://www.opengis.net/SensorML/1.0";
     	
 	protected String procedureID;	
-	protected TimeInfo time;
+	protected TimeExtent time;
     protected String format;
 
 	
@@ -79,13 +79,13 @@ public class DescribeSensorRequest extends OWSRequest
 	}
 	
 	
-	public TimeInfo getTime()
+	public TimeExtent getTime()
 	{
 		return time;
 	}
 
 
-	public void setTime(TimeInfo time)
+	public void setTime(TimeExtent time)
 	{
 		this.time = time;
 	}	

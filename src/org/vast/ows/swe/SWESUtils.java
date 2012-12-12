@@ -20,11 +20,13 @@
 
 package org.vast.ows.swe;
 
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSUtils;
+import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 import org.w3c.dom.Element;
@@ -72,18 +74,34 @@ public class SWESUtils
 			return;
 		
 		dom.addUserPrefix(prefix, nsUri);
-    	Iterator<Object> it = extObjs.values().iterator();
-		while (it.hasNext())
+    	for (Entry<QName, Object> extObj: extObjs.entrySet())
         {
-        	Object obj = it.next();
-			if (obj instanceof Element)
+        	Element extContent = null;
+        	QName extName = extObj.getKey();
+        	Object extValue = extObj.getValue();
+        	
+			if (extValue instanceof Element)
         	{
-        		Element extContent = (Element)obj;
+        		extContent = (Element)extObj;
         		dom.getDocument().adoptNode(extContent);
-        		Element extElt = dom.createElement(prefix + ":extension");
-        		extElt.appendChild(extContent);
-        		parentElt.appendChild(extElt);
         	}
+			else if (extValue instanceof String || extValue instanceof Number || extValue instanceof Boolean)
+	        {
+			    extContent = dom.getDocument().createElementNS(extName.getNsUri(), extName.getLocalName());
+			    dom.setElementValue(extContent, extValue.toString());
+	        }
+	        else if (extValue instanceof Date)
+	        {
+	            extContent = dom.getDocument().createElementNS(extName.getNsUri(), extName.getLocalName());
+	            dom.setElementValue(extContent, DateTimeFormat.formatIso(((Date)extValue).getTime() / 1000.0, 0));
+	        }
+			
+			if (extContent != null)
+			{
+			    Element extElt = dom.createElement(prefix + ":extension");
+                extElt.appendChild(extContent);
+                parentElt.appendChild(extElt);
+			}
         }
 	}
 	

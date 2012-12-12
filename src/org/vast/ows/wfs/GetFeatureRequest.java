@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.vast.ows.OWSRequest;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -44,7 +44,7 @@ import org.vast.util.TimeInfo;
  */
 public class GetFeatureRequest extends OWSRequest
 {
-    protected TimeInfo time;
+    protected TimeExtent time;
 	protected Bbox bbox;
 	protected String srs;
 	protected String format;
@@ -57,7 +57,7 @@ public class GetFeatureRequest extends OWSRequest
 	{
 		service = "WFS";
 		bbox = new Bbox();
-		time = new TimeInfo();
+		time = new TimeExtent();
 		featureIds = new ArrayList<String>(1);
 	}
 	
@@ -122,13 +122,13 @@ public class GetFeatureRequest extends OWSRequest
 	}
 
 
-	public TimeInfo getTime()
+	public TimeExtent getTime()
 	{
 		return time;
 	}
 
 
-	public void setTime(TimeInfo time)
+	public void setTime(TimeExtent time)
 	{
 		this.time = time;
 	}

@@ -22,6 +22,7 @@ package org.vast.ows;
 
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,7 +31,7 @@ import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -131,7 +132,7 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
      * @param buffer
      * @param time
      */
-    protected void writeTimeArgument(StringBuilder buffer, TimeInfo time)
+    protected void writeTimeArgument(StringBuilder buffer, TimeExtent time)
     {
         if (time.isTimeInstant())
         {
@@ -248,17 +249,59 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
      */
     protected void writeKVPExtensions(StringBuilder urlBuff, OWSRequest request)
     {
-    	Iterator<Entry<QName, Object>> extObjs = request.getExtensions().entrySet().iterator();
-        while (extObjs.hasNext())
+    	for (Entry<QName, Object> extension : request.getExtensions().entrySet())
         {
-        	Entry<QName, Object> ext = extObjs.next();
-        	if (ext.getValue() instanceof String)
-        	{
-        		urlBuff.append('&');
-        		urlBuff.append(ext.getKey().toString());
-        		urlBuff.append('=');
-        		urlBuff.append(ext.getValue().toString());
-        	}
+            String paramName = extension.getKey().getLocalName();
+            Object extValue = extension.getValue();
+            String paramValue = getExtensionKvpValue(extValue);
+            
+            if (paramValue != null)
+            {
+                urlBuff.append('&');
+                urlBuff.append(paramName);
+                urlBuff.append('=');                
+                urlBuff.append(paramValue);
+            }
         }
+    }
+    
+    
+    /**
+     * Adds extension parameters to KVP request
+     * @param urlParams
+     * @param request
+     */
+    protected void writeKvpExtensions(Map<String, String> urlParams, OWSRequest request)
+    {
+        for (Entry<QName, Object> extension : request.getExtensions().entrySet())
+        {
+            String paramName = extension.getKey().getLocalName();
+            Object extValue = extension.getValue();
+            String paramValue = getExtensionKvpValue(extValue);
+            
+            if (paramValue != null)
+                urlParams.put(paramName, paramValue);
+        }
+    }
+    
+    
+    protected String getExtensionKvpValue(Object extValue)
+    {
+        if (extValue instanceof String || extValue instanceof Number || extValue instanceof Boolean)
+        {
+            return extValue.toString();
+        }
+        else if (extValue instanceof Date)
+        {
+            return DateTimeFormat.formatIso(((Date)extValue).getTime() / 1000.0, 0);
+        }
+        else if (extValue instanceof TimeExtent)
+        {
+            StringBuilder buf = new StringBuilder();
+            this.writeTimeArgument(buf, (TimeExtent)extValue);
+            return buf.toString();
+        }
+        
+        return null;
     }
 }

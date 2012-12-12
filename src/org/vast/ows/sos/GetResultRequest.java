@@ -26,7 +26,7 @@ import org.opengis.filter.spatial.BinarySpatialOperator;
 import org.opengis.filter.temporal.BinaryTemporalOperator;
 import org.vast.ows.OWSRequest;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -125,13 +125,13 @@ public class GetResultRequest extends OWSRequest
     }
 
 
-    public TimeInfo getTime()
+    public TimeExtent getTime()
     {
         return FESUtils.filterToTimeInfo(temporalFilter);
     }
 
 
-    public void setTime(TimeInfo time)
+    public void setTime(TimeExtent time)
     {
         this.temporalFilter = FESUtils.timeInfoToFilter(time);
     }   

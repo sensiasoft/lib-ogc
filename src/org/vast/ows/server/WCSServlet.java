@@ -21,23 +21,13 @@
 
 package org.vast.ows.server;
 
-import javax.servlet.http.*;
-import javax.servlet.*;
-import java.io.*;
-import java.text.ParseException;
 import java.util.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
-import org.vast.ows.util.PostRequestFilter;
 import org.vast.ows.wcs.DescribeCoverageRequest;
 import org.vast.ows.wcs.GetCoverageRequest;
 import org.vast.ows.wcs.WCSException;
-import org.vast.util.*;
-import org.vast.xml.DOMHelper;
 
 
 /**
@@ -54,7 +44,6 @@ import org.vast.xml.DOMHelper;
 public abstract class WCSServlet extends OWSServlet
 {
     private static final long serialVersionUID = 7155979257491196521L;
-    private static final Log log = LogFactory.getLog(WCSServlet.class);
     protected String DEFAULT_VERSION = "1.0";
     protected OWSUtils owsUtils = new OWSUtils();
     
@@ -62,13 +51,18 @@ public abstract class WCSServlet extends OWSServlet
     protected Hashtable<String, WCSHandler> dataSetHandlers = new Hashtable<String, WCSHandler>();
         
 
-
-    protected void processQuery(GetCapabilitiesRequest query) throws Exception
+    @Override
+    public void handleRequest(OWSRequest request) throws Exception
     {
-    	sendCapabilities("ALL", query.getResponseStream());
+        if (request instanceof GetCoverageRequest)
+        {
+            processQuery((GetCoverageRequest) request);
+        }
+        else
+            throw new OWSException("Unsupported operation " + request.getOperation());
     }
     
-    
+
     protected void processQuery(GetCoverageRequest query) throws Exception
     {
     	String coverage = query.getCoverage();
@@ -110,139 +104,6 @@ public abstract class WCSServlet extends OWSServlet
 
 
     /**
-     * Parse and process HTTP GET request
-     * TODO  Modify to use WCSRequestReader
-     */
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException
-    {
-        String version = DEFAULT_VERSION;
-    	try
-        {
-	        OWSRequest query = (OWSRequest) owsUtils.readURLQuery(req.getQueryString());
-	        version = query.getVersion();
-	        query.setHttpRequest(req);
-            query.setHttpResponse(resp);
-	        	        
-	        if (query instanceof GetCapabilitiesRequest)
-	        {
-	        	resp.setContentType(XML_MIME_TYPE);
-	        	processQuery((GetCapabilitiesRequest)query);
-	        }
-	        else if (query instanceof DescribeCoverageRequest)
-	        {
-	        	resp.setContentType(XML_MIME_TYPE);
-	        	processQuery((DescribeCoverageRequest)query);
-	        }
-	        else if (query instanceof GetCoverageRequest)
-	        {
-	        	processQuery((GetCoverageRequest)query);
-	        }	        
-        }
-        catch (OWSException e)
-		{
-			try
-			{
-				resp.setContentType(XML_MIME_TYPE);
-				owsUtils.writeXMLException(resp.getOutputStream(), OWSUtils.WCS, version, e);
-			}
-			catch (IOException e1)
-			{
-			}
-		}
-		catch (Exception e)
-		{
-			try
-			{
-				resp.sendError(500, internalErrorMsg);
-				log.error(internalErrorMsg, e);
-			}
-			catch (IOException e1)
-			{
-			}
-		}
-        finally
-        {
-            try
-            {
-                resp.getOutputStream().flush();
-                resp.getOutputStream().close();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    /**
-     * Parse and process HTTP POST request
-     */
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
-    {
-    	String version = DEFAULT_VERSION;
-    	try
-        {
-    		InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
-            DOMHelper dom = new DOMHelper(xmlRequest, false);
-            OWSRequest query = (OWSRequest)owsUtils.readXMLQuery(dom, dom.getBaseElement());
-	        query.setHttpRequest(req);
-            query.setHttpResponse(resp);
-	        version = query.getVersion();
-	        
-	        if (query instanceof GetCapabilitiesRequest)
-	        {
-	        	resp.setContentType(XML_MIME_TYPE);
-	        	processQuery((GetCapabilitiesRequest)query);
-	        }
-	        else if (query instanceof DescribeCoverageRequest)
-	        {
-	        	resp.setContentType(XML_MIME_TYPE);
-	        	processQuery((DescribeCoverageRequest)query);
-	        }
-	        else if (query instanceof GetCoverageRequest)
-	        {
-	        	processQuery((GetCoverageRequest)query);
-	        }	        
-        }
-        catch (OWSException e)
-		{
-			try
-			{
-				resp.setContentType(XML_MIME_TYPE);
-				owsUtils.writeXMLException(resp.getOutputStream(), OWSUtils.WCS, version, e);
-			}
-			catch (IOException e1)
-			{
-			}
-		}
-		catch (Exception e)
-		{
-			try
-			{
-				resp.sendError(500, internalErrorMsg);
-				log.error(internalErrorMsg, e);
-			}
-			catch (IOException e1)
-			{
-			}
-		}
-        finally
-        {
-            try
-            {
-                resp.getOutputStream().flush();
-                resp.getOutputStream().close();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    /**
      * Adds a new handler for the given coverage ID
      * @param coverageID
      * @param handlerClass
@@ -257,54 +118,4 @@ public abstract class WCSServlet extends OWSServlet
     {
         dataSetHandlers.remove(dataSetID);
     }
-    
-    /**
-     * Utility method to parse time argument from GET request.
-     * Format is YYYY-MM-DDTHH:MM:SS.sss/YYYY-MM-DDTHH:MM:SS.sss/PYMDTHMS
-     * @param timeInfo
-     * @param argValue
-     */
-    protected void parseTimeArg(TimeInfo timeInfo, String argValue) throws OWSException
-    {
-        String[] timeRange = argValue.split("/");
-        double now = System.currentTimeMillis() / 1000;
-        
-        try
-        {
-            // parse start time
-            if (timeRange[0].equalsIgnoreCase("now"))
-            {
-                timeInfo.setBeginNow(true);
-                timeInfo.setStartTime(now);
-            }
-            else
-                timeInfo.setStartTime(DateTimeFormat.parseIso(timeRange[0]));
-            
-            // parse stop time if present
-            if (timeRange.length > 1)
-            {
-                if (timeRange[1].equalsIgnoreCase("now"))
-                {
-                    timeInfo.setEndNow(true);
-                    timeInfo.setStopTime(now);
-                }
-                else
-                    timeInfo.setStopTime(DateTimeFormat.parseIso(timeRange[1]));
-            }
-            
-            // parse step time if present
-            if (timeRange.length > 2)
-            {
-                timeInfo.setTimeStep(DateTimeFormat.parseIsoPeriod(timeRange[2]));
-            }
-        }
-        catch (ParseException e)
-        {
-            throw new OWSException("Invalid WCS Get Request: Invalid Time: " + argValue);
-        }
-        
-        // copy start to stop
-        if (timeRange.length == 1)
-            timeInfo.setStopTime(timeInfo.getStartTime());  
-    }    
 }

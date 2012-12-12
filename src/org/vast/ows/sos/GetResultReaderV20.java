@@ -34,6 +34,7 @@ import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.vast.ows.*;
+import org.vast.ows.swe.SWERequestReader;
 
 
 /**
@@ -51,16 +52,26 @@ import org.vast.ows.*;
  * @date Aug 1, 2012
  * @version 1.0
  */
-public class GetResultReaderV20 extends AbstractRequestReader<GetResultRequest>
+public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
 {
     protected Parser filterParser;
     
     
     public GetResultReaderV20()
-	{
-        Configuration configuration = new org.geotools.filter.v2_0.FESConfiguration();
-        filterParser = new Parser(configuration);
+	{        
 	}
+    
+    
+    protected Parser getFilterParser()
+    {
+        if (filterParser == null)
+        {
+            Configuration configuration = new org.geotools.filter.v2_0.FESConfiguration();
+            filterParser = new Parser(configuration);
+        }
+        
+        return filterParser;
+    }
 
 	
 	@Override
@@ -170,7 +181,7 @@ public class GetResultReaderV20 extends AbstractRequestReader<GetResultRequest>
             if (timeOpElt != null)
             {
                 DOMSource domSrc = new DOMSource(timeOpElt);
-                BinaryTemporalOperator filter = (BinaryTemporalOperator)filterParser.parse(domSrc);
+                BinaryTemporalOperator filter = (BinaryTemporalOperator)getFilterParser().parse(domSrc);
                 request.setTemporalFilter(filter);
             }
         }
@@ -194,7 +205,7 @@ public class GetResultReaderV20 extends AbstractRequestReader<GetResultRequest>
             if (spatialOpElt != null)
             {
                 DOMSource domSrc = new DOMSource(spatialOpElt);
-                BinarySpatialOperator filter = (BinarySpatialOperator)filterParser.parse(domSrc);
+                BinarySpatialOperator filter = (BinarySpatialOperator)getFilterParser().parse(domSrc);
                 request.setSpatialFilter(filter);
             }
         }

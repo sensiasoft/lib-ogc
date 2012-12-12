@@ -22,7 +22,6 @@
 
 package org.vast.ows.sps;
 
-import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseWriter;
@@ -30,6 +29,7 @@ import org.w3c.dom.*;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLWriterException;
 
 
 /**
@@ -77,9 +77,9 @@ public class TaskingResponseWriterV20 extends SWEResponseWriter<TaskingResponse<
 			
 			return rootElt;
 		}
-		catch (CDMException e)
+		catch (XMLWriterException e)
 		{
-			throw new SPSException(e);
+			throw new SPSException("Error while building tasking response", e);
 		}
 	}
 	

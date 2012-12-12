@@ -29,7 +29,7 @@ import org.vast.ows.*;
 import org.w3c.dom.*;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.Interval;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 
@@ -197,7 +197,7 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
 			
 			for (int i=0; i<request.getTimes().size(); i++)
 			{
-				TimeInfo timeInfo = request.getTimes().get(i);
+				TimeExtent timeInfo = request.getTimes().get(i);
 				if (timeInfo.isTimeInstant())
 				{
 					String time = DateTimeFormat.formatIso(timeInfo.getBaseTime(), timeInfo.getTimeZone());

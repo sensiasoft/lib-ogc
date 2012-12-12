@@ -22,7 +22,6 @@ package org.vast.ows.tml;
 
 import java.io.*;
 import java.util.ArrayList;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataStreamParser;
@@ -31,6 +30,7 @@ import org.vast.sweCommon.AsciiDataParser;
 import org.vast.sweCommon.BinaryDataParser;
 import org.vast.sweCommon.SWEFilter;
 import org.vast.sweCommon.SWECommonUtils;
+import org.vast.util.ReaderException;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.w3c.dom.*;
@@ -50,7 +50,7 @@ public class TMLReader implements InputStreamProvider
 	}
 	
 	
-	public void parse(InputStream inputStream) throws CDMException
+	public void parse(InputStream inputStream) throws IOException
 	{		
 		try
 		{
@@ -99,7 +99,7 @@ public class TMLReader implements InputStreamProvider
 		}
 		catch (DOMHelperException e)
 		{
-			throw new CDMException("Error while parsing TML XML", e);
+			throw new ReaderException("Error while parsing TML XML", e);
 		}
 	}
 	
@@ -116,7 +116,7 @@ public class TMLReader implements InputStreamProvider
 	}
 	
 	
-	private DataStreamParser createDataParser(DataComponent dataInfo, DataEncoding dataEncoding) throws CDMException
+	private DataStreamParser createDataParser(DataComponent dataInfo, DataEncoding dataEncoding) throws IOException
 	{
 		DataStreamParser parser = null;
 		
@@ -139,7 +139,7 @@ public class TMLReader implements InputStreamProvider
 	}
 	
 	
-	public InputStream getDataStream() throws CDMException
+	public InputStream getDataStream() throws IOException
 	{
 		return this.inputStream;
 	}

@@ -24,12 +24,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.vast.ogc.gml.GMLEnvelopeReader;
-import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.*;
 import org.vast.ows.sos.GetObservationRequest.ResponseMode;
@@ -103,7 +103,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 			// time
 			else if (argName.equalsIgnoreCase("time") || argName.equalsIgnoreCase("eventTime"))
 			{
-				TimeInfo timeInfo = parseTimeArg(argValue);
+				TimeExtent timeInfo = parseTimeArg(argValue);
 				request.setTime(timeInfo);
 			}
 			
@@ -177,7 +177,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
         {
             readTemporalOps(dom, requestElt, request);
         }
-        catch (GMLException e)
+        catch (XMLReaderException e)
         {
             throw new SOSException(invalidXML + ": " + e.getMessage());
         }
@@ -203,7 +203,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
         {
         	readFOI(dom, requestElt, request);
         }
-        catch (GMLException e)
+        catch (XMLReaderException e)
         {
             throw new SOSException(invalidXML + ": " + e.getMessage());
         }
@@ -252,7 +252,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
      * @param query
      * @throws GMLException
      */
-	protected void readTemporalOps(DOMHelper dom, Element requestElt, GetObservationRequest query) throws SOSException, GMLException
+	protected void readTemporalOps(DOMHelper dom, Element requestElt, GetObservationRequest query) throws SOSException, XMLReaderException
 	{
 		Element timeOpElt = dom.getElement(requestElt, "eventTime/*");
 		if (timeOpElt == null)
@@ -266,7 +266,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
             
             NodeList childElts = dom.getElements(timeOpElt, "*");
             Element timePrimitiveElt = (Element)childElts.item(1);
-        	TimeInfo time = timeReader.readTimePrimitive(dom, timePrimitiveElt);
+            TimeExtent time = timeReader.readTimePrimitive(dom, timePrimitiveElt);
             query.setTime(time);
         }
 		else
@@ -281,7 +281,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
 	 * @param query
 	 * @throws GMLException
 	 */
-	protected void readFOI(DOMHelper dom, Element requestElt, GetObservationRequest query) throws GMLException
+	protected void readFOI(DOMHelper dom, Element requestElt, GetObservationRequest query) throws XMLReaderException
     {
 		readSpatialOps(dom, requestElt, query);
     }
@@ -295,7 +295,7 @@ public class GetObservationReaderV10 extends AbstractRequestReader<GetObservatio
      * @param query
      * @throws GMLException
      */
-    protected void readSpatialOps(DOMHelper dom, Element requestElt, GetObservationRequest query) throws GMLException
+    protected void readSpatialOps(DOMHelper dom, Element requestElt, GetObservationRequest query) throws XMLReaderException
     {
         Element envelopeElt = dom.getElement(requestElt, "featureOfInterest/BBOX/Envelope");
         

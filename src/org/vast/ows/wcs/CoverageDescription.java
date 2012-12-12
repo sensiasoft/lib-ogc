@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.vast.ows.OWSIdentification;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -53,7 +53,7 @@ public class CoverageDescription extends OWSIdentification
 	// protected List<Polygon> -> use JTS
 
 	// temporal domain
-	protected List<TimeInfo> timeList;
+	protected List<TimeExtent> timeList;
 
 	// range
 	protected List<RangeField> rangeFields;
@@ -69,7 +69,7 @@ public class CoverageDescription extends OWSIdentification
 	{
 		bboxList = new ArrayList<Bbox>(1);
 		
-		timeList = new ArrayList<TimeInfo>(0);
+		timeList = new ArrayList<TimeExtent>(0);
 		rangeFields = new ArrayList<RangeField>(1);
 		
 		formatList = new ArrayList<String>(3);
@@ -137,13 +137,13 @@ public class CoverageDescription extends OWSIdentification
 	}
 
 
-	public List<TimeInfo> getTimeList()
+	public List<TimeExtent> getTimeList()
 	{
 		return timeList;
 	}
 
 
-	public void setTimeList(List<TimeInfo> timeList)
+	public void setTimeList(List<TimeExtent> timeList)
 	{
 		this.timeList = timeList;
 	}

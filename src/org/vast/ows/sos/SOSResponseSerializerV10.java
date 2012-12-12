@@ -28,7 +28,7 @@ import org.vast.ogc.gml.GMLTimeWriter;
 import org.vast.ogc.om.OMUtils;
 import org.vast.ows.SweResponseSerializer;
 import org.vast.sweCommon.SWECommonUtils;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 
 
@@ -93,7 +93,7 @@ public class SOSResponseSerializerV10 extends SweResponseSerializer
 	 * Changes eventTime element in the DOM to contain the request times
 	 * @param time
 	 */
-	public void setTime(TimeInfo time, int zone)
+	public void setTime(TimeExtent time, int zone)
 	{
         try
         {

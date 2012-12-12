@@ -30,9 +30,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
+import org.vast.ows.swe.SWERequestWriter;
 import org.w3c.dom.Element;
 
 
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  * @date Aug 8, 2012
  * @version 1.0
  */
-public class GetResultTemplateWriterV20 extends AbstractRequestWriter<GetResultTemplateRequest>
+public class GetResultTemplateWriterV20 extends SWERequestWriter<GetResultTemplateRequest>
 {
 	    
 	public GetResultTemplateWriterV20()

@@ -21,11 +21,11 @@
 package org.vast.ows.wps;
 
 import java.io.*;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataHandler;
 import org.vast.math.Vector3d;
 import org.vast.sweCommon.SWEFilter;
 import org.vast.sweCommon.SWEReader;
+import org.vast.xml.XMLReaderException;
 
 
 /**
@@ -58,18 +58,18 @@ public class ExecuteProcessResponseReader extends SWEReader
     
     
     @Override
-    public void parse(InputStream inputStream, DataHandler handler) throws CDMException
+    public void parse(InputStream inputStream, DataHandler handler) throws IOException
     {
     	dataHandler = handler;
     	if(this.dataEncoding == null || this.dataComponents == null)
-    		throw new CDMException("the dataComponent and DataEncoding of the reader " +
-    				"must be set before to parse the stream");
+    		throw new XMLReaderException("the dataComponent and DataEncoding of the reader " +
+    				"must be set before parsing the stream");
 		this.dataParser = createDataParser();
 
 	}
 	
 		
-	public InputStream getDataStream() throws CDMException
+	public InputStream getDataStream() throws IOException
 	{
 		return streamFilter;
 	}

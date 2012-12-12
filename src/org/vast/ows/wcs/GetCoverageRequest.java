@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.vast.ows.OWSRequest;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -136,7 +136,7 @@ public class GetCoverageRequest extends OWSRequest
 	}
 	
 	
-	public TimeInfo getTime()
+	public TimeExtent getTime()
 	{
 		for (DimensionSubset range: dimensionSubsets)
 		{
@@ -144,7 +144,7 @@ public class GetCoverageRequest extends OWSRequest
 			
 			if (axisName.equals(DimensionSubset.T))
 			{
-				TimeInfo timeInfo = new TimeInfo();
+				TimeExtent timeInfo = new TimeExtent();
 				timeInfo.setStartTime(range.getMin());
 				timeInfo.setStopTime(range.getMax());
 				return timeInfo;
@@ -155,16 +155,16 @@ public class GetCoverageRequest extends OWSRequest
 	}
 	
 	
-	public void setTime(TimeInfo time)
+	public void setTime(TimeExtent time)
 	{
 		if (!time.isNull())
 			dimensionSubsets.add(new DimensionSubset(DimensionSubset.T, time.getStartTime(), time.getStopTime()));
 	}
 
 
-	public List<TimeInfo> getTimes()
+	public List<TimeExtent> getTimes()
 	{
-		ArrayList<TimeInfo> times = new ArrayList<TimeInfo>();
+		ArrayList<TimeExtent> times = new ArrayList<TimeExtent>();
 		
 		for (DimensionSubset range: dimensionSubsets)
 		{
@@ -172,7 +172,7 @@ public class GetCoverageRequest extends OWSRequest
 			
 			if (axisName.equals(DimensionSubset.T))
 			{
-				TimeInfo timeInfo = new TimeInfo();
+				TimeExtent timeInfo = new TimeExtent();
 				timeInfo.setStartTime(range.getMin());
 				timeInfo.setStopTime(range.getMax());
 				times.add(timeInfo);

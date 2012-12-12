@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 import org.vast.ows.OWSRequest;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -45,7 +45,7 @@ import org.vast.util.TimeInfo;
  */
 public class GetMapRequest extends OWSRequest
 {
-    protected TimeInfo time;
+    protected TimeExtent time;
 	protected Bbox bbox;
 	protected String srs;
 	protected String format;	
@@ -153,13 +153,13 @@ public class GetMapRequest extends OWSRequest
 	}
 
 
-	public TimeInfo getTime()
+	public TimeExtent getTime()
 	{
 		return time;
 	}
 
 
-	public void setTime(TimeInfo time)
+	public void setTime(TimeExtent time)
 	{
 		this.time = time;
 	}

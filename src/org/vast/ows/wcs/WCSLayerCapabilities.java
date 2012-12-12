@@ -29,7 +29,7 @@ package org.vast.ows.wcs;
 import java.util.*;
 import org.vast.ows.OWSLayerCapabilities;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -51,7 +51,7 @@ public class WCSLayerCapabilities extends OWSLayerCapabilities
 	protected List<String> formatList;
 	protected List<String> crsList;
 	protected List<Bbox> bboxList;
-	protected List<TimeInfo> timeList;
+	protected List<TimeExtent> timeList;
 	protected List<WCSLayerCapabilities> childCoverages;
 	protected CoverageDescription fullDescription; 
 	
@@ -83,7 +83,7 @@ public class WCSLayerCapabilities extends OWSLayerCapabilities
 	}
 	
 	
-	public List<TimeInfo> getTimeList()
+	public List<TimeExtent> getTimeList()
 	{
 		return timeList;
 	}
@@ -113,7 +113,7 @@ public class WCSLayerCapabilities extends OWSLayerCapabilities
 	}
 
 
-	public void setTimeList(List<TimeInfo> timeList)
+	public void setTimeList(List<TimeExtent> timeList)
 	{
 		this.timeList = timeList;
 	}

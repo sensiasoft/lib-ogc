@@ -22,10 +22,10 @@
 package org.vast.ows.wcs;
 
 import java.io.*;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataHandler;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
+import org.vast.xml.XMLReaderException;
 import org.vast.ogc.OGCException;
 import org.vast.ogc.OGCExceptionReader;
 import org.vast.sweCommon.SWEFilter;
@@ -41,7 +41,7 @@ public class CoverageReader extends SWEReader
 	SWEFilter streamFilter;
 	
 	
-	public void parse(InputStream inputStream, DataHandler handler) throws CDMException
+	public void parse(InputStream inputStream, DataHandler handler) throws IOException
 	{		
 		try
 		{
@@ -77,16 +77,16 @@ public class CoverageReader extends SWEReader
 		}
 		catch (DOMHelperException e)
 		{
-			throw new CDMException("Error while parsing Coverage XML", e);
+			throw new XMLReaderException("Error while parsing Coverage XML", e);
 		}
         catch (OGCException e)
         {
-            throw new CDMException(e.getMessage());
+            throw new XMLReaderException(e.getMessage());
         }
 	}
 	
 	
-	public InputStream getDataStream() throws CDMException
+	public InputStream getDataStream() throws IOException
 	{
 		if (resultUri != null)
 		{

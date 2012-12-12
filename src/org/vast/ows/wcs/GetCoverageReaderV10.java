@@ -29,12 +29,12 @@ import java.util.Map.Entry;
 import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.Interval;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
 import org.w3c.dom.*;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLEnvelopeReader;
-import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.*;
 
@@ -106,7 +106,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 	                String[] timeList = argValue.split(",");
 	                for (int i=0; i<timeList.length; i++)
 	                {
-	                	TimeInfo newTime = parseTimeArg(timeList[i]);
+	                	TimeExtent newTime = parseTimeArg(timeList[i]);
 	                	request.getTimes().add(newTime);
 	                }
 	            }
@@ -283,7 +283,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 				request.setBbox(bbox);
 			}
 		}
-		catch (GMLException e1)
+		catch (XMLReaderException e1)
 		{
 			report.add(new WCSException(invalidXML + ": Invalid Envelope"));
 		}
@@ -326,14 +326,14 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 				{
 					request.getTimes().add(timeReader.readTimeInstant(dom, timeElt));
 				}
-				catch (GMLException e)
+				catch (XMLReaderException e)
 				{
 					report.add(new WCSException(invalidXML + ": Invalid TimeInstant"));
 				}
 			}
 			else
 			{
-				TimeInfo timeInfo = new TimeInfo();
+				TimeExtent timeInfo = new TimeExtent();
 				String beginTime = dom.getElementValue(timeElt, "beginTime");
 				String endTime = dom.getElementValue(timeElt, "endTime");
 				

@@ -23,7 +23,6 @@ Contributor(s):
 package org.vast.ows.sps;
 
 import org.w3c.dom.Element;
-import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWERequestWriter;
@@ -31,6 +30,7 @@ import org.vast.sweCommon.SWEData;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLWriterException;
 
 
 /**
@@ -88,9 +88,9 @@ public abstract class TaskingRequestWriterV20<RequestType extends TaskingRequest
 
 			return rootElt;
 		}
-		catch (CDMException e)
+		catch (XMLWriterException e)
 		{
-			throw new SPSException(e);
+			throw new SPSException("Error while building tasking request", e);
 		}
 	}
 }

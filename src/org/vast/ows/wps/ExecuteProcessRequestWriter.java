@@ -24,8 +24,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
@@ -57,7 +55,7 @@ public class ExecuteProcessRequestWriter extends AbstractRequestWriter<ExecutePr
     public final static String ioError = "IO Error while sending request:";
 	
     
-	public static InputStream writeData(ExecuteProcessRequest request) throws OWSException, CDMException
+	public static InputStream writeData(ExecuteProcessRequest request) throws OWSException, IOException
     {
 			ByteArrayOutputStream  out = new ByteArrayOutputStream ();
             AbstractDataWriter writer = (AbstractDataWriter)SWEFactory.createDataWriter(request.getInputDataEncoding());

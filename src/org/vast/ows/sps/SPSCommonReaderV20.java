@@ -21,8 +21,8 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.ows.sps;
 
+import java.io.IOException;
 import java.util.Map;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.ows.OWSException;
@@ -36,6 +36,7 @@ import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
+import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
 
 
@@ -66,23 +67,31 @@ public class SPSCommonReaderV20
 	 * @param paramStructure
 	 * @return
 	 */
-	public SWEData readSWEData(DOMHelper dom, Element paramsElt, DataComponent paramStructure) throws CDMException
+	public SWEData readSWEData(DOMHelper dom, Element paramsElt, DataComponent paramStructure) throws XMLReaderException
 	{
-		// read encoding
-		Element encodingElt = dom.getElement(paramsElt, "encoding");
-		DataEncoding dataEncoding = encodingReader.readEncodingProperty(dom, encodingElt);
-		
-		// create SWEData object
-		SWEData paramsData = new SWEData();
-		paramsData.setDataComponents(paramStructure.copy()); // important to copy here in case we parse two things using the same params !!
-		paramsData.setDataEncoding(dataEncoding);
-		
-		// data source is the content of an XML element!
-		Element valuesElt = dom.getElement(paramsElt, "values");
-		DataSourceDOM dataSource = new DataSourceDOM(dom, valuesElt);
-				
-		// launch parser to fill up the DataList inside the SWEData object
-		paramsData.parseData(dataSource);
+	    SWEData paramsData = new SWEData();
+	    
+	    try
+        {
+    	    // read encoding
+    		Element encodingElt = dom.getElement(paramsElt, "encoding");
+    		DataEncoding dataEncoding = encodingReader.readEncodingProperty(dom, encodingElt);
+    		
+    		// prepare SWEData object
+    		paramsData.setElementType(paramStructure.copy()); // important to copy here in case we parse two things using the same params !!
+    		paramsData.setEncoding(dataEncoding);
+    		
+    		// data source is the content of an XML element!
+    		Element valuesElt = dom.getElement(paramsElt, "values");
+    		DataSourceDOM dataSource = new DataSourceDOM(dom, valuesElt);
+    				
+    		// launch parser to fill up the DataList inside the SWEData object		
+            paramsData.parseData(dataSource);
+        }
+        catch (IOException e)
+        {
+            throw new XMLReaderException("Error while parsing SWE Common data", paramsElt, e);
+        }
 		
 		return paramsData;
 	}

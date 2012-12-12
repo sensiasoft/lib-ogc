@@ -57,9 +57,9 @@ public class SubmitRequestReaderV20 extends TaskingRequestReaderV20<SubmitReques
 	@Override
 	public SubmitRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
 	{
-		SubmitRequest request = new SubmitRequest();		
+		SubmitRequest request = new SubmitRequest();
 		readTaskingRequestXML(dom, requestElt, request);
-		checkParameters(request, new OWSExceptionReport());		
-		return request;		
+		checkParameters(request, new OWSExceptionReport());
+		return request;
 	}
 }

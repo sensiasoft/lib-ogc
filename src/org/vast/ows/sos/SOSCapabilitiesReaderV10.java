@@ -24,7 +24,7 @@ import java.util.*;
 import org.w3c.dom.*;
 import org.vast.util.*;
 import org.vast.xml.DOMHelper;
-import org.vast.ogc.gml.GMLException;
+import org.vast.xml.XMLReaderException;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.OWSCapabilitiesReaderV11;
 
@@ -80,7 +80,7 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
 	            getTimeList(dom, offeringElt, layerCaps);
 	            layerCaps.setParent(serviceCaps);
             }
-            catch (GMLException e)
+            catch (XMLReaderException e)
             {
             	String message = parsingError + " in offering " + layerCaps.getIdentifier();
                 ExceptionSystem.display(new SOSException(message, e));
@@ -93,11 +93,11 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
     
     
     /**
-     * Create TimeInfo array
+     * Create TimeExtent array
      * @param parentElement
      * @return
      */
-    protected void getTimeList(DOMHelper dom, Element parentElement, SOSLayerCapabilities layerCaps) throws GMLException, SOSException
+    protected void getTimeList(DOMHelper dom, Element parentElement, SOSLayerCapabilities layerCaps) throws XMLReaderException, SOSException
     {
         GMLTimeReader timeReader = new GMLTimeReader();
         Element timeElt = dom.getElement(parentElement, "time/*");  // 1.0 schema is using plain old 'time' here 
@@ -113,13 +113,13 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
         {
             NodeList timeElts = dom.getElements(timeElt, "member/*");
             int listSize = timeElts.getLength();
-            ArrayList<TimeInfo> timeList = new ArrayList<TimeInfo>(listSize);
+            ArrayList<TimeExtent> timeList = new ArrayList<TimeExtent>(listSize);
             layerCaps.setTimeList(timeList);
             
             for(int i = 0; i < listSize; i++)
             {
                 Element timeMemberElt = (Element)timeElts.item(i);
-                TimeInfo time = timeReader.readTimePrimitive(dom, timeMemberElt);            
+                TimeExtent time = timeReader.readTimePrimitive(dom, timeMemberElt);            
                 timeList.add(time);
             }
         }
@@ -127,7 +127,7 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
         // case of single instant/period/grid
         else
         {
-            TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
+            TimeExtent time = timeReader.readTimePrimitive(dom, timeElt);
             layerCaps.getTimeList().add(time);
         }
     }

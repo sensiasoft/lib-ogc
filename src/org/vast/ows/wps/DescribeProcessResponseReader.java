@@ -20,7 +20,7 @@
 
 package org.vast.ows.wps;
 
-import org.vast.cdm.common.CDMException;
+import java.io.IOException;
 import org.vast.ows.AbstractResponseReader;
 import org.vast.ows.OWSException;
 import org.vast.sweCommon.SWECommonUtils;
@@ -79,7 +79,7 @@ public class DescribeProcessResponseReader  extends AbstractResponseReader<Descr
         {
             throw new OWSException("No reader found for SWECommon", e);
         }
-		catch (CDMException e)
+		catch (IOException e)
 		{
 			throw new OWSException(e.getMessage());
 		}

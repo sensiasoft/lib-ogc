@@ -23,7 +23,6 @@ package org.vast.ows.wcs;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataHandler;
 import org.vast.data.DataArray;
 import org.vast.ogc.OGCException;
@@ -34,6 +33,7 @@ import org.vast.sweCommon.SWEReader;
 import org.vast.sweCommon.URIStreamHandler;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
+import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -60,7 +60,7 @@ public class WCSResponseReader extends SWEReader
     
     
     @Override
-    public void parse(InputStream inputStream, DataHandler handler) throws CDMException
+    public void parse(InputStream inputStream, DataHandler handler) throws IOException
     {
         try
         {
@@ -77,7 +77,7 @@ public class WCSResponseReader extends SWEReader
             NodeList elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om/1.0", "Observation");
             Element obsElt = (Element)elts.item(0); 
             if (obsElt == null)
-                throw new CDMException("XML Response doesn't contain any Observation");
+                throw new XMLReaderException("XML Response doesn't contain any Observation");
             
             // read result
             SWECommonUtils utils = new SWECommonUtils();
@@ -105,15 +105,15 @@ public class WCSResponseReader extends SWEReader
         }
         catch (IllegalStateException e)
         {
-            throw new CDMException("No reader found for SWECommon", e);
+            throw new XMLReaderException("No reader found for SWECommon", e);
         }
         catch (DOMHelperException e)
         {
-            throw new CDMException("Error while parsing Observation XML", e);
+            throw new XMLReaderException("Error while parsing Observation XML", e);
         }       
         catch (OGCException e)
         {
-            throw new CDMException(e.getMessage());
+            throw new XMLReaderException(e.getMessage());
         }
     }
     
@@ -124,7 +124,7 @@ public class WCSResponseReader extends SWEReader
     }
     
     
-    public InputStream getDataStream() throws CDMException
+    public InputStream getDataStream() throws IOException
     {
         if (valuesUri != null && valuesUri.length()>0)
         {

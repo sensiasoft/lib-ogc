@@ -23,7 +23,7 @@ package org.vast.ows.sas;
 import java.util.*;
 import org.vast.ows.OWSRequest;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**

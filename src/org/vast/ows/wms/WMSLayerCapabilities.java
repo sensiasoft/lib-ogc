@@ -24,7 +24,7 @@ import java.util.*;
 
 import org.vast.ows.OWSLayerCapabilities;
 import org.vast.util.Bbox;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -47,7 +47,7 @@ public class WMSLayerCapabilities extends OWSLayerCapabilities
     protected List<String> formatList;
     protected List<String> styleList;
     protected List<String> srsList;
-    protected List<TimeInfo> timeList;
+    protected List<TimeExtent> timeList;
     protected List<Bbox> bboxList;
     protected List<WMSLayerCapabilities> childLayers;
     protected int maxWidth;
@@ -63,7 +63,7 @@ public class WMSLayerCapabilities extends OWSLayerCapabilities
     	formatList = new ArrayList<String>(3);
     	styleList = new ArrayList<String>(3);
     	srsList = new ArrayList<String>(3);
-    	timeList = new ArrayList<TimeInfo>(1);
+    	timeList = new ArrayList<TimeExtent>(1);
     	bboxList = new ArrayList<Bbox>(1);
     	maxWidth = -1;
     	maxHeight = -1;
@@ -106,13 +106,13 @@ public class WMSLayerCapabilities extends OWSLayerCapabilities
 	}
 
 
-	public List<TimeInfo> getTimeList()
+	public List<TimeExtent> getTimeList()
 	{
 		return timeList;
 	}
 
 
-	public void setTimeList(List<TimeInfo> timeList)
+	public void setTimeList(List<TimeExtent> timeList)
 	{
 		this.timeList = timeList;
 	}

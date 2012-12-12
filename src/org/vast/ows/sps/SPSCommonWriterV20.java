@@ -21,7 +21,7 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.ows.sps;
 
-import org.vast.cdm.common.CDMException;
+import java.io.IOException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
@@ -35,6 +35,7 @@ import org.vast.sweCommon.SweEncodingWriterV20;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
 
 
@@ -66,26 +67,33 @@ public class SPSCommonWriterV20
 	 * @param paramStructure
 	 * @throws CDMException
 	 */
-	public void writeSWEData(DOMHelper dom, Element parentElt, SWEData paramsData) throws CDMException
+	public void writeSWEData(DOMHelper dom, Element parentElt, SWEData paramsData) throws XMLWriterException
 	{
-		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0"));
-		Element paramDataElt = dom.addElement(parentElt, "sps:ParameterData");
-		
-		// write encoding
-		Element encodingPropertyElt = dom.addElement(paramDataElt, "sps:encoding");
-		Element encodingElt = encodingWriter.writeEncoding(dom, paramsData.getDataEncoding());
-		encodingPropertyElt.appendChild(encodingElt);
-		
-		// write values
-		Element valuesElt = dom.addElement(paramDataElt, "sps:values");
-		DataSinkDOM dataSink = new DataSinkDOM(dom, valuesElt);
-		
-		// launch serializer to write data to the XML doc
-		paramsData.writeData(dataSink);
+	    dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0"));
+        Element paramDataElt = dom.addElement(parentElt, "sps:ParameterData");
+        
+	    try
+        {
+            // write encoding
+            Element encodingPropertyElt = dom.addElement(paramDataElt, "sps:encoding");
+            Element encodingElt = encodingWriter.writeEncoding(dom, paramsData.getEncoding());
+            encodingPropertyElt.appendChild(encodingElt);
+            
+            // write values
+            Element valuesElt = dom.addElement(paramDataElt, "sps:values");
+            DataSinkDOM dataSink = new DataSinkDOM(dom, valuesElt);
+            
+            // launch serializer to write data to the XML doc
+            paramsData.writeData(dataSink);
+        }
+        catch (IOException e)
+        {
+            throw new XMLWriterException("Error while writing SWE Common data", paramDataElt, e);
+        }
 	}
 	
 	
-	protected void writeBaseReportAttributes(DOMHelper dom, Element reportElt, StatusReport report) throws CDMException
+	protected void writeBaseReportAttributes(DOMHelper dom, Element reportElt, StatusReport report) throws XMLWriterException
 	{
 		String val;
 		dom.addUserPrefix("swes", OGCRegistry.getNamespaceURI(OWSUtils.SWES, "2.0"));
@@ -153,13 +161,13 @@ public class SPSCommonWriterV20
 	}
 	
 	
-	protected void writeStatusReportData(DOMHelper dom, Element reportElt, StatusReport report) throws CDMException
+	protected void writeStatusReportData(DOMHelper dom, Element reportElt, StatusReport report) throws XMLWriterException
 	{
 		writeBaseReportAttributes(dom, reportElt, report);
 	}
 	
 	
-	protected void writeAlternatives(DOMHelper dom, Element reportElt, FeasibilityReport report) throws CDMException
+	protected void writeAlternatives(DOMHelper dom, Element reportElt, FeasibilityReport report) throws XMLWriterException
 	{
 		String val;
 		dom.addUserPrefix("swes", OGCRegistry.getNamespaceURI(OWSUtils.SWES, "2.0"));
@@ -194,7 +202,7 @@ public class SPSCommonWriterV20
 	}
 	
 	
-	protected void writeTaskParameters(DOMHelper dom, Element reportElt, StatusReport report) throws CDMException
+	protected void writeTaskParameters(DOMHelper dom, Element reportElt, StatusReport report) throws XMLWriterException
 	{
 		// tasking parameters
 		SWEData taskingParams = report.getTaskingParameters();
@@ -206,7 +214,7 @@ public class SPSCommonWriterV20
 	}
 	
 	
-	protected Element writeTask(DOMHelper dom, Task task) throws CDMException
+	protected Element writeTask(DOMHelper dom, Task task) throws XMLWriterException
 	{
 		String val;
 		Element taskElt = dom.createElement("sps:Task");
@@ -248,7 +256,7 @@ public class SPSCommonWriterV20
 	 * @return
 	 * @throws CDMException
 	 */
-	public Element writeReport(DOMHelper dom, StatusReport report) throws CDMException
+	public Element writeReport(DOMHelper dom, StatusReport report) throws XMLWriterException
 	{
 		if (report instanceof FeasibilityReport)
 			return writeFeasibilityReport(dom, (FeasibilityReport)report);
@@ -266,7 +274,7 @@ public class SPSCommonWriterV20
 	 * @return
 	 * @throws OWSException
 	 */
-	public Element writeStatusReport(DOMHelper dom, StatusReport report) throws CDMException
+	public Element writeStatusReport(DOMHelper dom, StatusReport report) throws XMLWriterException
 	{
 		Element reportElt = dom.createElement("sps:StatusReport");
 		writeStatusReportData(dom, reportElt, report);
@@ -281,7 +289,7 @@ public class SPSCommonWriterV20
 	 * @return
 	 * @throws OWSException
 	 */
-	public Element writeFeasibilityReport(DOMHelper dom, FeasibilityReport report) throws CDMException
+	public Element writeFeasibilityReport(DOMHelper dom, FeasibilityReport report) throws XMLWriterException
 	{
 		Element reportElt = dom.createElement("sps:StatusReport");
 		writeStatusReportData(dom, reportElt, report);
@@ -300,7 +308,7 @@ public class SPSCommonWriterV20
 	 * @return
 	 * @throws OWSException
 	 */
-	public Element writeReservationReport(DOMHelper dom, ReservationReport report) throws CDMException
+	public Element writeReservationReport(DOMHelper dom, ReservationReport report) throws XMLWriterException
 	{
 		Element reportElt = dom.createElement("sps:ReservationReport");
 		writeStatusReportData(dom, reportElt, report);

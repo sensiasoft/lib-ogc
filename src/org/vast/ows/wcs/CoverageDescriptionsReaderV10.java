@@ -23,13 +23,13 @@
 package org.vast.ows.wcs;
 
 import org.vast.ogc.gml.GMLEnvelopeReader;
-import org.vast.ogc.gml.GMLException;
 import org.vast.ows.AbstractResponseReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSIdentification;
 import org.w3c.dom.*;
 import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
 
 
 /**
@@ -99,7 +99,7 @@ public class CoverageDescriptionsReaderV10 extends AbstractResponseReader<Covera
 				desc.getBboxList().add(bbox);
 			}
 		}
-		catch (GMLException e)
+		catch (XMLReaderException e)
 		{
 			throw new OWSException("Invalid Envelope", e);
 		}

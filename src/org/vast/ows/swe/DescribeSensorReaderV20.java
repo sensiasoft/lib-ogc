@@ -29,10 +29,10 @@ package org.vast.ows.swe;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
-import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.*;
 import org.vast.ows.sos.SOSException;
@@ -81,7 +81,7 @@ public class DescribeSensorReaderV20 extends SWERequestReader<DescribeSensorRequ
 			// time
 			if (argName.equalsIgnoreCase("validTime"))
 			{
-				TimeInfo time = parseTimeArg(argValue);
+				TimeExtent time = parseTimeArg(argValue);
             	request.setTime(time);
 			}
 			
@@ -129,11 +129,11 @@ public class DescribeSensorReaderV20 extends SWERequestReader<DescribeSensorRequ
 			Element timeElt = dom.getElement(requestElt, "validTime/*");
 			if (timeElt != null)
 			{
-				TimeInfo time = timeReader.readTimePrimitive(dom, timeElt);
+				TimeExtent time = timeReader.readTimePrimitive(dom, timeElt);
 				request.setTime(time);
 			}
 		}
-		catch (GMLException e)
+		catch (XMLReaderException e)
 		{
 			report.add(new OWSException(OWSException.invalid_param_code, "validTime"));
 		}

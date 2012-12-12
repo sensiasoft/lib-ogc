@@ -28,6 +28,7 @@ import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.vast.ows.*;
+import org.vast.ows.swe.SWERequestReader;
 
 
 /**
@@ -45,7 +46,7 @@ import org.vast.ows.*;
  * @date Aug 8, 2012
  * @version 1.0
  */
-public class GetResultTemplateReaderV20 extends AbstractRequestReader<GetResultTemplateRequest>
+public class GetResultTemplateReaderV20 extends SWERequestReader<GetResultTemplateRequest>
 {
         
     public GetResultTemplateReaderV20()

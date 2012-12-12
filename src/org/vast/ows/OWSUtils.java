@@ -20,6 +20,7 @@
 
 package org.vast.ows;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -446,6 +447,36 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     	String owsVersion = OGCRegistry.getOWSVersion(serviceType, version);
     	e.setVersion(owsVersion);    	
 		writer.writeException(os, e);
+    }
+    
+    
+    public <ResponseType extends OWSResponse> ResponseType sendRequest(OWSRequest request, boolean useSoap) throws OWSException
+    {
+        HttpURLConnection conn = null;
+        
+        if (request.getGetServer() != null)
+            conn = sendGetRequest(request);
+        else if (request.getPostServer() != null)
+        {
+            if (useSoap)
+                conn = sendSoapRequest(request);
+            else
+                conn = sendPostRequest(request);
+        }
+        else
+            throw new IllegalStateException("Either GET or POST server must be set in request object");
+        
+        // try to parse XML response
+        try
+        {
+            DOMHelper dom = new DOMHelper(new BufferedInputStream(conn.getInputStream()), false);
+            OGCExceptionReader.checkException(dom);
+            return (ResponseType)readXMLResponse(dom, dom.getBaseElement(), request.getService(), dom.getBaseElement().getLocalName(), request.getVersion());
+        }
+        catch (Exception e)
+        {
+            throw new OWSException("Error while parsing response", e);
+        }     
     }
     
     

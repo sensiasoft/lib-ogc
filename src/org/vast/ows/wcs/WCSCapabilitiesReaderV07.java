@@ -37,7 +37,7 @@ import org.vast.ows.OWSServiceCapabilities;
 import org.vast.util.Bbox;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -116,7 +116,7 @@ public class WCSCapabilitiesReaderV07 extends AbstractCapabilitiesReader
 		Element layerCapElt;
 		WCSLayerCapabilities layerCap; 
 		ArrayList<String> crsList, formatList;
-		ArrayList<TimeInfo> timeList;
+		ArrayList<TimeExtent> timeList;
         
 		//  Go through each GridCoverageLayer and populate layerCaps
 		for(int i=0; i<numLayers; i++) {
@@ -153,19 +153,19 @@ public class WCSCapabilitiesReaderV07 extends AbstractCapabilitiesReader
     
     
     /**
-     * Create TimeInfo array
+     * Create TimeExtent array
      * @param laterElt
      * @return
      */
-    protected ArrayList<TimeInfo> getTimeList(DOMHelper dom, Element layerElt)  throws ParseException
+    protected ArrayList<TimeExtent> getTimeList(DOMHelper dom, Element layerElt)  throws ParseException
     {
     	NodeList timeElts = dom.getElements(layerElt, "DomainSetDescription/GridExtentDescription/TemporalExtent");
         int listSize = timeElts.getLength();
-        ArrayList<TimeInfo> timeList = new ArrayList<TimeInfo>(listSize);
+        ArrayList<TimeExtent> timeList = new ArrayList<TimeExtent>(listSize);
     	
 		for(int i = 0; i < listSize; i++) {
 			Element timeElt = (Element)timeElts.item(i);
-			TimeInfo time = new TimeInfo();
+			TimeExtent time = new TimeExtent();
 			
 	    	try
 			{

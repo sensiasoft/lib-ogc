@@ -32,9 +32,9 @@ import org.geotools.xml.Configuration;
 import org.geotools.xml.Encoder;
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
+import org.vast.ows.swe.SWERequestWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -55,7 +55,7 @@ import org.w3c.dom.Element;
  * @date Aug 4, 2012
  * @version 1.0
  */
-public class GetObservationWriterV20 extends AbstractRequestWriter<GetObservationRequest>
+public class GetObservationWriterV20 extends SWERequestWriter<GetObservationRequest>
 {
 	protected Encoder filterEncoder;
 	

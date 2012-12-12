@@ -27,7 +27,7 @@ import org.w3c.dom.*;
 //import org.vast.util.*;
 import org.vast.ows.SweDataWriter;
 import org.vast.ows.SweResponseSerializer;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -63,7 +63,7 @@ public class TMLSerializer extends SweResponseSerializer
 	 * Change eventTime element in the DOM to contain the request times
 	 * @param time
 	 */
-	public void setTime(TimeInfo time, int zone)
+	public void setTime(TimeExtent time, int zone)
 	{
 		/*
 		DOMReader templates = null;

@@ -31,7 +31,7 @@ import org.vast.xml.DOMHelperException;
 import org.vast.xml.QName;
 import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.w3c.dom.Element;
 
 
@@ -123,12 +123,11 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
     /**
      * Utility method to parse time argument from GET request.
      * Format is YYYY-MM-DDTHH:MM:SS.sss/YYYY-MM-DDTHH:MM:SS.sss/PYMDTHMS
-     * @param timeInfo
      * @param argValue
      */
-    public static TimeInfo parseTimeArg(String argValue) throws OWSException
+    public static TimeExtent parseTimeArg(String argValue) throws OWSException
     {
-    	TimeInfo timeInfo = new TimeInfo();
+        TimeExtent timeInfo = new TimeExtent();
     	String[] timeRange = argValue.split("/");
         
         try

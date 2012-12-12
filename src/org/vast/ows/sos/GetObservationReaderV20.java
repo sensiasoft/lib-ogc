@@ -33,9 +33,8 @@ import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.vast.ogc.OGCRegistry;
-import org.vast.ogc.om.OMUtils;
 import org.vast.ows.*;
+import org.vast.ows.swe.SWERequestReader;
 
 
 /**
@@ -53,19 +52,17 @@ import org.vast.ows.*;
  * @date Aug 1, 2012
  * @version 1.0
  */
-public class GetObservationReaderV20 extends AbstractRequestReader<GetObservationRequest>
+public class GetObservationReaderV20 extends SWERequestReader<GetObservationRequest>
 {
     protected Parser filterParser;
     
     
     public GetObservationReaderV20()
 	{
-        Configuration configuration = new org.geotools.filter.v2_0.FESConfiguration();
-        filterParser = new Parser(configuration);
 	}
-
-	
-	@Override
+    
+    
+    @Override
 	public GetObservationRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
@@ -206,7 +203,7 @@ public class GetObservationReaderV20 extends AbstractRequestReader<GetObservatio
             if (timeOpElt != null)
             {
                 DOMSource domSrc = new DOMSource(timeOpElt);
-                BinaryTemporalOperator filter = (BinaryTemporalOperator)filterParser.parse(domSrc);
+                BinaryTemporalOperator filter = (BinaryTemporalOperator)getFilterParser().parse(domSrc);
                 request.setTemporalFilter(filter);
             }
         }
@@ -230,7 +227,7 @@ public class GetObservationReaderV20 extends AbstractRequestReader<GetObservatio
             if (spatialOpElt != null)
             {
                 DOMSource domSrc = new DOMSource(spatialOpElt);
-                BinarySpatialOperator filter = (BinarySpatialOperator)filterParser.parse(domSrc);
+                BinarySpatialOperator filter = (BinarySpatialOperator)getFilterParser().parse(domSrc);
                 request.setSpatialFilter(filter);
             }
         }
@@ -261,6 +258,18 @@ public class GetObservationReaderV20 extends AbstractRequestReader<GetObservatio
 		
 		// set default values
 		if (request.getFormat() == null)
-		    request.setFormat(OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0"));
+		    request.setFormat(GetObservationRequest.DEFAULT_FORMAT);
+    }
+    
+    
+    protected Parser getFilterParser()
+    {
+        if (filterParser == null)
+        {
+            Configuration configuration = new org.geotools.filter.v2_0.FESConfiguration();
+            filterParser = new Parser(configuration);
+        }
+        
+        return filterParser;
     }
 }
