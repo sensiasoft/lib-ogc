@@ -45,7 +45,7 @@ public class TestSosGetObsBindingsV20 extends TestCase
     protected static String DEFAULT_FORMAT = "http://www.opengis.net/om/2.0";
     
     
-    public void testReadKvpGetObsV20() throws Exception
+    public void testReadKvpGetObs() throws Exception
     {
         OWSUtils utils = new OWSUtils();
         InputStream is = TestSosGetObsBindingsV20.class.getResourceAsStream("examples_v20/core/GetObservationKVP.txt");
@@ -95,7 +95,7 @@ public class TestSosGetObsBindingsV20 extends TestCase
         r.close();
     }
     
-    public void testReadXmlGetObsV20() throws Exception
+    public void testReadXmlGetObs() throws Exception
     {
         OWSUtils utils = new OWSUtils();
         InputStream is;
@@ -239,7 +239,7 @@ public class TestSosGetObsBindingsV20 extends TestCase
     }
     
     
-    public void testWriteKvpGetObsV20() throws Exception
+    public void testWriteKvpGetObs() throws Exception
     {
         OWSUtils utils = new OWSUtils();
         InputStream is = TestSosGetObsBindingsV20.class.getResourceAsStream("examples_v20/core/GetObservationKVP.txt");
@@ -260,20 +260,20 @@ public class TestSosGetObsBindingsV20 extends TestCase
     }
     
     
-    public void testWriteXmlGetObsV20() throws Exception
+    public void testWriteXmlGetObs() throws Exception
     {
-        testWriteXmlGetObsV20("examples_v20/core/GetObservation1_obsProps.xml");
-        testWriteXmlGetObsV20("examples_v20/core/GetObservation2_obsProps_Procedure.xml");
-        testWriteXmlGetObsV20("examples_v20/core/GetObservation3_foiIDFilter.xml");
-        testWriteXmlGetObsV20("examples_v20/core/GetObservation4_spatialFilter.xml");
-        testWriteXmlGetObsV20("examples_v20/_useCase_airbase_station_network/GetObservation.xml");
+        testWriteXmlGetObs("examples_v20/core/GetObservation1_obsProps.xml");
+        testWriteXmlGetObs("examples_v20/core/GetObservation2_obsProps_Procedure.xml");
+        testWriteXmlGetObs("examples_v20/core/GetObservation3_foiIDFilter.xml");
+        testWriteXmlGetObs("examples_v20/core/GetObservation4_spatialFilter.xml");
+        testWriteXmlGetObs("examples_v20/_useCase_airbase_station_network/GetObservation.xml");
         //testWriteXmlGetObsV20("examples_v20/_useCase_mobile_sensors/GetObservation.xml");
-        testWriteXmlGetObsV20("examples_v20/_useCase_homogeneous_sensor_network/GetObservation.xml");
-        testWriteXmlGetObsV20("examples_v20/spatialFilteringProfile/GetObservation1_spatialFilteringProfile.xml");
+        testWriteXmlGetObs("examples_v20/_useCase_homogeneous_sensor_network/GetObservation.xml");
+        testWriteXmlGetObs("examples_v20/spatialFilteringProfile/GetObservation1_spatialFilteringProfile.xml");
     }
     
     
-    protected void testWriteXmlGetObsV20(String path) throws Exception
+    protected void testWriteXmlGetObs(String path) throws Exception
     {
         OWSUtils utils = new OWSUtils();
         GetObservationRequest request1, request2;

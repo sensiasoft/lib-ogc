@@ -42,7 +42,7 @@ import junit.framework.TestCase;
 public class TestSosGetResultBindingsV20 extends TestCase
 {
     
-    public void testReadKvpGetResultV20() throws Exception
+    public void testReadKvpGetResult() throws Exception
     {
         OWSUtils utils = new OWSUtils();
         InputStream is = TestSosGetResultBindingsV20.class.getResourceAsStream("examples_v20/resultHandling/GetResultKVP.txt");
@@ -72,7 +72,7 @@ public class TestSosGetResultBindingsV20 extends TestCase
     }
     
     
-    public void testReadKvpGetResultTemplateV20() throws Exception
+    public void testReadKvpGetResultTemplate() throws Exception
     {
         OWSUtils utils = new OWSUtils();
         InputStream is = TestSosGetResultBindingsV20.class.getResourceAsStream("examples_v20/resultHandling/GetResultTemplateKVP.txt");
@@ -92,7 +92,7 @@ public class TestSosGetResultBindingsV20 extends TestCase
     }
     
     
-    public void testReadXmlGetResultV20() throws Exception
+    public void testReadXmlGetResult() throws Exception
     {
         OWSUtils utils = new OWSUtils();
         InputStream is;
@@ -150,7 +150,7 @@ public class TestSosGetResultBindingsV20 extends TestCase
     }
     
     
-    public void testReadXmlGetResultTemplateV20() throws Exception
+    public void testReadXmlGetResultTemplate() throws Exception
     {
         OWSUtils utils = new OWSUtils();
         InputStream is;
@@ -168,7 +168,7 @@ public class TestSosGetResultBindingsV20 extends TestCase
     }
     
     
-    public void testWriteKvpGetResultV20() throws Exception
+    public void testWriteKvpGetResult() throws Exception
     {
         OWSUtils utils = new OWSUtils();
         InputStream is = TestSosGetResultBindingsV20.class.getResourceAsStream("examples_v20/resultHandling/GetResultKVP.txt");
@@ -189,7 +189,7 @@ public class TestSosGetResultBindingsV20 extends TestCase
     }
     
     
-    public void testWriteKvpGetResultTemplateV20() throws Exception
+    public void testWriteKvpGetResultTemplate() throws Exception
     {
         OWSUtils utils = new OWSUtils();
         InputStream is = TestSosGetResultBindingsV20.class.getResourceAsStream("examples_v20/resultHandling/GetResultTemplateKVP.txt");
@@ -210,15 +210,15 @@ public class TestSosGetResultBindingsV20 extends TestCase
     }
     
     
-    public void testWriteXmlGetResultV20() throws Exception
+    public void testWriteXmlGetResult() throws Exception
     {
-        testWriteXmlGetResultV20("examples_v20/resultHandling/GetResult1.xml");
-        testWriteXmlGetResultV20("examples_v20/resultHandling/GetResult2.xml");
-        testWriteXmlGetResultV20("examples_v20/resultHandling/GetResult3.xml");
+        testWriteXmlGetResult("examples_v20/resultHandling/GetResult1.xml");
+        testWriteXmlGetResult("examples_v20/resultHandling/GetResult2.xml");
+        testWriteXmlGetResult("examples_v20/resultHandling/GetResult3.xml");
     }
     
     
-    protected void testWriteXmlGetResultV20(String path) throws Exception
+    protected void testWriteXmlGetResult(String path) throws Exception
     {
         OWSUtils utils = new OWSUtils();
         GetResultRequest request1, request2;
@@ -241,13 +241,13 @@ public class TestSosGetResultBindingsV20 extends TestCase
     }
     
     
-    public void testWriteXmlGetResultTemplateV20() throws Exception
+    public void testWriteXmlGetResultTemplate() throws Exception
     {
-        testWriteXmlGetResultTemplateV20("examples_v20/resultHandling/GetResultTemplate1.xml");
+        testWriteXmlGetResultTemplate("examples_v20/resultHandling/GetResultTemplate1.xml");
     }
     
     
-    protected void testWriteXmlGetResultTemplateV20(String path) throws Exception
+    protected void testWriteXmlGetResultTemplate(String path) throws Exception
     {
         OWSUtils utils = new OWSUtils();
         GetResultTemplateRequest request1, request2;
