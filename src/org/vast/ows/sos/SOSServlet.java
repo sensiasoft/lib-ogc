@@ -18,14 +18,14 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.server;
+package org.vast.ows.sos;
 
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -44,12 +44,8 @@ import org.vast.ogc.om.IObservation;
 import org.vast.ogc.om.OMUtils;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSRequest;
-import org.vast.ows.sos.GetObservationRequest;
-import org.vast.ows.sos.GetResultRequest;
-import org.vast.ows.sos.GetResultTemplateRequest;
-import org.vast.ows.sos.GetResultTemplateResponse;
-import org.vast.ows.sos.SOSException;
-import org.vast.ows.sos.SOSUtils;
+import org.vast.ows.server.OWSServlet;
+import org.vast.ows.server.SOSDataFilter;
 import org.vast.ows.swe.DescribeSensorRequest;
 import org.vast.sweCommon.SWEFactory;
 import org.vast.util.TimeExtent;
@@ -75,10 +71,11 @@ import org.w3c.dom.NodeList;
  * @version 1.0
  */
 @SuppressWarnings("serial")
-public abstract class SOSServlet2 extends OWSServlet
+public abstract class SOSServlet extends OWSServlet
 {
+    
     // Table of SOS data providers: 1 for each observation offering
-	protected Map<String, SOSProviderConfig> dataProviders = new HashMap<String, SOSProviderConfig>();
+	protected Map<String, ISOSDataProviderFactory> dataProviders = new LinkedHashMap<String, ISOSDataProviderFactory>();
 	
 	// Table of <ProcedureId, SensorMLUrl> - 1 per procedure 
 	protected Hashtable<String, String> sensorMLUrls = new Hashtable<String, String>();
@@ -478,7 +475,7 @@ public abstract class SOSServlet2 extends OWSServlet
 	
 	protected ISOSDataProvider<?> getDataProvider(String offering, SOSDataFilter filter) throws Exception
 	{
-	    SOSProviderConfig dataProvider = dataProviders.get(offering);        
+	    ISOSDataProviderFactory dataProvider = dataProviders.get(offering);        
         if (dataProvider == null)
             throw new IllegalStateException("No valid data provider found for offering " + offering);     
         return dataProvider.getNewProvider(filter);
@@ -522,7 +519,7 @@ public abstract class SOSServlet2 extends OWSServlet
 	}
 
 	
-	public void addDataProvider(String offeringID, SOSProviderConfig dataProvider)
+	public void addDataProvider(String offeringID, ISOSDataProviderFactory dataProvider)
 	{
 	    dataProviders.put(offeringID, dataProvider);
 	}

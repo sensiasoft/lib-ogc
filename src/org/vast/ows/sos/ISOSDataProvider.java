@@ -21,7 +21,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.server;
+package org.vast.ows.sos;
 
 import java.io.IOException;
 import org.vast.cdm.common.DataBlock;
@@ -45,7 +45,7 @@ import org.vast.ogc.om.IObservation;
  * @date Nov 18, 2012
  * @version 1.0
  */
-public interface ISOSDataProvider<ConfigType extends SOSProviderConfig>
+public interface ISOSDataProvider<ConfigType extends ISOSDataProviderFactory>
 {  
     
     /**

@@ -21,47 +21,11 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.server;
+package org.vast.ows.sos;
 
+import org.vast.ows.server.SOSDataFilter;
 
-/**
- * <p><b>Title:</b>
- * SOSProviderConfig
- * </p>
- *
- * <p><b>Description:</b><br/>
- * Class holding information necessary to instantiate a new SOS data provider
- * </p>
- *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
- * @date Nov 25, 2012
- * @version 1.0
- */
-public abstract class SOSProviderConfig
+public interface ISOSDataProviderFactory
 {
-    protected String dataFile;
-    protected String sweTemplateFile;
-    
-    
-    public SOSProviderConfig(String dataFile, String sweTemplateFile)
-    {
-        this.dataFile = dataFile;
-        this.sweTemplateFile = sweTemplateFile;
-    }
-    
-    
-    public String getDataFile()
-    {
-        return dataFile;
-    }
-
-
-    public String getSweTemplateFile()
-    {
-        return sweTemplateFile;
-    }
-
-
     public abstract ISOSDataProvider<?> getNewProvider(SOSDataFilter filter) throws Exception;
 }
