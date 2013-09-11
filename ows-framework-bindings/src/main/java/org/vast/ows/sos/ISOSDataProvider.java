@@ -45,7 +45,7 @@ import org.vast.ogc.om.IObservation;
  * @date Nov 18, 2012
  * @version 1.0
  */
-public interface ISOSDataProvider<ConfigType extends ISOSDataProviderFactory>
+public interface ISOSDataProvider
 {  
     
     /**

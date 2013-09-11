@@ -117,7 +117,7 @@ public abstract class WPSServlet extends OWSServlet
 			//  get query string
 			String queryString = req.getQueryString();            
             if (queryString == null)
-                sendErrorMessage(resp.getOutputStream(), "Invalid request");
+                resp.sendError(400, "Invalid request");
             
             // parse query arguments
             log.info("GET REQUEST: " + queryString + " from IP " + req.getRemoteAddr());
@@ -137,7 +137,7 @@ public abstract class WPSServlet extends OWSServlet
 		{
 			try
             {
-                sendErrorMessage(resp.getOutputStream(), e.getMessage());
+			    resp.sendError(500, e.getMessage());
             }
             catch (IOException e1)
             {
@@ -148,7 +148,7 @@ public abstract class WPSServlet extends OWSServlet
         {
             try
             {
-                sendErrorMessage(resp.getOutputStream(), e.getMessage());
+                resp.sendError(400, e.getMessage());
             }
             catch (IOException e1)
             {
@@ -208,7 +208,7 @@ public abstract class WPSServlet extends OWSServlet
 			{
 				try
 		        {
-		            sendErrorMessage(resp.getOutputStream(), e.getMessage());
+				    resp.sendError(500, e.getMessage());
 		        }
 		        catch (IOException e1)
 		        {
@@ -219,7 +219,7 @@ public abstract class WPSServlet extends OWSServlet
 		    {
 		        try
 		        {
-		            sendErrorMessage(resp.getOutputStream(), e.getMessage());
+		            resp.sendError(400, e.getMessage());
 		        }
 		        catch (IOException e1)
 		        {
@@ -268,7 +268,7 @@ public abstract class WPSServlet extends OWSServlet
 			{
 				try
 				{
-					sendErrorMessage(resp.getOutputStream(), e.getMessage());
+				    resp.sendError(500, e.getMessage());
 				}
 				catch (IOException e1)
 				{
@@ -279,7 +279,7 @@ public abstract class WPSServlet extends OWSServlet
 			{
 				try
 				{
-					sendErrorMessage(resp.getOutputStream(), e.getMessage());
+				    resp.sendError(500, e.getMessage());
 				}
 				catch (IOException e1)
 				{
@@ -290,7 +290,7 @@ public abstract class WPSServlet extends OWSServlet
 			{
 				try
 				{
-					sendErrorMessage(resp.getOutputStream(), "Invalid request or unrecognized version");
+				    resp.sendError(400, "Invalid request or unrecognized version");
 				}
 				catch (IOException e1)
 				{
@@ -301,7 +301,7 @@ public abstract class WPSServlet extends OWSServlet
 			{
 				try
 				{
-					sendErrorMessage(resp.getOutputStream(), "Invalid XML request. Please check request format");
+				    resp.sendError(400, "Invalid XML request. Please check request format");
 				}
 				catch (IOException e1)
 				{

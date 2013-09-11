@@ -130,7 +130,7 @@ public abstract class SOSServlet extends OWSServlet
         
 	    // setup data provider
 	    SOSDataFilter filter = new SOSDataFilter(request.getObservables().get(0));
-	    ISOSDataProvider<?> dataProvider = getDataProvider(request.getOffering(), filter);
+	    ISOSDataProvider dataProvider = getDataProvider(request.getOffering(), filter);
         
         // build and 
 	    GetResultTemplateResponse resp = new GetResultTemplateResponse();
@@ -157,7 +157,7 @@ public abstract class SOSServlet extends OWSServlet
         
         // setup data provider
         SOSDataFilter filter = new SOSDataFilter(request.getFoiIDs(), request.getObservables(), request.getTime());
-        ISOSDataProvider<?> dataProvider = getDataProvider(request.getOffering(), filter);
+        ISOSDataProvider dataProvider = getDataProvider(request.getOffering(), filter);
         
         // write response with SWE common data stream
         OutputStream os = new BufferedOutputStream(request.getResponseStream());
@@ -214,7 +214,7 @@ public abstract class SOSServlet extends OWSServlet
 		
 		// setup data provider
         SOSDataFilter filter = new SOSDataFilter(request.getFoiIDs(), request.getObservables(), request.getTime());
-        ISOSDataProvider<?> dataProvider = getDataProvider(request.getOffering(), filter);
+        ISOSDataProvider dataProvider = getDataProvider(request.getOffering(), filter);
 		
 		// prepare obs writer for requested O&M version
 		String nsUri = format;
@@ -473,9 +473,9 @@ public abstract class SOSServlet extends OWSServlet
 	}
 	
 	
-	protected ISOSDataProvider<?> getDataProvider(String offering, SOSDataFilter filter) throws Exception
+	protected ISOSDataProvider getDataProvider(String offering, SOSDataFilter filter) throws Exception
 	{
-	    ISOSDataProviderFactory dataProvider = dataProviders.get(offering);        
+	    ISOSDataProviderFactory dataProvider = dataProviders.get(offering);
         if (dataProvider == null)
             throw new IllegalStateException("No valid data provider found for offering " + offering);     
         return dataProvider.getNewProvider(filter);
