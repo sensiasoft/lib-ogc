@@ -27,17 +27,13 @@ import org.w3c.dom.Element;
 
 /**
  * 
- * <p><b>Title:</b><br/>
- * OWS Response Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 21 nov. 07
+ * @since 21 nov. 07
  * @version 1.0
  */
 public interface OWSResponseWriter<ResponseType extends OWSResponse>

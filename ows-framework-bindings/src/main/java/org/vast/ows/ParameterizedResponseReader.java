@@ -26,18 +26,14 @@ import org.vast.cdm.common.DataComponent;
 
 
 /**
-* <p><b>Title:</b><br/>
-* Parameterized Response Reader
-* </p>
-*
-* <p><b>Description:</b><br/>
+* <p>
 * Base class for readers of response containing SWE Common data.
 * (i.e. GetFeasibilityResponse, SubmitResponse, UpdateResponse, GetStatusResponse)
 * </p>
 *
 * <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
-* @date Feb, 29 2008
+* @since Feb, 29 2008
 * @version 1.0
 */
 public interface ParameterizedResponseReader

@@ -58,7 +58,7 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
     }
     
     @Override
-    protected void readContents(DOMHelper dom, Element capsElt) throws OWSException
+    protected void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws OWSException
     {
         NodeList subList = dom.getElements(capsElt, "Contents/SubscriptionOfferingList/SubscriptionOffering");
         if(subList == null)
@@ -140,7 +140,7 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
             }
             catch (SASException e)
             {
-            	String message = parsingError + " in subscription " + layerCaps.getSubscriptionOfferingIDList().get(0);
+            	String message = xmlError + " in subscription " + layerCaps.getSubscriptionOfferingIDList().get(0);
                 ExceptionSystem.display(new SASException(message, e));
 				continue;
             }
@@ -149,17 +149,18 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
         }
     }
 
-	@Override
-	public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException {
+    @Override
+    @SuppressWarnings("rawtypes")
+    public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException {
 
-		serviceCaps = new OWSServiceCapabilities();
+	    OWSServiceCapabilities serviceCaps = new OWSServiceCapabilities();
     	
     	// Version
         String version = dom.getAttributeValue(capabilitiesElt, "version");
         serviceCaps.setVersion(version);
 
         // Contents section
-        readContents(dom, capabilitiesElt);
+        readContents(dom, capabilitiesElt, serviceCaps);
         
         return serviceCaps;
 	}

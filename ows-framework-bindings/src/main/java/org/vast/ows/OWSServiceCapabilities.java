@@ -25,17 +25,13 @@ import org.vast.util.ResponsibleParty;
 
 
 /**
- * <p><b>Title:</b><br/>
- * OWS Capabilities
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Representation of an OWS service capabilities document.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Oct 27, 2005
+ * @since Oct 27, 2005
  * @version 1.0
  */
 public class OWSServiceCapabilities extends OWSResponse
@@ -47,10 +43,11 @@ public class OWSServiceCapabilities extends OWSResponse
 	protected OWSIdentification identification;
 	
 	// additional service options
+	protected List<String> supportedVersions;
+	protected List<String> profiles;
 	protected String fees;
 	protected String accessConstraints;
-	protected List<String> supportedVersions;
-	
+		
 	// service provider
 	protected ResponsibleParty serviceProvider;
 	
@@ -74,7 +71,8 @@ public class OWSServiceCapabilities extends OWSResponse
     	identification = new OWSIdentification();
     	serviceProvider = new ResponsibleParty();
     	supportedVersions = new ArrayList<String>(1);
-    	layers = new ArrayList<OWSLayerCapabilities>(5);
+    	profiles = new ArrayList<String>(5);
+    	layers = new ArrayList<OWSLayerCapabilities>(10);
     	exceptionTypes = new ArrayList<String>(1);
     	getServers = new Hashtable<String, String>();
     	postServers = new Hashtable<String, String>();    	
@@ -150,7 +148,19 @@ public class OWSServiceCapabilities extends OWSResponse
 	}
 
 
-	public ResponsibleParty getServiceProvider()
+	public List<String> getProfiles()
+    {
+        return profiles;
+    }
+
+
+    public void setProfiles(List<String> profiles)
+    {
+        this.profiles = profiles;
+    }
+
+
+    public ResponsibleParty getServiceProvider()
 	{
 		return serviceProvider;
 	}

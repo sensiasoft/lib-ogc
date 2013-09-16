@@ -65,7 +65,7 @@ public class WCSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV0
 	
 	
 	@Override
-	protected void readContents(DOMHelper dom, Element capsElt) throws WCSException
+	protected void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws WCSException
 	{
 		//  Load List of CoverageOfferingBrief elements
 		NodeList layers = dom.getElements(capsElt, "ContentMetadata/CoverageOfferingBrief");

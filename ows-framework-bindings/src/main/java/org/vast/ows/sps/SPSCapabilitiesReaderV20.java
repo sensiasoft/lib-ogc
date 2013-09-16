@@ -26,6 +26,7 @@ import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSCapabilitiesReaderV11;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSServiceCapabilities;
 
 
 /**
@@ -49,11 +50,20 @@ public class SPSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
 
 	public SPSCapabilitiesReaderV20()
 	{
-	}
+	}	
 	
 	
 	@Override
-	protected void readContents(DOMHelper dom, Element capsElt) throws OWSException
+    public SPSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
+    {
+	    SPSServiceCapabilities serviceCaps = new SPSServiceCapabilities();
+	    readOWSCapabilities(dom, capabilitiesElt, serviceCaps);
+	    return serviceCaps;
+    }
+
+
+    @Override
+	protected void readContents(DOMHelper dom, Element capsElt, @SuppressWarnings("rawtypes") OWSServiceCapabilities serviceCaps) throws OWSException
 	{
 		//  Load List of SensorOffering elements
 		NodeList offerings = dom.getElements(capsElt, "contents/SPSContents/offering/SensorOffering");
@@ -78,24 +88,12 @@ public class SPSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
 			String sensorID = dom.getElementValue(offeringElt, "procedure");
 			offering.setSensorID(sensorID);
 			
-			readROI(offering, dom, offeringElt);
+			//readROI(offering, dom, offeringElt);
 			//readTOI(offering, dom, offeringElt);
 			//readFOI(offering, dom, offeringElt);
 
 			serviceCaps.getLayers().add(offering);
 		}
-	}
-	
-
-	/**
-	 * Reads ROI as point or polygon
-	 * @param layerCap
-	 * @param dom
-	 * @param layerElt
-	 */
-	protected void readROI(SPSOfferingCapabilities layerCap, DOMHelper dom, Element layerElt)
-	{
-		// TODO read ROI
 	}
 	
 }

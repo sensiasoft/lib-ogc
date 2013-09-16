@@ -27,35 +27,41 @@ import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
 /**
- * <p><b>Title:</b><br/>
- * AbstractResponseWriter
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 28 nov. 07
+ * @since 28 nov. 07
  * @version 1.0
  */
 public abstract class AbstractResponseWriter<ResponseType extends OWSResponse> implements OWSResponseWriter<ResponseType>
 {
-	public final static String ioError = "IO error while writing XML response to stream";
+    public final static String xmlError = "Error while generating XML for ";
+    public final static String ioError = "IO error while writing XML response to stream";
 	public final static String unsupportedVersion = "No support for version ";
 	
 	
 	public abstract Element buildXMLResponse(DOMHelper dom, ResponseType response, String version) throws OWSException;
 	
 	
+	@Override
 	public Element buildXMLResponse(DOMHelper dom, ResponseType response) throws OWSException
 	{
-		return buildXMLResponse(dom, response, response.getVersion());
+		try
+        {
+            return buildXMLResponse(dom, response, response.getVersion());
+        }
+		catch (Exception e)
+        {
+            throw new OWSException(xmlError + response.getClass().getName(), e);
+        }
 	}
 	
 	
-	public void writeXMLResponse(OutputStream os, ResponseType response, String version) throws OWSException
+	@Override
+    public void writeXMLResponse(OutputStream os, ResponseType response, String version) throws OWSException
     {
     	try
         {
@@ -70,7 +76,8 @@ public abstract class AbstractResponseWriter<ResponseType extends OWSResponse> i
     }
 	
 	
-	public void writeXMLResponse(OutputStream os, ResponseType response) throws OWSException
+	@Override
+    public void writeXMLResponse(OutputStream os, ResponseType response) throws OWSException
     {
     	writeXMLResponse(os, response, response.getVersion());      
     }

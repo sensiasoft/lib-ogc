@@ -27,14 +27,12 @@ import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLReaderException;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.OWSCapabilitiesReaderV11;
+import org.vast.ows.OWSException;
+import org.vast.ows.OWSServiceCapabilities;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SOS Capabilities Reader v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Reads a SOS server capabilities document and create and
  * populate the corresponding OWSServiceCapabilities and
  * SOSLayerCapabilities objects for version 1.0
@@ -42,7 +40,7 @@ import org.vast.ows.OWSCapabilitiesReaderV11;
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Sep 14, 2005
+ * @since Sep 14, 2005
  * @version 1.0
  */
 public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
@@ -54,7 +52,16 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
        
     
     @Override
-    protected void readContents(DOMHelper dom, Element capsElt) throws SOSException
+    public SOSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
+    {
+        SOSServiceCapabilities caps = new SOSServiceCapabilities();
+        readOWSCapabilities(dom, capabilitiesElt, caps);
+        return caps;
+    }
+    
+    
+    @Override
+    protected void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws SOSException
     {
         NodeList offeringList = dom.getElements(capsElt, "Contents/ObservationOfferingList/ObservationOffering");
         
@@ -68,7 +75,7 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
             
             String id = dom.getAttributeValue(offeringElt, "id");
             
-            SOSLayerCapabilities layerCaps = new SOSLayerCapabilities();           
+            SOSOfferingCapabilities layerCaps = new SOSOfferingCapabilities();           
             
             try
             {
@@ -82,7 +89,7 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
             }
             catch (XMLReaderException e)
             {
-            	String message = parsingError + " in offering " + layerCaps.getIdentifier();
+            	String message = xmlError + " in offering " + layerCaps.getIdentifier();
                 ExceptionSystem.display(new SOSException(message, e));
 				continue;
             }
@@ -97,7 +104,7 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
      * @param parentElement
      * @return
      */
-    protected void getTimeList(DOMHelper dom, Element parentElement, SOSLayerCapabilities layerCaps) throws XMLReaderException, SOSException
+    protected void getTimeList(DOMHelper dom, Element parentElement, SOSOfferingCapabilities layerCaps) throws XMLReaderException, SOSException
     {
         GMLTimeReader timeReader = new GMLTimeReader();
         Element timeElt = dom.getElement(parentElement, "time/*");  // 1.0 schema is using plain old 'time' here 
@@ -114,7 +121,7 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
             NodeList timeElts = dom.getElements(timeElt, "member/*");
             int listSize = timeElts.getLength();
             ArrayList<TimeExtent> timeList = new ArrayList<TimeExtent>(listSize);
-            layerCaps.setTimeList(timeList);
+            layerCaps.setPhenomenonTimes(timeList);
             
             for(int i = 0; i < listSize; i++)
             {
@@ -128,7 +135,7 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
         else
         {
             TimeExtent time = timeReader.readTimePrimitive(dom, timeElt);
-            layerCaps.getTimeList().add(time);
+            layerCaps.getPhenomenonTimes().add(time);
         }
     }
     
@@ -138,7 +145,7 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
      * @param parentElement
      * @return
      */
-    protected void getFormatList(DOMHelper dom, Element parentElement, SOSLayerCapabilities layerCaps) throws SOSException
+    protected void getFormatList(DOMHelper dom, Element parentElement, SOSOfferingCapabilities layerCaps) throws SOSException
     {
     	NodeList formatElts = dom.getElements(parentElement, "resultFormat");
     	if(formatElts.getLength()==0) {
@@ -147,7 +154,7 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
         int listSize = formatElts.getLength();
 
         ArrayList<String> formatList = new ArrayList<String>(listSize);
-        layerCaps.setFormatList(formatList);
+        layerCaps.setResponseFormats(formatList);
         
         for(int i = 0; i < listSize; i++)
         {
@@ -163,12 +170,12 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
      * @param parentElement
      * @return
      */
-    protected void getObservableList(DOMHelper dom, Element parentElement, SOSLayerCapabilities layerCaps) throws SOSException
+    protected void getObservableList(DOMHelper dom, Element parentElement, SOSOfferingCapabilities layerCaps) throws SOSException
     {
         NodeList obsElts = dom.getElements(parentElement, "observedProperty");
         int listSize = obsElts.getLength();
         ArrayList<String> obsList = new ArrayList<String>(listSize);
-        layerCaps.setObservableList(obsList);
+        layerCaps.setObservableProperties(obsList);
         
         for(int i = 0; i < listSize; i++)
         {
@@ -196,12 +203,12 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
      * @param parentElement
      * @return
      */
-    protected void getProcedureList(DOMHelper dom, Element parentElement, SOSLayerCapabilities layerCaps) throws SOSException
+    protected void getProcedureList(DOMHelper dom, Element parentElement, SOSOfferingCapabilities layerCaps) throws SOSException
     {
         NodeList procElts = dom.getElements(parentElement, "procedure");
         int listSize = procElts.getLength();
         ArrayList<String> procList = new ArrayList<String>(listSize);
-        layerCaps.setProcedureList(procList);
+        layerCaps.setProcedures(procList);
 
         for(int i = 0; i < listSize; i++)
         {

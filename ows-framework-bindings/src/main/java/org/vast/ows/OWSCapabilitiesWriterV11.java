@@ -22,28 +22,24 @@
 package org.vast.ows;
 
 import java.util.Enumeration;
-import java.util.List;
 import org.vast.util.ResponsibleParty;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
+
 /**
- * <p><b>Title:</b><br/>
- * OWSCapabilitiesWriterV11
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base writer for all service capabilities based on OWS common 1.1
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 27 nov. 07
+ * @since 27 nov. 07
  * @version 1.0
  */
 public abstract class OWSCapabilitiesWriterV11 extends AbstractResponseWriter<OWSServiceCapabilities>
 {
-		
+    
 	protected abstract void writeContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps, String version) throws OWSException; 
 	
 	
@@ -75,20 +71,26 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractResponseWriter<OW
 	 */
 	protected void writeServiceIdentification(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps)
 	{
-		Element idElt = dom.addElement(capsElt, "ows:ServiceIdentification");
+		if (caps.getIdentification() == null)
+		    return;
+	    
+	    Element idElt = dom.addElement(capsElt, "ows:ServiceIdentification");
 		writeIdentification(dom, idElt, caps.getIdentification());
 		
 		// mandatory service type
-		String text = caps.getService();
-		dom.setElementValue(idElt, "ows:ServiceType", text);
+		Element servTypeElt = dom.setElementValue(idElt, "ows:ServiceType", "OGC:" + caps.getService());
+		dom.setAttributeValue(servTypeElt, "codeSpace", "http://opengeospatial.net");
 		
 		// at least one supported version
-		List<String> versions = caps.getSupportedVersions();
-		for (int i=0; i<versions.size(); i++)
-			dom.setElementValue(idElt, "+ows:ServiceTypeVersion", versions.get(i));
+		for (String version: caps.getSupportedVersions())
+			dom.setElementValue(idElt, "+ows:ServiceTypeVersion", version);
+		
+		// profiles
+		for (String profile: caps.getProfiles())
+		    dom.setElementValue(idElt, "+ows:Profile",profile);
 		
 		// fees
-		text = caps.getFees();
+		String text = caps.getFees();
 		if (text != null)
 			dom.setElementValue(idElt, "ows:Fees", text);
 		

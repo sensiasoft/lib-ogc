@@ -29,17 +29,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * OWS Exception Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Utility class to serialize an OWS exception to XML
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date Oct 23, 2007
+ * @since Oct 23, 2007
  * @version 1.0
  */
 public class OWSExceptionWriter

@@ -23,7 +23,6 @@ package org.vast.ows.sos;
 import org.vast.util.Bbox;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.XMLWriterException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLEnvelopeWriter;
 import org.vast.ogc.gml.GMLTimeWriter;
@@ -51,14 +50,12 @@ import org.w3c.dom.Element;
  */
 public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservationRequest>
 {
-	protected GMLEnvelopeWriter bboxWriter;
-    protected GMLTimeWriter timeWriter;
+	protected GMLEnvelopeWriter bboxWriter = new GMLEnvelopeWriter("3.1");
+    protected GMLTimeWriter timeWriter = new GMLTimeWriter("3.1");
     
     
 	public GetObservationWriterV10()
 	{
-        bboxWriter = new GMLEnvelopeWriter();
-        timeWriter = new GMLTimeWriter();
 	}
 
 	
@@ -144,26 +141,19 @@ public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservatio
 		dom.setElementValue(rootElt, "sos:offering", request.getOffering());
 		
 		// event time
-        try
+		TimeExtent timeInfo = request.getTime();
+        if (timeInfo != null)
         {
-            TimeExtent timeInfo = request.getTime();
-            if (timeInfo != null)
-            {
-                Element timeElt = timeWriter.writeTime(dom, timeInfo);
-                Element opElt = null;
+            Element timeElt = timeWriter.writeTime(dom, timeInfo);
+            Element opElt = null;
 
-                if(timeInfo.isBaseAtNow())
-                	opElt = dom.addElement(rootElt, "sos:eventTime/ogc:TM_After");
-                else
-                	opElt = dom.addElement(rootElt, "sos:eventTime/ogc:TM_During");
-                
-                dom.setElementValue(opElt, "ogc:PropertyName", "om:samplingTime");                
-                opElt.appendChild(timeElt);
-            }
-        }
-        catch (XMLWriterException e)
-        {
-            throw new SOSException("Error while writing time", e);
+            if(timeInfo.isBaseAtNow())
+                opElt = dom.addElement(rootElt, "sos:eventTime/ogc:TM_After");
+            else
+                opElt = dom.addElement(rootElt, "sos:eventTime/ogc:TM_During");
+            
+            dom.setElementValue(opElt, "ogc:PropertyName", "om:samplingTime");                
+            opElt.appendChild(timeElt);
         }
         
         // procedures

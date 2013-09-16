@@ -24,17 +24,13 @@ import java.util.ArrayList;
 
 
 /**
- * <p><b>Title:</b><br/>
- * OWS Identification Group
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for common OWS Identification info
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alex Robin
- * @date Oct 11, 2007
+ * @since Oct 11, 2007
  * @version 1.0
  */
 public class OWSIdentification

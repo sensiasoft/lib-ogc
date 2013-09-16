@@ -36,18 +36,14 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Abstract class for all OWS Request Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse a GET or POST OWS request and
  * create an OWSQuery object
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Nov 4, 2005
+ * @since Nov 4, 2005
  * @version 1.0
  */
 public abstract class AbstractRequestReader<RequestType extends OWSRequest> implements OWSRequestReader<RequestType>

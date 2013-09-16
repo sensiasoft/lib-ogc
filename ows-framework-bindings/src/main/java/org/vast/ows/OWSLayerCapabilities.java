@@ -22,11 +22,7 @@ package org.vast.ows;
 
 
 /**
- * <p><b>Title:</b><br/>
- * OWS Layer Capabilities
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Abstract base class for all objects representing OWS 
  * capabilities document. Sepcific services should derive
  * their LayerCapabilities object from this base class.
@@ -34,7 +30,7 @@ package org.vast.ows;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Oct 31, 2005
+ * @since Oct 31, 2005
  * @version 1.0
  */
 public abstract class OWSLayerCapabilities extends OWSIdentification

@@ -24,7 +24,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.test.ows.sos;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -34,6 +34,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import org.opengis.filter.expression.Literal;
 import org.vast.ows.OWSUtils;
+import org.vast.ows.sos.GetObservationRequest;
 import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
 import com.vividsolutions.jts.geom.Polygon;

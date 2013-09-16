@@ -50,7 +50,7 @@ import org.vast.xml.QName;
  */
 public class CoverageDescriptionsWriterV10 extends AbstractResponseWriter<CoverageDescriptions>
 {
-	protected GMLEnvelopeWriter gmlWriter = new GMLEnvelopeWriter();
+	protected GMLEnvelopeWriter gmlWriter = new GMLEnvelopeWriter("3.1.1");
 		
 	
 	public Element buildXMLResponse(DOMHelper dom, CoverageDescriptions response, String version) throws OWSException

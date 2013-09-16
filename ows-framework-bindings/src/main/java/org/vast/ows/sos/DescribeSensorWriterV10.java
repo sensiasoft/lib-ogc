@@ -48,12 +48,11 @@ import org.w3c.dom.Element;
  */
 public class DescribeSensorWriterV10 extends AbstractRequestWriter<DescribeSensorRequest>
 {
-	protected GMLTimeWriter timeWriter;
+	protected GMLTimeWriter timeWriter = new GMLTimeWriter("3.1");
     
     
 	public DescribeSensorWriterV10()
 	{
-        timeWriter = new GMLTimeWriter();
 	}
 
 	

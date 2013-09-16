@@ -28,18 +28,14 @@ import org.vast.xml.QName;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GetCapabilities Request Builder v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to generate a KVP or XML GetCapabilities request based
  * on values contained in a GetCapabilities object for version 1.0
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Sep 21, 2007
+ * @since Sep 21, 2007
  * @version 1.0
  */
 public class GetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilitiesRequest>

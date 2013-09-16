@@ -51,7 +51,7 @@ import org.vast.xml.QName;
  */
 public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageRequest>
 {
-	protected GMLEnvelopeWriter envelopeWriter = new GMLEnvelopeWriter();
+	protected GMLEnvelopeWriter envelopeWriter = new GMLEnvelopeWriter("3.1");
 	
 	
 	@Override

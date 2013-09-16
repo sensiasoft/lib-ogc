@@ -30,17 +30,13 @@ import org.vast.xml.QName;
 
 
 /**
- * <p><b>Title:</b><br/>
- * OWS Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base class for all OWS style request objects
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Oct 27, 2005
+ * @since Oct 27, 2005
  * @version 1.0
  */
 public class OWSRequest

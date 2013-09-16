@@ -35,18 +35,14 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * OWS Request Builder
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base abstract class for all service specific POST/GET
  * request builders
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Oct 30, 2005
+ * @since Oct 30, 2005
  * @version 1.0
  */
 public abstract class AbstractRequestWriter<RequestType extends OWSRequest> implements OWSRequestWriter<RequestType>

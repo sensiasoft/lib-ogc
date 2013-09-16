@@ -19,6 +19,7 @@
    <Reader type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesReader"/>
    <Writer type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesWriter"/>
    <!-- -->
+   <Reader type="SOS" subType="Capabilities" version="2.0" class="org.vast.ows.sos.SOSCapabilitiesReaderV20"/>
    <Reader type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationReaderV10"/>
    <Reader type="SOS" subType="GetObservation" version="2.0" class="org.vast.ows.sos.GetObservationReaderV20"/>
    <Reader type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorReaderV10"/>
@@ -29,6 +30,7 @@
    <Reader type="SOS" subType="GetResultTemplate" version="2.0" class="org.vast.ows.sos.GetResultTemplateReaderV20"/>
    <Reader type="SOS" subType="GetResultTemplateResponse" version="2.0" class="org.vast.ows.sos.GetResultTemplateResponseReaderV20"/>
    <!-- -->
+   <Writer type="SOS" subType="Capabilities" version="2.0" class="org.vast.ows.sos.SOSCapabilitiesWriterV20"/>
    <Writer type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationWriterV10"/>
    <Writer type="SOS" subType="GetObservation" version="2.0" class="org.vast.ows.sos.GetObservationWriterV20"/>
    <Writer type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorWriterV10"/>

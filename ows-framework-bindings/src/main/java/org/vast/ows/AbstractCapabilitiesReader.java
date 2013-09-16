@@ -25,11 +25,7 @@ import org.vast.xml.DOMHelper;
 
 
 /**
- * <p><b>Title:</b><br/>
- * OWS Capabilities Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base abstract class for reading an OWS server capabilities document.
  * This class instantiates a OWSServiceCapabilities object.
  * Descendants should add their own specific layer capabilities object 
@@ -38,13 +34,12 @@ import org.vast.xml.DOMHelper;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Oct 30, 2005
+ * @since Oct 30, 2005
  * @version 1.0
  */
 public abstract class AbstractCapabilitiesReader implements OWSResponseReader<OWSServiceCapabilities>
 {
-    protected final static String parsingError = "Error while parsing capabilities document";
-    protected OWSServiceCapabilities serviceCaps;
+    protected final static String xmlError = "Error while parsing capabilities document XML";
     
 
     public AbstractCapabilitiesReader()
@@ -52,24 +47,18 @@ public abstract class AbstractCapabilitiesReader implements OWSResponseReader<OW
     }
     
     
-    /**
-     * Read Capabilities from the given DOM document
-     * @param dom
-     * @param capabilitiesElt
-     * @return
-     * @throws OWSException
-     */
     public abstract OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException;
     
-    protected abstract void readContents(DOMHelper dom, Element capsElt) throws OWSException;
     
+    protected abstract void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws OWSException;
+           
         
     /**
      * Read server GET and POST urls for each operation
      * @param operationMetadataElt
      * @param capabilities
      */
-    protected void readOperationsMetadata(DOMHelper dom, Element capabilitiesElt) throws OWSException
+    protected void readOperationsMetadata(DOMHelper dom, Element capabilitiesElt, OWSServiceCapabilities serviceCaps) throws OWSException
     {
     	NodeList operationList = dom.getElements(capabilitiesElt, "OperationsMetadata/Operation");    	
     	for (int i=0; i<operationList.getLength(); i++)

@@ -28,17 +28,13 @@ import org.vast.xml.QName;
 
 /**
  * 
- * <p><b>Title:</b><br/>
- * OWS Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base class for all OWS service responses
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 21 nov. 07
+ * @since 21 nov. 07
  * @version 1.0
  */
 public class OWSResponse

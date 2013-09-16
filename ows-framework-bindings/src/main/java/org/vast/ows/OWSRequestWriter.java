@@ -25,17 +25,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * OWS Request Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base interface for all OWS request writers
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Jan 16, 2007
+ * @since Jan 16, 2007
  * @version 1.0
  */
 public interface OWSRequestWriter<QueryType extends OWSRequest>

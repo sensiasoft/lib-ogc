@@ -64,7 +64,7 @@ public class WNSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
 	
 	
 	@Override
-	protected void readContents(DOMHelper dom, Element capsElt) throws WNSException
+	protected void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws WNSException
 	{
 		WNSCapabilities wnsCaps = new WNSCapabilities();
 		

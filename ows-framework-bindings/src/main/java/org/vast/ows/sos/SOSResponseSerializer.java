@@ -103,9 +103,9 @@ public class SOSResponseSerializer extends SweResponseSerializer
             time.setTimeZone(zone);
             time.setBeginNow(false);  //  FIX THIS- should not change these
             time.setEndNow(false);
-            time.setBaseAtNow(false);            
+            time.setBaseAtNow(false);
             Element obsTimeElt = dom.addElement(obsElt, "om:samplingTime");            
-            GMLTimeWriter timeWriter = new GMLTimeWriter();
+            GMLTimeWriter timeWriter = new GMLTimeWriter("3.1");
             Element timeElt = timeWriter.writeTime(dom, time);
             obsTimeElt.appendChild(timeElt);
         }

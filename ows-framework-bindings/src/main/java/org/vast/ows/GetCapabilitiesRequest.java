@@ -23,17 +23,13 @@ package org.vast.ows;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GetCapabilities Query
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for GetCapabilities query parameters
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alex Robin
- * @date Sep 21, 2007
+ * @since Sep 21, 2007
  * @version 1.0
  */
 public class GetCapabilitiesRequest extends OWSRequest

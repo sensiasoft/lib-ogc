@@ -20,23 +20,29 @@ Contributor(s):
 
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows;
+package org.vast.ows.sos;
 
-import org.vast.cdm.common.DataComponent;
+import org.vast.ows.OWSServiceCapabilities;
 
 
 /**
-* <p>
-* Base class for readers of request containing SWE Common data.
-* (i.e. GetFeasibility, Submit, Update)
-* </p>
-*
-* <p>Copyright (c) 2008</p>
-* @author Alexandre Robin <alexandre.robin@spotimage.fr>
-* @since Feb, 29 2008
-* @version 1.0
-*/
-public interface ParameterizedRequestReader
+ * <p><b>Description:</b><br/>
+ * Representation of SOS service capabilities document.
+ * </p>
+ *
+ * <p>Copyright (c) 2013</p>
+ * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @date Sep 15, 2013
+ */
+public class SOSServiceCapabilities extends OWSServiceCapabilities
 {
-	public void setParamStructure(DataComponent paramStructure);	
+	
+	
+	
+	public SOSServiceCapabilities()
+	{
+		
+	}
+	
+	
 }

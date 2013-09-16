@@ -24,9 +24,7 @@ import java.io.IOException;
 
 
 /**
- * <p><b>Title:</b><br/> DataWriter</p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for a SWE data values writer
  * Concrete implementation are used to write data within the data element,
  * a MIME content object or to an out of band stream.

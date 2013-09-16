@@ -27,17 +27,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * <p><b>Title:</b><br/>
- * OWSCapabilitiesReaderV11
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base reader for all capabilities document based on OWS common 1.1
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 27 nov. 07
+ * @since 27 nov. 07
  * @version 1.0
  */
 public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReader
@@ -46,35 +42,58 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
 	
 	
 	@Override
-	public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
+    public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
+    {
+        try
+        {
+            return readOWSCapabilities(dom, capabilitiesElt, new OWSServiceCapabilities());
+        }
+        catch (Exception e)
+        {
+            throw new OWSException(xmlError, e);
+        }
+    }
+	
+	
+	protected OWSServiceCapabilities readOWSCapabilities(DOMHelper dom, Element capabilitiesElt, OWSServiceCapabilities serviceCaps) throws OWSException
 	{
-		serviceCaps = new OWSServiceCapabilities();
-    	
-    	// Version
+	    // version
         String version = dom.getAttributeValue(capabilitiesElt, "version");
         serviceCaps.setVersion(version);
         
-        // Update Sequence
+        // update sequence
         String updateSequence = dom.getAttributeValue(capabilitiesElt, "updateSequence");
         serviceCaps.setUpdateSequence(updateSequence);
         
-        // Read Service Identification Section
+        // service identification section
         Element serviceIdElt = dom.getElement(capabilitiesElt, "ServiceIdentification");
-        owsReader.readIdentification(dom, serviceIdElt, serviceCaps.getIdentification());
+        if (serviceIdElt != null)
+            owsReader.readIdentification(dom, serviceIdElt, serviceCaps.getIdentification());
+        else
+            serviceCaps.setIdentification(null);
                 
         // service type
         String serviceType = dom.getElementValue(serviceIdElt, "ServiceType");
-        serviceCaps.setService(serviceType);
+        serviceCaps.setService(serviceType.replaceAll("OGC:", ""));
         
         // supported service versions
         NodeList versionElts = dom.getElements(serviceIdElt, "ServiceTypeVersion");
         int numElts = versionElts.getLength();
-		for (int i = 0; i < numElts; i++)
-		{
-			Element versionElt = (Element) versionElts.item(i);
-			String supportedVersion = dom.getElementValue(versionElt);
-			serviceCaps.getSupportedVersions().add(supportedVersion);
-		}
+        for (int i = 0; i < numElts; i++)
+        {
+            Element versionElt = (Element) versionElts.item(i);
+            String supportedVersion = dom.getElementValue(versionElt);
+            serviceCaps.getSupportedVersions().add(supportedVersion);
+        }
+        
+        // profiles
+        NodeList profileElts = dom.getElements(serviceIdElt, "Profile");
+        for (int i = 0; i < profileElts.getLength(); i++)
+        {
+            Element profileElt = (Element) profileElts.item(i);
+            String profileURI = dom.getElementValue(profileElt);
+            serviceCaps.getProfiles().add(profileURI);
+        }
         
         // fees and access constraints
         String fees = dom.getElementValue(serviceIdElt, "Fees");
@@ -84,20 +103,23 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
         
         // service provider
         Element providerElt = dom.getElement(capabilitiesElt, "ServiceProvider");
-        readServiceProvider(dom, providerElt);
+        if (providerElt != null)
+            readServiceProvider(dom, providerElt, serviceCaps);
+        else
+            serviceCaps.setServiceProvider(null);
         
-        // Server URLS
-        readOperationsMetadata(dom, capabilitiesElt);
+        // server URLS
+        readOperationsMetadata(dom, capabilitiesElt, serviceCaps);
         
-        // Contents section
-        readContents(dom, capabilitiesElt);
+        // contents section
+        readContents(dom, capabilitiesElt, serviceCaps);
         
         return serviceCaps;
 	}
 	
 	
 	@Override
-	protected void readOperationsMetadata(DOMHelper dom, Element capabilitiesElt)
+	protected void readOperationsMetadata(DOMHelper dom, Element capabilitiesElt, OWSServiceCapabilities serviceCaps)
 	{
 		NodeList opElts = dom.getElements(capabilitiesElt, "OperationsMetadata/Operation");
 		int numElts = opElts.getLength();
@@ -123,7 +145,7 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
 	 * @param parentElt
 	 * @return
 	 */
-	protected void readServiceProvider(DOMHelper dom, Element providerElt)
+	protected void readServiceProvider(DOMHelper dom, Element providerElt, OWSServiceCapabilities serviceCaps)
 	{
 		ResponsibleParty provider = serviceCaps.getServiceProvider();
 		String text;

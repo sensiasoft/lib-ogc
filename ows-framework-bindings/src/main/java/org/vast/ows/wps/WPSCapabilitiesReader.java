@@ -24,6 +24,7 @@ import java.util.*;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSCapabilitiesReaderV11;
+import org.vast.ows.OWSServiceCapabilities;
 
 
 /**
@@ -51,7 +52,7 @@ public class WPSCapabilitiesReader extends OWSCapabilitiesReaderV11
        
     
     @Override
-    protected void readContents(DOMHelper dom, Element capsElt) throws WPSException
+    protected void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws WPSException
     {
         NodeList offeringList = dom.getElements(capsElt, "Contents/ProcessOfferingList/ProcessOffering");
         

@@ -27,11 +27,7 @@ import org.apache.xml.serialize.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SweResponseSerializer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Helper class to handle serialization of SWE XML responses
  * based on a template document obtained from an input stream.
  * </p>

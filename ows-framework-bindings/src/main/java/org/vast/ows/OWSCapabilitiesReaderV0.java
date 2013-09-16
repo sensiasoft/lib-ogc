@@ -44,12 +44,16 @@ import org.w3c.dom.NodeList;
 public abstract class OWSCapabilitiesReaderV0 extends AbstractCapabilitiesReader
 {
 
-	@Override
-	public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
-	{
-		serviceCaps = new OWSServiceCapabilities();
-    	
-    	// Version
+    @Override
+    public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
+    {
+        return readOWSCapabilities(dom, capabilitiesElt, new OWSServiceCapabilities());
+    }
+    
+    
+    protected OWSServiceCapabilities readOWSCapabilities(DOMHelper dom, Element capabilitiesElt, OWSServiceCapabilities serviceCaps) throws OWSException
+    {
+		// Version
         String version = dom.getAttributeValue(capabilitiesElt, "version");
         serviceCaps.setVersion(version);
         
@@ -69,20 +73,20 @@ public abstract class OWSCapabilitiesReaderV0 extends AbstractCapabilitiesReader
         
         // responsible party
         Element respPartyElt = dom.getElement(serviceElt, "responsibleParty");
-        readResponsibleParty(dom, respPartyElt);
+        readResponsibleParty(dom, respPartyElt, serviceCaps);
         
         // Server URLS
-        readOperationsMetadata(dom, capabilitiesElt);
+        readOperationsMetadata(dom, capabilitiesElt, serviceCaps);
         
         // Contents section
-        readContents(dom, capabilitiesElt);
+        readContents(dom, capabilitiesElt, serviceCaps);
         
         return serviceCaps;
 	}
 	
 	
 	@Override
-	protected void readOperationsMetadata(DOMHelper dom, Element capabilitiesElt)
+	protected void readOperationsMetadata(DOMHelper dom, Element capabilitiesElt, OWSServiceCapabilities serviceCaps)
 	{
 		NodeList opElts = dom.getElements(capabilitiesElt, "Capability/Request/*");
 		int numElts = opElts.getLength();
@@ -136,7 +140,7 @@ public abstract class OWSCapabilitiesReaderV0 extends AbstractCapabilitiesReader
 	 * @param parentElt
 	 * @return
 	 */
-	protected void readResponsibleParty(DOMHelper dom, Element respPartyElt)
+	protected void readResponsibleParty(DOMHelper dom, Element respPartyElt, OWSServiceCapabilities serviceCaps)
 	{
 		ResponsibleParty provider = serviceCaps.getServiceProvider();
 		String text;

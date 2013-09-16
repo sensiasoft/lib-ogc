@@ -29,18 +29,14 @@ import org.w3c.dom.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GetCapabilities Request Reader v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse a KVP or XML GetCapabilities request and
  * create a GetCapabilities object for all version
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Sep 21, 2007
+ * @since Sep 21, 2007
  * @version 1.0
  */
 public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilitiesRequest>

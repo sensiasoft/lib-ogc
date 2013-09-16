@@ -39,17 +39,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * OWS Utils
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Utility methods for common stuffs in OGC services
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Jan 16, 2007
+ * @since Jan 16, 2007
  * @version 1.0
  */
 public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<OWSRequest>
@@ -341,8 +337,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
      */
     public OWSResponse readXMLResponse(DOMHelper dom, Element responseElt, String serviceType, String responseType) throws OWSException
     {
-    	String version = readXMLVersion(dom, responseElt);
-    	return readXMLResponse(dom, responseElt, serviceType, responseType, version);
+    	return readXMLResponse(dom, responseElt, serviceType, responseType, null);
     }
     
     
@@ -358,6 +353,14 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
      */
     public OWSResponse readXMLResponse(DOMHelper dom, Element responseElt, String serviceType, String responseType, String version) throws OWSException
     {
+        // skip SOAP envelope if present
+        if (responseElt.getNamespaceURI().equals(soap12Uri))
+            responseElt = dom.getElement(responseElt, "Body/*");
+        
+        // auto detect version if non specified
+        if (version == null)
+            version = readXMLVersion(dom, responseElt);
+        
         try
         {
         	OWSResponseReader<OWSResponse> reader = (OWSResponseReader<OWSResponse>)OGCRegistry.createReader(serviceType, responseType, version);
@@ -368,6 +371,29 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         {
             String spec = serviceType + " " + responseType + " v" + version;
         	throw new OWSException(unsupportedSpec + spec, e);
+        }
+    }
+    
+    
+    /**
+     * Helper method to parse any OWS response directly from an InputStream
+     * @param is
+     * @param serviceType
+     * @param responseType
+     * @return
+     * @throws OWSException
+     */
+    public OWSResponse readXMLResponse(InputStream is, String serviceType, String responseType) throws OWSException
+    {
+        try
+        {
+            DOMHelper dom = new DOMHelper(is, false);
+            OWSResponse resp = readXMLResponse(dom, dom.getRootElement(), serviceType, responseType);
+            return resp;
+        }
+        catch (DOMHelperException e)
+        {
+            throw new OWSException(AbstractResponseReader.invalidXML, e);
         }
     }
     

@@ -24,6 +24,7 @@ import java.util.*;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSServiceCapabilities;
 
 
 /**
@@ -50,7 +51,7 @@ public class WMSCapabilitiesReaderV11 extends WMSCapabilitiesReaderV10
     
     
     @Override
-    protected void readOperationsMetadata(DOMHelper dom, Element capsElt) throws OWSException
+    protected void readOperationsMetadata(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws OWSException
     {
         String url;
         

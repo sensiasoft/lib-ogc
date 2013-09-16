@@ -24,7 +24,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.test.ows.sos;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import org.vast.ows.OWSUtils;
+import org.vast.ows.sos.GetResultRequest;
 import org.vast.util.DateTimeFormat;
 import junit.framework.TestCase;
 

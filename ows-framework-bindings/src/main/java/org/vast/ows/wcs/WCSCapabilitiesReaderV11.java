@@ -27,6 +27,7 @@ import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSCapabilitiesReaderV11;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSServiceCapabilities;
 
 
 /**
@@ -54,7 +55,7 @@ public class WCSCapabilitiesReaderV11 extends OWSCapabilitiesReaderV11
 	
 	
 	@Override
-	protected void readContents(DOMHelper dom, Element capsElt) throws OWSException
+	protected void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws OWSException
 	{
 		//  Load List of CoverageSummary elements
 		NodeList layers = dom.getElements(capsElt, "Contents/CoverageSummary");

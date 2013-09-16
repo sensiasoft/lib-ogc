@@ -58,7 +58,7 @@ public class WMSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
     @Override
     public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
     {
-    	serviceCaps = new OWSServiceCapabilities();
+        OWSServiceCapabilities serviceCaps = new OWSServiceCapabilities();
     	
     	// Version
         String version = dom.getAttributeValue(capabilitiesElt, "version");
@@ -74,17 +74,17 @@ public class WMSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
         serviceCaps.getIdentification().setDescription(desc);
         
         // Server URLS
-        readOperationsMetadata(dom, capabilitiesElt);
+        readOperationsMetadata(dom, capabilitiesElt, serviceCaps);
         
         // Contents section
-        readContents(dom, capabilitiesElt);
+        readContents(dom, capabilitiesElt, serviceCaps);
         
         return serviceCaps;
     }
     
     
     @Override
-    protected void readOperationsMetadata(DOMHelper dom, Element capsElt) throws OWSException
+    protected void readOperationsMetadata(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws OWSException
     {
         String url;
         
@@ -101,7 +101,7 @@ public class WMSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
     
     
     @Override
-    protected void readContents(DOMHelper dom, Element capsElt)
+    protected void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps)
     {
     	readFormatList(dom, capsElt);
     	
@@ -109,7 +109,7 @@ public class WMSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
     	//int maxWidth = Integer.parseInt(dom.getElementValue("Service/"));
     	
     	Element rootLayer = dom.getElement(capsElt, "Capability/Layer");
-    	WMSLayerCapabilities layerCaps = readLayer(dom, rootLayer, null);
+    	WMSLayerCapabilities layerCaps = readLayer(dom, rootLayer, null, serviceCaps);
     	if (!serviceCaps.getLayers().contains(layerCaps))
     		serviceCaps.getLayers().add(0, layerCaps);
     }
@@ -146,7 +146,7 @@ public class WMSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
      * @param parentCaps
      * @param serviceCaps
      */
-    protected WMSLayerCapabilities readLayer(DOMHelper dom, Element layerElt, WMSLayerCapabilities parentCaps)
+    protected WMSLayerCapabilities readLayer(DOMHelper dom, Element layerElt, WMSLayerCapabilities parentCaps, OWSServiceCapabilities serviceCaps)
     {
         WMSLayerCapabilities layerCaps = new WMSLayerCapabilities();
         layerCaps.setParent(serviceCaps);
@@ -188,7 +188,7 @@ public class WMSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
     	for (int i = 0; i < listSize; i++)
         {
             Element childLayer = (Element)childLayers.item(i);
-            WMSLayerCapabilities childCaps = readLayer(dom, childLayer, layerCaps);
+            WMSLayerCapabilities childCaps = readLayer(dom, childLayer, layerCaps, serviceCaps);
             layerCaps.getChildLayers().add(childCaps);
         }
     	

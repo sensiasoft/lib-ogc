@@ -27,11 +27,7 @@ import java.util.List;
 
 
 /**
- * <p><b>Title:</b><br/>
- * OWSExceptionReport
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * This class encapsulates a list of OWS exceptions and can be
  * used to generate an XML report.
  * It itself derives from OWSException can be thrown as such. 
@@ -39,7 +35,7 @@ import java.util.List;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 23 oct. 07
+ * @since 23 oct. 07
  * @version 1.0
  */
 public class OWSExceptionReport extends OWSException

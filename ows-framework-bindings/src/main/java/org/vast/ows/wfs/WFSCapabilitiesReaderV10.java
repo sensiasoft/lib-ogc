@@ -56,7 +56,7 @@ public class WFSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
     @Override
     public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
     {
-    	serviceCaps = new OWSServiceCapabilities();
+        OWSServiceCapabilities serviceCaps = new OWSServiceCapabilities();
     	
     	// Version
         String version = dom.getAttributeValue(capabilitiesElt, "version");
@@ -72,17 +72,17 @@ public class WFSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
         serviceCaps.getIdentification().setDescription(desc);
         
         // Server URLS
-        readOperationsMetadata(dom, capabilitiesElt);
+        readOperationsMetadata(dom, capabilitiesElt, serviceCaps);
         
         // Contents section
-        readContents(dom, capabilitiesElt);
+        readContents(dom, capabilitiesElt, serviceCaps);
         
         return serviceCaps;
     }
     
     
     @Override
-    protected void readOperationsMetadata(DOMHelper dom, Element capsElt) throws OWSException
+    protected void readOperationsMetadata(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws OWSException
     {
         String url;
         
@@ -99,7 +99,7 @@ public class WFSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
     
     
     @Override
-    protected void readContents(DOMHelper dom, Element capsElt)
+    protected void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps)
     {
     	ArrayList<String> formatList = getFormatList(dom, capsElt);
     	
@@ -107,7 +107,7 @@ public class WFSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
         for (int i=0; i<featureList.getLength(); i++)
         {
         	Element featureElt = (Element)featureList.item(i);
-        	WFSLayerCapabilities featureCaps = readFeature(dom, featureElt);
+        	WFSLayerCapabilities featureCaps = readFeature(dom, featureElt, serviceCaps);
         	featureCaps.setFormatList(formatList);
         	serviceCaps.getLayers().add(featureCaps);
         }
@@ -147,7 +147,7 @@ public class WFSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
      * @param featureElt
      * @return WFSLayerCapabilities object
      */
-    protected WFSLayerCapabilities readFeature(DOMHelper dom, Element featureElt)
+    protected WFSLayerCapabilities readFeature(DOMHelper dom, Element featureElt, OWSServiceCapabilities serviceCaps)
     {
         WFSLayerCapabilities layerCaps = new WFSLayerCapabilities();
         layerCaps.setParent(serviceCaps);

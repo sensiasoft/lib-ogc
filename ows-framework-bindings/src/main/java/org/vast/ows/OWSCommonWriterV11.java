@@ -28,17 +28,13 @@ import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 
 /**
- * <p><b>Title:</b><br/>
- * OWS Reference Writer V11
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Utility methods to write OWS common References and Reference Groups
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 22 nov. 07
+ * @since 22 nov. 07
  * @version 1.0
  */
 public class OWSCommonWriterV11

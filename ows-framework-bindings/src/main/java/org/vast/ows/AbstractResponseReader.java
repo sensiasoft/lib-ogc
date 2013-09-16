@@ -27,18 +27,14 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Abstract class for all OWS Response Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse an XML OWS response and
  * create an OWSResponse object
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Nov 4, 2005
+ * @since Nov 4, 2005
  * @version 1.0
  */
 public abstract class AbstractResponseReader<ResponseType extends OWSResponse> implements OWSResponseReader<ResponseType>

@@ -22,18 +22,14 @@ package org.vast.ows;
 
 
 /**
- * <p><b>Title:</b><br/>
- * OWS Exception
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base exception class for all OGC Services.
  * Contains the fields necessary to generate an exception report.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 23 oct. 07
+ * @since 23 oct. 07
  * @version 1.0
  */
 public class OWSException extends Exception

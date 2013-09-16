@@ -70,8 +70,12 @@ public class WCSCapabilitiesReaderV07 extends AbstractCapabilitiesReader
     @Override
     public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException
     {
-    	serviceCaps = new OWSServiceCapabilities();
-    	
+        return readOWSCapabilities(dom, capabilitiesElt, new OWSServiceCapabilities());
+    }
+    
+    
+    protected OWSServiceCapabilities readOWSCapabilities(DOMHelper dom, Element capabilitiesElt, OWSServiceCapabilities serviceCaps) throws OWSException
+    {
     	// Version
         String version = dom.getAttributeValue(capabilitiesElt, "version");
         serviceCaps.setVersion(version);
@@ -86,17 +90,17 @@ public class WCSCapabilitiesReaderV07 extends AbstractCapabilitiesReader
         serviceCaps.getIdentification().setDescription(desc);
         
         // Server URLS
-        readOperationsMetadata(dom, capabilitiesElt);
+        readOperationsMetadata(dom, capabilitiesElt, serviceCaps);
         
         // Contents section
-        readContents(dom, capabilitiesElt);
+        readContents(dom, capabilitiesElt, serviceCaps);
         
         return serviceCaps;
     }
     
     
     @Override
-    protected void readOperationsMetadata(DOMHelper dom, Element capabilitiesElt)
+    protected void readOperationsMetadata(DOMHelper dom, Element capabilitiesElt, OWSServiceCapabilities serviceCaps)
     {
         Node map = dom.getAllElements(capabilitiesElt, "http:operation").item(0);
         String url = ((Element)map).getAttribute("location");
@@ -108,7 +112,7 @@ public class WCSCapabilitiesReaderV07 extends AbstractCapabilitiesReader
     
 
     @Override
-    protected void readContents(DOMHelper dom, Element capsElt)
+    protected void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps)
     {
         //  Load List of GridCoverageLayer elements
     	NodeList layers = dom.getElements(capsElt, "ContentMetadata/CoverageLayerList/GridCoverageLayer");
