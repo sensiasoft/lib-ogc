@@ -39,6 +39,10 @@ import org.vast.util.TimeExtent;
  */
 public class SOSOfferingCapabilities extends OWSLayerCapabilities
 {
+    public static String FORMAT_OM2 = "http://www.opengis.net/om/2.0";
+    public static String FORMAT_SML1 = "http://www.opengis.net/sensorML/1.0.1";
+    public static String FORMAT_SML2 = "http://www.opengis.net/sensorML/2.0";
+    
     protected List<String> observableProperties;
     protected List<String> procedures;
     protected List<Bbox> observedAreas;
@@ -47,6 +51,7 @@ public class SOSOfferingCapabilities extends OWSLayerCapabilities
     protected List<String> relatedFeatures;
     
     protected List<String> responseFormats;
+    protected List<String> supportedEncodings;
     protected List<String> procedureFormats;    
     protected List<String> observationTypes;
     protected List<String> foiTypes;
@@ -148,6 +153,18 @@ public class SOSOfferingCapabilities extends OWSLayerCapabilities
     public void setResponseFormats(List<String> responseFormats)
     {
         this.responseFormats = responseFormats;
+    }
+
+
+    public List<String> getSupportedEncodings()
+    {
+        return supportedEncodings;
+    }
+
+
+    public void setSupportedEncodings(List<String> supportedEncodings)
+    {
+        this.supportedEncodings = supportedEncodings;
     }
 
 

@@ -10,7 +10,7 @@
    <Namespace type="WCS" version="1.1.1" uri="http://www.opengis.net/wcs/1.1.1" ows="1.1"/>
    <Namespace type="CSW" version="1.0" uri="http://www.opengis.net/cat/csw"/>
    <Namespace type="SOS" version="1.0" uri="http://www.opengis.net/sos/1.0" ows="1.1"/>
-   <Namespace type="SOS" version="2.0" uri="http://www.opengis.net/sos/2.0"/>
+   <Namespace type="SOS" version="2.0" uri="http://www.opengis.net/sos/2.0" ows="1.1"/>
    <Namespace type="SAS" version="0.0" uri="http://www.opengis.net/sas/0.0"/>  
    <Namespace type="SPS" version="2.0" uri="http://www.opengis.net/sps/2.0" ows="1.1"/>
    <Namespace type="WNS" version="*" uri="http://www.opengis.net/wns"/>

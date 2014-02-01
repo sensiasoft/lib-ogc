@@ -67,7 +67,19 @@ public class SOSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
             readOWSCapabilities(dom, capabilitiesElt, caps);
             
             // TODO read specific SOS stuff
-            // TODO read insertion capabilities
+            
+            // insertion capabilities
+            Element insertionCapsElt = dom.getElement(capabilitiesElt, "extension/InsertionCapabilities");
+            if (insertionCapsElt != null)
+            {
+                SOSInsertionCapabilities insertionCaps = new SOSInsertionCapabilities();
+                insertionCaps.setProcedureFormats(readProcedureFormats(dom, insertionCapsElt));
+                insertionCaps.setObservationTypes(readObservationTypes(dom, insertionCapsElt));
+                insertionCaps.setFoiTypes(readFoiTypes(dom, insertionCapsElt));
+                insertionCaps.setSupportedEncodings(readSupportedEncodings(dom, insertionCapsElt));
+                caps.setInsertionCapabilities(insertionCaps);
+            }
+            
             // TODO read filter capabilities
             
             return caps;
@@ -230,6 +242,15 @@ public class SOSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
     protected List<String> readFoiTypes(DOMHelper dom, Element parentElt)
     {
         return readStringList(dom, parentElt, "featureOfInterestType");
+    }
+    
+    
+    /*
+     * Reads content from a list of supportedEncoding elements
+     */
+    protected List<String> readSupportedEncodings(DOMHelper dom, Element parentElt)
+    {
+        return readStringList(dom, parentElt, "supportedEncoding");
     }
     
     

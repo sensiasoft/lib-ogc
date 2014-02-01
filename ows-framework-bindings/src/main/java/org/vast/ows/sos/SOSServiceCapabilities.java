@@ -36,13 +36,28 @@ import org.vast.ows.OWSServiceCapabilities;
  */
 public class SOSServiceCapabilities extends OWSServiceCapabilities
 {
-	
+    public static String PROFILE_RESULT_RETRIEVAL = "http://www.opengis.net/spec/SOS/2.0/conf/resultRetrieval";
+    public static String PROFILE_OBS_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/obsInsertion";
+    public static String PROFILE_RESULT_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/resultInsertion";  
+    
+    SOSInsertionCapabilities insertionCapabilities;
 	
 	
 	public SOSServiceCapabilities()
 	{
-		
+	    this.service = "SOS";
 	}
-	
+
+
+    public SOSInsertionCapabilities getInsertionCapabilities()
+    {
+        return insertionCapabilities;
+    }
+
+
+    public void setInsertionCapabilities(SOSInsertionCapabilities insertionCapabilities)
+    {
+        this.insertionCapabilities = insertionCapabilities;
+    }
 	
 }

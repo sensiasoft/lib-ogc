@@ -36,7 +36,7 @@ import org.vast.util.ResponsibleParty;
  */
 public class OWSServiceCapabilities extends OWSResponse
 {
-	// updateSeqience
+	// updateSequence
 	protected String updateSequence = "0";
 	
 	// service identification

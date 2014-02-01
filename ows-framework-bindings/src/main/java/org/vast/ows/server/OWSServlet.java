@@ -73,19 +73,12 @@ public abstract class OWSServlet extends HttpServlet
     protected DOMHelper capsHelper;
         
     
-    public abstract void handleRequest(OWSRequest request) throws Exception;
+    protected abstract void handleRequest(OWSRequest request) throws Exception;
     
 
-	public synchronized void updateCapabilities(InputStream capsFile)
+	protected void handleRequest(GetCapabilitiesRequest request) throws Exception
 	{
-		try
-		{
-            capsHelper = new DOMHelper(capsFile, false);
-		}
-		catch (DOMHelperException e)
-		{
-			e.printStackTrace();
-		}
+	    sendCapabilities(((GetCapabilitiesRequest)request).getSection(), request.getResponseStream());
 	}
 
 
@@ -94,19 +87,13 @@ public abstract class OWSServlet extends HttpServlet
 	 * @param resp
 	 * @throws IOException
 	 */
-	protected void sendCapabilities(String section, OutputStream resp)
+	protected void sendCapabilities(String section, OutputStream resp) throws Exception
 	{
-	    try
-        {
-            OWSCapabilitiesSerializer serializer = new OWSCapabilitiesSerializer();
-            serializer.setOutputByteStream(resp);
-            serializer.serialize(capsHelper.getRootElement());
-        }
-        catch (IOException e)
-        {
-        }
+	    OWSCapabilitiesSerializer serializer = new OWSCapabilitiesSerializer();
+        serializer.setOutputByteStream(resp);
+        serializer.serialize(capsHelper.getRootElement());
         
-//      The code below is a better way to do it but we cannot remove the internalInfo element on the fly
+//      The code below is a better way to do it but we cannot remove the internalInfo elements on the fly
 //	    try
 //		{
 //		    Transformer serializer = TransformerFactory.newInstance().newTransformer();
@@ -119,6 +106,19 @@ public abstract class OWSServlet extends HttpServlet
 //		{
 //		}
 	}
+	
+
+	public synchronized void updateCapabilities(InputStream capsFile)
+    {
+        try
+        {
+            capsHelper = new DOMHelper(capsFile, false);
+        }
+        catch (DOMHelperException e)
+        {
+            e.printStackTrace();
+        }
+    }
 	
 	
 	/**
@@ -149,28 +149,53 @@ public abstract class OWSServlet extends HttpServlet
      */
     protected void processRequest(HttpServletRequest req, HttpServletResponse resp, boolean post)
     {
+        //  get actual request URL
+        String requestURL = req.getRequestURL().toString();
         OWSRequest request = null;
         
         try
         {
-            //  get request URL
-            String requestURL = req.getRequestURL().toString();
-            
-            // parse request
-            if (post)
+            // parse request            
+            try
             {
-                InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
-                DOMHelper dom = new DOMHelper(xmlRequest, false);
-                request = owsUtils.readXMLQuery(dom, dom.getBaseElement());
+                if (post)
+                {
+                    InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
+                    DOMHelper dom = new DOMHelper(xmlRequest, false);
+                    request = owsUtils.readXMLQuery(dom, dom.getBaseElement());
+                }
+                else
+                {
+                    String queryString = req.getQueryString();
+                    if (queryString == null)
+                        throw new IllegalArgumentException();
+                    request = owsUtils.readURLQuery(queryString);
+                }
             }
-            else
+            catch (IllegalArgumentException e)
             {
-                String queryString = req.getQueryString();
-                if (queryString == null)
-                    throw new IllegalArgumentException();
-                request = owsUtils.readURLQuery(queryString);
+                try
+                {
+                    resp.sendError(400, invalidKVPRequestMsg);
+                }
+                catch (IOException e1)
+                {
+                    log.error(internalErrorMsg, e1);
+                }            
             }
-            
+            catch (DOMHelperException e)
+            {
+                try
+                {
+                    resp.sendError(400, invalidXMLRequestMsg);
+                }
+                catch (IOException e1)
+                {
+                    log.error(internalErrorMsg, e1);
+                }            
+            }
+               
+            // write response
             // set default mime type 
             resp.setContentType(XML_MIME_TYPE);
             
@@ -181,7 +206,7 @@ public abstract class OWSServlet extends HttpServlet
             
             // if capabilities request, deal with it in a generic manner
             if (request instanceof GetCapabilitiesRequest)
-                this.sendCapabilities(((GetCapabilitiesRequest)request).getSection(), resp.getOutputStream());
+                this.handleRequest(request);
                 
             // else let specific code handle the request
             else
@@ -192,29 +217,7 @@ public abstract class OWSServlet extends HttpServlet
             try
             {
                 resp.setContentType(XML_MIME_TYPE);
-                owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), OWSUtils.WCS, getOWSVersion(request), e);
-            }
-            catch (IOException e1)
-            {
-                log.error(internalErrorMsg, e1);
-            }            
-        }
-        catch (IllegalArgumentException e)
-        {
-            try
-            {
-                resp.sendError(400, invalidKVPRequestMsg);
-            }
-            catch (IOException e1)
-            {
-                log.error(internalErrorMsg, e1);
-            }            
-        }
-        catch (DOMHelperException e)
-        {
-            try
-            {
-                resp.sendError(400, invalidXMLRequestMsg);
+                owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), request.getService(), request.getVersion(), e);
             }
             catch (IOException e1)
             {
@@ -245,11 +248,5 @@ public abstract class OWSServlet extends HttpServlet
                 log.error(internalErrorMsg, e);
             }
         }
-    }
-    
-    
-    protected String getOWSVersion(OWSRequest request)
-    {
-        return "1.0";
     }
 }

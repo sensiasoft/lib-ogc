@@ -43,6 +43,7 @@ import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ogc.om.IObservation;
 import org.vast.ogc.om.OMUtils;
 import org.vast.ows.GetCapabilitiesRequest;
+import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.server.OWSServlet;
 import org.vast.ows.server.SOSDataFilter;
@@ -126,7 +127,9 @@ public abstract class SOSServlet extends OWSServlet
 	protected void handleRequest(GetResultTemplateRequest request) throws Exception
 	{
 	    // check query parameters
-        checkQueryObservables(request.getOffering(), request.getObservables(), capsHelper);
+	    OWSExceptionReport report = new OWSExceptionReport();
+        checkQueryObservables(request.getOffering(), request.getObservables(), report);
+        report.process();
         
 	    // setup data provider
 	    SOSDataFilter filter = new SOSDataFilter(request.getObservables().get(0));
@@ -151,9 +154,11 @@ public abstract class SOSServlet extends OWSServlet
     protected void handleRequest(GetResultRequest request) throws Exception
     {
         // check query parameters
-        checkQueryObservables(request.getOffering(), request.getObservables(), capsHelper);
-        checkQueryProcedures(request.getOffering(), request.getProcedures(), capsHelper);
-        checkQueryTime(request.getOffering(), request.getTime(), capsHelper);
+        OWSExceptionReport report = new OWSExceptionReport();
+        checkQueryObservables(request.getOffering(), request.getObservables(), report);
+        checkQueryProcedures(request.getOffering(), request.getProcedures(), report);
+        checkQueryTime(request.getOffering(), request.getTime(), report);
+        report.process();
         
         // setup data provider
         SOSDataFilter filter = new SOSDataFilter(request.getFoiIDs(), request.getObservables(), request.getTime());
@@ -206,17 +211,19 @@ public abstract class SOSServlet extends OWSServlet
 			throw new SOSException("An SOS request must contain at least one observable");
 		
 		// check query parameters
-		checkQueryObservables(request.getOffering(), request.getObservables(), capsHelper);
-        checkQueryProcedures(request.getOffering(), request.getProcedures(), capsHelper);
-		checkQueryFormat(request.getOffering(), request.getFormat(), capsHelper);
-		checkQueryTime(request.getOffering(), request.getTime(), capsHelper);
-		String format = request.getFormat();
+		OWSExceptionReport report = new OWSExceptionReport();
+		checkQueryObservables(request.getOffering(), request.getObservables(), report);
+        checkQueryProcedures(request.getOffering(), request.getProcedures(), report);
+		checkQueryFormat(request.getOffering(), request.getFormat(), report);
+		checkQueryTime(request.getOffering(), request.getTime(), report);
+		report.process();
 		
 		// setup data provider
         SOSDataFilter filter = new SOSDataFilter(request.getFoiIDs(), request.getObservables(), request.getTime());
         ISOSDataProvider dataProvider = getDataProvider(request.getOffering(), filter);
 		
 		// prepare obs writer for requested O&M version
+        String format = request.getFormat();
 		String nsUri = format;
         String omVersion = nsUri.substring(format.lastIndexOf('/') + 1);
         IXMLWriterDOM<IObservation> obsWriter = (IXMLWriterDOM<IObservation>)OGCRegistry.createWriter(OMUtils.OM, OMUtils.OBSERVATION, omVersion);
@@ -256,6 +263,8 @@ public abstract class SOSServlet extends OWSServlet
 		    }
 		    
 		    xmlWriter.add(xmlFactory.createEndElement("om", nsUri, "observationData"));
+		    xmlWriter.flush();
+		    os.write('\n');
 		}
 		
 		xmlWriter.add(xmlFactory.createEndDocument());
@@ -265,28 +274,28 @@ public abstract class SOSServlet extends OWSServlet
 	
 	/**
 	 * Checks if all selected observables are available in this offering
-	 * @param offering
+	 * @param offeringID
 	 * @param observables
-	 * @param capsReader
+	 * @param report Exception report to append OWS exceptions to
 	 * @throws SOSException
 	 */
-	protected void checkQueryObservables(String offering, List<String> observables, DOMHelper capsReader) throws SOSException
+	protected void checkQueryObservables(String offeringID, List<String> observables, OWSExceptionReport report) throws SOSException
 	{
-		Element offeringElt = getOffering(offering, capsReader);		
-		NodeList observableElts = capsReader.getElements(offeringElt, "observableProperty");
+		Element offeringElt = getOffering(offeringID);		
+		NodeList observableElts = capsHelper.getElements(offeringElt, "observableProperty");
 		boolean ok;
 		
-		for (int j=0; j<observables.size(); j++)
+		for (String obsProp: observables)
 		{
 			ok = false;
 			
 			for (int i=0; i<observableElts.getLength(); i++)
 			{
-				String idString =  capsReader.getAttributeValue((Element)observableElts.item(i), "href");
+				String idString =  capsHelper.getAttributeValue((Element)observableElts.item(i), "href");
 				if(idString == null)
-                    idString = capsReader.getElementValue((Element)observableElts.item(i));
+                    idString = capsHelper.getElementValue((Element)observableElts.item(i));
 				
-				if (idString.equals(observables.get(j)))
+				if (idString.equals(obsProp))
 				{
 					ok = true;
 					break;
@@ -294,35 +303,35 @@ public abstract class SOSServlet extends OWSServlet
 			}
 			
 			if (!ok)
-				throw new SOSException("Observed property " + observables.get(j) + " is not available for offering " + offering);
+			    report.add(new SOSException(SOSException.invalid_param_code, "observedProperty", obsProp, "Observed property " + obsProp + " is not available for offering " + offeringID));
 		}
 	}
     
     
     /**
      * Checks if all selected procedures are available in this offering
-     * @param offering
+     * @param offeringID
      * @param procedures
-     * @param capsReader
+     * @param report Exception report to append OWS exceptions to
      * @throws SOSException
      */
-    protected void checkQueryProcedures(String offering, List<String> procedures, DOMHelper capsReader) throws SOSException
+    protected void checkQueryProcedures(String offeringID, List<String> procedures, OWSExceptionReport report) throws SOSException
     {
-        Element offeringElt = getOffering(offering, capsReader);
-        NodeList procedureElts = capsReader.getElements(offeringElt, "procedure");
+        Element offeringElt = getOffering(offeringID);
+        NodeList procedureElts = capsHelper.getElements(offeringElt, "procedure");
         boolean ok;
         
-        for (int j=0; j<procedures.size(); j++)
+        for (String procID: procedures)
         {
             ok = false;
             
             for (int i=0; i<procedureElts.getLength(); i++)
             {
-                String idString =  capsReader.getAttributeValue((Element)procedureElts.item(i), "href");
+                String idString =  capsHelper.getAttributeValue((Element)procedureElts.item(i), "href");
                 if(idString == null)
-                    idString = capsReader.getElementValue((Element)procedureElts.item(i));
+                    idString = capsHelper.getElementValue((Element)procedureElts.item(i));
                 
-                if (idString.equals(procedures.get(j)))
+                if (idString.equals(procID))
                 {
                     ok = true;
                     break;
@@ -330,26 +339,26 @@ public abstract class SOSServlet extends OWSServlet
             }
             
             if (!ok)
-                throw new SOSException("Procedure " + procedures.get(j) + " is not available for offering " + offering);
+                report.add(new SOSException(SOSException.invalid_param_code, "procedure", procID, "Procedure " + procID + " is not available for offering " + offeringID));
         }
     }
 	
 	
 	/**
 	 * Checks if selected format is available in this offering
-	 * @param offering
+	 * @param offeringID
 	 * @param format
-	 * @param capsReader
+	 * @param report Exception report to append OWS exceptions to
 	 * @throws SOSException
 	 */
-	protected void checkQueryFormat(String offering, String format, DOMHelper capsReader) throws SOSException
+	protected void checkQueryFormat(String offeringID, String format, OWSExceptionReport report) throws SOSException
 	{
-		Element offeringElt = getOffering(offering, capsReader);
+		Element offeringElt = getOffering(offeringID);
         
         // get format lists from either resultFormat or responseFormat elts
-		NodeList formatElts = capsReader.getElements(offeringElt, "resultFormat");
+		NodeList formatElts = capsHelper.getElements(offeringElt, "resultFormat");
     	if (formatElts.getLength() == 0)
-    	    formatElts = capsReader.getElements(offeringElt, "responseFormat");
+    	    formatElts = capsHelper.getElements(offeringElt, "responseFormat");
     
     	// if no formats are specified in caps, check if default is requested
     	if (format.equals(GetObservationRequest.DEFAULT_FORMAT))
@@ -359,36 +368,36 @@ public abstract class SOSServlet extends OWSServlet
         int listSize = formatElts.getLength();
 		for (int i=0; i<listSize; i++)
 		{
-			String formatString = capsReader.getElementValue((Element)formatElts.item(i), "");
+			String formatString = capsHelper.getElementValue((Element)formatElts.item(i), "");
 			
 			if (formatString.equals(format))
 				return;
 		}
 		
-		throw new SOSException("Format " + format + " is not available for offering " + offering);
+		report.add(new SOSException(SOSException.invalid_param_code, "format", format, "Format " + format + " is not available for offering " + offeringID));
 	}
 	
 	
 	/**
 	 * Checks if requested time is available in this offering
-	 * @param offering
+	 * @param offeringID
 	 * @param requestTime
-	 * @param capsReader
+	 * @param report Exception report to append OWS exceptions to
 	 * @throws SOSException
 	 * 	  TODO  these check*() methods need to be moved to account for differing SOS versions
 
 	 */
-	protected void checkQueryTime(String offering, TimeExtent requestTime, DOMHelper dom) throws SOSException
+	protected void checkQueryTime(String offeringID, TimeExtent requestTime, OWSExceptionReport report) throws SOSException
 	{
         // make sure startTime <= stopTime
         if (requestTime.getStartTime() > requestTime.getStopTime())
-            throw new SOSException("The requested period must begin before the it ends");
+            report.add(new SOSException("The requested period must begin before the it ends"));
         
         // loads capabilities advertised time
-        Element offeringElt = getOffering(offering, dom);
-        Element timeElt = dom.getElement(offeringElt, "eventTime/*");
+        Element offeringElt = getOffering(offeringID);
+        Element timeElt = capsHelper.getElement(offeringElt, "eventTime/*");
         if(timeElt == null)
-        	timeElt = dom.getElement(offeringElt, "phenomenonTime/*");
+        	timeElt = capsHelper.getElement(offeringElt, "phenomenonTime/*");
         if(timeElt == null)
             throw new SOSException("Internal Error: No Time Present in Capabilities Document");        
         GMLTimeReader timeReader = new GMLTimeReader();
@@ -397,20 +406,20 @@ public abstract class SOSServlet extends OWSServlet
         try
         {
             // case of time aggregate
-            if (dom.existElement(timeElt, "member"))
+            if (capsHelper.existElement(timeElt, "member"))
             {
-                NodeList timeElts = dom.getElements(timeElt, "member/*");                
+                NodeList timeElts = capsHelper.getElements(timeElt, "member/*");                
                 for(int i = 0; i < timeElts.getLength(); i++)
                 {
                     Element timeMemberElt = (Element)timeElts.item(i);
-                    TimeExtent time = timeReader.readTimePrimitive(dom, timeMemberElt);
+                    TimeExtent time = timeReader.readTimePrimitive(capsHelper, timeMemberElt);
                     timeList.add(time);
                 }
             }            
             // case of single instant/period/grid
             else
             {
-                TimeExtent time = timeReader.readTimePrimitive(dom, timeElt);
+                TimeExtent time = timeReader.readTimePrimitive(capsHelper, timeElt);
                 timeList.add(time);
             }
         }
@@ -445,7 +454,7 @@ public abstract class SOSServlet extends OWSServlet
                     buf.append(',');
             }
             
-            throw new SOSException(buf.toString());
+            report.add(new SOSException(SOSException.invalid_param_code, "phenomenonTime", requestTime.getIsoString(0), buf.toString()));
         }            
 	}
 	
@@ -453,19 +462,18 @@ public abstract class SOSServlet extends OWSServlet
     /**
      * Lookup offering element in caps using ID
      * @param offeringID
-     * @param capsReader
      * @return
-     * @throws SOSException
+     * @throws SOSException if no offering with requested ID can be found
      */
-	protected Element getOffering(String offeringID, DOMHelper capsReader) throws SOSException
+	protected Element getOffering(String offeringID) throws SOSException
 	{
 		Element offElt = null;
 		
-		NodeList offElts = capsReader.getElements("contents/Contents/offering/*");
+		NodeList offElts = capsHelper.getElements("contents/Contents/offering/*");
         for (int i = 0; i < offElts.getLength(); i++)
         {
             offElt = (Element)offElts.item(i);
-            if (capsReader.getElementValue(offElt, "identifier").equals(offeringID))
+            if (capsHelper.getElementValue(offElt, "identifier").equals(offeringID))
                 return offElt;
         }
         

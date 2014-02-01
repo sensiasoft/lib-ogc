@@ -72,10 +72,39 @@ public class SOSCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
 		writeServiceIdentification(dom, capsElt, caps);
 		writeServiceProvider(dom, capsElt, caps.getServiceProvider());
 		writeOperationsMetadata(dom, capsElt, caps);
+		// TODO write filter capabilities
+		writeInsertionCapabilities(dom, capsElt, (SOSServiceCapabilities)caps);
 		writeContents(dom, capsElt, caps, version);
 				
 		return capsElt;
 	}
+	
+	
+	protected void writeInsertionCapabilities(DOMHelper dom, Element capsElt, SOSServiceCapabilities serviceCaps) throws OWSException
+    {
+	    SOSInsertionCapabilities insertionCaps = serviceCaps.getInsertionCapabilities();
+	    if (insertionCaps != null)
+	    {
+	        Element insertionCapsElt = dom.addElement(capsElt, "sos:extension/sos:InsertionCapabilities");
+	        
+	        // procedure formats
+	        for (String token: insertionCaps.getProcedureFormats())
+	            dom.setElementValue(insertionCapsElt, "+sos:procedureDescriptionFormat", token);
+	        
+	        // foi types
+            for (String token: insertionCaps.getFoiTypes())
+                dom.setElementValue(insertionCapsElt, "+sos:featureOfInterestType", token);
+	        
+	        // obs types
+            for (String token: insertionCaps.getObservationTypes())
+                dom.setElementValue(insertionCapsElt, "+sos:observationType", token);
+            
+            // supported result encodings
+            for (String token: insertionCaps.getSupportedEncodings())
+                dom.setElementValue(insertionCapsElt, "+sos:supportedEncoding", token);
+	    }
+    }
+	
 	
 	
 	@Override
@@ -96,16 +125,16 @@ public class SOSCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
 	    // SOS offerings
 	    for (OWSLayerCapabilities layerCaps: serviceCaps.getLayers())
 	    {
-	        Element offeringElt = dom.addElement(contentsElt, "sos:offering/sos:ObservationOffering");
+	        Element offeringElt = dom.addElement(contentsElt, "+swes:offering/sos:ObservationOffering");
 	        SOSOfferingCapabilities offeringCaps = (SOSOfferingCapabilities)layerCaps;
 	        
 	        // description
 	        String desc = offeringCaps.getDescription();
             if (desc != null)
-                dom.setElementValue(offeringElt, "+swes:description", desc);
+                dom.setElementValue(offeringElt, "swes:description", desc);
 	        
 	        // identifier
-	        dom.setElementValue(offeringElt, "+swes:identifier", offeringCaps.getIdentifier());
+	        dom.setElementValue(offeringElt, "swes:identifier", offeringCaps.getIdentifier());
             
             // name
 	        String title = offeringCaps.getTitle();
@@ -113,7 +142,7 @@ public class SOSCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
 	            dom.setElementValue(offeringElt, "+swes:name", title);
             
 	        // procedure
-	        dom.setElementValue(offeringElt, "+swes:procedure", offeringCaps.getProcedures().get(0));
+	        dom.setElementValue(offeringElt, "swes:procedure", offeringCaps.getProcedures().get(0));
 	        
 	        // procedure description formats
 	        for (String token: getNonCommonListEntries(offeringCaps, serviceCaps, "getProcedureFormats"))
@@ -196,9 +225,12 @@ public class SOSCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
             {
                 List<String> tokenListFromOffering = (List<String>)layerCaps.getClass().getMethod(getListMethodName).invoke(layerCaps);
                 if (first)
+                {
                     intersectList.addAll(tokenListFromOffering);
+                    first = false;
+                }
                 else
-                    intersectList.retainAll(tokenListFromOffering);
+                    intersectList.retainAll(tokenListFromOffering);                
             }
             catch (Exception e)
             {                

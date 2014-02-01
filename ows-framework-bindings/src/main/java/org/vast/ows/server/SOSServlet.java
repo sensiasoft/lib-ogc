@@ -355,7 +355,7 @@ public abstract class SOSServlet extends OWSServlet
 		}
 		catch (Exception e)
 		{
-			throw new SOSException("No observation with ID " + obsID + " available on this server");
+			throw new SOSException("No offering with ID " + obsID + " available on this server");
 		}
 		
 		return obsElt;
