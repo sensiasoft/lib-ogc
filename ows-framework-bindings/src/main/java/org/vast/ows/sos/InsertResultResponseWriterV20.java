@@ -14,81 +14,48 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <alex.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.swe;
+package org.vast.ows.sos;
 
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.OWSRequest;
-import org.vast.sensorML.SMLUtils;
-import org.vast.util.TimeExtent;
+import org.vast.ows.OWSException;
+import org.vast.ows.swe.SWEResponseWriter;
+import org.w3c.dom.*;
+import org.vast.xml.DOMHelper;
 
 
 /**
  * <p><b>Title:</b><br/>
- * DescribeSensor Request
+ * InsertResult Response Writer v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for SOS Describe Sensor request parameters
+ * Writer to generate an XML InsertResult response based
+ * on values contained in a InsertResultResponse object for SOS v2.0
  * </p>
  *
- * <p>Copyright (c) 2007</p>
+ * <p>Copyright (c) 2014</p>
  * @author Alexandre Robin
- * @date Oct 09, 2007
+ * @date Feb 3, 2014
  * @version 1.0
  */
-public class DescribeSensorRequest extends OWSRequest
+public class InsertResultResponseWriterV20 extends SWEResponseWriter<InsertResultResponse>
 {
-    public final static String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "1.0");
-    	
-	protected String procedureID;
-	protected TimeExtent time;
-    protected String format;
-
-	
-	public DescribeSensorRequest()
+		
+	public Element buildXMLResponse(DOMHelper dom, InsertResultResponse response, String version) throws OWSException
 	{
-		service = "SOS";
-		operation = "DescribeSensor";
-		format = DEFAULT_FORMAT;
+	    dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(SOSUtils.SOS, version));
+        
+        // root element
+        Element rootElt = dom.createElement("sos:" + response.getMessageType());
+        
+        // write extensions
+        writeExtensions(dom, rootElt, response);
+        
+        return rootElt;
 	}
 	
-	
-	public String getFormat()
-	{
-		return format;
-	}
-
-
-	public void setFormat(String format)
-	{
-		this.format = format;
-	}
-
-
-	public String getProcedureID()
-	{
-		return procedureID;
-	}
-
-
-	public void setProcedureID(String procedure)
-	{
-		this.procedureID = procedure;
-	}
-	
-	
-	public TimeExtent getTime()
-	{
-		return time;
-	}
-
-
-	public void setTime(TimeExtent time)
-	{
-		this.time = time;
-	}	
 }

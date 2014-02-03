@@ -26,58 +26,30 @@
 
 package org.vast.ows.sos;
 
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
 import org.vast.ows.OWSResponse;
 
 
 /**
  * <p><b>Title:</b><br/>
- * GetResult Response
+ * InsertResult Response
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for SOS GetResult response data
+ * Container for SOS InsertResult response data
  * </p>
  *
- * <p>Copyright (c) 2012</p>
+ * <p>Copyright (c) 2014</p>
  * @author Alexandre Robin
- * @date Aug 19, 2012
+ * @date Feb 02, 2014
  * @version 1.0
  */
-public class GetResultResponse extends OWSResponse
+public class InsertResultResponse extends OWSResponse
 {
-    protected DataComponent resultData;
-    protected DataEncoding resultEncoding;
-    
-	
-	public GetResultResponse()
+
+	public InsertResultResponse()
 	{
-		service = "SOS";
-		messageType = "GetResultResponse";
+	    service = "SOS";
+        messageType = "InsertResultResponse";
 	}
 
-
-    public DataComponent getResultData()
-    {
-        return resultData;
-    }
-
-
-    public void setResultData(DataComponent resultData)
-    {
-        this.resultData = resultData;
-    }
-
-
-    public DataEncoding getResultEncoding()
-    {
-        return resultEncoding;
-    }
-
-
-    public void setResultEncoding(DataEncoding resultEncoding)
-    {
-        this.resultEncoding = resultEncoding;
-    }	
 }

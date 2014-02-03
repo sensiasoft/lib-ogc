@@ -104,9 +104,13 @@ public abstract class SOSServlet extends OWSServlet
     }
 	    
 	
-	protected void handleRequest(DescribeSensorRequest query) throws Exception
+    /**
+     * Checks DescribeSensorRequest validity and call the right handler
+     * @param request
+     */
+	protected void handleRequest(DescribeSensorRequest request) throws Exception
 	{
-		String sensorId = query.getProcedureID();
+		String sensorId = request.getProcedureID();
 		if (sensorId == null)
 			throw new SOSException("A DescribeSensor request must specify a sensorId argument");
 		
@@ -116,13 +120,13 @@ public abstract class SOSServlet extends OWSServlet
 			throw new SOSException("SensorML description for " + sensorId + " not available");
 		
 		DOMHelper dom = new DOMHelper(smlUrl, false);				
-        dom.serialize(dom.getBaseElement(), query.getResponseStream() , null);		
+        dom.serialize(dom.getBaseElement(), request.getResponseStream() , null);		
 	}
 	
 	
 	/**
-	 * Decode the query, check validity and call the right handler
-	 * @param query
+	 * Checks GetResultTemplateRequest validity and call the right handler
+	 * @param request
 	 */
 	protected void handleRequest(GetResultTemplateRequest request) throws Exception
 	{
@@ -148,8 +152,8 @@ public abstract class SOSServlet extends OWSServlet
 	
 	
 	/**
-     * Decode the query, check validity and call the right handler
-     * @param query
+     * Checks GetResultRequest validity and call the right handler
+     * @param request
      */
     protected void handleRequest(GetResultRequest request) throws Exception
     {
@@ -199,8 +203,8 @@ public abstract class SOSServlet extends OWSServlet
 	
 	
 	/**
-	 * Decode the query, check validity and call the right handler
-	 * @param query
+	 * Checks GetObservationRequest validity and call the right handler
+	 * @param request
 	 */
 	protected void handleRequest(GetObservationRequest request) throws Exception
 	{

@@ -14,81 +14,63 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <alex.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.swe;
+package org.vast.ows.sos;
 
-import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSRequest;
-import org.vast.sensorML.SMLUtils;
-import org.vast.util.TimeExtent;
+import org.vast.sweCommon.SWEData;
 
 
 /**
  * <p><b>Title:</b><br/>
- * DescribeSensor Request
+ * InsertResult Request
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for SOS Describe Sensor request parameters
+ * Container for SOS InsertResult request parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
+ * <p>Copyright (c) 2014</p>
  * @author Alexandre Robin
- * @date Oct 09, 2007
+ * @date Feb 02, 2014
  * @version 1.0
  */
-public class DescribeSensorRequest extends OWSRequest
+public class InsertResultRequest extends OWSRequest
 {
-    public final static String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "1.0");
-    	
-	protected String procedureID;
-	protected TimeExtent time;
-    protected String format;
-
+    protected String templateId;
+    protected SWEData resultData;
+    
 	
-	public DescribeSensorRequest()
+	public InsertResultRequest()
 	{
 		service = "SOS";
-		operation = "DescribeSensor";
-		format = DEFAULT_FORMAT;
-	}
-	
-	
-	public String getFormat()
-	{
-		return format;
+		operation = "InsertResult";
 	}
 
 
-	public void setFormat(String format)
-	{
-		this.format = format;
-	}
+    public String getTemplateId()
+    {
+        return templateId;
+    }
 
 
-	public String getProcedureID()
-	{
-		return procedureID;
-	}
+    public void setTemplateId(String templateId)
+    {
+        this.templateId = templateId;
+    }
 
 
-	public void setProcedureID(String procedure)
-	{
-		this.procedureID = procedure;
-	}
-	
-	
-	public TimeExtent getTime()
-	{
-		return time;
-	}
+    public SWEData getResultData()
+    {
+        return resultData;
+    }
 
 
-	public void setTime(TimeExtent time)
-	{
-		this.time = time;
-	}	
+    public void setResultData(SWEData resultData)
+    {
+        this.resultData = resultData;
+    }    
 }

@@ -24,6 +24,7 @@ package org.vast.ows.sps;
 
 import org.w3c.dom.Element;
 import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataEncoding;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.ParameterizedRequestReader;
@@ -54,7 +55,8 @@ public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest
 	protected DataComponent taskingParamStructure;
 	
 	
-	public void setParamStructure(DataComponent taskingParamStructure)
+	@Override
+	public void setParamStructure(DataComponent taskingParamStructure, DataEncoding resultEncoding)
 	{
 		this.taskingParamStructure = taskingParamStructure;
 	}

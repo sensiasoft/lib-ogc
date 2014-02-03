@@ -14,7 +14,7 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <alex.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -23,54 +23,42 @@ package org.vast.ows.sos;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseWriter;
-import org.vast.sweCommon.SweComponentWriterV20;
-import org.vast.sweCommon.SweEncodingWriterV20;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 
 
 /**
  * <p><b>Title:</b><br/>
- * GetResult Response Writer v2.0
+ * InsertResultTemplate Response Writer v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Writer to generate an XML GetResult response based
- * on values contained in a GetResultResponse object for SOS v2.0
+ * Writer to generate an XML InsertResultTemplate response based
+ * on values contained in a InsertResultTemplateResponse object for SOS v2.0
  * </p>
  *
- * <p>Copyright (c) 2012</p>
+ * <p>Copyright (c) 2014</p>
  * @author Alexandre Robin
- * @date Aug 19, 2012
+ * @date Feb 3, 2014
  * @version 1.0
  */
-public class GetResultResponseWriterV20 extends SWEResponseWriter<GetResultResponse>
+public class InsertResultTemplateResponseWriterV20 extends SWEResponseWriter<InsertResultTemplateResponse>
 {
-	protected SweComponentWriterV20 componentWriter = new SweComponentWriterV20();
-	protected SweEncodingWriterV20 encodingWriter = new SweEncodingWriterV20();
-	
-	
-	public Element buildXMLResponse(DOMHelper dom, GetResultResponse response, String version) throws OWSException
+		
+	public Element buildXMLResponse(DOMHelper dom, InsertResultTemplateResponse response, String version) throws OWSException
 	{
-		try
-		{
-			dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(SOSUtils.SOS, version));
-			
-			// root element
-			Element rootElt = dom.createElement("sos:" + response.getMessageType());
-			
-			// write extensions
-			writeExtensions(dom, rootElt, response);
-            
-			// result structure
-			// TODO write data
-			
-			return rootElt;
-		}
-		catch (Exception e)
-		{
-			throw new SOSException(e);
-		}
+	    dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(SOSUtils.SOS, version));
+        
+        // root element
+        Element rootElt = dom.createElement("sos:" + response.getMessageType());
+        
+        // write extensions
+        writeExtensions(dom, rootElt, response);
+        
+        // template id
+        dom.setElementValue(rootElt, "acceptedTemplate", response.getAcceptedTemplate());
+        
+        return rootElt;
 	}
 	
 }

@@ -74,7 +74,7 @@ public class SPSUtils extends OWSUtils
 		AbstractRequestReader.readCommonXML(dom, requestElt, tempReq);
 		
 		OWSRequestReader<?> reader = (OWSRequestReader<?>)OGCRegistry.createReader(SPSUtils.SPS, tempReq.getOperation(), tempReq.getVersion());
-		((ParameterizedRequestReader)reader).setParamStructure(mainParams);
+		((ParameterizedRequestReader)reader).setParamStructure(mainParams, null);
 		ParameterizedRequest request = (ParameterizedRequest)reader.readXMLQuery(dom, requestElt);
 		
 		return request;

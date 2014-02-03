@@ -23,6 +23,7 @@ Contributor(s):
 package org.vast.ows;
 
 import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataEncoding;
 
 
 /**
@@ -38,5 +39,5 @@ import org.vast.cdm.common.DataComponent;
 */
 public interface ParameterizedRequestReader
 {
-	public void setParamStructure(DataComponent paramStructure);	
+	public void setParamStructure(DataComponent structure, DataEncoding encoding);	
 }

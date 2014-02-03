@@ -14,81 +14,59 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <alex.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.swe;
-
-import org.vast.ogc.OGCRegistry;
-import org.vast.ows.OWSRequest;
-import org.vast.sensorML.SMLUtils;
-import org.vast.util.TimeExtent;
+package org.vast.ows.sos;
 
 
 /**
  * <p><b>Title:</b><br/>
- * DescribeSensor Request
+ * InsertSensor Request
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for SOS Describe Sensor request parameters
+ * Container for SOS InsertSensor request parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
+ * <p>Copyright (c) 2014</p>
  * @author Alexandre Robin
- * @date Oct 09, 2007
+ * @date Feb 02, 2014
  * @version 1.0
  */
-public class DescribeSensorRequest extends OWSRequest
+public class InsertSensorRequest extends org.vast.ows.swe.InsertSensorRequest
 {
-    public final static String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "1.0");
-    	
-	protected String procedureID;
-	protected TimeExtent time;
-    protected String format;
-
+    protected String observationType;
+    protected String foiType;
+    
 	
-	public DescribeSensorRequest()
+	public InsertSensorRequest()
 	{
-		service = "SOS";
-		operation = "DescribeSensor";
-		format = DEFAULT_FORMAT;
-	}
-	
-	
-	public String getFormat()
-	{
-		return format;
+		super("SOS");
 	}
 
 
-	public void setFormat(String format)
-	{
-		this.format = format;
-	}
+    public String getObservationType()
+    {
+        return observationType;
+    }
 
 
-	public String getProcedureID()
-	{
-		return procedureID;
-	}
+    public void setObservationType(String observationType)
+    {
+        this.observationType = observationType;
+    }
 
 
-	public void setProcedureID(String procedure)
-	{
-		this.procedureID = procedure;
-	}
-	
-	
-	public TimeExtent getTime()
-	{
-		return time;
-	}
+    public String getFoiType()
+    {
+        return foiType;
+    }
 
 
-	public void setTime(TimeExtent time)
-	{
-		this.time = time;
-	}	
+    public void setFoiType(String foiType)
+    {
+        this.foiType = foiType;
+    }    
 }
