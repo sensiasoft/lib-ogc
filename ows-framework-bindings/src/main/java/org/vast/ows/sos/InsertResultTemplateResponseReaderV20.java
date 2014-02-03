@@ -11,13 +11,9 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the
- University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ The Initial Developer of the Original Code is Spotimage S.A.
  Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
-
- Please Contact Mike Botts <mike.botts@uah.edu>
- or Alexandre Robin <alex.robin@sensiasoftware.com> for more information.
  
  Contributor(s): 
     Alexandre Robin <alex.robin@sensiasoftware.com>
@@ -26,43 +22,41 @@
 
 package org.vast.ows.sos;
 
-import org.vast.ows.OWSResponse;
+import org.vast.ows.OWSException;
+import org.vast.ows.swe.SWEResponseReader;
+import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * InsertResultTemplate Response
+ * <p><b>Title:</b>
+ * InsertResultTemplate Response Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Container for SOS InsertResultTemplate response data
+ * Reader for XML InsertResultTemplate response for SOS v2.0 
  * </p>
  *
  * <p>Copyright (c) 2014</p>
  * @author Alexandre Robin
- * @date Feb 02, 2014
+ * @date Feb, 19 2014
  * @version 1.0
  */
-public class InsertResultTemplateResponse extends OWSResponse
+public class InsertResultTemplateResponseReaderV20 extends SWEResponseReader<InsertResultTemplateResponse>
 {
-    protected String acceptedTemplateId;
-    
-    
-	public InsertResultTemplateResponse()
+		
+	public InsertResultTemplateResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
-	    service = "SOS";
-        messageType = "InsertResultTemplateResponse";
-	}
-
-
-    public String getAcceptedTemplateId()
-    {
-        return acceptedTemplateId;
-    }
-
-
-    public void setAcceptedTemplateId(String acceptedTemplateId)
-    {
-        this.acceptedTemplateId = acceptedTemplateId;
-    }
+	    InsertResultTemplateResponse response = new InsertResultTemplateResponse();
+		response.setVersion("2.0");
+		
+		// template id
+		String templateId = dom.getElementValue("acceptedTemplate");
+		response.setAcceptedTemplateId(templateId);
+		
+		// read extensions
+		readXMLExtensions(dom, responseElt, response);
+		
+		return response;
+	}	
 }

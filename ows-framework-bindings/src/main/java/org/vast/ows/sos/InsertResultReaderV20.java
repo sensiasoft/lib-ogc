@@ -48,7 +48,7 @@ import org.vast.sweCommon.SWEData;
  * @date Feb 2, 2014
  * @version 1.0
  */
-public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest> implements ParameterizedRequestReader
+public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest> implements SweEncodedMessageProcessor
 {
     protected DataComponent resultStructure;
     protected DataEncoding resultEncoding;
@@ -61,7 +61,7 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
     
     
     @Override
-    public void setParamStructure(DataComponent structure, DataEncoding encoding)
+    public void setSweCommonStructure(DataComponent structure, DataEncoding encoding)
     {
         this.resultStructure = structure;
         this.resultEncoding = encoding;
@@ -80,6 +80,9 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		InsertResultRequest request = new InsertResultRequest();
+		
+		if (resultStructure == null || resultEncoding == null)
+		    throw new RuntimeException("Result structure and/or encoding are not properly set");
 		
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);

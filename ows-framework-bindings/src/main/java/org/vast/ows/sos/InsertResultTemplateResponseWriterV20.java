@@ -56,7 +56,7 @@ public class InsertResultTemplateResponseWriterV20 extends SWEResponseWriter<Ins
         writeExtensions(dom, rootElt, response);
         
         // template id
-        dom.setElementValue(rootElt, "acceptedTemplate", response.getAcceptedTemplate());
+        dom.setElementValue(rootElt, "acceptedTemplate", response.getAcceptedTemplateId());
         
         return rootElt;
 	}

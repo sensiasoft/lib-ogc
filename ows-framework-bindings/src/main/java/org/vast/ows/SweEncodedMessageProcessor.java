@@ -23,12 +23,14 @@ Contributor(s):
 package org.vast.ows;
 
 import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataEncoding;
 
 
 /**
 * <p>
-* Base class for readers of response containing SWE Common data.
-* (i.e. GetFeasibilityResponse, SubmitResponse, UpdateResponse, GetStatusResponse)
+* Base class for readers of request containing SWE Common data.
+* i.e. in SPS: GetFeasibility, Submit, Update
+* i.e. in SOS: GetResultResponse, InsertResult
 * </p>
 *
 * <p>Copyright (c) 2008</p>
@@ -36,7 +38,7 @@ import org.vast.cdm.common.DataComponent;
 * @since Feb, 29 2008
 * @version 1.0
 */
-public interface ParameterizedResponseReader
+public interface SweEncodedMessageProcessor
 {
-	public void setParamStructure(DataComponent paramStructure);
+	public void setSweCommonStructure(DataComponent structure, DataEncoding encoding);	
 }

@@ -79,15 +79,16 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
 		String val;
+		Element templateElt = dom.getElement(requestElt, "proposedTemplate/ResultTemplate");
 		
         // offering
-        val = dom.getElementValue(requestElt, "offering");
+        val = dom.getElementValue(templateElt, "offering");
         request.setOffering(val);        
 		
         // observation template
         try
         {
-            Element obsElt = dom.getElement(requestElt, "observationTemplate");
+            Element obsElt = dom.getElement(templateElt, "observationTemplate/*");
             IObservation obs = obsReader.read(dom, obsElt);
             request.setObservationTemplate(obs);
         }
@@ -99,8 +100,8 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         // result structure
         try
         {
-            Element resultStructElt = dom.getElement(requestElt, "resultStructure");
-            DataComponent component = componentReader.readComponent(dom, resultStructElt);
+            Element resultStructElt = dom.getElement(templateElt, "resultStructure");
+            DataComponent component = componentReader.readComponentProperty(dom, resultStructElt);
             request.setResultStructure(component);
         }
         catch (XMLReaderException e)
@@ -111,7 +112,7 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         // result encoding
         try
         {
-            Element resultEncodingElt = dom.getElement(requestElt, "resultEncoding");
+            Element resultEncodingElt = dom.getElement(templateElt, "resultEncoding/*");
             DataEncoding encoding = encodingReader.readEncoding(dom, resultEncodingElt);
             request.setResultEncoding(encoding);
         }

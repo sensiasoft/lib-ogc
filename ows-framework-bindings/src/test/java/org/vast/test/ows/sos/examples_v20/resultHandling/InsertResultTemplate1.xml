@@ -28,11 +28,19 @@ http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sos.xsd" xmlns
 					<!--template containing the static observation elements which are the same for all results which are inserted-->
 					<sos:observationTemplate>
 						<om:OM_Observation gml:id="sensor2obsTemplate">
-							<om:phenomenonTime nilReason="template"/>
-							<om:resultTime nilReason="template"/>
+							<om:phenomenonTime>
+                               <gml:TimeInstant id="T01">
+                                  <gml:timePosition indeterminatePosition="unknown"/>
+                               </gml:TimeInstant>
+                            </om:phenomenonTime>
+							<om:resultTime>
+                               <gml:TimeInstant id="T02">
+                                  <gml:timePosition indeterminatePosition="unknown"/>
+                               </gml:TimeInstant>
+                            </om:resultTime>
 							<om:procedure xlink:href="http://www.example.org/register/process/Water_Gage_2"/>
 							<om:observedProperty xlink:href="http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight"/>
-							<om:featureOfInterest xlink:href="http://wfs.example.org?request=getFeature&amp;featureid=Rhine_Sandbank_123 "/>
+							<om:featureOfInterest xlink:href="http://wfs.example.org?request=getFeature&amp;featureid=Rhine_Sandbank_123"/>
 							<om:result/>
 						</om:OM_Observation>
 					</sos:observationTemplate>
@@ -41,7 +49,7 @@ http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sos.xsd" xmlns
 						<swe:DataRecord>
 							<swe:field name="phenomenonTime">
 								<swe:Time definition="http://www.opengis.net/def/property/OGC/0/PhenomenonTime">
-									<swe:uom code="ms"/>
+									<swe:uom xlink:href="http://www.opengis.net/def/uom/ISO-8601/0/Gregorian"/>
 								</swe:Time>
 							</swe:field>
 							<swe:field name="waterlevel">

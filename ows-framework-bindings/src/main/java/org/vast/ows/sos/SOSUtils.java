@@ -26,10 +26,34 @@
 
 package org.vast.ows.sos;
 
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataEncoding;
+import org.vast.ogc.OGCRegistry;
+import org.vast.ows.AbstractRequestReader;
+import org.vast.ows.OWSException;
+import org.vast.ows.OWSRequest;
+import org.vast.ows.OWSRequestReader;
 import org.vast.ows.OWSUtils;
+import org.vast.ows.SweEncodedMessageProcessor;
+import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
 
 
 public class SOSUtils extends OWSUtils
 {
-
+    
+    public OWSRequest readSweEncodedRequest(DOMHelper dom, Element requestElt, DataComponent structure, DataEncoding encoding) throws OWSException
+    {
+        // skip SOAP envelope if present
+        if (requestElt.getNamespaceURI().equals(soap12Uri))
+            requestElt = dom.getElement(requestElt, "Body/*");
+        
+        OWSRequest tempReq = new OWSRequest();
+        AbstractRequestReader.readCommonXML(dom, requestElt, tempReq);
+                
+        OWSRequestReader<?> reader = (OWSRequestReader<?>)OGCRegistry.createReader(SOSUtils.SOS, tempReq.getOperation(), tempReq.getVersion());
+        ((SweEncodedMessageProcessor)reader).setSweCommonStructure(structure, encoding);
+        return reader.readXMLQuery(dom, requestElt);
+    }
+    
 }

@@ -74,16 +74,19 @@ public class InsertResultTemplateWriterV20 extends SWERequestWriter<InsertResult
 		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0"));
 		
 		// root element
-		Element rootElt = dom.createElement("sos:InsertResult");
+		Element rootElt = dom.createElement("sos:" + request.getOperation());
 		addCommonXML(dom, rootElt, request);
 		
+		// template element
+		Element templateElt = dom.addElement(rootElt, "sos:proposedTemplate/sos:ResultTemplate");
+		
 		// offering
-		dom.setElementValue(rootElt, "+sos:offering", request.getOffering());
+		dom.setElementValue(templateElt, "+sos:offering", request.getOffering());
 		
 		// observation template
 		try
         {
-		    Element obsPropertyElt = dom.addElement(rootElt, "sos:observationTemplate");
+		    Element obsPropertyElt = dom.addElement(templateElt, "sos:observationTemplate");
             Element obsElt = obsWriter.write(dom, request.getObservationTemplate());
             obsPropertyElt.appendChild(obsElt);
         }
@@ -95,7 +98,7 @@ public class InsertResultTemplateWriterV20 extends SWERequestWriter<InsertResult
         // result structure
         try
         {
-            Element structurePropertyElt = dom.addElement(rootElt, "sos:resultStructure");        
+            Element structurePropertyElt = dom.addElement(templateElt, "sos:resultStructure");        
             Element structureElt = componentWriter.writeComponent(dom, request.getResultStructure());
             structurePropertyElt.appendChild(structureElt);
         }
@@ -107,7 +110,7 @@ public class InsertResultTemplateWriterV20 extends SWERequestWriter<InsertResult
         // result encoding
         try
         {
-            Element encodingPropertyElt = dom.addElement(rootElt, "sos:resultEncoding");        
+            Element encodingPropertyElt = dom.addElement(templateElt, "sos:resultEncoding");        
             Element encodingElt = encodingWriter.writeEncoding(dom, request.getResultEncoding());
             encodingPropertyElt.appendChild(encodingElt); 
     	}

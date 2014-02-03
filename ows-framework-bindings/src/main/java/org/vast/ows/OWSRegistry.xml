@@ -29,6 +29,10 @@
    <Reader type="SOS" subType="GetResult" version="2.0" class="org.vast.ows.sos.GetResultReaderV20"/>
    <Reader type="SOS" subType="GetResultTemplate" version="2.0" class="org.vast.ows.sos.GetResultTemplateReaderV20"/>
    <Reader type="SOS" subType="GetResultTemplateResponse" version="2.0" class="org.vast.ows.sos.GetResultTemplateResponseReaderV20"/>
+   <Reader type="SOS" subType="InsertResult" version="2.0" class="org.vast.ows.sos.InsertResultReaderV20"/>
+   <Reader type="SOS" subType="InsertResultResponse" version="2.0" class="org.vast.ows.sos.InsertResultResponseReaderV20"/>
+   <Reader type="SOS" subType="InsertResultTemplate" version="2.0" class="org.vast.ows.sos.InsertResultTemplateReaderV20"/>
+   <Reader type="SOS" subType="InsertResultResponseTemplate" version="2.0" class="org.vast.ows.sos.InsertResultTemplateResponseReaderV20"/>
    <!-- -->
    <Writer type="SOS" subType="Capabilities" version="2.0" class="org.vast.ows.sos.SOSCapabilitiesWriterV20"/>
    <Writer type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationWriterV10"/>
@@ -39,7 +43,11 @@
    <Writer type="SOS" subType="GetResult" version="2.0" class="org.vast.ows.sos.GetResultWriterV20"/>
    <Writer type="SOS" subType="GetResultResponse" version="2.0" class="org.vast.ows.sos.GetResultResponseWriterV20"/>
    <Writer type="SOS" subType="GetResultTemplate" version="2.0" class="org.vast.ows.sos.GetResultTemplateWriterV20"/>
-   <Writer type="SOS" subType="GetResultTemplateResponse" version="2.0" class="org.vast.ows.sos.GetResultTemplateResponseWriterV20"/> 
+   <Writer type="SOS" subType="GetResultTemplateResponse" version="2.0" class="org.vast.ows.sos.GetResultTemplateResponseWriterV20"/>
+   <Writer type="SOS" subType="InsertResult" version="2.0" class="org.vast.ows.sos.InsertResultWriterV20"/>
+   <Writer type="SOS" subType="InsertResultResponse" version="2.0" class="org.vast.ows.sos.InsertResultResponseWriterV20"/>
+   <Writer type="SOS" subType="InsertResultTemplate" version="2.0" class="org.vast.ows.sos.InsertResultTemplateWriterV20"/>
+   <Writer type="SOS" subType="InsertResultTemplateResponse" version="2.0" class="org.vast.ows.sos.InsertResultTemplateResponseWriterV20"/>
    <!-- -->
    <Reader type="SAS" subType="Capabilities" version="*" class="org.vast.ows.sas.SASCapabilitiesReader"/>
    <Reader type="SAS" subType="Capabilities" version="0.0" class="org.vast.ows.sas.SASCapabilitiesReader"/>

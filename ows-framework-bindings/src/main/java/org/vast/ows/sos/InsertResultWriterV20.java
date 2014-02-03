@@ -83,7 +83,7 @@ public class InsertResultWriterV20 extends SWERequestWriter<InsertResultRequest>
 		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0"));
 		
 		// root element
-		Element rootElt = dom.createElement("sos:InsertResult");
+		Element rootElt = dom.createElement("sos:" + request.getOperation());
 		addCommonXML(dom, rootElt, request);
 		
 		// template id

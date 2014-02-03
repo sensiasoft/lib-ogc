@@ -27,7 +27,7 @@ import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
-import org.vast.ows.ParameterizedRequestReader;
+import org.vast.ows.SweEncodedMessageProcessor;
 import org.vast.ows.swe.SWERequestReader;
 import org.vast.sweCommon.SWEData;
 import org.vast.util.DateTime;
@@ -49,14 +49,14 @@ import org.vast.xml.DOMHelper;
 * @date Feb, 29 2008
 * @version 1.0
 */
-public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest> extends SWERequestReader<RequestType> implements ParameterizedRequestReader
+public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest> extends SWERequestReader<RequestType> implements SweEncodedMessageProcessor
 {
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
 	protected DataComponent taskingParamStructure;
 	
 	
 	@Override
-	public void setParamStructure(DataComponent taskingParamStructure, DataEncoding resultEncoding)
+	public void setSweCommonStructure(DataComponent taskingParamStructure, DataEncoding resultEncoding)
 	{
 		this.taskingParamStructure = taskingParamStructure;
 	}

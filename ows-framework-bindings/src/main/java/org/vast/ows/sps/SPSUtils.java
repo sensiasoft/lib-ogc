@@ -34,7 +34,7 @@ import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSRequestReader;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.ParameterizedRequest;
-import org.vast.ows.ParameterizedRequestReader;
+import org.vast.ows.SweEncodedMessageProcessor;
 import org.vast.ows.swe.SWESUtils;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
@@ -62,7 +62,7 @@ public class SPSUtils extends OWSUtils
 	public static String EVENT_DATA_PUBLISHED = "DataPublished";
 	public static String EVENT_TASK_FAILED = "TaskFailed";
 	public static String EVENT_TASK_CANCELLED = "TaskCancelled";
-	public static String EVENT_TASK_UPDATED = "TaskUpdated";	
+	public static String EVENT_TASK_UPDATED = "TaskUpdated";
 	public static String EVENT_TASK_RESERVED = "TaskReserved";
 	public static String EVENT_TASK_CONFIRMED = "TaskConfirmed";
 	public static String EVENT_RESERVATION_EXPIRED = "ReservationExpired";
@@ -74,7 +74,7 @@ public class SPSUtils extends OWSUtils
 		AbstractRequestReader.readCommonXML(dom, requestElt, tempReq);
 		
 		OWSRequestReader<?> reader = (OWSRequestReader<?>)OGCRegistry.createReader(SPSUtils.SPS, tempReq.getOperation(), tempReq.getVersion());
-		((ParameterizedRequestReader)reader).setParamStructure(mainParams, null);
+		((SweEncodedMessageProcessor)reader).setSweCommonStructure(mainParams, null);
 		ParameterizedRequest request = (ParameterizedRequest)reader.readXMLQuery(dom, requestElt);
 		
 		return request;
