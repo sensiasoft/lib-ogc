@@ -115,7 +115,7 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
     
     
     /**
-     * Checks that GetObservation mandatory parameters are present
+     * Checks that InsertResult mandatory parameters are present
      * @param request
      * @throws OWSException
      */

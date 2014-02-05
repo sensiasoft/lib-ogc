@@ -24,7 +24,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.test.ows.sos;
+package org.vast.ows.sos.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

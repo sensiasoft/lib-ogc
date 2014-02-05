@@ -23,7 +23,7 @@ package org.vast.ows.swe;
 import java.util.List;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ows.OWSRequest;
-import org.vast.sensorML.system.SMLSystem;
+import org.vast.sensorML.SMLProcess;
 
 
 /**
@@ -43,7 +43,7 @@ import org.vast.sensorML.system.SMLSystem;
 public class InsertSensorRequest extends OWSRequest
 {
     protected String procedureDescriptionFormat;
-    protected SMLSystem procedureDescription;
+    protected SMLProcess procedureDescription;
     protected List<String> observableProperties;
     protected List<FeatureRef> relatedFeatures;    
     
@@ -67,13 +67,13 @@ public class InsertSensorRequest extends OWSRequest
     }
 
 
-    public Object getProcedureDescription()
+    public SMLProcess getProcedureDescription()
     {
         return procedureDescription;
     }
 
 
-    public void setProcedureDescription(SMLSystem procedureDescription)
+    public void setProcedureDescription(SMLProcess procedureDescription)
     {
         this.procedureDescription = procedureDescription;
     }
