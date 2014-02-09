@@ -70,7 +70,7 @@ public class DescribeProcessWriter extends AbstractRequestWriter<DescribeProcess
 	public Element buildXMLQuery(DOMHelper dom, DescribeProcessRequest request) throws OWSException
 	{
 		dom.addUserPrefix("wps", OGCRegistry.getNamespaceURI(OWSUtils.WPS, request.getVersion()));
-		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
+		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OWSUtils.OGC));
 		
 		// root element
 		Element rootElt = dom.createElement("wps:DescribeProcess");

@@ -26,6 +26,7 @@ import java.util.List;
 import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.OWSException;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSUtils;
@@ -67,8 +68,8 @@ public class WRSRequestWriter extends AbstractRequestWriter<WRSQuery>
 	
 	protected Element buildQueryRootElement(DOMHelper domWriter) throws OWSException {
 		domWriter.addUserPrefix("csw", OGCRegistry.getNamespaceURI(OWSUtils.CSW));
-		domWriter.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
-		domWriter.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+		domWriter.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OWSUtils.OGC));
+		domWriter.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML));
 		
 		// root element
 		Element rootElt = domWriter.createElement("csw:GetRecords");

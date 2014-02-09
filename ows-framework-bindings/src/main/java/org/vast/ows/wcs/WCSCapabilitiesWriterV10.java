@@ -22,6 +22,7 @@
 package org.vast.ows.wcs;
 
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.OWSCapabilitiesWriterV0;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSServiceCapabilities;
@@ -55,7 +56,7 @@ public class WCSCapabilitiesWriterV10 extends OWSCapabilitiesWriterV0
 	public Element buildXMLResponse(DOMHelper dom, OWSServiceCapabilities caps, String version) throws OWSException
 	{
 		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS));
-		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML));
 		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
 		
 		Element capsElt = dom.createElement("WCS_Capabilities");

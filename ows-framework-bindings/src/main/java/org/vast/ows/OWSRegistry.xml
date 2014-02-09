@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Map>
    <!-- -->
+   <Namespace type="OGC" version="*" uri="http://www.opengis.net/ogc"/>
    <Namespace type="OWS" version="*" uri="http://www.opengis.net/ows"/>
    <Namespace type="OWS" version="1.1" uri="http://www.opengis.net/ows/1.1"/>
    <Namespace type="SWES" version="2.0" uri="http://www.opengis.net/swes/2.0"/>
@@ -29,6 +30,10 @@
    <Reader type="SOS" subType="GetResult" version="2.0" class="org.vast.ows.sos.GetResultReaderV20"/>
    <Reader type="SOS" subType="GetResultTemplate" version="2.0" class="org.vast.ows.sos.GetResultTemplateReaderV20"/>
    <Reader type="SOS" subType="GetResultTemplateResponse" version="2.0" class="org.vast.ows.sos.GetResultTemplateResponseReaderV20"/>
+   <Reader type="SOS" subType="InsertObservation" version="2.0" class="org.vast.ows.sos.InsertObservationReaderV20"/>
+   <Reader type="SOS" subType="InsertObservationResponse" version="2.0" class="org.vast.ows.sos.InsertObservationResponseReaderV20"/>
+   <Reader type="SOS" subType="InsertSensor" version="2.0" class="org.vast.ows.sos.InsertSensorReaderV20"/>
+   <Reader type="SOS" subType="InsertSensorResponse" version="2.0" class="org.vast.ows.swe.InsertSensorResponseReaderV20"/>
    <Reader type="SOS" subType="InsertResult" version="2.0" class="org.vast.ows.sos.InsertResultReaderV20"/>
    <Reader type="SOS" subType="InsertResultResponse" version="2.0" class="org.vast.ows.sos.InsertResultResponseReaderV20"/>
    <Reader type="SOS" subType="InsertResultTemplate" version="2.0" class="org.vast.ows.sos.InsertResultTemplateReaderV20"/>
@@ -41,9 +46,12 @@
    <Writer type="SOS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorWriterV20"/> 
    <Writer type="SOS" subType="GetResult" version="1.0" class="org.vast.ows.sos.GetResultWriterV10"/>
    <Writer type="SOS" subType="GetResult" version="2.0" class="org.vast.ows.sos.GetResultWriterV20"/>
-   <Writer type="SOS" subType="GetResultResponse" version="2.0" class="org.vast.ows.sos.GetResultResponseWriterV20"/>
    <Writer type="SOS" subType="GetResultTemplate" version="2.0" class="org.vast.ows.sos.GetResultTemplateWriterV20"/>
    <Writer type="SOS" subType="GetResultTemplateResponse" version="2.0" class="org.vast.ows.sos.GetResultTemplateResponseWriterV20"/>
+   <Writer type="SOS" subType="InsertObservation" version="2.0" class="org.vast.ows.sos.InsertObservationWriterV20"/>
+   <Writer type="SOS" subType="InsertObservationResponse" version="2.0" class="org.vast.ows.sos.InsertObservationResponseWriterV20"/>
+   <Writer type="SOS" subType="InsertSensor" version="2.0" class="org.vast.ows.sos.InsertSensorWriterV20"/>
+   <Writer type="SOS" subType="InsertSensorResponse" version="2.0" class="org.vast.ows.swe.InsertSensorResponseWriterV20"/>
    <Writer type="SOS" subType="InsertResult" version="2.0" class="org.vast.ows.sos.InsertResultWriterV20"/>
    <Writer type="SOS" subType="InsertResultResponse" version="2.0" class="org.vast.ows.sos.InsertResultResponseWriterV20"/>
    <Writer type="SOS" subType="InsertResultTemplate" version="2.0" class="org.vast.ows.sos.InsertResultTemplateWriterV20"/>

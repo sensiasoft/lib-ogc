@@ -11,7 +11,9 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is Sensia Software LLC.
+ Portions created by the Initial Developer are Copyright (C) 2014
+ the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
     Alexandre Robin <alex.robin@sensiasoftware.com>
@@ -20,10 +22,13 @@
 
 package org.vast.ows.swe;
 
+import java.util.ArrayList;
 import java.util.List;
+import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ows.OWSRequest;
 import org.vast.sensorML.SMLProcess;
+import org.vast.sensorML.SMLUtils;
 
 
 /**
@@ -42,7 +47,16 @@ import org.vast.sensorML.SMLProcess;
  */
 public class InsertSensorRequest extends OWSRequest
 {
-    protected String procedureDescriptionFormat;
+    public final static String DEFAULT_PROCEDURE_FORMAT;
+    public final static String DEFAULT_FEATURE_ROLE = "http://www.opengis.net/def/nil/OGC/0/unknown";
+    
+    static
+    {
+        SMLUtils.loadRegistry();
+        DEFAULT_PROCEDURE_FORMAT = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0");
+    }
+    
+    protected String procedureDescriptionFormat = DEFAULT_PROCEDURE_FORMAT;
     protected SMLProcess procedureDescription;
     protected List<String> observableProperties;
     protected List<FeatureRef> relatedFeatures;    
@@ -52,6 +66,8 @@ public class InsertSensorRequest extends OWSRequest
     {
         service = serviceType;
 		operation = "InsertSensor";
+		observableProperties = new ArrayList<String>(5);
+		relatedFeatures = new ArrayList<FeatureRef>(2);
 	}
 
 

@@ -11,13 +11,12 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the
- University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
- Portions created by the Initial Developer are Copyright (C) 2007
+ The Initial Developer of the Original Code is Sensia Software LLC.
+ Portions created by the Initial Developer are Copyright (C) 2014
  the Initial Developer. All Rights Reserved.
-
- Please Contact Mike Botts <mike.botts@uah.edu>
- or Alexandre Robin <alex.robin@sensiasoftware.com> for more information.
+ 
+ Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> or
+ Mike Botts <mike.botts@botts-inc.net> for more information.
  
  Contributor(s): 
     Alexandre Robin <alex.robin@sensiasoftware.com>
@@ -26,11 +25,23 @@
 
 package org.vast.ows.sos.test;
 
-import junit.framework.TestCase;
+import org.vast.ows.swe.DescribeSensorRequest;
+import org.vast.ows.test.OWSTestCase;
 
 
-public class TestSosDescribeBindingsV20 extends TestCase
+public class TestSosDescribeBindingsV20 extends OWSTestCase
 {
     
+    public void testReadXmlDescribeSensor() throws Exception
+    {
+        DescribeSensorRequest request = (DescribeSensorRequest)readXmlRequest("examples_v20/core/DescribeSensor1.xml");
+        assertEquals("http://my.company.org/sensors/sensor1", request.getProcedureID());
+        assertEquals("http://www.opengis.net/sensorml/1.0.1", request.getFormat());
+    }
     
+    
+    public void testReadWriteXmlDescribeSensor() throws Exception
+    {
+        readWriteCompareXmlRequest("examples_v20/core/DescribeSensor1.xml");
+    }
 }

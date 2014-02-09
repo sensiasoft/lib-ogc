@@ -25,6 +25,7 @@ import org.w3c.dom.*;
 import org.vast.math.Vector3d;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLTimeWriter;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ogc.om.OMUtils;
 import org.vast.ows.SweResponseSerializer;
 import org.vast.sweCommon.SWECommonUtils;
@@ -70,7 +71,7 @@ public class SOSResponseSerializerV10 extends SweResponseSerializer
     public void setTemplate(DOMHelper dom)
     {
         super.setTemplate(dom);        
-        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML));
         dom.addUserPrefix("om", OGCRegistry.getNamespaceURI(OMUtils.OM, "1.0"));
         dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "1.0"));
         //  I Think we need to be on OM 1.0 now...

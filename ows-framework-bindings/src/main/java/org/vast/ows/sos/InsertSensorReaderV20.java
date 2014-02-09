@@ -11,8 +11,12 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu>
- or Alexandre Robin <alex.robin@sensiasoftware.com> for more information.
+ The Initial Developer of the Original Code is Sensia Software LLC.
+ Portions created by the Initial Developer are Copyright (C) 2014
+ the Initial Developer. All Rights Reserved.
+ 
+ Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> or
+ Mike Botts <mike.botts@botts-inc.net> for more information.
  
  Contributor(s): 
     Alexandre Robin <alex.robin@sensiasoftware.com>
@@ -25,7 +29,10 @@ import java.util.Map;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.gml.FeatureRef;
+import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.ows.*;
 import org.vast.ows.swe.SWERequestReader;
 import org.vast.sensorML.SMLProcess;
@@ -45,18 +52,16 @@ import org.vast.sensorML.SystemReaderV20;
  * request and create a InsertSensorRequest object for version 2.0
  * </p>
  *
- * <p>Copyright (c) 2014</p>
+ * <p>Copyright (c) 2014 Sensia Software LLC</p>
  * @author Alexandre Robin
  * @date Feb 2, 2014
  * @version 1.0
  */
 public class InsertSensorReaderV20 extends SWERequestReader<InsertSensorRequest>
 {
-      
     
     public InsertSensorReaderV20()
-	{
-       
+	{       
 	}
 
 
@@ -88,18 +93,18 @@ public class InsertSensorReaderV20 extends SWERequestReader<InsertSensorRequest>
         
         // create reader depending on format
         SMLReader procedureReader;
-        if (val.equals(OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "1.0")))
+        if (val.startsWith((OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "1.0"))))
             procedureReader = new SystemReaderV1();
         else if (val.equals(OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0")))
             procedureReader = new SystemReaderV20();
         else
-            throw new OWSException(OWSException.invalid_param_code, "procedureDescription", "Unsoppurted format: " + val);
+            throw new OWSException(OWSException.invalid_param_code, "procedureDescription", "Unsupported format: " + val);
             
         // procedure description
         try
         {
-            Element procedureElt = dom.getElement(requestElt, "procedure/*");
-            SMLProcess process = procedureReader.read(dom, procedureElt);            
+            Element procedureElt = dom.getElement(requestElt, "procedureDescription/*");
+            SMLProcess process = procedureReader.read(dom, procedureElt);
             request.setProcedureDescription(process);
         }
         catch (XMLReaderException e)
@@ -107,15 +112,48 @@ public class InsertSensorReaderV20 extends SWERequestReader<InsertSensorRequest>
             throw new OWSException(OWSException.invalid_param_code, "procedure", "Unable to read SensorML description:\n" + e.getMessage());
         }
         
+        // observable properties
+        NodeList obsPropElts = dom.getElements(requestElt, "observableProperty");
+        for (int i=0; i<obsPropElts.getLength(); i++)
+        {
+            String obsProp = dom.getElementValue((Element)obsPropElts.item(i));
+            request.getObservableProperties().add(obsProp);
+        }
+        
+        // related features
+        NodeList featureElts = dom.getElements(requestElt, "relatedFeature/FeatureRelationship");
+        for (int i=0; i<featureElts.getLength(); i++)
+        {
+            Element featElt = (Element)featureElts.item(i);
+            
+            FeatureRef featureRef = new FeatureRef();
+            Element targetElt = dom.getElement(featElt, "target");
+            XlinkUtils.readXlinkAttributes(targetElt, featureRef);
+            
+            String role = dom.getElementValue(featElt, "role");
+            if (role != null)
+                featureRef.setArcRole(role);
+            
+            request.getRelatedFeatures().add(featureRef);
+        }
+        
         // insertion metadata
-        Element metadataElt = dom.getElement(requestElt, "metadata/InsertionMetadata");
+        Element metadataElt = dom.getElement(requestElt, "metadata/SosInsertionMetadata");
         if (metadataElt != null)
         {
-            val = dom.getElementValue(metadataElt, "observationType");
-            request.setObservationType(val);
+            NodeList obsTypeElts = dom.getElements(metadataElt, "observationType");
+            for (int i=0; i<obsTypeElts.getLength(); i++)
+            {
+                val = dom.getElementValue((Element)obsTypeElts.item(i));
+                request.getObservationTypes().add(val);
+            }
             
-            val = dom.getElementValue(metadataElt, "featureOfInterestType");
-            request.setFoiType(val);
+            NodeList foiTypeElts = dom.getElements(metadataElt, "featureOfInterestType");
+            for (int i=0; i<foiTypeElts.getLength(); i++)
+            {
+                val = dom.getElementValue((Element)foiTypeElts.item(i));
+                request.getFoiTypes().add(val);
+            }
         }
         
         this.checkParameters(request, report);
@@ -134,11 +172,11 @@ public class InsertSensorReaderV20 extends SWERequestReader<InsertSensorRequest>
 		super.checkParameters(request, report, OWSUtils.SOS);
         
         // need observation type
-        if (request.getObservationType() == null)
+        if (request.getObservationTypes().isEmpty())
             report.add(new OWSException(OWSException.missing_param_code, "observationType"));
         
         // need foi type
-        if (request.getFoiType() == null)
+        if (request.getFoiTypes().isEmpty())
             report.add(new OWSException(OWSException.missing_param_code, "featureOfInterestType"));
         
         // procedure

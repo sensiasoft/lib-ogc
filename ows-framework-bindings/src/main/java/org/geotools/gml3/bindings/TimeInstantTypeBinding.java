@@ -16,12 +16,12 @@
  */
 package org.geotools.gml3.bindings;
 
+import java.text.NumberFormat;
 import org.geotools.gml3.GML;
 import org.geotools.temporal.object.DefaultInstant;
 import org.geotools.xml.*;
 import org.opengis.temporal.Instant;
 import org.opengis.temporal.Position;
-
 import javax.xml.namespace.QName;
 
 /**
@@ -53,6 +53,16 @@ import javax.xml.namespace.QName;
  */
 public class TimeInstantTypeBinding extends AbstractComplexBinding {
 
+    static private int currentId = 1;
+    private NumberFormat idFormatter;    
+    
+    public TimeInstantTypeBinding()
+    {
+        idFormatter = NumberFormat.getNumberInstance();
+        idFormatter.setMinimumIntegerDigits(3);
+        idFormatter.setGroupingUsed(false);
+    }    
+    
     /**
      * @generated
      */
@@ -83,7 +93,13 @@ public class TimeInstantTypeBinding extends AbstractComplexBinding {
     public Object getProperty(Object object, QName name) throws Exception {
         if (name.getLocalPart().equals("timePosition"))
             return ((Instant)object).getPosition();
+        else if (name.getLocalPart().equals("id"))
+            return "T" + idFormatter.format(currentId++);
         else
             return null;
+    }    
+    
+    public static void resetIdCounter() {
+        currentId = 1;
     }
 }

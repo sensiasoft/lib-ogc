@@ -21,6 +21,7 @@
 package org.vast.ows.wms;
 
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
@@ -86,9 +87,9 @@ public class GetMapWriterV11 extends AbstractRequestWriter<GetMapRequest>
     public Element buildXMLQuery(DOMHelper dom, GetMapRequest request) throws OWSException
     {
         dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS));
-        dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
-        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
-        dom.addUserPrefix("sld", OGCRegistry.getNamespaceURI(OGCRegistry.SLD));
+        dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OWSUtils.OGC));
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML));
+        dom.addUserPrefix("sld", OGCRegistry.getNamespaceURI(OWSUtils.SLD));
         
         // root element
         Element rootElt = dom.createElement("ows:GetMap");

@@ -131,7 +131,7 @@ public class GetResultWriterV10 extends AbstractRequestWriter<GetResultRequest>
 	public Element buildXMLQuery(DOMHelper dom, GetResultRequest request) throws OWSException
 	{
 		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(OWSUtils.SOS, request.getVersion()));
-		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
+		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OWSUtils.OGC));
 		
 		// root element
 		Element rootElt = dom.createElement("sos:GetResult");

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:GetObservation xmlns:sos="http://www.opengis.net/sos/2.0" service="SOS" version="2.0.0">
+	<!--identifier of a procedure-->
+	<sos:procedure>http://www.my_namespace.org/sensors/Water_Gage_1</sos:procedure>
+	<!--identifier of an offering-->
+	<sos:offering>http://www.my_namespace.org/water_gage_1_observations</sos:offering>
+	<!--identifier of an observed property-->
+	<sos:observedProperty>http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight</sos:observedProperty>
+	<!--observations are requested for specific feature of interest-->
+	<sos:featureOfInterest>http://wfs.example.org?request=getFeature&amp;featureid="river1"</sos:featureOfInterest>
+</sos:GetObservation>

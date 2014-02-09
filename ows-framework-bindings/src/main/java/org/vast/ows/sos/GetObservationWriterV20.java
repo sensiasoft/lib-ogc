@@ -11,13 +11,12 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the
- University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
- Portions created by the Initial Developer are Copyright (C) 2007
+ The Initial Developer of the Original Code is Sensia Software LLC.
+ Portions created by the Initial Developer are Copyright (C) 2014
  the Initial Developer. All Rights Reserved.
-
- Please Contact Mike Botts <mike.botts@uah.edu>
- or Alexandre Robin <alex.robin@sensiasoftware.com> for more information.
+ 
+ Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> or
+ Mike Botts <mike.botts@botts-inc.net> for more information.
  
  Contributor(s): 
     Alexandre Robin <alex.robin@sensiasoftware.com>
@@ -167,7 +166,8 @@ public class GetObservationWriterV20 extends SWERequestWriter<GetObservationRequ
 	public Element buildXMLQuery(DOMHelper dom, GetObservationRequest request) throws OWSException
 	{
 		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(OWSUtils.SOS, request.getVersion()));
-		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OGCRegistry.OGC));
+		dom.addUserPrefix("ogc", OGCRegistry.getNamespaceURI(OWSUtils.OGC));
+		FESUtils.resetIdCounters();
 		
 		// root element
 		Element rootElt = dom.createElement("sos:GetObservation");
@@ -214,7 +214,7 @@ public class GetObservationWriterV20 extends SWERequestWriter<GetObservationRequ
                 Element propElt = dom.addElement(rootElt, "sos:spatialFilter");
                 Document doc = filterEncoder.encodeAsDOM(request.getSpatialFilter(), org.geotools.filter.v2_0.FES.spatialOps);
                 Element filterElt = (Element)dom.getDocument().importNode(doc.getDocumentElement(), true);
-                propElt.appendChild(filterElt);                
+                propElt.appendChild(filterElt);
             }
             catch (Exception e)
             {

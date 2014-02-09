@@ -33,6 +33,9 @@ import java.util.regex.Pattern;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.filter.AttributeExpressionImpl;
+import org.geotools.gml3.bindings.PolygonTypeBinding;
+import org.geotools.gml3.bindings.TimeInstantTypeBinding;
+import org.geotools.gml3.bindings.TimePeriodTypeBinding;
 import org.geotools.temporal.object.DefaultInstant;
 import org.geotools.temporal.object.DefaultPeriod;
 import org.geotools.temporal.object.DefaultPosition;
@@ -231,5 +234,13 @@ public class FESUtils
     protected static BinarySpatialOperator bboxToFilter(Bbox bbox)
     {
         return filterFactory.bbox("featureOfInterest/*/shape", bbox.getMinX(), bbox.getMinY(), bbox.getMaxX(), bbox.getMaxY(), bbox.getCrs());
+    }
+    
+    
+    public static void resetIdCounters()
+    {
+        TimeInstantTypeBinding.resetIdCounter();
+        TimePeriodTypeBinding.resetIdCounter();
+        PolygonTypeBinding.resetIdCounter();
     }
 }

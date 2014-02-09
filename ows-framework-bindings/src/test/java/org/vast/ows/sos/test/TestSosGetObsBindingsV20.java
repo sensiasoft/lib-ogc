@@ -11,13 +11,12 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the
- University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
- Portions created by the Initial Developer are Copyright (C) 2007
+ The Initial Developer of the Original Code is Sensia Software LLC.
+ Portions created by the Initial Developer are Copyright (C) 2014
  the Initial Developer. All Rights Reserved.
-
- Please Contact Mike Botts <mike.botts@uah.edu>
- or Alexandre Robin <alex.robin@sensiasoftware.com> for more information.
+ 
+ Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> or
+ Mike Botts <mike.botts@botts-inc.net> for more information.
  
  Contributor(s): 
     Alexandre Robin <alex.robin@sensiasoftware.com>
@@ -27,21 +26,19 @@
 package org.vast.ows.sos.test;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import org.opengis.filter.expression.Literal;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.sos.GetObservationRequest;
+import org.vast.ows.test.OWSTestCase;
 import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
 import com.vividsolutions.jts.geom.Polygon;
-import junit.framework.TestCase;
 
 
-public class TestSosGetObsBindingsV20 extends TestCase
+public class TestSosGetObsBindingsV20 extends OWSTestCase
 {
     protected static String DEFAULT_FORMAT = "http://www.opengis.net/om/2.0";
     
@@ -75,7 +72,7 @@ public class TestSosGetObsBindingsV20 extends TestCase
         assertEquals(32.32, request.getBbox().getMaxX());
         assertEquals(22.2, request.getBbox().getMaxY());
         assertEquals("urn:ogc:def:crs:EPSG::4326", request.getBbox().getCrs());
-        assertEquals(DEFAULT_FORMAT, request.getFormat());
+        assertEquals(null, request.getFormat());
         
         queryString = r.readLine();
         request = (GetObservationRequest)utils.readURLQuery(queryString, OWSUtils.SOS);
@@ -115,7 +112,7 @@ public class TestSosGetObsBindingsV20 extends TestCase
         assertEquals(0, request.getProcedures().size());
         assertEquals("2008-03-01T17:44:15Z", DateTimeFormat.formatIso(request.getTime().getBaseTime(), 0));
         assertTrue("BBOX is not null", request.getBbox().isNull());
-        assertEquals(DEFAULT_FORMAT, request.getFormat());
+        assertEquals(null, request.getFormat());
         is.close();
         
         is = TestSosGetObsBindingsV20.class.getResourceAsStream("examples_v20/core/GetObservation2_obsProps_Procedure.xml");        
@@ -132,7 +129,7 @@ public class TestSosGetObsBindingsV20 extends TestCase
         assertEquals("http://www.my_namespace.org/sensors/Water_Gage_1", request.getProcedures().get(0));
         assertTrue("Time is not null", request.getTime().isNull());
         assertTrue("BBOX is not null", request.getBbox().isNull());
-        assertEquals(DEFAULT_FORMAT, request.getFormat());
+        assertEquals(null, request.getFormat());
         is.close();
         
         is = TestSosGetObsBindingsV20.class.getResourceAsStream("examples_v20/core/GetObservation3_foiIDFilter.xml");        
@@ -150,7 +147,7 @@ public class TestSosGetObsBindingsV20 extends TestCase
         assertEquals("http://www.my_namespace.org/sensors/Water_Gage_1", request.getProcedures().get(0));
         assertTrue("Time is not null", request.getTime().isNull());
         assertTrue("BBOX is not null", request.getBbox().isNull());
-        assertEquals(DEFAULT_FORMAT, request.getFormat());
+        assertEquals(null, request.getFormat());
         is.close();
         
         is = TestSosGetObsBindingsV20.class.getResourceAsStream("examples_v20/core/GetObservation4_spatialFilter.xml");        
@@ -175,7 +172,7 @@ public class TestSosGetObsBindingsV20 extends TestCase
         assertEquals(7.54, poly.getCoordinates()[2].y);
         assertEquals(52.90, poly.getCoordinates()[3].x);
         assertEquals(7.52, poly.getCoordinates()[3].y);        
-        assertEquals(DEFAULT_FORMAT, request.getFormat());
+        assertEquals(null, request.getFormat());
         is.close();
         
         is = TestSosGetObsBindingsV20.class.getResourceAsStream("examples_v20/_useCase_airbase_station_network/GetObservation.xml");        
@@ -194,7 +191,7 @@ public class TestSosGetObsBindingsV20 extends TestCase
         assertEquals("2008-01-01T00:00:00Z", DateTimeFormat.formatIso(request.getTime().getStartTime(), 0));
         assertEquals("2011-05-01T17:44:15Z", DateTimeFormat.formatIso(request.getTime().getStopTime(), 0));
         assertTrue("BBOX is not null", request.getBbox().isNull());
-        assertEquals(DEFAULT_FORMAT, request.getFormat());
+        assertEquals(null, request.getFormat());
         is.close();
         
         is = TestSosGetObsBindingsV20.class.getResourceAsStream("examples_v20/_useCase_mobile_sensors/GetObservation.xml");        
@@ -215,7 +212,7 @@ public class TestSosGetObsBindingsV20 extends TestCase
         assertEquals(-94.0, bbox.getMinY());
         assertEquals( 22.0, bbox.getMaxX());
         assertEquals(-90.0, bbox.getMaxY());
-        assertEquals(DEFAULT_FORMAT, request.getFormat());
+        assertEquals(null, request.getFormat());
         is.close();
         
         is = TestSosGetObsBindingsV20.class.getResourceAsStream("examples_v20/_useCase_homogeneous_sensor_network/GetObservation.xml");        
@@ -235,8 +232,21 @@ public class TestSosGetObsBindingsV20 extends TestCase
         assertEquals("2008-01-01T00:00:00Z", DateTimeFormat.formatIso(request.getTime().getStartTime(), 0));
         assertEquals("2011-05-01T17:44:15Z", DateTimeFormat.formatIso(request.getTime().getStopTime(), 0));
         assertTrue("BBOX is not null", request.getBbox().isNull());
-        assertEquals(DEFAULT_FORMAT, request.getFormat());
+        assertEquals(null, request.getFormat());
         is.close();
+    }
+    
+    
+    public void testReadWriteXmlGetObs() throws Exception
+    {
+        readWriteCompareXmlRequest("examples_v20/core/GetObservation1_obsProps.xml");
+        readWriteCompareXmlRequest("examples_v20/core/GetObservation2_obsProps_Procedure.xml");
+        readWriteCompareXmlRequest("examples_v20/core/GetObservation3_foiIDFilter.xml");
+        readWriteCompareXmlRequest("examples_v20/core/GetObservation4_spatialFilter.xml");
+        readWriteCompareXmlRequest("examples_v20/_useCase_airbase_station_network/GetObservation.xml");
+        //readWriteCompareXmlRequest("examples_v20/_useCase_mobile_sensors/GetObservation.xml");
+        readWriteCompareXmlRequest("examples_v20/_useCase_homogeneous_sensor_network/GetObservation.xml");
+        readWriteCompareXmlRequest("examples_v20/spatialFilteringProfile/GetObservation1_spatialFilteringProfile.xml");
     }
     
     
@@ -259,43 +269,7 @@ public class TestSosGetObsBindingsV20 extends TestCase
             checkRequestsEquals(request1, request2);
         }
     }
-    
-    
-    public void testWriteXmlGetObs() throws Exception
-    {
-        testWriteXmlGetObs("examples_v20/core/GetObservation1_obsProps.xml");
-        testWriteXmlGetObs("examples_v20/core/GetObservation2_obsProps_Procedure.xml");
-        testWriteXmlGetObs("examples_v20/core/GetObservation3_foiIDFilter.xml");
-        testWriteXmlGetObs("examples_v20/core/GetObservation4_spatialFilter.xml");
-        testWriteXmlGetObs("examples_v20/_useCase_airbase_station_network/GetObservation.xml");
-        //testWriteXmlGetObsV20("examples_v20/_useCase_mobile_sensors/GetObservation.xml");
-        testWriteXmlGetObs("examples_v20/_useCase_homogeneous_sensor_network/GetObservation.xml");
-        testWriteXmlGetObs("examples_v20/spatialFilteringProfile/GetObservation1_spatialFilteringProfile.xml");
-    }
-    
-    
-    protected void testWriteXmlGetObs(String path) throws Exception
-    {
-        OWSUtils utils = new OWSUtils();
-        GetObservationRequest request1, request2;
-        
-        InputStream is = TestSosGetObsBindingsV20.class.getResourceAsStream(path);
-        request1 = (GetObservationRequest)utils.readXMLQuery(is, OWSUtils.SOS);
-        is.close();
-        
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        System.out.println();
-        utils.writeXMLQuery(System.out, request1);
-        utils.writeXMLQuery(os, request1);
-        os.close();
-        
-        ByteArrayInputStream bis = new ByteArrayInputStream(os.toByteArray());
-        request2 = (GetObservationRequest)utils.readXMLQuery(bis, OWSUtils.SOS);
-        bis.close();
-        
-        checkRequestsEquals(request1, request2);
-    }
-    
+   
     
     protected void checkRequestsEquals(GetObservationRequest request1, GetObservationRequest request2)
     {

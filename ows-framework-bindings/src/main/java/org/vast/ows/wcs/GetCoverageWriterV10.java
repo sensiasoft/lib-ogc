@@ -25,6 +25,7 @@ package org.vast.ows.wcs;
 import java.text.NumberFormat;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLEnvelopeWriter;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.*;
 import org.w3c.dom.*;
 import org.vast.util.DateTimeFormat;
@@ -150,7 +151,7 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
 	public Element buildXMLQuery(DOMHelper dom, GetCoverageRequest request) throws OWSException
 	{
 		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS));
-		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML));
 		
 		// root element
 		Element rootElt = dom.createElement("GetCoverage");

@@ -11,13 +11,12 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the
- University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
- Portions created by the Initial Developer are Copyright (C) 2007
+ The Initial Developer of the Original Code is Sensia Software LLC.
+ Portions created by the Initial Developer are Copyright (C) 2014
  the Initial Developer. All Rights Reserved.
-
- Please Contact Mike Botts <mike.botts@uah.edu>
- or Alexandre Robin <alex.robin@sensiasoftware.com> for more information.
+ 
+ Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> or
+ Mike Botts <mike.botts@botts-inc.net> for more information.
  
  Contributor(s): 
     Alexandre Robin <alex.robin@sensiasoftware.com>
@@ -35,7 +34,6 @@ import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.swe.SWERequestWriter;
 import org.vast.sweCommon.DataSinkDOM;
-import org.vast.sweCommon.SWECommonUtils;
 import org.w3c.dom.Element;
 
 
@@ -69,7 +67,7 @@ public class InsertResultWriterV20 extends SWERequestWriter<InsertResultRequest>
 		Map<String, String> urlParams = new LinkedHashMap<String, String>();
         addCommonArgs(urlParams, request);
 		
-		// offerings
+		// template id
         urlParams.put("template", request.getTemplateId());
         
         return urlParams;
@@ -80,7 +78,6 @@ public class InsertResultWriterV20 extends SWERequestWriter<InsertResultRequest>
 	public Element buildXMLQuery(DOMHelper dom, InsertResultRequest request) throws OWSException
 	{
 		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(OWSUtils.SOS, request.getVersion()));
-		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0"));
 		
 		// root element
 		Element rootElt = dom.createElement("sos:" + request.getOperation());

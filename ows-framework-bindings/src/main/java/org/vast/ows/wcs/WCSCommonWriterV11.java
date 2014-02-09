@@ -23,6 +23,7 @@
 package org.vast.ows.wcs;
 
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.OWSException;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -39,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 4 déc. 07
+ * @date 4 dï¿½c. 07
  * @version 1.0
  */
 public class WCSCommonWriterV11
@@ -47,7 +48,7 @@ public class WCSCommonWriterV11
 	
 	public Element buildGridCRS(DOMHelper dom, WCSRectifiedGridCrs gridCrs, String id) throws OWSException
     {
-		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+		dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML));
 		Element gridElt = dom.createElement("GridCRS");
 		
 		dom.setElementValue(gridElt, "gml:srsName", id);

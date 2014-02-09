@@ -25,6 +25,7 @@ package org.vast.ows.wcs;
 import java.util.List;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLEnvelopeWriter;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
@@ -87,7 +88,7 @@ public class CoverageDescriptionsWriterV10 extends AbstractResponseWriter<Covera
 			WCSRectifiedGridCrs gridCrs = desc.getGridCrs();
 			if (gridCrs != null)
 			{
-				dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+				dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML));
 				Element gridElt = dom.addElement(spDomainElt, "gml:RectifiedGrid");
 				dom.setAttributeValue(gridElt, "srsName", gridCrs.getBaseCrs());
 				

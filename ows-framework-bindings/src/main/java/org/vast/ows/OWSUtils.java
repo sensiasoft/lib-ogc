@@ -50,7 +50,8 @@ import org.w3c.dom.Element;
  */
 public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<OWSRequest>
 {
-	public final static String OWS = "OWS";
+    public final static String OGC = "OGC";
+    public final static String OWS = "OWS";
 	public final static String WMS = "WMS";
 	public final static String WFS = "WFS";
 	public final static String WCS = "WCS";
@@ -61,7 +62,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
 	public final static String SAS = "SAS";	
 	public final static String SPS = "SPS";
 	public final static String WPS = "WPS";	
-	
+	public final static String SLD = "SLD";
+    
 	public final static String soap11Uri = "http://schemas.xmlsoap.org/soap/envelope/";
 	public final static String soap12Uri = "http://www.w3.org/2003/05/soap-envelope";
 	public final static String unsupportedSpec = "No support for ";
@@ -116,8 +118,7 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         try
         {
             OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(request.service, request.operation, request.version);
-            request = reader.readXMLQuery(dom, requestElt);
-            
+            request = reader.readXMLQuery(dom, requestElt);            
             return request;
         }
         catch (IllegalStateException e)
@@ -161,6 +162,15 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
 		{
 			throw new OWSException(AbstractRequestReader.invalidXML, e);
 		}
+    }
+    
+    
+    /**
+     * Helper method to parse any OWS query directly from an InputStream
+     */
+    public OWSRequest readXMLQuery(InputStream is) throws OWSException
+    {
+        return readXMLQuery(is, null);
     }
     
     
@@ -326,6 +336,21 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
 
 
     /**
+     * Helper method to parse any OWSResponse from service type only
+     * This tries to guess the response type and version from the root element
+     * @param dom
+     * @param responseElt
+     * @param serviceType
+     * @return
+     * @throws OWSException
+     */
+    public OWSResponse readXMLResponse(DOMHelper dom, Element responseElt, String serviceType) throws OWSException
+    {
+        return readXMLResponse(dom, responseElt, serviceType, null, null);
+    }
+    
+    
+    /**
      * Helper method to parse any OWSResponse from service type and response type only
      * This tries to guess the version from a version attribute or the end of the namespace uri
      * @param dom
@@ -356,6 +381,10 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         // skip SOAP envelope if present
         if (responseElt.getNamespaceURI().equals(soap12Uri))
             responseElt = dom.getElement(responseElt, "Body/*");
+        
+        // autodetect response type if non specified
+        if (responseType == null)
+            responseType = responseElt.getLocalName();
         
         // auto detect version if non specified
         if (version == null)

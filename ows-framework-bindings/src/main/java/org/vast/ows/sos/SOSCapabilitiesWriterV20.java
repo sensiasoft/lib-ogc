@@ -11,14 +11,18 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is Spotimage S.A.
- Portions created by the Initial Developer are Copyright (C) 2007
+ The Initial Developer of the Original Code is Sensia Software LLC.
+ Portions created by the Initial Developer are Copyright (C) 2014
  the Initial Developer. All Rights Reserved.
  
+ Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> or
+ Mike Botts <mike.botts@botts-inc.net> for more information.
+ 
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <alex.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
+
 package org.vast.ows.sos;
 
 import java.util.ArrayList;

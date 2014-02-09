@@ -11,7 +11,12 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is Sensia Software LLC.
+ Portions created by the Initial Developer are Copyright (C) 2014
+ the Initial Developer. All Rights Reserved.
+ 
+ Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> or
+ Mike Botts <mike.botts@botts-inc.net> for more information.
  
  Contributor(s): 
     Alexandre Robin <alex.robin@sensiasoftware.com>
@@ -19,6 +24,9 @@
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.sos;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -37,36 +45,26 @@ package org.vast.ows.sos;
  */
 public class InsertSensorRequest extends org.vast.ows.swe.InsertSensorRequest
 {
-    protected String observationType;
-    protected String foiType;
+    protected List<String> observationTypes;
+    protected List<String> foiTypes;
     
 	
 	public InsertSensorRequest()
 	{
 		super("SOS");
+		observationTypes = new ArrayList<String>(2);
+		foiTypes = new ArrayList<String>(2);
 	}
 
 
-    public String getObservationType()
+    public List<String> getObservationTypes()
     {
-        return observationType;
+        return observationTypes;
     }
 
 
-    public void setObservationType(String observationType)
+    public List<String> getFoiTypes()
     {
-        this.observationType = observationType;
-    }
-
-
-    public String getFoiType()
-    {
-        return foiType;
-    }
-
-
-    public void setFoiType(String foiType)
-    {
-        this.foiType = foiType;
-    }    
+        return foiTypes;
+    }   
 }
