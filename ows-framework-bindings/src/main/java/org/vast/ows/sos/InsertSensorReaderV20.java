@@ -128,7 +128,7 @@ public class InsertSensorReaderV20 extends SWERequestReader<InsertSensorRequest>
             
             FeatureRef featureRef = new FeatureRef();
             Element targetElt = dom.getElement(featElt, "target");
-            XlinkUtils.readXlinkAttributes(targetElt, featureRef);
+            XlinkUtils.readXlinkAttributes(dom, targetElt, featureRef);
             
             String role = dom.getElementValue(featElt, "role");
             if (role != null)
