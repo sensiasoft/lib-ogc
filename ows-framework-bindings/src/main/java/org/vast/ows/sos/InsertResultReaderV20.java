@@ -133,7 +133,7 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
             report.add(new OWSException(OWSException.missing_param_code, "template"));
         
         // need result values
-        if (request.getResultData() == null || request.getResultData().getDataList().getComponentCount() == 0)
+        if (request.getResultData() == null || request.getResultData().getComponentCount() == 0)
             report.add(new OWSException(OWSException.missing_param_code, "resultValues"));
         
         report.process();
