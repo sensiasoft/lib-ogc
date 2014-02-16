@@ -382,6 +382,10 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         if (responseElt.getNamespaceURI().equals(soap12Uri))
             responseElt = dom.getElement(responseElt, "Body/*");
         
+        // this will throw an exception if the response contains one 
+        // instead of the actual response message
+        OWSExceptionReader.checkException(dom, responseElt);
+        
         // autodetect response type if non specified
         if (responseType == null)
             responseType = responseElt.getLocalName();
