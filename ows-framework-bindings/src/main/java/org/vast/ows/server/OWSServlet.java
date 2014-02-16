@@ -23,6 +23,7 @@ package org.vast.ows.server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,6 +44,7 @@ import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.util.PostRequestFilter;
+import org.vast.util.WriterException;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 
@@ -218,22 +220,27 @@ public abstract class OWSServlet extends HttpServlet
             {
                 resp.setContentType(XML_MIME_TYPE);
                 owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), request.getService(), request.getVersion(), e);
+                log.debug(e.getMessage(), e);
             }
             catch (IOException e1)
             {
                 log.error(internalErrorMsg, e1);
             }            
         }
+        catch (WriterException e)
+        {
+            log.debug(internalErrorMsg, e);
+        }
         catch (Exception e)
         {
             try
             {
-                resp.sendError(500, internalErrorMsg);
+                if (!resp.isCommitted())
+                    resp.sendError(500, internalErrorMsg);
                 log.error(internalErrorMsg, e);
             }
             catch (IOException e1)
             {
-                log.error(internalErrorMsg, e1);
             }
         }
         finally
@@ -241,11 +248,9 @@ public abstract class OWSServlet extends HttpServlet
             try
             {
                 resp.getOutputStream().flush();
-                resp.getOutputStream().close();
             }
             catch (IOException e)
             {
-                log.error(internalErrorMsg, e);
             }
         }
     }

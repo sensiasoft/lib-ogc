@@ -119,8 +119,8 @@ public abstract class SOSServlet extends OWSServlet
 		if(smlUrl == null)
 			throw new SOSException("SensorML description for " + sensorId + " not available");
 		
-		DOMHelper dom = new DOMHelper(smlUrl, false);				
-        dom.serialize(dom.getBaseElement(), request.getResponseStream() , null);		
+		DOMHelper dom = new DOMHelper(smlUrl, false);
+        dom.serialize(dom.getBaseElement(), request.getResponseStream() , null);
 	}
 	
 	
@@ -130,24 +130,34 @@ public abstract class SOSServlet extends OWSServlet
 	 */
 	protected void handleRequest(GetResultTemplateRequest request) throws Exception
 	{
-	    // check query parameters
-	    OWSExceptionReport report = new OWSExceptionReport();
-        checkQueryObservables(request.getOffering(), request.getObservables(), report);
-        report.process();
+	    ISOSDataProvider dataProvider = null;
         
-	    // setup data provider
-	    SOSDataFilter filter = new SOSDataFilter(request.getObservables().get(0));
-	    ISOSDataProvider dataProvider = getDataProvider(request.getOffering(), filter);
-        
-        // build and 
-	    GetResultTemplateResponse resp = new GetResultTemplateResponse();
-	    resp.setResultStructure(dataProvider.getResultStructure());
-	    resp.setResultEncoding(dataProvider.getDefaultResultEncoding());
-
-	    // write response to response stream
-	    OutputStream os = new BufferedOutputStream(request.getResponseStream());
-	    owsUtils.writeXMLResponse(os, resp, request.getVersion());
-	    os.flush();
+        try
+        {
+            // check query parameters        
+    	    OWSExceptionReport report = new OWSExceptionReport();
+            checkQueryObservables(request.getOffering(), request.getObservables(), report);
+            report.process();
+            
+    	    // setup data provider
+    	    SOSDataFilter filter = new SOSDataFilter(request.getObservables().get(0));
+    	    dataProvider = getDataProvider(request.getOffering(), filter);
+            
+            // build and 
+    	    GetResultTemplateResponse resp = new GetResultTemplateResponse();
+    	    resp.setResultStructure(dataProvider.getResultStructure());
+    	    resp.setResultEncoding(dataProvider.getDefaultResultEncoding());
+    
+    	    // write response to response stream
+    	    OutputStream os = new BufferedOutputStream(request.getResponseStream());
+    	    owsUtils.writeXMLResponse(os, resp, request.getVersion());
+    	    os.flush();
+        }
+        finally
+        {
+            if (dataProvider != null)
+                dataProvider.close();
+        }
 	}
 	
 	
@@ -157,48 +167,58 @@ public abstract class SOSServlet extends OWSServlet
      */
     protected void handleRequest(GetResultRequest request) throws Exception
     {
-        // check query parameters
-        OWSExceptionReport report = new OWSExceptionReport();
-        checkQueryObservables(request.getOffering(), request.getObservables(), report);
-        checkQueryProcedures(request.getOffering(), request.getProcedures(), report);
-        checkQueryTime(request.getOffering(), request.getTime(), report);
-        report.process();
-        
-        // setup data provider
-        SOSDataFilter filter = new SOSDataFilter(request.getFoiIDs(), request.getObservables(), request.getTime());
-        ISOSDataProvider dataProvider = getDataProvider(request.getOffering(), filter);
-        
-        // write response with SWE common data stream
-        OutputStream os = new BufferedOutputStream(request.getResponseStream());
-        
-        // write small xml wrapper if requested
-        if (((GetResultRequest) request).isXmlWrapper())
-        {
-            String nsUri = OGCRegistry.getNamespaceURI(SOSUtils.SOS, request.getVersion());
-            os.write(new String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n").getBytes());
-            os.write(new String("<GetResultResponse xmlns=\"" + nsUri + "\">\n<resultValues>\n").getBytes());
-        }
-        else
-            request.getHttpResponse().setContentType("text/plain");
-        
-        // prepare writer for selected encoding
-        DataStreamWriter writer = SWEFactory.createDataWriter(dataProvider.getDefaultResultEncoding());
-        writer.setDataComponents(dataProvider.getResultStructure());
-        writer.setOutput(os);
-        
-        // write each record in output stream
-        DataBlock nextRecord;
-        while ((nextRecord = dataProvider.getNextResultRecord()) != null)
-        {
-            writer.write(nextRecord);
-            writer.flush();
-        }
-        
-        // close xml wrapper
-        if (((GetResultRequest) request).isXmlWrapper())
-            os.write(new String("\n</resultValues>\n</GetResultResponse>").getBytes());            
+        ISOSDataProvider dataProvider = null;
                 
-        os.flush();
+        try
+        {
+            // check query parameters
+            OWSExceptionReport report = new OWSExceptionReport();
+            checkQueryObservables(request.getOffering(), request.getObservables(), report);
+            checkQueryProcedures(request.getOffering(), request.getProcedures(), report);
+            checkQueryTime(request.getOffering(), request.getTime(), report);
+            report.process();
+            
+            // setup data provider
+            SOSDataFilter filter = new SOSDataFilter(request.getFoiIDs(), request.getObservables(), request.getTime());
+            dataProvider = getDataProvider(request.getOffering(), filter);
+            
+            // write response with SWE common data stream
+            OutputStream os = new BufferedOutputStream(request.getResponseStream());
+            
+            // write small xml wrapper if requested
+            if (((GetResultRequest) request).isXmlWrapper())
+            {
+                String nsUri = OGCRegistry.getNamespaceURI(SOSUtils.SOS, request.getVersion());
+                os.write(new String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n").getBytes());
+                os.write(new String("<GetResultResponse xmlns=\"" + nsUri + "\">\n<resultValues>\n").getBytes());
+            }
+            else
+                request.getHttpResponse().setContentType("text/plain");
+            
+            // prepare writer for selected encoding
+            DataStreamWriter writer = SWEFactory.createDataWriter(dataProvider.getDefaultResultEncoding());
+            writer.setDataComponents(dataProvider.getResultStructure());
+            writer.setOutput(os);
+            
+            // write each record in output stream
+            DataBlock nextRecord;
+            while ((nextRecord = dataProvider.getNextResultRecord()) != null)
+            {
+                writer.write(nextRecord);
+                writer.flush();
+            }
+            
+            // close xml wrapper
+            if (((GetResultRequest) request).isXmlWrapper())
+                os.write(new String("\n</resultValues>\n</GetResultResponse>").getBytes());            
+                    
+            os.flush();
+        }
+        finally
+        {
+            if (dataProvider != null)
+                dataProvider.close();
+        }
     }
 	
 	
@@ -208,71 +228,81 @@ public abstract class SOSServlet extends OWSServlet
 	 */
 	protected void handleRequest(GetObservationRequest request) throws Exception
 	{
-		if (request.getOffering() == null)
-			throw new SOSException("A GetObservation SOS request must specify an offeringId argument");
-		
-		if (request.getObservables().isEmpty())
-			throw new SOSException("An SOS request must contain at least one observable");
-		
-		// check query parameters
-		OWSExceptionReport report = new OWSExceptionReport();
-		checkQueryObservables(request.getOffering(), request.getObservables(), report);
-        checkQueryProcedures(request.getOffering(), request.getProcedures(), report);
-		checkQueryFormat(request.getOffering(), request.getFormat(), report);
-		checkQueryTime(request.getOffering(), request.getTime(), report);
-		report.process();
-		
-		// setup data provider
-        SOSDataFilter filter = new SOSDataFilter(request.getFoiIDs(), request.getObservables(), request.getTime());
-        ISOSDataProvider dataProvider = getDataProvider(request.getOffering(), filter);
-		
-		// prepare obs writer for requested O&M version
-        String format = request.getFormat();
-		String nsUri = format;
-        String omVersion = nsUri.substring(format.lastIndexOf('/') + 1);
-        IXMLWriterDOM<IObservation> obsWriter = (IXMLWriterDOM<IObservation>)OGCRegistry.createWriter(OMUtils.OM, OMUtils.OBSERVATION, omVersion);
-        
-		// init xml document writing
-		OutputStream os = new BufferedOutputStream(request.getResponseStream());
-		XMLEventFactory xmlFactory = XMLEventFactory.newInstance();
-		XMLEventWriter xmlWriter = XMLOutputFactory.newInstance().createXMLEventWriter(os);
-		xmlWriter.add(xmlFactory.createStartDocument());
-		xmlWriter.add(xmlFactory.createStartElement("om", nsUri, "GetObservationResponse"));
-		
-		// write each observation in stream
-		boolean firstObs = true;
-		IObservation obs;
-		while ((obs = dataProvider.getNextObservation()) != null)
-		{
-		    DOMHelper dom = new DOMHelper();
-		    Element obsElt = obsWriter.write(dom, obs);
-		    
-		    // add namespaces
-		    if (firstObs)
-		    {
-		        for (Entry<String, String> nsDef: dom.getXmlDocument().getNSTable().entrySet())
-		            xmlWriter.add(xmlFactory.createNamespace(nsDef.getKey(), nsDef.getValue()));
+	    ISOSDataProvider dataProvider = null;
+	    
+	    try
+        {
+            if (request.getOffering() == null)
+            	throw new SOSException("A GetObservation SOS request must specify an offeringId argument");
+            
+            if (request.getObservables().isEmpty())
+            	throw new SOSException("An SOS request must contain at least one observable");
+            
+            // check query parameters
+            OWSExceptionReport report = new OWSExceptionReport();
+            checkQueryObservables(request.getOffering(), request.getObservables(), report);
+            checkQueryProcedures(request.getOffering(), request.getProcedures(), report);
+            checkQueryFormat(request.getOffering(), request.getFormat(), report);
+            checkQueryTime(request.getOffering(), request.getTime(), report);
+            report.process();
+            
+            // setup data provider
+            SOSDataFilter filter = new SOSDataFilter(request.getFoiIDs(), request.getObservables(), request.getTime());
+            dataProvider = getDataProvider(request.getOffering(), filter);
+            
+            // prepare obs writer for requested O&M version
+            String format = request.getFormat();
+            String nsUri = format;
+            String omVersion = nsUri.substring(format.lastIndexOf('/') + 1);
+            IXMLWriterDOM<IObservation> obsWriter = (IXMLWriterDOM<IObservation>)OGCRegistry.createWriter(OMUtils.OM, OMUtils.OBSERVATION, omVersion);
+            
+            // init xml document writing
+            OutputStream os = new BufferedOutputStream(request.getResponseStream());
+            XMLEventFactory xmlFactory = XMLEventFactory.newInstance();
+            XMLEventWriter xmlWriter = XMLOutputFactory.newInstance().createXMLEventWriter(os);
+            xmlWriter.add(xmlFactory.createStartDocument());
+            xmlWriter.add(xmlFactory.createStartElement("om", nsUri, "GetObservationResponse"));
+            
+            // write each observation in stream
+            boolean firstObs = true;
+            IObservation obs;
+            while ((obs = dataProvider.getNextObservation()) != null)
+            {
+                DOMHelper dom = new DOMHelper();
+                Element obsElt = obsWriter.write(dom, obs);
+                
+                // add namespaces
+                if (firstObs)
+                {
+                    for (Entry<String, String> nsDef: dom.getXmlDocument().getNSTable().entrySet())
+                        xmlWriter.add(xmlFactory.createNamespace(nsDef.getKey(), nsDef.getValue()));
 
-		        firstObs = false;
-		    }
-		    
-		    xmlWriter.add(xmlFactory.createStartElement("om", nsUri, "observationData"));
-		    
-		    XMLEventReader domReader = XMLInputFactory.newInstance().createXMLEventReader(new DOMSource(obsElt));
-		    while (domReader.hasNext())
-		    {
-		        XMLEvent event = domReader.nextEvent();
-		        if (!event.isStartDocument() && !event.isEndDocument())
-		            xmlWriter.add(event);
-		    }
-		    
-		    xmlWriter.add(xmlFactory.createEndElement("om", nsUri, "observationData"));
-		    xmlWriter.flush();
-		    os.write('\n');
-		}
-		
-		xmlWriter.add(xmlFactory.createEndDocument());
-		xmlWriter.close();
+                    firstObs = false;
+                }
+                
+                xmlWriter.add(xmlFactory.createStartElement("om", nsUri, "observationData"));
+                
+                XMLEventReader domReader = XMLInputFactory.newInstance().createXMLEventReader(new DOMSource(obsElt));
+                while (domReader.hasNext())
+                {
+                    XMLEvent event = domReader.nextEvent();
+                    if (!event.isStartDocument() && !event.isEndDocument())
+                        xmlWriter.add(event);
+                }
+                
+                xmlWriter.add(xmlFactory.createEndElement("om", nsUri, "observationData"));
+                xmlWriter.flush();
+                os.write('\n');
+            }
+            
+            xmlWriter.add(xmlFactory.createEndDocument());
+            xmlWriter.close();
+        }
+        finally
+        {
+            if (dataProvider != null)
+                dataProvider.close();
+        }
 	}
 	
 	

@@ -80,4 +80,11 @@ public interface ISOSDataProvider
      * @return
      */
     public DataEncoding getDefaultResultEncoding() throws Exception;
+    
+    
+    /**
+     * Properly releases all resources accessed by provider
+     * (for instance, when connection is ended by client)
+     */
+    public void close();
 }

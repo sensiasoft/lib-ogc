@@ -35,8 +35,8 @@ import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.ows.*;
 import org.vast.ows.swe.SWERequestReader;
+import org.vast.sensorML.ProcessReader;
 import org.vast.sensorML.SMLProcess;
-import org.vast.sensorML.SMLReader;
 import org.vast.sensorML.SMLUtils;
 import org.vast.sensorML.SystemReaderV1;
 import org.vast.sensorML.SystemReaderV20;
@@ -92,7 +92,7 @@ public class InsertSensorReaderV20 extends SWERequestReader<InsertSensorRequest>
         }
         
         // create reader depending on format
-        SMLReader procedureReader;
+        ProcessReader procedureReader;
         if (val.startsWith((OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "1.0"))))
             procedureReader = new SystemReaderV1();
         else if (val.equals(OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0")))
