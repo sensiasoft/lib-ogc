@@ -25,6 +25,7 @@
 
 package org.vast.ows.sos;
 
+import java.util.List;
 import java.util.Map;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLReaderException;
@@ -37,6 +38,7 @@ import org.vast.ows.*;
 import org.vast.ows.swe.SWERequestReader;
 import org.vast.sweCommon.SweComponentReaderV20;
 import org.vast.sweCommon.SweEncodingReaderV20;
+import org.vast.sweCommon.SweValidator;
 
 
 /**
@@ -79,6 +81,7 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		InsertResultTemplateRequest request = new InsertResultTemplateRequest();
+		SweValidator validator = new SweValidator();
 		
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
@@ -102,11 +105,15 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         }
         
         // result structure
+        DataComponent structure = null;
         try
         {
             Element resultStructElt = dom.getElement(templateElt, "resultStructure");
-            DataComponent component = componentReader.readComponentProperty(dom, resultStructElt);
-            request.setResultStructure(component);
+            structure = componentReader.readComponentProperty(dom, resultStructElt);
+            List<Exception> errors = validator.validateComponent(structure, null);
+            for (Exception e: errors)
+                report.add(new OWSException(OWSException.invalid_param_code, "resultStructure", "Invalid structure definition: " + e.getMessage()));
+            request.setResultStructure(structure);
         }
         catch (XMLReaderException e)
         {
@@ -118,6 +125,9 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         {
             Element resultEncodingElt = dom.getElement(templateElt, "resultEncoding/*");
             DataEncoding encoding = encodingReader.readEncoding(dom, resultEncodingElt);
+            List<Exception> errors = validator.validateEncoding(encoding, structure, null);
+            for (Exception e: errors)
+                report.add(new OWSException(OWSException.invalid_param_code, "resultEncoding", "Invalid encoding definition: " + e.getMessage()));
             request.setResultEncoding(encoding);
         }
         catch (XMLReaderException e)

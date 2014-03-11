@@ -25,54 +25,22 @@
 
 package org.vast.ows.sos;
 
-import java.util.LinkedList;
-import java.util.List;
-import org.vast.ogc.om.IObservation;
-import org.vast.ows.OWSRequest;
-
 
 /**
- * <p><b>Title:</b><br/>
- * InsertObservation Request
+ * <p>
+ * Container for SOS InsertSensor response data
  * </p>
  *
- * <p><b>Description:</b><br/>
- * Container for SOS InsertObservation request parameters
- * </p>
- *
- * <p>Copyright (c) 2014</p>
- * @author Alexandre Robin
- * @date Feb 02, 2014
- * @version 1.0
+ * <p>Copyright (c) 2014 Sensia Software LLC</p>
+ * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @since Mar 10, 2014
  */
-public class InsertObservationRequest extends OWSRequest
+public class InsertSensorResponse extends org.vast.ows.swe.InsertSensorResponse
 {
-    protected String offering;
-    protected List<IObservation> observations;
-    
-	
-	public InsertObservationRequest()
-	{
-		service = "SOS";
-		operation = "InsertObservation";
-		observations = new LinkedList<IObservation>();
-	}
 
-
-    public String getOffering()
+    public InsertSensorResponse()
     {
-        return offering;
+        super(SOSUtils.SOS);
     }
 
-
-    public void setOffering(String offering)
-    {
-        this.offering = offering;
-    }
-
-
-    public List<IObservation> getObservations()
-    {
-        return observations;
-    }    
 }

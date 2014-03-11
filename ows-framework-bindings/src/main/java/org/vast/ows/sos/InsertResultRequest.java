@@ -25,6 +25,7 @@
 
 package org.vast.ows.sos;
 
+import org.vast.cdm.common.DataSource;
 import org.vast.ows.OWSRequest;
 import org.vast.sweCommon.SWEData;
 
@@ -46,6 +47,7 @@ import org.vast.sweCommon.SWEData;
 public class InsertResultRequest extends OWSRequest
 {
     protected String templateId;
+    protected DataSource resultDataSource;
     protected SWEData resultData;
     
 	
@@ -65,6 +67,18 @@ public class InsertResultRequest extends OWSRequest
     public void setTemplateId(String templateId)
     {
         this.templateId = templateId;
+    }
+
+
+    public DataSource getResultDataSource()
+    {
+        return resultDataSource;
+    }
+
+
+    public void setResultDataSource(DataSource resultDataSource)
+    {
+        this.resultDataSource = resultDataSource;
     }
 
 

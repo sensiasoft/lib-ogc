@@ -39,7 +39,7 @@ import org.vast.ows.OWSRequest;
  */
 public class DeleteSensorRequest extends OWSRequest
 {
-    protected String procedure;
+    protected String procedureId;
     
 	
 	public DeleteSensorRequest(String serviceType)
@@ -49,14 +49,14 @@ public class DeleteSensorRequest extends OWSRequest
 	}
 
 
-    public String getProcedure()
+    public String getProcedureId()
     {
-        return procedure;
+        return procedureId;
     }
 
 
-    public void setProcedure(String procedure)
+    public void setProcedureId(String procedureId)
     {
-        this.procedure = procedure;
+        this.procedureId = procedureId;
     }    
 }

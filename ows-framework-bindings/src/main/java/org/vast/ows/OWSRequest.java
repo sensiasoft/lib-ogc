@@ -95,10 +95,7 @@ public class OWSRequest
 	
 	public String getGetServer()
 	{
-		if (getServer == null)
-			return postServer;
-		else
-			return getServer;
+		return getServer;
 	}
 
 
@@ -110,10 +107,7 @@ public class OWSRequest
 
 	public String getPostServer()
 	{
-		if (postServer == null)
-			return getServer;
-		else	
-			return postServer;
+		return postServer;
 	}
 
 
@@ -204,23 +198,5 @@ public class OWSRequest
 	public void setHttpResponse(HttpServletResponse httpResponse)
 	{
 		this.httpResponse = httpResponse;
-	}
-	
-	
-	/**
-	 * @deprecated
-	 **/
-	public HttpServletResponse getResponse()
-	{
-		return httpResponse;
-	}
-
-
-	/**
-	 * @deprecated
-	 **/
-	public void setResponse(HttpServletResponse response)
-	{
-		this.httpResponse = response;
 	}
 }

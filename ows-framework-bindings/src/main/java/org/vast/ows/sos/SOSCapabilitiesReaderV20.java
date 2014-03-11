@@ -138,7 +138,8 @@ public class SOSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
             	
             	// observed area
             	Element envElt = dom.getElement(offeringElt, "observedArea/Envelope");
-            	offering.getObservedAreas().add(gmlEnvReader.readEnvelope(dom, envElt));
+            	if (envElt != null)
+            	    offering.getObservedAreas().add(gmlEnvReader.readEnvelope(dom, envElt));
             	
             	// phenomenon time
             	Element phenTimeElt = dom.getElement(offeringElt, "phenomenonTime/TimePeriod");

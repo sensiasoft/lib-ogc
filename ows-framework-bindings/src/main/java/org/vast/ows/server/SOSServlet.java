@@ -30,6 +30,7 @@ import org.vast.ows.OWSUtils;
 import org.vast.ows.sos.GetObservationRequest;
 import org.vast.ows.sos.GetResultRequest;
 import org.vast.ows.sos.SOSException;
+import org.vast.ows.sos.SOSUtils;
 import org.vast.ows.swe.DescribeSensorRequest;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
@@ -415,5 +416,12 @@ public abstract class SOSServlet extends OWSServlet
 	public void removeDataSetHandler(String dataSetID)
 	{
 		dataSetHandlers.remove(dataSetID);
+	}
+	
+	
+	@Override
+	protected String getServiceType()
+	{
+	    return SOSUtils.SOS;
 	}
 }

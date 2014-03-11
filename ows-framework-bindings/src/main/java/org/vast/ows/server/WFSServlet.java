@@ -59,4 +59,11 @@ public abstract class WFSServlet extends OWSServlet
 
 
 	public abstract void processQuery(GetFeatureRequest request) throws OWSException;
+	
+	
+	@Override
+    protected String getServiceType()
+    {
+        return "WFS";
+    }
 }

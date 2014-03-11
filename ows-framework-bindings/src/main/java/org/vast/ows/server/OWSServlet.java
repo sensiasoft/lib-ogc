@@ -42,6 +42,7 @@ import org.apache.commons.logging.LogFactory;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
+import org.vast.ows.OWSResponse;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.util.PostRequestFilter;
 import org.vast.util.WriterException;
@@ -219,7 +220,8 @@ public abstract class OWSServlet extends HttpServlet
             try
             {
                 resp.setContentType(XML_MIME_TYPE);
-                owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), request.getService(), request.getVersion(), e);
+                String version = (request != null) ? request.getVersion() : getDefaultVersion();
+                owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), getServiceType(), version, e);
                 log.debug(e.getMessage(), e);
             }
             catch (IOException e1)
@@ -254,4 +256,22 @@ public abstract class OWSServlet extends HttpServlet
             }
         }
     }
+    
+    
+    protected void sendResponse(OWSRequest request, OWSResponse resp) throws OWSException, IOException
+    {
+        // write response to response stream
+        OutputStream os = new BufferedOutputStream(request.getResponseStream());
+        owsUtils.writeXMLResponse(os, resp, request.getVersion());
+        os.flush();
+    }
+    
+    
+    protected String getDefaultVersion()
+    {
+        return "1.0";
+    }
+    
+    
+    protected abstract String getServiceType();
 }

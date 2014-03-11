@@ -28,6 +28,7 @@ package org.vast.ows.sos;
 import java.util.Map;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.vast.ogc.om.IObservation;
 import org.vast.ogc.om.ObservationReaderV20;
 import org.vast.ows.*;
@@ -83,9 +84,13 @@ public class InsertObservationReaderV20 extends SWERequestReader<InsertObservati
         // observation
         try
         {
-            Element obsElt = dom.getElement(requestElt, "observation/*");
-            IObservation obs = reader.read(dom, obsElt);
-            request.setObservation(obs);
+            NodeList obsElts = dom.getElements(requestElt, "observation/*");
+            for (int i=0; i<obsElts.getLength(); i++)
+            {
+                Element obsElt = (Element)obsElts.item(i);
+                IObservation obs = reader.read(dom, obsElt);
+                request.getObservations().add(obs);
+            }
         }
         catch (Exception e)
         {
@@ -112,7 +117,7 @@ public class InsertObservationReaderV20 extends SWERequestReader<InsertObservati
             report.add(new OWSException(OWSException.missing_param_code, "offering"));
         
         // need observation
-        if (request.getObservation() == null)
+        if (request.getObservations() == null || request.getObservations().isEmpty())
             report.add(new OWSException(OWSException.missing_param_code, "observation"));
         
         report.process();

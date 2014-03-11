@@ -76,6 +76,28 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
     public InsertResultRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
     {
         throw new SOSException(noKVP + "SOS 2.0 InsertResult");
+        
+        /*OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
+        InsertResultRequest request = new InsertResultRequest();
+        readCommonQueryArguments(queryParameters, request);
+        
+        // parse other params
+        Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
+        while (it.hasNext())
+        {
+            Entry<String, String> item = it.next();
+            String argName = item.getKey();
+            String argValue = item.getValue();
+            
+            // template argument
+            if (argName.equalsIgnoreCase("template"))
+                request.setTemplateId(argValue);
+        }
+        
+        // result values are sent
+        
+        
+        return request;*/
     }
     
     
@@ -84,9 +106,6 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		InsertResultRequest request = new InsertResultRequest();
-		
-		if (resultStructure == null || resultEncoding == null)
-		    throw new RuntimeException("Result structure and/or encoding are not properly set");
 		
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
@@ -98,15 +117,19 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
         // result values
         try
         {
-            SWEData sweData = new SWEData();
-            sweData.setElementType(resultStructure);
-            sweData.setEncoding(resultEncoding);
-            
             Element valuesElt = dom.getElement(requestElt, "resultValues");
-            DataSourceDOM domSrc = new DataSourceDOM(dom, valuesElt);
-            sweData.parseData(domSrc);
+            DataSourceDOM domSrc = new DataSourceDOM(dom, valuesElt);            
             
-            request.setResultData(sweData);            
+            if (resultStructure != null && resultEncoding != null)
+            {
+                SWEData sweData = new SWEData();
+                sweData.setElementType(resultStructure);
+                sweData.setEncoding(resultEncoding);
+                sweData.parseData(domSrc);
+                request.setResultData(sweData);
+            }
+            else
+                request.setResultDataSource(domSrc);
         }
         catch (IOException e)
         {
@@ -133,7 +156,7 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
             report.add(new OWSException(OWSException.missing_param_code, "template"));
         
         // need result values
-        if (request.getResultData() == null || request.getResultData().getComponentCount() == 0)
+        if (request.getResultData() == null && request.getResultDataSource() == null)
             report.add(new OWSException(OWSException.missing_param_code, "resultValues"));
         
         report.process();

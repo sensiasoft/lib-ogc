@@ -47,7 +47,9 @@ import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.server.OWSServlet;
 import org.vast.ows.server.SOSDataFilter;
+import org.vast.ows.swe.DeleteSensorRequest;
 import org.vast.ows.swe.DescribeSensorRequest;
+import org.vast.ows.swe.UpdateSensorRequest;
 import org.vast.sweCommon.SWEFactory;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
@@ -85,16 +87,33 @@ public abstract class SOSServlet extends OWSServlet
 	@Override
     public void handleRequest(OWSRequest request) throws Exception
     {
+	    // core operations
 	    if (request instanceof GetCapabilitiesRequest)
             handleRequest((GetCapabilitiesRequest)request);
         else if (request instanceof DescribeSensorRequest)
             handleRequest((DescribeSensorRequest)request);
-        else if (request instanceof GetObservationRequest)
+	    else if (request instanceof GetObservationRequest)
             handleRequest((GetObservationRequest)request);
+	    
+	    // result retrieval
         else if (request instanceof GetResultRequest)
             handleRequest((GetResultRequest)request);
         else if (request instanceof GetResultTemplateRequest)
             handleRequest((GetResultTemplateRequest)request);
+	    
+	    // transactional methods
+        else if (request instanceof InsertSensorRequest)
+            handleRequest((InsertSensorRequest)request);
+        else if (request instanceof UpdateSensorRequest)
+            handleRequest((UpdateSensorRequest)request);
+        else if (request instanceof DeleteSensorRequest)
+            handleRequest((DeleteSensorRequest)request);
+        else if (request instanceof InsertObservationRequest)
+            handleRequest((InsertObservationRequest)request);
+        else if (request instanceof InsertResultRequest)
+            handleRequest((InsertResultRequest)request);
+        else if (request instanceof InsertResultTemplateRequest)
+            handleRequest((InsertResultTemplateRequest)request);
     }
 
 
@@ -143,15 +162,11 @@ public abstract class SOSServlet extends OWSServlet
     	    SOSDataFilter filter = new SOSDataFilter(request.getObservables().get(0));
     	    dataProvider = getDataProvider(request.getOffering(), filter);
             
-            // build and 
+            // build and send response 
     	    GetResultTemplateResponse resp = new GetResultTemplateResponse();
     	    resp.setResultStructure(dataProvider.getResultStructure());
     	    resp.setResultEncoding(dataProvider.getDefaultResultEncoding());
-    
-    	    // write response to response stream
-    	    OutputStream os = new BufferedOutputStream(request.getResponseStream());
-    	    owsUtils.writeXMLResponse(os, resp, request.getVersion());
-    	    os.flush();
+    	    sendResponse(request, resp);    	    
         }
         finally
         {
@@ -238,6 +253,10 @@ public abstract class SOSServlet extends OWSServlet
             if (request.getObservables().isEmpty())
             	throw new SOSException("An SOS request must contain at least one observable");
             
+            // set default format
+            if (request.getFormat() == null)
+                request.setFormat(GetObservationRequest.DEFAULT_FORMAT);
+            
             // check query parameters
             OWSExceptionReport report = new OWSExceptionReport();
             checkQueryObservables(request.getOffering(), request.getObservables(), report);
@@ -304,6 +323,42 @@ public abstract class SOSServlet extends OWSServlet
                 dataProvider.close();
         }
 	}
+	
+	
+	protected void handleRequest(InsertSensorRequest request) throws Exception
+    {
+	    throw new UnsupportedOperationException("InsertSensor operation is not supported on this server");
+    }
+	
+	
+	protected void handleRequest(UpdateSensorRequest request) throws Exception
+    {
+        throw new UnsupportedOperationException("UpdateSensor operation is not supported on this server");
+    }
+	
+	
+	protected void handleRequest(DeleteSensorRequest request) throws Exception
+    {
+        throw new UnsupportedOperationException("DeleteSensor operation is not supported on this server");
+    }
+	
+	
+	protected void handleRequest(InsertObservationRequest request) throws Exception
+    {
+	    throw new UnsupportedOperationException("InsertObservation operation is not supported on this server");
+    }
+	
+	
+	protected void handleRequest(InsertResultTemplateRequest request) throws Exception
+    {
+	    throw new UnsupportedOperationException("InsertResultTemplate operation is not supported on this server");
+    }
+	
+	
+	protected void handleRequest(InsertResultRequest request) throws Exception
+    {
+	    throw new UnsupportedOperationException("InsertResult operation is not supported on this server");
+    }
 	
 	
 	/**
@@ -517,10 +572,10 @@ public abstract class SOSServlet extends OWSServlet
 	
 	protected ISOSDataProvider getDataProvider(String offering, SOSDataFilter filter) throws Exception
 	{
-	    ISOSDataProviderFactory dataProvider = dataProviders.get(offering);
-        if (dataProvider == null)
-            throw new IllegalStateException("No valid data provider found for offering " + offering);     
-        return dataProvider.getNewProvider(filter);
+	    ISOSDataProviderFactory factory = dataProviders.get(offering);
+        if (factory == null)
+            throw new IllegalStateException("No valid data provider factory found for offering " + offering);
+        return factory.getNewProvider(filter);
 	}
 
 	
@@ -571,4 +626,11 @@ public abstract class SOSServlet extends OWSServlet
 	{
 	    dataProviders.remove(offeringID);
 	}
+	
+	
+    @Override
+    protected String getServiceType()
+    {
+        return SOSUtils.SOS;
+    }
 }

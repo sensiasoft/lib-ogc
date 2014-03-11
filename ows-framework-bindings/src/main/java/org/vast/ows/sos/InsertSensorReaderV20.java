@@ -181,7 +181,7 @@ public class InsertSensorReaderV20 extends SWERequestReader<InsertSensorRequest>
         
         // procedure
         if (request.getProcedureDescription() == null)
-            report.add(new OWSException(OWSException.missing_param_code, "procedure"));
+            report.add(new OWSException(OWSException.missing_param_code, "procedureDescription"));
         
         report.process();
     }

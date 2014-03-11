@@ -1,4 +1,4 @@
-<sos:InsertObservation xmlns:sos="http://www.opengis.net/sos/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:swes="http://www.opengis.net/swes/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:ogc="http://www.opengis.net/ogc" xmlns:om="http://www.opengis.net/om/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" service="SOS" version="2.0.0">
+<sos:InsertObservation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sos="http://www.opengis.net/sos/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:swes="http://www.opengis.net/swes/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:ogc="http://www.opengis.net/ogc" xmlns:om="http://www.opengis.net/om/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" service="SOS" version="2.0.0">
 	<!--identifier of offering for which the observation shall be inserted-->
 	<sos:offering>http://www.my_namespace.org/water_gage_2_observations</sos:offering>
 	<!--observation which shall be inserted-->
@@ -32,7 +32,7 @@
 			<om:observedProperty xlink:href="http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight"/>
 			<!-- a notional WFS call identifying the object regarding which the observation was made -->
 			<om:featureOfInterest xlink:href="http://wfs.example.org?request=getFeature&amp;featureid=river1"/>
-			<om:result>
+			<om:result xsi:type="swe:QuantityPropertyType">
                <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight">
                   <swe:uom code="m"/>
                   <swe:value>6.3</swe:value>

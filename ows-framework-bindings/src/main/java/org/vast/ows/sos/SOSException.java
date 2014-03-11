@@ -60,6 +60,12 @@ public class SOSException extends OWSException
 	}
 	
 	
+	public SOSException(String code, String locator)
+    {
+        super(code, locator);
+    }
+	
+	
 	public SOSException(String code, String locator, String badValue, String message)
 	{
 		super(code, locator, badValue, message);

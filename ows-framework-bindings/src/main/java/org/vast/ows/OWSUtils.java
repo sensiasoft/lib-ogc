@@ -529,13 +529,17 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         try
         {
             DOMHelper dom = new DOMHelper(new BufferedInputStream(conn.getInputStream()), false);
-            OGCExceptionReader.checkException(dom);
+            OWSExceptionReader.checkException(dom, dom.getBaseElement());
             return (ResponseType)readXMLResponse(dom, dom.getBaseElement(), request.getService(), dom.getBaseElement().getLocalName(), request.getVersion());
+        }
+        catch (OWSException e)
+        {
+            throw e;
         }
         catch (Exception e)
         {
-            throw new OWSException("Error while parsing response", e);
-        }     
+            throw new RuntimeException(e);
+        }
     }
     
     

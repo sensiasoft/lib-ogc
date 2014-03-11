@@ -125,7 +125,7 @@ public abstract class WPSServlet extends OWSServlet
             
             // setup response stream
             resp.setContentType("text/xml");
-            query.setResponse(resp);
+            query.setHttpResponse(resp);
 			query.setGetServer(requestURL);
 			
 			if (query instanceof GetCapabilitiesRequest)
@@ -195,7 +195,7 @@ public abstract class WPSServlet extends OWSServlet
 				
 				// setup response stream
 				resp.setContentType("text/xml");
-				query.setResponse(resp);
+				query.setHttpResponse(resp);
 				query.setPostServer(requestURL);
 				
 				if (query instanceof GetCapabilitiesRequest)
@@ -254,7 +254,7 @@ public abstract class WPSServlet extends OWSServlet
 
 				// setup response stream
 				resp.setContentType(req.getContentType());
-				query.setResponse(resp);
+				query.setHttpResponse(resp);
 				query.setPostServer(requestURL);
 			
 				if (query instanceof GetCapabilitiesRequest)
@@ -326,4 +326,10 @@ public abstract class WPSServlet extends OWSServlet
 		}
 	}
 	
+	
+	@Override
+    protected String getServiceType()
+    {
+        return "WPS";
+    }	
 }

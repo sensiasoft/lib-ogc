@@ -28,6 +28,7 @@ package org.vast.ows.sos;
 import java.io.IOException;
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.om.IObservation;
 import org.vast.ogc.om.ObservationWriterV20;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
@@ -53,7 +54,7 @@ import org.w3c.dom.Element;
  */
 public class InsertObservationWriterV20 extends SWERequestWriter<InsertObservationRequest>
 {
-    private ObservationWriterV20 writer = new ObservationWriterV20();
+    private ObservationWriterV20 obsWriter = new ObservationWriterV20();
     
     
 	public InsertObservationWriterV20()
@@ -76,9 +77,12 @@ public class InsertObservationWriterV20 extends SWERequestWriter<InsertObservati
 		// observation
 		try
         {
-		    Element propElt = dom.addElement(rootElt, "+sos:observation");
-		    Element obsElt = writer.write(dom, request.getObservation());
-		    propElt.appendChild(obsElt);
+		    for (IObservation obs: request.getObservations())
+		    {
+    		    Element propElt = dom.addElement(rootElt, "+sos:observation");
+    		    Element obsElt = obsWriter.write(dom, obs);
+    		    propElt.appendChild(obsElt);
+		    }
         }
         catch (IOException e)
         {
