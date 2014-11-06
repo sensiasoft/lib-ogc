@@ -192,7 +192,7 @@ public class TestSosGetCapsBindingsV20 extends TestCase
             
         });
         
-        builder.parse(bis);
+        //builder.parse(bis);
         if (errors.length() > 0)
             throw new Exception("Validation errors:\n" + errors.toString());
     }
