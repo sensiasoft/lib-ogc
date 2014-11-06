@@ -39,7 +39,7 @@ import org.vast.xml.DOMHelper;
 import org.xml.sax.InputSource;
 
 
-public class OWSTestCase extends XMLTestCase
+public abstract class OWSTestCase extends XMLTestCase
 {
 
     public void setUp() throws Exception
