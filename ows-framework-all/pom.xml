@@ -5,7 +5,7 @@
   <version>1.0</version>
   <packaging>pom</packaging>
   <name>OWS Framework Library</name>
-  <url>http://code.google.com/p/ows-service-framework/</url>
+  <url>https://github.com/sensiasoft/lib-ows/tree/master/ows-framework-all</url>
   <description>The OWS Framework library provides XML-Java bindings for several OGC web services. These bindings are designed to be easy to use on both server and client side.</description>
   <licenses>
     <license>
@@ -26,14 +26,12 @@
     </developer>
   </developers>
   <scm>
-     <url>http://code.google.com/p/ows-service-framework/source/browse/</url>
-     <connection>scm:svn:http://ows-service-framework.googlecode.com/svn/</connection>
-     <developerConnection>scm:svn:https://ows-service-framework.googlecode.com/svn/</developerConnection>
-     <tag>HEAD</tag>
+     <url>https://github.com/sensiasoft/lib-ows/tree/master/ows-framework-all</url>
+     <tag>master</tag>
   </scm>
   <issueManagement>
-     <url>http://code.google.com/p/ows-service-framework/issues/list</url>
-     <system>Google Code</system>
+     <url>https://github.com/sensiasoft/lib-ows/issues</url>
+     <system>GitHub</system>
   </issueManagement>
   <modules>
      <module>../ows-framework-bindings</module>
