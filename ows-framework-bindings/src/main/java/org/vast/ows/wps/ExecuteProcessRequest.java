@@ -21,11 +21,9 @@
 package org.vast.ows.wps;
 
 import javax.xml.soap.AttachmentPart;
-
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
+import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ows.OWSRequest;
-
 
 
 /**
@@ -45,8 +43,7 @@ import org.vast.ows.OWSRequest;
 
 public class ExecuteProcessRequest extends OWSRequest
 {
-
-	protected String offering, requestFormat;
+    protected String offering, requestFormat;
     protected DataComponent inputDataComponent;
 	protected DataEncoding inputDataEncoding;
 	protected AttachmentPart attachmentPart;

@@ -27,18 +27,18 @@ package org.vast.ows.sos;
 
 import java.util.List;
 import java.util.Map;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataEncoding;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
 import org.vast.ogc.om.IObservation;
 import org.vast.ogc.om.ObservationReaderV20;
 import org.vast.ows.*;
 import org.vast.ows.swe.SWERequestReader;
 import org.vast.sweCommon.SweComponentReaderV20;
 import org.vast.sweCommon.SweEncodingReaderV20;
-import org.vast.sweCommon.SweValidator;
+import org.vast.sweCommon.SWEValidator;
 
 
 /**
@@ -81,7 +81,7 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		InsertResultTemplateRequest request = new InsertResultTemplateRequest();
-		SweValidator validator = new SweValidator();
+		SWEValidator validator = new SWEValidator();
 		
 		// do common stuffs like version, request name and service type
 		readCommonXML(dom, requestElt, request);
@@ -108,8 +108,8 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         DataComponent structure = null;
         try
         {
-            Element resultStructElt = dom.getElement(templateElt, "resultStructure");
-            structure = componentReader.readComponentProperty(dom, resultStructElt);
+            Element resultStructElt = dom.getElement(templateElt, "resultStructure/*");
+            structure = componentReader.read(dom, resultStructElt);
             List<Exception> errors = validator.validateComponent(structure, null);
             for (Exception e: errors)
                 report.add(new OWSException(OWSException.invalid_param_code, "resultStructure", "Invalid structure definition: " + e.getMessage()));
@@ -124,7 +124,7 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         try
         {
             Element resultEncodingElt = dom.getElement(templateElt, "resultEncoding/*");
-            DataEncoding encoding = encodingReader.readEncoding(dom, resultEncodingElt);
+            DataEncoding encoding = encodingReader.read(dom, resultEncodingElt);
             List<Exception> errors = validator.validateEncoding(encoding, structure, null);
             for (Exception e: errors)
                 report.add(new OWSException(OWSException.invalid_param_code, "resultEncoding", "Invalid encoding definition: " + e.getMessage()));

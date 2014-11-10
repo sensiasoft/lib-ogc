@@ -24,9 +24,9 @@
 package org.vast.ows.sos;
 
 import java.io.IOException;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
+import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.om.IObservation;
 import org.vast.sensorML.SMLProcess;
 
@@ -61,8 +61,8 @@ public interface ISOSDataConsumer
     
     /**
      * Requests consumer to process a list of new observations
-     * @param obs
-     * @throws IOException
+     * @param observations 
+     * @throws Exception
      */
     public void newObservation(IObservation... observations) throws Exception;
     
@@ -80,7 +80,9 @@ public interface ISOSDataConsumer
     
     /**
      * Requests consumer to process a list of new result records
-     * @param obs
+     * @param templateID 
+     * @param datablocks 
+     * @throws Exception 
      * @throws IOException
      */
     public void newResultRecord(String templateID, DataBlock... datablocks) throws Exception;

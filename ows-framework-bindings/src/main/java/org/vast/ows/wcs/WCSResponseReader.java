@@ -23,8 +23,9 @@ package org.vast.ows.wcs;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import net.opengis.swe.v20.DataArray;
 import org.vast.cdm.common.DataHandler;
-import org.vast.data.DataArray;
+import org.vast.data.DataArrayImpl;
 import org.vast.ogc.OGCException;
 import org.vast.ogc.OGCExceptionReader;
 import org.vast.sweCommon.SWECommonUtils;
@@ -56,7 +57,7 @@ import org.w3c.dom.NodeList;
 public class WCSResponseReader extends SWEReader
 {
     protected SWEFilter streamFilter;
-    protected DataArray coverageArray;
+    protected DataArrayImpl coverageArray;
     
     
     @Override
@@ -87,7 +88,7 @@ public class WCSResponseReader extends SWEReader
             Element countElt = dom.getElement(resultArrayElt, "elementCount/Count");
             String countValue = dom.getElementValue(countElt, "value");
             int arraySize = Integer.parseInt(countValue);
-            coverageArray = new DataArray(arraySize);
+            coverageArray = new DataArrayImpl(arraySize);
                         
             // read array component structure and encoding
             Element eltTypeElt = dom.getElement(resultArrayElt, "elementType");
@@ -95,7 +96,7 @@ public class WCSResponseReader extends SWEReader
             this.dataComponents = utils.readComponentProperty(dom, eltTypeElt);
             this.dataEncoding = utils.readEncodingProperty(dom, encElt);
             this.dataParser = createDataParser();
-            coverageArray.addComponent(this.dataComponents);
+            coverageArray.addComponent(dataComponents.getName(), dataComponents);
             this.dataParser.setParentArray(coverageArray);
             
             // read external link if present

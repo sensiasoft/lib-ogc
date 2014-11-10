@@ -23,7 +23,6 @@ package org.vast.ows.sps;
 
 import java.io.IOException;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.sps.StatusReport.RequestStatus;
 import org.vast.ows.sps.StatusReport.TaskStatus;
@@ -64,8 +63,7 @@ public class SPSCommonWriterV20
 	 * @param dom
 	 * @param parentElt
 	 * @param paramsData
-	 * @param paramStructure
-	 * @throws CDMException
+	 * @throws XMLWriterException
 	 */
 	public void writeSWEData(DOMHelper dom, Element parentElt, SWEData paramsData) throws XMLWriterException
 	{
@@ -76,7 +74,7 @@ public class SPSCommonWriterV20
         {
             // write encoding
             Element encodingPropertyElt = dom.addElement(paramDataElt, "sps:encoding");
-            Element encodingElt = encodingWriter.writeEncoding(dom, paramsData.getEncoding());
+            Element encodingElt = encodingWriter.write(dom, paramsData.getEncoding());
             encodingPropertyElt.appendChild(encodingElt);
             
             // write values
@@ -253,8 +251,8 @@ public class SPSCommonWriterV20
 	 * Writes any report to the DOM
 	 * @param dom
 	 * @param report
-	 * @return
-	 * @throws CDMException
+	 * @return new DOM element
+	 * @throws XMLWriterException
 	 */
 	public Element writeReport(DOMHelper dom, StatusReport report) throws XMLWriterException
 	{
@@ -271,8 +269,8 @@ public class SPSCommonWriterV20
 	 * Writes a Status Report as a DOM element according to SPS v2.0 schema
 	 * @param dom
 	 * @param report
-	 * @return
-	 * @throws OWSException
+	 * @return new DOM element
+	 * @throws XMLWriterException
 	 */
 	public Element writeStatusReport(DOMHelper dom, StatusReport report) throws XMLWriterException
 	{
@@ -286,8 +284,8 @@ public class SPSCommonWriterV20
 	 * Writes a Feasibility Report as a DOM element according to SPS v2.0 schema
 	 * @param dom
 	 * @param report
-	 * @return
-	 * @throws OWSException
+	 * @return new DOM element
+	 * @throws XMLWriterException
 	 */
 	public Element writeFeasibilityReport(DOMHelper dom, FeasibilityReport report) throws XMLWriterException
 	{
@@ -305,8 +303,8 @@ public class SPSCommonWriterV20
 	 * Writes a Reservation report as a DOM element according to SPS v2.0 schema
 	 * @param dom
 	 * @param report
-	 * @return
-	 * @throws OWSException
+	 * @return new DOM element
+	 * @throws XMLWriterException
 	 */
 	public Element writeReservationReport(DOMHelper dom, ReservationReport report) throws XMLWriterException
 	{

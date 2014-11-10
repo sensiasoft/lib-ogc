@@ -22,7 +22,7 @@
 
 package org.vast.ows.sps;
 
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseReader;
 import org.vast.sweCommon.SweComponentReaderV20;
@@ -59,8 +59,10 @@ public class DescribeTaskingResponseReaderV20 extends SWEResponseReader<Describe
 			Element paramsElt;
 			
 			// common tasking parameters
-			paramsElt = dom.getElement(responseElt, "taskingParameters");
-			DataComponent taskingParams = componentReader.readComponentProperty(dom, paramsElt);
+			paramsElt = dom.getElement(responseElt, "taskingParameters/*");
+			DataComponent taskingParams = componentReader.read(dom, paramsElt);
+			String name = dom.getAttributeValue(responseElt, "taskingParameters/@name");
+			taskingParams.setName(name);
 			response.setTaskingParameters(taskingParams);
 			
 			// read extensions

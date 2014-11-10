@@ -98,7 +98,7 @@ public class InsertResultTemplateWriterV20 extends SWERequestWriter<InsertResult
         try
         {
             Element structurePropertyElt = dom.addElement(templateElt, "sos:resultStructure");        
-            Element structureElt = componentWriter.writeComponent(dom, request.getResultStructure());
+            Element structureElt = componentWriter.write(dom, request.getResultStructure());
             structurePropertyElt.appendChild(structureElt);
         }
         catch (XMLWriterException e)
@@ -110,7 +110,7 @@ public class InsertResultTemplateWriterV20 extends SWERequestWriter<InsertResult
         try
         {
             Element encodingPropertyElt = dom.addElement(templateElt, "sos:resultEncoding");        
-            Element encodingElt = encodingWriter.writeEncoding(dom, request.getResultEncoding());
+            Element encodingElt = encodingWriter.write(dom, request.getResultEncoding());
             encodingPropertyElt.appendChild(encodingElt); 
     	}
         catch (XMLWriterException e)

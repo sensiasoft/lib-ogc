@@ -28,7 +28,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.xml.soap.*;
-
 import org.vast.cdm.common.CDMException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;

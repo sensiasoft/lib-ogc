@@ -21,10 +21,10 @@
 package org.vast.ows.wps;
 
 import java.io.InputStream;
-
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
+import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ows.OWSResponse;
+
 
 /**
  * <p><b>Title:</b>
@@ -42,7 +42,6 @@ import org.vast.ows.OWSResponse;
  */
 public class ExecuteProcessResponse extends OWSResponse
 {
-	
 	protected DataEncoding dataEncoding;
 	protected DataComponent dataComponent;
 	protected InputStream dataStream;

@@ -24,9 +24,9 @@ package org.vast.ows.wcs;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.opengis.swe.v20.DataType;
 import org.vast.ows.OWSIdentification;
 import org.vast.unit.Unit;
-import org.vast.cdm.common.DataType;
 
 
 /**

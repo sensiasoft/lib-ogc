@@ -63,7 +63,7 @@ public class SPSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
 
 
     @Override
-	protected void readContents(DOMHelper dom, Element capsElt, @SuppressWarnings("rawtypes") OWSServiceCapabilities serviceCaps) throws OWSException
+	protected void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws OWSException
 	{
 		//  Load List of SensorOffering elements
 		NodeList offerings = dom.getElements(capsElt, "contents/SPSContents/offering/SensorOffering");

@@ -23,11 +23,9 @@
 package org.vast.ows.sps;
 
 import java.util.ArrayList;
-import org.vast.cdm.common.DataComponent;
-import org.vast.data.AbstractDataComponent;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.data.DataIterator;
 import org.vast.ows.OWSResponse;
-import org.vast.sweCommon.SweConstants;
 
 
 /**
@@ -82,8 +80,7 @@ public class DescribeTaskingResponse extends OWSResponse
 		while (it.hasNext())
 		{
 			DataComponent nextComp = it.next();
-			Boolean updatable = (Boolean)nextComp.getProperty(SweConstants.UPDATABLE);
-			if (updatable != null && updatable == false)
+			if (nextComp.isSetUpdatable() && !nextComp.getUpdatable())
 			{
 				componentsToDelete.add(nextComp);
 				if (nextComp.getComponentCount() > 0)
@@ -94,7 +91,7 @@ public class DescribeTaskingResponse extends OWSResponse
 		// remove non-unupdatable parameters from tree
 		for (DataComponent component: componentsToDelete)
 		{
-			AbstractDataComponent parent = ((AbstractDataComponent)component.getParent());
+			DataComponent parent = ((DataComponent)component.getParent());
 			
 			if (parent == null)
 				return null;

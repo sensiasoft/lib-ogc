@@ -23,8 +23,8 @@ package org.vast.ows.sps;
 
 import java.io.IOException;
 import java.util.Map;
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
+import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ows.OWSException;
 import org.vast.ows.sps.StatusReport.RequestStatus;
 import org.vast.ows.sps.StatusReport.TaskStatus;
@@ -61,11 +61,12 @@ public class SPSCommonReaderV20
 		
 	
 	/**
-	 * USed to read SWE Data stream such as inside taskingParameters or reportParameters
+	 * Read SWE Data stream such as inside taskingParameters or reportParameters
 	 * @param dom
 	 * @param paramsElt
 	 * @param paramStructure
-	 * @return
+	 * @return decoded data
+	 * @throws XMLReaderException 
 	 */
 	public SWEData readSWEData(DOMHelper dom, Element paramsElt, DataComponent paramStructure) throws XMLReaderException
 	{
@@ -74,8 +75,8 @@ public class SPSCommonReaderV20
 	    try
         {
     	    // read encoding
-    		Element encodingElt = dom.getElement(paramsElt, "encoding");
-    		DataEncoding dataEncoding = encodingReader.readEncodingProperty(dom, encodingElt);
+    		Element encodingElt = dom.getElement(paramsElt, "encoding/*");
+    		DataEncoding dataEncoding = encodingReader.read(dom, encodingElt);
     		
     		// prepare SWEData object
     		paramsData.setElementType(paramStructure.copy()); // important to copy here in case we parse two things using the same params !!
@@ -206,11 +207,10 @@ public class SPSCommonReaderV20
 	
 	
 	/**
-	 * Reads a StatusReport using the provided structure for report parameters
+	 * Reads a status report using the provided structure for report parameters
 	 * @param dom
 	 * @param reportElt
-	 * @param paramStructure
-	 * @return
+	 * @return status report
 	 * @throws OWSException
 	 */
 	public StatusReport readStatusReport(DOMHelper dom, Element reportElt) throws OWSException
@@ -222,11 +222,10 @@ public class SPSCommonReaderV20
 	
 	
 	/**
-	 * Reads a ReservationReport using the provided structure for report parameters
+	 * Reads a reservation report using the provided structure for report parameters
 	 * @param dom
 	 * @param reportElt
-	 * @param paramStructure
-	 * @return
+	 * @return reservation report
 	 * @throws OWSException
 	 */
 	public ReservationReport readReservationReport(DOMHelper dom, Element reportElt) throws OWSException
@@ -254,11 +253,10 @@ public class SPSCommonReaderV20
 	
 	
 	/**
-	 * Reads a FeasibilityReport using the provided structure for study parameters
+	 * Reads a feasibility report using the provided structure for study parameters
 	 * @param dom
 	 * @param reportElt
-	 * @param paramStructure
-	 * @return
+	 * @return feasibility report
 	 * @throws OWSException
 	 */
 	public FeasibilityReport readFeasibilityReport(DOMHelper dom, Element reportElt) throws OWSException

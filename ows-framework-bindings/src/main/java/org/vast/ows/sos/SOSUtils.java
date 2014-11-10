@@ -26,8 +26,8 @@
 
 package org.vast.ows.sos;
 
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
+import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;

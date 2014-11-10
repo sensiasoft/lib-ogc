@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
-import org.vast.cdm.common.CDMException;
+import net.opengis.swe.v20.ValidationException;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSRequest;
@@ -86,7 +86,7 @@ public abstract class TaskingRequest extends OWSRequest implements Parameterized
 	
 	public void validate() throws OWSException
 	{
-		List<CDMException> errorList = new ArrayList<CDMException>();
+		List<ValidationException> errorList = new ArrayList<ValidationException>();
 		taskingParameters.validateData(errorList);
 		if (errorList.size() == 0)
 			return;

@@ -20,7 +20,7 @@
 
 package org.vast.ows.sps;
 
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseWriter;

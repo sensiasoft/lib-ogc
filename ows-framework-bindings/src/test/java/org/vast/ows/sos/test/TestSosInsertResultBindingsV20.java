@@ -28,8 +28,8 @@ package org.vast.ows.sos.test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import org.vast.cdm.common.AsciiEncoding;
-import org.vast.data.DataGroup;
+import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.TextEncoding;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.sos.InsertResultRequest;
 import org.vast.ows.sos.InsertResultTemplateRequest;
@@ -92,7 +92,7 @@ public class TestSosInsertResultBindingsV20 extends OWSTestCase
         assertEquals("2.0.0", request.getVersion());
         assertEquals("InsertResult", request.getOperation());
         assertEquals("http://my.organization.org/sos/resultTemplate1", request.getTemplateId());
-        assertEquals(3, request.getResultData().getElementCount());
+        assertEquals(3, request.getResultData().getNumElements());
         assertEquals(2, request.getResultData().getElementType().getComponentCount());        
     }
     
@@ -110,8 +110,8 @@ public class TestSosInsertResultBindingsV20 extends OWSTestCase
         assertEquals("2.0.0", request.getVersion());
         assertEquals("InsertResultTemplate", request.getOperation());
         assertEquals("http://www.my_namespace.org/water_gage_2_observations", request.getOffering());
-        assertEquals(DataGroup.class, request.getResultStructure().getClass());
-        assertEquals(AsciiEncoding.class, request.getResultEncoding().getClass());
+        assertTrue(DataRecord.class.isAssignableFrom(request.getResultStructure().getClass()));
+        assertTrue(TextEncoding.class.isAssignableFrom(request.getResultEncoding().getClass()));
     }
     
     

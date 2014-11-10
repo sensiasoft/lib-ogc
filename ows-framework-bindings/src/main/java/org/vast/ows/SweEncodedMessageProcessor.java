@@ -22,8 +22,8 @@ Contributor(s):
 
 package org.vast.ows;
 
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataEncoding;
 
 
 /**

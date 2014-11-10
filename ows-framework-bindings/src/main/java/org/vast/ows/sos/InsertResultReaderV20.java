@@ -27,10 +27,10 @@ package org.vast.ows.sos;
 
 import java.io.IOException;
 import java.util.Map;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataEncoding;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
 import org.vast.ows.*;
 import org.vast.ows.swe.SWERequestReader;
 import org.vast.sweCommon.DataSourceDOM;

@@ -24,6 +24,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.BinaryEncoding;
+import net.opengis.swe.v20.TextEncoding;
+import net.opengis.swe.v20.XMLEncoding;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
@@ -105,14 +109,14 @@ public class ExecuteProcessRequestWriter extends AbstractRequestWriter<ExecutePr
 	public static String getContentType(ExecuteProcessRequest request) throws OWSException
 	{
 		// request format
-		String encodingType = request.getInputDataEncoding().getEncodingType().toString();
+	    DataEncoding encoding = request.getInputDataEncoding();
         String requestFormat = null;
         
-        if(encodingType.equalsIgnoreCase("ascii"))
+        if (encoding instanceof TextEncoding)
         	requestFormat = "text/plain"; 
-        else if(encodingType.equalsIgnoreCase("xml"))
+        else if (encoding instanceof XMLEncoding)
         	requestFormat = "text/xml";
-        else if(encodingType.equalsIgnoreCase("binary"))
+        else if (encoding instanceof BinaryEncoding)
         	requestFormat = "application/binary";
 		else
 			try {

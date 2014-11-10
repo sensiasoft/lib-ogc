@@ -25,8 +25,8 @@
 
 package org.vast.ows.sos;
 
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataEncoding;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseWriter;
@@ -82,11 +82,11 @@ public class GetResultTemplateResponseWriterV20 extends SWEResponseWriter<GetRes
 				throw new SOSException("Result structure must be provided");
 			
 			// result encoding
-            DataEncoding resultEncoding = response.getResultEncoding();
+			DataEncoding resultEncoding = response.getResultEncoding();
             if (resultEncoding != null)
             {
                 Element encPropElt = dom.addElement(rootElt, "sos:resultEncoding");
-                Element encElt = encodingWriter.writeEncoding(dom, resultEncoding);
+                Element encElt = encodingWriter.write(dom, resultEncoding);
                 encPropElt.appendChild(encElt);
             }
             else

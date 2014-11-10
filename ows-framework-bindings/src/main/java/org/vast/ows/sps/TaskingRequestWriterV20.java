@@ -36,6 +36,7 @@ import org.vast.xml.XMLWriterException;
 /**
 * <p><b>Title:</b><br/>
 * SPS Tasking Request Writer v2.0
+* @param <RequestType> Type of tasking request handled by the writer
 * </p>
 *
 * <p><b>Description:</b><br/>

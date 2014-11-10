@@ -20,9 +20,10 @@
 
 package org.vast.ows.wps;
 
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
+import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ows.OWSResponse;
+
 
 /**
  * <p><b>Title:</b>
@@ -40,7 +41,6 @@ import org.vast.ows.OWSResponse;
  */
 public class DescribeProcessResponse extends OWSResponse
 {
-	
 	protected DataEncoding outputDataEncoding;
 	protected DataComponent inputDataComponent;
 	protected DataEncoding inputDataEncoding;

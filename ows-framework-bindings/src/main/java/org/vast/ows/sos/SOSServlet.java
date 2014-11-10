@@ -36,7 +36,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.dom.DOMSource;
-import org.vast.cdm.common.DataBlock;
+import net.opengis.swe.v20.DataBlock;
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLTimeReader;

@@ -23,10 +23,9 @@
 
 package org.vast.ows.sos;
 
-import java.io.IOException;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
+import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.om.IObservation;
 
 
@@ -52,7 +51,7 @@ public interface ISOSDataProvider
      * Requests provider to generate the next observation from the
      * underlying data, given the current config and filter
      * @return observation instance
-     * @throws IOException
+     * @throws Exception
      */
     public IObservation getNextObservation() throws Exception;
     
@@ -60,8 +59,8 @@ public interface ISOSDataProvider
     /**
      * Requests provider to generate the next CDM record from the
      * underlying data, given the current config and filter
-     * @return
-     * @throws IOException
+     * @return data block
+     * @throws Exception
      */
     public DataBlock getNextResultRecord() throws Exception;
     
@@ -69,7 +68,8 @@ public interface ISOSDataProvider
     /**
      * Requests provider to provide the result structure corresponding
      * to the current config and filter
-     * @return
+     * @return data component
+     * @throws Exception 
      */
     public DataComponent getResultStructure() throws Exception;
     
@@ -77,7 +77,8 @@ public interface ISOSDataProvider
     /**
      * Requests provider to specify the preferred encoding for the
      * underlying data, given the current config and filter
-     * @return
+     * @return encoding instance
+     * @throws Exception 
      */
     public DataEncoding getDefaultResultEncoding() throws Exception;
     

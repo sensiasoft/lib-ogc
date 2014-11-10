@@ -22,9 +22,9 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
+import net.opengis.swe.v20.DataEncoding;
 import org.w3c.dom.Element;
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.SweEncodedMessageProcessor;
@@ -38,6 +38,7 @@ import org.vast.xml.DOMHelper;
 /**
 * <p><b>Title:</b><br/>
 * SPS Tasking Request Reader v2.0
+* @param <RequestType> Type of tasking request handled by the reader
 * </p>
 *
 * <p><b>Description:</b><br/>
