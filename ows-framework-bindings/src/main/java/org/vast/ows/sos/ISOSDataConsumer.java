@@ -24,11 +24,11 @@
 package org.vast.ows.sos;
 
 import java.io.IOException;
+import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.om.IObservation;
-import org.vast.sensorML.SMLProcess;
 
 
 /**
@@ -56,7 +56,7 @@ public interface ISOSDataConsumer
      * @param newSensorDescription
      * @throws Exception
      */
-    public void updateSensor(SMLProcess newSensorDescription) throws Exception;
+    public void updateSensor(AbstractProcess newSensorDescription) throws Exception;
     
     
     /**

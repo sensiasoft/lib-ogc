@@ -24,10 +24,10 @@ package org.vast.ows.swe;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.opengis.sensorml.v20.AbstractProcess;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ows.OWSRequest;
-import org.vast.sensorML.SMLProcess;
 import org.vast.sensorML.SMLUtils;
 
 
@@ -57,7 +57,7 @@ public class InsertSensorRequest extends OWSRequest
     }
     
     protected String procedureDescriptionFormat = DEFAULT_PROCEDURE_FORMAT;
-    protected SMLProcess procedureDescription;
+    protected AbstractProcess procedureDescription;
     protected List<String> observableProperties;
     protected List<FeatureRef> relatedFeatures;    
     
@@ -83,13 +83,13 @@ public class InsertSensorRequest extends OWSRequest
     }
 
 
-    public SMLProcess getProcedureDescription()
+    public AbstractProcess getProcedureDescription()
     {
         return procedureDescription;
     }
 
 
-    public void setProcedureDescription(SMLProcess procedureDescription)
+    public void setProcedureDescription(AbstractProcess procedureDescription)
     {
         this.procedureDescription = procedureDescription;
     }

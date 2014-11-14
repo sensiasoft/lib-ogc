@@ -26,6 +26,7 @@
 package org.vast.ows.sos;
 
 import java.util.Map;
+import net.opengis.sensorml.v20.AbstractProcess;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
@@ -35,11 +36,7 @@ import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.ows.*;
 import org.vast.ows.swe.SWERequestReader;
-import org.vast.sensorML.ProcessReader;
-import org.vast.sensorML.SMLProcess;
 import org.vast.sensorML.SMLUtils;
-import org.vast.sensorML.SystemReaderV1;
-import org.vast.sensorML.SystemReaderV20;
 
 
 /**
@@ -59,6 +56,8 @@ import org.vast.sensorML.SystemReaderV20;
  */
 public class InsertSensorReaderV20 extends SWERequestReader<InsertSensorRequest>
 {
+    SMLUtils smlUtils = new SMLUtils();
+    
     
     public InsertSensorReaderV20()
 	{       
@@ -91,20 +90,15 @@ public class InsertSensorReaderV20 extends SWERequestReader<InsertSensorRequest>
             report.process();
         }
         
-        // create reader depending on format
-        ProcessReader procedureReader;
-        if (val.startsWith((OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "1.0"))))
-            procedureReader = new SystemReaderV1();
-        else if (val.equals(OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0")))
-            procedureReader = new SystemReaderV20();
-        else
+        // check format is supported
+        if (!val.equals(OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0")))
             throw new OWSException(OWSException.invalid_param_code, "procedureDescription", "Unsupported format: " + val);
             
-        // procedure description
+        // read SensorML procedure description
         try
-        {
+        {            
             Element procedureElt = dom.getElement(requestElt, "procedureDescription/*");
-            SMLProcess process = procedureReader.read(dom, procedureElt);
+            AbstractProcess process = smlUtils.readProcess(dom, procedureElt);
             request.setProcedureDescription(process);
         }
         catch (XMLReaderException e)

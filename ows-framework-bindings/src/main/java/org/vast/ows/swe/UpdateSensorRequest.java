@@ -20,8 +20,8 @@
 
 package org.vast.ows.swe;
 
+import net.opengis.sensorml.v20.AbstractProcess;
 import org.vast.ows.OWSRequest;
-import org.vast.sensorML.system.SMLSystem;
 
 
 /**
@@ -42,7 +42,7 @@ public class UpdateSensorRequest extends OWSRequest
 {
     protected String procedureId;
     protected String procedureDescriptionFormat;
-    protected SMLSystem procedureDescription;  
+    protected AbstractProcess procedureDescription;  
     
 	
 	public UpdateSensorRequest(String serviceType)
@@ -76,13 +76,13 @@ public class UpdateSensorRequest extends OWSRequest
     }
 
 
-    public Object getProcedureDescription()
+    public AbstractProcess getProcedureDescription()
     {
         return procedureDescription;
     }
 
 
-    public void setProcedureDescription(SMLSystem procedureDescription)
+    public void setProcedureDescription(AbstractProcess procedureDescription)
     {
         this.procedureDescription = procedureDescription;
     }

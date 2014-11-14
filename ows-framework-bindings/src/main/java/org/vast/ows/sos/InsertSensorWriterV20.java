@@ -27,16 +27,12 @@ package org.vast.ows.sos;
 
 import java.io.IOException;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.IXMLWriterDOM;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.swe.SWERequestWriter;
-import org.vast.sensorML.SMLProcess;
 import org.vast.sensorML.SMLUtils;
-import org.vast.sensorML.SystemWriterV1;
-import org.vast.sensorML.SystemWriterV20;
 import org.w3c.dom.Element;
 
 
@@ -58,6 +54,8 @@ import org.w3c.dom.Element;
  */
 public class InsertSensorWriterV20 extends SWERequestWriter<InsertSensorRequest>
 {
+    SMLUtils smlUtils = new SMLUtils();
+    
     
 	public InsertSensorWriterV20()
 	{
@@ -80,18 +78,15 @@ public class InsertSensorWriterV20 extends SWERequestWriter<InsertSensorRequest>
 		// procedure
 		try
         {
-		    IXMLWriterDOM<SMLProcess> writer = null;
+		    // check format is supported
 		    String format = request.getProcedureDescriptionFormat();
-		    if (format.startsWith((OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "1.0"))))
-		        writer = new SystemWriterV1();
-	        else if (format.equals(OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0")))
-	            writer = new SystemWriterV20();
-	        else
-	            throw new OWSException("Unsupported format: " + request.getProcedureDescriptionFormat());
+		    if (!format.equals(OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0")))
+		        throw new OWSException("Unsupported format: " + request.getProcedureDescriptionFormat());
 	            
 		    Element procedureElt = dom.addElement(rootElt, "swes:procedureDescription");
-		    Element sysElt = writer.write(dom, request.getProcedureDescription());
-            procedureElt.appendChild(sysElt);
+		    smlUtils.setOutputVersion("2.0");
+		    Element processElt = smlUtils.writeProcess(dom, request.getProcedureDescription());
+            procedureElt.appendChild(processElt);
         }
         catch (IOException e)
         {
