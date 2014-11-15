@@ -37,6 +37,10 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.dom.DOMSource;
 import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.JSONEncoding;
+import net.opengis.swe.v20.TextEncoding;
+import net.opengis.swe.v20.XMLEncoding;
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLTimeReader;
@@ -76,6 +80,9 @@ import org.w3c.dom.NodeList;
 @SuppressWarnings("serial")
 public abstract class SOSServlet extends OWSServlet
 {
+    protected static final String TEXT_MIME_TYPE = "text/plain";
+    protected static final String BINARY_MIME_TYPE = "application/octet-stream";
+    protected static final String UNSUPPORTED_MSG = " operation is not supported on this server";
     
     // Table of SOS data providers: 1 for each observation offering
 	protected Map<String, ISOSDataProviderFactory> dataProviders = new LinkedHashMap<String, ISOSDataProviderFactory>();
@@ -196,6 +203,7 @@ public abstract class SOSServlet extends OWSServlet
             // setup data provider
             SOSDataFilter filter = new SOSDataFilter(request.getFoiIDs(), request.getObservables(), request.getTime());
             dataProvider = getDataProvider(request.getOffering(), filter);
+            DataEncoding resultEncoding = dataProvider.getDefaultResultEncoding();
             
             // write response with SWE common data stream
             OutputStream os = new BufferedOutputStream(request.getResponseStream());
@@ -208,10 +216,19 @@ public abstract class SOSServlet extends OWSServlet
                 os.write(new String("<GetResultResponse xmlns=\"" + nsUri + "\">\n<resultValues>\n").getBytes());
             }
             else
-                request.getHttpResponse().setContentType("text/plain");
+            {
+                if (resultEncoding instanceof TextEncoding)
+                    request.getHttpResponse().setContentType(TEXT_MIME_TYPE);
+                else if (resultEncoding instanceof JSONEncoding)
+                    request.getHttpResponse().setContentType(JSON_MIME_TYPE);
+                else if (resultEncoding instanceof XMLEncoding)
+                    request.getHttpResponse().setContentType(XML_MIME_TYPE);
+                else
+                    request.getHttpResponse().setContentType(BINARY_MIME_TYPE);
+            }
             
             // prepare writer for selected encoding
-            DataStreamWriter writer = SWEFactory.createDataWriter(dataProvider.getDefaultResultEncoding());
+            DataStreamWriter writer = SWEFactory.createDataWriter(resultEncoding);
             writer.setDataComponents(dataProvider.getResultStructure());
             writer.setOutput(os);
             
@@ -327,37 +344,37 @@ public abstract class SOSServlet extends OWSServlet
 	
 	protected void handleRequest(InsertSensorRequest request) throws Exception
     {
-	    throw new UnsupportedOperationException("InsertSensor operation is not supported on this server");
+	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
     }
 	
 	
 	protected void handleRequest(UpdateSensorRequest request) throws Exception
     {
-        throw new UnsupportedOperationException("UpdateSensor operation is not supported on this server");
+        throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
     }
 	
 	
 	protected void handleRequest(DeleteSensorRequest request) throws Exception
     {
-        throw new UnsupportedOperationException("DeleteSensor operation is not supported on this server");
+        throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
     }
 	
 	
 	protected void handleRequest(InsertObservationRequest request) throws Exception
     {
-	    throw new UnsupportedOperationException("InsertObservation operation is not supported on this server");
+	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
     }
 	
 	
 	protected void handleRequest(InsertResultTemplateRequest request) throws Exception
     {
-	    throw new UnsupportedOperationException("InsertResultTemplate operation is not supported on this server");
+	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
     }
 	
 	
 	protected void handleRequest(InsertResultRequest request) throws Exception
     {
-	    throw new UnsupportedOperationException("InsertResult operation is not supported on this server");
+	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
     }
 	
 	

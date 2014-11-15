@@ -66,6 +66,7 @@ public abstract class OWSServlet extends HttpServlet
 {
     private static final long serialVersionUID = 4970153267344348035L;
     protected static final String XML_MIME_TYPE = "text/xml";
+    protected static final String JSON_MIME_TYPE = "application/json";
     protected static final String invalidKVPRequestMsg = "Invalid KVP request. Please check your syntax";
     protected static final String invalidXMLRequestMsg = "Invalid XML request. Please check your syntax";
     protected static final String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
