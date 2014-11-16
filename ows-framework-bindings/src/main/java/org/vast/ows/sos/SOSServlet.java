@@ -288,16 +288,18 @@ public abstract class SOSServlet extends OWSServlet
             
             // prepare obs writer for requested O&M version
             String format = request.getFormat();
-            String nsUri = format;
-            String omVersion = nsUri.substring(format.lastIndexOf('/') + 1);
+            String omVersion = format.substring(format.lastIndexOf('/') + 1);
             IXMLWriterDOM<IObservation> obsWriter = (IXMLWriterDOM<IObservation>)OGCRegistry.createWriter(OMUtils.OM, OMUtils.OBSERVATION, omVersion);
+            String sosNsUri = OGCRegistry.getNamespaceURI(SOSUtils.SOS, "2.0");
+            String sosPrefix = "sos";
             
             // init xml document writing
             OutputStream os = new BufferedOutputStream(request.getResponseStream());
             XMLEventFactory xmlFactory = XMLEventFactory.newInstance();
             XMLEventWriter xmlWriter = XMLOutputFactory.newInstance().createXMLEventWriter(os);
             xmlWriter.add(xmlFactory.createStartDocument());
-            xmlWriter.add(xmlFactory.createStartElement("om", nsUri, "GetObservationResponse"));
+            xmlWriter.add(xmlFactory.createStartElement(sosPrefix, sosNsUri, "GetObservationResponse"));
+            xmlWriter.add(xmlFactory.createNamespace(sosPrefix, sosNsUri));
             
             // write each observation in stream
             boolean firstObs = true;
@@ -316,7 +318,7 @@ public abstract class SOSServlet extends OWSServlet
                     firstObs = false;
                 }
                 
-                xmlWriter.add(xmlFactory.createStartElement("om", nsUri, "observationData"));
+                xmlWriter.add(xmlFactory.createStartElement(sosPrefix, sosNsUri, "observationData"));
                 
                 XMLEventReader domReader = XMLInputFactory.newInstance().createXMLEventReader(new DOMSource(obsElt));
                 while (domReader.hasNext())
@@ -326,7 +328,7 @@ public abstract class SOSServlet extends OWSServlet
                         xmlWriter.add(event);
                 }
                 
-                xmlWriter.add(xmlFactory.createEndElement("om", nsUri, "observationData"));
+                xmlWriter.add(xmlFactory.createEndElement(sosPrefix, sosNsUri, "observationData"));
                 xmlWriter.flush();
                 os.write('\n');
             }

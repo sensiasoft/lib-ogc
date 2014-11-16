@@ -44,6 +44,7 @@ import org.w3c.dom.NodeList;
  *
  * <p><b>Description:</b><br/>
  * Base abstract class for implementing SOS servlets
+ * @deprecated use org.vast.ows.sos.SOSServlet
  * </p>
  *
  * <p>Copyright (c) 2005</p>
