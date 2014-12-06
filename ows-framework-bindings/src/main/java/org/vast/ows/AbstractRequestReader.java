@@ -129,8 +129,10 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> impl
         try
         {
             // parse start time
-            if (timeRange[0].equalsIgnoreCase("now"))
+            if (timeRange[0].equalsIgnoreCase("now")) {
+                timeInfo.setBaseAtNow(true);
                 timeInfo.setBeginNow(true);
+            }
             else
                 timeInfo.setStartTime(DateTimeFormat.parseIso(timeRange[0]));
             

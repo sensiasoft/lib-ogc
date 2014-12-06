@@ -39,13 +39,16 @@ import org.geotools.gml3.bindings.TimePeriodTypeBinding;
 import org.geotools.temporal.object.DefaultInstant;
 import org.geotools.temporal.object.DefaultPeriod;
 import org.geotools.temporal.object.DefaultPosition;
+import org.geotools.temporal.object.DefaultTemporalPosition;
 import org.opengis.filter.FilterFactory;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.spatial.BBOX;
 import org.opengis.filter.spatial.BinarySpatialOperator;
 import org.opengis.filter.temporal.BinaryTemporalOperator;
+import org.opengis.temporal.IndeterminateValue;
 import org.opengis.temporal.Instant;
 import org.opengis.temporal.Period;
+import org.opengis.temporal.TemporalPosition;
 import org.opengis.temporal.TemporalPrimitive;
 import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;
@@ -148,7 +151,11 @@ public class FESUtils
                     
             if (timePrimitive instanceof Instant)
             {
-                time.setBaseTime(((Instant)timePrimitive).getPosition().getDate().getTime()/1000.0);            
+                TemporalPosition anyOther = ((Instant) timePrimitive).getPosition().anyOther();
+                if (anyOther != null && anyOther.getIndeterminatePosition() == IndeterminateValue.NOW)
+                    time.setBaseAtNow(true);
+                else
+                    time.setBaseTime(((Instant)timePrimitive).getPosition().getDate().getTime()/1000.0);            
             }
             else if (timePrimitive instanceof Period)
             {
@@ -175,9 +182,14 @@ public class FESUtils
         
         if (time.isTimeInstant())
         {
-            timePrimitive = new DefaultInstant(new DefaultPosition(begin));
+            DefaultPosition timePosition;
+            if (time.isBaseAtNow())
+                timePosition = new DefaultPosition(new DefaultTemporalPosition(null, IndeterminateValue.NOW));
+            else
+                timePosition = new DefaultPosition(begin);            
+            timePrimitive = new DefaultInstant(timePosition);
             temporalFilter = filterFactory.tequals(filterFactory.property("phenomenonTime"),
-                                                        filterFactory.literal(timePrimitive));
+                    filterFactory.literal(timePrimitive));
         }
         else if (time.isEndNow() || time.getStopTime() == Double.POSITIVE_INFINITY)
         {
