@@ -168,8 +168,8 @@ public class FESUtils
      */
     protected static BinaryTemporalOperator timeInfoToFilter(TimeExtent time)
     {
-        Date begin = new Date((long)time.getStartTime()*1000);
-        Date end = new Date((long)time.getStopTime()*1000);
+        Date begin = new Date((long)(time.getStartTime()*1000));
+        Date end = new Date((long)(time.getStopTime()*1000));
         BinaryTemporalOperator temporalFilter;
         TemporalPrimitive timePrimitive;
         
