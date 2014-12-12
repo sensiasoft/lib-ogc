@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
@@ -40,8 +42,6 @@ import org.vast.ows.wps.WPSException;
 import org.vast.ows.wps.WPSUtils;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -59,7 +59,7 @@ import org.apache.commons.logging.LogFactory;
 public abstract class WPSServlet extends OWSServlet
 {
     private static final long serialVersionUID = 6940984824581209178L;
-    private static final Log log = LogFactory.getLog(WPSServlet.class);
+    private static final Logger log = LoggerFactory.getLogger(WPSServlet.class);
     protected OWSUtils owsUtils = new OWSUtils();
 	private WPSUtils wpsUtils;
 	protected DOMHelper describeProcessDomHelper;

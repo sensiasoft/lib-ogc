@@ -37,8 +37,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
@@ -71,7 +71,7 @@ public abstract class OWSServlet extends HttpServlet
     protected static final String invalidXMLRequestMsg = "Invalid XML request. Please check your syntax";
     protected static final String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
     
-    protected Log log = LogFactory.getLog(OWSServlet.class);
+    private static Logger log = LoggerFactory.getLogger(OWSServlet.class);
     protected String owsVersion = "1.0";
     protected OWSUtils owsUtils = new OWSUtils();
     protected DOMHelper capsHelper;
