@@ -21,7 +21,7 @@
 package org.vast.ows.sos;
 
 import java.util.*;
-import org.vast.ows.OWSLayerCapabilities;
+import org.vast.ows.swe.SWESOfferingCapabilities;
 import org.vast.util.Bbox;
 import org.vast.util.TimeExtent;
 
@@ -37,22 +37,13 @@ import org.vast.util.TimeExtent;
  * @since Oct 27, 2005
  * @version 1.0
  */
-public class SOSOfferingCapabilities extends OWSLayerCapabilities
+public class SOSOfferingCapabilities extends SWESOfferingCapabilities
 {
-    public static String FORMAT_OM2 = "http://www.opengis.net/om/2.0";
-    public static String FORMAT_SML1 = "http://www.opengis.net/sensorML/1.0.1";
-    public static String FORMAT_SML2 = "http://www.opengis.net/sensorml/2.0";
-    
-    protected List<String> observableProperties;
-    protected List<String> procedures;
     protected List<Bbox> observedAreas;
     protected List<TimeExtent> phenomenonTimes;
     protected List<TimeExtent> resultTimes;    
-    protected List<String> relatedFeatures;
-    
     protected List<String> responseFormats;
     protected List<String> supportedEncodings;
-    protected List<String> procedureFormats;    
     protected List<String> observationTypes;
     protected List<String> foiTypes;
     
@@ -69,30 +60,6 @@ public class SOSOfferingCapabilities extends OWSLayerCapabilities
     	procedureFormats = new ArrayList<String>(2);
     	observationTypes = new ArrayList<String>(2);
     	foiTypes = new ArrayList<String>(2);
-    }
-
-
-    public List<String> getObservableProperties()
-    {
-        return observableProperties;
-    }
-
-
-    public void setObservableProperties(List<String> observableProperties)
-    {
-        this.observableProperties = observableProperties;
-    }
-
-
-    public List<String> getProcedures()
-    {
-        return procedures;
-    }
-
-
-    public void setProcedures(List<String> procedures)
-    {
-        this.procedures = procedures;
     }
 
 
@@ -132,18 +99,6 @@ public class SOSOfferingCapabilities extends OWSLayerCapabilities
     }
 
 
-    public List<String> getRelatedFeatures()
-    {
-        return relatedFeatures;
-    }
-
-
-    public void setRelatedFeatures(List<String> relatedFeatures)
-    {
-        this.relatedFeatures = relatedFeatures;
-    }
-    
-    
     public List<String> getResponseFormats()
     {
         return responseFormats;
@@ -168,18 +123,6 @@ public class SOSOfferingCapabilities extends OWSLayerCapabilities
     }
 
 
-    public List<String> getProcedureFormats()
-    {
-        return procedureFormats;
-    }
-
-
-    public void setProcedureFormats(List<String> procedureFormats)
-    {
-        this.procedureFormats = procedureFormats;
-    }
-    
-    
     public List<String> getObservationTypes()
     {
         return observationTypes;
@@ -202,12 +145,11 @@ public class SOSOfferingCapabilities extends OWSLayerCapabilities
     {
         this.foiTypes = foiTypes;
     }
-
-
+	
+    
     @Override
     public SOSServiceCapabilities getParent()
     {
-        return (SOSServiceCapabilities)super.getParent();
+        return (SOSServiceCapabilities) super.getParent();
     }
-	
 }

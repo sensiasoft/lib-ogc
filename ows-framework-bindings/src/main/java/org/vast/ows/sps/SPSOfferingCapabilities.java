@@ -22,8 +22,7 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import java.util.List;
-import org.vast.ows.OWSLayerCapabilities;
+import org.vast.ows.swe.SWESOfferingCapabilities;
 import org.vast.util.Bbox;
 
 
@@ -32,22 +31,15 @@ import org.vast.util.Bbox;
  * SPS Offering Capabilities
  * </p>
  *
- * <p><b>Description:</b><br/>
- * 
- * </p>
- *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
  * @date Feb, 25 2008
  * @version 1.0
  */
-public class SPSOfferingCapabilities extends OWSLayerCapabilities
+public class SPSOfferingCapabilities extends SWESOfferingCapabilities
 {
 	protected Bbox areaOfService;
-	protected List<String> observableList;
 	protected DescribeTaskingResponse parametersDescription;
-	protected String sensorDescriptionURL;
-	protected Object sensorDescription;
 
 
 	public String getSensorID()
@@ -74,18 +66,6 @@ public class SPSOfferingCapabilities extends OWSLayerCapabilities
 	}
 
 
-	public List<String> getObservableList()
-	{
-		return observableList;
-	}
-
-
-	public void setObservableList(List<String> observableList)
-	{
-		this.observableList = observableList;
-	}
-
-
 	public DescribeTaskingResponse getParametersDescription()
 	{
 		return parametersDescription;
@@ -97,28 +77,10 @@ public class SPSOfferingCapabilities extends OWSLayerCapabilities
 		this.parametersDescription = parameterDescription;
 	}
 
-
-	public Object getSensorDescription()
-	{
-		return sensorDescription;
-	}
-
-
-	public void setSensorDescription(Object sensorDescription)
-	{
-		this.sensorDescription = sensorDescription;
-	}
-
-
-	public String getSensorDescriptionURL()
-	{
-		return sensorDescriptionURL;
-	}
-
-
-	public void setSensorDescriptionURL(String sensorDescriptionURL)
-	{
-		this.sensorDescriptionURL = sensorDescriptionURL;
-	}
-
+	
+    @Override
+    public SPSServiceCapabilities getParent()
+    {
+        return (SPSServiceCapabilities) super.getParent();
+    }
 }
