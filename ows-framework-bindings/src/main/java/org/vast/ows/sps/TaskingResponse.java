@@ -43,7 +43,7 @@ import org.vast.util.DateTime;
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
  * @date Feb, 29 2008
- * @version 1.0
+ * @param <Report> Type of status report contained in this response
  */
 public abstract class TaskingResponse<Report extends StatusReport> extends OWSResponse
 {

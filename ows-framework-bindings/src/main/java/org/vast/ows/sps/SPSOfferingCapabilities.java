@@ -22,8 +22,8 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
+import net.opengis.gml.v32.AbstractGeometry;
 import org.vast.ows.swe.SWESOfferingCapabilities;
-import org.vast.util.Bbox;
 
 
 /**
@@ -38,7 +38,7 @@ import org.vast.util.Bbox;
  */
 public class SPSOfferingCapabilities extends SWESOfferingCapabilities
 {
-	protected Bbox areaOfService;
+	protected AbstractGeometry observableArea;
 	protected DescribeTaskingResponse parametersDescription;
 
 
@@ -54,15 +54,15 @@ public class SPSOfferingCapabilities extends SWESOfferingCapabilities
 	}
 
 
-	public Bbox getAreaOfService()
+	public AbstractGeometry getObservableArea()
 	{
-		return areaOfService;
+		return observableArea;
 	}
 
 
-	public void setAreaOfService(Bbox areaOfService)
+	public void setObservableArea(AbstractGeometry observableArea)
 	{
-		this.areaOfService = areaOfService;
+		this.observableArea = observableArea;
 	}
 
 

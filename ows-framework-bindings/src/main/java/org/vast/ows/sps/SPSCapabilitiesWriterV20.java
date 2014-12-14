@@ -21,13 +21,18 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.ows.sps;
 
+import net.opengis.gml.v32.AbstractGeometry;
+import net.opengis.gml.v32.Point;
+import net.opengis.gml.v32.Polygon;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ows.OWSCapabilitiesWriterV11;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
 import org.vast.ows.OWSUtils;
+import org.vast.ows.swe.SWESCapabilitiesWriterV20;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
+import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
 
 
@@ -47,17 +52,20 @@ import org.w3c.dom.Element;
  * @date 27 nov. 07
  * @version 1.0
  */
-public class SPSCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
+public class SPSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
 {
-
+    GMLUtils gmlUtils = new GMLUtils();
+    
+    
 	@Override
 	public Element buildXMLResponse(DOMHelper dom, OWSServiceCapabilities caps, String version) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.SPS, version));
-		dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS, "1.1"));
+	    dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI(OWSUtils.SPS, version));
+        dom.addUserPrefix("swes", OGCRegistry.getNamespaceURI(OWSUtils.SWES, "2.0"));
+        dom.addUserPrefix("ows", OGCRegistry.getNamespaceURI(OWSUtils.OWS, "1.1"));
 		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
 		
-		Element capsElt = dom.createElement("Capabilities");
+		Element capsElt = dom.createElement("sps:Capabilities");
 		writeRootAttributes(dom, capsElt, caps, version);
 		writeServiceIdentification(dom, capsElt, caps);		
 		writeServiceProvider(dom, capsElt, caps.getServiceProvider());
@@ -69,8 +77,53 @@ public class SPSCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
 	
 	
 	@Override
-	protected void writeContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities caps, String version) throws OWSException
+	protected void writeContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps, String version) throws OWSException
 	{
-		// TODO
+	    try
+        {
+            Element contentsElt = dom.addElement(capsElt, "sps:contents/sps:SPSContents");
+            SPSServiceCapabilities spsCaps = (SPSServiceCapabilities)serviceCaps;
+            
+            // SWES properties common to all offerings
+            super.writeCommonContentsProperties(dom, contentsElt, serviceCaps);
+
+            // SPS offerings
+            for (OWSLayerCapabilities layerCaps: serviceCaps.getLayers())
+            {
+                Element offeringElt = dom.addElement(contentsElt, "+swes:offering/sps:SensorOffering");
+                SPSOfferingCapabilities offering = (SPSOfferingCapabilities)layerCaps;
+                
+                // SWES offering properties
+                super.writeCommonOfferingProperties(dom, offeringElt, serviceCaps, offering);
+                
+                // observable area
+                AbstractGeometry obsArea = offering.getObservableArea();
+                if (obsArea != null)
+                {
+                    Element geomElt = gmlUtils.writeGeometry(dom, obsArea);
+                    String path = "sps:observableArea/";
+                    if (obsArea instanceof Polygon)
+                        path += "sps:byPolygon";
+                    else if (obsArea instanceof Point)
+                        path += "sps:byPoint";
+                    else
+                        throw new SPSException("Invalid geometry for observedArea: " + obsArea.getClass().getSimpleName());
+                    dom.addElement(offeringElt, path).appendChild(geomElt);
+                }
+            }
+            
+            // min status time
+            double minStatusTime = spsCaps.getMinStatusTime();
+            if (!Double.isNaN(minStatusTime)) 
+                dom.setElementValue(contentsElt, "sps:minStatusTime", timeFormat.formatIsoPeriod(minStatusTime, 'D'));
+            
+            // supported encodings
+            for (String encoding: spsCaps.getSupportedEncodings())
+                dom.setElementValue(contentsElt, "+sps:supportedEncoding", encoding);
+        }
+        catch (XMLWriterException e)
+        {
+            throw new SPSException("Error while writing SPS capabilities", e);
+        }
 	}
 }

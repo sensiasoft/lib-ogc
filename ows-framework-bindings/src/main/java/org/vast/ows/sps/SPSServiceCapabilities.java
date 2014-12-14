@@ -43,7 +43,8 @@ import org.vast.ows.OWSServiceCapabilities;
  */
 public class SPSServiceCapabilities extends OWSServiceCapabilities
 {
-	List<String> supportedEncodings;
+	double minStatusTime; // in seconds
+    List<String> supportedEncodings;
 	
 	
 	public SPSServiceCapabilities()
@@ -56,4 +57,16 @@ public class SPSServiceCapabilities extends OWSServiceCapabilities
 	{
 		return supportedEncodings;
 	}
+
+
+    public double getMinStatusTime()
+    {
+        return minStatusTime;
+    }
+
+
+    public void setMinStatusTime(double minStatusTime)
+    {
+        this.minStatusTime = minStatusTime;
+    }
 }

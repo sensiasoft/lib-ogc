@@ -16,38 +16,40 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <alex.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ows.sps;
 
+import java.text.ParseException;
+import java.util.List;
+import net.opengis.gml.v32.AbstractGeometry;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.vast.ows.OWSCapabilitiesReaderV11;
+import org.vast.xml.XMLReaderException;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSServiceCapabilities;
+import org.vast.ows.swe.SWESCapabilitiesReaderV20;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SPS Capabilities Reader V2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Reads an SPS server capabilities document and create and
  * populate the corresponding OWSServiceCapabilities and
  * SPSOfferingCapabilities objects for version 2.0
  * </p>
  *
- * <p>Copyright (c) 2009</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 5 jan. 09
- * @version 1.0
+ * <p>Copyright (c) 2014</p>
+ * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @since Dec, 12 2014
  */
-public class SPSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
+public class SPSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20
 {
-
+    GMLUtils gmlUtils = new GMLUtils();
+    
+    
 	public SPSCapabilitiesReaderV20()
 	{
 	}	
@@ -65,35 +67,58 @@ public class SPSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
     @Override
 	protected void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws OWSException
 	{
-		//  Load List of SensorOffering elements
-		NodeList offerings = dom.getElements(capsElt, "contents/SPSContents/offering/SensorOffering");
-		int numOfferings = offerings.getLength();
-
-		// Go through each element and populate offering caps
-		for (int i = 0; i < numOfferings; i++)
-		{
-			Element offeringElt = (Element) offerings.item(i);
-			SPSOfferingCapabilities offering = new SPSOfferingCapabilities();
-			offering.setParent(serviceCaps);
-			
-			// title
-			String title = dom.getElementValue(offeringElt, "identifier");
-			offering.setTitle(title);
-			
-			// abstract
-			String description = dom.getElementValue(offeringElt, "description");
-			offering.setDescription(description);
-			
-			// sensorID
-			String sensorID = dom.getElementValue(offeringElt, "procedure");
-			offering.setSensorID(sensorID);
-			
-			//readROI(offering, dom, offeringElt);
-			//readTOI(offering, dom, offeringElt);
-			//readFOI(offering, dom, offeringElt);
-
-			serviceCaps.getLayers().add(offering);
-		}
+        SPSServiceCapabilities spsCaps = (SPSServiceCapabilities)serviceCaps;
+        Element contentsElt = dom.getElement(capsElt, "contents/SPSContents");
+        
+        try
+        {
+            // common service settings (for all offerings)
+            List<String> serviceProcFormats = readProcedureFormats(dom, contentsElt);
+            List<String> serviceObsProperties = readObservableProperties(dom, contentsElt);
+            List<String> serviceRelFeatures = readRelatedFeatures(dom, contentsElt);
+            
+            // list of SensorOffering elements
+            NodeList offerings = dom.getElements(contentsElt, "offering/SensorOffering");
+            int numOfferings = offerings.getLength();
+            
+            // Go through each element and populate offering caps
+            for (int i = 0; i < numOfferings; i++)
+            {
+            	Element offeringElt = (Element) offerings.item(i);
+            	SPSOfferingCapabilities offering = new SPSOfferingCapabilities();
+            	offering.setParent(serviceCaps);
+            	
+            	super.readCommonOfferingProperties(dom, offeringElt, offering,
+                        serviceProcFormats, serviceObsProperties, serviceRelFeatures);
+            	
+            	// observable area
+            	Element geomElt = dom.getElement(offeringElt, "observableArea/*/*");
+            	if (geomElt != null)
+            	{
+            	    AbstractGeometry geom = gmlUtils.readGeometry(dom, geomElt);
+            	    offering.setObservableArea(geom);
+            	}
+            	
+            	serviceCaps.getLayers().add(offering);
+            }
+            
+            // minStatusTime
+            String val = dom.getElementValue(contentsElt, "minStatusTime");
+            if (val != null)
+                spsCaps.setMinStatusTime(timeFormat.parseIsoPeriod(val));
+                
+            // supported encodings
+            NodeList encodings = dom.getElements(contentsElt, "supportedEncoding");
+            for (int i = 0; i < encodings.getLength(); i++)
+            {
+                Element encodingElt = (Element) encodings.item(i);
+                spsCaps.getSupportedEncodings().add(dom.getElementValue(encodingElt));
+            }
+        }
+        catch (XMLReaderException | ParseException e)
+        {
+            throw new SPSException(e.getMessage());
+        }
 	}
 	
 }
