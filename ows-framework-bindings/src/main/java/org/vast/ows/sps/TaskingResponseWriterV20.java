@@ -50,7 +50,8 @@ import org.vast.xml.XMLWriterException;
 public class TaskingResponseWriterV20 extends SWEResponseWriter<TaskingResponse<?>>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
-	
+	protected DateTimeFormat timeFormat = new DateTimeFormat();
+    
 	
 	public Element buildXMLResponse(DOMHelper dom, TaskingResponse<?> response, String version) throws OWSException
 	{
@@ -68,7 +69,7 @@ public class TaskingResponseWriterV20 extends SWEResponseWriter<TaskingResponse<
 			DateTime latestResp = response.getLatestResponseTime();
 			if (latestResp != null)
 				dom.setElementValue(rootElt, "sps:latestResponseTime",
-						DateTimeFormat.formatIso(latestResp.getJulianTime(), 0));
+						timeFormat.formatIso(latestResp.getJulianTime(), 0));
 			
 			// status report
 			Element reportElt = commonWriter.writeReport(dom, response.getReport());

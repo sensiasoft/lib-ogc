@@ -28,9 +28,6 @@ package org.vast.ows.sos;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import javax.xml.transform.dom.DOMSource;
-import org.geotools.xml.Configuration;
-import org.geotools.xml.Parser;
 import org.opengis.filter.spatial.BinarySpatialOperator;
 import org.opengis.filter.temporal.BinaryTemporalOperator;
 import org.vast.xml.DOMHelper;
@@ -58,7 +55,7 @@ import org.vast.ows.swe.SWERequestReader;
  */
 public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
 {
-    protected Parser filterParser;
+    protected FESUtils fesUtils = new FESUtils();
     
     
     public GetResultReaderV20()
@@ -66,19 +63,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
 	}
     
     
-    protected Parser getFilterParser()
-    {
-        if (filterParser == null)
-        {
-            Configuration configuration = new org.geotools.filter.v2_0.FESConfiguration();
-            filterParser = new Parser(configuration);
-        }
-        
-        return filterParser;
-    }
-
-	
-	@Override
+    @Override
 	public GetResultRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
@@ -89,7 +74,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
         Map<String, String> namespaceMap = null;
         String nsList = queryParameters.remove("namespaces");
         if (nsList != null)
-            namespaceMap = FESUtils.readKVPNamespaces(nsList);
+            namespaceMap = fesUtils.readKVPNamespaces(nsList);
         
         // parse other params
 		Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
@@ -120,17 +105,31 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
             }
 			
 			// temporal filter
-			else if (argName.equalsIgnoreCase("temporalFilter"))
-			{
-				BinaryTemporalOperator filter = FESUtils.readKVPTemporalFilter(argValue, namespaceMap);
-				request.setTemporalFilter(filter);
-			}
-			
-			// spatial filter
+            else if (argName.equalsIgnoreCase("temporalFilter"))
+            {
+                try
+                {
+                    BinaryTemporalOperator filter = fesUtils.readKVPTemporalFilter(argValue, namespaceMap);
+                    request.setTemporalFilter(filter);
+                }
+                catch (Exception e)
+                {
+                    throw new SOSException(SOSException.invalid_param_code, "temporalFilter", null, null);
+                }
+            }
+            
+            // spatial filter
             else if (argName.equalsIgnoreCase("spatialFilter"))
             {
-                BinarySpatialOperator filter = FESUtils.readKVPSpatialFilter(argValue, namespaceMap);
-                request.setSpatialFilter(filter);
+                try
+                {
+                    BinarySpatialOperator filter = fesUtils.readKVPSpatialFilter(argValue, namespaceMap);
+                    request.setSpatialFilter(filter);
+                }
+                catch (Exception e)
+                {
+                    throw new SOSException(SOSException.invalid_param_code, "spatialFilter", null, null);
+                }
             }
 			
 			// xml wrapper
@@ -178,14 +177,13 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
 		val = dom.getElementValue(requestElt, "observedProperty");
         request.getObservables().add(val); 
 		
-		// temporal filter
+        // temporal filter
         try
         {
             Element timeOpElt = dom.getElement(requestElt, "temporalFilter/*");
             if (timeOpElt != null)
             {
-                DOMSource domSrc = new DOMSource(timeOpElt);
-                BinaryTemporalOperator filter = (BinaryTemporalOperator)getFilterParser().parse(domSrc);
+                BinaryTemporalOperator filter = fesUtils.readXMLTemporalFilter(timeOpElt);
                 request.setTemporalFilter(filter);
             }
         }
@@ -193,8 +191,8 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
         {
             throw new SOSException(SOSException.invalid_param_code, "temporalFilter", null, null);
         }
-		
-		// features of interest
+        
+        // features of interest
         NodeList foiList = dom.getElements(requestElt, "featureOfInterest");
         for (int i = 0; i < foiList.getLength(); i++)
         {
@@ -208,8 +206,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
             Element spatialOpElt = dom.getElement(requestElt, "spatialFilter/*");
             if (spatialOpElt != null)
             {
-                DOMSource domSrc = new DOMSource(spatialOpElt);
-                BinarySpatialOperator filter = (BinarySpatialOperator)getFilterParser().parse(domSrc);
+                BinarySpatialOperator filter = fesUtils.readXMLSpatialFilter(spatialOpElt);
                 request.setSpatialFilter(filter);
             }
         }

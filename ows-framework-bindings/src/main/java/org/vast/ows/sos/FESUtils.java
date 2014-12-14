@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+import javax.xml.transform.dom.DOMSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
 import org.geotools.filter.AttributeExpressionImpl;
@@ -40,6 +41,8 @@ import org.geotools.temporal.object.DefaultInstant;
 import org.geotools.temporal.object.DefaultPeriod;
 import org.geotools.temporal.object.DefaultPosition;
 import org.geotools.temporal.object.DefaultTemporalPosition;
+import org.geotools.xml.Configuration;
+import org.geotools.xml.Parser;
 import org.opengis.filter.FilterFactory;
 import org.opengis.filter.expression.Literal;
 import org.opengis.filter.spatial.BBOX;
@@ -50,18 +53,28 @@ import org.opengis.temporal.Instant;
 import org.opengis.temporal.Period;
 import org.opengis.temporal.TemporalPosition;
 import org.opengis.temporal.TemporalPrimitive;
-import org.vast.ows.AbstractRequestReader;
+import org.vast.ows.OWSCommonUtils;
 import org.vast.ows.OWSException;
 import org.vast.util.Bbox;
 import org.vast.util.TimeExtent;
+import org.w3c.dom.Element;
 
 
-public class FESUtils
+public class FESUtils extends OWSCommonUtils
 {
     protected static Pattern NS_DECL_PATTERN = Pattern.compile("xmlns\\(.*\\)(,xmlns\\(.*\\))*");
     protected static Pattern NS_DECL_SPLIT = Pattern.compile("(\\),)?xmlns\\(");
     
-    protected static FilterFactory filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools.getDefaultHints());
+    protected FilterFactory filterFactory;
+    protected Parser filterParser;
+    
+    
+    public FESUtils()
+    {
+        filterFactory = CommonFactoryFinder.getFilterFactory2(GeoTools.getDefaultHints());
+        Configuration configuration = new org.geotools.filter.v2_0.FESConfiguration();
+        filterParser = new Parser(configuration);
+    }
     
     
     /**
@@ -70,21 +83,28 @@ public class FESUtils
      * @param request
      * @throws SOSException
      */
-    protected static BinaryTemporalOperator readKVPTemporalFilter(String arg, Map<String, String> namespaceMap) throws OWSException
+    protected BinaryTemporalOperator readKVPTemporalFilter(String arg, Map<String, String> namespaceMap) throws OWSException
     {
-        int firstComma = arg.indexOf(',');
-        String valueRef = arg.substring(0, firstComma);
-        String isoTime = arg.substring(firstComma + 1);
-        
-        // parse iso time string
-        TimeExtent time = AbstractRequestReader.parseTimeArg(isoTime);
-        BinaryTemporalOperator timeOp = timeInfoToFilter(time);
-        
-        // set value reference
-        // TODO use namespace map
-        ((AttributeExpressionImpl)timeOp.getExpression1()).setPropertyName(valueRef);        
-        
-        return timeOp;
+        try
+        {
+            int firstComma = arg.indexOf(',');
+            String valueRef = arg.substring(0, firstComma);
+            String isoTime = arg.substring(firstComma + 1);
+            
+            // parse iso time string
+            TimeExtent time = parseTimeArg(isoTime);
+            BinaryTemporalOperator timeOp = timeInfoToFilter(time);
+            
+            // set value reference
+            // TODO use namespace map
+            ((AttributeExpressionImpl)timeOp.getExpression1()).setPropertyName(valueRef);        
+            
+            return timeOp;
+        }
+        catch (Exception e)
+        {
+            throw new OWSException("Invalid temporal filter: " + arg);
+        }
     }
     
     
@@ -94,21 +114,28 @@ public class FESUtils
      * @param request
      * @throws SOSException
      */
-    protected static BinarySpatialOperator readKVPSpatialFilter(String arg, Map<String, String> namespaceMap) throws OWSException
+    protected BinarySpatialOperator readKVPSpatialFilter(String arg, Map<String, String> namespaceMap) throws OWSException
     {
-        int firstComma = arg.indexOf(',');
-        String valueRef = arg.substring(0, firstComma);
-        String bboxString = arg.substring(firstComma + 1);
-        
-        // parse bbox string
-        Bbox bbox = AbstractRequestReader.parseBboxArg(bboxString);
-        BinarySpatialOperator spatialOp = bboxToFilter(bbox);
-        
-        // set value reference
-        // TODO use namespace map
-        ((AttributeExpressionImpl)spatialOp.getExpression1()).setPropertyName(valueRef);
-        
-        return spatialOp;
+        try
+        {
+            int firstComma = arg.indexOf(',');
+            String valueRef = arg.substring(0, firstComma);
+            String bboxString = arg.substring(firstComma + 1);
+            
+            // parse bbox string
+            Bbox bbox = parseBboxArg(bboxString);
+            BinarySpatialOperator spatialOp = bboxToFilter(bbox);
+            
+            // set value reference
+            // TODO use namespace map
+            ((AttributeExpressionImpl)spatialOp.getExpression1()).setPropertyName(valueRef);
+            
+            return spatialOp;
+        }
+        catch (Exception e)
+        {
+            throw new OWSException("Invalid spatial filter: " + arg);
+        }
     }
     
     
@@ -116,7 +143,7 @@ public class FESUtils
      * Reads the KVP argument containing namespace prefix declarations
      * @return
      */
-    protected static Map<String, String> readKVPNamespaces(String argValue) throws SOSException
+    protected Map<String, String> readKVPNamespaces(String argValue) throws SOSException
     {
         //if (!NS_DECL_PATTERN.matcher(argValue).matches())
         //    throw new SOSException(SOSException.invalid_param_code, "namespaces", null, null);
@@ -137,11 +164,51 @@ public class FESUtils
     
     
     /**
+     * Reads temporal filter encoded according to OGC filter XML schema
+     * @param timeOpElt
+     * @return
+     * @throws OWSException
+     */
+    protected BinaryTemporalOperator readXMLTemporalFilter(Element timeOpElt) throws OWSException
+    {
+        try
+        {
+            DOMSource domSrc = new DOMSource(timeOpElt);
+            return (BinaryTemporalOperator)filterParser.parse(domSrc);
+        }
+        catch (Exception e)
+        {
+            throw new OWSException("Invalid temporal filter");
+        }
+    }
+    
+    
+    /**
+     * Reads spatial filter encoded according to OGC filter XML schema
+     * @param timeOpElt
+     * @return
+     * @throws OWSException
+     */
+    protected BinarySpatialOperator readXMLSpatialFilter(Element spatialOpElt) throws OWSException
+    {
+        try
+        {
+            DOMSource domSrc = new DOMSource(spatialOpElt);
+            return (BinarySpatialOperator)filterParser.parse(domSrc);
+        }
+        catch (Exception e)
+        {
+            throw new OWSException("Invalid spatial filter");
+        }
+    }
+    
+    
+    /**
      * Utility method to convert from a GeoTools temporal operator to a simpler TimeInfo
      * @param temporalFilter
      * @return
      */
-    protected static TimeExtent filterToTimeInfo(BinaryTemporalOperator temporalFilter)
+    protected TimeExtent filterToTimeInfo(BinaryTemporalOperator temporalFilter)
     {
         TimeExtent time = new TimeExtent();
         
@@ -173,7 +240,7 @@ public class FESUtils
      * @param time
      * @return
      */
-    protected static BinaryTemporalOperator timeInfoToFilter(TimeExtent time)
+    protected BinaryTemporalOperator timeInfoToFilter(TimeExtent time)
     {
         Date begin = new Date((long)(time.getStartTime()*1000));
         Date end = new Date((long)(time.getStopTime()*1000));
@@ -220,7 +287,7 @@ public class FESUtils
      * @param spatialFilter
      * @return
      */
-    protected static Bbox filterToBbox(BinarySpatialOperator spatialFilter)
+    protected Bbox filterToBbox(BinarySpatialOperator spatialFilter)
     {
         Bbox bbox = new Bbox();
         
@@ -243,7 +310,7 @@ public class FESUtils
      * @param bbox
      * @return
      */
-    protected static BinarySpatialOperator bboxToFilter(Bbox bbox)
+    protected BinarySpatialOperator bboxToFilter(Bbox bbox)
     {
         return filterFactory.bbox("featureOfInterest/*/shape", bbox.getMinX(), bbox.getMinY(), bbox.getMaxX(), bbox.getMaxY(), bbox.getCrs());
     }

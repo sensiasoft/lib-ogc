@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 import org.vast.ows.*;
@@ -51,8 +50,7 @@ import org.vast.ows.*;
  */
 public class GetCoverageReaderV20 extends AbstractRequestReader<GetCoverageRequest>
 {
-
-	
+    	
 	@Override
 	public GetCoverageRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
@@ -221,7 +219,7 @@ public class GetCoverageReaderV20 extends AbstractRequestReader<GetCoverageReque
 		{
 			if (text.startsWith("\""))
 				text.replace("\"", "");
-			return DateTimeFormat.parseIso(text);
+			return timeFormat.parseIso(text);
 		}
 	}
 	

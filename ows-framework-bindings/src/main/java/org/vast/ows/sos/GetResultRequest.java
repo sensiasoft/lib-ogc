@@ -45,6 +45,7 @@ import org.vast.util.TimeExtent;
  */
 public class GetResultRequest extends OWSRequest
 {
+    protected FESUtils fesUtils = new FESUtils();
     protected String offering;
     protected List<String> procedures;
     protected List<String> observables;
@@ -127,13 +128,13 @@ public class GetResultRequest extends OWSRequest
 
     public TimeExtent getTime()
     {
-        return FESUtils.filterToTimeInfo(temporalFilter);
+        return fesUtils.filterToTimeInfo(temporalFilter);
     }
 
 
     public void setTime(TimeExtent time)
     {
-        this.temporalFilter = FESUtils.timeInfoToFilter(time);
+        this.temporalFilter = fesUtils.timeInfoToFilter(time);
     }   
 
 
@@ -151,13 +152,13 @@ public class GetResultRequest extends OWSRequest
 
     public Bbox getBbox()
     {
-        return FESUtils.filterToBbox(spatialFilter);
+        return fesUtils.filterToBbox(spatialFilter);
     }
 
 
     public void setBbox(Bbox bbox)
     {
-        this.spatialFilter = FESUtils.bboxToFilter(bbox);
+        this.spatialFilter = fesUtils.bboxToFilter(bbox);
     }
 
 

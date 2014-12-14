@@ -37,7 +37,7 @@ import org.vast.xml.DOMHelper;
  * @since Oct 30, 2005
  * @version 1.0
  */
-public abstract class AbstractCapabilitiesReader implements OWSResponseReader<OWSServiceCapabilities>
+public abstract class AbstractCapabilitiesReader extends AbstractResponseReader<OWSServiceCapabilities>
 {
     protected final static String xmlError = "Error while parsing capabilities document XML";
     

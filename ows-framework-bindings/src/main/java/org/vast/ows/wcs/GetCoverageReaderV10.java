@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.vast.util.Bbox;
-import org.vast.util.DateTimeFormat;
 import org.vast.util.Interval;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
@@ -58,7 +57,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 {
 	protected GMLEnvelopeReader envelopeReader = new GMLEnvelopeReader();
 	protected GMLTimeReader timeReader = new GMLTimeReader();
-	
+		
 	
 	@Override
 	public GetCoverageRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
@@ -339,7 +338,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 				
 				try
 				{
-					double begin = DateTimeFormat.parseIso(beginTime);
+					double begin = timeFormat.parseIso(beginTime);
 					timeInfo.setStartTime(begin);
 				}
 				catch (ParseException e)
@@ -349,7 +348,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 				
 				try
 				{
-					double end = DateTimeFormat.parseIso(endTime);
+					double end = timeFormat.parseIso(endTime);
 					timeInfo.setStopTime(end);
 				}
 				catch (ParseException e)
@@ -365,7 +364,7 @@ public class GetCoverageReaderV10 extends AbstractRequestReader<GetCoverageReque
 					try
 					{
 						if (timeRes.contains("P"))
-							step = DateTimeFormat.parseIsoPeriod(timeRes);
+							step = timeFormat.parseIsoPeriod(timeRes);
 						else
 							step = Double.parseDouble(timeRes);
 						

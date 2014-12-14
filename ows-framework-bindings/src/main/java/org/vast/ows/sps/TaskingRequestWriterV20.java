@@ -51,7 +51,8 @@ import org.vast.xml.XMLWriterException;
 public abstract class TaskingRequestWriterV20<RequestType extends TaskingRequest> extends SWERequestWriter<RequestType>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
-	
+	protected DateTimeFormat timeFormat = new DateTimeFormat();
+    
 
 	/**
 	 * XML Request
@@ -83,7 +84,7 @@ public abstract class TaskingRequestWriterV20<RequestType extends TaskingRequest
 			DateTime latestResponseTime = request.getLatestResponseTime();
 			if (latestResponseTime != null)
 			{
-				String isoTime = DateTimeFormat.formatIso(latestResponseTime.getJulianTime(), 0);
+				String isoTime = timeFormat.formatIso(latestResponseTime.getJulianTime(), 0);
 				dom.setElementValue(rootElt, "sps:latestResponseTime", isoTime);
 			}
 

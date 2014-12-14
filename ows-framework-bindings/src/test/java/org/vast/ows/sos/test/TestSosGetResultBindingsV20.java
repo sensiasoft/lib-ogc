@@ -63,8 +63,8 @@ public class TestSosGetResultBindingsV20 extends TestCase
         assertEquals(1, request.getFoiIDs().size());
         assertEquals(0, request.getProcedures().size());
         assertEquals("urn:sensia:foi:b1", request.getFoiIDs().get(0));
-        assertEquals("2009-01-10T10:00:00Z", DateTimeFormat.formatIso(request.getTime().getStartTime(), 0));
-        assertEquals("2009-01-10T11:00:00Z", DateTimeFormat.formatIso(request.getTime().getStopTime(), 0));
+        assertEquals("2009-01-10T10:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStartTime(), 0));
+        assertEquals("2009-01-10T11:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStopTime(), 0));
         assertEquals(22.32, request.getBbox().getMinX());
         assertEquals(11.2, request.getBbox().getMinY());
         assertEquals(32.32, request.getBbox().getMaxX());
@@ -109,7 +109,7 @@ public class TestSosGetResultBindingsV20 extends TestCase
         assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().get(0));
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(0, request.getProcedures().size());
-        assertEquals("2008-03-01T17:44:15Z", DateTimeFormat.formatIso(request.getTime().getBaseTime(), 0));
+        assertEquals("2008-03-01T17:44:15Z", new DateTimeFormat().formatIso(request.getTime().getBaseTime(), 0));
         assertTrue("BBOX is not null", request.getBbox().isNull());
         is.close();
         

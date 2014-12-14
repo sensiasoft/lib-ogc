@@ -23,6 +23,7 @@ package org.vast.ows;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -35,12 +36,15 @@ import org.w3c.dom.Element;
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
  * @since 28 nov. 07
  * @version 1.0
+ * @param <ResponseType> Type of OWS response object accepted by this writer
  */
 public abstract class AbstractResponseWriter<ResponseType extends OWSResponse> implements OWSResponseWriter<ResponseType>
 {
     public final static String xmlError = "Error while generating XML for ";
     public final static String ioError = "IO error while writing XML response to stream";
 	public final static String unsupportedVersion = "No support for version ";
+	
+	protected DateTimeFormat timeFormat = new DateTimeFormat();
 	
 	
 	public abstract Element buildXMLResponse(DOMHelper dom, ResponseType response, String version) throws OWSException;

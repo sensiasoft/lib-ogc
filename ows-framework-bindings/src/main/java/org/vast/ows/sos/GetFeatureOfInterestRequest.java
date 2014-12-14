@@ -22,12 +22,8 @@ package org.vast.ows.sos;
 
 import java.util.*;
 import org.opengis.filter.spatial.BinarySpatialOperator;
-import org.opengis.filter.temporal.BinaryTemporalOperator;
-import org.vast.ogc.OGCRegistry;
-import org.vast.ogc.om.OMUtils;
 import org.vast.ows.OWSRequest;
 import org.vast.util.Bbox;
-import org.vast.util.TimeExtent;
 
 
 /**
@@ -50,6 +46,7 @@ public class GetFeatureOfInterestRequest extends OWSRequest
 	protected List<String> observables;
 	protected List<String> foiIDs;
 	protected BinarySpatialOperator spatialFilter;
+	protected FESUtils fesUtils = new FESUtils();
 	
 	
 	public GetFeatureOfInterestRequest()
@@ -94,12 +91,12 @@ public class GetFeatureOfInterestRequest extends OWSRequest
 
     public Bbox getBbox()
 	{
-        return FESUtils.filterToBbox(spatialFilter);
+        return fesUtils.filterToBbox(spatialFilter);
 	}
 
 
 	public void setBbox(Bbox bbox)
 	{
-	    this.spatialFilter = FESUtils.bboxToFilter(bbox);
+	    this.spatialFilter = fesUtils.bboxToFilter(bbox);
 	}
 }

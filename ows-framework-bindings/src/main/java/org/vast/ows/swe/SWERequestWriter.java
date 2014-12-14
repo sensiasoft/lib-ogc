@@ -40,7 +40,7 @@ import org.vast.ows.OWSRequest;
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
  * @date Oct 30, 2005
- * @version 1.0
+ * @param <RequestType> Type of OWS request object accepted by this writer
  */
 public abstract class SWERequestWriter<RequestType extends OWSRequest> extends AbstractRequestWriter<RequestType>
 {	

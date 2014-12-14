@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
 public class GetFeasibilityResponseReaderV20 extends SWEResponseReader<GetFeasibilityResponse>
 {
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
-	
+		
 	
 	public GetFeasibilityResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
@@ -61,7 +61,7 @@ public class GetFeasibilityResponseReaderV20 extends SWEResponseReader<GetFeasib
 			String isoDate = dom.getElementValue(responseElt, "latestResponseTime");
 			if (isoDate != null)
 			{
-				DateTime latestResponseTime = new DateTime(DateTimeFormat.parseIso(isoDate));
+				DateTime latestResponseTime = new DateTime(timeFormat.parseIso(isoDate));
 				response.setLatestResponseTime(latestResponseTime);
 			}
 			

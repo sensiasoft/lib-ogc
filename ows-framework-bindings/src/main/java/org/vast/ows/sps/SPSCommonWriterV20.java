@@ -56,6 +56,7 @@ import org.w3c.dom.Element;
 public class SPSCommonWriterV20
 {
 	protected SweEncodingWriterV20 encodingWriter = new SweEncodingWriterV20();
+	protected DateTimeFormat timeFormat = new DateTimeFormat();
 	
 	
 	/**
@@ -122,7 +123,7 @@ public class SPSCommonWriterV20
 		// estimated time of completion
 		DateTime date = report.getEstimatedToC();
 		if (date != null)
-			dom.setElementValue(reportElt, "sps:estimatedToC", DateTimeFormat.formatIso(date.getJulianTime(), 0)); 
+			dom.setElementValue(reportElt, "sps:estimatedToC", timeFormat.formatIso(date.getJulianTime(), 0)); 
 		
 		// event code
 		val = report.getEventCode();
@@ -155,7 +156,7 @@ public class SPSCommonWriterV20
 			
 		// update time
 		date = report.getLastUpdate();
-		dom.setElementValue(reportElt, "sps:updateTime", DateTimeFormat.formatIso(date.getJulianTime(), 0));		
+		dom.setElementValue(reportElt, "sps:updateTime", timeFormat.formatIso(date.getJulianTime(), 0));		
 	}
 	
 	

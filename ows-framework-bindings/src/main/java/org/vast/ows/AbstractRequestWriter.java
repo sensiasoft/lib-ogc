@@ -44,6 +44,7 @@ import org.vast.util.TimeExtent;
  * @author Alexandre Robin
  * @since Oct 30, 2005
  * @version 1.0
+ * @param <RequestType> Type of OWS request object accepted by this writer
  */
 public abstract class AbstractRequestWriter<RequestType extends OWSRequest> implements OWSRequestWriter<RequestType>
 {
@@ -51,6 +52,8 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
 	protected final static String noKVP = "KVP request not supported in ";
     protected final static String noXML = "XML request not supported in ";
     	
+    protected DateTimeFormat timeFormat = new DateTimeFormat();
+    
     
 	public AbstractRequestWriter()
 	{	
@@ -135,7 +138,7 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
             if (time.isBaseAtNow())
                 buffer.append("now");
             else
-                buffer.append(DateTimeFormat.formatIso(time.getBaseTime(), 0));
+                buffer.append(timeFormat.formatIso(time.getBaseTime(), 0));
         }
         else
         {
@@ -143,7 +146,7 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
             if (time.isBeginNow())
                 buffer.append("now");
             else
-                buffer.append(DateTimeFormat.formatIso(time.getStartTime(), 0));
+                buffer.append(timeFormat.formatIso(time.getStartTime(), 0));
         
             // add stop and step time
             buffer.append('/');
@@ -151,13 +154,13 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
             if (time.isEndNow())
                 buffer.append("now");
             else
-                buffer.append(DateTimeFormat.formatIso(time.getStopTime(), 0));
+                buffer.append(timeFormat.formatIso(time.getStopTime(), 0));
             
             // add time step if specified
             if (time.getTimeStep() > 0)
             {
                 buffer.append('/');
-                buffer.append(DateTimeFormat.formatIsoPeriod(time.getTimeStep()));
+                buffer.append(timeFormat.formatIsoPeriod(time.getTimeStep()));
             }
         }
     }
@@ -289,7 +292,7 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
         }
         else if (extValue instanceof Date)
         {
-            return DateTimeFormat.formatIso(((Date)extValue).getTime() / 1000.0, 0);
+            return timeFormat.formatIso(((Date)extValue).getTime() / 1000.0, 0);
         }
         else if (extValue instanceof TimeExtent)
         {

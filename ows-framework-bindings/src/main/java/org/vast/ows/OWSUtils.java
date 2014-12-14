@@ -14,7 +14,7 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alex.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -40,15 +40,14 @@ import org.w3c.dom.Element;
 
 /**
  * <p>
- * Utility methods for common stuffs in OGC services
+ * Utility methods for common handling of requests/responses in OGC web services
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
  * @since Jan 16, 2007
- * @version 1.0
  */
-public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<OWSRequest>
+public class OWSUtils extends OWSCommonUtils
 {
     public final static String OGC = "OGC";
     public final static String OWS = "OWS";
@@ -69,6 +68,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
 	public final static String unsupportedSpec = "No support for ";
     public final static String invalidEndpoint = "No Endpoint URL specified in request object";
     public final static String ioError = "IO Error while sending request:";
+    
+    OWSCommonUtils dataTypeUtils = new OWSCommonUtils();
     
     
     static
@@ -97,8 +98,12 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to parse any OWS query from an XML/DOM tree
-     * The service type is also specified to check if service in query is correct
-     * The default version is used in case no version is specified in the query
+     * @param dom DOM helper instance that will be used to parse the DOM tree
+     * @param requestElt root element of the request
+     * @param serviceType service type to check if service in query is correct
+     * @param defaultVersion version used in case no version is specified in the query
+     * @return OWS request object filled with all parameters parsed from XML request
+     * @throws OWSException 
      */
     public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt, String serviceType, String defaultVersion) throws OWSException
     {
@@ -131,6 +136,11 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to parse any OWS query from an XML/DOM tree
+     * @param dom DOM helper instance that will be used to parse the DOM tree
+     * @param requestElt root element of the request
+     * @param serviceType service type to check if service parameter in query is correct
+     * @return OWS request object filled with all parameters parsed from XML request
+     * @throws OWSException 
      */
     public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt, String serviceType) throws OWSException
     {
@@ -140,6 +150,10 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to parse any OWS query from an XML/DOM tree
+     * @param dom DOM helper instance that will be used to parse the DOM tree
+     * @param requestElt root element of the request 
+     * @return OWS request object filled with all parameters parsed from XML request
+     * @throws OWSException 
      */
     public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt) throws OWSException
     {
@@ -149,13 +163,17 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to parse any OWS query directly from an InputStream
+     * @param is input stream containing the XML document to read from
+     * @param serviceType service type to check if service parameter in query is correct 
+     * @return OWS request object filled with all parameters parsed from XML request
+     * @throws OWSException 
      */
-    public OWSRequest readXMLQuery(InputStream is, String service) throws OWSException
+    public OWSRequest readXMLQuery(InputStream is, String serviceType) throws OWSException
     {
     	try
 		{
 			DOMHelper dom = new DOMHelper(is, false);
-			OWSRequest request = readXMLQuery(dom, dom.getRootElement(), service);
+			OWSRequest request = readXMLQuery(dom, dom.getRootElement(), serviceType);
 			return request;
 		}
 		catch (DOMHelperException e)
@@ -167,6 +185,9 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to parse any OWS query directly from an InputStream
+     * @param is input stream containing the XML document to read from
+     * @return OWS request object filled with all parameters parsed from XML request
+     * @throws OWSException 
      */
     public OWSRequest readXMLQuery(InputStream is) throws OWSException
     {
@@ -176,50 +197,21 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to parse any OWS query from a URL query string
-     * The service type is also specified to check if service in query is correct
-     * The default version is used in case no version is specified in the query
+     * @param queryString query string to read request parameters from
+     * @param serviceType service type to check if service parameter in query is correct 
+     * @param defaultVersion version used in case no version is specified in the query
+     * @return OWS request object containing all parameters parsed from query string
+     * @throws OWSException 
      */
     public OWSRequest readURLQuery(String queryString, String serviceType, String defaultVersion) throws OWSException
-    {
-        Map<String, String> queryParams = AbstractRequestReader.parseQueryParameters(queryString);
-       return readURLParameters(queryParams, serviceType, defaultVersion);
-    }
-    
-    
-    /**
-     * Helper method to parse any OWS query from a URL query string
-     * The service type is also specified in case it is missing in the query
-     */
-    public OWSRequest readURLQuery(String queryString, String serviceType) throws OWSException
-    {
-    	return readURLQuery(queryString, serviceType, null);
-    }
-    
-    
-    /**
-     * Helper method to parse any OWS query from a URL query string
-     */
-    public OWSRequest readURLQuery(String queryString) throws OWSException
-    {
-        return readURLQuery(queryString, null);
-    }
-    
-    
-    /**
-     * Helper method to decode URL KVP parameters into the right request object
-     * @param queryParams
-     * @param serviceType
-     * @param defaultVersion
-     * @return
-     * @throws OWSException
-     */
-    public OWSRequest readURLParameters(Map<String, String> queryParams, String serviceType, String defaultVersion) throws OWSException
     {
         // init generic request object
         OWSRequest request = new OWSRequest();
         
         try
         {
+            Map<String, String> queryParams = parseQueryParameters(queryString);
+            
             // read common params to figure out what reader to use
             request.setService(queryParams.get("service"));
             request.setOperation(queryParams.get("request"));
@@ -244,19 +236,37 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     
     /**
-     * Helper method to parse KVP arguments of any OWS query
-     */    
-    public OWSRequest readURLParameters(Map<String, String> queryParams) throws OWSException
+     * Helper method to parse any OWS query from a URL query string
+     * The service type is also specified in case it is missing in the query
+     * @param queryString query string to read request parameters from
+     * @param serviceType service type to check if service parameter in query is correct 
+     * @return OWS request object containing all parameters parsed from query string
+     * @throws OWSException 
+     */
+    public OWSRequest readURLQuery(String queryString, String serviceType) throws OWSException
     {
-        return readURLParameters(queryParams, null, null);
+    	return readURLQuery(queryString, serviceType, null);
     }
     
     
     /**
-     * Helper method to read the version from the request XML
-     * @param dom
-     * @param objectElt
-     * @return
+     * Helper method to parse any OWS query from a URL query string
+     * @param queryString query string to read request parameters from 
+     * @return OWS request object containing all parameters parsed from query string
+     * @throws OWSException 
+     */
+    public OWSRequest readURLQuery(String queryString) throws OWSException
+    {
+        return readURLQuery(queryString, null);
+    }
+    
+    
+    /**
+     * Helper method to guess the version from the request XML
+     * @param dom DOM helper instance that will be used to parse the DOM tree
+     * @param objectElt DOM element to read version from
+     * @return version string
+     * @throws OWSException 
      */
     public String readXMLVersion(DOMHelper dom, Element objectElt) throws OWSException
     {
@@ -279,7 +289,10 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     
     /**
-     * Helper method to build an URL query from given query object
+     * Helper method to build an URL query from given request object
+     * @param request OWS request object
+     * @return query string generated from the given request object
+     * @throws OWSException 
      */
     public String buildURLQuery(OWSRequest request) throws OWSException
     {
@@ -300,6 +313,10 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     /**
      * Helper method to build a DOM element containing the request XML
      * Note that the element is not yet appended to any parent.
+     * @param dom DOM helper instance that will be used to generate the DOM tree
+     * @param request OWS request object
+     * @return DOM element containing the request XML
+     * @throws OWSException 
      */
     public Element buildXMLQuery(DOMHelper dom, OWSRequest request) throws OWSException
     {
@@ -318,7 +335,10 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     
     /**
-     * Helper method to write any OWS XML request to an output stream
+     * Helper method to write any OWS XML request directly to an output stream
+     * @param os output stream to write to
+     * @param request OWS request object
+     * @throws OWSException 
      */
     public void writeXMLQuery(OutputStream os, OWSRequest request) throws OWSException
     {
@@ -338,10 +358,10 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     /**
      * Helper method to parse any OWSResponse from service type only
      * This tries to guess the response type and version from the root element
-     * @param dom
-     * @param responseElt
-     * @param serviceType
-     * @return
+     * @param dom DOM helper instance that will be used to parse the DOM tree
+     * @param responseElt root element of the XML response
+     * @param serviceType type of OGC service sending the response
+     * @return OWS response object
      * @throws OWSException
      */
     public OWSResponse readXMLResponse(DOMHelper dom, Element responseElt, String serviceType) throws OWSException
@@ -353,11 +373,11 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     /**
      * Helper method to parse any OWSResponse from service type and response type only
      * This tries to guess the version from a version attribute or the end of the namespace uri
-     * @param dom
-     * @param responseElt
-     * @param serviceType
-     * @param responseType
-     * @return
+     * @param dom DOM helper instance that will be used to parse the DOM tree
+     * @param responseElt root element of the XML response
+     * @param serviceType type of OGC service sending the response
+     * @param responseType type of response object to read (if null XML element name is used)
+     * @return OWS response object
      * @throws OWSException
      */
     public OWSResponse readXMLResponse(DOMHelper dom, Element responseElt, String serviceType, String responseType) throws OWSException
@@ -368,12 +388,12 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to parse any OWSResponse from service type, response type and version
-     * @param dom
-     * @param responseElt
-     * @param serviceType
-     * @param responseType
-     * @param version
-     * @return
+     * @param dom DOM helper instance that will be used to parse the DOM tree
+     * @param responseElt root element of the XML response
+     * @param serviceType type of OGC service sending the response
+     * @param responseType type of response object to read (if null XML element name is used)
+     * @param version version of reader to use
+     * @return OWS response object
      * @throws OWSException
      */
     public OWSResponse readXMLResponse(DOMHelper dom, Element responseElt, String serviceType, String responseType, String version) throws OWSException
@@ -410,10 +430,10 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to parse any OWS response directly from an InputStream
-     * @param is
-     * @param serviceType
-     * @param responseType
-     * @return
+     * @param is input stream to read from
+     * @param serviceType type of OGC service sending the response
+     * @param responseType type of response to read (get it from 
+     * @return OWS response object
      * @throws OWSException
      */
     public OWSResponse readXMLResponse(InputStream is, String serviceType, String responseType) throws OWSException
@@ -434,10 +454,11 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     /**
 	 * Helper method to build a DOM element containing the response XML
 	 * for the specified version 
-	 * @param dom
-	 * @param response
-	 * @param version
-	 * @return
+	 * @param dom DOM helper instance that will be used to generate the DOM tree
+	 * @param response OWS response object
+	 * @param version version of writer to use
+	 * @return DOM element containing the response XML
+     * @throws OWSException 
 	 */
 	public Element buildXMLResponse(DOMHelper dom, OWSResponse response, String version) throws OWSException
 	{
@@ -456,11 +477,12 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
 	
 	
 	/**
-	 * Helper method to build a DOM element containing the response XML
+	 * Helper method to build a DOM element containing the response XML.<br/>
 	 * in a version agnostic way. The element is not appended to any parent 
-	 * @param dom
-	 * @param response
-	 * @return
+	 * @param dom DOM helper instance that will be used to generate the DOM tree
+	 * @param response OWS response object
+	 * @return DOM element containing the response XML
+	 * @throws OWSException 
 	 */
 	public Element buildXMLResponse(DOMHelper dom, OWSResponse response) throws OWSException
 	{
@@ -469,7 +491,11 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
 	
 	
 	/**
-     * Helper method to write any OWS XML response to an output stream
+     * Helper method to write any OWS XML response directly to an output stream
+	 * @param os output stream to write to
+	 * @param response OWS response object
+	 * @param version version of writer to use
+	 * @throws OWSException 
      */
     public void writeXMLResponse(OutputStream os, OWSResponse response, String version) throws OWSException
     {
@@ -487,7 +513,11 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     
     /**
-     * Helper method to write any OWS XML response to an output stream
+     * Helper method to write any OWS XML response directly to an output stream.<br/>
+     * The version specified in the response object determines the version of writer to use
+     * @param os output stream to write to
+     * @param response OWS response object
+     * @throws OWSException 
      */
     public void writeXMLResponse(OutputStream os, OWSResponse response) throws OWSException
     {
@@ -497,8 +527,10 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to write OWS exception reports
-     * @param os
-     * @param e
+     * @param os output stream to write to
+     * @param serviceType type of OGC service generating the exception
+     * @param version version of exception report to write
+     * @param e OWS exception to write
      */
     public void writeXMLException(OutputStream os, String serviceType, String version, OWSException e)
     {
@@ -509,6 +541,14 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     }
     
     
+    /**
+     * Helper method to send any OWS request using either GET or POST URL as specified in request object.<br/>
+     * If both GET and POST URLs are specified, GET is used.
+     * @param request OWS request object to send
+     * @param useSoap set to true to wrap the POST request into a SOAP envelope
+     * @return OWS response object obtained from service response
+     * @throws OWSException if service returned an OWS exception
+     */
     public <ResponseType extends OWSResponse> ResponseType sendRequest(OWSRequest request, boolean useSoap) throws OWSException
     {
         HttpURLConnection conn = null;
@@ -545,9 +585,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to send any OWS request to the server URL using GET
-     * @param request OWSQuery object
-     * @param usePost true if using POST
-     * @return HTTP Connection Object
+     * @param request OWS request object
+     * @return HTTP connection object
      * @throws OWSException
      */
     public HttpURLConnection sendGetRequest(OWSRequest request) throws OWSException
@@ -587,8 +626,8 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to send any OWS request to the server URL using POST
-     * @param request OWSQuery object
-     * @return HTTP Connection Object
+     * @param request OWS request object to send
+     * @return HTTP connection object
      * @throws OWSException
      */
     public HttpURLConnection sendPostRequest(OWSRequest request) throws OWSException
@@ -645,9 +684,9 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     
     /**
-     * Helper method to send any OWS request to the server URL using SOAP
-     * @param request OWSQuery object
-     * @return HTTP Connection Object
+     * Helper method to send any OWS request to the server URL using POST with SOAP
+     * @param request OWS request object to send
+     * @return HTTP connection object
      * @throws OWSException
      */
     public HttpURLConnection sendSoapRequest(OWSRequest request) throws OWSException
@@ -711,8 +750,13 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to parse any OWS capabilities document from an XML/DOM tree
+     * @param dom DOM helper instance to use to parse the DOM tree
+     * @param capsElt root of the capabilities document
+     * @param serviceType type of service to read capabilities from
+     * @return OWS capabilities
+     * @throws OWSException 
      */
-    public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capsElt, String service) throws OWSException
+    public OWSServiceCapabilities readCapabilities(DOMHelper dom, Element capsElt, String serviceType) throws OWSException
     {
         // read common params and check that they're present
         String version = dom.getAttributeValue(capsElt, "@version");
@@ -720,13 +764,13 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
         
         try
         {
-            OWSResponseReader<OWSResponse> reader = (OWSResponseReader<OWSResponse>)OGCRegistry.createReader(service, message, version);
+            OWSResponseReader<OWSResponse> reader = (OWSResponseReader<OWSResponse>)OGCRegistry.createReader(serviceType, message, version);
             OWSServiceCapabilities caps = (OWSServiceCapabilities)reader.readXMLResponse(dom, capsElt);
             return caps;
         }
         catch (IllegalStateException e)
         {
-            String spec = service + " " + message + " v" + version;
+            String spec = serviceType + " " + message + " v" + version;
         	throw new OWSException(unsupportedSpec + spec, e);
         }
     }
@@ -734,10 +778,10 @@ public class OWSUtils implements OWSRequestReader<OWSRequest>, OWSRequestWriter<
     
     /**
      * Helper method to get capabilities from an OWS service and parse it
-     * @param server
-     * @param serviceType
-     * @param version
-     * @return
+     * @param server URL of server to get capabilities from (without getCapabilities query arguments)
+     * @param serviceType type of service the request will be sent to
+     * @param version version of service the request will be sent to
+     * @return OWS capabilities
      * @throws OWSException
      */
     public OWSServiceCapabilities getCapabilities(String server, String serviceType, String version) throws OWSException

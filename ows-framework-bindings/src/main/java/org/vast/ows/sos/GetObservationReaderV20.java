@@ -28,9 +28,6 @@ package org.vast.ows.sos;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import javax.xml.transform.dom.DOMSource;
-import org.geotools.xml.Configuration;
-import org.geotools.xml.Parser;
 import org.opengis.filter.spatial.BinarySpatialOperator;
 import org.opengis.filter.temporal.BinaryTemporalOperator;
 import org.vast.xml.DOMHelper;
@@ -58,7 +55,7 @@ import org.vast.ows.swe.SWERequestReader;
  */
 public class GetObservationReaderV20 extends SWERequestReader<GetObservationRequest>
 {
-    protected Parser filterParser;
+    protected FESUtils fesUtils = new FESUtils();
     
     
     public GetObservationReaderV20()
@@ -77,7 +74,7 @@ public class GetObservationReaderV20 extends SWERequestReader<GetObservationRequ
 		Map<String, String> namespaceMap = null;
         String nsList = queryParameters.remove("namespaces");
         if (nsList != null)
-            namespaceMap = FESUtils.readKVPNamespaces(nsList);
+            namespaceMap = fesUtils.readKVPNamespaces(nsList);
 		
         // parse other params
         Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
@@ -124,7 +121,7 @@ public class GetObservationReaderV20 extends SWERequestReader<GetObservationRequ
             {
                 try
                 {
-                    BinaryTemporalOperator filter = FESUtils.readKVPTemporalFilter(argValue, namespaceMap);
+                    BinaryTemporalOperator filter = fesUtils.readKVPTemporalFilter(argValue, namespaceMap);
                     request.setTemporalFilter(filter);
                 }
                 catch (Exception e)
@@ -138,7 +135,7 @@ public class GetObservationReaderV20 extends SWERequestReader<GetObservationRequ
             {
                 try
                 {
-                    BinarySpatialOperator filter = FESUtils.readKVPSpatialFilter(argValue, namespaceMap);
+                    BinarySpatialOperator filter = fesUtils.readKVPSpatialFilter(argValue, namespaceMap);
                     request.setSpatialFilter(filter);
                 }
                 catch (Exception e)
@@ -206,8 +203,7 @@ public class GetObservationReaderV20 extends SWERequestReader<GetObservationRequ
             Element timeOpElt = dom.getElement(requestElt, "temporalFilter/*");
             if (timeOpElt != null)
             {
-                DOMSource domSrc = new DOMSource(timeOpElt);
-                BinaryTemporalOperator filter = (BinaryTemporalOperator)getFilterParser().parse(domSrc);
+                BinaryTemporalOperator filter = fesUtils.readXMLTemporalFilter(timeOpElt);
                 request.setTemporalFilter(filter);
             }
         }
@@ -230,8 +226,7 @@ public class GetObservationReaderV20 extends SWERequestReader<GetObservationRequ
             Element spatialOpElt = dom.getElement(requestElt, "spatialFilter/*");
             if (spatialOpElt != null)
             {
-                DOMSource domSrc = new DOMSource(spatialOpElt);
-                BinarySpatialOperator filter = (BinarySpatialOperator)getFilterParser().parse(domSrc);
+                BinarySpatialOperator filter = fesUtils.readXMLSpatialFilter(spatialOpElt);
                 request.setSpatialFilter(filter);
             }
         }
@@ -259,17 +254,5 @@ public class GetObservationReaderV20 extends SWERequestReader<GetObservationRequ
     	// check common params
 		super.checkParameters(request, report, OWSUtils.SOS);		
 		report.process();
-    }
-    
-    
-    protected Parser getFilterParser()
-    {
-        if (filterParser == null)
-        {
-            Configuration configuration = new org.geotools.filter.v2_0.FESConfiguration();
-            filterParser = new Parser(configuration);
-        }
-        
-        return filterParser;
     }
 }

@@ -53,6 +53,7 @@ import org.vast.xml.DOMHelper;
 public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest> extends SWERequestReader<RequestType> implements SweEncodedMessageProcessor
 {
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
+	protected DateTimeFormat timeFormat = new DateTimeFormat();
 	protected DataComponent taskingParamStructure;
 	
 	
@@ -97,7 +98,7 @@ public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest
 			String isoDate = dom.getElementValue(requestElt, "latestResponseTime");
 			if (isoDate != null)
 			{
-				DateTime latestResponseTime = new DateTime(DateTimeFormat.parseIso(isoDate));
+				DateTime latestResponseTime = new DateTime(timeFormat.parseIso(isoDate));
 				request.setLatestResponseTime(latestResponseTime);
 			}
 		}

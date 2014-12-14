@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.vast.util.Bbox;
-import org.vast.util.DateTimeFormat;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLReaderException;
@@ -234,7 +233,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 				
 				try
 				{
-					double begin = DateTimeFormat.parseIso(beginPos);
+					double begin = timeFormat.parseIso(beginPos);
 					timeRange.setStartTime(begin);
 				}
 				catch (ParseException e)
@@ -244,7 +243,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 				
 				try
 				{
-					double end = DateTimeFormat.parseIso(endPos);
+					double end = timeFormat.parseIso(endPos);
 					timeRange.setStopTime(end);
 				}
 				catch (ParseException e)
@@ -260,7 +259,7 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 					try
 					{
 						if (timeRes.contains("P"))
-							step = DateTimeFormat.parseIsoPeriod(timeRes);
+							step = timeFormat.parseIsoPeriod(timeRes);
 						else
 							step = Double.parseDouble(timeRes);
 						

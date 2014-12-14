@@ -22,7 +22,7 @@
 
 package org.vast.ows.wcs;
 
-import org.vast.ows.AbstractRequestReader;
+import org.vast.ows.OWSCommonUtils;
 import org.vast.ows.OWSException;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -39,12 +39,12 @@ import org.w3c.dom.Element;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 4 déc. 07
+ * @date 4 dï¿½c. 07
  * @version 1.0
  */
-public class WCSCommonReaderV11
+public class WCSCommonReaderV11 extends OWSCommonUtils
 {
-	
+    
 	public void readGridCRS(DOMHelper dom, Element gridElt, WCSRectifiedGridCrs gridCrs) throws OWSException
     {
 		// base CRS
@@ -65,7 +65,7 @@ public class WCSCommonReaderV11
 		String gridOrigin = dom.getElementValue(gridElt, "GridOrigin");
 		if (gridOrigin != null)
 		{
-			double[] vecOrig = AbstractRequestReader.parseVector(gridOrigin);
+			double[] vecOrig = parseVector(gridOrigin);
 			gridCrs.setGridDimension(vecOrig.length);
 			gridCrs.setGridOrigin(vecOrig);
 		}

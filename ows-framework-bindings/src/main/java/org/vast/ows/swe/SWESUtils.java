@@ -93,7 +93,7 @@ public class SWESUtils
 	        else if (extValue instanceof Date)
 	        {
 	            extContent = dom.getDocument().createElementNS(extName.getNsUri(), extName.getLocalName());
-	            dom.setElementValue(extContent, DateTimeFormat.formatIso(((Date)extValue).getTime() / 1000.0, 0));
+	            dom.setElementValue(extContent, new DateTimeFormat().formatIso(((Date)extValue).getTime() / 1000.0, 0));
 	        }
 			
 			if (extContent != null)

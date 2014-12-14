@@ -25,7 +25,6 @@ import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseWriter;
 import org.w3c.dom.*;
 import org.vast.util.DateTime;
-import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLWriterException;
 
@@ -48,7 +47,7 @@ import org.vast.xml.XMLWriterException;
 public class GetFeasibilityResponseWriterV20 extends SWEResponseWriter<GetFeasibilityResponse>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();
-	
+		
 	
 	public Element buildXMLResponse(DOMHelper dom, GetFeasibilityResponse response, String version) throws OWSException
 	{
@@ -66,7 +65,7 @@ public class GetFeasibilityResponseWriterV20 extends SWEResponseWriter<GetFeasib
 			DateTime latestResp = response.getLatestResponseTime();
 			if (latestResp != null)
 				dom.setElementValue(rootElt, "sps:latestResponseTime",
-						DateTimeFormat.formatIso(latestResp.getJulianTime(), 0));
+				        timeFormat.formatIso(latestResp.getJulianTime(), 0));
 			
 			// feasibility report
 			Element reportElt = commonWriter.writeFeasibilityReport(dom, response.getReport());

@@ -52,7 +52,8 @@ public class GetObservationRequest extends OWSRequest
     }
     
     public static String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0");
-        
+    
+    protected FESUtils fesUtils = new FESUtils();
 	protected List<String> procedures;
 	protected List<String> offerings;
 	protected List<String> observables;
@@ -128,13 +129,13 @@ public class GetObservationRequest extends OWSRequest
 
     public TimeExtent getTime()
 	{
-        return FESUtils.filterToTimeInfo(temporalFilter);
+        return fesUtils.filterToTimeInfo(temporalFilter);
 	}
 
 
 	public void setTime(TimeExtent time)
 	{
-	    this.temporalFilter = FESUtils.timeInfoToFilter(time);
+	    this.temporalFilter = fesUtils.timeInfoToFilter(time);
 	}	
 
 
@@ -152,13 +153,13 @@ public class GetObservationRequest extends OWSRequest
 
     public Bbox getBbox()
 	{
-        return FESUtils.filterToBbox(spatialFilter);
+        return fesUtils.filterToBbox(spatialFilter);
 	}
 
 
 	public void setBbox(Bbox bbox)
 	{
-	    this.spatialFilter = FESUtils.bboxToFilter(bbox);
+	    this.spatialFilter = fesUtils.bboxToFilter(bbox);
 	}
 	
 	

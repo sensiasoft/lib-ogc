@@ -35,7 +35,9 @@ import org.w3c.dom.Element;
 public class SASAlertReader extends SWEReader
 {
 	protected SWEFilter streamFilter;
-	protected double timestamp;       
+	protected double timestamp;
+	protected DateTimeFormat timeFormat = new DateTimeFormat();
+	
     
     public SASAlertReader()
     {
@@ -61,7 +63,7 @@ public class SASAlertReader extends SWEReader
             // read timestamp
             Element timestampElt = dom.getElement(rootElement, "Timestamp");
             String timestampISO = dom.getElementValue(timestampElt);
-            timestamp = DateTimeFormat.parseIso(timestampISO);        
+            timestamp = timeFormat.parseIso(timestampISO);        
 
             // create dataParser
             this.dataParser = createDataParser();

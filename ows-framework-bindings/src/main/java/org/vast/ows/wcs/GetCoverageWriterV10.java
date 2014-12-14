@@ -28,7 +28,6 @@ import org.vast.ogc.gml.GMLEnvelopeWriter;
 import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.*;
 import org.w3c.dom.*;
-import org.vast.util.DateTimeFormat;
 import org.vast.util.Interval;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
@@ -201,14 +200,14 @@ public class GetCoverageWriterV10 extends AbstractRequestWriter<GetCoverageReque
 				TimeExtent timeInfo = request.getTimes().get(i);
 				if (timeInfo.isTimeInstant())
 				{
-					String time = DateTimeFormat.formatIso(timeInfo.getBaseTime(), timeInfo.getTimeZone());
+					String time = timeFormat.formatIso(timeInfo.getBaseTime(), timeInfo.getTimeZone());
 					dom.setElementValue(temporalElt, "+gml:timePosition", time);
 				}
 				else
 				{
 					Element periodElt = dom.addElement(temporalElt, "+timePeriod");
-					String begin = DateTimeFormat.formatIso(timeInfo.getStartTime(), timeInfo.getTimeZone());
-					String end = DateTimeFormat.formatIso(timeInfo.getStopTime(), timeInfo.getTimeZone());
+					String begin = timeFormat.formatIso(timeInfo.getStartTime(), timeInfo.getTimeZone());
+					String end = timeFormat.formatIso(timeInfo.getStopTime(), timeInfo.getTimeZone());
 					dom.setElementValue(periodElt, "beginTime", begin);
 					dom.setElementValue(periodElt, "endTime", end);
 					

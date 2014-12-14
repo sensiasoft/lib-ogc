@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.util.DateTime;
-import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 
 
@@ -50,6 +49,7 @@ import org.vast.xml.DOMHelper;
 public class ReserveRequestReaderV20 extends TaskingRequestReaderV20<ReserveRequest>
 {
 		
+    
 	@Override
 	public ReserveRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
 	{
@@ -69,7 +69,7 @@ public class ReserveRequestReaderV20 extends TaskingRequestReaderV20<ReserveRequ
 			String isoDate = dom.getElementValue(requestElt, "reservationExpiration");
 			if (isoDate != null)
 			{
-				DateTime expirationDate = new DateTime(DateTimeFormat.parseIso(isoDate));
+				DateTime expirationDate = new DateTime(timeFormat.parseIso(isoDate));
 				request.setReservationExpiration(expirationDate);
 			}
 		}

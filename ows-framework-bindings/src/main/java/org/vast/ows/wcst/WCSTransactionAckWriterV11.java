@@ -22,7 +22,6 @@
 
 package org.vast.ows.wcst;
 
-import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 import org.w3c.dom.*;
@@ -59,7 +58,7 @@ public class WCSTransactionAckWriterV11 extends AbstractResponseWriter<WCSTransa
 		Element rootElt = dom.createElement("Acknowledgement");
 		
 		// time stamp
-		String timeStamp = DateTimeFormat.formatIso(response.getTimeStamp().getJulianTime(), 0);
+		String timeStamp = timeFormat.formatIso(response.getTimeStamp().getJulianTime(), 0);
 		dom.setElementValue(rootElt, "TimeStamp", timeStamp);
 		
 		// original request

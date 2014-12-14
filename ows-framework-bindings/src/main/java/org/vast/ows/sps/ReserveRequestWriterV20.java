@@ -63,7 +63,7 @@ public class ReserveRequestWriterV20 extends TaskingRequestWriterV20<ReserveRequ
 		DateTime expirationDate = request.getReservationExpiration();
 		if (expirationDate != null)
 		{
-			String isoTime = DateTimeFormat.formatIso(expirationDate.getJulianTime(), 0);
+			String isoTime = timeFormat.formatIso(expirationDate.getJulianTime(), 0);
 			dom.setElementValue(requestElt, "sps:reservationExpiration", isoTime);
 		}
 		

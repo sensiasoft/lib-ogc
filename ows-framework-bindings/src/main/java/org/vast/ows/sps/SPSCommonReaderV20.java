@@ -58,7 +58,8 @@ import org.w3c.dom.Element;
 public class SPSCommonReaderV20
 {
 	protected SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
-		
+	protected DateTimeFormat timeFormat = new DateTimeFormat();
+    
 	
 	/**
 	 * Read SWE Data stream such as inside taskingParameters or reportParameters
@@ -138,7 +139,7 @@ public class SPSCommonReaderV20
 			val = dom.getElementValue(reportElt, "estimatedToC");
 			if (val != null)
 			{
-				DateTime estimatedToC = new DateTime(DateTimeFormat.parseIso(val));
+				DateTime estimatedToC = new DateTime(timeFormat.parseIso(val));
 				report.setEstimatedToC(estimatedToC);
 			}
 			
@@ -176,7 +177,7 @@ public class SPSCommonReaderV20
 			val = dom.getElementValue(reportElt, "updateTime");
 			if (val != null)
 			{
-				DateTime lastUpdate = new DateTime(DateTimeFormat.parseIso(val));
+				DateTime lastUpdate = new DateTime(timeFormat.parseIso(val));
 				report.setLastUpdate(lastUpdate);
 			}
 		}
@@ -239,7 +240,7 @@ public class SPSCommonReaderV20
 			String isoDate = dom.getElementValue(reportElt, "reservationExpiration");
 			if (isoDate != null)
 			{
-				DateTime expiration = new DateTime(DateTimeFormat.parseIso(isoDate));
+				DateTime expiration = new DateTime(timeFormat.parseIso(isoDate));
 				report.setReservationExpiration(expiration);
 			}
 			
