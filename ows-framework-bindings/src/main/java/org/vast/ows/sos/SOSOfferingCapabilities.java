@@ -50,14 +50,10 @@ public class SOSOfferingCapabilities extends SWESOfferingCapabilities
 
     public SOSOfferingCapabilities()
     {
-        observableProperties = new ArrayList<String>(10);
-        procedures = new ArrayList<String>(2);
         observedAreas = new ArrayList<Bbox>(2);
         phenomenonTimes = new ArrayList<TimeExtent>(2);
         resultTimes = new ArrayList<TimeExtent>(2);
-        relatedFeatures = new ArrayList<String>(2);        
         responseFormats = new ArrayList<String>(2);
-    	procedureFormats = new ArrayList<String>(2);
     	observationTypes = new ArrayList<String>(2);
     	foiTypes = new ArrayList<String>(2);
     }

@@ -139,12 +139,6 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
 	}
 
 	
-	/**
-	 * Reads the service provider section
-	 * @param dom
-	 * @param parentElt
-	 * @return
-	 */
 	protected void readServiceProvider(DOMHelper dom, Element providerElt, OWSServiceCapabilities serviceCaps)
 	{
 		ResponsibleParty provider = serviceCaps.getServiceProvider();
@@ -164,28 +158,34 @@ public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReade
 		text = dom.getElementValue(contactElt, "Role");
 		provider.setRole(text);
 		
-		Element contactInfoElt = dom.getElement(contactElt, "ContactInfo");		
-		text = dom.getElementValue(contactInfoElt, "Phone/Voice");
-		provider.setVoiceNumber(text);		
-		text = dom.getElementValue(contactInfoElt, "Phone/Facsimile");
-		provider.setFaxNumber(text);		
-		text = dom.getElementValue(contactInfoElt, "HoursOfService");
-		provider.setHoursOfService(text);		
-		text = dom.getElementValue(contactInfoElt, "ContactInstructions");
-		provider.setContactInstructions(text);
-		
-		Element addressElt = dom.getElement(contactInfoElt, "Address");		
-		text = dom.getElementValue(addressElt, "DeliveryPoint");
-		provider.setDeliveryPoint(text);		
-		text = dom.getElementValue(addressElt, "City");
-		provider.setCity(text);
-		text = dom.getElementValue(addressElt, "AdministrativeArea");
-		provider.setAdministrativeArea(text);
-		text = dom.getElementValue(addressElt, "PostalCode");
-		provider.setPostalCode(text);
-		text = dom.getElementValue(addressElt, "Country");
-		provider.setCountry(text);
-		text = dom.getElementValue(addressElt, "ElectronicMailAddress");
-		provider.setEmail(text);
+		Element contactInfoElt = dom.getElement(contactElt, "ContactInfo");
+		if (contactInfoElt != null)
+		{
+    		text = dom.getElementValue(contactInfoElt, "Phone/Voice");
+    		provider.setVoiceNumber(text);		
+    		text = dom.getElementValue(contactInfoElt, "Phone/Facsimile");
+    		provider.setFaxNumber(text);		
+    		text = dom.getElementValue(contactInfoElt, "HoursOfService");
+    		provider.setHoursOfService(text);		
+    		text = dom.getElementValue(contactInfoElt, "ContactInstructions");
+    		provider.setContactInstructions(text);  
+    		
+    		Element addressElt = dom.getElement(contactInfoElt, "Address");
+    		if (addressElt != null)
+    		{
+        		text = dom.getElementValue(addressElt, "DeliveryPoint");
+        		provider.setDeliveryPoint(text);		
+        		text = dom.getElementValue(addressElt, "City");
+        		provider.setCity(text);
+        		text = dom.getElementValue(addressElt, "AdministrativeArea");
+        		provider.setAdministrativeArea(text);
+        		text = dom.getElementValue(addressElt, "PostalCode");
+        		provider.setPostalCode(text);
+        		text = dom.getElementValue(addressElt, "Country");
+        		provider.setCountry(text);
+        		text = dom.getElementValue(addressElt, "ElectronicMailAddress");
+        		provider.setEmail(text);
+    		}
+		}
 	}
 }

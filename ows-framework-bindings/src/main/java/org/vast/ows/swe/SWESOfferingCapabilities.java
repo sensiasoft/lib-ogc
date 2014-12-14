@@ -25,6 +25,7 @@
 
 package org.vast.ows.swe;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.vast.ows.OWSLayerCapabilities;
 
@@ -53,6 +54,10 @@ public abstract class SWESOfferingCapabilities extends OWSLayerCapabilities
     public SWESOfferingCapabilities()
     {
         super();
+        observableProperties = new ArrayList<String>(10);
+        procedures = new ArrayList<String>(2);
+        relatedFeatures = new ArrayList<String>(2);        
+        procedureFormats = new ArrayList<String>(2);        
     }
 
 

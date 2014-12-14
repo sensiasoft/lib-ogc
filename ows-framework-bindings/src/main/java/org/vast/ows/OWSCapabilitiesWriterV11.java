@@ -21,7 +21,6 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.ows;
 
-import java.util.Enumeration;
 import org.vast.util.ResponsibleParty;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -78,8 +77,7 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractResponseWriter<OW
 		writeIdentification(dom, idElt, caps.getIdentification());
 		
 		// mandatory service type
-		Element servTypeElt = dom.setElementValue(idElt, "ows:ServiceType", "OGC:" + caps.getService());
-		dom.setAttributeValue(servTypeElt, "codeSpace", "http://opengeospatial.net");
+		dom.setElementValue(idElt, "ows:ServiceType", "OGC:" + caps.getService());
 		
 		// at least one supported version
 		for (String version: caps.getSupportedVersions())
@@ -169,42 +167,47 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractResponseWriter<OW
 			dom.setElementValue(contactElt, "ows:PositionName", text);
 				
 		// Contact Info element and children
-		Element contactInfoElt = dom.addElement(contactElt, "ows:ContactInfo");
-		text = provider.getVoiceNumber();
-		if (text != null)
-			dom.setElementValue(contactInfoElt, "ows:Phone/ows:Voice", text);
-		text = provider.getFaxNumber();
-		if (text != null)
-			dom.setElementValue(contactInfoElt, "ows:Phone/ows:Facsimile", text);
-		
-		// Address element and children	
-		Element addressElt = dom.addElement(contactInfoElt, "ows:Address");
-		text = provider.getDeliveryPoint();		
-		if (text != null)
-			dom.setElementValue(addressElt, "ows:DeliveryPoint", text);
-		text = provider.getCity();
-		if (text != null)
-			dom.setElementValue(addressElt, "ows:City", text);
-		text = provider.getAdministrativeArea();
-		if (text != null)
-			dom.setElementValue(addressElt, "ows:AdministrativeArea", text);
-		text = provider.getPostalCode();
-		if (text != null)
-			dom.setElementValue(addressElt, "ows:PostalCode", text);
-		text = provider.getCountry();
-		if (text != null)
-			dom.setElementValue(addressElt, "ows:Country", text);
-		text = provider.getEmail();
-		if (text != null)
-			dom.setElementValue(addressElt, "ows:ElectronicMailAddress", text);
-		
-		// end of ContactInfo
-		text = provider.getHoursOfService();
-		if (text != null)
-			dom.setElementValue(contactInfoElt, "ows:HoursOfService", text);
-		text = provider.getContactInstructions();
-		if (text != null)
-			dom.setElementValue(contactInfoElt, "ows:ContactInstructions", text);
+		if (provider.hasContactInfo())
+		{
+    		Element contactInfoElt = dom.addElement(contactElt, "ows:ContactInfo");
+    		text = provider.getVoiceNumber();
+    		if (text != null)
+    			dom.setElementValue(contactInfoElt, "ows:Phone/ows:Voice", text);
+    		text = provider.getFaxNumber();
+    		if (text != null)
+    			dom.setElementValue(contactInfoElt, "ows:Phone/ows:Facsimile", text);
+    		
+    		// Address element and children
+    		if (provider.hasAddress())
+    		{
+        		Element addressElt = dom.addElement(contactInfoElt, "ows:Address");
+        		text = provider.getDeliveryPoint();		
+        		if (text != null)
+        			dom.setElementValue(addressElt, "ows:DeliveryPoint", text);
+        		text = provider.getCity();
+        		if (text != null)
+        			dom.setElementValue(addressElt, "ows:City", text);
+        		text = provider.getAdministrativeArea();
+        		if (text != null)
+        			dom.setElementValue(addressElt, "ows:AdministrativeArea", text);
+        		text = provider.getPostalCode();
+        		if (text != null)
+        			dom.setElementValue(addressElt, "ows:PostalCode", text);
+        		text = provider.getCountry();
+        		if (text != null)
+        			dom.setElementValue(addressElt, "ows:Country", text);
+        		text = provider.getEmail();
+        		if (text != null)
+        			dom.setElementValue(addressElt, "ows:ElectronicMailAddress", text);
+    		}
+
+    		text = provider.getHoursOfService();
+    		if (text != null)
+    			dom.setElementValue(contactInfoElt, "ows:HoursOfService", text);
+    		text = provider.getContactInstructions();
+    		if (text != null)
+    			dom.setElementValue(contactInfoElt, "ows:ContactInstructions", text);
+		}
 		
 		// end of ServiceContact		
 		text = provider.getRole();
@@ -228,10 +231,8 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractResponseWriter<OW
 		Element opsElt = dom.addElement(capsElt, "ows:OperationsMetadata");
 		
 		// first add everything in GetServer table
-		Enumeration<String> getOps = caps.getGetServers().keys();
-		while (getOps.hasMoreElements())
+		for (String opName: caps.getGetServers().keySet())
 		{
-			String opName = getOps.nextElement();
 			String opUrl =  caps.getGetServers().get(opName);
 			Element opElt = dom.addElement(opsElt, "+ows:Operation");
 			dom.setAttributeValue(opElt, "@name", opName);
@@ -244,10 +245,8 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractResponseWriter<OW
 		}
 		
 		// now loop through all PostServers + add only the ones with only POST support
-		Enumeration<String> postOps = caps.getPostServers().keys();
-		while (postOps.hasMoreElements())
-		{
-			String opName = postOps.nextElement();
+		for (String opName: caps.getPostServers().keySet())
+        {
 			String opUrl =  caps.getPostServers().get(opName);
 			if (caps.getGetServers().get(opName) != null)
 				continue;

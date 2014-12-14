@@ -21,14 +21,14 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.ows;
 
-import java.util.Enumeration;
 import org.vast.util.ResponsibleParty;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
+
 /**
  * <p><b>Title:</b><br/>
- * OWSCapabilitiesWriterV11
+ * OWSCapabilitiesWriterV0
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -168,34 +168,40 @@ public abstract class OWSCapabilitiesWriterV0 extends AbstractResponseWriter<OWS
 			dom.setElementValue(respPartyElt, "positionName", text);
 				
 		// Contact Info element and children
-		Element contactInfoElt = dom.addElement(respPartyElt, "contactInfo");
-		text = provider.getVoiceNumber();
-		if (text != null)
-			dom.setElementValue(contactInfoElt, "phone/voice", text);
-		text = provider.getFaxNumber();
-		if (text != null)
-			dom.setElementValue(contactInfoElt, "phone/facsimile", text);
-		
-		// Address element and children	
-		Element addressElt = dom.addElement(contactInfoElt, "address");
-		text = provider.getDeliveryPoint();		
-		if (text != null)
-			dom.setElementValue(addressElt, "deliveryPoint", text);
-		text = provider.getCity();
-		if (text != null)
-			dom.setElementValue(addressElt, "city", text);
-		text = provider.getAdministrativeArea();
-		if (text != null)
-			dom.setElementValue(addressElt, "administrativeArea", text);
-		text = provider.getPostalCode();
-		if (text != null)
-			dom.setElementValue(addressElt, "postalCode", text);
-		text = provider.getCountry();
-		if (text != null)
-			dom.setElementValue(addressElt, "country", text);
-		text = provider.getEmail();
-		if (text != null)
-			dom.setElementValue(addressElt, "electronicMailAddress", text);
+		if (provider.hasContactInfo())
+		{
+    		Element contactInfoElt = dom.addElement(respPartyElt, "contactInfo");
+    		text = provider.getVoiceNumber();
+    		if (text != null)
+    			dom.setElementValue(contactInfoElt, "phone/voice", text);
+    		text = provider.getFaxNumber();
+    		if (text != null)
+    			dom.setElementValue(contactInfoElt, "phone/facsimile", text);
+    		
+    		if (provider.hasAddress())
+    		{
+        		// Address element and children	
+        		Element addressElt = dom.addElement(contactInfoElt, "address");
+        		text = provider.getDeliveryPoint();		
+        		if (text != null)
+        			dom.setElementValue(addressElt, "deliveryPoint", text);
+        		text = provider.getCity();
+        		if (text != null)
+        			dom.setElementValue(addressElt, "city", text);
+        		text = provider.getAdministrativeArea();
+        		if (text != null)
+        			dom.setElementValue(addressElt, "administrativeArea", text);
+        		text = provider.getPostalCode();
+        		if (text != null)
+        			dom.setElementValue(addressElt, "postalCode", text);
+        		text = provider.getCountry();
+        		if (text != null)
+        			dom.setElementValue(addressElt, "country", text);
+        		text = provider.getEmail();
+        		if (text != null)
+        			dom.setElementValue(addressElt, "electronicMailAddress", text);
+    		}
+		}
 	}
 	
 	
@@ -214,10 +220,8 @@ public abstract class OWSCapabilitiesWriterV0 extends AbstractResponseWriter<OWS
 		Element requestElt = dom.addElement(capsElt, "Capability/Request");
 		
 		// first add everything in GetServer table
-		Enumeration<String> getOps = caps.getGetServers().keys();
-		while (getOps.hasMoreElements())
-		{
-			String opName = getOps.nextElement();
+		for (String opName: caps.getGetServers().keySet())
+        {
 			String opUrl =  caps.getGetServers().get(opName);
 			Element opElt = dom.addElement(requestElt, opName);
 			dom.setAttributeValue(opElt, "DCPType/HTTP/Get/OnlineResource/@xlink:href", opUrl);
@@ -229,10 +233,8 @@ public abstract class OWSCapabilitiesWriterV0 extends AbstractResponseWriter<OWS
 		}
 		
 		// now loop through all PostServers + add only the ones with only POST support
-		Enumeration<String> postOps = caps.getPostServers().keys();
-		while (postOps.hasMoreElements())
-		{
-			String opName = postOps.nextElement();
+		for (String opName: caps.getPostServers().keySet())
+        {
 			String opUrl =  caps.getPostServers().get(opName);
 			if (caps.getGetServers().get(opName) != null)
 				continue;

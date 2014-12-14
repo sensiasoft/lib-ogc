@@ -61,8 +61,8 @@ public class OWSServiceCapabilities extends OWSResponse
 	protected List<String> exceptionTypes;
 	
 	// tables of operation->url
-	protected Hashtable<String, String> getServers;
-	protected Hashtable<String, String> postServers;
+	protected Map<String, String> getServers;
+	protected Map<String, String> postServers;
 	
 	
     public OWSServiceCapabilities()
@@ -74,8 +74,8 @@ public class OWSServiceCapabilities extends OWSResponse
     	profiles = new ArrayList<String>(5);
     	layers = new ArrayList<OWSLayerCapabilities>(10);
     	exceptionTypes = new ArrayList<String>(1);
-    	getServers = new Hashtable<String, String>();
-    	postServers = new Hashtable<String, String>();    	
+    	getServers = new LinkedHashMap<String, String>();
+    	postServers = new LinkedHashMap<String, String>();    	
     }
 	
 	
@@ -184,25 +184,25 @@ public class OWSServiceCapabilities extends OWSResponse
 	}
 
 
-	public Hashtable<String, String> getGetServers()
+	public Map<String, String> getGetServers()
 	{
 		return getServers;
 	}
     
     
-	public void setGetServers(Hashtable<String, String> getServers)
+	public void setGetServers(Map<String, String> getServers)
 	{
 		this.getServers = getServers;
 	}
 
 
-	public Hashtable<String, String> getPostServers()
+	public Map<String, String> getPostServers()
 	{
 		return postServers;
 	}
 	
 	
-	public void setPostServers(Hashtable<String, String> postServers)
+	public void setPostServers(Map<String, String> postServers)
 	{
 		this.postServers = postServers;
 	}
@@ -224,7 +224,7 @@ public class OWSServiceCapabilities extends OWSResponse
 	 * Retrieves LayerCapabilities object corresponding to
 	 * this layerId or null if not found 
 	 * @param layerId
-	 * @return
+	 * @return layer object with given ID
 	 */
 	public OWSLayerCapabilities getLayer(String layerId)
 	{

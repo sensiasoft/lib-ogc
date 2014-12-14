@@ -25,16 +25,14 @@
 
 package org.vast.ows.sos;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLEnvelopeWriter;
 import org.vast.ogc.gml.GMLTimeWriter;
-import org.vast.ows.OWSCapabilitiesWriterV11;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
 import org.vast.ows.OWSUtils;
+import org.vast.ows.swe.SWESCapabilitiesWriterV20;
 import org.vast.util.Bbox;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
@@ -43,12 +41,8 @@ import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b><br/>
- * SPS Capabilities Writer V2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
- * Writes a SPS server capabilities document from
- * OWSServiceCapabilities and SPSLayerCapabilities
+ * Writes an SOS server capabilities document from
+ * OWSServiceCapabilities and SOSOfferingCapabilities
  * objects for version 2.0
  * </p>
  *
@@ -57,7 +51,7 @@ import org.w3c.dom.Element;
  * @date 27 nov. 07
  * @version 1.0
  */
-public class SOSCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
+public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
 {
     GMLEnvelopeWriter bboxWriter = new GMLEnvelopeWriter("3.2");
     GMLTimeWriter timeWriter = new GMLTimeWriter("3.2");
@@ -117,14 +111,7 @@ public class SOSCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
 		Element contentsElt = dom.addElement(capsElt, "sos:contents/sos:Contents");
 		
 	    // SWES properties common to all offerings
-		for (String token: getCommonListEntries(serviceCaps, "getProcedureFormats"))
-            dom.setElementValue(contentsElt, "+swes:procedureDescriptionFormat", token);
-        
-        for (String token: getCommonListEntries(serviceCaps, "getObservableProperties"))
-            dom.setElementValue(contentsElt, "+swes:observableProperty", token);
-        
-        for (String token: getCommonListEntries(serviceCaps, "getRelatedFeatures"))
-            addRelatedFeature(dom, contentsElt, token);
+		super.writeCommonContentsProperties(dom, contentsElt, serviceCaps);
 	    
 	    // SOS offerings
 	    for (OWSLayerCapabilities layerCaps: serviceCaps.getLayers())
@@ -132,33 +119,8 @@ public class SOSCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
 	        Element offeringElt = dom.addElement(contentsElt, "+swes:offering/sos:ObservationOffering");
 	        SOSOfferingCapabilities offeringCaps = (SOSOfferingCapabilities)layerCaps;
 	        
-	        // description
-	        String desc = offeringCaps.getDescription();
-            if (desc != null)
-                dom.setElementValue(offeringElt, "swes:description", desc);
-	        
-	        // identifier
-	        dom.setElementValue(offeringElt, "swes:identifier", offeringCaps.getIdentifier());
-            
-            // name
-	        String title = offeringCaps.getTitle();
-	        if (title != null)
-	            dom.setElementValue(offeringElt, "+swes:name", title);
-            
-	        // procedure
-	        dom.setElementValue(offeringElt, "swes:procedure", offeringCaps.getProcedures().get(0));
-	        
-	        // procedure description formats
-	        for (String token: getNonCommonListEntries(offeringCaps, serviceCaps, "getProcedureFormats"))
-                dom.setElementValue(offeringElt, "+swes:procedureDescriptionFormat", token);
-	        
-	        // observable properties
-	        for (String token: getNonCommonListEntries(offeringCaps, serviceCaps, "getObservableProperties"))
-                dom.setElementValue(offeringElt, "+swes:observableProperty", token);
-	        
-	        // related features
-	        for (String token: getNonCommonListEntries(offeringCaps, serviceCaps, "getRelatedFeatures"))
-	            addRelatedFeature(dom, offeringElt, token);
+	        // SWES offering properties
+	        super.writeCommonOfferingProperties(dom, offeringElt, serviceCaps, offeringCaps);
 	        
 	        // observed area
 	        if (offeringCaps.getObservedAreas() != null && !offeringCaps.getObservedAreas().isEmpty())
@@ -207,62 +169,5 @@ public class SOSCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
         for (String token: getCommonListEntries(serviceCaps, "getFoiTypes"))
             dom.setElementValue(contentsElt, "+sos:featureOfInterestType", token);
 	}
-	
-	
-	protected void addRelatedFeature(DOMHelper dom, Element parentElt, String featureURI)
-	{
-	    dom.setAttributeValue(parentElt, "+swes:relatedFeature/swes:FeatureRelationship/swes:target/@xlink:href", featureURI);
-	}
-	
-	
-	/*
-	 * Extracts entries that are common to all offerings in order to build the top level inherited section
-	 */
-	protected List<String> getCommonListEntries(OWSServiceCapabilities caps, String getListMethodName)
-	{
-	    ArrayList<String> intersectList = new ArrayList<String>();
-	    boolean first = true;
-	    
-	    for (OWSLayerCapabilities layerCaps: caps.getLayers())
-	    {
-	        try
-            {
-                List<String> tokenListFromOffering = (List<String>)layerCaps.getClass().getMethod(getListMethodName).invoke(layerCaps);
-                if (first)
-                {
-                    intersectList.addAll(tokenListFromOffering);
-                    first = false;
-                }
-                else
-                    intersectList.retainAll(tokenListFromOffering);                
-            }
-            catch (Exception e)
-            {                
-            }
-	    }
-	    
-	    return intersectList;
-	}
-	
-	
-	/*
-     * Extracts entries that are not common to all offerings
-     */
-    protected List<String> getNonCommonListEntries(OWSLayerCapabilities layerCaps, OWSServiceCapabilities serviceCaps, String getListMethodName)
-    {
-        ArrayList<String> nonIntersectList = new ArrayList<String>();        
-        List<String> intersectList = getCommonListEntries(serviceCaps, getListMethodName);
-        
-        try
-        {
-            List<String> tokenListFromOffering = (List<String>)layerCaps.getClass().getMethod(getListMethodName).invoke(layerCaps);
-            nonIntersectList.addAll(tokenListFromOffering);
-            nonIntersectList.removeAll(intersectList);            
-        }
-        catch (Exception e)
-        {                
-        }
-        
-        return nonIntersectList;
-    }
+
 }

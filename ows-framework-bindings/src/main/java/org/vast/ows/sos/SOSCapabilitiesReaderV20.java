@@ -25,16 +25,15 @@
 
 package org.vast.ows.sos;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLReaderException;
 import org.vast.ogc.gml.GMLEnvelopeReader;
 import org.vast.ogc.gml.GMLTimeReader;
-import org.vast.ows.OWSCapabilitiesReaderV11;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSServiceCapabilities;
+import org.vast.ows.swe.SWESCapabilitiesReaderV20;
 
 
 /**
@@ -48,7 +47,7 @@ import org.vast.ows.OWSServiceCapabilities;
  * @author Alexandre Robin <alex.robin@sensiasoftware.com>
  * @since Sep 15, 2013
  */
-public class SOSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
+public class SOSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20
 {
     GMLEnvelopeReader gmlEnvReader = new GMLEnvelopeReader();
     GMLTimeReader gmlTimeReader = new GMLTimeReader();
@@ -120,21 +119,8 @@ public class SOSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
             	SOSOfferingCapabilities offering = new SOSOfferingCapabilities();
             	offering.setParent(serviceCaps);
             	
-            	// identifier
-                String id = dom.getElementValue(offeringElt, "identifier");
-                offering.setIdentifier(id);
-            	
-            	// name
-            	String name = dom.getElementValue(offeringElt, "name");
-            	offering.setTitle(name);
-            	
-            	// description
-            	String description = dom.getElementValue(offeringElt, "description");
-            	offering.setDescription(description);
-            	
-            	// procedure
-            	String procedureID = dom.getElementValue(offeringElt, "procedure");
-            	offering.getProcedures().add(procedureID);
+            	super.readCommonOfferingProperties(dom, offeringElt, offering,
+            	            serviceProcFormats, serviceObsProperties, serviceRelFeatures);
             	
             	// observed area
             	Element envElt = dom.getElement(offeringElt, "observedArea/Envelope");
@@ -152,19 +138,7 @@ public class SOSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
                     offering.getResultTimes().add(gmlTimeReader.readTimePeriod(dom, resultTimeElt));
                 
             	// for the following items, we combine service level and offering level metadata			
-            	// procedure description formats
-            	offering.getProcedureFormats().addAll(serviceProcFormats);
-            	offering.getProcedureFormats().addAll(readProcedureFormats(dom, offeringElt));
-            	
-            	// observable properties
-            	offering.getObservableProperties().addAll(serviceObsProperties);
-            	offering.getObservableProperties().addAll(readObservableProperties(dom, offeringElt));
-            	
-            	// related features
-                offering.getRelatedFeatures().addAll(serviceRelFeatures);
-                offering.getRelatedFeatures().addAll(readRelatedFeatures(dom, offeringElt));
-                
-                // response formats
+            	// response formats
                 offering.getResponseFormats().addAll(serviceRespFormats);
                 offering.getResponseFormats().addAll(readResponseFormats(dom, offeringElt));
                 
@@ -184,42 +158,6 @@ public class SOSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
             throw new SOSException(e.getMessage());
         }
 	}
-	
-	
-	/*
-	 * Reads content from a list of procedureDescriptionFormat elements
-	 */
-	protected List<String> readProcedureFormats(DOMHelper dom, Element parentElt)
-	{
-	    return readStringList(dom, parentElt, "procedureDescriptionFormat");
-	}
-	
-	
-	/*
-     * Reads content from a list of observableProperty elements
-     */
-    protected List<String> readObservableProperties(DOMHelper dom, Element parentElt)
-    {
-        return readStringList(dom, parentElt, "observableProperty");
-    }
-    
-    
-    /*
-     * Reads content from a list of relatedFeature elements
-     */
-    protected List<String> readRelatedFeatures(DOMHelper dom, Element parentElt)
-    {
-        List<String> featureList = new ArrayList<String>();
-        
-        NodeList featRelationshipElts = dom.getElements(parentElt, "relatedFeature/FeatureRelationship/target");
-        for (int i=0; i<featRelationshipElts.getLength(); i++)
-        {
-            String href = dom.getAttributeValue((Element)featRelationshipElts.item(i), "@href");
-            featureList.add(href);
-        }
-        
-        return featureList;
-    }
     
     
     /*
@@ -255,22 +193,5 @@ public class SOSCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
     protected List<String> readSupportedEncodings(DOMHelper dom, Element parentElt)
     {
         return readStringList(dom, parentElt, "supportedEncoding");
-    }
-    
-    
-    /*
-     * Reads string values from a list of identical elements
-     */
-    protected List<String> readStringList(DOMHelper dom, Element parentElt, String eltPath)
-    {
-        List<String> tokenList = new ArrayList<String>();
-        NodeList elts = dom.getElements(parentElt, eltPath);
-        for (int i=0; i<elts.getLength(); i++)
-        {
-            String token = dom.getElementValue((Element)elts.item(i));
-            tokenList.add(token);
-        }
-        
-        return tokenList;
     }	
 }
