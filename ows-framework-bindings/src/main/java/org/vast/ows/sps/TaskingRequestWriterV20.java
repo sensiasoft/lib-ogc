@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWERequestWriter;
-import org.vast.sweCommon.SWEData;
+import org.vast.swe.SWEData;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;

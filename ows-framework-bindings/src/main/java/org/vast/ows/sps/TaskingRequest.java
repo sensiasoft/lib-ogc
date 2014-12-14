@@ -12,7 +12,7 @@ import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.ParameterizedRequest;
-import org.vast.sweCommon.SWEData;
+import org.vast.swe.SWEData;
 import org.vast.util.DateTime;
 
 

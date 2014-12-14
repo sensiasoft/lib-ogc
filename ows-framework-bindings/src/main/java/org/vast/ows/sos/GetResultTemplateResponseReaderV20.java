@@ -28,7 +28,7 @@ package org.vast.ows.sos;
 import org.vast.ows.OWSCommonReaderV11;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseReader;
-import org.vast.sweCommon.SWECommonUtils;
+import org.vast.swe.SWECommonUtils;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;

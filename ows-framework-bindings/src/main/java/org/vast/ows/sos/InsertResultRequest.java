@@ -27,7 +27,7 @@ package org.vast.ows.sos;
 
 import org.vast.cdm.common.DataSource;
 import org.vast.ows.OWSRequest;
-import org.vast.sweCommon.SWEData;
+import org.vast.swe.SWEData;
 
 
 /**

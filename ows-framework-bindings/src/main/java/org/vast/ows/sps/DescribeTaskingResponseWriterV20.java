@@ -24,7 +24,7 @@ import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseWriter;
-import org.vast.sweCommon.SweComponentWriterV20;
+import org.vast.swe.SweComponentWriterV20;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLWriterException;

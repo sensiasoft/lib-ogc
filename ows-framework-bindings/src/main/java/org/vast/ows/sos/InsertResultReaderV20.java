@@ -33,8 +33,8 @@ import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 import org.vast.ows.*;
 import org.vast.ows.swe.SWERequestReader;
-import org.vast.sweCommon.DataSourceDOM;
-import org.vast.sweCommon.SWEData;
+import org.vast.swe.DataSourceDOM;
+import org.vast.swe.SWEData;
 
 
 /**

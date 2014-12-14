@@ -32,8 +32,8 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
-import org.vast.sweCommon.AbstractDataWriter;
-import org.vast.sweCommon.SWEFactory;
+import org.vast.swe.AbstractDataWriter;
+import org.vast.swe.SWEFactory;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 

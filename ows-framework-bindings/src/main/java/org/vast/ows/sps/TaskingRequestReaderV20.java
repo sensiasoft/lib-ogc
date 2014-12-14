@@ -29,7 +29,7 @@ import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.SweEncodedMessageProcessor;
 import org.vast.ows.swe.SWERequestReader;
-import org.vast.sweCommon.SWEData;
+import org.vast.swe.SWEData;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;

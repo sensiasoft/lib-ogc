@@ -36,9 +36,9 @@ import org.vast.ogc.om.IObservation;
 import org.vast.ogc.om.ObservationReaderV20;
 import org.vast.ows.*;
 import org.vast.ows.swe.SWERequestReader;
-import org.vast.sweCommon.SweComponentReaderV20;
-import org.vast.sweCommon.SweEncodingReaderV20;
-import org.vast.sweCommon.SWEValidator;
+import org.vast.swe.SWEValidator;
+import org.vast.swe.SweComponentReaderV20;
+import org.vast.swe.SweEncodingReaderV20;
 
 
 /**

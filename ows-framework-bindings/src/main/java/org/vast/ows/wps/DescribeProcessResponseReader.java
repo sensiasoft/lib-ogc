@@ -23,7 +23,7 @@ package org.vast.ows.wps;
 import java.io.IOException;
 import org.vast.ows.AbstractResponseReader;
 import org.vast.ows.OWSException;
-import org.vast.sweCommon.SWECommonUtils;
+import org.vast.swe.SWECommonUtils;
 import org.vast.xml.*;
 import org.w3c.dom.*;
 

@@ -28,7 +28,7 @@ import org.vast.ogc.gml.GMLTimeWriter;
 import org.vast.ogc.gml.GMLUtils;
 import org.vast.ogc.om.OMUtils;
 import org.vast.ows.SweResponseSerializer;
-import org.vast.sweCommon.SWECommonUtils;
+import org.vast.swe.SWECommonUtils;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 

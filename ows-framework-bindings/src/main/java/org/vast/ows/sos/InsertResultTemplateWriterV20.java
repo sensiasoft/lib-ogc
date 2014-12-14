@@ -32,9 +32,9 @@ import org.vast.ogc.om.ObservationWriterV20;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.swe.SWERequestWriter;
-import org.vast.sweCommon.SWECommonUtils;
-import org.vast.sweCommon.SweComponentWriterV20;
-import org.vast.sweCommon.SweEncodingWriterV20;
+import org.vast.swe.SWECommonUtils;
+import org.vast.swe.SweComponentWriterV20;
+import org.vast.swe.SweEncodingWriterV20;
 import org.w3c.dom.Element;
 
 

@@ -25,7 +25,7 @@ package org.vast.ows.sps;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseReader;
-import org.vast.sweCommon.SweComponentReaderV20;
+import org.vast.swe.SweComponentReaderV20;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 

@@ -33,7 +33,7 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.swe.SWERequestWriter;
-import org.vast.sweCommon.DataSinkDOM;
+import org.vast.swe.DataSinkDOM;
 import org.w3c.dom.Element;
 
 

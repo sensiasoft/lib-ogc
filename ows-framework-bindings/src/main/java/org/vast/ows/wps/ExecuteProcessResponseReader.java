@@ -23,8 +23,8 @@ package org.vast.ows.wps;
 import java.io.*;
 import org.vast.cdm.common.DataHandler;
 import org.vast.math.Vector3d;
-import org.vast.sweCommon.SWEFilter;
-import org.vast.sweCommon.SWEReader;
+import org.vast.swe.SWEFilter;
+import org.vast.swe.SWEReader;
 import org.vast.xml.XMLReaderException;
 
 

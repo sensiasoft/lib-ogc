@@ -54,7 +54,7 @@ import org.vast.ows.server.SOSDataFilter;
 import org.vast.ows.swe.DeleteSensorRequest;
 import org.vast.ows.swe.DescribeSensorRequest;
 import org.vast.ows.swe.UpdateSensorRequest;
-import org.vast.sweCommon.SWEFactory;
+import org.vast.swe.SWEFactory;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLWriterDOM;

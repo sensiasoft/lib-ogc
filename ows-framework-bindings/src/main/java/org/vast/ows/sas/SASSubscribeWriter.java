@@ -25,7 +25,7 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
-import org.vast.sweCommon.SWECommonUtils;
+import org.vast.swe.SWECommonUtils;
 import org.w3c.dom.Element;
 
 

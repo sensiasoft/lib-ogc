@@ -28,10 +28,10 @@ import org.vast.xml.DOMHelperException;
 import org.vast.xml.XMLReaderException;
 import org.vast.ogc.OGCException;
 import org.vast.ogc.OGCExceptionReader;
-import org.vast.sweCommon.SWEFilter;
-import org.vast.sweCommon.SWEReader;
-import org.vast.sweCommon.SWECommonUtils;
-import org.vast.sweCommon.URIStreamHandler;
+import org.vast.swe.SWECommonUtils;
+import org.vast.swe.SWEFilter;
+import org.vast.swe.SWEReader;
+import org.vast.swe.URIStreamHandler;
 import org.w3c.dom.*;
 
 
