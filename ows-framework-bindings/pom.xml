@@ -21,12 +21,6 @@
   </repositories>
   <dependencies>
      <dependency>
-        <groupId>org.geotools</groupId>
-        <artifactId>gt-xml</artifactId>
-        <version>8.0</version>
-        <type>jar</type>
-     </dependency>
-     <dependency>
         <groupId>org.codehaus.woodstox</groupId>
         <artifactId>woodstox-core-asl</artifactId>
         <version>4.2.0</version>

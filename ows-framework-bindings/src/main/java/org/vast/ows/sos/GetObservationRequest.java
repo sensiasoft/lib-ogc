@@ -21,11 +21,12 @@
 package org.vast.ows.sos;
 
 import java.util.*;
-import org.opengis.filter.spatial.BinarySpatialOperator;
-import org.opengis.filter.temporal.BinaryTemporalOperator;
+import net.opengis.fes.v20.BinarySpatialOp;
+import net.opengis.fes.v20.BinaryTemporalOp;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.om.OMUtils;
 import org.vast.ows.OWSRequest;
+import org.vast.ows.fes.FESRequestUtils;
 import org.vast.util.Bbox;
 import org.vast.util.TimeExtent;
 
@@ -53,13 +54,12 @@ public class GetObservationRequest extends OWSRequest
     
     public static String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0");
     
-    protected FESUtils fesUtils = new FESUtils();
-	protected List<String> procedures;
+    protected List<String> procedures;
 	protected List<String> offerings;
 	protected List<String> observables;
 	protected List<String> foiIDs;
-	protected BinaryTemporalOperator temporalFilter;
-	protected BinarySpatialOperator spatialFilter;
+	protected BinaryTemporalOp temporalFilter;
+	protected BinarySpatialOp spatialFilter;
     protected String format;
     protected String resultModel;
 	protected ResponseMode responseMode;
@@ -115,13 +115,13 @@ public class GetObservationRequest extends OWSRequest
     }
 
 
-	public BinaryTemporalOperator getTemporalFilter()
+	public BinaryTemporalOp getTemporalFilter()
     {
         return temporalFilter;
     }
 
 
-    public void setTemporalFilter(BinaryTemporalOperator temporalFilter)
+    public void setTemporalFilter(BinaryTemporalOp temporalFilter)
     {
         this.temporalFilter = temporalFilter;
     }
@@ -129,23 +129,23 @@ public class GetObservationRequest extends OWSRequest
 
     public TimeExtent getTime()
 	{
-        return fesUtils.filterToTimeInfo(temporalFilter);
+        return FESRequestUtils.filterToTimeInfo(temporalFilter);
 	}
 
 
 	public void setTime(TimeExtent time)
 	{
-	    this.temporalFilter = fesUtils.timeInfoToFilter(time);
+	    this.temporalFilter = FESRequestUtils.timeInfoToFilter(time);
 	}	
 
 
-    public BinarySpatialOperator getSpatialFilter()
+    public BinarySpatialOp getSpatialFilter()
     {
         return spatialFilter;
     }
 
 
-    public void setSpatialFilter(BinarySpatialOperator spatialFilter)
+    public void setSpatialFilter(BinarySpatialOp spatialFilter)
     {
         this.spatialFilter = spatialFilter;
     }
@@ -153,13 +153,13 @@ public class GetObservationRequest extends OWSRequest
 
     public Bbox getBbox()
 	{
-        return fesUtils.filterToBbox(spatialFilter);
+        return FESRequestUtils.filterToBbox(spatialFilter);
 	}
 
 
 	public void setBbox(Bbox bbox)
 	{
-	    this.spatialFilter = fesUtils.bboxToFilter(bbox);
+	    this.spatialFilter = FESRequestUtils.bboxToFilter(bbox);
 	}
 	
 	

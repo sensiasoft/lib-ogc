@@ -22,6 +22,7 @@ Contributor(s):
 
 package org.vast.ows.sos;
 
+import net.opengis.fes.v20.FilterCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
 
 
@@ -41,6 +42,7 @@ public class SOSServiceCapabilities extends OWSServiceCapabilities
     public static String PROFILE_RESULT_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/resultInsertion";  
     
     SOSInsertionCapabilities insertionCapabilities;
+    FilterCapabilities filterCapabilities;
 	
 	
 	public SOSServiceCapabilities()
@@ -58,6 +60,18 @@ public class SOSServiceCapabilities extends OWSServiceCapabilities
     public void setInsertionCapabilities(SOSInsertionCapabilities insertionCapabilities)
     {
         this.insertionCapabilities = insertionCapabilities;
+    }
+
+
+    public FilterCapabilities getFilterCapabilities()
+    {
+        return filterCapabilities;
+    }
+
+
+    public void setFilterCapabilities(FilterCapabilities filterCapabilities)
+    {
+        this.filterCapabilities = filterCapabilities;
     }
 	
 }

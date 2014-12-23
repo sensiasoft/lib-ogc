@@ -21,8 +21,9 @@
 package org.vast.ows.sos;
 
 import java.util.*;
-import org.opengis.filter.spatial.BinarySpatialOperator;
+import net.opengis.fes.v20.BinarySpatialOp;
 import org.vast.ows.OWSRequest;
+import org.vast.ows.fes.FESRequestUtils;
 import org.vast.util.Bbox;
 
 
@@ -45,8 +46,7 @@ public class GetFeatureOfInterestRequest extends OWSRequest
     protected List<String> procedures;
 	protected List<String> observables;
 	protected List<String> foiIDs;
-	protected BinarySpatialOperator spatialFilter;
-	protected FESUtils fesUtils = new FESUtils();
+	protected BinarySpatialOp spatialFilter;
 	
 	
 	public GetFeatureOfInterestRequest()
@@ -77,13 +77,13 @@ public class GetFeatureOfInterestRequest extends OWSRequest
     }	
 
 
-    public BinarySpatialOperator getSpatialFilter()
+    public BinarySpatialOp getSpatialFilter()
     {
         return spatialFilter;
     }
 
 
-    public void setSpatialFilter(BinarySpatialOperator spatialFilter)
+    public void setSpatialFilter(BinarySpatialOp spatialFilter)
     {
         this.spatialFilter = spatialFilter;
     }
@@ -91,12 +91,12 @@ public class GetFeatureOfInterestRequest extends OWSRequest
 
     public Bbox getBbox()
 	{
-        return fesUtils.filterToBbox(spatialFilter);
+        return FESRequestUtils.filterToBbox(spatialFilter);
 	}
 
 
 	public void setBbox(Bbox bbox)
 	{
-	    this.spatialFilter = fesUtils.bboxToFilter(bbox);
+	    this.spatialFilter = FESRequestUtils.bboxToFilter(bbox);
 	}
 }

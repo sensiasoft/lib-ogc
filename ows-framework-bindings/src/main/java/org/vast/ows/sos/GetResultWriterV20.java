@@ -27,14 +27,12 @@ package org.vast.ows.sos;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.geotools.xml.Configuration;
-import org.geotools.xml.Encoder;
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
+import org.vast.ows.fes.FESUtils;
 import org.vast.ows.swe.SWERequestWriter;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 
@@ -56,13 +54,11 @@ import org.w3c.dom.Element;
  */
 public class GetResultWriterV20 extends SWERequestWriter<GetResultRequest>
 {
-	protected Encoder filterEncoder;
+    protected FESUtils fesUtils = new FESUtils();
 	
     
 	public GetResultWriterV20()
 	{
-	    Configuration configuration = new org.geotools.filter.v2_0.FESConfiguration();
-	    filterEncoder = new Encoder(configuration);
 	}
 
 	
@@ -99,7 +95,7 @@ public class GetResultWriterV20 extends SWERequestWriter<GetResultRequest>
 		if (request.getTemporalFilter() != null && !request.getTime().isNull())
 		{
 		    StringBuilder buf = new StringBuilder();
-		    buf.append(request.getTemporalFilter().getExpression1().toString());
+		    buf.append(request.getTemporalFilter().getOperand1().toString());
 		    buf.append(',');
 	        this.writeTimeArgument(buf, request.getTime());
 	        urlParams.put("temporalfilter", buf.toString());
@@ -109,7 +105,7 @@ public class GetResultWriterV20 extends SWERequestWriter<GetResultRequest>
 		if (request.getSpatialFilter() != null && !request.getBbox().isNull())
         {
             StringBuilder buf = new StringBuilder();
-            buf.append(request.getSpatialFilter().getExpression1().toString());
+            buf.append(request.getSpatialFilter().getOperand1().toString());
             buf.append(',');
             this.writeBboxArgument(buf, request.getBbox());
             urlParams.put("spatialFilter", buf.toString());
@@ -144,8 +140,7 @@ public class GetResultWriterV20 extends SWERequestWriter<GetResultRequest>
             try
             {
                 Element propElt = dom.addElement(rootElt, "sos:temporalFilter");
-                Document doc = filterEncoder.encodeAsDOM(request.getTemporalFilter(), org.geotools.filter.v2_0.FES.temporalOps);
-                Element filterElt = (Element)dom.getDocument().importNode(doc.getDocumentElement(), true);
+                Element filterElt = fesUtils.writeTemporalFilter(dom, request.getTemporalFilter());
                 propElt.appendChild(filterElt);
                 
             }
@@ -165,8 +160,7 @@ public class GetResultWriterV20 extends SWERequestWriter<GetResultRequest>
             try
             {
                 Element propElt = dom.addElement(rootElt, "sos:spatialFilter");
-                Document doc = filterEncoder.encodeAsDOM(request.getSpatialFilter(), org.geotools.filter.v2_0.FES.spatialOps);
-                Element filterElt = (Element)dom.getDocument().importNode(doc.getDocumentElement(), true);
+                Element filterElt = fesUtils.writeSpatialFilter(dom, request.getSpatialFilter());
                 propElt.appendChild(filterElt);                
             }
             catch (Exception e)

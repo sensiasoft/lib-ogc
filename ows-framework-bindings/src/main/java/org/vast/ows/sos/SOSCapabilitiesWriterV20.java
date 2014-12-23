@@ -25,6 +25,7 @@
 
 package org.vast.ows.sos;
 
+import net.opengis.fes.v20.FilterCapabilities;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLEnvelopeWriter;
 import org.vast.ogc.gml.GMLTimeWriter;
@@ -32,6 +33,7 @@ import org.vast.ows.OWSException;
 import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
 import org.vast.ows.OWSUtils;
+import org.vast.ows.fes.FESUtils;
 import org.vast.ows.swe.SWESCapabilitiesWriterV20;
 import org.vast.util.Bbox;
 import org.vast.util.TimeExtent;
@@ -55,6 +57,7 @@ public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
 {
     GMLEnvelopeWriter bboxWriter = new GMLEnvelopeWriter("3.2");
     GMLTimeWriter timeWriter = new GMLTimeWriter("3.2");
+    FESUtils fesUtils = new FESUtils();
     
     
 	@Override
@@ -70,9 +73,9 @@ public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
 		writeServiceIdentification(dom, capsElt, caps);
 		writeServiceProvider(dom, capsElt, caps.getServiceProvider());
 		writeOperationsMetadata(dom, capsElt, caps);
-		// TODO write filter capabilities
 		writeInsertionCapabilities(dom, capsElt, (SOSServiceCapabilities)caps);
-		writeContents(dom, capsElt, caps, version);
+		writeFilterCapabilities(dom, capsElt, (SOSServiceCapabilities)caps);
+        writeContents(dom, capsElt, caps, version);
 				
 		return capsElt;
 	}
@@ -103,6 +106,24 @@ public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
 	    }
     }
 	
+	
+	protected void writeFilterCapabilities(DOMHelper dom, Element capsElt, SOSServiceCapabilities serviceCaps) throws OWSException
+    {
+        try
+        {
+            FilterCapabilities filterCaps = serviceCaps.getFilterCapabilities();
+            if (filterCaps != null)
+            {
+                Element filterCapsElt = fesUtils.writeFilterCapabilities(dom, filterCaps);
+                Element capsPropElt = dom.addElement(capsElt, "sos:filterCapabilities");
+                capsPropElt.appendChild(filterCapsElt);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new OWSException("", e);
+        }
+    }
 	
 	
 	@Override

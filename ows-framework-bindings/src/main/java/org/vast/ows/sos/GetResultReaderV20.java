@@ -28,13 +28,14 @@ package org.vast.ows.sos;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.opengis.filter.spatial.BinarySpatialOperator;
-import org.opengis.filter.temporal.BinaryTemporalOperator;
+import net.opengis.fes.v20.BinarySpatialOp;
+import net.opengis.fes.v20.BinaryTemporalOp;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.vast.ows.*;
+import org.vast.ows.fes.FESUtils;
 import org.vast.ows.swe.SWERequestReader;
 
 
@@ -109,7 +110,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
             {
                 try
                 {
-                    BinaryTemporalOperator filter = fesUtils.readKVPTemporalFilter(argValue, namespaceMap);
+                    BinaryTemporalOp filter = fesUtils.readKVPTemporalFilter(argValue, namespaceMap);
                     request.setTemporalFilter(filter);
                 }
                 catch (Exception e)
@@ -123,7 +124,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
             {
                 try
                 {
-                    BinarySpatialOperator filter = fesUtils.readKVPSpatialFilter(argValue, namespaceMap);
+                    BinarySpatialOp filter = fesUtils.readKVPSpatialFilter(argValue, namespaceMap);
                     request.setSpatialFilter(filter);
                 }
                 catch (Exception e)
@@ -183,7 +184,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
             Element timeOpElt = dom.getElement(requestElt, "temporalFilter/*");
             if (timeOpElt != null)
             {
-                BinaryTemporalOperator filter = fesUtils.readXMLTemporalFilter(timeOpElt);
+                BinaryTemporalOp filter = fesUtils.readXMLTemporalFilter(timeOpElt);
                 request.setTemporalFilter(filter);
             }
         }
@@ -206,7 +207,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
             Element spatialOpElt = dom.getElement(requestElt, "spatialFilter/*");
             if (spatialOpElt != null)
             {
-                BinarySpatialOperator filter = fesUtils.readXMLSpatialFilter(spatialOpElt);
+                BinarySpatialOp filter = fesUtils.readXMLSpatialFilter(spatialOpElt);
                 request.setSpatialFilter(filter);
             }
         }

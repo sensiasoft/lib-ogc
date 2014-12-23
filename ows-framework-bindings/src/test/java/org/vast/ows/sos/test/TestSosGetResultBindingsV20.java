@@ -31,7 +31,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import org.opengis.filter.expression.Literal;
+import net.opengis.fes.v20.GMLExpression;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.sos.GetResultRequest;
 import org.vast.ows.sos.GetResultTemplateRequest;
@@ -138,7 +138,7 @@ public class TestSosGetResultBindingsV20 extends TestCase
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(0, request.getProcedures().size());
         assertTrue("Temporal filter is not null", request.getTemporalFilter() == null);
-        Polygon poly = (Polygon)((Literal)request.getSpatialFilter().getExpression2()).getValue();
+        Polygon poly = (Polygon)((GMLExpression)request.getSpatialFilter().getOperand2()).getGmlObject();
         assertEquals(52.90, poly.getCoordinates()[0].x);
         assertEquals(7.52, poly.getCoordinates()[0].y);
         assertEquals(52.92, poly.getCoordinates()[1].x);

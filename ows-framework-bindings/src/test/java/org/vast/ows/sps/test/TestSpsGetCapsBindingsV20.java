@@ -25,7 +25,6 @@
 
 package org.vast.ows.sps.test;
 
-import java.util.List;
 import org.vast.ows.test.OWSTestCase;
 
 

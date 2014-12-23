@@ -26,6 +26,7 @@
 package org.vast.ows.sos;
 
 import java.util.List;
+import net.opengis.fes.v20.FilterCapabilities;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLReaderException;
@@ -33,6 +34,7 @@ import org.vast.ogc.gml.GMLEnvelopeReader;
 import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSServiceCapabilities;
+import org.vast.ows.fes.FESUtils;
 import org.vast.ows.swe.SWESCapabilitiesReaderV20;
 
 
@@ -51,6 +53,7 @@ public class SOSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20
 {
     GMLEnvelopeReader gmlEnvReader = new GMLEnvelopeReader();
     GMLTimeReader gmlTimeReader = new GMLTimeReader();
+    FESUtils fesUtils = new FESUtils();
     
     
 	public SOSCapabilitiesReaderV20()
@@ -82,7 +85,13 @@ public class SOSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20
                 caps.setInsertionCapabilities(insertionCaps);
             }
             
-            // TODO read filter capabilities
+            // read filter capabilities
+            Element filterCapsElt = dom.getElement(capabilitiesElt, "filterCapabilities/Filter_Capabilities");
+            if (filterCapsElt != null)
+            {
+                FilterCapabilities filterCaps = fesUtils.readFilterCapabilities(filterCapsElt);
+                caps.setFilterCapabilities(filterCaps);
+            }
             
             return caps;
         }
