@@ -1198,6 +1198,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     private void writeGeometryOperands(XMLStreamWriter writer, List<QName> operandList) throws XMLStreamException
     {
+        if (operandList.isEmpty())
+            return;
+        
         writer.writeStartElement(NS_URI, "GeometryOperands");
         
         for (QName opName: operandList)
@@ -1388,6 +1391,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     private void writeTemporalOperands(XMLStreamWriter writer, List<QName> operandList) throws XMLStreamException
     {
+        if (operandList.isEmpty())
+            return;
+        
         writer.writeStartElement(NS_URI, "TemporalOperands");
         
         for (QName opName: operandList)
