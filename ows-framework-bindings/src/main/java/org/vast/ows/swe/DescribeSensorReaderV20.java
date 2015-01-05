@@ -69,8 +69,8 @@ public class DescribeSensorReaderV20 extends SWERequestReader<DescribeSensorRequ
 	{
 		OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
 		DescribeSensorRequest request = new DescribeSensorRequest();
-		Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
 		readCommonQueryArguments(queryParameters, request);
+		Iterator<Entry<String, String>> it = queryParameters.entrySet().iterator();
 		
         while (it.hasNext())
         {

@@ -25,6 +25,7 @@
 
 package org.vast.ows.sos.test;
 
+import org.vast.ows.sos.SOSUtils;
 import org.vast.ows.swe.DescribeSensorRequest;
 import org.vast.ows.test.OWSTestCase;
 
@@ -43,5 +44,15 @@ public class TestSosDescribeBindingsV20 extends OWSTestCase
     public void testReadWriteXmlDescribeSensor() throws Exception
     {
         readWriteCompareXmlRequest("examples_v20/core/DescribeSensor1.xml");
+    }
+    
+    
+    public void testReadKvpDescribeSensor() throws Exception
+    {
+        SOSUtils utils = new SOSUtils();
+        String kvp = "service=SOS&version=2.0&request=DescribeSensor&procedure=urn:test:sensors:fakegps&procedureDescriptionFormat=http://www.opengis.net/sensorml/2.0.0";
+        DescribeSensorRequest request = (DescribeSensorRequest)utils.readURLQuery(kvp);
+        assertEquals("urn:test:sensors:fakegps", request.getProcedureID());
+        assertEquals("http://www.opengis.net/sensorml/2.0.0", request.getFormat());
     }
 }
