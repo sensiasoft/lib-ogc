@@ -40,8 +40,8 @@ import org.vast.util.TimeExtent;
 public class SOSOfferingCapabilities extends SWESOfferingCapabilities
 {
     protected List<Bbox> observedAreas;
-    protected List<TimeExtent> phenomenonTimes;
-    protected List<TimeExtent> resultTimes;    
+    protected TimeExtent phenomenonTime;
+    protected TimeExtent resultTime;    
     protected List<String> responseFormats;
     protected List<String> supportedEncodings;
     protected List<String> observationTypes;
@@ -51,8 +51,6 @@ public class SOSOfferingCapabilities extends SWESOfferingCapabilities
     public SOSOfferingCapabilities()
     {
         observedAreas = new ArrayList<Bbox>(2);
-        phenomenonTimes = new ArrayList<TimeExtent>(2);
-        resultTimes = new ArrayList<TimeExtent>(2);
         responseFormats = new ArrayList<String>(2);
     	observationTypes = new ArrayList<String>(2);
     	foiTypes = new ArrayList<String>(2);
@@ -71,27 +69,27 @@ public class SOSOfferingCapabilities extends SWESOfferingCapabilities
     }
 
 
-    public List<TimeExtent> getPhenomenonTimes()
+    public TimeExtent getPhenomenonTime()
     {
-        return phenomenonTimes;
+        return phenomenonTime;
     }
 
 
-    public void setPhenomenonTimes(List<TimeExtent> phenomenonTimes)
+    public void setPhenomenonTime(TimeExtent phenomenonTime)
     {
-        this.phenomenonTimes = phenomenonTimes;
+        this.phenomenonTime = phenomenonTime;
     }
 
 
-    public List<TimeExtent> getResultTimes()
+    public TimeExtent getResultTime()
     {
-        return resultTimes;
+        return resultTime;
     }
 
 
-    public void setResultTimes(List<TimeExtent> resultTimes)
+    public void setResultTime(TimeExtent resultTime)
     {
-        this.resultTimes = resultTimes;
+        this.resultTime = resultTime;
     }
 
 

@@ -116,26 +116,20 @@ public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
             throw new SOSException("At least one offering time must be specified");
         
         // case of time aggregate
+        // we only parse the first member
         if (dom.existElement(timeElt, "member"))
         {
             NodeList timeElts = dom.getElements(timeElt, "member/*");
-            int listSize = timeElts.getLength();
-            ArrayList<TimeExtent> timeList = new ArrayList<TimeExtent>(listSize);
-            layerCaps.setPhenomenonTimes(timeList);
-            
-            for(int i = 0; i < listSize; i++)
-            {
-                Element timeMemberElt = (Element)timeElts.item(i);
-                TimeExtent time = timeReader.readTimePrimitive(dom, timeMemberElt);            
-                timeList.add(time);
-            }
+            Element timeMemberElt = (Element)timeElts.item(0);
+            TimeExtent time = timeReader.readTimePrimitive(dom, timeMemberElt);            
+            layerCaps.setPhenomenonTime(time);
         }
         
         // case of single instant/period/grid
         else
         {
             TimeExtent time = timeReader.readTimePrimitive(dom, timeElt);
-            layerCaps.getPhenomenonTimes().add(time);
+            layerCaps.setPhenomenonTime(time);
         }
     }
     

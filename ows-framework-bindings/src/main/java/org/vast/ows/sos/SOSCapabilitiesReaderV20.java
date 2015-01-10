@@ -139,12 +139,12 @@ public class SOSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20
             	// phenomenon time
             	Element phenTimeElt = dom.getElement(offeringElt, "phenomenonTime/TimePeriod");
             	if (phenTimeElt != null)
-            	    offering.getPhenomenonTimes().add(gmlTimeReader.readTimePeriod(dom, phenTimeElt));
+            	    offering.setPhenomenonTime(gmlTimeReader.readTimePeriod(dom, phenTimeElt));
             	
             	// result time
             	Element resultTimeElt = dom.getElement(offeringElt, "resultTime/TimePeriod");
             	if (resultTimeElt != null)
-                    offering.getResultTimes().add(gmlTimeReader.readTimePeriod(dom, resultTimeElt));
+                    offering.setResultTime(gmlTimeReader.readTimePeriod(dom, resultTimeElt));
                 
             	// for the following items, we combine service level and offering level metadata			
             	// response formats

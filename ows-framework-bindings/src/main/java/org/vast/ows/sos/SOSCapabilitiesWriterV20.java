@@ -152,17 +152,17 @@ public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
 	        }
 	        
 	        // phenomenon time
-	        if (offeringCaps.getPhenomenonTimes() != null && !offeringCaps.getPhenomenonTimes().isEmpty())
+	        TimeExtent timePeriod = offeringCaps.getPhenomenonTime();
+            if (timePeriod != null && !timePeriod.isNull())
             {
-                TimeExtent timePeriod = offeringCaps.getPhenomenonTimes().get(0);
                 Element envElt = timeWriter.writeTime(dom, timePeriod);
                 dom.addElement(offeringElt, "sos:phenomenonTime").appendChild(envElt);
             }
 	        
 	        // result time
-            if (offeringCaps.getResultTimes() != null && !offeringCaps.getResultTimes().isEmpty())
+            timePeriod = offeringCaps.getResultTime();
+            if (timePeriod != null && !timePeriod.isNull())
             {
-                TimeExtent timePeriod = offeringCaps.getResultTimes().get(0);
                 Element envElt = timeWriter.writeTime(dom, timePeriod);
                 dom.addElement(offeringElt, "sos:resultTime").appendChild(envElt);
             }
