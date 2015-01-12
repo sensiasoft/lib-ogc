@@ -232,7 +232,7 @@ public abstract class OWSServlet extends HttpServlet
         }
         catch (WriterException e)
         {
-            log.debug(internalErrorMsg, e);
+            log.error(internalErrorMsg, e);
         }
         catch (Exception e)
         {
