@@ -36,7 +36,9 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.dom.DOMSource;
+import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.JSONEncoding;
 import net.opengis.swe.v20.TextEncoding;
@@ -203,6 +205,7 @@ public abstract class SOSServlet extends OWSServlet
             // setup data provider
             SOSDataFilter filter = new SOSDataFilter(request.getFoiIDs(), request.getObservables(), request.getTime());
             dataProvider = getDataProvider(request.getOffering(), filter);
+            DataComponent resultStructure = dataProvider.getResultStructure();
             DataEncoding resultEncoding = dataProvider.getDefaultResultEncoding();
             
             // write response with SWE common data stream
@@ -223,34 +226,58 @@ public abstract class SOSServlet extends OWSServlet
                     request.getHttpResponse().setContentType(JSON_MIME_TYPE);
                 else if (resultEncoding instanceof XMLEncoding)
                     request.getHttpResponse().setContentType(XML_MIME_TYPE);
-                else
+                else if (resultEncoding instanceof BinaryEncoding)
                     request.getHttpResponse().setContentType(BINARY_MIME_TYPE);
+                else
+                    throw new RuntimeException("Unsupported encoding: " + resultEncoding.getClass().getCanonicalName());
             }
             
-            // prepare writer for selected encoding
-            DataStreamWriter writer = SWEFactory.createDataWriter(resultEncoding);
-            writer.setDataComponents(dataProvider.getResultStructure());
-            writer.setOutput(os);
+            // use specific format handler if available
+            boolean dataWritten = false;
+            if (resultEncoding instanceof BinaryEncoding)
+                dataWritten = writeCustomFormatStream(request, dataProvider, os);
             
-            // write each record in output stream
-            DataBlock nextRecord;
-            while ((nextRecord = dataProvider.getNextResultRecord()) != null)
+            // otherwise use default
+            if (!dataWritten)
             {
-                writer.write(nextRecord);
-                writer.flush();
+                // prepare writer for selected encoding
+                DataStreamWriter writer = SWEFactory.createDataWriter(resultEncoding);
+                writer.setDataComponents(resultStructure);
+                writer.setOutput(os);
+                
+                // write each record in output stream
+                DataBlock nextRecord;
+                while ((nextRecord = dataProvider.getNextResultRecord()) != null)
+                {
+                    writer.write(nextRecord);
+                    writer.flush();
+                }
+                
+                // close xml wrapper
+                if (((GetResultRequest) request).isXmlWrapper())
+                    os.write(new String("\n</resultValues>\n</GetResultResponse>").getBytes());          
+                        
+                os.flush();
             }
-            
-            // close xml wrapper
-            if (((GetResultRequest) request).isXmlWrapper())
-                os.write(new String("\n</resultValues>\n</GetResultResponse>").getBytes());            
-                    
-            os.flush();
         }
         finally
         {
             if (dataProvider != null)
                 dataProvider.close();
         }
+    }
+    
+    
+    /**
+     * This method inits the data stream by setting correct MIME type and writing necessary header info
+     * Sub-classes can override this method to use specific wrapper formats (e.g. video containers such as MP4)
+     * @param request
+     * @param resultEncoding
+     * @param os
+     */
+    protected boolean writeCustomFormatStream(GetResultRequest request, ISOSDataProvider dataProvider, OutputStream os) throws Exception
+    {
+        return false;
     }
 	
 	
