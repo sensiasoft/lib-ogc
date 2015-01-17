@@ -30,10 +30,10 @@ import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSRequestReader;
 import org.vast.ows.OWSUtils;
-import org.vast.ows.ParameterizedRequest;
 import org.vast.ows.SweEncodedMessageProcessor;
 import org.vast.ows.swe.SWESUtils;
 import org.vast.xml.DOMHelper;
@@ -68,16 +68,30 @@ public class SPSUtils extends OWSUtils
 	public static String EVENT_RESERVATION_EXPIRED = "ReservationExpired";
 	
 	
-	public ParameterizedRequest readParameterizedRequest(DOMHelper dom, Element requestElt, DataComponent mainParams) throws OWSException
-	{
-		OWSRequest tempReq = new OWSRequest();
-		AbstractRequestReader.readCommonXML(dom, requestElt, tempReq);
+	public OWSRequest readSpsRequest(DOMHelper dom, Element requestElt, DataComponent sweParams) throws OWSException
+    {
+	    //requestElt = skipSoapEnvelope(dom, requestElt);
+	    
+	    // read common params and check that they're present
+        OWSRequest request = new OWSRequest();
+        AbstractRequestReader.readCommonXML(dom, requestElt, request);
+        OWSExceptionReport report = new OWSExceptionReport();
+        AbstractRequestReader.checkParameters(request, report, SPSUtils.SPS);
+        report.process();
 		
-		OWSRequestReader<?> reader = (OWSRequestReader<?>)OGCRegistry.createReader(SPSUtils.SPS, tempReq.getOperation(), tempReq.getVersion());
-		((SweEncodedMessageProcessor)reader).setSweCommonStructure(mainParams, null);
-		ParameterizedRequest request = (ParameterizedRequest)reader.readXMLQuery(dom, requestElt);
-		
-		return request;
+		// parse request with appropriate reader
+        try
+        {
+            OWSRequestReader<?> reader = (OWSRequestReader<?>)OGCRegistry.createReader(SPSUtils.SPS, request.getOperation(), request.getVersion());
+            if (reader instanceof SweEncodedMessageProcessor)
+                ((SweEncodedMessageProcessor)reader).setSweCommonStructure(sweParams, null);
+    		return reader.readXMLQuery(dom, requestElt);
+        }
+        catch (IllegalStateException e)
+        {
+            String spec = SPSUtils.SPS + " " + request.getOperation() + " v" + request.getVersion();
+            throw new OWSException(unsupportedSpec + spec, e);
+        }
 	}
 	
 	

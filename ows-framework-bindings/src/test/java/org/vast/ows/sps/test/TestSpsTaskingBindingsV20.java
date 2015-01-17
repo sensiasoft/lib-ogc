@@ -25,18 +25,25 @@
 
 package org.vast.ows.sps.test;
 
-import org.vast.ows.test.OWSTestCase;
+import org.vast.ows.sps.DescribeTaskingResponse;
 
 
-public class TestSpsGetCapsBindingsV20 extends OWSTestCase
+
+public class TestSpsTaskingBindingsV20 extends SPSTestCase
 {
 
-    public void testWriteAndReadBackCapabilitiesXml() throws Exception
+    public void testWriteAndReadBackSubmit() throws Exception
     {
-        readWriteCompareXmlResponse("examples_v20/spsCapabilities.xml", "SPS");
+        DescribeTaskingResponse dt = (DescribeTaskingResponse)readXmlResponse("examples_v20/spsDescribeTaskingResponse.xml", "SPS", "DescribeTaskingResponse");
+        readWriteCompareXmlRequest("examples_v20/spsSubmitNoOptionalChoice1.xml", dt.getTaskingParameters());
+        readWriteCompareXmlRequest("examples_v20/spsSubmitNoOptionalChoice2.xml", dt.getTaskingParameters());
     }
     
     
-    
+    public void testWriteAndReadBackUpdate() throws Exception
+    {
+        DescribeTaskingResponse dt = (DescribeTaskingResponse)readXmlResponse("examples_v20/spsDescribeTaskingResponse.xml", "SPS", "DescribeTaskingResponse");
+        readWriteCompareXmlRequest("examples_v20/spsUpdateNoOptionalChoice1.xml", dt.getUpdatableParameters());
+    }
 
 }

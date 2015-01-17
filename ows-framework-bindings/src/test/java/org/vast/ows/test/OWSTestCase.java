@@ -34,7 +34,6 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSResponse;
 import org.vast.ows.OWSUtils;
-import org.vast.ows.sos.SOSUtils;
 import org.vast.xml.DOMHelper;
 import org.xml.sax.InputSource;
 
@@ -61,13 +60,25 @@ public abstract class OWSTestCase extends XMLTestCase
     
     protected OWSRequest readXmlRequest(String path) throws Exception
     {
-        SOSUtils utils = new SOSUtils();
+        OWSUtils utils = new OWSUtils();
         
         InputStream is = getClass().getResourceAsStream(path);
         OWSRequest request = utils.readXMLQuery(is);
         is.close();
         
         return request;
+    }
+    
+    
+    protected OWSResponse readXmlResponse(String path, String serviceType, String responseType) throws Exception
+    {
+        OWSUtils utils = new OWSUtils();
+        
+        InputStream is = getClass().getResourceAsStream(path);
+        OWSResponse resp = utils.readXMLResponse(is, serviceType, responseType);
+        is.close();
+        
+        return resp;
     }
     
     

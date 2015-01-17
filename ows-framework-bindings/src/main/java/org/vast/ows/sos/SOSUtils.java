@@ -31,6 +31,7 @@ import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSRequestReader;
 import org.vast.ows.OWSUtils;
@@ -44,16 +45,27 @@ public class SOSUtils extends OWSUtils
     
     public OWSRequest readSweEncodedRequest(DOMHelper dom, Element requestElt, DataComponent structure, DataEncoding encoding) throws OWSException
     {
-        // skip SOAP envelope if present
-        if (requestElt.getNamespaceURI().equals(soap12Uri))
-            requestElt = dom.getElement(requestElt, "Body/*");
+        requestElt = skipSoapEnvelope(dom, requestElt);
         
-        OWSRequest tempReq = new OWSRequest();
-        AbstractRequestReader.readCommonXML(dom, requestElt, tempReq);
-                
-        OWSRequestReader<?> reader = (OWSRequestReader<?>)OGCRegistry.createReader(SOSUtils.SOS, tempReq.getOperation(), tempReq.getVersion());
-        ((SweEncodedMessageProcessor)reader).setSweCommonStructure(structure, encoding);
-        return reader.readXMLQuery(dom, requestElt);
+        // read common params and check that they're present
+        OWSRequest request = new OWSRequest();        
+        AbstractRequestReader.readCommonXML(dom, requestElt, request);
+        OWSExceptionReport report = new OWSExceptionReport();
+        AbstractRequestReader.checkParameters(request, report, SOSUtils.SOS);
+        report.process();
+        
+        // parse request with appropriate reader
+        try
+        {
+            OWSRequestReader<?> reader = (OWSRequestReader<?>)OGCRegistry.createReader(SOSUtils.SOS, request.getOperation(), request.getVersion());
+            ((SweEncodedMessageProcessor)reader).setSweCommonStructure(structure, encoding);
+            return reader.readXMLQuery(dom, requestElt);
+        }
+        catch (IllegalStateException e)
+        {
+            String spec = SOSUtils.SOS + " " + request.getOperation() + " v" + request.getVersion();
+            throw new OWSException(unsupportedSpec + spec, e);
+        }
     }
     
 }

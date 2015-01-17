@@ -90,21 +90,33 @@ public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest
 			{
 				String code = SPSException.invalid_param_code;
 				String locator = "taskingParameters";
-				String badValue = null;
-				throw new SPSException(code, locator, badValue, invalidXML + ": " + e.getMessage());
+				throw new SPSException(code, locator, invalidXML + ": " + e.getMessage(), e);
 			}
 			
 			// latest response time
 			String isoDate = dom.getElementValue(requestElt, "latestResponseTime");
-			if (isoDate != null)
-			{
-				DateTime latestResponseTime = new DateTime(timeFormat.parseIso(isoDate));
-				request.setLatestResponseTime(latestResponseTime);
-			}
+			try
+            {
+                if (isoDate != null)
+                {
+                	DateTime latestResponseTime = new DateTime(timeFormat.parseIso(isoDate));
+                	request.setLatestResponseTime(latestResponseTime);
+                }
+            }
+            catch (Exception e)
+            {
+                String code = SPSException.invalid_param_code;
+                String locator = "latestResponseTime";
+                throw new SPSException(code, locator, invalidValue + locator + ": " + isoDate, e);
+            }
+		}
+		catch (SPSException e)
+		{
+		    throw e;
 		}
 		catch (Exception e)
 		{
-			throw new SPSException(invalidXML + ": " + e.getMessage());
+			throw new SPSException(invalidXML + ": " + e.getMessage(), e);
 		}
 	}
 

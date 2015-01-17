@@ -96,6 +96,16 @@ public class OWSUtils extends OWSCommonUtils
     }
     
     
+    public Element skipSoapEnvelope(DOMHelper dom, Element requestElt)
+    {
+        // skip SOAP envelope if present
+        if (requestElt.getNamespaceURI().equals(soap12Uri))
+            requestElt = dom.getElement(requestElt, "Body/*");
+        
+        return requestElt;
+    }
+    
+    
     /**
      * Helper method to parse any OWS query from an XML/DOM tree
      * @param dom DOM helper instance that will be used to parse the DOM tree
@@ -107,19 +117,17 @@ public class OWSUtils extends OWSCommonUtils
      */
     public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt, String serviceType, String defaultVersion) throws OWSException
     {
-    	OWSRequest request = new OWSRequest();
-    	request.setVersion(defaultVersion);
-    	
-    	// skip SOAP envelope if present
-    	if (requestElt.getNamespaceURI().equals(soap12Uri))
-    	    requestElt = dom.getElement(requestElt, "Body/*");
-    	
+        requestElt = skipSoapEnvelope(dom, requestElt);
+        
     	// read common params and check that they're present
-        AbstractRequestReader.readCommonXML(dom, requestElt, request);
+        OWSRequest request = new OWSRequest();
+        request.setVersion(defaultVersion);
+    	AbstractRequestReader.readCommonXML(dom, requestElt, request);
 		OWSExceptionReport report = new OWSExceptionReport();
 		AbstractRequestReader.checkParameters(request, report, serviceType);
         report.process();
         
+        // parse request with appropriate reader
         try
         {
             OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(request.service, request.operation, request.version);

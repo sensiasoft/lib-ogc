@@ -146,7 +146,7 @@ public abstract class OWSServlet extends HttpServlet
     
     
     /**
-     * Parse and process all types of requests
+     * Process all types of requests
      * @param req
      * @param resp
      * @param post
@@ -162,25 +162,14 @@ public abstract class OWSServlet extends HttpServlet
             // parse request            
             try
             {
-                if (post)
-                {
-                    InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
-                    DOMHelper dom = new DOMHelper(xmlRequest, false);
-                    request = owsUtils.readXMLQuery(dom, dom.getBaseElement());
-                }
-                else
-                {
-                    String queryString = req.getQueryString();
-                    if (queryString == null)
-                        throw new IllegalArgumentException();
-                    request = owsUtils.readURLQuery(queryString);
-                }
+                request = parseRequest(req, post);
             }
             catch (IllegalArgumentException e)
             {
                 try
                 {
                     resp.sendError(400, invalidKVPRequestMsg);
+                    log.debug(invalidKVPRequestMsg, e);
                 }
                 catch (IOException e1)
                 {
@@ -192,6 +181,7 @@ public abstract class OWSServlet extends HttpServlet
                 try
                 {
                     resp.sendError(400, invalidXMLRequestMsg);
+                    log.debug(invalidXMLRequestMsg, e);
                 }
                 catch (IOException e1)
                 {
@@ -255,6 +245,31 @@ public abstract class OWSServlet extends HttpServlet
             catch (IOException e)
             {
             }
+        }
+    }
+    
+    
+    /**
+     * Parse KVP or XML request to generate java request object
+     * @param req
+     * @param post
+     * @return
+     * @throws Exception
+     */
+    protected OWSRequest parseRequest(HttpServletRequest req, boolean post) throws Exception
+    {
+        if (post)
+        {
+            InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
+            DOMHelper dom = new DOMHelper(xmlRequest, false);
+            return owsUtils.readXMLQuery(dom, dom.getBaseElement());
+        }
+        else
+        {
+            String queryString = req.getQueryString();
+            if (queryString == null)
+                throw new IllegalArgumentException();
+            return owsUtils.readURLQuery(queryString);
         }
     }
     

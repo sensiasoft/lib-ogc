@@ -60,8 +60,20 @@ public class SPSException extends OWSException
 	}
 	
 	
+	public SPSException(String code, String locator, String badValue)
+    {
+        super(code, locator, badValue);
+    }
+	
+	
 	public SPSException(String code, String locator, String badValue, String message)
 	{
 		super(code, locator, badValue, message);
 	}
+	
+	
+	public SPSException(String code, String locator, String message, Exception e)
+    {
+        super(code, locator, message, e);
+    }
 }
