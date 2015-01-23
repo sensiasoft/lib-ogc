@@ -37,7 +37,7 @@
    <Reader type="SOS" subType="InsertResult" version="2.0" class="org.vast.ows.sos.InsertResultReaderV20"/>
    <Reader type="SOS" subType="InsertResultResponse" version="2.0" class="org.vast.ows.sos.InsertResultResponseReaderV20"/>
    <Reader type="SOS" subType="InsertResultTemplate" version="2.0" class="org.vast.ows.sos.InsertResultTemplateReaderV20"/>
-   <Reader type="SOS" subType="InsertResultResponseTemplate" version="2.0" class="org.vast.ows.sos.InsertResultTemplateResponseReaderV20"/>
+   <Reader type="SOS" subType="InsertResultTemplateResponse" version="2.0" class="org.vast.ows.sos.InsertResultTemplateResponseReaderV20"/>
    <!-- -->
    <Writer type="SOS" subType="Capabilities" version="2.0" class="org.vast.ows.sos.SOSCapabilitiesWriterV20"/>
    <Writer type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationWriterV10"/>
