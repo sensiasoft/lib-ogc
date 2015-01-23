@@ -71,7 +71,7 @@ public abstract class AbstractResponseWriter<ResponseType extends OWSResponse> i
         {
             DOMHelper dom = new DOMHelper();
             Element responseElt = buildXMLResponse(dom, response, version);
-            dom.serialize(responseElt, os, null);
+            dom.serialize(responseElt, os, true);
         }
         catch (IOException e)
         {

@@ -29,8 +29,6 @@ package org.vast.ows.fes;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.dom.DOMResult;
@@ -44,6 +42,7 @@ import org.vast.ows.OWSException;
 import org.vast.util.Bbox;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLImplFinder;
 import org.vast.xml.XMLReaderException;
 import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
@@ -164,7 +163,7 @@ public class FESUtils extends OWSCommonUtils
         try
         {
             DOMSource domSrc = new DOMSource(timeOpElt);
-            XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(domSrc);
+            XMLStreamReader reader = XMLImplFinder.getStaxInputFactory().createXMLStreamReader(domSrc);
             reader.nextTag();
             return (BinaryTemporalOp)filterBindings.readTemporalOps(reader);
         }
@@ -187,7 +186,7 @@ public class FESUtils extends OWSCommonUtils
         try
         {
             DOMResult result = new DOMResult(dom.createElement("fragment"));
-            XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(result);
+            XMLStreamWriter writer = XMLImplFinder.getStaxOutputFactory().createXMLStreamWriter(result);
             filterBindings.setNamespacePrefixes(writer);
             filterBindings.declareNamespacesOnRootElement();
             filterBindings.writeTemporalOps(writer, temporalOp);
@@ -211,7 +210,7 @@ public class FESUtils extends OWSCommonUtils
         try
         {
             DOMSource domSrc = new DOMSource(spatialOpElt);
-            XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(domSrc);
+            XMLStreamReader reader = XMLImplFinder.getStaxInputFactory().createXMLStreamReader(domSrc);
             reader.nextTag();
             return (BinarySpatialOp)filterBindings.readSpatialOps(reader);
         }
@@ -234,7 +233,7 @@ public class FESUtils extends OWSCommonUtils
         try
         {
             DOMResult result = new DOMResult(dom.createElement("fragment"));
-            XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(result);
+            XMLStreamWriter writer = XMLImplFinder.getStaxOutputFactory().createXMLStreamWriter(result);
             filterBindings.setNamespacePrefixes(writer);
             filterBindings.declareNamespacesOnRootElement();
             filterBindings.writeSpatialOps(writer, spatialOp);
@@ -258,7 +257,7 @@ public class FESUtils extends OWSCommonUtils
         try
         {
             DOMSource domSrc = new DOMSource(filterCapsElt);
-            XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(domSrc);
+            XMLStreamReader reader = XMLImplFinder.getStaxInputFactory().createXMLStreamReader(domSrc);
             reader.nextTag();
             return (FilterCapabilities)filterBindings.readFilterCapabilities(reader);
         }
@@ -281,7 +280,7 @@ public class FESUtils extends OWSCommonUtils
         try
         {
             DOMResult result = new DOMResult(dom.createElement("fragment"));
-            XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(result);
+            XMLStreamWriter writer = XMLImplFinder.getStaxOutputFactory().createXMLStreamWriter(result);
             filterBindings.setNamespacePrefixes(writer);
             filterBindings.declareNamespacesOnRootElement();
             filterBindings.writeFilterCapabilities(writer, filterCaps);

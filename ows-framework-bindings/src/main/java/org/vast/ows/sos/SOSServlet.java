@@ -60,6 +60,7 @@ import org.vast.swe.SWEFactory;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLWriterDOM;
+import org.vast.xml.XMLImplFinder;
 import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -148,7 +149,7 @@ public abstract class SOSServlet extends OWSServlet
 			throw new SOSException("SensorML description for " + sensorId + " not available");
 		
 		DOMHelper dom = new DOMHelper(smlUrl, false);
-        dom.serialize(dom.getBaseElement(), request.getResponseStream() , null);
+        dom.serialize(dom.getBaseElement(), request.getResponseStream() , true);
 	}
 	
 	
@@ -347,7 +348,8 @@ public abstract class SOSServlet extends OWSServlet
                 
                 xmlWriter.add(xmlFactory.createStartElement(sosPrefix, sosNsUri, "observationData"));
                 
-                XMLEventReader domReader = XMLInputFactory.newInstance().createXMLEventReader(new DOMSource(obsElt));
+                XMLInputFactory factory = XMLImplFinder.getStaxInputFactory();
+                XMLEventReader domReader = factory.createXMLEventReader(new DOMSource(obsElt));
                 while (domReader.hasNext())
                 {
                     XMLEvent event = domReader.nextEvent();

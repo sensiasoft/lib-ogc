@@ -95,7 +95,7 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
         {
             DOMHelper dom = new DOMHelper();
             Element requestElt = buildXMLQuery(dom, request);
-            dom.serialize(requestElt, os, null);
+            dom.serialize(requestElt, os, true);
         }
         catch (IOException e)
         {

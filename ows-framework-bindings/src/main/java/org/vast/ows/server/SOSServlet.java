@@ -95,7 +95,7 @@ public abstract class SOSServlet extends OWSServlet
 			throw new SOSException("SensorML description for " + sensorId + " not available");
 		
 		DOMHelper dom = new DOMHelper(smlUrl, false);				
-        dom.serialize(dom.getBaseElement(), query.getResponseStream() , null);		
+        dom.serialize(dom.getBaseElement(), query.getResponseStream() , true);		
 	}
 	
 	/**
