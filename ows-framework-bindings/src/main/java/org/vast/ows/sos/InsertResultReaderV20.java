@@ -26,10 +26,13 @@
 package org.vast.ows.sos;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.vast.ows.*;
 import org.vast.ows.swe.SWERequestReader;
@@ -75,9 +78,7 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
     @Override
     public InsertResultRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
     {
-        throw new SOSException(noKVP + "SOS 2.0 InsertResult");
-        
-        /*OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
+        OWSExceptionReport report = new OWSExceptionReport(OWSException.VERSION_11);
         InsertResultRequest request = new InsertResultRequest();
         readCommonQueryArguments(queryParameters, request);
         
@@ -92,12 +93,18 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
             // template argument
             if (argName.equalsIgnoreCase("template"))
                 request.setTemplateId(argValue);
-        }
+            
+            // vendor parameters
+            else
+            {
+                if (argValue == null)
+                    argValue = "";
+                request.getExtensions().put(new QName(argName), argValue);
+            }
+        }        
         
-        // result values are sent
-        
-        
-        return request;*/
+        this.checkParameters(request, report);
+        return request;
     }
     
     
@@ -112,7 +119,7 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
 		
         // template
         String templateId = dom.getElementValue(requestElt, "template");
-        request.setTemplateId(templateId);		
+        request.setTemplateId(templateId);
         
         // result values
         try
@@ -120,6 +127,7 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
             Element valuesElt = dom.getElement(requestElt, "resultValues");
             DataSourceDOM domSrc = new DataSourceDOM(dom, valuesElt);            
             
+            // if data structure and encoding are set, we can parse now
             if (resultStructure != null && resultEncoding != null)
             {
                 SWEData sweData = new SWEData();
