@@ -59,6 +59,7 @@ public class FESRequestUtils
     public static TimeExtent filterToTimeInfo(BinaryTemporalOp temporalFilter)
     {
         TimeExtent time = new TimeExtent();
+        TimePosition timePos;
         
         if (temporalFilter != null)
         {
@@ -66,7 +67,7 @@ public class FESRequestUtils
                     
             if (timePrimitive instanceof TimeInstant)
             {
-                TimePosition timePos = ((TimeInstant) timePrimitive).getTimePosition();
+                timePos = ((TimeInstant) timePrimitive).getTimePosition();
                 if (timePos.getIndeterminatePosition() == TimeIndeterminateValue.NOW)
                     time.setBaseAtNow(true);
                 else
@@ -74,8 +75,17 @@ public class FESRequestUtils
             }
             else if (timePrimitive instanceof TimePeriod)
             {
-                time.setStartTime(((TimePeriod)timePrimitive).getBeginPosition().getDecimalValue()); 
-                time.setStopTime(((TimePeriod)timePrimitive).getEndPosition().getDecimalValue()); 
+                timePos = ((TimePeriod) timePrimitive).getBeginPosition();
+                if (timePos.getIndeterminatePosition() == TimeIndeterminateValue.NOW)
+                    time.setBeginNow(true);
+                else
+                    time.setStartTime(timePos.getDecimalValue());
+                
+                timePos = ((TimePeriod) timePrimitive).getEndPosition();
+                if (timePos.getIndeterminatePosition() == TimeIndeterminateValue.NOW)
+                    time.setEndNow(true);
+                else
+                    time.setStopTime(timePos.getDecimalValue());
             }
         }
         
@@ -93,36 +103,34 @@ public class FESRequestUtils
         double begin = time.getStartTime();
         double end = time.getStopTime();
         BinaryTemporalOp temporalFilter;
-        AbstractTimeGeometricPrimitive timePrimitive;
         
         if (time.isTimeInstant())
         {
-            TimePosition timePosition;
+            TimePosition timePosition = gmlFactory.newTimePosition();
             if (time.isBaseAtNow())
-            {
-                timePosition = gmlFactory.newTimePosition();
                 timePosition.setIndeterminatePosition(TimeIndeterminateValue.NOW);
-            }
             else
-                timePosition = gmlFactory.newTimePosition(begin);
+                timePosition.setDecimalValue(begin);
             
-            timePrimitive = gmlFactory.newTimeInstant(timePosition);
-            temporalFilter = filterFactory.newTemporalOp(TemporalOperatorName.T_EQUALS, DEFAULT_TIME_PROPERTY, timePrimitive);
-        }
-        else if (time.isEndNow() || time.getStopTime() == Double.POSITIVE_INFINITY)
-        {
-            timePrimitive = gmlFactory.newTimeInstant(gmlFactory.newTimePosition(begin));
-            temporalFilter = filterFactory.newTemporalOp(TemporalOperatorName.AFTER, DEFAULT_TIME_PROPERTY, timePrimitive);
-        }
-        else if (time.getStartTime() == Double.NEGATIVE_INFINITY)
-        {
-            timePrimitive = gmlFactory.newTimeInstant(gmlFactory.newTimePosition(end));
-            temporalFilter = filterFactory.newTemporalOp(TemporalOperatorName.BEFORE, DEFAULT_TIME_PROPERTY, timePrimitive);
+            temporalFilter = filterFactory.newTemporalOp(TemporalOperatorName.T_EQUALS, DEFAULT_TIME_PROPERTY,
+                                                         gmlFactory.newTimeInstant(timePosition));
         }
         else
         {
-            timePrimitive = gmlFactory.newTimePeriod(gmlFactory.newTimePosition(begin), gmlFactory.newTimePosition(end));
-            temporalFilter = filterFactory.newTemporalOp(TemporalOperatorName.DURING, DEFAULT_TIME_PROPERTY, timePrimitive);
+            TimePosition beginPosition = gmlFactory.newTimePosition();
+            if (time.isBeginNow())
+                beginPosition.setIndeterminatePosition(TimeIndeterminateValue.NOW);
+            else
+                beginPosition.setDecimalValue(begin);
+                
+            TimePosition endPosition = gmlFactory.newTimePosition();
+            if (time.isEndNow())
+                endPosition.setIndeterminatePosition(TimeIndeterminateValue.NOW);
+            else
+                endPosition.setDecimalValue(end);
+            
+            temporalFilter = filterFactory.newTemporalOp(TemporalOperatorName.DURING, DEFAULT_TIME_PROPERTY,
+                                                         gmlFactory.newTimePeriod(beginPosition, endPosition));
         }
         
         return temporalFilter;

@@ -111,6 +111,7 @@ public class OWSCommonUtils
             if (timeRange[0].equalsIgnoreCase("now")) {
                 timeInfo.setBaseAtNow(true);
                 timeInfo.setBeginNow(true);
+                timeInfo.setEndNow(true);
             }
             else
                 timeInfo.setStartTime(timeFormat.parseIso(timeRange[0]));
