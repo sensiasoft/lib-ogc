@@ -224,11 +224,13 @@
                         </gml:exterior>
                      </gml:Polygon>
                   </sps:byPolygon>
-               </sps:observableArea>                        
+               </sps:observableArea> 
             </sps:SensorOffering>
          </swes:offering>
+         
          <sps:minStatusTime>P1DT12H20M30S</sps:minStatusTime>
          <sps:supportedEncoding>http://www.opengis.net/swe/2.0/TextEncoding</sps:supportedEncoding>
+         
       </sps:SPSContents>
    </sps:contents>
 </sps:Capabilities>
