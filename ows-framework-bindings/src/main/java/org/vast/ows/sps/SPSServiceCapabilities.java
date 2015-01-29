@@ -49,7 +49,8 @@ public class SPSServiceCapabilities extends OWSServiceCapabilities
 	
 	public SPSServiceCapabilities()
 	{
-		supportedEncodings = new ArrayList<String>(2);
+		this.service = SPSUtils.SPS;
+	    supportedEncodings = new ArrayList<String>(2);
 	}
 	
 	

@@ -42,18 +42,6 @@ public class SPSOfferingCapabilities extends SWESOfferingCapabilities
 	protected DescribeTaskingResponse parametersDescription;
 
 
-	public String getSensorID()
-	{
-		return getIdentifier();
-	}
-
-
-	public void setSensorID(String sensorID)
-	{
-		this.setIdentifier(sensorID);
-	}
-
-
 	public AbstractGeometry getObservableArea()
 	{
 		return observableArea;

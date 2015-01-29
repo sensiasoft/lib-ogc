@@ -22,6 +22,7 @@ package org.vast.ows.swe;
 
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSRequest;
+import org.vast.ows.OWSUtils;
 import org.vast.sensorML.SMLUtils;
 import org.vast.util.TimeExtent;
 
@@ -42,7 +43,7 @@ import org.vast.util.TimeExtent;
  */
 public class DescribeSensorRequest extends OWSRequest
 {
-    public final static String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "1.0");
+    public final static String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0");
     	
 	protected String procedureID;
 	protected TimeExtent time;
@@ -51,7 +52,7 @@ public class DescribeSensorRequest extends OWSRequest
 	
 	public DescribeSensorRequest()
 	{
-		service = "SOS";
+		service = OWSUtils.SOS;
 		operation = "DescribeSensor";
 		format = DEFAULT_FORMAT;
 	}

@@ -224,6 +224,10 @@ public abstract class OWSServlet extends HttpServlet
         {
             log.error(internalErrorMsg, e);
         }
+        catch(EOFException e)
+        {
+            // do nothing when client close stream
+        }
         catch (Exception e)
         {
             try
@@ -262,6 +266,7 @@ public abstract class OWSServlet extends HttpServlet
         {
             InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
             DOMHelper dom = new DOMHelper(xmlRequest, false);
+            //dom.serialize(dom.getBaseElement(), System.out, true);
             return owsUtils.readXMLQuery(dom, dom.getBaseElement());
         }
         else

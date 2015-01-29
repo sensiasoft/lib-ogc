@@ -47,7 +47,7 @@ public class SOSServiceCapabilities extends OWSServiceCapabilities
 	
 	public SOSServiceCapabilities()
 	{
-	    this.service = "SOS";
+	    this.service = SOSUtils.SOS;
 	}
 
 
