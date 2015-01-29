@@ -109,26 +109,23 @@ public abstract class SWESCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
 	    ArrayList<String> intersectList = new ArrayList<String>();
 	    boolean first = true;
 	    
-	    if (caps.getLayers().size() > 1)
-	    {
-    	    for (OWSLayerCapabilities layerCaps: caps.getLayers())
-    	    {
-    	        try
+	    for (OWSLayerCapabilities layerCaps: caps.getLayers())
+        {
+            try
+            {
+                List<String> tokenListFromOffering = (List<String>)layerCaps.getClass().getMethod(getListMethodName).invoke(layerCaps);
+                if (first)
                 {
-                    List<String> tokenListFromOffering = (List<String>)layerCaps.getClass().getMethod(getListMethodName).invoke(layerCaps);
-                    if (first)
-                    {
-                        intersectList.addAll(tokenListFromOffering);
-                        first = false;
-                    }
-                    else
-                        intersectList.retainAll(tokenListFromOffering);                
+                    intersectList.addAll(tokenListFromOffering);
+                    first = false;
                 }
-                catch (Exception e)
-                {                
-                }
-    	    }
-	    }
+                else
+                    intersectList.retainAll(tokenListFromOffering);                
+            }
+            catch (Exception e)
+            {                
+            }
+        }
 	    
 	    return intersectList;
 	}
