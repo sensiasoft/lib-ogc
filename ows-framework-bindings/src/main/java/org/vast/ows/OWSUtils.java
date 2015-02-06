@@ -67,7 +67,7 @@ public class OWSUtils extends OWSCommonUtils
 	public final static String soap12Uri = "http://www.w3.org/2003/05/soap-envelope";
 	public final static String unsupportedSpec = "No support for ";
     public final static String invalidEndpoint = "No Endpoint URL specified in request object";
-    public final static String ioError = "IO Error while sending request:";
+    public final static String ioError = "IO Error while sending request: ";
     
     OWSCommonUtils dataTypeUtils = new OWSCommonUtils();
     
@@ -555,7 +555,7 @@ public class OWSUtils extends OWSCommonUtils
      * @param request OWS request object to send
      * @param useSoap set to true to wrap the POST request into a SOAP envelope
      * @return OWS response object obtained from service response
-     * @throws OWSException if service returned an OWS exception
+     * @throws OWSException if service returns an OWS exception report or an HTTP error
      */
     public <ResponseType extends OWSResponse> ResponseType sendRequest(OWSRequest request, boolean useSoap) throws OWSException
     {
@@ -580,13 +580,9 @@ public class OWSUtils extends OWSCommonUtils
             OWSExceptionReader.checkException(dom, dom.getBaseElement());
             return (ResponseType)readXMLResponse(dom, dom.getBaseElement(), request.getService(), dom.getBaseElement().getLocalName(), request.getVersion());
         }
-        catch (OWSException e)
+        catch (DOMHelperException | IOException e)
         {
-            throw e;
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
+            throw new OWSException("Error while reading service response", e);
         }
     }
     
@@ -595,7 +591,7 @@ public class OWSUtils extends OWSCommonUtils
      * Helper method to send any OWS request to the server URL using GET
      * @param request OWS request object
      * @return HTTP connection object
-     * @throws OWSException
+     * @throws OWSException if service returns an OWS exception report or an HTTP error
      */
     public HttpURLConnection sendGetRequest(OWSRequest request) throws OWSException
     {
@@ -627,7 +623,7 @@ public class OWSUtils extends OWSCommonUtils
 		}
         catch (IOException e)
         {
-            throw new OWSException(ioError + "\n" + requestString, e);
+            throw new OWSException(ioError + requestString, e);
         }
     }
     
@@ -636,7 +632,7 @@ public class OWSUtils extends OWSCommonUtils
      * Helper method to send any OWS request to the server URL using POST
      * @param request OWS request object to send
      * @return HTTP connection object
-     * @throws OWSException
+     * @throws OWSException if service returns an OWS exception report or an HTTP error
      */
     public HttpURLConnection sendPostRequest(OWSRequest request) throws OWSException
     {
@@ -695,7 +691,7 @@ public class OWSUtils extends OWSCommonUtils
      * Helper method to send any OWS request to the server URL using POST with SOAP
      * @param request OWS request object to send
      * @return HTTP connection object
-     * @throws OWSException
+     * @throws OWSException if service returns an OWS exception report or an HTTP error
      */
     public HttpURLConnection sendSoapRequest(OWSRequest request) throws OWSException
     {
