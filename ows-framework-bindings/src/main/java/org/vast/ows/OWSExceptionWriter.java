@@ -46,8 +46,8 @@ public class OWSExceptionWriter
 	/**
 	 * Creates an ExceptionReport XML element containing the list
 	 * of exception as specified in OWS Common
-	 * @param report
-	 * @return
+	 * @param e instance of OWSException or OWSExceptionReport
+	 * @return the XML representation of the exception report as defined by OGC OWS Common
 	 */
 	public Element buildXML(OWSException e)
 	{

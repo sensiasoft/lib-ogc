@@ -24,7 +24,6 @@ package org.vast.ows.sps;
 
 import org.vast.ows.OWSException;
 import org.vast.util.DateTime;
-import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 

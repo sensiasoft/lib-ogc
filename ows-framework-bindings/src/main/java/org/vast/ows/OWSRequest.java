@@ -64,7 +64,7 @@ public class OWSRequest
     /**
 	 * Method used to normalize server KVP endpoint (always add ? or &) 
 	 * @param url
-	 * @return
+	 * @return normalized endpoint string
 	 */
 	public static String checkServer(String url)
     {

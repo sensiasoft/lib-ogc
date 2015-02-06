@@ -41,6 +41,7 @@ import org.vast.ows.OWSResponse;
  * @author Alexandre Robin
  * @date Oct 30, 2005
  * @version 1.0
+ * @param <ResponseType> Type of OWS response object accepted by this writer
  */
 public abstract class SWEResponseWriter<ResponseType extends OWSResponse> extends AbstractResponseWriter<ResponseType>
 {	

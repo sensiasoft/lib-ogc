@@ -26,54 +26,56 @@ import org.w3c.dom.Element;
 
 
 /**
- * 
  * <p>
- * 
+ * Base interface for all OWS response writers
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
  * @since 21 nov. 07
  * @version 1.0
+ * @param <ResponseType> Type of response object supported by this writer
  */
 public interface OWSResponseWriter<ResponseType extends OWSResponse>
 {
 		
     /**
-     * Builds a DOM element containing the response XML
+     * Builds a DOM element containing the response XML.<br/>
      * Note that the element is not yet appended to any parent.
-     * @param dom
-     * @param response
-     * @return
+     * @param dom  DOMHelper instance that will own the generated element
+     * @param response response object to serialize as XML
+     * @return DOM element containing the XML representation of the response 
+     * @throws OWSException 
      */
     public Element buildXMLResponse(DOMHelper dom, ResponseType response) throws OWSException;
     
     
     /**
-     * Builds a DOM element containing the response XML for given version
+     * Builds a DOM element containing the response XML for the given version.<br/>
      * Note that the element is not yet appended to any parent.
-     * @param dom
-     * @param response
-     * @param version
-     * @return
+     * @param dom  DOMHelper instance that will own the generated element
+     * @param response response object to serialize as XML
+     * @param version version of writer to use
+     * @return DOM element containing the XML representation of the response
+     * @throws OWSException 
      */
     public Element buildXMLResponse(DOMHelper dom, ResponseType response, String version) throws OWSException;
     
     
     /**
      * Writes the XML response directly to the output stream
-     * @param os
-     * @param response
+     * @param os output stream where the XML data will be written
+     * @param response response object to serialize as XML
      * @throws OWSException
      */
     public void writeXMLResponse(OutputStream os, ResponseType response) throws OWSException;
     
     
     /**
-     * Writes the XML response for desired version directly to the output stream
-     * @param os
-     * @param response
-     * @param version
+     * Writes the XML response for the desired version directly to the output stream
+     * @param os output stream where the XML data will be written
+     * @param response response object to serialize as XML
+     * @param version version of writer to use
      * @throws OWSException
      */
     public void writeXMLResponse(OutputStream os, ResponseType response, String version) throws OWSException;

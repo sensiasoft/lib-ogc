@@ -25,24 +25,24 @@ import org.w3c.dom.Element;
 
 
 /**
- * 
  * <p>
- * 
+ * Base interface for all OWS response readers
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
  * @since 21 nov. 07
  * @version 1.0
+ * @param <ResponseType> Type of response object supported by this reader
  */
 public interface OWSResponseReader<ResponseType extends OWSResponse>
 {
 
 	/**
      * Reads XML response from the given element and using the given DOMHelper.
-     * @param domHelper
-     * @param responseElt
-     * @return
+     * @param dom DOMHelper instance used to read the XML content
+     * @param responseElt DOM element corresponding to the root of the request
+     * @return response object deserialized from XML
      * @throws OWSException
      */
     public ResponseType readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException;

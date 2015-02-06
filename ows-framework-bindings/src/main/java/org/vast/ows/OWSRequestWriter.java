@@ -33,24 +33,28 @@ import org.w3c.dom.Element;
  * @author Alexandre Robin
  * @since Jan 16, 2007
  * @version 1.0
+ * @param <RequestType> Type of request object supported by this writer
  */
-public interface OWSRequestWriter<QueryType extends OWSRequest>
+public interface OWSRequestWriter<RequestType extends OWSRequest>
 {
 
     /**
      * Builds a String containing the GET request URL
-     * @param query
-     * @return
+     * @param request OWS request object
+     * @return qury string generated from the content of the request object
+     * @throws OWSException 
      */
-    public String buildURLQuery(QueryType query) throws OWSException;
+    public String buildURLQuery(RequestType request) throws OWSException;
 
 
     /**
      * Builds a DOM element containing the request XML
      * Note that the element is not yet appended to any parent.
-     * @param query
-     * @return
+     * @param dom DOMHelper instance that will own the generated element
+     * @param request OWs request object
+     * @return DOM element containing the XML representation of the request
+     * @throws OWSException 
      */
-    public Element buildXMLQuery(DOMHelper dom, QueryType query) throws OWSException;
+    public Element buildXMLQuery(DOMHelper dom, RequestType request) throws OWSException;
 
 }

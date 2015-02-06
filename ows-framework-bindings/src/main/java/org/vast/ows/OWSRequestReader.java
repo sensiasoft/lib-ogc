@@ -34,35 +34,36 @@ import org.w3c.dom.Element;
  * @author Alexandre Robin
  * @since Jan 16, 2007
  * @version 1.0
+ * @param <RequestType> Type of request object supported by this reader
  */
-public interface OWSRequestReader<QueryType extends OWSRequest>
+public interface OWSRequestReader<RequestType extends OWSRequest>
 {
 
     /**
      * Reads URL request arguments from the given query string 
      * @param queryString
-     * @return
+     * @return request object generated from query string
      * @throws OWSException
      */
-    public QueryType readURLQuery(String queryString) throws OWSException;
+    public RequestType readURLQuery(String queryString) throws OWSException;
     
     
     /**
      * Decodes URL request parameters from the given map 
      * @param queryParameters map containing a key value pair for each query parameter
-     * @return
+     * @return request object generated from the argument map
      * @throws OWSException
      */
-    public QueryType readURLParameters(Map<String, String> queryParameters) throws OWSException;
+    public RequestType readURLParameters(Map<String, String> queryParameters) throws OWSException;
 
 
     /**
      * Reads XML request parameters from the given element and using the given DOMHelper.
      * @param domHelper
      * @param requestElt
-     * @return
+     * @return request object generated from the XML document
      * @throws OWSException
      */
-    public QueryType readXMLQuery(DOMHelper domHelper, Element requestElt) throws OWSException;
+    public RequestType readXMLQuery(DOMHelper domHelper, Element requestElt) throws OWSException;
 
 }

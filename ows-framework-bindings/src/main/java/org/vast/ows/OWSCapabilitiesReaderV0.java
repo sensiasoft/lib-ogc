@@ -108,8 +108,6 @@ public abstract class OWSCapabilitiesReaderV0 extends AbstractCapabilitiesReader
 	
 	/**
 	 * Reads a keyword list
-	 * @param layerElt
-	 * @return
 	 */
 	protected void readIdentification(OWSIdentification idObject, DOMHelper dom, Element parentElt)
 	{
@@ -136,9 +134,6 @@ public abstract class OWSCapabilitiesReaderV0 extends AbstractCapabilitiesReader
 	
 	/**
 	 * Reads the responsibleParty section
-	 * @param dom
-	 * @param parentElt
-	 * @return
 	 */
 	protected void readResponsibleParty(DOMHelper dom, Element respPartyElt, OWSServiceCapabilities serviceCaps)
 	{

@@ -73,7 +73,7 @@ public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest
 
 			// sensor ID
 			String sensorID = dom.getElementValue(requestElt, "procedure");
-			request.setSensorID(sensorID);
+			request.setProcedureID(sensorID);
 			
 			// tasking parameters
 			try
@@ -132,7 +132,7 @@ public abstract class TaskingRequestReaderV20<RequestType extends TaskingRequest
 		checkParameters(request, report, SPSUtils.SPS);
 
 		// Check that sensorID is present
-		if (request.getSensorID() == null)
+		if (request.getProcedureID() == null)
 			report.add(new SPSException(SPSException.missing_param_code, "procedure"));
 
 		// Check that tasking parameters are present

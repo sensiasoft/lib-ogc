@@ -69,8 +69,8 @@ public abstract class TaskingRequestWriterV20<RequestType extends TaskingRequest
 			addCommonXML(dom, rootElt, request);
 			
 			// sensorID
-			if (request.getSensorID() != null)
-				dom.setElementValue(rootElt, "sps:procedure", request.getSensorID());
+			if (request.getProcedureID() != null)
+				dom.setElementValue(rootElt, "sps:procedure", request.getProcedureID());
 							
 			// tasking parameters
 			SWEData taskingParams = request.getParameters();
