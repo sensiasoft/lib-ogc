@@ -30,6 +30,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vast.ogc.OGCException;
 import org.vast.ogc.OGCExceptionReader;
 import org.vast.ogc.OGCRegistry;
@@ -49,6 +51,8 @@ import org.w3c.dom.Element;
  */
 public class OWSUtils extends OWSCommonUtils
 {
+    private final static Logger log = LoggerFactory.getLogger(OWSUtils.class);
+    
     public final static String OGC = "OGC";
     public final static String OWS = "OWS";
 	public final static String WMS = "WMS";
@@ -680,9 +684,14 @@ public class OWSUtils extends OWSCommonUtils
 		}
         catch (IOException e)
         {
-        	ByteArrayOutputStream buf = new ByteArrayOutputStream();
-        	writeXMLQuery(buf, request);
-        	throw new OWSException(ioError + "\n" + buf, e);
+        	if (log.isDebugEnabled())
+        	{
+        	    ByteArrayOutputStream buf = new ByteArrayOutputStream();
+        	    writeXMLQuery(buf, request);
+        	    log.debug(ioError + "\n" + buf);
+        	}
+        	
+        	throw new OWSException(ioError + request.getOperation(), e);
         }
     }
     
@@ -745,9 +754,14 @@ public class OWSUtils extends OWSCommonUtils
 		}
         catch (IOException e)
         {
-        	ByteArrayOutputStream buf = new ByteArrayOutputStream();
-        	writeXMLQuery(buf, request);
-        	throw new OWSException(ioError + "\n" + buf, e);
+            if (log.isDebugEnabled())
+            {
+                ByteArrayOutputStream buf = new ByteArrayOutputStream();
+                writeXMLQuery(buf, request);
+                log.debug(ioError + "\n" + buf);
+            }
+            
+        	throw new OWSException(ioError + request.getOperation(), e);
         }
     }
     

@@ -169,7 +169,7 @@ public abstract class OWSServlet extends HttpServlet
                 try
                 {
                     resp.sendError(400, invalidKVPRequestMsg);
-                    log.debug(invalidKVPRequestMsg, e);
+                    log.trace(invalidKVPRequestMsg, e);
                 }
                 catch (IOException e1)
                 {
@@ -181,7 +181,7 @@ public abstract class OWSServlet extends HttpServlet
                 try
                 {
                     resp.sendError(400, invalidXMLRequestMsg);
-                    log.debug(invalidXMLRequestMsg, e);
+                    log.trace(invalidXMLRequestMsg, e);
                 }
                 catch (IOException e1)
                 {
@@ -213,7 +213,7 @@ public abstract class OWSServlet extends HttpServlet
                 resp.setContentType(XML_MIME_TYPE);
                 String version = (request != null) ? request.getVersion() : getDefaultVersion();
                 owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), getServiceType(), version, e);
-                log.debug(e.getMessage(), e);
+                log.trace(e.getMessage(), e);
             }
             catch (IOException e1)
             {
