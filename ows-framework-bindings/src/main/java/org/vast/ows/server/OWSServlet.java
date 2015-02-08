@@ -65,8 +65,6 @@ import org.vast.xml.DOMHelperException;
 public abstract class OWSServlet extends HttpServlet
 {
     private static final long serialVersionUID = 4970153267344348035L;
-    protected static final String XML_MIME_TYPE = "text/xml";
-    protected static final String JSON_MIME_TYPE = "application/json";
     protected static final String invalidKVPRequestMsg = "Invalid KVP request. Please check your syntax";
     protected static final String invalidXMLRequestMsg = "Invalid XML request. Please check your syntax";
     protected static final String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
@@ -141,7 +139,12 @@ public abstract class OWSServlet extends HttpServlet
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
     {
         log.info("POST REQUEST from IP " + req.getRemoteAddr());
-        processRequest(req, resp, true);
+        
+        // assume XML if content type is not specified
+        String contentType = req.getContentType();
+        boolean isXml = (contentType == null) || (contentType.contains("xml"));
+        
+        processRequest(req, resp, isXml);
     }
     
     
@@ -149,9 +152,9 @@ public abstract class OWSServlet extends HttpServlet
      * Process all types of requests
      * @param req
      * @param resp
-     * @param post
+     * @param isXmlRequest
      */
-    protected void processRequest(HttpServletRequest req, HttpServletResponse resp, boolean post)
+    protected void processRequest(HttpServletRequest req, HttpServletResponse resp, boolean isXmlRequest)
     {
         //  get actual request URL
         String requestURL = req.getRequestURL().toString();
@@ -159,10 +162,10 @@ public abstract class OWSServlet extends HttpServlet
         
         try
         {
-            // parse request            
+            // parse request
             try
             {
-                request = parseRequest(req, post);
+                request = parseRequest(req, isXmlRequest);
             }
             catch (IllegalArgumentException e)
             {
@@ -191,7 +194,7 @@ public abstract class OWSServlet extends HttpServlet
                
             // write response
             // set default mime type 
-            resp.setContentType(XML_MIME_TYPE);
+            resp.setContentType(OWSUtils.XML_MIME_TYPE);
             
             // keep http objects in request
             request.setHttpRequest(req);
@@ -210,7 +213,7 @@ public abstract class OWSServlet extends HttpServlet
         {
             try
             {
-                resp.setContentType(XML_MIME_TYPE);
+                resp.setContentType(OWSUtils.XML_MIME_TYPE);
                 String version = (request != null) ? request.getVersion() : getDefaultVersion();
                 owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), getServiceType(), version, e);
                 log.trace(e.getMessage(), e);
@@ -256,13 +259,13 @@ public abstract class OWSServlet extends HttpServlet
     /**
      * Parse KVP or XML request to generate java request object
      * @param req
-     * @param post
+     * @param isXmlRequest
      * @return
      * @throws Exception
      */
-    protected OWSRequest parseRequest(HttpServletRequest req, boolean post) throws Exception
+    protected OWSRequest parseRequest(HttpServletRequest req, boolean isXmlRequest) throws Exception
     {
-        if (post)
+        if (isXmlRequest)
         {
             InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
             DOMHelper dom = new DOMHelper(xmlRequest, false);

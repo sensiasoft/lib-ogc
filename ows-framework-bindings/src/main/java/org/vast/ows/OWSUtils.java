@@ -53,6 +53,10 @@ public class OWSUtils extends OWSCommonUtils
 {
     private final static Logger log = LoggerFactory.getLogger(OWSUtils.class);
     
+    public static final String XML_MIME_TYPE = "text/xml";
+    public static final String XML_MIME_TYPE2 = "application/xml";
+    public static final String JSON_MIME_TYPE = "application/json";
+    
     public final static String OGC = "OGC";
     public final static String OWS = "OWS";
 	public final static String WMS = "WMS";
@@ -603,17 +607,13 @@ public class OWSUtils extends OWSCommonUtils
         
         try
         {
-        	String endpoint = request.getGetServer();
-        	
-        	if (endpoint == null)
-        		endpoint = request.getPostServer();
-        	
-        	if (endpoint == null)
+        	if (request.getGetServer() == null)
         		throw new OWSException(invalidEndpoint);
             
-            requestString = buildURLQuery(request);                
+            requestString = buildURLQuery(request);
             URL url = new URL(requestString);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.connect();
             
             // catch server side exceptions
             if (connection.getResponseCode() > 202)
@@ -662,7 +662,7 @@ public class OWSUtils extends OWSCommonUtils
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-type", "text/xml");            
+            connection.setRequestProperty("Content-type", XML_MIME_TYPE);            
             PrintStream out = new PrintStream(connection.getOutputStream());
             
             // send post data            
@@ -675,7 +675,6 @@ public class OWSUtils extends OWSCommonUtils
             if (connection.getResponseCode() > 202)
             	OGCExceptionReader.parseException(connection.getErrorStream());
             
-            // return server response stream
             return connection;
         }
 	    catch (OGCException e)
@@ -692,6 +691,52 @@ public class OWSUtils extends OWSCommonUtils
         	}
         	
         	throw new OWSException(ioError + request.getOperation(), e);
+        }
+    }
+    
+    
+    /**
+     * Helper method to send any OWS request in the query string by using POST for additional content.<br/>
+     * This is typically used to send SWE data to the server in a persistent HTTP connection, so the connection
+     * object returned is not connected to let the caller add the desired content headers connection options.
+     * @param request OWS request object to send
+     * @return HTTP connection object
+     * @throws OWSException if there is an error serializing or sending the request
+     */
+    public HttpURLConnection sendPostRequestWithQuery(OWSRequest request) throws OWSException
+    {
+        try
+        {
+            String endpoint = request.getGetServer();
+            if (endpoint == null)
+            {
+                endpoint = request.getPostServer();
+                request.setGetServer(endpoint);
+            }
+            
+            if (endpoint == null)
+                throw new OWSException(invalidEndpoint);            
+            
+            // initiatlize HTTP connection
+            String requestString = buildURLQuery(request);
+            URL url = new URL(requestString);
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            
+            return connection;
+        }
+        catch (IOException e)
+        {
+            if (log.isDebugEnabled())
+            {
+                ByteArrayOutputStream buf = new ByteArrayOutputStream();
+                writeXMLQuery(buf, request);
+                log.debug(ioError + "\n" + buf);
+            }
+            
+            throw new OWSException(ioError + request.getOperation(), e);
         }
     }
     
@@ -725,7 +770,7 @@ public class OWSUtils extends OWSCommonUtils
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setDoInput(true);
             connection.setDoOutput(true);
-            connection.setRequestProperty("Content-type", "text/xml");
+            connection.setRequestProperty("Content-type", XML_MIME_TYPE);
             connection.setRequestProperty("SOAPAction", request.getOperation());
             PrintStream out = new PrintStream(connection.getOutputStream());
             
@@ -744,8 +789,7 @@ public class OWSUtils extends OWSCommonUtils
             // catch server side exceptions
             if (connection.getResponseCode() > 202)
             	OGCExceptionReader.parseException(connection.getErrorStream());
-                        
-            // return server response stream
+
             return connection;
         }
 	    catch (OGCException e)

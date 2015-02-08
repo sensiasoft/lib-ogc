@@ -51,6 +51,7 @@ import org.vast.ogc.om.OMUtils;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSRequest;
+import org.vast.ows.OWSUtils;
 import org.vast.ows.server.OWSServlet;
 import org.vast.ows.server.SOSDataFilter;
 import org.vast.ows.swe.DeleteSensorRequest;
@@ -224,9 +225,9 @@ public abstract class SOSServlet extends OWSServlet
                 if (resultEncoding instanceof TextEncoding)
                     request.getHttpResponse().setContentType(TEXT_MIME_TYPE);
                 else if (resultEncoding instanceof JSONEncoding)
-                    request.getHttpResponse().setContentType(JSON_MIME_TYPE);
+                    request.getHttpResponse().setContentType(OWSUtils.JSON_MIME_TYPE);
                 else if (resultEncoding instanceof XMLEncoding)
-                    request.getHttpResponse().setContentType(XML_MIME_TYPE);
+                    request.getHttpResponse().setContentType(OWSUtils.XML_MIME_TYPE);
                 else if (resultEncoding instanceof BinaryEncoding)
                     request.getHttpResponse().setContentType(BINARY_MIME_TYPE);
                 else

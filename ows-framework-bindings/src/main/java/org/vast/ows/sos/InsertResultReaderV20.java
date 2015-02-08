@@ -37,6 +37,7 @@ import org.w3c.dom.Element;
 import org.vast.ows.*;
 import org.vast.ows.swe.SWERequestReader;
 import org.vast.swe.DataSourceDOM;
+import org.vast.swe.DataSourceURI;
 import org.vast.swe.SWEData;
 
 
@@ -103,6 +104,7 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
             }
         }        
         
+        request.setResultDataSource(new DataSourceURI("POST"));
         this.checkParameters(request, report);
         return request;
     }
