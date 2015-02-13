@@ -32,11 +32,9 @@ import org.vast.util.TimeExtent;
  * observables, procedures...
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Oct 27, 2005
- * @version 1.0
- */
+ * */
 public class SOSOfferingCapabilities extends SWESOfferingCapabilities
 {
     protected List<Bbox> observedAreas;

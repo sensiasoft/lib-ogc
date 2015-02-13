@@ -27,19 +27,13 @@ import org.vast.ows.OWSLayerCapabilities;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WNS Capabilities
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Jan 17, 2008
- * @version 1.0
- */
+ * */
 public class WNSCapabilities extends OWSLayerCapabilities
 {
 	protected List<String> supportedProtocols;

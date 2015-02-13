@@ -51,17 +51,13 @@ import org.vast.xml.DOMHelperException;
 
 
 /**
- * <p><b>Title:</b><br/> OWSServlet</p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Abstract Base Class for all OWS Style Servlets
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 9, 2005
- * @version 1.0
- */
+ * */
 public abstract class OWSServlet extends HttpServlet
 {
     private static final long serialVersionUID = 4970153267344348035L;

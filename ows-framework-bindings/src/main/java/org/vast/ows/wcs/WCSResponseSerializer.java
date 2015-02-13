@@ -25,19 +25,13 @@ import org.vast.ows.sos.SOSResponseSerializerV10;
 
 
 /**
- * <p><b>Title:</b>
- * WCS Response Serializer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Write SWE XML response in a WCS
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin, Tony Cook
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Jun 21, 2005
- * @version 1.0
- */
+ * */
 public class WCSResponseSerializer extends SOSResponseSerializerV10
 {
     int bytesPerPoint; //  used only by BinaryBlock encoding?

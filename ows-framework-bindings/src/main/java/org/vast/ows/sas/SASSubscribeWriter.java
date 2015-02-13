@@ -30,21 +30,15 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SAS Subscribe Request Writer v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to generate a KVP or XML SAS Subscribe
  * request based on values contained in a SASSubscribeRequest
  * object
  * </p>
  *
- * <p>Copyright (c) 2007</p>
  * @author Gregoire Berthiau
  * @date Jul 10, 2008
- * @version 1.0
- */
+ * */
 public class SASSubscribeWriter extends AbstractRequestWriter<SASSubscribeRequest>
 {
     

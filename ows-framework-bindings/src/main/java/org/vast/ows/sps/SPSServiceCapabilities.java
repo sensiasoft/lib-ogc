@@ -28,19 +28,13 @@ import org.vast.ows.OWSServiceCapabilities;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SPS Capabilities
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Representation of SPS service capabilities document.
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Dec 10, 2008
- * @version 1.0
- */
+ * */
 public class SPSServiceCapabilities extends OWSServiceCapabilities
 {
 	double minStatusTime; // in seconds

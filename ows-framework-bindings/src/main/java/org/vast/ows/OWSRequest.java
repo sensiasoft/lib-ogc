@@ -34,11 +34,9 @@ import org.vast.xml.QName;
  * Base class for all OWS style request objects
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Oct 27, 2005
- * @version 1.0
- */
+ * */
 public class OWSRequest
 {
 	protected final static String EXCEPTION_MIME_TYPE = "application/vnd.ogc.se_xml";

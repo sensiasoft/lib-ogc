@@ -22,20 +22,14 @@ package org.vast.ows.sld.functions;
 
 
 /**
- * <p><b>Title:</b><br/>
- * LookUp Table 1D
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Look Up Table implementation of a mapping function.
  * This will interpolate at the first order between points.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Apr 3, 2006
- * @version 1.0
- */
+ * */
 public class LookUpTable1D extends AbstractMappingFunction
 {
     protected double[][] tableData;

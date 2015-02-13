@@ -25,19 +25,13 @@ package org.vast.ows.sps;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Submit Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for SPS Submit request parameters
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb 25, 2008
- * @version 1.0
- */
+ * */
 public class SubmitRequest extends TaskingRequest
 {
 		

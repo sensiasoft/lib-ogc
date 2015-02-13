@@ -27,20 +27,14 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * OWSCapabilitiesWriterV0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base writer for all service capabilities based on the
  * pre-version of OWS common (here called v0)
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 27 nov. 07
- * @version 1.0
- */
+ * */
 public abstract class OWSCapabilitiesWriterV0 extends AbstractResponseWriter<OWSServiceCapabilities>
 {
 	

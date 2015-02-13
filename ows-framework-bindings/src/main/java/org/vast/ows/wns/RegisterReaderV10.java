@@ -29,20 +29,14 @@ import org.vast.ows.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WNS Register Request Reader v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse an XML Register request and
  * create a RegisterRequest object for WNS version 1.0
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Sep 21, 2007
- * @version 1.0
- */
+ * */
 public class RegisterReaderV10 extends AbstractRequestReader<RegisterRequest>
 {
 	

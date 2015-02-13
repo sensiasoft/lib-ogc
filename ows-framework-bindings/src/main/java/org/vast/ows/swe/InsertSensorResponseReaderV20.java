@@ -32,19 +32,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * InsertSensor Response Reader v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Reader for XML InsertSensor response for SOS v2.0 
  * </p>
  *
- * <p>Copyright (c) 2014</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb, 19 2014
- * @version 1.0
- */
+ * */
 public class InsertSensorResponseReaderV20 extends SWEResponseReader<InsertSensorResponse>
 {
 		

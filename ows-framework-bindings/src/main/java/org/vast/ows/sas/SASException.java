@@ -24,19 +24,13 @@ import org.vast.ows.OWSException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SAS Exception
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Exception object to carry SAS error messages.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
  * @author Gregoire Berthiau <berthiau@nsstc.uah.edu>
  * @date 07 jul. 06
- * @version 1.0
- */
+ * */
 public class SASException extends OWSException
 {
 	static final long serialVersionUID = 0x59DB55493721FA3CL;

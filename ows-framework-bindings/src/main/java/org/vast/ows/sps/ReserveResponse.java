@@ -24,20 +24,14 @@ package org.vast.ows.sps;
 
 
 /**
- * <p><b>Title:</b>
- * Reserve Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for a Reserve response
  * It can contain either a StatusReport 
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Dec, 10 2008
- * @version 1.0
- */
+ * */
 public class ReserveResponse extends TaskingResponse<ReservationReport>
 {
 

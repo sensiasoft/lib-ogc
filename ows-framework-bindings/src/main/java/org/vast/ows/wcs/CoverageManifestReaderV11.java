@@ -28,20 +28,14 @@ import org.vast.ows.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Coverage Manifest Reader v1.1.1
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse an XML Coverage Manifest response and
  * create a CoverageManifest object for version 1.1.1
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 11, 2007
- * @version 1.0
- */
+ * */
 public class CoverageManifestReaderV11 implements OWSResponseReader<CoverageManifest>
 {
 	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();

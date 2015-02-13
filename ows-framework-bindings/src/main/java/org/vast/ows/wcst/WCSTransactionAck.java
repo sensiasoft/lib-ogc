@@ -27,19 +27,13 @@ import org.vast.util.DateTime;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WCS Transaction Acknowledgment
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 26 nov. 07
- * @version 1.0
- */
+ * */
 public class WCSTransactionAck extends OWSResponse
 {
 	protected DateTime timeStamp;

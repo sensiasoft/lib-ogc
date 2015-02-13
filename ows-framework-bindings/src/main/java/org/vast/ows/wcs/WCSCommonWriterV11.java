@@ -30,19 +30,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WCS Common Writer V1.1.1
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Util method to write XML common to several WCS documents
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 4 d�c. 07
- * @version 1.0
- */
+ * */
 public class WCSCommonWriterV11
 {
 	

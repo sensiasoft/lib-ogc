@@ -33,19 +33,13 @@ import org.vast.xml.XMLReaderException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Coverage Descriptions Reader V1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 27 nov. 07
- * @version 1.0
- */
+ * */
 public class CoverageDescriptionsReaderV10 extends AbstractResponseReader<CoverageDescriptions>
 {
 	protected GMLEnvelopeReader gmlReader = new GMLEnvelopeReader();

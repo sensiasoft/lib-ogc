@@ -27,20 +27,14 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GetMap Request Builder v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to generate a KVP GetMap request based
  * on values contained in a GetMapRequest object for version 1.0
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 10, 2007
- * @version 1.0
- */
+ * */
 public class GetMapWriterV10 extends AbstractRequestWriter<GetMapRequest>
 {
 

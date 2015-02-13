@@ -32,11 +32,9 @@ import org.apache.xml.serialize.*;
  * based on a template document obtained from an input stream.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 9, 2005
- * @version 1.0
- */
+ * */
 public abstract class SweResponseSerializer extends XMLSerializer
 {
 	protected DOMHelper dom;

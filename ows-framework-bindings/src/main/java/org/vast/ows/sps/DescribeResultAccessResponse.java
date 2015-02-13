@@ -29,19 +29,13 @@ import org.vast.ows.OWSResponse;
 
 
 /**
- * <p><b>Title:</b>
- * DescribeResultAccess Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO DescribeResultAccessResponse type description
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Mar, 03 2008
- * @version 1.0
- */
+ * */
 public class DescribeResultAccessResponse extends OWSResponse
 {
 	public final static String DATA_NOT_AVAILABLE_CODE = "DataNotAvailable";

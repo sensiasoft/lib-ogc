@@ -34,20 +34,14 @@ import org.vast.ows.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GetCoverage Request Reader v2.0.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse a KVP or XML GetCoverage request and
  * create a GetCoverage object for version 2.0.0
  * </p>
  *
- * <p>Copyright (c) 2011</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Aug 16, 2011
- * @version 1.0
- */
+ * */
 public class GetCoverageReaderV20 extends AbstractRequestReader<GetCoverageRequest>
 {
     	

@@ -29,20 +29,14 @@ import org.w3c.dom.Element;
 
 
 /**
-* <p><b>Title:</b><br/>
-* SPS Reserve Request Writer v2.0
-* </p>
-*
-* <p><b>Description:</b><br/>
+* <p>
 * Provides methods to generate a SPS Reserve request based
 * on values contained in a ReserveRequest object for version 2.0
 * </p>
 *
-* <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
 * @date Feb, 28 2008
-* @version 1.0
-*/
+**/
 public class ReserveRequestWriterV20 extends TaskingRequestWriterV20<ReserveRequest>
 {
 

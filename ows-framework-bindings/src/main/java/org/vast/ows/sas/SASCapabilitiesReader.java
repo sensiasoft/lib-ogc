@@ -38,18 +38,12 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SASCapabilitiesReader
+ * <p>
  * </p>
  *
- * <p><b>Description:</b><br/>
- * </p>
- *
- * <p>Copyright (c) 2008</p>
  * @author Gregoire Berthiau
  * @date Jul 2, 2008
- * @version 1.0
- */
+ * */
 public class SASCapabilitiesReader extends AbstractCapabilitiesReader
 {
    

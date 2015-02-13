@@ -27,19 +27,13 @@ import org.vast.ows.OWSRequest;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Confirm Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for SPS Confirm request parameters
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb 25, 2008
- * @version 1.0
- */
+ * */
 public class ConfirmRequest extends OWSRequest
 {
 	protected String taskID;

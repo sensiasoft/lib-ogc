@@ -22,20 +22,14 @@ package org.vast.ows.sld.functions;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Direct LookUp Table
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * This uses the input value as a direct index into an
  * array of values to compute the output.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Apr 3, 2006
- * @version 1.0
- */
+ * */
 public class DirectLookUpTable extends AbstractMappingFunction
 {
     protected double[] tableData;

@@ -28,19 +28,13 @@ import org.vast.ows.OWSResponse;
 
 
 /**
- * <p><b>Title:</b>
- * GetStatus Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for a GetStatus response
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb, 29 2008
- * @version 1.0
- */
+ * */
 public class GetStatusResponse extends OWSResponse
 {
 	List<StatusReport> reportList;

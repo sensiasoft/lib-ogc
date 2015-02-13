@@ -30,21 +30,15 @@ import org.vast.ows.OWSServiceCapabilities;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WFS Capabilities Reader v1.1
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Reads a WFS server capabilities document and create and
  * populate the corresponding OWSServiceCapabilities and
  * WFSLayerCapabilities objects for version 1.1
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 30, 2005
- * @version 1.0
- */
+ * */
 public class WFSCapabilitiesReaderV11 extends AbstractCapabilitiesReader
 {
 	

@@ -17,19 +17,13 @@ import org.vast.util.DateTime;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Tasking Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base class for all SPS tasking requests
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb 25, 2008
- * @version 1.0
- */
+ * */
 public abstract class TaskingRequest extends OWSRequest implements ParameterizedRequest
 {
 	protected String procedureID;

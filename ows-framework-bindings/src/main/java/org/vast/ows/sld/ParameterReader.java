@@ -28,21 +28,15 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * CSS Parameter Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * This class parses a CssParameter element and create corresponding object.
  * This supports STT extension for including a mapping function between the
  * property value and the actual renderable parameter.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public class ParameterReader
 {
     private FunctionReader functionReader;

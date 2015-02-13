@@ -29,19 +29,13 @@ import org.vast.ows.OWSResponse;
 
 
 /**
- * <p><b>Title:</b><br/>
- * InsertResultTemplate Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for SOS InsertResultTemplate response data
  * </p>
  *
- * <p>Copyright (c) 2014</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb 02, 2014
- * @version 1.0
- */
+ * */
 public class InsertResultTemplateResponse extends OWSResponse
 {
     protected String acceptedTemplateId;

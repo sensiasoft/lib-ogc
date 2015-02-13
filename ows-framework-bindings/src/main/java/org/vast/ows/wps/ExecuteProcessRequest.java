@@ -27,19 +27,13 @@ import org.vast.ows.OWSRequest;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GetResult Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for WPS ExecuteProcess request parameters
  * </p>
  *
- * <p>Copyright (c) 2008</p>
  * @author Gregoire Berthiau
  * @date Dec 15, 2008
- * @version 1.0
- */
+ * */
 
 public class ExecuteProcessRequest extends OWSRequest
 {

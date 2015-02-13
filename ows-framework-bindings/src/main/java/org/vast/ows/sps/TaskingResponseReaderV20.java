@@ -29,20 +29,14 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * Tasking Response Reader v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Used to read a version 2.0 SPS tasking responses into
  * the corresponding object
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb, 29 2008
- * @version 1.0
- */
+ * */
 public class TaskingResponseReaderV20 extends SWEResponseReader<TaskingResponse<?>>
 {
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();

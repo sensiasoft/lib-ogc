@@ -29,19 +29,13 @@ import org.vast.ows.OWSException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WCS Exception
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Exception object to carry WCS error messages.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <robin@nsstc.uah.edu>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 07 jul. 06
- * @version 1.0
- */
+ * */
 public class WCSException extends OWSException
 {
 	static final long serialVersionUID = 0xED126190670F4F6AL;

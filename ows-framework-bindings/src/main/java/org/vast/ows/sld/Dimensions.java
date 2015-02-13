@@ -23,21 +23,15 @@ package org.vast.ows.sld;
 import java.util.Hashtable;
 
 /**
- * <p><b>Title:</b><br/>
- * Dimensions
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD-X Dimensions object.
  * Allows to define mappings to Arrays for grid dimensions
  * along all any number of coordinates.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public class Dimensions extends Hashtable<String, String>
 {
 	private final static long serialVersionUID = 0;

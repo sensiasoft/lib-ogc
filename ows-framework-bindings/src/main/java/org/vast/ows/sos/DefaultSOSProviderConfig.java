@@ -25,19 +25,13 @@ package org.vast.ows.sos;
 
 
 /**
- * <p><b>Title:</b>
- * SOSProviderConfig
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Class holding information necessary to instantiate a new SOS data provider
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 25, 2012
- * @version 1.0
- */
+ * */
 public abstract class DefaultSOSProviderConfig implements ISOSDataProviderFactory
 {
     protected String dataFile;

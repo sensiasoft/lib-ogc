@@ -33,11 +33,9 @@ import org.w3c.dom.Element;
  * Utility class to serialize an OWS exception to XML
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Oct 23, 2007
- * @version 1.0
- */
+ * */
 public class OWSExceptionWriter
 {
 	protected DOMHelper dom = new DOMHelper();

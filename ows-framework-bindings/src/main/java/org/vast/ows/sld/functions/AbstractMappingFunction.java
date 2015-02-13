@@ -26,19 +26,13 @@ package org.vast.ows.sld.functions;
 import org.vast.ows.sld.MappingFunction;
 
 /**
- * <p><b>Title:</b>
- * AbstractMappingFunction
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO AbstractMappingFunction type description
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Jan 24, 2009
- * @version 1.0
- */
+ * */
 public class AbstractMappingFunction implements MappingFunction
 {
 

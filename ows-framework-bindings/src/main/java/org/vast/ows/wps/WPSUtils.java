@@ -45,19 +45,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * WPS Utils
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Utility methods for common stuffs for WPS and SOAP binding and attachment
  * </p>
  *
- * <p>Copyright (c) 2007</p>
  * @author Gregoire Berthiau
  * @date Dec 22, 2008
- * @version 1.0
- */
+ * */
 
 public class WPSUtils extends OWSUtils
 {

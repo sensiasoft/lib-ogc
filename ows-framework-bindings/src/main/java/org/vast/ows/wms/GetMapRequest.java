@@ -30,19 +30,13 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WMS GetMap Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for GetMap request parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alex Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 10, 2007
- * @version 1.0
- */
+ * */
 public class GetMapRequest extends OWSRequest
 {
     protected TimeExtent time;

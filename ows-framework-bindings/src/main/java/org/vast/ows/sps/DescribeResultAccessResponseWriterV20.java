@@ -30,20 +30,14 @@ import org.vast.xml.DOMHelper;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DescribeResultAccess Response Writer v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer to generate an XML DescribeResultAccess response based
  * on values contained in a DescribeResultAccessResponse object for SPS v2.0
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Mar 19, 2008
- * @version 1.0
- */
+ * */
 public class DescribeResultAccessResponseWriterV20 extends SWEResponseWriter<DescribeResultAccessResponse>
 {
 	protected OWSCommonWriterV11 owsWriter = new OWSCommonWriterV11();

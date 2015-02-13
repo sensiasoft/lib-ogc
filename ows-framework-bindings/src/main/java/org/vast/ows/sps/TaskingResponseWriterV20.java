@@ -33,20 +33,14 @@ import org.vast.xml.XMLWriterException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Tasking Response Writer v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer to generate an adequate XML tasking response based on values
  * contained in concrete subclasses of TaskingResponse object for SPS v2.0
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Mar 04, 2008
- * @version 1.0
- */
+ * */
 public class TaskingResponseWriterV20 extends SWEResponseWriter<TaskingResponse<?>>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();

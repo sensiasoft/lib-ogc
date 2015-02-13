@@ -33,18 +33,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * <p><b>Title:</b>
- *  WRSResponseReader
+ * <p>
  * </p>
  *
- * <p><b>Description:</b><br/>
- * </p>
- *
- * <p>Copyright (c) 2006</p>
  * @author Tony Cook
  * @date Nov 28, 2006
- * @version 1.0
- */
+ * */
 
 public class WRSResponseReader {
 	

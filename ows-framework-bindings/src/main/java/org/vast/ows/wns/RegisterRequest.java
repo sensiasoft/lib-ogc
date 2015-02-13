@@ -26,19 +26,13 @@ import org.vast.ows.OWSRequest;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WNS Register Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for Register request parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Jan 16, 2008
- * @version 1.0
- */
+ * */
 public class RegisterRequest extends OWSRequest
 {
     protected WNSUser user;

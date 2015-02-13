@@ -31,11 +31,9 @@ import org.vast.ows.swe.SWESOfferingCapabilities;
  * SPS Offering Capabilities
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb, 25 2008
- * @version 1.0
- */
+ * */
 public class SPSOfferingCapabilities extends SWESOfferingCapabilities
 {
 	protected AbstractGeometry observableArea;

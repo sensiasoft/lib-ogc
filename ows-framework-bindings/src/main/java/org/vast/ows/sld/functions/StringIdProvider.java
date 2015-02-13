@@ -24,20 +24,14 @@
 package org.vast.ows.sld.functions;
 
 /**
- * <p><b>Title:</b>
- * StringIndentifierResolver
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * This is used to map Sting to an integer index so that
  * mapping can be done more efficiently
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Jan 24, 2009
- * @version 1.0
- */
+ * */
 public interface StringIdProvider
 {
     public int getStringId(String text);

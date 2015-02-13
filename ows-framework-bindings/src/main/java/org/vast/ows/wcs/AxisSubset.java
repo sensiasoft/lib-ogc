@@ -27,20 +27,14 @@ import org.vast.util.Interval;
 
 
 /**
- * <p><b>Title:</b><br/>
- * AxisSubset
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Specifies subsetting parameters for any axis other than spatial and temporal.
  * For space and time use Bbox and TimeInfo
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alex Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Sep 24, 2007
- * @version 1.0
- */
+ * */
 public class AxisSubset extends OWSIdentification
 {
 	protected ArrayList<Interval> rangeIntervals;

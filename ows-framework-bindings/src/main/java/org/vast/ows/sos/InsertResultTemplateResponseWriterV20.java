@@ -1,25 +1,14 @@
 /***************************** BEGIN LICENSE BLOCK ***************************
 
- The contents of this file are subject to the Mozilla Public License Version
- 1.1 (the "License"); you may not use this file except in compliance with
- the License. You may obtain a copy of the License at
- http://www.mozilla.org/MPL/MPL-1.1.html
+The contents of this file are subject to the Mozilla Public License, v. 2.0.
+If a copy of the MPL was not distributed with this file, You can obtain one
+at http://mozilla.org/MPL/2.0/.
+
+Software distributed under the License is distributed on an "AS IS" basis,
+WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+for the specific language governing rights and limitations under the License.
  
- Software distributed under the License is distributed on an "AS IS" basis,
- WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- for the specific language governing rights and limitations under the License.
- 
- The Original Code is the "OGC Service Framework".
- 
- The Initial Developer of the Original Code is Sensia Software LLC.
- Portions created by the Initial Developer are Copyright (C) 2014
- the Initial Developer. All Rights Reserved.
- 
- Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> or
- Mike Botts <mike.botts@botts-inc.net> for more information.
- 
- Contributor(s): 
-    Alexandre Robin <alex.robin@sensiasoftware.com>
+Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -33,20 +22,14 @@ import org.vast.xml.DOMHelper;
 
 
 /**
- * <p><b>Title:</b><br/>
- * InsertResultTemplate Response Writer v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer to generate an XML InsertResultTemplate response based
  * on values contained in a InsertResultTemplateResponse object for SOS v2.0
  * </p>
  *
- * <p>Copyright (c) 2014</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb 3, 2014
- * @version 1.0
- */
+ * */
 public class InsertResultTemplateResponseWriterV20 extends SWEResponseWriter<InsertResultTemplateResponse>
 {
 		

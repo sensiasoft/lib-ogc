@@ -34,19 +34,13 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SWES Common Reader V20
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Utility methods to read SWES common structures
  * </p>
  *
- * <p>Copyright (c) 2010</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 22 jun. 10
- * @version 1.0
- */
+ * */
 public class SWESUtils
 {
 		

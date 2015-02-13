@@ -31,20 +31,14 @@ import org.vast.xml.XMLWriterException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DescribeTasking Response Writer v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer to generate an XML DescribeTasking response based
  * on values contained in a DescribeTaskingResponse object for SPS v2.0
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb 29, 2008
- * @version 1.0
- */
+ * */
 public class DescribeTaskingResponseWriterV20 extends SWEResponseWriter<DescribeTaskingResponse>
 {
 	protected SweComponentWriterV20 componentWriter = new SweComponentWriterV20();

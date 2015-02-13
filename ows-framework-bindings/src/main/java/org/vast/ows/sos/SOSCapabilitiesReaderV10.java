@@ -38,11 +38,9 @@ import org.vast.ows.OWSServiceCapabilities;
  * SOSLayerCapabilities objects for version 1.0
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 14, 2005
- * @version 1.0
- */
+ * */
 public class SOSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
 {
    

@@ -40,8 +40,7 @@ import org.vast.ows.OWSException;
  * Helper methods to read SWES v2.0 capabilities documents
  * </p>
  *
- * <p>Copyright (c) 2014</p>
- * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Dec 12, 2014
  */
 public abstract class SWESCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11

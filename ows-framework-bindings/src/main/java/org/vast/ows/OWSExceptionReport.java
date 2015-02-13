@@ -33,11 +33,9 @@ import java.util.List;
  * It itself derives from OWSException can be thrown as such. 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since 23 oct. 07
- * @version 1.0
- */
+ * */
 public class OWSExceptionReport extends OWSException
 {
 	static final long serialVersionUID = 0x2E03E7BD4483B097L;

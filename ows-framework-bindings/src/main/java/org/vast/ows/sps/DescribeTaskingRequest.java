@@ -27,19 +27,13 @@ import org.vast.ows.OWSRequest;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DescribeTasking Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for SPS DescribeTasking request parameters
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb 25, 2008
- * @version 1.0
- */
+ * */
 public class DescribeTaskingRequest extends OWSRequest
 {
 	protected String procedureID;

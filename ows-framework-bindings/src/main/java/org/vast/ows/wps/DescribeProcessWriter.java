@@ -29,21 +29,15 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WPS DescribeProcess Request Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to generate a KVP or XML WPS DescribeProcess
  * request based on values contained in a DescribeProcessRequest
  * object
  * </p>
  *
- * <p>Copyright (c) 2007</p>
  * @author Gregoire Berthiau
  * @date Dec 2, 2008
- * @version 1.0
- */
+ * */
 public class DescribeProcessWriter extends AbstractRequestWriter<DescribeProcessRequest>
 {
 

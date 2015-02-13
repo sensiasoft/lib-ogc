@@ -31,21 +31,15 @@ import org.vast.xml.DOMHelper;
 
 
 /**
-* <p><b>Title:</b><br/>
-* SPS GetStatus Request Writer v2.0
-* </p>
-*
-* <p><b>Description:</b><br/>
+* <p>
 * Provides methods to generate a KVP or XML SPS GetStatus
 * request based on values contained in a GetStatus object
 * for version 2.0
 * </p>
 *
-* <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
 * @date Feb, 258 2008
-* @version 1.0
-*/
+**/
 public class GetStatusRequestWriterV20 extends SWERequestWriter<GetStatusRequest>
 {
 

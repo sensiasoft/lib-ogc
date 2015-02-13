@@ -26,17 +26,13 @@ import org.vast.ows.wps.DescribeProcessRequest;
 
 
 /**
- * <p><b>Title:</b><br/> WPSHandler</p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for an WPS dataset (process offering) handler
  * </p>
  *
- * <p>Copyright (c) 2005</p>
  * @author Gregoire Berthiau
  * @since Dec 3, 2008
- * @version 1.0
- */
+ * */
 public interface WPSHandler
 {
 	public abstract void executeProcess(ExecuteProcessRequest request) throws Exception;

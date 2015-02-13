@@ -34,19 +34,13 @@ import org.vast.xml.DOMHelperException;
 import org.w3c.dom.Element;
 
 /**
- * <p><b>Title:</b>
- *  SAS Subscribe Response reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * reads the SAS Subscribe XML response
  * </p>
  *
- * <p>Copyright (c) 2006</p>
  * @author Gregoire Berthiau
  * @date Jul 9, 2008
- * @version 1.0
- */
+ * */
 
 public class SASSubscribeResponseReader
 {

@@ -32,11 +32,9 @@ import org.vast.xml.QName;
  * Base class for all OWS service responses
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since 21 nov. 07
- * @version 1.0
- */
+ * */
 public class OWSResponse
 {
 	protected String service;

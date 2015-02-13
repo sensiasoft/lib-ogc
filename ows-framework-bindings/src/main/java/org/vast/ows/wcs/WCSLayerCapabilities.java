@@ -33,19 +33,13 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WCS Layer Capabilities
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 27 nov. 07
- * @version 1.0
- */
+ * */
 public class WCSLayerCapabilities extends OWSLayerCapabilities
 {
 	protected List<String> formatList;

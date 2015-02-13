@@ -21,20 +21,14 @@
 package org.vast.ows.sld;
 
 /**
- * <p><b>Title:</b><br/>
- * Grid Mesh Symbolizer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD-X Grid Mesh Symbolizer object.
  * To render data as a mesh with the given Stroke parameters.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Aug 02, 2006
- * @version 1.0
- */
+ * */
 public class GridMeshSymbolizer extends GridSymbolizer
 {
 	protected Stroke stroke;

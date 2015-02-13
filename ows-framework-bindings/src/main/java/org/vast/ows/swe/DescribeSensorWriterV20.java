@@ -39,21 +39,15 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SWE Common DescribeSensor Request Writer v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to generate a KVP or XML SOS DescribeSensor
  * request based on values contained in a DescribeSensorRequest
  * object for version 1.0
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 10, 2008
- * @version 1.0
- */
+ * */
 public class DescribeSensorWriterV20 extends AbstractRequestWriter<DescribeSensorRequest>
 {
 	protected GMLTimeWriter timeWriter = new GMLTimeWriter("3.2");

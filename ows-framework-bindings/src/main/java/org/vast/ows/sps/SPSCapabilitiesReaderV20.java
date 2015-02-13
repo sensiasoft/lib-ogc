@@ -41,8 +41,7 @@ import org.vast.ows.swe.SWESCapabilitiesReaderV20;
  * SPSOfferingCapabilities objects for version 2.0
  * </p>
  *
- * <p>Copyright (c) 2014</p>
- * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Dec, 12 2014
  */
 public class SPSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20

@@ -27,20 +27,14 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SAS Layer Capabilities
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Contains SAS layer capabilities like available formats,
  * observables, procedures...
  * </p>
  *
- * <p>Copyright (c) 2008</p>
  * @author Gregoire Berthiau
  * @date Jul 2, 2008
- * @version 1.0
- */
+ * */
 public class SASLayerCapabilities extends OWSLayerCapabilities
 {
 	protected List<String> subscriptionOfferingIDList;

@@ -35,20 +35,14 @@ import org.vast.ows.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SOS GetResult Request Reader v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse a KVP or XML SOS GetResult
  * request and create a GetResultRequest object for version 1.0
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 10, 2007
- * @version 1.0
- */
+ * */
 public class GetResultReaderV10 extends AbstractRequestReader<GetResultRequest>
 {
     protected GMLTimeReader timeReader;

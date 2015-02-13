@@ -28,19 +28,13 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DescribeSensor Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for SOS Describe Sensor request parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 09, 2007
- * @version 1.0
- */
+ * */
 public class DescribeSensorRequest extends OWSRequest
 {
     public final static String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0");

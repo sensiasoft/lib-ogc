@@ -30,20 +30,14 @@ import org.vast.unit.Unit;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Range Axis
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Information on a range axis
  * (ex: name=xs1, uom=W.sr-1.m-2.um, type=short, min=1, max=65500, null=0) 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 6 nov. 07
- * @version 1.0
- */
+ * */
 public class RangeAxis extends OWSIdentification
 {
 	protected Object nullValue;

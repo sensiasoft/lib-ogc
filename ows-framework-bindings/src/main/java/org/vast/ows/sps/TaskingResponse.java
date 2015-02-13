@@ -31,17 +31,12 @@ import org.vast.util.DateTime;
 
 
 /**
- * <p><b>Title:</b>
- * Tasking Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for a tasking response.
  * (i.e. GetFeasibility, Submit, Update, Reserve or Confirm operations)
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb, 29 2008
  * @param <Report> Type of status report contained in this response
  */

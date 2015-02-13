@@ -27,19 +27,13 @@ import org.vast.ows.OWSRequest;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WCS DescribeCoverage Query
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for DescribeCoverage query parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alex Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Spe 21, 2007
- * @version 1.0
- */
+ * */
 public class DescribeCoverageRequest extends OWSRequest
 {
     protected ArrayList<String> coverages;

@@ -27,11 +27,9 @@ package org.vast.ows;
  * Contains the fields necessary to generate an exception report.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since 23 oct. 07
- * @version 1.0
- */
+ * */
 public class OWSException extends Exception
 {
 	static final long serialVersionUID = 0xED126190670F4F6AL;

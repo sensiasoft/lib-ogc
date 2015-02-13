@@ -40,11 +40,9 @@ import org.vast.util.TimeExtent;
  * request builders
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Oct 30, 2005
- * @version 1.0
- * @param <RequestType> Type of OWS request object accepted by this writer
+ * * @param <RequestType> Type of OWS request object accepted by this writer
  */
 public abstract class AbstractRequestWriter<RequestType extends OWSRequest> implements OWSRequestWriter<RequestType>
 {

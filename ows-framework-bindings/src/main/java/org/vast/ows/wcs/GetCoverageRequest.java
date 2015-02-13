@@ -30,19 +30,13 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WCS GetCoverage Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for GetCoverage request parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alex Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Sep 21, 2007
- * @version 1.0
- */
+ * */
 public class GetCoverageRequest extends OWSRequest
 {
     protected String coverage;

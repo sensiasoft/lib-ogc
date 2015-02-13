@@ -26,19 +26,13 @@ import java.util.List;
 import org.vast.ows.OWSIdentification;
 
 /**
- * <p><b>Title:</b><br/>
- * FieldSubset
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 4 déc. 07
- * @version 1.0
- */
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @date 4 dï¿½c. 07
+ * */
 public class FieldSubset extends OWSIdentification
 {
 	protected List<AxisSubset> axisSubsets;

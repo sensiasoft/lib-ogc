@@ -22,19 +22,13 @@ package org.vast.ows.sld.functions;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Linear Adjustment
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Linear Adjustment function of the form y = a*x + b.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Apr 3, 2006
- * @version 1.0
- */
+ * */
 public class LinearAdjustment extends AbstractMappingFunction
 {
     protected double gain;

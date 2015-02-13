@@ -30,20 +30,14 @@ import org.vast.xml.XMLWriterException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GetFeasibility Response Writer v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer to generate an XML GetFeasibility response based
  * on values contained in a GetFeasibilityResponse object for SPS v2.0
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Mar 04, 2008
- * @version 1.0
- */
+ * */
 public class GetFeasibilityResponseWriterV20 extends SWEResponseWriter<GetFeasibilityResponse>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();

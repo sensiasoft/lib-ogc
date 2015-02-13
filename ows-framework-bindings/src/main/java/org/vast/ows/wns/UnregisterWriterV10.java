@@ -30,20 +30,14 @@ import org.vast.xml.QName;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WNS Unregister Request Builder v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to generate an XML Unregister request based
  * on values contained in a UnregisterRequest object for WNS version 1.0
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Jan 16, 2008
- * @version 1.0
- */
+ * */
 public class UnregisterWriterV10 extends AbstractRequestWriter<UnregisterRequest>
 {
 

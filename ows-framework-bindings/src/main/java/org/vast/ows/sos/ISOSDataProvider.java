@@ -30,20 +30,14 @@ import org.vast.ogc.om.IObservation;
 
 
 /**
- * <p><b>Title:</b>
- * ISosDataProvider
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface to be implemented for providing data to the SOS engine.
  * One data provider is mapped for each SOS offering.
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 18, 2012
- * @version 1.0
- */
+ * */
 public interface ISOSDataProvider
 {  
     

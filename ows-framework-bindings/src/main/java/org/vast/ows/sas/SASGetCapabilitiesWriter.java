@@ -31,20 +31,14 @@ import org.vast.xml.QName;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SAS GetCapabilities Request Builder v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to generate a KVP or XML GetCapabilities request based
  * on values contained in a GetCapabilities object for version 1.0
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Sep 21, 2007
- * @version 1.0
- */
+ * */
 public class SASGetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilitiesRequest>
 {
 	

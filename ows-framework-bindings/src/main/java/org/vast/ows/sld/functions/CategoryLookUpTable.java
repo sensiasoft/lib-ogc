@@ -24,20 +24,14 @@ import java.util.Hashtable;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Category LookUp Table
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * This uses a String input value and maps it to a numerical value.
  * This is used to map categorical values
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Apr 3, 2006
- * @version 1.0
- */
+ * */
 public class CategoryLookUpTable extends AbstractMappingFunction
 {
     protected Hashtable<String, Double> mappingTable;

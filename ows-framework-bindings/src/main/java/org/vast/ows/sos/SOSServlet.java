@@ -68,19 +68,13 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b>
- * SOSServlet2
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base abstract class for implementing SOS servlets
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 24, 2012
- * @version 1.0
- */
+ * */
 @SuppressWarnings("serial")
 public abstract class SOSServlet extends OWSServlet
 {

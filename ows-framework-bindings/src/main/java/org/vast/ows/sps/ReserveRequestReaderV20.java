@@ -32,20 +32,14 @@ import org.vast.xml.DOMHelper;
 
 
 /**
-* <p><b>Title:</b><br/>
-* SPS Reserve Request Reader v2.0
-* </p>
-*
-* <p><b>Description:</b><br/>
+* <p>
 * Provides methods to parse an XML SPS Reserve
 * request and create an ReserveRequest object for version 2.0
 * </p>
 *
-* <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
 * @date Dec, 10 2008
-* @version 1.0
-*/
+**/
 public class ReserveRequestReaderV20 extends TaskingRequestReaderV20<ReserveRequest>
 {
 		

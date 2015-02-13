@@ -34,20 +34,13 @@ import org.vast.xml.XMLWriterException;
 
 
 /**
-* <p><b>Title:</b><br/>
-* SPS Tasking Request Writer v2.0
-* @param <RequestType> Type of tasking request handled by the writer
-* </p>
-*
-* <p><b>Description:</b><br/>
+* <p>
 * Provides methods to generate SPS tasking requests for version 2.0
 * </p>
 *
-* <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
 * @date Feb, 28 2008
-* @version 1.0
-*/
+**/
 public abstract class TaskingRequestWriterV20<RequestType extends TaskingRequest> extends SWERequestWriter<RequestType>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();

@@ -21,19 +21,13 @@
 package org.vast.ows.sld;
 
 /**
- * <p><b>Title:</b><br/>
- * Raster Channel object
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Object used for one of the channel selections.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public class RasterChannel extends ScalarParameter
 {
     protected boolean normalize;

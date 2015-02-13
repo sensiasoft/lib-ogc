@@ -27,20 +27,14 @@ import org.vast.util.Bbox;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WFS Layer Capabilities
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Contains WFS layer capabilities like formats,
  * reference systems (srs), max bbox...
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 30, 2005
- * @version 1.0
- */
+ * */
 public class WFSLayerCapabilities extends OWSLayerCapabilities
 {
     protected List<String> formatList;

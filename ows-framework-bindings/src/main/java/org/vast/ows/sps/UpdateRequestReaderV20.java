@@ -30,20 +30,14 @@ import org.vast.xml.DOMHelper;
 
 
 /**
-* <p><b>Title:</b><br/>
-* SPS Update Request Reader v2.0
-* </p>
-*
-* <p><b>Description:</b><br/>
+* <p>
 * Provides methods to parse an XML SPS Update
 * request and create an UpdateRequest object for version 2.0
 * </p>
 *
-* <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
 * @date Dec, 10 2008
-* @version 1.0
-*/
+**/
 public class UpdateRequestReaderV20 extends TaskingRequestReaderV20<UpdateRequest>
 {
 		

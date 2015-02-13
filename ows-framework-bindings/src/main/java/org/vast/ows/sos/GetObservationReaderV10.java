@@ -36,20 +36,14 @@ import org.vast.ows.sos.GetObservationRequest.ResponseMode;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SOS GetObservation Request Reader v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse a KVP or XML SOS GetObservation
  * request and create a GetObservationRequest object for version 1.0
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 10, 2007
- * @version 1.0
- */
+ * */
 public class GetObservationReaderV10 extends AbstractRequestReader<GetObservationRequest>
 {
     protected GMLTimeReader timeReader;

@@ -30,19 +30,13 @@ import org.vast.ows.OWSResponse;
 
 
 /**
- * <p><b>Title:</b><br/>
- * UpdateSensor Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for SWES UpdateSensor response data
  * </p>
  *
- * <p>Copyright (c) 2014</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb 02, 2014
- * @version 1.0
- */
+ * */
 public class UpdateSensorResponse extends OWSResponse
 {
     protected String updatedProcedure;

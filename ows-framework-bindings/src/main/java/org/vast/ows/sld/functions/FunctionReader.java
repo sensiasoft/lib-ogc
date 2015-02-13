@@ -27,22 +27,16 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Mapping Function Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * This class parses one of the MappingFunction elements allowed within
  * a CssParameter definition. It will create the appropriate MappingFunction
  * object which will be use to dynamically preprocess the data before it is 
  * displayed.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public class FunctionReader
 {
 	

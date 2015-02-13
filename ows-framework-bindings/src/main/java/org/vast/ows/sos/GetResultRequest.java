@@ -31,19 +31,13 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GetResult Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for SOS GetResult request parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 09, 2007
- * @version 1.0
- */
+ * */
 public class GetResultRequest extends OWSRequest
 {
     protected String offering;

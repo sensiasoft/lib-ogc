@@ -28,21 +28,15 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * OWS Capabilities Serializer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Seializes a Capabilities document to the given
  * output stream. This will also skip elements called
  * internalInfo that are used internally by our servlets.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Aug 22, 2006
- * @version 1.0
- */
+ * */
 public class OWSCapabilitiesSerializer extends XMLSerializer
 {
     

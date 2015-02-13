@@ -27,11 +27,9 @@ package org.vast.ows;
  * Container for GetCapabilities query parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alex Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 21, 2007
- * @version 1.0
- */
+ * */
 public class GetCapabilitiesRequest extends OWSRequest
 {
     protected String section;

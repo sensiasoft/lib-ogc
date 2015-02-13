@@ -1,25 +1,14 @@
 /***************************** BEGIN LICENSE BLOCK ***************************
 
- The contents of this file are subject to the Mozilla Public License Version
- 1.1 (the "License"); you may not use this file except in compliance with
- the License. You may obtain a copy of the License at
- http://www.mozilla.org/MPL/MPL-1.1.html
+The contents of this file are subject to the Mozilla Public License, v. 2.0.
+If a copy of the MPL was not distributed with this file, You can obtain one
+at http://mozilla.org/MPL/2.0/.
+
+Software distributed under the License is distributed on an "AS IS" basis,
+WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+for the specific language governing rights and limitations under the License.
  
- Software distributed under the License is distributed on an "AS IS" basis,
- WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- for the specific language governing rights and limitations under the License.
- 
- The Original Code is the "OGC Service Framework".
- 
- The Initial Developer of the Original Code is Sensia Software LLC.
- Portions created by the Initial Developer are Copyright (C) 2014
- the Initial Developer. All Rights Reserved.
- 
- Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> or
- Mike Botts <mike.botts@botts-inc.net> for more information.
- 
- Contributor(s): 
-    Alexandre Robin <alex.robin@sensiasoftware.com>
+Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -36,20 +25,14 @@ import org.vast.ows.swe.SWERequestReader;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SOS GetResultTemplate Request Reader v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse a KVP or SOAP/XML SOS GetResultTemplate
  * request and create a GetResultTemplateRequest object for version 2.0
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Aug 8, 2012
- * @version 1.0
- */
+ * */
 public class GetResultTemplateReaderV20 extends SWERequestReader<GetResultTemplateRequest>
 {
         

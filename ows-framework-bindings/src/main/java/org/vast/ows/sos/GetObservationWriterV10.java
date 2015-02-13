@@ -33,21 +33,15 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SOS GetObservation Request Writer v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to generate a KVP or XML SOS GetObservation
  * as defined in version 1.0 of the SOS standard using values
  * contained in a GetObservationRequest object
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 10, 2007
- * @version 1.0
- */
+ * */
 public class GetObservationWriterV10 extends AbstractRequestWriter<GetObservationRequest>
 {
 	protected GMLEnvelopeWriter bboxWriter = new GMLEnvelopeWriter("3.1");

@@ -21,20 +21,14 @@
 package org.vast.ows.sld;
 
 /**
- * <p><b>Title:</b><br/>
- * Line Symbolizer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD Line Symbolizer object.
  * Allows to specify line geometry and stroke.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 10, 2005
- * @version 1.0
- */
+ * */
 public class LineSymbolizer extends Symbolizer
 {
 	protected Dimensions dimensions; // numPoints, numSegments

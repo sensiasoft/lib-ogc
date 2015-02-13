@@ -30,11 +30,9 @@ import org.w3c.dom.Element;
  * Base interface for all OWS response writers
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since 21 nov. 07
- * @version 1.0
- * @param <ResponseType> Type of response object supported by this writer
+ * * @param <ResponseType> Type of response object supported by this writer
  */
 public interface OWSResponseWriter<ResponseType extends OWSResponse>
 {

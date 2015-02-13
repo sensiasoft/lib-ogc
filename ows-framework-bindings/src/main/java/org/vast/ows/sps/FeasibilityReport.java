@@ -26,19 +26,13 @@ import java.util.List;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Feasibility Report
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb, 25 2008
- * @version 1.0
- */
+ * */
 public class FeasibilityReport extends StatusReport
 {
 	private static final long serialVersionUID = -2981759440875957711L;

@@ -28,11 +28,9 @@ import java.util.ArrayList;
  * Container for common OWS Identification info
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alex Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Oct 11, 2007
- * @version 1.0
- */
+ * */
 public class OWSIdentification
 {
 	protected String title;

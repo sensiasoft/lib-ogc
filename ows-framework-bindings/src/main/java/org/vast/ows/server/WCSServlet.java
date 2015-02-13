@@ -37,10 +37,8 @@ import org.vast.ows.wcs.WCSException;
  * Base abstract class for implementing WCS servlets
  * </p>
  *
- * <p>Copyright: Copyright (c) 2005</p>
- * @author Alexandre Robin, Tony Cook
- * @version 1.0
- */
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * */
 public abstract class WCSServlet extends OWSServlet
 {
     private static final long serialVersionUID = 7155979257491196521L;

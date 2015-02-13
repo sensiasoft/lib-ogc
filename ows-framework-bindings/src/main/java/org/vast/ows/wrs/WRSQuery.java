@@ -26,18 +26,12 @@ import org.vast.util.Bbox;
 
 
 /**
- * <p><b>Title:</b><br/>
- *  WRSQuery
+ * <p>
  * </p>
  *
- * <p><b>Description:</b><br/>
- * </p>
- *
- * <p>Copyright (c) 2005</p>
  * @author Tony Cook
  * @date Nov 26, 2006
- * @version 1.0
- */
+ * */
 public class WRSQuery extends OWSRequest
 {
     protected final static String unsupportedVersion = "Unsupported WRS version";

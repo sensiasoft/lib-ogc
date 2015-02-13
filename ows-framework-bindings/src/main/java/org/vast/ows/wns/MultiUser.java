@@ -26,19 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p><b>Title:</b><br/>
- * MultiUser
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 16 janv. 08
- * @version 1.0
- */
+ * */
 public class MultiUser extends WNSUser
 {
 	protected List<String> userIds;

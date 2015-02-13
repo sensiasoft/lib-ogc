@@ -40,17 +40,13 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b><br/> SOSServlet</p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base abstract class for implementing SOS servlets
  * @deprecated use org.vast.ows.sos.SOSServlet
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @version 1.0
- */
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * */
 public abstract class SOSServlet extends OWSServlet
 {
     private static final long serialVersionUID = 6940984824581209178L;

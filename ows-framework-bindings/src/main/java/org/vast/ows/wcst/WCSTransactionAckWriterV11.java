@@ -30,20 +30,14 @@ import org.vast.ows.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WCS Transaction Ack Writer V1.1.1
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer to generate an WCS-T Transaction Ackowledgment for
  * version 1.1.1 based on a WCSTransactionAck object. 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 22 nov. 07
- * @version 1.0
- */
+ * */
 public class WCSTransactionAckWriterV11 extends AbstractResponseWriter<WCSTransactionAck>
 {
 	protected WCSTransactionWriterV11 requestWriter = new WCSTransactionWriterV11();

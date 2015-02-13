@@ -21,20 +21,14 @@
 package org.vast.ows.sld;
 
 /**
- * <p><b>Title:</b><br/>
- * Fill
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD Fill object.
  * Allows to specify fill color and opacity.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public class Fill
 {
 	protected Graphic graphicFill;

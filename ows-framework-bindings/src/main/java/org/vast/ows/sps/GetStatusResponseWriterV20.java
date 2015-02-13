@@ -31,20 +31,14 @@ import org.vast.xml.XMLWriterException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Status Response Writer v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer to generate an adequate XML status response based on values
  * contained in a GetStatusResponse object for SPS v2.0
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Mar 04, 2008
- * @version 1.0
- */
+ * */
 public class GetStatusResponseWriterV20 extends SWEResponseWriter<GetStatusResponse>
 {
 	protected SPSCommonWriterV20 commonWriter = new SPSCommonWriterV20();

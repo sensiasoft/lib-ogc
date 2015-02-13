@@ -32,19 +32,13 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b>
- * DescribeResultAccess Response Reader v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO DescribeResultAccessResponseReaderV11 type description
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Mar, 19 2008
- * @version 1.0
- */
+ * */
 public class DescribeResultAccessResponseReaderV20 extends SWEResponseReader<DescribeResultAccessResponse>
 {
 	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();

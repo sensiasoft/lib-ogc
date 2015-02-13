@@ -26,19 +26,13 @@ import org.vast.ows.OWSException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WNS Exception
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Exception object to carry WNS error messages.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Jan 16, 2008
- * @version 1.0
- */
+ * */
 public class WNSException extends OWSException
 {
 	static final long serialVersionUID = -7139393367380917111L;

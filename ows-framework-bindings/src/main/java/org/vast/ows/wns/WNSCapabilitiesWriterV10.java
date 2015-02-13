@@ -33,21 +33,15 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WNS Capabilities Writer V1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writes a WNS server capabilities document from
  * OWSServiceCapabilities and WNSCapabilities
  * objects for WNS version 1.0
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Jan 17, 2008
- * @version 1.0
- */
+ * */
 public class WNSCapabilitiesWriterV10 extends OWSCapabilitiesWriterV11
 {
 

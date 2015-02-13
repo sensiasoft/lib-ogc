@@ -22,19 +22,13 @@ package org.vast.ows.sld;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Symbolizer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Abstract Base Symbolizer
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public abstract class Symbolizer
 {
 	protected String name;

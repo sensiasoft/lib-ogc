@@ -21,20 +21,14 @@
 package org.vast.ows.sld;
 
 /**
- * <p><b>Title:</b><br/>
- * Grid Border Symbolizer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD-X Grid Border Symbolizer object.
  * To render only the border of gridded data.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Aug 02, 2006
- * @version 1.0
- */
+ * */
 public class GridBorderSymbolizer extends GridSymbolizer
 {
 	protected Stroke stroke;

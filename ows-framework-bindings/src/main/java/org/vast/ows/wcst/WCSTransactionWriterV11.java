@@ -31,20 +31,14 @@ import org.vast.ows.wcs.WCSException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WCS Transaction Writer V1.1.1
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer to generate an WCS-T Transaction for version 1.1.1 based
  * on values contained in a WCSTransactionRequest object. 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 22 nov. 07
- * @version 1.0
- */
+ * */
 public class WCSTransactionWriterV11 extends AbstractRequestWriter<WCSTransactionRequest>
 {
 	protected OWSCommonWriterV11 owsWriter = new OWSCommonWriterV11();

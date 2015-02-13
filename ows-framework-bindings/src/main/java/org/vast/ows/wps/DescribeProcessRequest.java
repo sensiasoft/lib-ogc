@@ -25,19 +25,13 @@ import org.vast.ows.OWSRequest;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GetResult Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for WPS DescribeProcess request parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
  * @author Gregoire Berthiau
  * @date Nov 29, 2008
- * @version 1.0
- */
+ * */
 public class DescribeProcessRequest extends OWSRequest
 {
 	protected String requestFormat;

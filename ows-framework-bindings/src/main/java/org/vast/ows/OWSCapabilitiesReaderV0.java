@@ -27,20 +27,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * <p><b>Title:</b><br/>
- * OWS Capabilities Reader V0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base reader for all capabilities document based
  * on a pre-version of OWS common (here called version 0)
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 27 nov. 07
- * @version 1.0
- */
+ * */
 public abstract class OWSCapabilitiesReaderV0 extends AbstractCapabilitiesReader
 {
 

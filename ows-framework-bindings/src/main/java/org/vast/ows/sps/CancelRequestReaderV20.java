@@ -32,20 +32,14 @@ import org.vast.xml.DOMHelper;
 
 
 /**
-* <p><b>Title:</b><br/>
-* SPS Cancel Request Reader v2.0
-* </p>
-*
-* <p><b>Description:</b><br/>
+* <p>
 * Provides methods to parse a KVP or XML SPS Cancel
 * request and create a CancelRequest object for version 2.0
 * </p>
 *
-* <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
 * @date Dec, 18 2008
-* @version 1.0
-*/
+**/
 public class CancelRequestReaderV20 extends SWERequestReader<CancelRequest>
 {
 

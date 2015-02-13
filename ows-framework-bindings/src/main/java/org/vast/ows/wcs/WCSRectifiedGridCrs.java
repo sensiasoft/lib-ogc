@@ -23,19 +23,13 @@
 package org.vast.ows.wcs;
 
 /**
- * <p><b>Title:</b><br/>
- * WCSGridCrs
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 28 nov. 07
- * @version 1.0
- */
+ * */
 public class WCSRectifiedGridCrs
 {
 	public final static String SIMPLE_GRID = "urn:ogc:def:method:WCS:1.1:2dSimpleGrid";

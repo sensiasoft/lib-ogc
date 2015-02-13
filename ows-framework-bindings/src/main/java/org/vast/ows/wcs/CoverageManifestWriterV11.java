@@ -34,20 +34,14 @@ import org.vast.xml.QName;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Coverage Manifest Writer v1.1.1
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer to generate an XML Coverage Manifest based
  * on values contained in a CoverageManifest object for version 1.1.1
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 11, 2007
- * @version 1.0
- */
+ * */
 public class CoverageManifestWriterV11 extends AbstractResponseWriter<CoverageManifest>
 {
 	protected OWSCommonWriterV11 owsWriter = new OWSCommonWriterV11();

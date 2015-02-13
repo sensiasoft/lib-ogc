@@ -31,11 +31,9 @@ import org.vast.ows.wcs.GetCoverageRequest;
  * Interface for a WCS dataset (layer) handler
  * </p>
  *
- * <p>Copyright: Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 9, 2005
- * @version 1.0
- */
+ * */
 public interface WCSHandler
 {
 	public abstract void getCoverage(GetCoverageRequest req) throws Exception;

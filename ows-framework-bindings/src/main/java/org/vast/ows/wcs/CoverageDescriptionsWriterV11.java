@@ -35,19 +35,13 @@ import org.vast.xml.QName;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Coverage Descriptions Writer V1.1.1
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 23 nov. 07
- * @version 1.0
- */
+ * */
 public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<CoverageDescriptions>
 {
 	protected WCSCommonWriterV11 wcsWriter = new WCSCommonWriterV11();

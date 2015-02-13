@@ -24,20 +24,14 @@ import java.util.*;
 import org.vast.ows.OWSLayerCapabilities;
 
 /**
- * <p><b>Title:</b><br/>
- * SWE WPS Layer Capabilities
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Contains WPS layer capabilities like available formats,
  * requestMode, responseMode...
  * </p>
  *
- * <p>Copyright (c) 2005</p>
  * @author Gregoire Berthiau
  * @date Nov 29, 2008
- * @version 1.0
- */
+ * */
 public class WPSLayerCapabilities extends OWSLayerCapabilities
 {
 	protected String method;

@@ -28,20 +28,14 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WMS Layer Capabilities
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Contains WMS layer capabilities like formats, styles,
  * reference systems (srs), max bbox, available time ranges...
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 30, 2005
- * @version 1.0
- */
+ * */
 public class WMSLayerCapabilities extends OWSLayerCapabilities
 {
     protected List<String> formatList;

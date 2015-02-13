@@ -27,19 +27,13 @@ import org.vast.ows.OWSRequest;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DescribeResultAccess Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for SPS DescribeResultAccess request parameters
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Mar 03, 2008
- * @version 1.0
- */
+ * */
 public class DescribeResultAccessRequest extends OWSRequest
 {
 	protected String procedureID;

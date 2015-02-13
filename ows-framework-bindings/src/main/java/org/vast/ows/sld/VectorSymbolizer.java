@@ -21,20 +21,14 @@
 package org.vast.ows.sld;
 
 /**
- * <p><b>Title:</b><br/>
- * Point Symbolizer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD Point Symbolizer object.
  * Allows to specify point geometry and symbols.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 10, 2005
- * @version 1.0
- */
+ * */
 public class VectorSymbolizer extends Symbolizer
 {
     public enum DirectionType {DIFF, ROT, ABS};

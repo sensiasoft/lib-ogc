@@ -30,20 +30,14 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b>
- * Get Status Response Reader v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Used to read a version 2.0 SPS GetStatus Response into
  * a GetStatusResponse object
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb, 29 2008
- * @version 1.0
- */
+ * */
 public class GetStatusResponseReaderV20 extends SWEResponseReader<GetStatusResponse>
 {
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();

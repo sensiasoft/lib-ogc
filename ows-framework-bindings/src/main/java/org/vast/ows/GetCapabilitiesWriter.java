@@ -33,11 +33,9 @@ import org.vast.xml.QName;
  * on values contained in a GetCapabilities object for version 1.0
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 21, 2007
- * @version 1.0
- */
+ * */
 public class GetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilitiesRequest>
 {
 	

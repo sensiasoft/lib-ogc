@@ -24,18 +24,14 @@ import java.io.*;
 
 
 /**
- * <p><b>Title:</b><br/> PostRequestFilter</p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Filter used to receive POST request from a HTML FORM.
  * This removes all characters before the first '<'
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 9, 2005
- * @version 1.0
- */
+ * */
 public class PostRequestFilter extends FilterInputStream
 {
 	public PostRequestFilter(InputStream in)

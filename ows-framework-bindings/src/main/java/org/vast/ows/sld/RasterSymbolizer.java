@@ -21,19 +21,13 @@
 package org.vast.ows.sld;
 
 /**
- * <p><b>Title:</b><br/>
- * Raster Symbolizer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD Raster Symbolizer object.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public class RasterSymbolizer extends Symbolizer
 {
     protected RasterChannel redChannel;

@@ -41,8 +41,7 @@ import org.vast.util.TimeExtent;
  * Helper methods for OWS readers/writers.
  * </p>
  *
- * <p>Copyright (c) 2014 Sensia Software LLC</p>
- * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Dec 14, 2014
  */
 public class OWSCommonUtils

@@ -31,20 +31,14 @@ import org.vast.ows.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DescribeCoverage Request Reader v1.1.1
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse a KVP or XML DescribeCoverage request and
  * create a DescribeCoverage object for version 1.1.1
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 08, 2007
- * @version 1.0
- */
+ * */
 public class DescribeCoverageReaderV11 extends AbstractRequestReader<DescribeCoverageRequest>
 {
 	

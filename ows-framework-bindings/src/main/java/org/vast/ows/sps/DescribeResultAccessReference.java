@@ -30,21 +30,15 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DescribeResultAccessReference
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Subclass of OWSReference specific for SPS DescribeResultAccessResponse.
  * It adds the ability to append an SPSMetadata object to specify the type
  * of data access operation or service to be used to retrieve task data.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 8 oct. 2010
- * @version 1.0
- */
+ * */
 public class DescribeResultAccessReference extends OWSReference
 {
 	public static final String ROLE_RESOURCE = "http://www.opengis.net/spec/SPS/2.0/referenceType/Resource";

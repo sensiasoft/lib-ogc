@@ -39,19 +39,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Execute Process Request Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer to write the Execute Process data into the request stream
  * </p>
  *
- * <p>Copyright (c) 2008</p>
  * @author Gregoire Berthiau
  * @date Dec 15, 2008
- * @version 1.0
- */
+ * */
 public class ExecuteProcessRequestWriter extends AbstractRequestWriter<ExecuteProcessRequest>
 {
 

@@ -34,11 +34,9 @@ import org.w3c.dom.*;
  * create a GetCapabilities object for all version
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 21, 2007
- * @version 1.0
- */
+ * */
 public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilitiesRequest>
 {
 	protected String service;

@@ -31,20 +31,14 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * DescribeTasking Response Reader v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Used to read a version 2.0 SPS DescribeTasking Response into
  * a DescribeTaskingResponse object
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb, 25 2008
- * @version 1.0
- */
+ * */
 public class DescribeTaskingResponseReaderV20 extends SWEResponseReader<DescribeTaskingResponse>
 {
 	protected SweComponentReaderV20 componentReader = new SweComponentReaderV20();

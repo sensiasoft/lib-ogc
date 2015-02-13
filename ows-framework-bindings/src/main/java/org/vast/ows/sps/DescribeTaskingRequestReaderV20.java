@@ -34,20 +34,14 @@ import org.vast.xml.DOMHelper;
 
 
 /**
-* <p><b>Title:</b><br/>
-* SPS DescribeTasking Request Reader v2.0
-* </p>
-*
-* <p><b>Description:</b><br/>
+* <p>
 * Provides methods to parse a KVP or XML SPS DescribeTasking
 * request and create a DescribeTasking object for version 2.0
 * </p>
 *
-* <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
 * @date Feb, 25 2008
-* @version 1.0
-*/
+**/
 public class DescribeTaskingRequestReaderV20 extends SWERequestReader<DescribeTaskingRequest>
 {
 

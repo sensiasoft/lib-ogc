@@ -30,21 +30,15 @@ import org.vast.xml.DOMHelper;
 
 
 /**
-* <p><b>Title:</b><br/>
-* SPS DescribeResultAccess Request Writer v2.0
-* </p>
-*
-* <p><b>Description:</b><br/>
+* <p>
 * Provides methods to generate a KVP or XML SPS DescribeResultAccess
 * request based on values contained in a DescribeResultAccessRequest
 * object for version 2.0
 * </p>
 *
-* <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
 * @date Feb, 28 2008
-* @version 1.0
-*/
+**/
 public class DescribeResultAccessRequestWriterV20 extends SWERequestWriter<DescribeResultAccessRequest>
 {
 

@@ -31,20 +31,14 @@ import org.vast.xml.DOMHelper;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GetMap Request Reader v1.1
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse a KVP or XML GetMap request and
  * create a GetMapRequest object for version 1.1
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 10, 2007
- * @version 1.0
- */
+ * */
 public class GetMapReaderV11 extends GetMapReaderV10
 {
 	

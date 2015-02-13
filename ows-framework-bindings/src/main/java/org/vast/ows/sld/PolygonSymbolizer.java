@@ -21,20 +21,14 @@
 package org.vast.ows.sld;
 
 /**
- * <p><b>Title:</b><br/>
- * Polygon Symbolizer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD Polygon Symbolizer object.
  * Allows to specify polygon geometry, fill and stroke.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 10, 2005
- * @version 1.0
- */
+ * */
 public class PolygonSymbolizer extends Symbolizer
 {
 	protected Dimensions dimensions; // numPoints, numHoles

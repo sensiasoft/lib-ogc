@@ -32,11 +32,9 @@ import org.w3c.dom.Element;
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since 28 nov. 07
- * @version 1.0
- * @param <ResponseType> Type of OWS response object accepted by this writer
+ * * @param <ResponseType> Type of OWS response object accepted by this writer
  */
 public abstract class AbstractResponseWriter<ResponseType extends OWSResponse> implements OWSResponseWriter<ResponseType>
 {

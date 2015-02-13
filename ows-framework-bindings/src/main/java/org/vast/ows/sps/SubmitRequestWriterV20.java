@@ -26,20 +26,14 @@ import org.vast.ows.OWSException;
 
 
 /**
-* <p><b>Title:</b><br/>
-* SPS Submit Request Writer v2.0
-* </p>
-*
-* <p><b>Description:</b><br/>
+* <p>
 * Provides methods to generate a SPS Submit request based
 * on values contained in a Submit object for version 2.0
 * </p>
 *
-* <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
 * @date Feb, 28 2008
-* @version 1.0
-*/
+**/
 public class SubmitRequestWriterV20 extends TaskingRequestWriterV20<SubmitRequest>
 {
 

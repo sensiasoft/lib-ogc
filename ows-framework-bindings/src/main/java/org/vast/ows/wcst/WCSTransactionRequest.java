@@ -27,19 +27,13 @@ import org.vast.ows.OWSRequest;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WCS Transaction Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for Transactional request parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alex Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 11, 2007
- * @version 1.0
- */
+ * */
 public class WCSTransactionRequest extends OWSRequest
 {
     protected ArrayList<CoverageTransaction> inputCoverages;

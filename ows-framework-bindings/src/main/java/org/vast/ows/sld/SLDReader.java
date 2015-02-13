@@ -32,20 +32,14 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SLD Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * This class parses an SLD XML document and creates appropriate
  * SLD java objects like Symbolizers
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public class SLDReader
 {
 	private ParameterReader cssReader;

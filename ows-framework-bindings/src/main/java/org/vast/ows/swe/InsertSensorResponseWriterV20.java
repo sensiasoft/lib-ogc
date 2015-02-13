@@ -33,20 +33,14 @@ import org.vast.xml.DOMHelper;
 
 
 /**
- * <p><b>Title:</b><br/>
- * InsertSensor Response Writer v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer to generate an XML InsertSensor response based
  * on values contained in a InsertSensorResponse object for SOS v2.0
  * </p>
  *
- * <p>Copyright (c) 2014</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb 3, 2014
- * @version 1.0
- */
+ * */
 public class InsertSensorResponseWriterV20 extends SWEResponseWriter<InsertSensorResponse>
 {
 		

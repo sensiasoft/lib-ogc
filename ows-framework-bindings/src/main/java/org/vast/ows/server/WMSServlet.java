@@ -37,10 +37,8 @@ import org.vast.ows.wms.GetMapRequest;
  * Base abstract class for implementing WMS servlets
  * </p>
  *
- * <p>Copyright: Copyright (c) 2010</p>
  * @author Mathieu Dhainaut
- * @version 1.0
- */
+ * */
 public abstract class WMSServlet extends OWSServlet
 {
 	private static final long serialVersionUID = 1265879257871196681L;

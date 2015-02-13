@@ -21,20 +21,14 @@
 package org.vast.ows.sld;
 
 /**
- * <p><b>Title:</b><br/>
- * Graphic Mark
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD Mark object.
  * Allows to specify mark fill and color.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public class GraphicMark implements GraphicSource
 {
 	protected ScalarParameter shape;

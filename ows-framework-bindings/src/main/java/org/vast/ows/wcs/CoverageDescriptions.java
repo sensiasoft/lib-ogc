@@ -28,19 +28,13 @@ import org.vast.ows.OWSResponse;
 
 
 /**
- * <p><b>Title:</b><br/>
- * CoverageDescriptions
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 23 nov. 07
- * @version 1.0
- */
+ * */
 public class CoverageDescriptions extends OWSResponse
 {
 	protected List<CoverageDescription> descriptions;

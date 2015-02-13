@@ -34,11 +34,7 @@ import org.vast.xml.DOMHelper;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SOS Response Serializer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * This class is a specific serializer used to output XML for
  * SOS Responses (O&M Observation). It provides additional setID, setTime, setFoi, 
  * methods to easily change the corresponding parameters in the XML
@@ -52,11 +48,9 @@ import org.vast.xml.DOMHelper;
  *        unless we decide to maintain support for pre v1.0 SOS.  TC
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb 10, 2006
- * @version 1.0
- */
+ * */
 public class SOSResponseSerializerV10 extends SweResponseSerializer
 {
 	protected Element obsElt;

@@ -42,16 +42,11 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * SPS Utils
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Utility methods for common stuffs in SPS services
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 08, 2008
  */
 public class SPSUtils extends OWSUtils

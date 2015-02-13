@@ -28,21 +28,15 @@ import org.vast.ows.OWSServiceCapabilities;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WPS Capabilities Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Reads a WPS server capabilities document and create and
  * populate the corresponding OWSServiceCapabilities and
  * WPSLayerCapabilities objects
  * </p>
  *
- * <p>Copyright (c) 2005</p>
  * @author Gregoire Berthiau
  * @date Nov 29, 2008
- * @version 1.0
- */
+ * */
 public class WPSCapabilitiesReader extends OWSCapabilitiesReaderV11
 {
    

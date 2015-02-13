@@ -30,20 +30,14 @@ import org.vast.xml.QName;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GetCoverage Request Builder v1.1.1
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to generate a KVP or XML GetCoverage request based
  * on values contained in a GetCoverageRequest object for version 1.1.1
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Sep 21, 2007
- * @version 1.0
- */
+ * */
 public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageRequest>
 {
 	protected WCSCommonWriterV11 wcsWriter = new WCSCommonWriterV11();

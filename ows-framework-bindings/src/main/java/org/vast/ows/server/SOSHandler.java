@@ -27,17 +27,13 @@ import org.vast.ows.swe.DescribeSensorRequest;
 
 
 /**
- * <p><b>Title:</b><br/> SOSHandler</p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for an SOS dataset (observation offering) handler
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 9, 2005
- * @version 1.0
- */
+ * */
 public interface SOSHandler
 {
 	public abstract void getObservation(GetObservationRequest request) throws Exception;

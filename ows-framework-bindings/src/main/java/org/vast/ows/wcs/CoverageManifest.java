@@ -28,19 +28,13 @@ import org.vast.ows.OWSResponse;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WCS CoverageManifest Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for a CoverageManifest response
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alex Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 11, 2007
- * @version 1.0
- */
+ * */
 public class CoverageManifest extends OWSResponse
 {
 	protected OWSIdentification identification;

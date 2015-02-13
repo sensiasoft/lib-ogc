@@ -32,22 +32,16 @@ import org.vast.ogc.om.IObservation;
 
 
 /**
- * <p><b>Title:</b>
- * ISOSDataConsumer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface to be implemented for consuming data received by the SOS-T interface.
  * One data consumer is mapped for each SOS offering and receives data when 
  * transactional operations are used (InsertSensor, UpdateSensor, DeleteSensor,
  * InsertObservation, InsertResultTemplate, InsertResult).
  * </p>
  *
- * <p>Copyright (c) 2014</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date March 1, 2014
- * @version 1.0
- */
+ * */
 public interface ISOSDataConsumer
 {     
     

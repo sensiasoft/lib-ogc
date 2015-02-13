@@ -28,11 +28,9 @@ package org.vast.ows;
  * their LayerCapabilities object from this base class.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Oct 31, 2005
- * @version 1.0
- */
+ * */
 public abstract class OWSLayerCapabilities extends OWSIdentification
 {
 	protected OWSServiceCapabilities parent;

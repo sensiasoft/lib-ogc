@@ -27,19 +27,13 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SAS Subscribe Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for SAS Subscribe request parameters
  * </p>
  *
- * <p>Copyright (c) 2007</p>
  * @author Gregoire Berthiau
  * @date Jul 09, 2008
- * @version 1.0
- */
+ * */
 public class SASSubscribeResponse
 {
 	protected String service = "SAS";

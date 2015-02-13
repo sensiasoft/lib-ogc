@@ -24,20 +24,14 @@ import java.util.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Graphic
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD Graphic object (represents a symbol).
  * Allows to specify graphic opacity, size and rotation.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public class Graphic
 {
 	protected ScalarParameter opacity;

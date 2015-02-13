@@ -24,19 +24,13 @@ package org.vast.ows.sps;
 
 
 /**
- * <p><b>Title:</b>
- * Cancel Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for a Cancel response
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Mar, 03 2008
- * @version 1.0
- */
+ * */
 public class CancelResponse extends TaskingResponse<StatusReport>
 {
 	

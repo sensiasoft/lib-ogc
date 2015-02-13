@@ -45,16 +45,12 @@ import org.vast.xml.DOMHelperException;
 
 
 /**
- * <p><b>Title:</b><br/> SOSServlet</p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base abstract class for implementing SOS servlets
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @version 1.0
- */
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * */
 @SuppressWarnings("deprecation")
 public abstract class WPSServlet extends OWSServlet
 {

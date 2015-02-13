@@ -27,19 +27,13 @@ import org.vast.util.Bbox;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Coverage Transaction
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 26 nov. 07
- * @version 1.0
- */
+ * */
 public class CoverageTransaction extends CoverageRefGroup
 {
 	public final static String ADD = "Add";

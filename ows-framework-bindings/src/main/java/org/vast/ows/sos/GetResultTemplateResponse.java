@@ -32,19 +32,13 @@ import org.vast.ows.OWSResponse;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GetResultTemplate Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for SOS GetResultTemplate response data
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Aug 19, 2012
- * @version 1.0
- */
+ * */
 public class GetResultTemplateResponse extends OWSResponse
 {
     protected DataComponent resultStructure;

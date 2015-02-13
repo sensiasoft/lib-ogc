@@ -23,20 +23,14 @@ package org.vast.ows.sld;
 import java.util.Hashtable;
 
 /**
- * <p><b>Title:</b><br/>
- * GraphicCustom
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Custom graphic can be used to render custom icons based on some
  * data values mapped to rendering parameters.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public class GraphicCustom implements GraphicSource
 {
 	protected Hashtable<String, ScalarParameter> parameters;

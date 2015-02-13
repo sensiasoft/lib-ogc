@@ -29,19 +29,13 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WFS Query
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for WFS query parameters
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 27, 2005
- * @version 1.0
- */
+ * */
 public class GetFeatureRequest extends OWSRequest
 {
     protected TimeExtent time;

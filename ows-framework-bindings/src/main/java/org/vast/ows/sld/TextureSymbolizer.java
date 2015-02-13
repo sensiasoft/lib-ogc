@@ -21,20 +21,14 @@
 package org.vast.ows.sld;
 
 /**
- * <p><b>Title:</b><br/>
- * Texture Mapping Symbolizer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD-X Texture Mapping Symbolizer object.
  * Allows to use data as a 3D mapped texture.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 10, 2005
- * @version 1.0
- */
+ * */
 public class TextureSymbolizer extends RasterSymbolizer
 {
     protected Dimensions gridDimensions;

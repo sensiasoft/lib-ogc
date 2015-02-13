@@ -33,11 +33,9 @@ import net.opengis.swe.v20.DataEncoding;
 * i.e. in SOS: GetResultResponse, InsertResult
 * </p>
 *
-* <p>Copyright (c) 2008</p>
 * @author Alexandre Robin <alexandre.robin@spotimage.fr>
 * @since Feb, 29 2008
-* @version 1.0
-*/
+**/
 public interface SweEncodedMessageProcessor
 {
 	public void setSweCommonStructure(DataComponent structure, DataEncoding encoding);	

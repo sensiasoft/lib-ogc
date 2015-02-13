@@ -36,10 +36,8 @@ import org.vast.ows.wfs.GetFeatureRequest;
  * Base abstract class for implementing WFS servlets
  * </p>
  *
- * <p>Copyright: Copyright (c) 2010</p>
- * @author Alexandre Robin
- * @version 1.0
- */
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * */
 public abstract class WFSServlet extends OWSServlet
 {
 	private static final long serialVersionUID = 1L;

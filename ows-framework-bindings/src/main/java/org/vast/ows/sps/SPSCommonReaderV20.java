@@ -41,20 +41,14 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SPS Common Reader v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Helper routines for parsing common structures present
  * in several SPS requests/responses
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb, 29 2008
- * @version 1.0
- */
+ * */
 public class SPSCommonReaderV20
 {
 	protected SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();

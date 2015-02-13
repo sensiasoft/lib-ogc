@@ -22,20 +22,14 @@ package org.vast.ows.sld;
 
 
 /**
- * <p><b>Title:</b><br/>
- * CssParameter
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD/CSS Parameter object extended to support mapping functions
  * such as color maps and other look up tables.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public class ScalarParameter
 {
 	protected String propertyName;

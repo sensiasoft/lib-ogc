@@ -40,20 +40,14 @@ import org.w3c.dom.NodeList;
 
 
 /**
- *  * <p><b>Title:</b>
- * WCSResponseReader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ *  * <p>
  * Read WCS response in SWE format. The actual format is plain O&M
  * with a fixed size N-dimensional DataArray containing coverage data as the result.
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Jan 16, 2010
- * @version 1.0
- */
+ * */
 public class WCSResponseReader extends SWEReader
 {
     protected SWEFilter streamFilter;

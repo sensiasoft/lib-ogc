@@ -30,21 +30,15 @@ import org.vast.ows.OWSServiceCapabilities;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WMS Capabilities Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Reads a WMS server capabilities document and create and
  * populate the corresponding OWSServiceCapabilities and
  * WMSLayerCapabilities objects. for versions 1.0.0, 1.0.6
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 30, 2005
- * @version 1.0
- */
+ * */
 public class WMSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
 {
 	ArrayList<String> formatList;

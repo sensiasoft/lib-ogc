@@ -24,19 +24,13 @@ package org.vast.ows.sps;
 
 
 /**
- * <p><b>Title:</b>
- * Confirm Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for a Confirm response
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Dec, 10 2008
- * @version 1.0
- */
+ * */
 public class ConfirmResponse extends TaskingResponse<StatusReport>
 {
 

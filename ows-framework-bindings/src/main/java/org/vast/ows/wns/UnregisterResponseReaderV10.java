@@ -28,20 +28,14 @@ import org.vast.ows.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WNS Unregister Response Reader v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse an XML Unregister response and
  * create a UnregisterResponse object for WNS version 1.0
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Jan 16, 2008
- * @version 1.0
- */
+ * */
 public class UnregisterResponseReaderV10 extends AbstractResponseReader<UnregisterResponse>
 {
 	

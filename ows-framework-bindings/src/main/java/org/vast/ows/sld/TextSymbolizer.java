@@ -21,20 +21,14 @@
 package org.vast.ows.sld;
 
 /**
- * <p><b>Title:</b><br/>
- * Text Symbolizer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD Text Symbolizer object.
  * Allows to specify labels, placement, font, halo, and fill.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 10, 2005
- * @version 1.0
- */
+ * */
 public class TextSymbolizer extends Symbolizer
 {
 	protected ScalarParameter label;

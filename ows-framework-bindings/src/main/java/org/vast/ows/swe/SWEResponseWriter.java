@@ -29,19 +29,13 @@ import org.vast.ows.OWSResponse;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SWES Response Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base abstract class for SWE services XML response writers
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 30, 2005
- * @version 1.0
- * @param <ResponseType> Type of OWS response object accepted by this writer
+ * * @param <ResponseType> Type of OWS response object accepted by this writer
  */
 public abstract class SWEResponseWriter<ResponseType extends OWSResponse> extends AbstractResponseWriter<ResponseType>
 {	

@@ -24,19 +24,13 @@ package org.vast.ows.sps;
 
 
 /**
- * <p><b>Title:</b>
- * Submit Response
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for a Submit response
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb, 29 2008
- * @version 1.0
- */
+ * */
 public class SubmitResponse extends TaskingResponse<StatusReport>
 {
 

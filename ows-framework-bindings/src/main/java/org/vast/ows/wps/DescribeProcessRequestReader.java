@@ -29,20 +29,14 @@ import org.vast.ows.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WPS Describe Request Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse a KVP or XML WPS DescribeProcess
  * request and create a DescribeProcessRequest
  * </p>
  *
- * <p>Copyright (c) 2007</p>
  * @author Gregoire Berthiau
  * @date Dec 2, 2008
- * @version 1.0
- */
+ * */
 public class DescribeProcessRequestReader extends AbstractRequestReader<DescribeProcessRequest>
 {
     

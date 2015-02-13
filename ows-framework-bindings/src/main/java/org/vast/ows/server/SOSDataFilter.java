@@ -29,19 +29,13 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b>
- * SOSDataFilter
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Filter to be used with SOS data provider
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 25, 2012
- * @version 1.0
- */
+ * */
 public class SOSDataFilter
 {
     List<String> foiIds = new ArrayList<String>();

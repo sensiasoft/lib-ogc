@@ -37,21 +37,15 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SPS Capabilities Writer V2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writes a SPS server capabilities document from
  * OWSServiceCapabilities and SPSLayerCapabilities
  * objects for version 2.0
  * </p>
  *
- * <p>Copyright (c) 2009</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date 27 nov. 07
- * @version 1.0
- */
+ * */
 public class SPSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
 {
     GMLUtils gmlUtils = new GMLUtils();

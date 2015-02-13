@@ -29,19 +29,13 @@ import org.w3c.dom.*;
 
 
 /**
- * <p><b>Title:</b>
- * Describe Process Response Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * reader for WPS Describe Process responses with a input/output expressed in SWE Common.
  * </p>
  *
- * <p>Copyright (c) 2008</p>
  * @author Gregoire Berthiau
  * @date Dec 15, 2008
- * @version 1.0
- */
+ * */
 public class DescribeProcessResponseReader  extends AbstractResponseReader<DescribeProcessResponse>
 {
 

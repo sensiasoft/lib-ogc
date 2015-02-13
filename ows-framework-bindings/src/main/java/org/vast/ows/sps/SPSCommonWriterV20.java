@@ -39,20 +39,14 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SPS Common Writer v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Helper routines for writing common info present
  * in several SPS requests/responses (i.e. SWE Data)
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb, 29 2008
- * @version 1.0
- */
+ * */
 public class SPSCommonWriterV20
 {
 	protected SweEncodingWriterV20 encodingWriter = new SweEncodingWriterV20();

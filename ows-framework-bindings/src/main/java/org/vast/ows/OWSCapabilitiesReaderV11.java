@@ -31,11 +31,9 @@ import org.w3c.dom.NodeList;
  * Base reader for all capabilities document based on OWS common 1.1
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since 27 nov. 07
- * @version 1.0
- */
+ * */
 public abstract class OWSCapabilitiesReaderV11 extends AbstractCapabilitiesReader
 {
 	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();

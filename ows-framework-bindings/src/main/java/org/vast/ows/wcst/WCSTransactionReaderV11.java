@@ -30,20 +30,14 @@ import org.vast.ows.wcs.WCSException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * WCS Transaction Request Reader v1.1
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides methods to parse an XML Transaction request and
  * create a WCSTransactionRequest object for version 1.1
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 11, 2007
- * @version 1.0
- */
+ * */
 public class WCSTransactionReaderV11 extends AbstractRequestReader<WCSTransactionRequest>
 {
 	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();

@@ -29,11 +29,9 @@ import org.vast.util.ResponsibleParty;
  * Representation of an OWS service capabilities document.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Oct 27, 2005
- * @version 1.0
- */
+ * */
 public class OWSServiceCapabilities extends OWSResponse
 {
 	// updateSequence

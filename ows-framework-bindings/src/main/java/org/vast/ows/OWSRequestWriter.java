@@ -29,11 +29,9 @@ import org.w3c.dom.Element;
  * Base interface for all OWS request writers
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Jan 16, 2007
- * @version 1.0
- * @param <RequestType> Type of request object supported by this writer
+ * * @param <RequestType> Type of request object supported by this writer
  */
 public interface OWSRequestWriter<RequestType extends OWSRequest>
 {

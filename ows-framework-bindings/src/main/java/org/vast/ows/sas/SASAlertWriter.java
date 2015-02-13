@@ -32,19 +32,13 @@ import org.vast.xml.DOMHelper;
 
 
 /**
-* <p><b>Title:</b><br/>
-* SAS Alert Writer
-* </p>
-*
-* <p><b>Description:</b><br/>
+* <p>
 * Provides methods to generate a XML SAS alert
 * </p>
 *
-* <p>Copyright (c) 2008</p>
 * @author Gregoire Berthiau 
 * @date Jan, 28 2009
-* @version 1.0
-*/
+**/
 public class SASAlertWriter
 {
 	/**

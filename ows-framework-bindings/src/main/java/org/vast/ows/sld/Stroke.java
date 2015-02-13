@@ -21,21 +21,15 @@
 package org.vast.ows.sld;
 
 /**
- * <p><b>Title:</b><br/>
- * Stroke
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SLD Stroke object.
  * Allows to specify stroke color, opacity, width,
  * line pattern and join/cap styles.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Nov 11, 2005
- * @version 1.0
- */
+ * */
 public class Stroke
 {
 	protected Graphic graphicStroke;

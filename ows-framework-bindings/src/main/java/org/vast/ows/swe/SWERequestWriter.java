@@ -29,16 +29,11 @@ import org.vast.ows.OWSRequest;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SWES Request Builder
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base abstract class for SWE services POST/GET request builders
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Oct 30, 2005
  * @param <RequestType> Type of OWS request object accepted by this writer
  */

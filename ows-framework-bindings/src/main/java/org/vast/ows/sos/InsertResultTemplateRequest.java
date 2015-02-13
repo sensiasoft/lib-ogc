@@ -32,19 +32,13 @@ import org.vast.ows.OWSRequest;
 
 
 /**
- * <p><b>Title:</b><br/>
- * InsertResultTemplate Request
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Container for SOS InsertResultTemplate request parameters
  * </p>
  *
- * <p>Copyright (c) 2014</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @date Feb 02, 2014
- * @version 1.0
- */
+ * */
 public class InsertResultTemplateRequest extends OWSRequest
 {
     protected String offering;
