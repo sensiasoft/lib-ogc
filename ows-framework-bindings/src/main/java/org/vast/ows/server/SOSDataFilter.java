@@ -41,6 +41,7 @@ public class SOSDataFilter
     List<String> foiIds = new ArrayList<String>();
     List<String> observables = new ArrayList<String>();
     TimeExtent timeRange = new TimeExtent(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+    double replaySpeedFactor = Double.NaN;
     
     
     public SOSDataFilter(TimeExtent timeRange)
@@ -90,5 +91,17 @@ public class SOSDataFilter
     public TimeExtent getTimeRange()
     {
         return timeRange;
+    }
+
+
+    public double getReplaySpeedFactor()
+    {
+        return replaySpeedFactor;
+    }
+
+
+    public void setReplaySpeedFactor(double replaySpeedFactor)
+    {
+        this.replaySpeedFactor = replaySpeedFactor;
     }
 }

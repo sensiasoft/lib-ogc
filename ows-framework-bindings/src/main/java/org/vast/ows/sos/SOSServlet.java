@@ -61,6 +61,7 @@ import org.vast.swe.SWEFactory;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLWriterDOM;
+import org.vast.xml.QName;
 import org.vast.xml.XMLImplFinder;
 import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
@@ -81,6 +82,7 @@ public abstract class SOSServlet extends OWSServlet
     protected static final String TEXT_MIME_TYPE = "text/plain";
     protected static final String BINARY_MIME_TYPE = "application/octet-stream";
     protected static final String UNSUPPORTED_MSG = " operation is not supported on this server";
+    protected static final QName EXT_REPLAY = new QName("replayspeed"); // kvp params are always lower case
     
     // Table of SOS data providers: 1 for each observation offering
 	protected Map<String, ISOSDataProviderFactory> dataProviders = new LinkedHashMap<String, ISOSDataProviderFactory>();
@@ -198,8 +200,15 @@ public abstract class SOSServlet extends OWSServlet
             checkQueryTime(request.getOffering(), request.getTime(), report);
             report.process();
             
-            // setup data provider
+            // setup data filter (including extensions)
             SOSDataFilter filter = new SOSDataFilter(request.getFoiIDs(), request.getObservables(), request.getTime());
+            if (request.getExtensions().containsKey(EXT_REPLAY))
+            {
+                String replaySpeed = (String)request.getExtensions().get(EXT_REPLAY);
+                filter.setReplaySpeedFactor(Double.parseDouble(replaySpeed));
+            }
+            
+            // setup data provider
             dataProvider = getDataProvider(request.getOffering(), filter);
             DataComponent resultStructure = dataProvider.getResultStructure();
             DataEncoding resultEncoding = dataProvider.getDefaultResultEncoding();
