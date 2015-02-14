@@ -23,7 +23,6 @@
 
 package org.vast.ows.sos;
 
-import java.io.IOException;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataBlock;
@@ -44,6 +43,13 @@ import org.vast.ogc.om.IObservation;
  * */
 public interface ISOSDataConsumer
 {     
+    
+    public static class Template
+    {
+        public DataComponent component;
+        public DataEncoding encoding;
+    }
+    
     
     /**
      * Requests consumer to update sensor description
@@ -77,7 +83,15 @@ public interface ISOSDataConsumer
      * @param templateID 
      * @param datablocks 
      * @throws Exception 
-     * @throws IOException
      */
     public void newResultRecord(String templateID, DataBlock... datablocks) throws Exception;
+    
+    
+    /**
+     * Retrieve previously registered template information
+     * @param templateID
+     * @return stream description (structure +encoding)
+     * @throws Exception 
+     */
+    public Template getTemplate(String templateID) throws Exception;
 }
