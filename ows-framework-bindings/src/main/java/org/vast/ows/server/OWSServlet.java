@@ -39,6 +39,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vast.ogc.OGCRegistry;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
@@ -159,51 +160,26 @@ public abstract class OWSServlet extends HttpServlet
         try
         {
             // parse request
-            try
-            {
-                request = parseRequest(req, isXmlRequest);
-            }
-            catch (IllegalArgumentException e)
-            {
-                try
-                {
-                    resp.sendError(400, invalidKVPRequestMsg);
-                    log.trace(invalidKVPRequestMsg, e);
-                }
-                catch (IOException e1)
-                {
-                    log.error(internalErrorMsg, e1);
-                }            
-            }
-            catch (DOMHelperException e)
-            {
-                try
-                {
-                    resp.sendError(400, invalidXMLRequestMsg);
-                    log.trace(invalidXMLRequestMsg, e);
-                }
-                catch (IOException e1)
-                {
-                    log.error(internalErrorMsg, e1);
-                }            
-            }
-               
-            // write response
-            // set default mime type 
-            resp.setContentType(OWSUtils.XML_MIME_TYPE);
+            request = parseRequest(req, resp, isXmlRequest);
             
-            // keep http objects in request
-            request.setHttpRequest(req);
-            request.setHttpResponse(resp);
-            request.setPostServer(requestURL);
-            
-            // if capabilities request, deal with it in a generic manner
-            if (request instanceof GetCapabilitiesRequest)
-                this.handleRequest(request);
+            if (request != null)
+            {
+                // set default mime type 
+                resp.setContentType(OWSUtils.XML_MIME_TYPE);
                 
-            // else let specific code handle the request
-            else
-                this.handleRequest(request);
+                // keep http objects in request
+                request.setHttpRequest(req);
+                request.setHttpResponse(resp);
+                request.setPostServer(requestURL);
+                
+                // if capabilities request, deal with it in a generic manner
+                if (request instanceof GetCapabilitiesRequest)
+                    this.handleRequest(request);
+                    
+                // else let specific code handle the request
+                else
+                    this.handleRequest(request);
+            }
         }
         catch (OWSException e)
         {
@@ -216,14 +192,13 @@ public abstract class OWSServlet extends HttpServlet
             }
             catch (IOException e1)
             {
-                log.error(internalErrorMsg, e1);
             }            
         }
         catch (WriterException e)
         {
             log.error(internalErrorMsg, e);
         }
-        catch(EOFException e)
+        catch (EOFException e)
         {
             // do nothing when client close stream
         }
@@ -259,22 +234,64 @@ public abstract class OWSServlet extends HttpServlet
      * @return
      * @throws Exception
      */
-    protected OWSRequest parseRequest(HttpServletRequest req, boolean isXmlRequest) throws Exception
+    protected OWSRequest parseRequest(HttpServletRequest req, HttpServletResponse resp, boolean isXmlRequest) throws Exception
     {
-        if (isXmlRequest)
+        try
         {
-            InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
-            DOMHelper dom = new DOMHelper(xmlRequest, false);
-            //dom.serialize(dom.getBaseElement(), System.out, true);
-            return owsUtils.readXMLQuery(dom, dom.getBaseElement());
+            if (isXmlRequest)
+            {
+                InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
+                DOMHelper dom = new DOMHelper(xmlRequest, false);
+                //dom.serialize(dom.getBaseElement(), System.out, true);
+                return owsUtils.readXMLQuery(dom, dom.getBaseElement());
+            }
+            else
+            {
+                String queryString = req.getQueryString();
+                if (queryString == null)
+                    throw new IllegalArgumentException();
+                return owsUtils.readURLQuery(queryString);
+            }
         }
-        else
+        catch (IllegalArgumentException e)
         {
-            String queryString = req.getQueryString();
-            if (queryString == null)
-                throw new IllegalArgumentException();
-            return owsUtils.readURLQuery(queryString);
+            try
+            {
+                resp.sendError(400, invalidKVPRequestMsg);
+                log.trace(invalidKVPRequestMsg, e);
+            }
+            catch (IOException e1)
+            {
+            }            
         }
+        catch (IOException | DOMHelperException e)
+        {
+            try
+            {
+                resp.sendError(400, invalidXMLRequestMsg);
+                log.trace(invalidXMLRequestMsg, e);
+            }
+            catch (IOException e1)
+            {
+            }            
+        }
+        catch (OWSException e)
+        {
+            try
+            {
+                resp.setContentType(OWSUtils.XML_MIME_TYPE);
+                String version = req.getParameter("version");
+                if (version == null)
+                    version = getDefaultVersion();
+                owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), getServiceType(), version, e);
+                log.trace(e.getMessage(), e);
+            }
+            catch (IOException e1)
+            {
+            }            
+        }
+        
+        return null;
     }
     
     
