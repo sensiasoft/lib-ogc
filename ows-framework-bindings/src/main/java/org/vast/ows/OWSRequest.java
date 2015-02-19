@@ -43,6 +43,7 @@ public class OWSRequest
 	
 	protected transient HttpServletRequest httpRequest;
 	protected transient HttpServletResponse httpResponse;
+	protected transient OutputStream outputStream;
 	protected String getServer;
 	protected String postServer;
 	protected String service;
@@ -82,12 +83,28 @@ public class OWSRequest
 	
 	public OutputStream getResponseStream()
 	{
-		try {
-			return httpResponse.getOutputStream();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+		if (outputStream != null)
+		{
+		    return outputStream;
 		}
+		else
+		{
+		    try
+    	    {
+    			return httpResponse.getOutputStream();
+    		}
+		    catch (IOException e)
+		    {
+    			e.printStackTrace();
+    			return null;
+    		}
+		}
+	}
+	
+	
+	public void setResponseStream(OutputStream os)
+	{
+	    this.outputStream = os;
 	}
 
 	

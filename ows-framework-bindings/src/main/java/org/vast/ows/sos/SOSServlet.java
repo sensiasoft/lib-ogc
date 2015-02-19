@@ -223,7 +223,9 @@ public abstract class SOSServlet extends OWSServlet
                 os.write(new String("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n").getBytes());
                 os.write(new String("<GetResultResponse xmlns=\"" + nsUri + "\">\n<resultValues>\n").getBytes());
             }
-            else
+            
+            // set response headers in case of HTTP response
+            else if (request.getHttpResponse() != null)
             {
                 if (resultEncoding instanceof TextEncoding)
                     request.getHttpResponse().setContentType(TEXT_MIME_TYPE);
