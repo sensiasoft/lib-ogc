@@ -57,7 +57,7 @@ import org.vast.ows.server.SOSDataFilter;
 import org.vast.ows.swe.DeleteSensorRequest;
 import org.vast.ows.swe.DescribeSensorRequest;
 import org.vast.ows.swe.UpdateSensorRequest;
-import org.vast.swe.SWEFactory;
+import org.vast.swe.SWEHelper;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLWriterDOM;
@@ -248,7 +248,7 @@ public abstract class SOSServlet extends OWSServlet
             if (!dataWritten)
             {
                 // prepare writer for selected encoding
-                DataStreamWriter writer = SWEFactory.createDataWriter(resultEncoding);
+                DataStreamWriter writer = SWEHelper.createDataWriter(resultEncoding);
                 writer.setDataComponents(resultStructure);
                 writer.setOutput(os);
                 

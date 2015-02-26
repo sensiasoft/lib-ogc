@@ -33,7 +33,7 @@ import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
 import org.vast.swe.AbstractDataWriter;
-import org.vast.swe.SWEFactory;
+import org.vast.swe.SWEHelper;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -56,7 +56,7 @@ public class ExecuteProcessRequestWriter extends AbstractRequestWriter<ExecutePr
 	public static InputStream writeData(ExecuteProcessRequest request) throws OWSException, IOException
     {
 			ByteArrayOutputStream  out = new ByteArrayOutputStream ();
-            AbstractDataWriter writer = (AbstractDataWriter)SWEFactory.createDataWriter(request.getInputDataEncoding());
+            AbstractDataWriter writer = (AbstractDataWriter)SWEHelper.createDataWriter(request.getInputDataEncoding());
     		writer.setDataEncoding(request.getInputDataEncoding());
     		writer.setDataComponents(request.getInputDataComponent());
     		writer.write(out);
