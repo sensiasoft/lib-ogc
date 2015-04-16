@@ -32,4 +32,5 @@
         <scope>test</scope>
      </dependency>
   </dependencies>
+  <name>OWS Framework Service Bindings</name>
 </project>
