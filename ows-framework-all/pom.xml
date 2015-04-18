@@ -7,6 +7,10 @@
   <name>OWS Framework Library</name>
   <url>https://github.com/sensiasoft/lib-ows/tree/master/ows-framework-all</url>
   <description>The OWS Framework library provides XML-Java bindings for several OGC web services. These bindings are designed to be easy to use on both server and client side.</description>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
   <licenses>
     <license>
       <name>Mozilla Public License Version 1.1</name>
