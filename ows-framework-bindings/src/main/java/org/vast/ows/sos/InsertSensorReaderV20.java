@@ -39,7 +39,7 @@ import org.vast.sensorML.SMLUtils;
  * */
 public class InsertSensorReaderV20 extends SWERequestReader<InsertSensorRequest>
 {
-    SMLUtils smlUtils = new SMLUtils();
+    SMLUtils smlUtils = new SMLUtils(SMLUtils.V2_0);
     
     
     public InsertSensorReaderV20()

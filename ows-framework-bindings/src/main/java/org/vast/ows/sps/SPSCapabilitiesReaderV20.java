@@ -23,7 +23,7 @@
 package org.vast.ows.sps;
 
 import java.text.ParseException;
-import java.util.List;
+import java.util.Collection;
 import net.opengis.gml.v32.AbstractGeometry;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
@@ -46,7 +46,7 @@ import org.vast.ows.swe.SWESCapabilitiesReaderV20;
  */
 public class SPSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20
 {
-    GMLUtils gmlUtils = new GMLUtils();
+    GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
     
     
 	public SPSCapabilitiesReaderV20()
@@ -72,9 +72,9 @@ public class SPSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20
         try
         {
             // common service settings (for all offerings)
-            List<String> serviceProcFormats = readProcedureFormats(dom, contentsElt);
-            List<String> serviceObsProperties = readObservableProperties(dom, contentsElt);
-            List<String> serviceRelFeatures = readRelatedFeatures(dom, contentsElt);
+            Collection<String> serviceProcFormats = readProcedureFormats(dom, contentsElt, null);
+            Collection<String> serviceObsProperties = readObservableProperties(dom, contentsElt, null);
+            Collection<String> serviceRelFeatures = readRelatedFeatures(dom, contentsElt, null);
             
             // list of SensorOffering elements
             NodeList offerings = dom.getElements(contentsElt, "offering/SensorOffering");

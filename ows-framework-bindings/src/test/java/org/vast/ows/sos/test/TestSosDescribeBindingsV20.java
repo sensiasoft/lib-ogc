@@ -36,6 +36,12 @@ public class TestSosDescribeBindingsV20 extends OWSTestCase
     }
     
     
+    public void testReadWriteXmlDescribeSensorWithTime() throws Exception
+    {
+        readWriteCompareXmlRequest("examples_v20/core/DescribeSensorWithTime.xml");
+    }
+    
+    
     public void testReadKvpDescribeSensor() throws Exception
     {
         SOSUtils utils = new SOSUtils();

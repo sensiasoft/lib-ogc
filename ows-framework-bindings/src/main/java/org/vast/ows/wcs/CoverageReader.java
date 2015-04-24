@@ -28,7 +28,7 @@ import org.vast.xml.DOMHelperException;
 import org.vast.xml.XMLReaderException;
 import org.vast.ogc.OGCException;
 import org.vast.ogc.OGCExceptionReader;
-import org.vast.swe.SWECommonUtils;
+import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEFilter;
 import org.vast.swe.SWEReader;
 import org.vast.swe.URIStreamHandler;
@@ -37,7 +37,8 @@ import org.w3c.dom.*;
 
 public class CoverageReader extends SWEReader
 {
-	String resultUri;
+    SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
+    String resultUri;
 	SWEFilter streamFilter;
 	
 	
@@ -64,13 +65,12 @@ public class CoverageReader extends SWEReader
 			
 			// get structure and encoding elements
 			Element defElt = dom.getElement("result/Data/definition/DataDefinition");
-			Element dataElt = dom.getElement(defElt, "dataComponents");
-			Element encElt = dom.getElement(defElt, "encoding");
+			Element dataElt = dom.getElement(defElt, "dataComponents/*");
+			Element encElt = dom.getElement(defElt, "encoding/*");
 			
-			// parse structure and encoding
-            SWECommonUtils utils = new SWECommonUtils();
-            this.dataComponents = utils.readComponentProperty(dom, dataElt);
-			this.dataEncoding = utils.readEncodingProperty(dom, encElt);
+			// parse structure and encoding            
+            this.dataComponents = sweUtils.readComponent(dom, dataElt);
+			this.dataEncoding = sweUtils.readEncoding(dom, encElt);
 			
 			// read link to out of band data stream if present
 			resultUri = dom.getAttributeValue("result/data/value/externalLink");

@@ -122,13 +122,13 @@ public class GetResultRequest extends OWSRequest
 
     public TimeExtent getTime()
     {
-        return FESRequestUtils.filterToTimeInfo(temporalFilter);
+        return FESRequestUtils.filterToTimeExtent(temporalFilter);
     }
 
 
     public void setTime(TimeExtent time)
     {
-        this.temporalFilter = FESRequestUtils.timeInfoToFilter(time);
+        this.temporalFilter = FESRequestUtils.timeExtentToFilter(time);
     }   
 
 

@@ -9,12 +9,12 @@
          <sos:observationTemplate>
             <om:OM_Observation gml:id="sensor2obsTemplate">
                <om:phenomenonTime>
-                  <gml:TimeInstant gml:id="T001">
+                  <gml:TimeInstant gml:id="T1">
                      <gml:timePosition indeterminatePosition="unknown" />
                   </gml:TimeInstant>
                </om:phenomenonTime>
                <om:resultTime>
-                  <gml:TimeInstant gml:id="T002">
+                  <gml:TimeInstant gml:id="T2">
                      <gml:timePosition indeterminatePosition="unknown" />
                   </gml:TimeInstant>
                </om:resultTime>

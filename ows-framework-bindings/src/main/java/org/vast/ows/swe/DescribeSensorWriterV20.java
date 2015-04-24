@@ -30,8 +30,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLWriterException;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ogc.gml.GMLTimeWriter;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
@@ -50,7 +51,7 @@ import org.w3c.dom.Element;
  * */
 public class DescribeSensorWriterV20 extends AbstractRequestWriter<DescribeSensorRequest>
 {
-	protected GMLTimeWriter timeWriter = new GMLTimeWriter("3.2");
+    protected GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
     
     
 	public DescribeSensorWriterV20()
@@ -98,12 +99,19 @@ public class DescribeSensorWriterV20 extends AbstractRequestWriter<DescribeSenso
         dom.setElementValue(rootElt, "swes:procedureDescriptionFormat", request.getFormat());
         
 		// time instant or period
-        TimeExtent timeInfo = request.getTime();
-        if (timeInfo != null)
+        TimeExtent timeExtent = request.getTime();
+        if (timeExtent != null)
         {
-            Element timeElt = timeWriter.writeTime(dom, timeInfo);
-            Element elt = dom.addElement(rootElt, "swes:validTime");
-            elt.appendChild(timeElt);
+            try
+            {
+                Element timeElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom, timeExtent);
+                Element elt = dom.addElement(rootElt, "swes:validTime");
+                elt.appendChild(timeElt);
+            }
+            catch (XMLWriterException e)
+            {
+                throw new OWSException(e.getMessage());
+            }
         }
         
 		return rootElt;

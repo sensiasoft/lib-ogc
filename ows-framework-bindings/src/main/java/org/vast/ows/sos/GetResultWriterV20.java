@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * */
 public class GetResultWriterV20 extends SWERequestWriter<GetResultRequest>
 {
-    protected FESUtils fesUtils = new FESUtils();
+    protected FESUtils fesUtils = new FESUtils(FESUtils.V2_0);
 	
     
 	public GetResultWriterV20()
@@ -90,7 +90,7 @@ public class GetResultWriterV20 extends SWERequestWriter<GetResultRequest>
             StringBuilder buf = new StringBuilder();
             buf.append(request.getSpatialFilter().getOperand1().toString());
             buf.append(',');
-            this.writeBboxArgument(buf, request.getBbox());
+            this.writeBboxArgument(buf, request.getBbox(), true);
             urlParams.put("spatialFilter", buf.toString());
         }
 		

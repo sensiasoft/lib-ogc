@@ -26,7 +26,11 @@
 package org.vast.ows.swe;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import org.vast.ows.OWSCapabilitiesWriterV11;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSLayerCapabilities;
@@ -76,21 +80,29 @@ public abstract class SWESCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
             dom.setElementValue(offeringElt, "+swes:name", title);
         
         // procedure
-        dom.setElementValue(offeringElt, "swes:procedure", offeringCaps.getProcedures().get(0));
+        if (!offeringCaps.getProcedures().isEmpty())
+            dom.setElementValue(offeringElt, "swes:procedure", offeringCaps.getProcedures().iterator().next());
         
-        // procedure description formats
-        for (String token: getNonCommonListEntries(offeringCaps, serviceCaps, "getProcedureFormats"))
-            dom.setElementValue(offeringElt, "+swes:procedureDescriptionFormat", token);
+        // procedure description formats (inheritance = replace)
+        if (!offeringCaps.getProcedureFormats().equals(getCommonListEntries(serviceCaps, "getProcedureFormats")))
+        {
+            for (String token: offeringCaps.getProcedureFormats())
+                dom.setElementValue(offeringElt, "+swes:procedureDescriptionFormat", token);
+        }
         
-        // observable properties
-        for (String token: getNonCommonListEntries(offeringCaps, serviceCaps, "getObservableProperties"))
-            dom.setElementValue(offeringElt, "+swes:observableProperty", token);
+        // observable properties (inheritance = replace)
+        if (!offeringCaps.getObservableProperties().equals(getCommonListEntries(serviceCaps, "getObservableProperties")))
+        {
+            for (String token: offeringCaps.getObservableProperties())
+                dom.setElementValue(offeringElt, "+swes:observableProperty", token);
+        }
         
-        // related features
-        for (String token: getNonCommonListEntries(offeringCaps, serviceCaps, "getRelatedFeatures"))
-            addRelatedFeature(dom, offeringElt, token);
-        
-        
+        // related features (inheritance = replace)
+        if (!offeringCaps.getRelatedFeatures().equals(getCommonListEntries(serviceCaps, "getRelatedFeatures")))
+        {
+            for (String token: offeringCaps.getRelatedFeatures())
+                addRelatedFeature(dom, offeringElt, token);
+        }        
 	}
 	
 	
@@ -101,53 +113,54 @@ public abstract class SWESCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
 	
 	
 	/*
-	 * Extracts entries that are common to all offerings in order to build the top level inherited section
+	 * Extracts largest set common to the maximum of offerings
 	 */
-	protected List<String> getCommonListEntries(OWSServiceCapabilities caps, String getListMethodName)
+	protected Collection<String> getCommonListEntries(OWSServiceCapabilities caps, String getListMethodName)
 	{
-	    ArrayList<String> intersectList = new ArrayList<String>();
-	    boolean first = true;
-	    
+	    // collect all offering sets
+	    List<Set<String>> offeringSets = new ArrayList<Set<String>>(caps.getLayers().size());
 	    for (OWSLayerCapabilities layerCaps: caps.getLayers())
-        {
-            try
+	    {
+	        try
             {
-                List<String> tokenListFromOffering = (List<String>)layerCaps.getClass().getMethod(getListMethodName).invoke(layerCaps);
-                if (first)
-                {
-                    intersectList.addAll(tokenListFromOffering);
-                    first = false;
-                }
-                else
-                    intersectList.retainAll(tokenListFromOffering);                
+                Set<String> tokenSet = (Set<String>)layerCaps.getClass().getMethod(getListMethodName).invoke(layerCaps);
+                offeringSets.add(tokenSet);
             }
             catch (Exception e)
-            {                
+            {
             }
-        }
+	    }
 	    
-	    return intersectList;
+	    // sort sets by size
+        Collections.sort(offeringSets, new Comparator<Set<String>>() {
+            @Override
+            public int compare(Set<String> set1, Set<String> set2)
+            {
+                return set2.size() - set1.size();
+            }
+        });
+	    
+	    // iterate to find largest common set
+	    Set<String> bestSet = Collections.emptySet();
+	    int bestScore = 0;
+	    for (int i = 0; i < offeringSets.size(); i++)
+	    {
+    	    int score = 0;
+    	    Set<String> refSet = offeringSets.get(i);
+    	            
+    	    for (int j = i; j < offeringSets.size(); j++)
+	        {
+	            if (offeringSets.get(j).equals(refSet))
+	                score += refSet.size();
+	        }
+    	    
+    	    if (score > bestScore)
+    	    {
+    	        bestScore = score;
+    	        bestSet = refSet;
+    	    }
+	    }
+	    
+	    return bestSet;
 	}
-	
-	
-	/*
-     * Extracts entries that are not common to all offerings
-     */
-    protected List<String> getNonCommonListEntries(OWSLayerCapabilities layerCaps, OWSServiceCapabilities serviceCaps, String getListMethodName)
-    {
-        ArrayList<String> nonIntersectList = new ArrayList<String>();        
-        List<String> intersectList = getCommonListEntries(serviceCaps, getListMethodName);
-        
-        try
-        {
-            List<String> tokenListFromOffering = (List<String>)layerCaps.getClass().getMethod(getListMethodName).invoke(layerCaps);
-            nonIntersectList.addAll(tokenListFromOffering);
-            nonIntersectList.removeAll(intersectList);            
-        }
-        catch (Exception e)
-        {                
-        }
-        
-        return nonIntersectList;
-    }
 }

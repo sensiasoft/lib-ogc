@@ -28,9 +28,8 @@ import org.vast.ows.sps.StatusReport.RequestStatus;
 import org.vast.ows.sps.StatusReport.TaskStatus;
 import org.vast.ows.swe.SWESUtils;
 import org.vast.swe.DataSinkDOM;
-import org.vast.swe.SWECommonUtils;
+import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEData;
-import org.vast.swe.SweEncodingWriterV20;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
@@ -49,7 +48,7 @@ import org.w3c.dom.Element;
  * */
 public class SPSCommonWriterV20
 {
-	protected SweEncodingWriterV20 encodingWriter = new SweEncodingWriterV20();
+    protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
 	protected DateTimeFormat timeFormat = new DateTimeFormat();
 	
 	
@@ -62,14 +61,13 @@ public class SPSCommonWriterV20
 	 */
 	public void writeSWEData(DOMHelper dom, Element parentElt, SWEData paramsData) throws XMLWriterException
 	{
-	    dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0"));
-        Element paramDataElt = dom.addElement(parentElt, "sps:ParameterData");
+	    Element paramDataElt = dom.addElement(parentElt, "sps:ParameterData");
         
 	    try
         {
             // write encoding
             Element encodingPropertyElt = dom.addElement(paramDataElt, "sps:encoding");
-            Element encodingElt = encodingWriter.write(dom, paramsData.getEncoding());
+            Element encodingElt = sweUtils.writeEncoding(dom, paramsData.getEncoding());
             encodingPropertyElt.appendChild(encodingElt);
             
             // write values

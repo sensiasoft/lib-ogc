@@ -30,8 +30,8 @@ import org.vast.ows.sps.StatusReport.RequestStatus;
 import org.vast.ows.sps.StatusReport.TaskStatus;
 import org.vast.ows.swe.SWESUtils;
 import org.vast.swe.DataSourceDOM;
+import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEData;
-import org.vast.swe.SweEncodingReaderV20;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
  * */
 public class SPSCommonReaderV20
 {
-	protected SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
+    protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
 	protected DateTimeFormat timeFormat = new DateTimeFormat();
     
 	
@@ -71,7 +71,7 @@ public class SPSCommonReaderV20
         {
     	    // read encoding
     		Element encodingElt = dom.getElement(paramsElt, "encoding/*");
-    		DataEncoding dataEncoding = encodingReader.read(dom, encodingElt);
+    		DataEncoding dataEncoding = sweUtils.readEncoding(dom, encodingElt);
     		
     		// prepare SWEData object
     		paramsData.setElementType(paramStructure.copy()); // important to copy here in case we parse two things using the same params !!

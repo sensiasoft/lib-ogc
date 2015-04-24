@@ -165,17 +165,32 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
     
     
     /**
-     * Utility method to add bbox argument to a GET request
+     * Utility method to add bbox argument to a GET request.<br/>
      * Format is minY,minX,maxY,maxX
-     * @param buffer
-     * @param bbox
+     * @param buffer string buffer to append to
+     * @param bbox Bbox object to be serialized
      */
     protected void writeBboxArgument(StringBuilder buffer, Bbox bbox)
+    {
+        writeBboxArgument(buffer, bbox, false);
+    }
+    
+    
+    /**
+     * Utility method to add bbox with CRS argument to a GET request.<br/>
+     * Format is minY,minX,maxY,maxX[,crsUri]
+     * @param buffer string buffer to append to
+     * @param bbox Bbox object to be serialized
+     * @param writeCrs true if crs URI should be appended at the end of the string
+     */
+    protected void writeBboxArgument(StringBuilder buffer, Bbox bbox, boolean writeCrs)
     {
         buffer.append(bbox.getMinX());
         buffer.append("," + bbox.getMinY());
         buffer.append("," + bbox.getMaxX());
-        buffer.append("," + bbox.getMaxY());
+        buffer.append("," + bbox.getMaxY());        
+        if (bbox.getCrs() != null)
+            buffer.append(',').append(bbox.getCrs());
     }
     
     

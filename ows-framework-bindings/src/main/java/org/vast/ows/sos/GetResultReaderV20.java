@@ -39,7 +39,7 @@ import org.vast.ows.swe.SWERequestReader;
  * */
 public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
 {
-    protected FESUtils fesUtils = new FESUtils();
+    protected FESUtils fesUtils = new FESUtils(FESUtils.V2_0);
     
     
     public GetResultReaderV20()

@@ -33,7 +33,7 @@ import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
-import org.vast.ogc.gml.GMLTimeReader;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.*;
 import org.vast.ows.sos.SOSException;
 
@@ -49,12 +49,11 @@ import org.vast.ows.sos.SOSException;
  * */
 public class DescribeSensorReaderV20 extends SWERequestReader<DescribeSensorRequest>
 {
-	protected GMLTimeReader timeReader;
+	protected GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
 	
 	
 	public DescribeSensorReaderV20()
 	{
-        timeReader = new GMLTimeReader();
 	}
 	
 	
@@ -123,7 +122,7 @@ public class DescribeSensorReaderV20 extends SWERequestReader<DescribeSensorRequ
 			Element timeElt = dom.getElement(requestElt, "validTime/*");
 			if (timeElt != null)
 			{
-				TimeExtent time = timeReader.readTimePrimitive(dom, timeElt);
+				TimeExtent time = gmlUtils.readTimePrimitiveAsTimeExtent(dom, timeElt);
 				request.setTime(time);
 			}
 		}

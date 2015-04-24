@@ -40,18 +40,18 @@ public class SOSOfferingCapabilities extends SWESOfferingCapabilities
     protected List<Bbox> observedAreas;
     protected TimeExtent phenomenonTime;
     protected TimeExtent resultTime;    
-    protected List<String> responseFormats;
-    protected List<String> supportedEncodings;
-    protected List<String> observationTypes;
-    protected List<String> foiTypes;
+    protected Set<String> responseFormats;
+    protected Set<String> supportedEncodings;
+    protected Set<String> observationTypes;
+    protected Set<String> foiTypes;
     
 
     public SOSOfferingCapabilities()
     {
         observedAreas = new ArrayList<Bbox>(2);
-        responseFormats = new ArrayList<String>(2);
-    	observationTypes = new ArrayList<String>(2);
-    	foiTypes = new ArrayList<String>(2);
+        responseFormats = new LinkedHashSet<String>(2);
+    	observationTypes = new LinkedHashSet<String>(2);
+    	foiTypes = new LinkedHashSet<String>(2);
     }
 
 
@@ -91,51 +91,27 @@ public class SOSOfferingCapabilities extends SWESOfferingCapabilities
     }
 
 
-    public List<String> getResponseFormats()
+    public Set<String> getResponseFormats()
     {
         return responseFormats;
     }
 
 
-    public void setResponseFormats(List<String> responseFormats)
-    {
-        this.responseFormats = responseFormats;
-    }
-
-
-    public List<String> getSupportedEncodings()
+    public Set<String> getSupportedEncodings()
     {
         return supportedEncodings;
     }
 
 
-    public void setSupportedEncodings(List<String> supportedEncodings)
-    {
-        this.supportedEncodings = supportedEncodings;
-    }
-
-
-    public List<String> getObservationTypes()
+    public Set<String> getObservationTypes()
     {
         return observationTypes;
     }
-
-
-    public void setObservationTypes(List<String> observationTypes)
-    {
-        this.observationTypes = observationTypes;
-    }
     
     
-    public List<String> getFoiTypes()
+    public Set<String> getFoiTypes()
     {
         return foiTypes;
-    }
-
-
-    public void setFoiTypes(List<String> foiTypes)
-    {
-        this.foiTypes = foiTypes;
     }
 	
     

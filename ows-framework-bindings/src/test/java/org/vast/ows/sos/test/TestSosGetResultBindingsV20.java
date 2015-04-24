@@ -21,16 +21,28 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import net.opengis.fes.v20.GMLExpression;
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.sos.GetResultRequest;
 import org.vast.ows.sos.GetResultTemplateRequest;
+import org.vast.ows.sos.GetResultTemplateResponse;
 import org.vast.util.DateTimeFormat;
+import org.xml.sax.InputSource;
 import com.vividsolutions.jts.geom.Polygon;
-import junit.framework.TestCase;
 
 
-public class TestSosGetResultBindingsV20 extends TestCase
+public class TestSosGetResultBindingsV20 extends XMLTestCase
 {
+    
+    public void setUp() throws Exception
+    {
+        XMLUnit.setIgnoreComments(true);
+        XMLUnit.setIgnoreWhitespace(true);
+        XMLUnit.setNormalizeWhitespace(true);
+        XMLUnit.setIgnoreAttributeOrder(true);
+    }
+    
     
     public void testReadKvpGetResult() throws Exception
     {
@@ -242,7 +254,7 @@ public class TestSosGetResultBindingsV20 extends TestCase
         OWSUtils utils = new OWSUtils();
         GetResultTemplateRequest request1, request2;
         
-        InputStream is = TestSosGetResultBindingsV20.class.getResourceAsStream(path);
+        InputStream is = getClass().getResourceAsStream(path);
         request1 = (GetResultTemplateRequest)utils.readXMLQuery(is, OWSUtils.SOS);
         is.close();
         
@@ -251,7 +263,7 @@ public class TestSosGetResultBindingsV20 extends TestCase
         utils.writeXMLQuery(System.out, request1);
         utils.writeXMLQuery(os, request1);
         os.close();
-        
+
         ByteArrayInputStream bis = new ByteArrayInputStream(os.toByteArray());
         request2 = (GetResultTemplateRequest)utils.readXMLQuery(bis, OWSUtils.SOS);
         bis.close();
@@ -292,5 +304,32 @@ public class TestSosGetResultBindingsV20 extends TestCase
         
         for (int i = 0; i < list1.size(); i++)
             assertEquals(list1.get(i), list2.get(i));
+    }
+    
+    
+    public void testReadWriteXmlGetResultTemplateResponse() throws Exception
+    {
+        testReadWriteXmlGetResultTemplateResponse("examples_v20/resultHandling/GetResultTemplate1_response.xml");
+    }
+    
+    
+    protected void testReadWriteXmlGetResultTemplateResponse(String path) throws Exception
+    {
+        OWSUtils utils = new OWSUtils();
+        
+        InputStream is = getClass().getResourceAsStream(path);
+        GetResultTemplateResponse resp = (GetResultTemplateResponse)utils.readXMLResponse(is, OWSUtils.SOS, "GetResultTemplateResponse");
+        is.close();
+        
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        System.out.println();
+        utils.writeXMLResponse(System.out, resp);
+        utils.writeXMLResponse(os, resp);
+        os.close();
+        
+        // compare with original
+        InputSource src1 = new InputSource(getClass().getResourceAsStream(path));
+        InputSource src2 = new InputSource(new ByteArrayInputStream(os.toByteArray()));
+        assertXMLEqual(src1, src2);
     }
 }

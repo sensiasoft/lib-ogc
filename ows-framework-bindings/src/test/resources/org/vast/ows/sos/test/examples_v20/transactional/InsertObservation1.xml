@@ -6,12 +6,12 @@
 		<om:OM_Observation gml:id="obsTest1">
 			<om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"/>
 			<om:phenomenonTime>
-				<gml:TimeInstant gml:id="T001">
+				<gml:TimeInstant gml:id="T1">
 					<gml:timePosition>2010-08-31T17:45:15Z</gml:timePosition>
 				</gml:TimeInstant>
 			</om:phenomenonTime>
 			<om:resultTime>
-                <gml:TimeInstant gml:id="T002">
+                <gml:TimeInstant gml:id="T2">
                     <gml:timePosition>2010-08-31T17:55:15Z</gml:timePosition>
                 </gml:TimeInstant>
             </om:resultTime>

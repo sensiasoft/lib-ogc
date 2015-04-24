@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--=====================================================================
+Example Instance for SOS 2.0 DescribeSensor request.
+=======================================================================-->
+<DescribeSensor xmlns="http://www.opengis.net/swes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" service="SOS" version="2.0.0">
+	<procedure>http://my.company.org/sensors/sensor1</procedure>
+	<procedureDescriptionFormat>http://www.opengis.net/sensorml/1.0.1</procedureDescriptionFormat>
+    <validTime>
+        <gml:TimePeriod gml:id="T1">
+           <gml:beginPosition>2009-01-11T16:22:25Z</gml:beginPosition>
+           <gml:endPosition>2011-08-21T08:32:10Z</gml:endPosition>
+        </gml:TimePeriod>
+    </validTime>
+</DescribeSensor>

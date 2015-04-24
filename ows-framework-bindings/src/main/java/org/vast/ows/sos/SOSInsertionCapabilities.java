@@ -22,8 +22,8 @@ Contributor(s):
 
 package org.vast.ows.sos;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 
 /**
@@ -36,65 +36,41 @@ import java.util.List;
  */
 public class SOSInsertionCapabilities
 {
-    protected List<String> procedureFormats;
-    protected List<String> observationTypes;
-    protected List<String> foiTypes;
-    protected List<String> supportedEncodings;
+    protected Set<String> procedureFormats;
+    protected Set<String> observationTypes;
+    protected Set<String> foiTypes;
+    protected Set<String> supportedEncodings;
 	
 	
 	public SOSInsertionCapabilities()
 	{
-	    procedureFormats = new ArrayList<String>(1);
-        observationTypes = new ArrayList<String>(2);
-        foiTypes = new ArrayList<String>(2);
-        supportedEncodings = new ArrayList<String>(2);
+	    procedureFormats = new LinkedHashSet<String>(1);
+        observationTypes = new LinkedHashSet<String>(2);
+        foiTypes = new LinkedHashSet<String>(2);
+        supportedEncodings = new LinkedHashSet<String>(2);
 	}
 	
 	
-	public List<String> getProcedureFormats()
+	public Set<String> getProcedureFormats()
     {
         return procedureFormats;
     }
-
-
-    public void setProcedureFormats(List<String> procedureFormats)
-    {
-        this.procedureFormats = procedureFormats;
-    }
     
     
-    public List<String> getObservationTypes()
+    public Set<String> getObservationTypes()
     {
         return observationTypes;
     }
-
-
-    public void setObservationTypes(List<String> observationTypes)
-    {
-        this.observationTypes = observationTypes;
-    }
     
     
-    public List<String> getFoiTypes()
+    public Set<String> getFoiTypes()
     {
         return foiTypes;
     }
-
-
-    public void setFoiTypes(List<String> foiTypes)
-    {
-        this.foiTypes = foiTypes;
-    }
     
     
-    public List<String> getSupportedEncodings()
+    public Set<String> getSupportedEncodings()
     {
         return supportedEncodings;
-    }
-
-
-    public void setSupportedEncodings(List<String> supportedEncodings)
-    {
-        this.supportedEncodings = supportedEncodings;
     }
 }

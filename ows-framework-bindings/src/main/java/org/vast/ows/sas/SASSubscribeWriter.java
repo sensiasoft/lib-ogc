@@ -25,7 +25,7 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
-import org.vast.swe.SWECommonUtils;
+import org.vast.swe.SWEUtils;
 import org.w3c.dom.Element;
 
 
@@ -50,7 +50,7 @@ public class SASSubscribeWriter extends AbstractRequestWriter<SASSubscribeReques
 	public Element buildXMLQuery(DOMHelper dom, SASSubscribeRequest request) throws OWSException
 	{
 		dom.addUserPrefix("sas", OGCRegistry.getNamespaceURI(OWSUtils.SAS, request.getVersion()));
-		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "1.0"));
+		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWEUtils.SWE, "1.0"));
 		// root element		
 		Element rootElt = dom.createElement("sas:Subscribe");
 		addCommonXML(dom, rootElt, request);

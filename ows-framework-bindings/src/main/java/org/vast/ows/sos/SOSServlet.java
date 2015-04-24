@@ -45,7 +45,7 @@ import net.opengis.swe.v20.TextEncoding;
 import net.opengis.swe.v20.XMLEncoding;
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ogc.gml.GMLTimeReader;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ogc.om.IObservation;
 import org.vast.ogc.om.OMUtils;
 import org.vast.ows.GetCapabilitiesRequest;
@@ -543,7 +543,7 @@ public abstract class SOSServlet extends OWSServlet
         	timeElt = capsHelper.getElement(offeringElt, "phenomenonTime/*");
         if(timeElt == null)
             throw new SOSException("Internal Error: No Time Present in Capabilities Document");        
-        GMLTimeReader timeReader = new GMLTimeReader();
+        GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
         ArrayList<TimeExtent> timeList = new ArrayList<TimeExtent>();
         
         try
@@ -555,15 +555,15 @@ public abstract class SOSServlet extends OWSServlet
                 for(int i = 0; i < timeElts.getLength(); i++)
                 {
                     Element timeMemberElt = (Element)timeElts.item(i);
-                    TimeExtent time = timeReader.readTimePrimitive(capsHelper, timeMemberElt);
-                    timeList.add(time);
+                    TimeExtent timeExtent = gmlUtils.readTimePrimitiveAsTimeExtent(capsHelper, timeMemberElt);
+                    timeList.add(timeExtent);
                 }
             }            
             // case of single instant/period/grid
             else
             {
-                TimeExtent time = timeReader.readTimePrimitive(capsHelper, timeElt);
-                timeList.add(time);
+                TimeExtent timeExtent = gmlUtils.readTimePrimitiveAsTimeExtent(capsHelper, timeElt);
+                timeList.add(timeExtent);
             }
         }
         catch (XMLReaderException e)

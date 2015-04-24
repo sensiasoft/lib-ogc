@@ -38,14 +38,18 @@ import org.w3c.dom.Element;
 
 public class FESUtils extends OWSCommonUtils
 {
+    public final static String FES = "FES";
+    public final static String V2_0 = "2.0";
+    
     protected static Pattern NS_DECL_PATTERN = Pattern.compile("xmlns\\(.*\\)(,xmlns\\(.*\\))*");
     protected static Pattern NS_DECL_SPLIT = Pattern.compile("(\\),)?xmlns\\(");
     
     FESStaxBindings filterBindings;
     
     
-    public FESUtils()
+    public FESUtils(String version)
     {
+        // TODO load correct bindings for desired version
         filterBindings = new FESStaxBindings(true);
     }
     
@@ -67,7 +71,7 @@ public class FESUtils extends OWSCommonUtils
             
             // parse iso time string
             TimeExtent time = parseTimeArg(isoTime);
-            BinaryTemporalOp timeOp = FESRequestUtils.timeInfoToFilter(time);
+            BinaryTemporalOp timeOp = FESRequestUtils.timeExtentToFilter(time);
             
             // set value reference
             // TODO use namespace map

@@ -134,7 +134,7 @@
                   </gml:Envelope>
                </sos:observedArea>
                <sos:phenomenonTime>
-                  <gml:TimePeriod gml:id="T001">
+                  <gml:TimePeriod gml:id="T1">
                      <gml:beginPosition>2009-01-01T00:00:00Z</gml:beginPosition>
                      <gml:endPosition>2011-03-01T00:00:00Z</gml:endPosition>
                   </gml:TimePeriod>
@@ -152,7 +152,7 @@
                   </gml:Envelope>
                </sos:observedArea>
                <sos:phenomenonTime>
-                  <gml:TimePeriod gml:id="T002">
+                  <gml:TimePeriod gml:id="T2">
                      <gml:beginPosition>2010-09-15T00:00:00Z</gml:beginPosition>
                      <gml:endPosition>2011-02-22T00:00:00Z</gml:endPosition>
                   </gml:TimePeriod>

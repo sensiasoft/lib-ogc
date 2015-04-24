@@ -25,6 +25,7 @@ public class TestSosGetCapsBindingsV20 extends OWSTestCase
     {
         readWriteCompareXmlResponse("examples_v20/_useCase_homogeneous_sensor_network/GetCapabilities_response_homogeneous_sensor_network.xml", "SOS");
         readWriteCompareXmlResponse("examples_v20/_useCase_mobile_sensors/GetCapabilities_response_mobile_sensor.xml", "SOS");
+        readWriteCompareXmlResponse("examples_v20/_useCase_airbase_station_network/GetCapabilities_response.xml", "SOS");
     }
 
 

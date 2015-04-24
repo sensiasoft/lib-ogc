@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  * */
 public class SPSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
 {
-    GMLUtils gmlUtils = new GMLUtils();
+    GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
     
     
 	@Override

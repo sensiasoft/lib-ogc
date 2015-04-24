@@ -28,7 +28,7 @@ import org.vast.cdm.common.DataHandler;
 import org.vast.data.DataArrayImpl;
 import org.vast.ogc.OGCException;
 import org.vast.ogc.OGCExceptionReader;
-import org.vast.swe.SWECommonUtils;
+import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEFilter;
 import org.vast.swe.SWEReader;
 import org.vast.swe.URIStreamHandler;
@@ -50,6 +50,7 @@ import org.w3c.dom.NodeList;
  * */
 public class WCSResponseReader extends SWEReader
 {
+    protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
     protected SWEFilter streamFilter;
     protected DataArrayImpl coverageArray;
     
@@ -75,7 +76,6 @@ public class WCSResponseReader extends SWEReader
                 throw new XMLReaderException("XML Response doesn't contain any Observation");
             
             // read result
-            SWECommonUtils utils = new SWECommonUtils();
             Element resultArrayElt = dom.getElement(obsElt, "result/*");
             
             // read array
@@ -85,10 +85,10 @@ public class WCSResponseReader extends SWEReader
             coverageArray = new DataArrayImpl(arraySize);
                         
             // read array component structure and encoding
-            Element eltTypeElt = dom.getElement(resultArrayElt, "elementType");
-            Element encElt = dom.getElement(resultArrayElt, "encoding");
-            this.dataComponents = utils.readComponentProperty(dom, eltTypeElt);
-            this.dataEncoding = utils.readEncodingProperty(dom, encElt);
+            Element eltTypeElt = dom.getElement(resultArrayElt, "elementType/*");
+            Element encElt = dom.getElement(resultArrayElt, "encoding/*");
+            this.dataComponents = sweUtils.readComponent(dom, eltTypeElt);
+            this.dataEncoding = sweUtils.readEncoding(dom, encElt);
             this.dataParser = createDataParser();
             coverageArray.addComponent(dataComponents.getName(), dataComponents);
             this.dataParser.setParentArray(coverageArray);

@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * */
 public class InsertSensorWriterV20 extends SWERequestWriter<InsertSensorRequest>
 {
-    SMLUtils smlUtils = new SMLUtils();
+    SMLUtils smlUtils = new SMLUtils(SMLUtils.V2_0);
     
     
 	public InsertSensorWriterV20()
@@ -67,7 +67,6 @@ public class InsertSensorWriterV20 extends SWERequestWriter<InsertSensorRequest>
 		        throw new OWSException("Unsupported format: " + request.getProcedureDescriptionFormat());
 	            
 		    Element procedureElt = dom.addElement(rootElt, "swes:procedureDescription");
-		    smlUtils.setOutputVersion("2.0");
 		    Element processElt = smlUtils.writeProcess(dom, request.getProcedureDescription());
             procedureElt.appendChild(processElt);
         }

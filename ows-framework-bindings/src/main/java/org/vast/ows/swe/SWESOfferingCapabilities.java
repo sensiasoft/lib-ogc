@@ -25,8 +25,8 @@
 
 package org.vast.ows.swe;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.vast.ows.OWSLayerCapabilities;
 
 
@@ -44,67 +44,52 @@ public abstract class SWESOfferingCapabilities extends OWSLayerCapabilities
     public static String FORMAT_SML1 = "http://www.opengis.net/sensorML/1.0.1";
     public static String FORMAT_SML2 = "http://www.opengis.net/sensorml/2.0";
 
-    protected List<String> observableProperties;
-    protected List<String> procedures;
-    protected List<String> relatedFeatures;
-    protected List<String> procedureFormats;
+    protected Set<String> observableProperties;
+    protected Set<String> procedures;
+    protected Set<String> relatedFeatures;
+    protected Set<String> procedureFormats;
 
 
     public SWESOfferingCapabilities()
     {
         super();
-        observableProperties = new ArrayList<String>(10);
-        procedures = new ArrayList<String>(2);
-        relatedFeatures = new ArrayList<String>(2);        
-        procedureFormats = new ArrayList<String>(2);        
+        observableProperties = new LinkedHashSet<String>(10);
+        procedures = new LinkedHashSet<String>(2);
+        relatedFeatures = new LinkedHashSet<String>(2);        
+        procedureFormats = new LinkedHashSet<String>(2);        
     }
 
 
-    public List<String> getObservableProperties()
+    public Set<String> getObservableProperties()
     {
         return observableProperties;
     }
 
 
-    public void setObservableProperties(List<String> observableProperties)
-    {
-        this.observableProperties = observableProperties;
-    }
-
-
-    public List<String> getProcedures()
+    public Set<String> getProcedures()
     {
         return procedures;
     }
-
-
-    public void setProcedures(List<String> procedures)
+    
+    
+    public String getMainProcedure()
     {
-        this.procedures = procedures;
+        if (procedures.isEmpty())
+            return null;
+        
+        return procedures.iterator().next();
     }
 
 
-    public List<String> getRelatedFeatures()
+    public Set<String> getRelatedFeatures()
     {
         return relatedFeatures;
     }
 
 
-    public void setRelatedFeatures(List<String> relatedFeatures)
-    {
-        this.relatedFeatures = relatedFeatures;
-    }
-
-
-    public List<String> getProcedureFormats()
+    public Set<String> getProcedureFormats()
     {
         return procedureFormats;
-    }
-
-
-    public void setProcedureFormats(List<String> procedureFormats)
-    {
-        this.procedureFormats = procedureFormats;
     }
 
 }

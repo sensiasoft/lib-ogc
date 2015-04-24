@@ -26,11 +26,9 @@
 package org.vast.ows.swe;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.vast.ogc.gml.GMLEnvelopeReader;
-import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.OWSCapabilitiesReaderV11;
 import org.vast.ows.OWSException;
 
@@ -45,9 +43,6 @@ import org.vast.ows.OWSException;
  */
 public abstract class SWESCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
 {
-    GMLEnvelopeReader gmlEnvReader = new GMLEnvelopeReader();
-    GMLTimeReader gmlTimeReader = new GMLTimeReader();
-    
     
 	public SWESCapabilitiesReaderV20()
 	{
@@ -55,7 +50,7 @@ public abstract class SWESCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
 	
 	
 	protected void readCommonOfferingProperties(DOMHelper dom, Element offeringElt, SWESOfferingCapabilities offering,
-	        List<String> serviceProcFormats, List<String> serviceObsProperties, List<String> serviceRelFeatures) throws OWSException
+	        Collection<String> serviceProcFormats, Collection<String> serviceObsProperties, Collection<String> serviceRelFeatures) throws OWSException
     {
 	    // identifier
         String id = dom.getElementValue(offeringElt, "identifier");
@@ -73,63 +68,69 @@ public abstract class SWESCapabilitiesReaderV20 extends OWSCapabilitiesReaderV11
         String procedureID = dom.getElementValue(offeringElt, "procedure");
         offering.getProcedures().add(procedureID);
         
-        // for the following items, we combine service level and offering level metadata            
-        // procedure description formats
-        offering.getProcedureFormats().addAll(serviceProcFormats);
-        offering.getProcedureFormats().addAll(readProcedureFormats(dom, offeringElt));
+        // for the following items, we inherit from service level
+        // procedure description formats (inheritance = replace)
+        readProcedureFormats(dom, offeringElt, offering.getProcedureFormats());
+        if (offering.getProcedureFormats().isEmpty())
+            offering.getProcedureFormats().addAll(serviceProcFormats);
         
-        // observable properties
-        offering.getObservableProperties().addAll(serviceObsProperties);
-        offering.getObservableProperties().addAll(readObservableProperties(dom, offeringElt));
+        // observable properties (inheritance = replace)
+        readObservableProperties(dom, offeringElt, offering.getObservableProperties());
+        if (offering.getObservableProperties().isEmpty())
+            offering.getObservableProperties().addAll(serviceObsProperties);
         
-        // related features
-        offering.getRelatedFeatures().addAll(serviceRelFeatures);
-        offering.getRelatedFeatures().addAll(readRelatedFeatures(dom, offeringElt));
+        // related features (inheritance = replace)
+        readRelatedFeatures(dom, offeringElt, offering.getRelatedFeatures());
+        if (offering.getRelatedFeatures().isEmpty())
+            offering.getRelatedFeatures().addAll(serviceRelFeatures);
     }
 	
 	
 	/*
 	 * Reads content from a list of procedureDescriptionFormat elements
 	 */
-	protected List<String> readProcedureFormats(DOMHelper dom, Element parentElt)
+	protected Collection<String> readProcedureFormats(DOMHelper dom, Element parentElt, Collection<String> procFormats)
 	{
-	    return readStringList(dom, parentElt, "procedureDescriptionFormat");
+	    return readStringList(dom, parentElt, "procedureDescriptionFormat", procFormats);
 	}
 	
 	
 	/*
      * Reads content from a list of observableProperty elements
      */
-    protected List<String> readObservableProperties(DOMHelper dom, Element parentElt)
+    protected Collection<String> readObservableProperties(DOMHelper dom, Element parentElt, Collection<String> observables)
     {
-        return readStringList(dom, parentElt, "observableProperty");
+        return readStringList(dom, parentElt, "observableProperty", observables);
     }
     
     
     /*
      * Reads content from a list of relatedFeature elements
      */
-    protected List<String> readRelatedFeatures(DOMHelper dom, Element parentElt)
+    protected Collection<String> readRelatedFeatures(DOMHelper dom, Element parentElt, Collection<String> relatedFeatures)
     {
-        List<String> featureList = new ArrayList<String>();
+        if (relatedFeatures == null)
+            relatedFeatures = new ArrayList<String>();
         
         NodeList featRelationshipElts = dom.getElements(parentElt, "relatedFeature/FeatureRelationship/target");
         for (int i=0; i<featRelationshipElts.getLength(); i++)
         {
             String href = dom.getAttributeValue((Element)featRelationshipElts.item(i), "@href");
-            featureList.add(href);
+            relatedFeatures.add(href);
         }
         
-        return featureList;
+        return relatedFeatures;
     }
     
     
     /*
      * Reads string values from a list of identical elements
      */
-    protected List<String> readStringList(DOMHelper dom, Element parentElt, String eltPath)
+    protected Collection<String> readStringList(DOMHelper dom, Element parentElt, String eltPath, Collection<String> tokenList)
     {
-        List<String> tokenList = new ArrayList<String>();
+        if (tokenList == null)
+            tokenList = new ArrayList<String>();
+        
         NodeList elts = dom.getElements(parentElt, eltPath);
         for (int i=0; i<elts.getLength(); i++)
         {

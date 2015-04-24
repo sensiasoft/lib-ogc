@@ -21,12 +21,8 @@
    <Writer type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesWriter"/>
    <!-- -->
    <Reader type="SOS" subType="Capabilities" version="2.0" class="org.vast.ows.sos.SOSCapabilitiesReaderV20"/>
-   <Reader type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationReaderV10"/>
    <Reader type="SOS" subType="GetObservation" version="2.0" class="org.vast.ows.sos.GetObservationReaderV20"/>
-   <Reader type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorReaderV10"/>
    <Reader type="SOS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorReaderV20"/>
-   <Reader type="SOS" subType="Capabilities" version="1.0" class="org.vast.ows.sos.SOSCapabilitiesReaderV10"/>
-   <Reader type="SOS" subType="GetResult" version="1.0" class="org.vast.ows.sos.GetResultReaderV10"/>
    <Reader type="SOS" subType="GetResult" version="2.0" class="org.vast.ows.sos.GetResultReaderV20"/>
    <Reader type="SOS" subType="GetResultTemplate" version="2.0" class="org.vast.ows.sos.GetResultTemplateReaderV20"/>
    <Reader type="SOS" subType="GetResultTemplateResponse" version="2.0" class="org.vast.ows.sos.GetResultTemplateResponseReaderV20"/>
@@ -40,11 +36,8 @@
    <Reader type="SOS" subType="InsertResultTemplateResponse" version="2.0" class="org.vast.ows.sos.InsertResultTemplateResponseReaderV20"/>
    <!-- -->
    <Writer type="SOS" subType="Capabilities" version="2.0" class="org.vast.ows.sos.SOSCapabilitiesWriterV20"/>
-   <Writer type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationWriterV10"/>
    <Writer type="SOS" subType="GetObservation" version="2.0" class="org.vast.ows.sos.GetObservationWriterV20"/>
-   <Writer type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorWriterV10"/>
    <Writer type="SOS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorWriterV20"/> 
-   <Writer type="SOS" subType="GetResult" version="1.0" class="org.vast.ows.sos.GetResultWriterV10"/>
    <Writer type="SOS" subType="GetResult" version="2.0" class="org.vast.ows.sos.GetResultWriterV20"/>
    <Writer type="SOS" subType="GetResultTemplate" version="2.0" class="org.vast.ows.sos.GetResultTemplateWriterV20"/>
    <Writer type="SOS" subType="GetResultTemplateResponse" version="2.0" class="org.vast.ows.sos.GetResultTemplateResponseWriterV20"/>
@@ -106,26 +99,18 @@
    <Writer type="SPS" subType="ReserveResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseWriterV20"/>   
    <Writer type="SPS" subType="Confirm" version="2.0" class="org.vast.ows.sps.ConfirmRequestWriterV20"/>
    <Writer type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseWriterV20"/>   
-   <!-- -->   
-   <Reader type="WCS" subType="GetCoverage" version="1.0" class="org.vast.ows.wcs.GetCoverageReaderV10"/>
+   <!-- -->
    <Reader type="WCS" subType="GetCoverage" version="1.1.1" class="org.vast.ows.wcs.GetCoverageReaderV11"/>
-   <Reader type="WCS" subType="DescribeCoverage" version="1.0" class="org.vast.ows.wcs.DescribeCoverageReaderV10"/>
    <Reader type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageReaderV11"/>
-   <Reader type="WCS" subType="Capabilities" version="1.0" class="org.vast.ows.wcs.WCSCapabilitiesReaderV10"/>
    <Reader type="WCS" subType="Capabilities" version="1.1.1" class="org.vast.ows.wcs.WCSCapabilitiesReaderV11"/>   
    <Reader type="WCS" subType="CoverageManifest" version="1.1.1" class="org.vast.ows.wcs.CoverageManifestReaderV11"/>
-   <Reader type="WCS" subType="CoverageDescriptions" version="1.0" class="org.vast.ows.wcs.CoverageDescriptionsReaderV10"/>
    <Reader type="WCS" subType="CoverageDescriptions" version="1.1.1" class="org.vast.ows.wcs.CoverageDescriptionsReaderV11"/>
    <Reader type="WCS" subType="Transaction" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionReaderV11"/>
    <!-- -->
-   <Writer type="WCS" subType="GetCoverage" version="1.0" class="org.vast.ows.wcs.GetCoverageWriterV10"/>
    <Writer type="WCS" subType="GetCoverage" version="1.1.1" class="org.vast.ows.wcs.GetCoverageWriterV11"/>
-   <Writer type="WCS" subType="DescribeCoverage" version="1.0" class="org.vast.ows.wcs.DescribeCoverageWriterV10"/>
    <Writer type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageWriterV11"/>
-   <Writer type="WCS" subType="Capabilities" version="1.0" class="org.vast.ows.wcs.WCSCapabilitiesWriterV10"/>
    <Writer type="WCS" subType="Capabilities" version="1.1.1" class="org.vast.ows.wcs.WCSCapabilitiesWriterV11"/>   
    <Writer type="WCS" subType="CoverageManifest" version="1.1.1" class="org.vast.ows.wcs.CoverageManifestWriterV11"/>
-   <Writer type="WCS" subType="CoverageDescriptions" version="1.0" class="org.vast.ows.wcs.CoverageDescriptionsWriterV10"/>
    <Writer type="WCS" subType="CoverageDescriptions" version="1.1.1" class="org.vast.ows.wcs.CoverageDescriptionsWriterV11"/>
    <Writer type="WCS" subType="Transaction" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionWriterV11"/>
    <Writer type="WCS" subType="TransactionAck" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionAckWriterV11"/>

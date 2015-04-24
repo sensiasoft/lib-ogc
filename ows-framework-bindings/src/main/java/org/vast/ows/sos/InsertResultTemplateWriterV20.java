@@ -21,9 +21,7 @@ import org.vast.ogc.om.ObservationWriterV20;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.swe.SWERequestWriter;
-import org.vast.swe.SWECommonUtils;
-import org.vast.swe.SweComponentWriterV20;
-import org.vast.swe.SweEncodingWriterV20;
+import org.vast.swe.SWEUtils;
 import org.w3c.dom.Element;
 
 
@@ -39,8 +37,7 @@ import org.w3c.dom.Element;
  * */
 public class InsertResultTemplateWriterV20 extends SWERequestWriter<InsertResultTemplateRequest>
 {	
-    protected SweComponentWriterV20 componentWriter = new SweComponentWriterV20();    
-    protected SweEncodingWriterV20 encodingWriter = new SweEncodingWriterV20();
+    protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
     protected ObservationWriterV20 obsWriter = new ObservationWriterV20();
     
     
@@ -53,7 +50,7 @@ public class InsertResultTemplateWriterV20 extends SWERequestWriter<InsertResult
 	public Element buildXMLQuery(DOMHelper dom, InsertResultTemplateRequest request) throws OWSException
 	{
 		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(OWSUtils.SOS, request.getVersion()));
-		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0"));
+		dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWEUtils.SWE, "2.0"));
 		
 		// root element
 		Element rootElt = dom.createElement("sos:" + request.getOperation());
@@ -81,7 +78,7 @@ public class InsertResultTemplateWriterV20 extends SWERequestWriter<InsertResult
         try
         {
             Element structurePropertyElt = dom.addElement(templateElt, "sos:resultStructure");        
-            Element structureElt = componentWriter.write(dom, request.getResultStructure());
+            Element structureElt = sweUtils.writeComponent(dom, request.getResultStructure(), false);
             structurePropertyElt.appendChild(structureElt);
         }
         catch (XMLWriterException e)
@@ -93,7 +90,7 @@ public class InsertResultTemplateWriterV20 extends SWERequestWriter<InsertResult
         try
         {
             Element encodingPropertyElt = dom.addElement(templateElt, "sos:resultEncoding");        
-            Element encodingElt = encodingWriter.write(dom, request.getResultEncoding());
+            Element encodingElt = sweUtils.writeEncoding(dom, request.getResultEncoding());
             encodingPropertyElt.appendChild(encodingElt); 
     	}
         catch (XMLWriterException e)

@@ -24,7 +24,7 @@ import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseWriter;
-import org.vast.swe.SweComponentWriterV20;
+import org.vast.swe.SWEUtils;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLWriterException;
@@ -41,7 +41,7 @@ import org.vast.xml.XMLWriterException;
  * */
 public class DescribeTaskingResponseWriterV20 extends SWEResponseWriter<DescribeTaskingResponse>
 {
-	protected SweComponentWriterV20 componentWriter = new SweComponentWriterV20();
+    protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
 	
 	
 	public Element buildXMLResponse(DOMHelper dom, DescribeTaskingResponse response, String version) throws OWSException
@@ -64,7 +64,7 @@ public class DescribeTaskingResponseWriterV20 extends SWEResponseWriter<Describe
 			{
 				Element paramsElt = dom.addElement(rootElt, "sps:taskingParameters");
 				dom.setAttributeValue(paramsElt, "name", params.getName());
-				componentElt = componentWriter.writeComponent(dom, params, true);
+				componentElt = sweUtils.writeComponent(dom, params, true);
 				paramsElt.appendChild(componentElt);
 			}
 			else

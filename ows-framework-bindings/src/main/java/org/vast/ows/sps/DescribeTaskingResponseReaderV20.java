@@ -25,7 +25,7 @@ package org.vast.ows.sps;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseReader;
-import org.vast.swe.SweComponentReaderV20;
+import org.vast.swe.SWEUtils;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  * */
 public class DescribeTaskingResponseReaderV20 extends SWEResponseReader<DescribeTaskingResponse>
 {
-	protected SweComponentReaderV20 componentReader = new SweComponentReaderV20();
+    protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
 	
 	
 	public DescribeTaskingResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
@@ -54,7 +54,7 @@ public class DescribeTaskingResponseReaderV20 extends SWEResponseReader<Describe
 			
 			// common tasking parameters
 			paramsElt = dom.getElement(responseElt, "taskingParameters/*");
-			DataComponent taskingParams = componentReader.read(dom, paramsElt);
+			DataComponent taskingParams = sweUtils.readComponent(dom, paramsElt);
 			String name = dom.getAttributeValue(responseElt, "taskingParameters/@name");
 			taskingParams.setName(name);
 			response.setTaskingParameters(taskingParams);

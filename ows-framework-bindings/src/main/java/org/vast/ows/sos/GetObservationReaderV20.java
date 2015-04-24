@@ -39,7 +39,7 @@ import org.vast.ows.swe.SWERequestReader;
  * */
 public class GetObservationReaderV20 extends SWERequestReader<GetObservationRequest>
 {
-    protected FESUtils fesUtils = new FESUtils();
+    protected FESUtils fesUtils = new FESUtils(FESUtils.V2_0);
     
     
     public GetObservationReaderV20()

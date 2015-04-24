@@ -29,10 +29,8 @@ import java.util.Map.Entry;
 import org.vast.util.Bbox;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.XMLReaderException;
 import org.w3c.dom.*;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ogc.gml.GMLTimeReader;
 import org.vast.ows.*;
 
 
@@ -49,7 +47,6 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 {
 	protected WCSCommonReaderV11 wcsReader = new WCSCommonReaderV11();
 	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();
-	protected GMLTimeReader timeReader = new GMLTimeReader();
 	
 	
 	@Override
@@ -211,11 +208,12 @@ public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageReque
 			{
 				try
 				{
-					request.getTimes().add(timeReader.readTimeInstant(dom, timeElt));
+				    double time = timeFormat.parseIso(dom.getElementValue(timeElt));
+				    request.getTimes().add(new TimeExtent(time));
 				}
-				catch (XMLReaderException e)
+				catch (ParseException e)
 				{
-					report.add(new WCSException(invalidXML + ": Invalid TimeInstant"));
+					report.add(new WCSException(invalidXML + ": Invalid Time Position"));
 				}
 			}
 			

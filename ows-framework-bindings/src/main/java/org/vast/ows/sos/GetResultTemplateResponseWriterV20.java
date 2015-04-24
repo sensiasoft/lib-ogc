@@ -19,8 +19,7 @@ import net.opengis.swe.v20.DataEncoding;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseWriter;
-import org.vast.swe.SweComponentWriterV20;
-import org.vast.swe.SweEncodingWriterV20;
+import org.vast.swe.SWEUtils;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLWriterException;
@@ -37,8 +36,7 @@ import org.vast.xml.XMLWriterException;
  * */
 public class GetResultTemplateResponseWriterV20 extends SWEResponseWriter<GetResultTemplateResponse>
 {
-	protected SweComponentWriterV20 componentWriter = new SweComponentWriterV20();
-	protected SweEncodingWriterV20 encodingWriter = new SweEncodingWriterV20();
+	protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
 	
 	
 	public Element buildXMLResponse(DOMHelper dom, GetResultTemplateResponse response, String version) throws OWSException
@@ -58,7 +56,7 @@ public class GetResultTemplateResponseWriterV20 extends SWEResponseWriter<GetRes
 			if (resultStructure != null)
 			{
 				Element structPropElt = dom.addElement(rootElt, "sos:resultStructure");
-				Element componentElt = componentWriter.writeComponent(dom, resultStructure, false);
+				Element componentElt = sweUtils.writeComponent(dom, resultStructure, false);
 				structPropElt.appendChild(componentElt);
 			}
 			else
@@ -69,7 +67,7 @@ public class GetResultTemplateResponseWriterV20 extends SWEResponseWriter<GetRes
             if (resultEncoding != null)
             {
                 Element encPropElt = dom.addElement(rootElt, "sos:resultEncoding");
-                Element encElt = encodingWriter.write(dom, resultEncoding);
+                Element encElt = sweUtils.writeEncoding(dom, resultEncoding);
                 encPropElt.appendChild(encElt);
             }
             else

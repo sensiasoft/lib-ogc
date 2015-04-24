@@ -23,7 +23,7 @@ package org.vast.ows.wps;
 import java.io.IOException;
 import org.vast.ows.AbstractResponseReader;
 import org.vast.ows.OWSException;
-import org.vast.swe.SWECommonUtils;
+import org.vast.swe.SWEUtils;
 import org.vast.xml.*;
 import org.w3c.dom.*;
 
@@ -38,7 +38,8 @@ import org.w3c.dom.*;
  * */
 public class DescribeProcessResponseReader  extends AbstractResponseReader<DescribeProcessResponse>
 {
-
+    SWEUtils utils = new SWEUtils(SWEUtils.V2_0);
+    
 	
 	public DescribeProcessResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException 
 	{
@@ -46,25 +47,23 @@ public class DescribeProcessResponseReader  extends AbstractResponseReader<Descr
 		DescribeProcessResponse response = new DescribeProcessResponse();
 		try
 		{
-			SWECommonUtils utils = new SWECommonUtils();
-			
-            // read input
+			// read input
             Element inputObjElt = dom.getElement(responseElt, "input/*");
             
-            Element inputEncElt = dom.getElement(inputObjElt, "encoding");
-            response.inputDataEncoding = utils.readEncodingProperty(dom, inputEncElt);
+            Element inputEncElt = dom.getElement(inputObjElt, "encoding/*");
+            response.inputDataEncoding = utils.readEncoding(dom, inputEncElt);
             
-            Element inputDefElt = dom.getElement(inputObjElt, "elementType");
-            response.inputDataComponent = utils.readComponentProperty(dom, inputDefElt);
+            Element inputDefElt = dom.getElement(inputObjElt, "elementType/*");
+            response.inputDataComponent = utils.readComponent(dom, inputDefElt);
 
             // read output
             Element outputObjElt = dom.getElement(responseElt, "output/*");
             
-            Element outputEncElt = dom.getElement(outputObjElt, "encoding");
-            response.outputDataEncoding = utils.readEncodingProperty(dom, outputEncElt);
+            Element outputEncElt = dom.getElement(outputObjElt, "encoding/*");
+            response.outputDataEncoding = utils.readEncoding(dom, outputEncElt);
             
-            Element outputDefElt = dom.getElement(outputObjElt, "elementType");
-            response.outputDataComponent = utils.readComponentProperty(dom, outputDefElt);
+            Element outputDefElt = dom.getElement(outputObjElt, "elementType/*");
+            response.outputDataComponent = utils.readComponent(dom, outputDefElt);
 		
 		return null;
     		

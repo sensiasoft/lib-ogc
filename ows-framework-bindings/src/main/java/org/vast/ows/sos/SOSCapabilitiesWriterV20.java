@@ -16,8 +16,7 @@ package org.vast.ows.sos;
 
 import net.opengis.fes.v20.FilterCapabilities;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ogc.gml.GMLEnvelopeWriter;
-import org.vast.ogc.gml.GMLTimeWriter;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
@@ -27,6 +26,7 @@ import org.vast.ows.swe.SWESCapabilitiesWriterV20;
 import org.vast.util.Bbox;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
 
 
@@ -42,9 +42,8 @@ import org.w3c.dom.Element;
  * */
 public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
 {
-    GMLEnvelopeWriter bboxWriter = new GMLEnvelopeWriter("3.2");
-    GMLTimeWriter timeWriter = new GMLTimeWriter("3.2");
-    FESUtils fesUtils = new FESUtils();
+    GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
+    FESUtils fesUtils = new FESUtils(FESUtils.V2_0);
     
     
 	@Override
@@ -124,47 +123,63 @@ public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
 	    // SOS offerings
 	    for (OWSLayerCapabilities layerCaps: serviceCaps.getLayers())
 	    {
-	        Element offeringElt = dom.addElement(contentsElt, "+swes:offering/sos:ObservationOffering");
-	        SOSOfferingCapabilities offeringCaps = (SOSOfferingCapabilities)layerCaps;
-	        
-	        // SWES offering properties
-	        super.writeCommonOfferingProperties(dom, offeringElt, serviceCaps, offeringCaps);
-	        
-	        // observed area
-	        if (offeringCaps.getObservedAreas() != null && !offeringCaps.getObservedAreas().isEmpty())
-	        {
-	            Bbox bbox = offeringCaps.getObservedAreas().get(0);
-	            Element envElt = bboxWriter.writeEnvelope(dom, bbox);
-	            dom.addElement(offeringElt, "sos:observedArea").appendChild(envElt);
-	        }
-	        
-	        // phenomenon time
-	        TimeExtent timePeriod = offeringCaps.getPhenomenonTime();
-            if (timePeriod != null && !timePeriod.isNull())
+	        try
             {
-                Element envElt = timeWriter.writeTime(dom, timePeriod);
-                dom.addElement(offeringElt, "sos:phenomenonTime").appendChild(envElt);
+                Element offeringElt = dom.addElement(contentsElt, "+swes:offering/sos:ObservationOffering");
+                SOSOfferingCapabilities offeringCaps = (SOSOfferingCapabilities)layerCaps;
+                
+                // SWES offering properties
+                super.writeCommonOfferingProperties(dom, offeringElt, serviceCaps, offeringCaps);
+                
+                // observed area
+                if (offeringCaps.getObservedAreas() != null && !offeringCaps.getObservedAreas().isEmpty())
+                {
+                    Bbox bbox = offeringCaps.getObservedAreas().get(0);
+                    Element envElt = gmlUtils.writeBboxAsEnvelope(dom, bbox);
+                    dom.addElement(offeringElt, "sos:observedArea").appendChild(envElt);
+                }
+                
+                // phenomenon time
+                TimeExtent timePeriod = offeringCaps.getPhenomenonTime();
+                if (timePeriod != null && !timePeriod.isNull())
+                {
+                    Element envElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom, timePeriod);
+                    dom.addElement(offeringElt, "sos:phenomenonTime").appendChild(envElt);
+                }
+                
+                // result time
+                timePeriod = offeringCaps.getResultTime();
+                if (timePeriod != null && !timePeriod.isNull())
+                {
+                    Element envElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom, timePeriod);
+                    dom.addElement(offeringElt, "sos:resultTime").appendChild(envElt);
+                }
+                
+                // response formats (inheritance = replace)
+                if (!offeringCaps.getResponseFormats().equals(getCommonListEntries(serviceCaps, "getResponseFormats")))
+                {
+                    for (String token: offeringCaps.getResponseFormats())
+                        dom.setElementValue(offeringElt, "+sos:responseFormat", token);
+                }
+                
+                // obs types (inheritance = replace)
+                if (!offeringCaps.getObservationTypes().equals(getCommonListEntries(serviceCaps, "getObservationTypes")))
+                {
+                    for (String token: offeringCaps.getObservationTypes())
+                        dom.setElementValue(offeringElt, "+sos:observationType", token);
+                }
+                
+                // foi types (inheritance = replace)
+                if (!offeringCaps.getFoiTypes().equals(getCommonListEntries(serviceCaps, "getFoiTypes")))
+                {
+                    for (String token: offeringCaps.getFoiTypes())
+                        dom.setElementValue(offeringElt, "+sos:featureOfInterestType", token);
+                }
             }
-	        
-	        // result time
-            timePeriod = offeringCaps.getResultTime();
-            if (timePeriod != null && !timePeriod.isNull())
+            catch (XMLWriterException e)
             {
-                Element envElt = timeWriter.writeTime(dom, timePeriod);
-                dom.addElement(offeringElt, "sos:resultTime").appendChild(envElt);
+                throw new OWSException("Error writing offering " + layerCaps.getIdentifier(), e);
             }
-            
-            // response formats
-            for (String token: getNonCommonListEntries(offeringCaps, serviceCaps, "getResponseFormats"))
-                dom.setElementValue(offeringElt, "+sos:responseFormat", token);
-            
-            // obs types
-            for (String token: getNonCommonListEntries(offeringCaps, serviceCaps, "getObservationTypes"))
-                dom.setElementValue(offeringElt, "+sos:observationType", token);
-            
-            // foi types
-            for (String token: getNonCommonListEntries(offeringCaps, serviceCaps, "getFoiTypes"))
-                dom.setElementValue(offeringElt, "+sos:featureOfInterestType", token);
 	    }
 	    
 	    // SOS properties common to all offerings

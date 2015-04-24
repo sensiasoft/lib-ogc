@@ -25,9 +25,8 @@ import org.vast.ogc.om.IObservation;
 import org.vast.ogc.om.ObservationReaderV20;
 import org.vast.ows.*;
 import org.vast.ows.swe.SWERequestReader;
+import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEValidator;
-import org.vast.swe.SweComponentReaderV20;
-import org.vast.swe.SweEncodingReaderV20;
 
 
 /**
@@ -41,8 +40,7 @@ import org.vast.swe.SweEncodingReaderV20;
  * */
 public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResultTemplateRequest>
 {
-    protected SweComponentReaderV20 componentReader = new SweComponentReaderV20();
-    protected SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
+    protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
     protected ObservationReaderV20 obsReader = new ObservationReaderV20();
     
     
@@ -92,7 +90,7 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         try
         {
             Element resultStructElt = dom.getElement(templateElt, "resultStructure/*");
-            structure = componentReader.read(dom, resultStructElt);
+            structure = sweUtils.readComponent(dom, resultStructElt);
             List<Exception> errors = validator.validateComponent(structure, null);
             for (Exception e: errors)
                 report.add(new OWSException(OWSException.invalid_param_code, "resultStructure", "Invalid structure definition: " + e.getMessage()));
@@ -107,7 +105,7 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         try
         {
             Element resultEncodingElt = dom.getElement(templateElt, "resultEncoding/*");
-            DataEncoding encoding = encodingReader.read(dom, resultEncodingElt);
+            DataEncoding encoding = sweUtils.readEncoding(dom, resultEncodingElt);
             List<Exception> errors = validator.validateEncoding(encoding, structure, null);
             for (Exception e: errors)
                 report.add(new OWSException(OWSException.invalid_param_code, "resultEncoding", "Invalid encoding definition: " + e.getMessage()));

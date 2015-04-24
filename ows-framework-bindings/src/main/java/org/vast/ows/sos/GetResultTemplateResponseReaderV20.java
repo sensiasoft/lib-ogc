@@ -17,7 +17,7 @@ package org.vast.ows.sos;
 import org.vast.ows.OWSCommonReaderV11;
 import org.vast.ows.OWSException;
 import org.vast.ows.swe.SWEResponseReader;
-import org.vast.swe.SWECommonUtils;
+import org.vast.swe.SWEUtils;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 public class GetResultTemplateResponseReaderV20 extends SWEResponseReader<GetResultTemplateResponse>
 {
 	protected OWSCommonReaderV11 owsReader = new OWSCommonReaderV11();
-	protected SWECommonUtils sweUtils = new SWECommonUtils();
+	protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
 	
 	
 	public GetResultTemplateResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
