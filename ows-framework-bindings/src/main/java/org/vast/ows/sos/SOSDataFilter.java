@@ -21,11 +21,12 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.server;
+package org.vast.ows.sos;
 
 import java.util.ArrayList;
 import java.util.List;
 import org.vast.util.TimeExtent;
+import com.vividsolutions.jts.geom.Polygon;
 
 
 /**
@@ -38,9 +39,11 @@ import org.vast.util.TimeExtent;
  * */
 public class SOSDataFilter
 {
-    List<String> foiIds = new ArrayList<String>();
     List<String> observables = new ArrayList<String>();
+    List<String> foiIds = new ArrayList<String>();
     TimeExtent timeRange = new TimeExtent(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+    Polygon roi;
+    
     double replaySpeedFactor = Double.NaN;
     
     
@@ -74,23 +77,35 @@ public class SOSDataFilter
         if (timeRange != null)
             this.timeRange = timeRange.copy();
     }
+    
 
-
+    public List<String> getObservables()
+    {
+        return observables;
+    }
+    
+    
     public List<String> getFoiIds()
     {
         return foiIds;
     }
 
 
-    public List<String> getObservables()
-    {
-        return observables;
-    }
-
-
     public TimeExtent getTimeRange()
     {
         return timeRange;
+    }
+
+
+    public Polygon getRoi()
+    {
+        return roi;
+    }
+
+
+    public void setRoi(Polygon roi)
+    {
+        this.roi = roi;
     }
 
 

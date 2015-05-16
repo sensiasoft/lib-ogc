@@ -53,7 +53,6 @@ import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.server.OWSServlet;
-import org.vast.ows.server.SOSDataFilter;
 import org.vast.ows.swe.DeleteSensorRequest;
 import org.vast.ows.swe.DescribeSensorRequest;
 import org.vast.ows.swe.UpdateSensorRequest;
@@ -527,8 +526,7 @@ public abstract class SOSServlet extends OWSServlet
 	 * @param requestTime
 	 * @param report Exception report to append OWS exceptions to
 	 * @throws SOSException
-	 * 	  TODO  these check*() methods need to be moved to account for differing SOS versions
-
+	 * TODO  these check*() methods need to be moved to account for differing SOS versions
 	 */
 	protected void checkQueryTime(String offeringID, TimeExtent requestTime, OWSExceptionReport report) throws SOSException
 	{
@@ -629,7 +627,7 @@ public abstract class SOSServlet extends OWSServlet
 	    ISOSDataProviderFactory factory = dataProviders.get(offering);
         if (factory == null)
             throw new IllegalStateException("No valid data provider factory found for offering " + offering);
-        return factory.getNewProvider(filter);
+        return factory.getNewDataProvider(filter);
 	}
 
 	

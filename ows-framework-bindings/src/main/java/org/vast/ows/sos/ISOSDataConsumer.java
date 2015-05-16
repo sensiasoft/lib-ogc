@@ -72,10 +72,11 @@ public interface ISOSDataConsumer
      * data structure and encoding
      * @param component
      * @param encoding
+     * @param obsTemplate 
      * @return new template ID
      * @throws Exception
      */
-    public String newResultTemplate(DataComponent component, DataEncoding encoding) throws Exception;
+    public String newResultTemplate(DataComponent component, DataEncoding encoding, IObservation obsTemplate) throws Exception;
     
     
     /**

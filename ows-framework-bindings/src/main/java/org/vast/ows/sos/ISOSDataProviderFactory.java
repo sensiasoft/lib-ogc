@@ -23,10 +23,9 @@
 
 package org.vast.ows.sos;
 
-import org.vast.ows.server.SOSDataFilter;
 
 
 public interface ISOSDataProviderFactory
 {
-    public ISOSDataProvider getNewProvider(SOSDataFilter filter) throws Exception;
+    public ISOSDataProvider getNewDataProvider(SOSDataFilter filter) throws Exception;
 }
