@@ -24,6 +24,7 @@ import java.util.*;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSCapabilitiesReaderV11;
+import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
 
 
@@ -72,14 +73,13 @@ public class WPSCapabilitiesReader extends OWSCapabilitiesReaderV11
 	        
 	        layerCaps.setParent(serviceCaps);
             
-            serviceCaps.getLayers().add(layerCaps);
+	        ((List<OWSLayerCapabilities>)serviceCaps.getLayers()).add(layerCaps);
         }
     }
  
     /**
      * Creates format list array
      * @param parentElement
-     * @return
      */
     protected void getResponseFormatList(DOMHelper dom, Element parentElement, WPSLayerCapabilities layerCaps) throws WPSException
     {
@@ -101,7 +101,6 @@ public class WPSCapabilitiesReader extends OWSCapabilitiesReaderV11
     /**
      * Creates format list array
      * @param parentElement
-     * @return
      */
     protected void getRequestFormatList(DOMHelper dom, Element parentElement, WPSLayerCapabilities layerCaps) throws WPSException
     {

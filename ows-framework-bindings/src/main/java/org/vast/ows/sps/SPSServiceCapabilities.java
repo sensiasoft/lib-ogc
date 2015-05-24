@@ -25,6 +25,7 @@ package org.vast.ows.sps;
 import java.util.ArrayList;
 import java.util.List;
 import org.vast.ows.OWSServiceCapabilities;
+import org.vast.ows.sps.SPSOfferingCapabilities;
 
 
 /**
@@ -63,5 +64,19 @@ public class SPSServiceCapabilities extends OWSServiceCapabilities
     public void setMinStatusTime(double minStatusTime)
     {
         this.minStatusTime = minStatusTime;
+    }
+    
+    
+    @Override
+    public List<SPSOfferingCapabilities> getLayers()
+    {
+        return (List<SPSOfferingCapabilities>)super.getLayers();
+    }
+
+
+    @Override
+    public SPSOfferingCapabilities getLayer(String layerId)
+    {
+        return (SPSOfferingCapabilities)super.getLayer(layerId);
     }
 }

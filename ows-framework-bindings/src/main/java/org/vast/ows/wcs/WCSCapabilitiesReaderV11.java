@@ -22,11 +22,13 @@
 
 package org.vast.ows.wcs;
 
+import java.util.List;
 import org.w3c.dom.*;
 import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSCapabilitiesReaderV11;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
 
 
@@ -68,8 +70,8 @@ public class WCSCapabilitiesReaderV11 extends OWSCapabilitiesReaderV11
 			read2DBboxList(layerCap, dom, layerCapElt);
 			readCRSList(layerCap, dom, layerCapElt);
 			readFormatList(layerCap, dom, layerCapElt);
-
-			serviceCaps.getLayers().add(layerCap);
+			 
+			((List<OWSLayerCapabilities>)serviceCaps.getLayers()).add(layerCap);
 		}
 	}
 	
@@ -110,7 +112,6 @@ public class WCSCapabilitiesReaderV11 extends OWSCapabilitiesReaderV11
 	/**
 	 * Reads all supported format for given layer
 	 * @param layerElt
-	 * @return
 	 */
 	protected void readFormatList(WCSLayerCapabilities layerCap, DOMHelper dom, Element layerElt)
 	{
@@ -129,7 +130,6 @@ public class WCSCapabilitiesReaderV11 extends OWSCapabilitiesReaderV11
 	/**
 	 * Reads all supported CRS for given layer
 	 * @param layerElt
-	 * @return
 	 */
 	protected void readCRSList(WCSLayerCapabilities layerCap, DOMHelper dom, Element layerElt)
 	{

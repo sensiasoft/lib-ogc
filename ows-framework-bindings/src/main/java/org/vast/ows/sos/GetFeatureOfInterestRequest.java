@@ -46,7 +46,7 @@ public class GetFeatureOfInterestRequest extends OWSRequest
 	public GetFeatureOfInterestRequest()
 	{
 		service = "SOS";
-		operation = "GetObservation";
+		operation = "GetFeatureOfInterest";
 		procedures = new ArrayList<String>(2);
 		observables = new ArrayList<String>(2);
 		foiIDs = new ArrayList<String>(2);

@@ -18,7 +18,6 @@ import net.opengis.fes.v20.FilterCapabilities;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLUtils;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.fes.FESUtils;
@@ -121,12 +120,11 @@ public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
 		super.writeCommonContentsProperties(dom, contentsElt, serviceCaps);
 	    
 	    // SOS offerings
-	    for (OWSLayerCapabilities layerCaps: serviceCaps.getLayers())
+	    for (SOSOfferingCapabilities offeringCaps: ((SOSServiceCapabilities)serviceCaps).getLayers())
 	    {
 	        try
             {
                 Element offeringElt = dom.addElement(contentsElt, "+swes:offering/sos:ObservationOffering");
-                SOSOfferingCapabilities offeringCaps = (SOSOfferingCapabilities)layerCaps;
                 
                 // SWES offering properties
                 super.writeCommonOfferingProperties(dom, offeringElt, serviceCaps, offeringCaps);
@@ -178,7 +176,7 @@ public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
             }
             catch (XMLWriterException e)
             {
-                throw new OWSException("Error writing offering " + layerCaps.getIdentifier(), e);
+                throw new OWSException("Error writing offering " + offeringCaps.getIdentifier(), e);
             }
 	    }
 	    

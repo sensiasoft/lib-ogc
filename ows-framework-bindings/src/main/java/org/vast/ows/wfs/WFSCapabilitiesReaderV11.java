@@ -26,6 +26,7 @@ import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.AbstractCapabilitiesReader;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
 
 
@@ -87,7 +88,7 @@ public class WFSCapabilitiesReaderV11 extends AbstractCapabilitiesReader
         	WFSLayerCapabilities featureCaps = readFeature(dom, featureElt);
         	featureCaps.setParent(serviceCaps);
         	featureCaps.setFormatList(formatList);
-        	serviceCaps.getLayers().add(featureCaps);
+        	((List<OWSLayerCapabilities>)serviceCaps.getLayers()).add(featureCaps);
         }
     }
     

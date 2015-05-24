@@ -98,6 +98,8 @@ public abstract class SOSServlet extends OWSServlet
             handleRequest((GetCapabilitiesRequest)request);
         else if (request instanceof DescribeSensorRequest)
             handleRequest((DescribeSensorRequest)request);
+        else if (request instanceof GetFeatureOfInterestRequest)
+            handleRequest((GetFeatureOfInterestRequest)request);
 	    else if (request instanceof GetObservationRequest)
             handleRequest((GetObservationRequest)request);
 	    
@@ -329,7 +331,7 @@ public abstract class SOSServlet extends OWSServlet
             // init xml document writing
             OutputStream os = new BufferedOutputStream(request.getResponseStream());
             XMLEventFactory xmlFactory = XMLEventFactory.newInstance();
-            XMLEventWriter xmlWriter = XMLOutputFactory.newInstance().createXMLEventWriter(os);
+            XMLEventWriter xmlWriter = XMLOutputFactory.newInstance().createXMLEventWriter(os, "UTF-8");
             xmlWriter.add(xmlFactory.createStartDocument());
             xmlWriter.add(xmlFactory.createStartElement(sosPrefix, sosNsUri, "GetObservationResponse"));
             xmlWriter.add(xmlFactory.createNamespace(sosPrefix, sosNsUri));
@@ -375,6 +377,12 @@ public abstract class SOSServlet extends OWSServlet
             if (dataProvider != null)
                 dataProvider.close();
         }
+	}
+	
+	
+	protected void handleRequest(GetFeatureOfInterestRequest request) throws Exception
+	{
+	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
 	}
 	
 	

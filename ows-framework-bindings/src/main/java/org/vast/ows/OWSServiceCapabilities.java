@@ -53,7 +53,7 @@ public class OWSServiceCapabilities extends OWSResponse
 	protected OWSNotificationService notificationCapabilities;
 	
 	// list of layers
-	protected List<OWSLayerCapabilities> layers;
+	protected List<? extends OWSLayerCapabilities> layers;
 	
 	// list of supported exception types
 	protected List<String> exceptionTypes;
@@ -206,13 +206,13 @@ public class OWSServiceCapabilities extends OWSResponse
 	}
 	
 	
-	public List<OWSLayerCapabilities> getLayers()
+	public List<? extends OWSLayerCapabilities> getLayers()
 	{
 		return layers;
 	}
 	
 	
-	public void setLayers(List<OWSLayerCapabilities> layers)
+	public void setLayers(List<? extends OWSLayerCapabilities> layers)
 	{
 		this.layers = layers;
 	}

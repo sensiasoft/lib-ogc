@@ -35,9 +35,9 @@
 
 
    <!-- the filterCapabilities section lists the filters and operands which are supported in the observation, result and feature retrieval operations -->
-   <!-- <sos:filterCapabilities>
+   <sos:filterCapabilities>
       <fes:Filter_Capabilities>
-         <fes:Conformance>
+         <!-- <fes:Conformance>
             <fes:Constraint name="ImplementsQuery">
                <ows:NoValues />
                <ows:DefaultValue>false</ows:DefaultValue>
@@ -86,7 +86,7 @@
                <ows:NoValues />
                <ows:DefaultValue>false</ows:DefaultValue>
             </fes:Constraint>
-         </fes:Conformance>
+         </fes:Conformance>-->
          <fes:Spatial_Capabilities>
             <fes:GeometryOperands>
                <fes:GeometryOperand name="gml:Point" />
@@ -110,8 +110,7 @@
             </fes:TemporalOperators>
          </fes:Temporal_Capabilities>
       </fes:Filter_Capabilities>
-   </sos:filterCapabilities>-->
-
+   </sos:filterCapabilities>
 
    <sos:contents>
       <sos:Contents>

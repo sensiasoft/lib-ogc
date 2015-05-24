@@ -21,6 +21,7 @@
 package org.vast.ows.sas;
 
 import java.io.StringWriter;
+import java.util.List;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -32,6 +33,7 @@ import org.vast.util.ExceptionSystem;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.AbstractCapabilitiesReader;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -139,12 +141,11 @@ public class SASCapabilitiesReader extends AbstractCapabilitiesReader
 				continue;
             }
             
-            serviceCaps.getLayers().add(layerCaps);
+            ((List<OWSLayerCapabilities>)serviceCaps.getLayers()).add(layerCaps);
         }
     }
 
     @Override
-    @SuppressWarnings("rawtypes")
     public OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException {
 
 	    OWSServiceCapabilities serviceCaps = new OWSServiceCapabilities();

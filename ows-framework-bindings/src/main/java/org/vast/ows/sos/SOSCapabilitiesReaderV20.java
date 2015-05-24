@@ -148,7 +148,7 @@ public class SOSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20
                 if (offering.getFoiTypes().isEmpty())
                     offering.getFoiTypes().addAll(serviceFoiTypes);
                 
-            	serviceCaps.getLayers().add(offering);
+            	((SOSServiceCapabilities)serviceCaps).getLayers().add(offering);
             }
         }
         catch (XMLReaderException e)

@@ -98,7 +98,7 @@ public class SPSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20
             	    offering.setObservableArea(geom);
             	}
             	
-            	serviceCaps.getLayers().add(offering);
+            	spsCaps.getLayers().add(offering);
             }
             
             // minStatusTime

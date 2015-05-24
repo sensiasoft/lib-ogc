@@ -154,7 +154,8 @@ public abstract class SWESCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
 	                score += refSet.size();
 	        }
     	    
-    	    if (score > bestScore)
+    	    // best set has to be used in at least 2 offerings
+    	    if (score > refSet.size() && score > bestScore)
     	    {
     	        bestScore = score;
     	        bestSet = refSet;

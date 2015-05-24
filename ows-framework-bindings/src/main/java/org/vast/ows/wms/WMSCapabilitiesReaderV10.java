@@ -26,6 +26,7 @@ import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.AbstractCapabilitiesReader;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
 
 
@@ -105,7 +106,7 @@ public class WMSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
     	Element rootLayer = dom.getElement(capsElt, "Capability/Layer");
     	WMSLayerCapabilities layerCaps = readLayer(dom, rootLayer, null, serviceCaps);
     	if (!serviceCaps.getLayers().contains(layerCaps))
-    		serviceCaps.getLayers().add(0, layerCaps);
+    	    ((List<OWSLayerCapabilities>)serviceCaps.getLayers()).add(0, layerCaps);
     }
     
     
@@ -170,7 +171,7 @@ public class WMSCapabilitiesReaderV10 extends AbstractCapabilitiesReader
         
         // add it to the main service object if it is has a name/id
     	if (layerCaps.getIdentifier() != null)
-        	serviceCaps.getLayers().add(layerCaps);
+    	    ((List<OWSLayerCapabilities>)serviceCaps.getLayers()).add(layerCaps);
         
         // get all child layers        
         NodeList childLayers = dom.getElements(layerElt, "Layer");

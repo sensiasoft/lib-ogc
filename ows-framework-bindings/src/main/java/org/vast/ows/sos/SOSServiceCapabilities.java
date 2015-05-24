@@ -22,6 +22,7 @@ Contributor(s):
 
 package org.vast.ows.sos;
 
+import java.util.List;
 import net.opengis.fes.v20.FilterCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
 
@@ -71,6 +72,20 @@ public class SOSServiceCapabilities extends OWSServiceCapabilities
     public void setFilterCapabilities(FilterCapabilities filterCapabilities)
     {
         this.filterCapabilities = filterCapabilities;
+    }
+
+
+    @Override
+    public List<SOSOfferingCapabilities> getLayers()
+    {
+        return (List<SOSOfferingCapabilities>)super.getLayers();
+    }
+
+
+    @Override
+    public SOSOfferingCapabilities getLayer(String layerId)
+    {
+        return (SOSOfferingCapabilities)super.getLayer(layerId);
     }
 	
 }

@@ -22,10 +22,12 @@
 
 package org.vast.ows.wns;
 
+import java.util.List;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.OWSCapabilitiesReaderV11;
 import org.vast.ows.OWSException;
+import org.vast.ows.OWSLayerCapabilities;
 import org.vast.ows.OWSServiceCapabilities;
 import org.vast.ows.OWSUtils;
 
@@ -75,7 +77,7 @@ public class WNSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11
 				wnsCaps.getSupportedProtocols().add(protocolElt.getLocalName());
 		}
 		
-		serviceCaps.getLayers().add(wnsCaps);
+		((List<OWSLayerCapabilities>)serviceCaps.getLayers()).add(wnsCaps);
 	}
 
 }

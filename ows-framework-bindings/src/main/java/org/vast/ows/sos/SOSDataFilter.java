@@ -23,8 +23,9 @@
 
 package org.vast.ows.sos;
 
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import org.vast.util.TimeExtent;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -39,8 +40,8 @@ import com.vividsolutions.jts.geom.Polygon;
  * */
 public class SOSDataFilter
 {
-    List<String> observables = new ArrayList<String>();
-    List<String> foiIds = new ArrayList<String>();
+    Set<String> observables = new LinkedHashSet<String>();
+    Set<String> foiIds = new LinkedHashSet<String>();
     TimeExtent timeRange = new TimeExtent(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
     Polygon roi;
     
@@ -79,13 +80,13 @@ public class SOSDataFilter
     }
     
 
-    public List<String> getObservables()
+    public Set<String> getObservables()
     {
         return observables;
     }
     
     
-    public List<String> getFoiIds()
+    public Set<String> getFoiIds()
     {
         return foiIds;
     }

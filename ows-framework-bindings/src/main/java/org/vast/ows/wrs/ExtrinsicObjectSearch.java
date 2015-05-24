@@ -280,7 +280,7 @@ public class ExtrinsicObjectSearch extends DOMHelper
 				{
 					for(int j=i; j<owsCap.getLayers().size()-1; j++)
 					{
-						owsCap.getLayers().set(j, owsCap.getLayers().get(j+1));
+					    ((List<OWSLayerCapabilities>)owsCap.getLayers()).set(j, owsCap.getLayers().get(j+1));
 					}
 				}
 			}	
@@ -313,7 +313,7 @@ public class ExtrinsicObjectSearch extends DOMHelper
 			e.printStackTrace();
 			return null;
 		}
-		List<OWSLayerCapabilities> capList = owsCap.getLayers();
+		List<OWSLayerCapabilities> capList = (List<OWSLayerCapabilities>)owsCap.getLayers();
 		return capList;
 	}
 	
