@@ -206,14 +206,13 @@
    </sps:notifications>-->
    <sps:contents>
       <sps:SPSContents>
-          
-         <swes:procedureDescriptionFormat>http://www.opengis.net/sensorML/1.0.1</swes:procedureDescriptionFormat>
-         <swes:observableProperty>http://www.opengis.net/def/propertyType/x-radiance</swes:observableProperty>
          
          <swes:offering>
             <sps:SensorOffering>
                <swes:identifier>http://www.ogc.org/sps/offering1</swes:identifier>
                <swes:procedure>http://www.ogc.org/procedure/camera/1</swes:procedure>
+               <swes:procedureDescriptionFormat>http://www.opengis.net/sensorML/1.0.1</swes:procedureDescriptionFormat>
+               <swes:observableProperty>http://www.opengis.net/def/propertyType/x-radiance</swes:observableProperty>
                <sps:observableArea>
                   <sps:byPolygon>
                      <gml:Polygon gml:id="gid01" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
