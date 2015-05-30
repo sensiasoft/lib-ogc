@@ -191,6 +191,8 @@ public class OWSCommonUtils
                 String crs = coords[coords.length-1];
                 bbox.setCrs(crs);
             }
+            
+            bbox.checkValid();
         }
         catch (Exception e)
         {
