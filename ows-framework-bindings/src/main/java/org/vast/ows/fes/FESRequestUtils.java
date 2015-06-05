@@ -93,7 +93,7 @@ public class FESRequestUtils
         {
             GMLExpression exp = (GMLExpression) ((BBOX)spatialFilter).getOperand2();
             Envelope env = (Envelope)exp.getGmlObject();
-            return gmlUtils.envelopeToBbox(env);
+            return GMLUtils.envelopeToBbox(env);
         }
                 
         return new Bbox();
