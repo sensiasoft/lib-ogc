@@ -163,7 +163,7 @@ Example Instance for SOS 2.0 GetCapabilities SOAP response
                 </swes:FeatureRelationship>
               </swes:relatedFeature>
 							<sos:observedArea>
-								<gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+								<gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326" srsDimension="2" >
 									<gml:lowerCorner>50.7167 7.76667</gml:lowerCorner>
 									<gml:upperCorner>53.7167 9.76667</gml:upperCorner>
 								</gml:Envelope>

@@ -215,7 +215,7 @@
                <swes:observableProperty>http://www.opengis.net/def/propertyType/x-radiance</swes:observableProperty>
                <sps:observableArea>
                   <sps:byPolygon>
-                     <gml:Polygon gml:id="gid01" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                     <gml:Polygon gml:id="gid01" srsDimension="2" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
                         <gml:exterior>
                            <gml:LinearRing>
                               <gml:posList >51.9 8.186 51.9005 8.186 51.9005 8.199 51.9 8.199</gml:posList>

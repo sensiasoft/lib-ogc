@@ -164,7 +164,7 @@
                <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[NH3]</swes:observableProperty>
                <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[CO]</swes:observableProperty>
                <sos:observedArea>
-                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326" srsDimension="2">
                      <gml:lowerCorner>50.7167 7.76667</gml:lowerCorner>
                      <gml:upperCorner>50.7167 7.76667</gml:upperCorner>
                   </gml:Envelope>
@@ -185,7 +185,7 @@
                <swes:procedure>http://myServer.org/sensors/AQ_0002</swes:procedure>
                <!-- This sensor station measures all observable properties defined in the Contents section. Hence, we do not have to specify them here. -->
                <sos:observedArea>
-                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326" srsDimension="2">
                      <gml:lowerCorner>51.7167 6.86667</gml:lowerCorner>
                      <gml:upperCorner>51.7167 6.86667</gml:upperCorner>
                   </gml:Envelope>
@@ -207,7 +207,7 @@
                <!-- This sensor station only measures H2S. Hence, we override the inherited observable properties here. -->
                <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[H2S]</swes:observableProperty>
                <sos:observedArea>
-                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326" srsDimension="2">
                      <gml:lowerCorner>52.7167 5.86667</gml:lowerCorner>
                      <gml:upperCorner>52.7167 5.86667</gml:upperCorner>
                   </gml:Envelope>
@@ -228,7 +228,7 @@
                <swes:procedure>http://myServer.org/sensors/AQ_0004</swes:procedure>
                <!-- This sensor station measures all observable properties defined in the Contents section. Hence, we do not have to specify them here. -->
                <sos:observedArea>
-                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326" srsDimension="2">
                      <gml:lowerCorner>51.7167 4.86667</gml:lowerCorner>
                      <gml:upperCorner>51.7167 4.86667</gml:upperCorner>
                   </gml:Envelope>

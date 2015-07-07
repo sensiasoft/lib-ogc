@@ -161,7 +161,7 @@
                   </swes:FeatureRelationship>
                </swes:relatedFeature>               
                <sos:observedArea>
-                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326" srsDimension="2" >
                      <gml:lowerCorner>50.0 4.0</gml:lowerCorner>
                      <gml:upperCorner>53.0 8.0</gml:upperCorner>
                   </gml:Envelope>

@@ -127,7 +127,7 @@
                <swes:identifier>http://myServer.org/offerings/Observations_of_sensor_system_Glider1</swes:identifier>
                <swes:procedure>http://myServer.org/sensors/glider1</swes:procedure>
                <sos:observedArea>
-                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326" srsDimension="2">
                      <gml:lowerCorner>21.0 -95.0</gml:lowerCorner>
                      <gml:upperCorner>28.0 -84.0</gml:upperCorner>
                   </gml:Envelope>
@@ -145,7 +145,7 @@
                <swes:identifier>http://myServer.org/offerings/Observations_of_sensor_system_Glider2</swes:identifier>
                <swes:procedure>http://myServer.org/sensors/glider2</swes:procedure>
                <sos:observedArea>
-                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                  <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326" srsDimension="2">
                      <gml:lowerCorner>24.0 -94.0</gml:lowerCorner>
                      <gml:upperCorner>27.0 -88.0</gml:upperCorner>
                   </gml:Envelope>
