@@ -22,7 +22,6 @@ package org.vast.ows.wps;
 
 import java.io.*;
 import org.vast.cdm.common.DataHandler;
-import org.vast.math.Vector3d;
 import org.vast.swe.SWEFilter;
 import org.vast.swe.SWEReader;
 import org.vast.xml.XMLReaderException;
@@ -40,14 +39,14 @@ import org.vast.xml.XMLReaderException;
 public class ExecuteProcessResponseReader extends SWEReader
 {
 	protected SWEFilter streamFilter;
-	protected Vector3d foiLocation;
+	protected double[] foiLocation;
     protected String procedure;
     protected String observationName;
        
     
     public ExecuteProcessResponseReader()
     {
-        foiLocation = new Vector3d();
+        foiLocation = new double[3];
     }
     
     
