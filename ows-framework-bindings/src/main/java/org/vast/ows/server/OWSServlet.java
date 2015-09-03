@@ -39,7 +39,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vast.ogc.OGCRegistry;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
@@ -88,22 +87,22 @@ public abstract class OWSServlet extends HttpServlet
 	 */
 	protected void sendCapabilities(String section, OutputStream resp) throws Exception
 	{
-	    OWSCapabilitiesSerializer serializer = new OWSCapabilitiesSerializer();
-        serializer.setOutputByteStream(resp);
-        serializer.serialize(capsHelper.getRootElement());
+//	    OWSCapabilitiesSerializer serializer = new OWSCapabilitiesSerializer();
+//	    serializer.setOutputByteStream(resp);
+//	    serializer.serialize(capsHelper.getRootElement());
         
-//      The code below is a better way to do it but we cannot remove the internalInfo elements on the fly
-//	    try
-//		{
-//		    Transformer serializer = TransformerFactory.newInstance().newTransformer();
-//		    serializer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
-//		    Source input = new DOMSource(capsHelper.getRootElement());
-//		    Result output = new StreamResult(resp);
-//		    serializer.transform(input, output);
-//		}
-//		catch (Exception e)
-//		{
-//		}
+        // The code below is a better way to do it but we cannot remove the internalInfo elements on the fly
+	    try
+		{
+		    Transformer serializer = TransformerFactory.newInstance().newTransformer();
+		    serializer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
+		    Source input = new DOMSource(capsHelper.getRootElement());
+		    Result output = new StreamResult(resp);
+		    serializer.transform(input, output);
+		}
+		catch (Exception e)
+		{
+		}
 	}
 	
 
