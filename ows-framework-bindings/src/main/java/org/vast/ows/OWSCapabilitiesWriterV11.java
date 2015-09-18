@@ -51,12 +51,22 @@ public abstract class OWSCapabilitiesWriterV11 extends AbstractResponseWriter<OW
 		String text;
 		
 		// mandatory version attribute
-		dom.setAttributeValue(capsElt, "version", version);
+		dom.setAttributeValue(capsElt, "version", normalizeVersionString(version));
 		
 		// updateSequence attribute
 		text = caps.getUpdateSequence();
 		if (text != null)
 			dom.setAttributeValue(capsElt, "updateSequence", text);
+	}
+	
+	
+	protected String normalizeVersionString(String version)
+	{
+	    // make sure version number always has 3 parts
+	    while (version.split("\\.").length < 3)
+	        version += ".0";
+	    
+	    return version;
 	}
 	
 	
