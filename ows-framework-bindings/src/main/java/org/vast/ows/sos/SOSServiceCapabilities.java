@@ -38,8 +38,11 @@ import org.vast.ows.OWSServiceCapabilities;
 public class SOSServiceCapabilities extends OWSServiceCapabilities
 {
     public static String PROFILE_RESULT_RETRIEVAL = "http://www.opengis.net/spec/SOS/2.0/conf/resultRetrieval";
+    public static String PROFILE_SENSOR_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/sensorInsertion";
+    public static String PROFILE_SENSOR_DELETION = "http://www.opengis.net/spec/SOS/2.0/conf/sensorDeletion";
     public static String PROFILE_OBS_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/obsInsertion";
-    public static String PROFILE_RESULT_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/resultInsertion";  
+    public static String PROFILE_RESULT_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/resultInsertion";
+    public static String PROFILE_OMXML = "http://www.opengis.net/spec/OMXML/2.0/conf/observation";
     
     SOSInsertionCapabilities insertionCapabilities;
     FilterCapabilities filterCapabilities;
