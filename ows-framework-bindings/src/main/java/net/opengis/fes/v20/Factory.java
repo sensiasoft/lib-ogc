@@ -14,6 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.fes.v20;
 
+import net.opengis.ows.v11.Domain;
+
 
 public interface Factory
 {
@@ -58,6 +60,12 @@ public interface Factory
     
     
     public FilterCapabilities newFilterCapabilities();
+    
+        
+    public Domain newConstraint(String name);
+    
+    
+    public Domain newConstraint(String name, String defaultValue);
     
     
     public ScalarCapabilities newScalarCapabilities();

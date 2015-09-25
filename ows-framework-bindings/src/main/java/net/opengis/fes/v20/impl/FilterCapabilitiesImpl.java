@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.fes.v20.impl;
 
+import net.opengis.fes.v20.Conformance;
 import net.opengis.fes.v20.FilterCapabilities;
 import net.opengis.fes.v20.ScalarCapabilities;
 import net.opengis.fes.v20.SpatialCapabilities;
@@ -23,6 +24,7 @@ import net.opengis.fes.v20.TemporalCapabilities;
 public class FilterCapabilitiesImpl implements FilterCapabilities
 {
     static final long serialVersionUID = 1L;
+    protected Conformance conformance = new ConformanceImpl();
     protected ScalarCapabilities scalarCapabilities;
     protected SpatialCapabilities spatialCapabilities;
     protected TemporalCapabilities temporalCapabilities;
@@ -30,6 +32,20 @@ public class FilterCapabilitiesImpl implements FilterCapabilities
 
     public FilterCapabilitiesImpl()
     {
+    }
+
+
+    @Override
+    public Conformance getConformance()
+    {
+        return conformance;
+    }
+
+
+    @Override
+    public void setConformance(Conformance conformance)
+    {
+        this.conformance = conformance;        
     }
 
 

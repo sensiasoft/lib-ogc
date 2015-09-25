@@ -42,6 +42,7 @@ public class FESStaxBindings extends XMLStreamBindings
         super(new FESFactory(), new GMLStaxBindings(useJTS));
         nsContext = gmlBindings.getNamespaceContext();
         nsContext.registerNamespace("fes", net.opengis.fes.v20.bind.XMLStreamBindings.NS_URI);
+        nsContext.registerNamespace("ows", net.opengis.fes.v20.bind.XMLStreamBindings.OWS_NS_URI);
     }
     
     

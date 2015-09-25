@@ -92,12 +92,15 @@ import net.opengis.fes.v20.Factory;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.Envelope;
+import net.opengis.ows.v11.Domain;
+import net.opengis.ows.v11.Range;
 
 
 @SuppressWarnings("javadoc")
 public class XMLStreamBindings extends AbstractXMLStreamBindings
 {
     public final static String NS_URI = "http://www.opengis.net/fes/2.0";
+    public final static String OWS_NS_URI = "http://www.opengis.net/ows/1.1";
     
     protected Factory factory;
     protected net.opengis.gml.v32.bind.XMLStreamBindings gmlBindings;
@@ -2944,7 +2947,14 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     {
         writer.writeStartElement(NS_URI, "Filter_Capabilities");
         
-        // TODO Conformance
+        // Conformance
+        if (bean.getConformance() != null)
+        {
+            writer.writeStartElement(NS_URI, "Conformance");
+            for (Domain constraint: bean.getConformance().getConstraintList())
+                writeConstraint(writer, constraint);
+            writer.writeEndElement();
+        }
         
         // TODO IdCapabilities
         
@@ -2975,6 +2985,50 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         // TODO Functions
         
         // TODO Extended_Capabilities
+        
+        writer.writeEndElement();
+    }
+   
+    
+    private void writeConstraint(XMLStreamWriter writer, Domain constraint) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "Constraint");
+        
+        // for now we embed OWS stuff here directly
+        writer.writeAttribute("name", constraint.getName());
+        
+        // possible values
+        if (constraint.isSetNoValues())
+            writer.writeEmptyElement(OWS_NS_URI, "NoValues");
+        else if (constraint.isSetAnyValue())
+            writer.writeEmptyElement(OWS_NS_URI, "NoValues");
+        else
+        {
+            writer.writeStartElement(OWS_NS_URI, "AllowedValues");
+            for (Object allowedVal: constraint.getAllowedValues())
+            {
+                if (allowedVal instanceof String)
+                {
+                    writer.writeStartElement(OWS_NS_URI, "Value");
+                    writer.writeCharacters(constraint.getDefaultValue());
+                    writer.writeEndElement();
+                }
+                else if (allowedVal instanceof Range)
+                {
+                    writer.writeStartElement(OWS_NS_URI, "Range");
+                    writer.writeCharacters(constraint.getDefaultValue());
+                    writer.writeEndElement();
+                }
+            }
+            writer.writeEndElement();
+        }
+        // default value
+        if (constraint.isSetDefaultValue())
+        {
+            writer.writeStartElement(OWS_NS_URI, "DefaultValue");
+            writer.writeCharacters(constraint.getDefaultValue());
+            writer.writeEndElement();
+        }
         
         writer.writeEndElement();
     }

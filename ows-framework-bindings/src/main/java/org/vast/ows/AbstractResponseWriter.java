@@ -27,9 +27,10 @@ import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
+
 /**
  * <p>
- * 
+ * Abstract base for all DOM based service response writers
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
@@ -55,9 +56,13 @@ public abstract class AbstractResponseWriter<ResponseType extends OWSResponse> i
         {
             return buildXMLResponse(dom, response, response.getVersion());
         }
+		catch (OWSException e)
+		{
+		    throw e;
+		}
 		catch (Exception e)
         {
-            throw new OWSException(xmlError + response.getClass().getName(), e);
+            throw new RuntimeException(xmlError + response.getClass().getName(), e);
         }
 	}
 	

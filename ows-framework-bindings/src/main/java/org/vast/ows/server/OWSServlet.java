@@ -45,7 +45,6 @@ import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSResponse;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.util.PostRequestFilter;
-import org.vast.util.WriterException;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 
@@ -192,10 +191,6 @@ public abstract class OWSServlet extends HttpServlet
             catch (IOException e1)
             {
             }            
-        }
-        catch (WriterException e)
-        {
-            log.error(internalErrorMsg, e);
         }
         catch (EOFException e)
         {

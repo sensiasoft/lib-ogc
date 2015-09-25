@@ -74,6 +74,8 @@ import net.opengis.fes.v20.Within;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.Envelope;
+import net.opengis.ows.v11.Domain;
+import net.opengis.ows.v11.impl.DomainImpl;
 
 
 public class FESFactory implements Factory
@@ -438,6 +440,25 @@ public class FESFactory implements Factory
     public final FilterCapabilities newFilterCapabilities()
     {
         return new FilterCapabilitiesImpl();
+    }
+    
+    
+    @Override
+    public final Domain newConstraint(String name)
+    {
+        Domain constraint = new DomainImpl();
+        constraint.setName(name);
+        return constraint;
+    }
+    
+    
+    @Override
+    public final Domain newConstraint(String name, String defaultValue)
+    {
+        Domain constraint = new DomainImpl();
+        constraint.setName(name);
+        constraint.setDefaultValue(defaultValue);
+        return constraint;
     }
 
 

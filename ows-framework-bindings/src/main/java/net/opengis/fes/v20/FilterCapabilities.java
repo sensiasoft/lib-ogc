@@ -17,6 +17,11 @@ package net.opengis.fes.v20;
 
 public interface FilterCapabilities
 {
+    public Conformance getConformance();
+    
+    
+    public void setConformance(Conformance conformance);
+    
     
     public ScalarCapabilities getScalarCapabilities();
     

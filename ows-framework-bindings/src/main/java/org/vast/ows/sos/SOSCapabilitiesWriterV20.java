@@ -106,7 +106,7 @@ public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
         }
         catch (Exception e)
         {
-            throw new OWSException("", e);
+            throw new RuntimeException("Internal error while writing filter capabilities", e);
         }
     }
 	
@@ -176,7 +176,7 @@ public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
             }
             catch (XMLWriterException e)
             {
-                throw new OWSException("Error writing offering " + offeringCaps.getIdentifier(), e);
+                throw new RuntimeException("Error writing offering " + offeringCaps.getIdentifier(), e);
             }
 	    }
 	    
