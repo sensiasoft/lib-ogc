@@ -5,7 +5,7 @@
    <version>1.0</version>
    <packaging>pom</packaging>
    <name>OWS Framework Library</name>
-   <url>https://github.com/sensiasoft/lib-ows/tree/master/ows-framework-all</url>
+   <url>http://docs.opensensorhub.org/${project.artifactId}</url>
    <description>The OWS Framework library provides XML-Java bindings for several OGC web services. These bindings are designed to be easy to use on both server and client side.</description>
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -108,7 +108,7 @@
                </dependency>
             </dependencies>
             <configuration>
-               <skipDeploy>true</skipDeploy>
+               <stagingDirectory>${session.executionRootDirectory}/../sensorhub-site/${project.artifactId}</stagingDirectory>
             </configuration>
          </plugin>
       </plugins>
@@ -123,8 +123,8 @@
          <url>scpexe://sensiasoft.net/home/ubuntu/maven-repo</url>
       </snapshotRepository>
       <site>
-         <id>sensiasoft</id>
-         <url>scpexe://sensiasoft.net/home/ubuntu/sensorhub-site</url>
+         <id>osh</id>
+         <url>http://docs.opensensorhub.org</url>
       </site>
    </distributionManagement>
    <reporting>
