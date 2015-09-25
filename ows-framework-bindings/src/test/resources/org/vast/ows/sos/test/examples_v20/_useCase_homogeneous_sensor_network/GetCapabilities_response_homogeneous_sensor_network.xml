@@ -37,56 +37,7 @@
    <!-- the filterCapabilities section lists the filters and operands which are supported in the observation, result and feature retrieval operations -->
    <sos:filterCapabilities>
       <fes:Filter_Capabilities>
-         <!--<fes:Conformance>
-            <fes:Constraint name="ImplementsQuery">
-               <ows:NoValues />
-               <ows:DefaultValue>false</ows:DefaultValue>
-            </fes:Constraint>
-            <fes:Constraint name="ImplementsAdHocQuery">
-               <ows:NoValues />
-               <ows:DefaultValue>false</ows:DefaultValue>
-            </fes:Constraint>
-            <fes:Constraint name="ImplementsFunctions">
-               <ows:NoValues />
-               <ows:DefaultValue>false</ows:DefaultValue>
-            </fes:Constraint>
-            <fes:Constraint name="ImplementsMinStandardFilter">
-               <ows:NoValues />
-               <ows:DefaultValue>false</ows:DefaultValue>
-            </fes:Constraint>
-            <fes:Constraint name="ImplementsStandardFilter">
-               <ows:NoValues />
-               <ows:DefaultValue>false</ows:DefaultValue>
-            </fes:Constraint>
-            <fes:Constraint name="ImplementsMinSpatialFilter">
-               <ows:NoValues />
-               <ows:DefaultValue>true</ows:DefaultValue>
-            </fes:Constraint>
-            <fes:Constraint name="ImplementsSpatialFilter">
-               <ows:NoValues />
-               <ows:DefaultValue>true</ows:DefaultValue>
-            </fes:Constraint>
-            <fes:Constraint name="ImplementsMinTemporalFilter">
-               <ows:NoValues />
-               <ows:DefaultValue>true</ows:DefaultValue>
-            </fes:Constraint>
-            <fes:Constraint name="ImplementsTemporalFilter">
-               <ows:NoValues />
-               <ows:DefaultValue>true</ows:DefaultValue>
-            </fes:Constraint>
-            <fes:Constraint name="ImplementsVersionNav">
-               <ows:NoValues />
-               <ows:DefaultValue>false</ows:DefaultValue>
-            </fes:Constraint>
-            <fes:Constraint name="ImplementsSorting">
-               <ows:NoValues />
-               <ows:DefaultValue>false</ows:DefaultValue>
-            </fes:Constraint>
-            <fes:Constraint name="ImplementsExtendedOperators">
-               <ows:NoValues />
-               <ows:DefaultValue>false</ows:DefaultValue>
-            </fes:Constraint>
-         </fes:Conformance>-->
+         <fes:Conformance/>
          <fes:Spatial_Capabilities>
             <fes:GeometryOperands>
                <fes:GeometryOperand name="gml:Point" />
