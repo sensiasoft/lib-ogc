@@ -56,6 +56,8 @@ import org.vast.ows.server.OWSServlet;
 import org.vast.ows.swe.DeleteSensorRequest;
 import org.vast.ows.swe.DescribeSensorRequest;
 import org.vast.ows.swe.UpdateSensorRequest;
+import org.vast.swe.AbstractDataWriter;
+import org.vast.swe.FilteredWriter;
 import org.vast.swe.SWEHelper;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
@@ -169,10 +171,14 @@ public abstract class SOSServlet extends OWSServlet
     	    // setup data provider
     	    SOSDataFilter filter = new SOSDataFilter(request.getObservables().get(0));
     	    dataProvider = getDataProvider(request.getOffering(), filter);
-            
+    	    
+    	    // build filtered component tree
+    	    DataComponent filteredStruct = dataProvider.getResultStructure().copy();
+    	    filteredStruct.accept(new DataStructFilter(request.getObservables()));
+    	    
             // build and send response 
     	    GetResultTemplateResponse resp = new GetResultTemplateResponse();
-    	    resp.setResultStructure(dataProvider.getResultStructure());
+    	    resp.setResultStructure(filteredStruct);
     	    resp.setResultEncoding(dataProvider.getDefaultResultEncoding());
     	    sendResponse(request, resp);    	    
         }
@@ -250,6 +256,9 @@ public abstract class SOSServlet extends OWSServlet
             {
                 // prepare writer for selected encoding
                 DataStreamWriter writer = SWEHelper.createDataWriter(resultEncoding);
+                
+                // we also do filtering here in case data provider hasn't modified the datablocks
+                writer = new FilteredWriter((AbstractDataWriter)writer, request.getObservables());
                 writer.setDataComponents(resultStructure);
                 writer.setOutput(os);
                 

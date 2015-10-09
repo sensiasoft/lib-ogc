@@ -54,8 +54,20 @@ public class GetResultWriterV20 extends SWERequestWriter<GetResultRequest>
 		// offerings
         urlParams.put("offering", request.getOffering());
         
-        // observed properties
-        urlParams.put("observedProperty", request.getObservables().get(0));
+        // observed properties (only one officially supported by SOS 2.0!)
+        if (!request.getObservables().isEmpty())
+        {
+            StringBuilder buf = new StringBuilder();
+            
+            for (String off: request.getObservables())
+            {
+                buf.append(off);
+                buf.append(',');
+            }
+            buf.deleteCharAt(buf.length()-1);
+            
+            urlParams.put("observedProperty", buf.toString());
+        }
         
         // features of interest
         if (!request.getFoiIDs().isEmpty())
@@ -114,8 +126,9 @@ public class GetResultWriterV20 extends SWERequestWriter<GetResultRequest>
 		// offering
 		dom.setElementValue(rootElt, "+sos:offering", request.getOffering());
 		
-		// observed properties
-        dom.setElementValue(rootElt, "+sos:observedProperty", request.getObservables().get(0));
+		// observed properties (only one officially supported by SOS 2.0!)
+        for (String obs: request.getObservables())
+            dom.setElementValue(rootElt, "+sos:observedProperty", obs);
 		
 		// temporal filter
         if (request.getTemporalFilter() != null)

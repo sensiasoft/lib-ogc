@@ -74,10 +74,12 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
 			    request.setOffering(argValue);
 			}
 			
-			// observed property
+			// observed properties (only one officially supported by SOS 2.0!)
             else if (argName.equalsIgnoreCase("observedProperty"))
             {
-                request.getObservables().add(argValue);
+                request.getObservables().clear();
+                for (String obs: argValue.split(","))
+                    request.getObservables().add(obs);
             }
 			
 			// features of interest
@@ -157,9 +159,13 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
         val = dom.getElementValue(requestElt, "offering");
         request.setOffering(val);        
 		
-        // observed property
-		val = dom.getElementValue(requestElt, "observedProperty");
-        request.getObservables().add(val); 
+        // observed properties (only one officially supported by SOS 2.0!)
+        NodeList obsList = dom.getElements(requestElt, "observedProperty");
+        for (int i = 0; i < obsList.getLength(); i++)
+        {
+            val = dom.getElementValue((Element)obsList.item(i));
+            request.getObservables().add(val);
+        }
 		
         // temporal filter
         try
@@ -219,7 +225,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
             report.add(new OWSException(OWSException.missing_param_code, "offering"));
         
         // need observedProperty
-        if (request.getObservables().size() != 1)
+        if (request.getObservables().size() < 1)
             report.add(new OWSException(OWSException.missing_param_code, "observedProperty"));
         
 		report.process();

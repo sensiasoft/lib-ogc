@@ -51,8 +51,20 @@ public class GetResultTemplateWriterV20 extends SWERequestWriter<GetResultTempla
 		// offering
         urlParams.put("offering", request.getOffering());
         
-        // observed property
-        urlParams.put("observedProperty", request.getObservables().get(0));
+        // observed properties (only one officially supported by SOS 2.0!)
+        if (!request.getObservables().isEmpty())
+        {
+            StringBuilder buf = new StringBuilder();
+            
+            for (String off: request.getObservables())
+            {
+                buf.append(off);
+                buf.append(',');
+            }
+            buf.deleteCharAt(buf.length()-1);
+            
+            urlParams.put("observedProperty", buf.toString());
+        }
                 		
         return urlParams;
 	}
@@ -70,8 +82,9 @@ public class GetResultTemplateWriterV20 extends SWERequestWriter<GetResultTempla
 		// offering
 		dom.setElementValue(rootElt, "+sos:offering", request.getOffering());
 		
-		// observed property
-        dom.setElementValue(rootElt, "+sos:observedProperty", request.getObservables().get(0));
+		// observed properties (only one officially supported by SOS 2.0!)
+        for (String obs: request.getObservables())
+            dom.setElementValue(rootElt, "+sos:observedProperty", obs);
 		        
 		return rootElt;
 	}
