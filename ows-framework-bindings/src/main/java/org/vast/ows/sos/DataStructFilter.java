@@ -24,7 +24,6 @@ import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.SimpleComponent;
 import net.opengis.swe.v20.Vector;
 import org.vast.data.BaseTreeVisitor;
-import org.vast.swe.SWEConstants;
 
 
 /**
@@ -43,7 +42,6 @@ public class DataStructFilter extends BaseTreeVisitor
     
     public DataStructFilter(Collection<String> selectedObsProperties)
     {
-        this.selectedObsProperties.add(SWEConstants.DEF_SAMPLING_TIME);
         this.selectedObsProperties.addAll(selectedObsProperties);
     }
     

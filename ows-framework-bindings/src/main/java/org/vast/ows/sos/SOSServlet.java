@@ -58,6 +58,7 @@ import org.vast.ows.swe.DescribeSensorRequest;
 import org.vast.ows.swe.UpdateSensorRequest;
 import org.vast.swe.AbstractDataWriter;
 import org.vast.swe.FilteredWriter;
+import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEHelper;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
@@ -174,6 +175,7 @@ public abstract class SOSServlet extends OWSServlet
     	    
     	    // build filtered component tree
     	    DataComponent filteredStruct = dataProvider.getResultStructure().copy();
+    	    request.getObservables().add(SWEConstants.DEF_SAMPLING_TIME); // always keep sampling time
     	    filteredStruct.accept(new DataStructFilter(request.getObservables()));
     	    
             // build and send response 
@@ -258,6 +260,7 @@ public abstract class SOSServlet extends OWSServlet
                 DataStreamWriter writer = SWEHelper.createDataWriter(resultEncoding);
                 
                 // we also do filtering here in case data provider hasn't modified the datablocks
+                request.getObservables().add(SWEConstants.DEF_SAMPLING_TIME); // always keep sampling time
                 writer = new FilteredWriter((AbstractDataWriter)writer, request.getObservables());
                 writer.setDataComponents(resultStructure);
                 writer.setOutput(os);
@@ -350,6 +353,11 @@ public abstract class SOSServlet extends OWSServlet
             IObservation obs;
             while ((obs = dataProvider.getNextObservation()) != null)
             {
+                // filter obs properties
+                DataComponent filteredStruct = obs.getResult();
+                filteredStruct.accept(new DataStructFilter(request.getObservables()));
+                
+                // prepare for writing
                 DOMHelper dom = new DOMHelper();
                 Element obsElt = obsWriter.write(dom, obs);
                 
