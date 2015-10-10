@@ -77,6 +77,14 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
             {
                 request.setVersion(argValue);
             }
+            
+            // accepted versions
+            else if (argName.equalsIgnoreCase("acceptVersions"))
+            {
+                request.getAcceptedVersions().clear();
+                for (String version: argValue.split(","))
+                    request.getAcceptedVersions().add(version);
+            }
 
             // request argument
             else if (argName.equalsIgnoreCase("request"))
@@ -91,7 +99,7 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
             }
         }
 
-        checkServiceParameter(request, report, service);
+        checkParameters(request, report, service);
         report.process();
         
         return request;
@@ -104,9 +112,19 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 		OWSExceptionReport report = new OWSExceptionReport();
 		GetCapabilitiesRequest request = new GetCapabilitiesRequest();
 		readCommonXML(dom, requestElt, request);
+		
+		// section
 		request.setSection(dom.getElementValue(requestElt, "section"));
 		
-		checkServiceParameter(request, report, service);
+		// accepted versions
+        NodeList versionList = dom.getElements(requestElt, "acceptVersions");
+        for (int i = 0; i < versionList.getLength(); i++)
+        {
+            String val = dom.getElementValue((Element)versionList.item(i));
+            request.getAcceptedVersions().add(val);
+        }
+		
+		checkParameters(request, report, service);
 		report.process();
 		
 		return request;
@@ -118,7 +136,7 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 	 * @param request
 	 * @param report
 	 */
-	protected void checkServiceParameter(OWSRequest request, OWSExceptionReport report, String serviceType) throws OWSException
+	protected void checkParameters(GetCapabilitiesRequest request, OWSExceptionReport report, String serviceType) throws OWSException
 	{
 		// need SERVICE
 		if (request.getService() == null)
@@ -141,6 +159,17 @@ public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilities
 				ex.setBadValue(request.getVersion());
 				report.add(ex);
 			}
+		}
+		
+		// check accept versions validity
+		for (String version: request.getAcceptedVersions())
+		{
+		    if (!version.matches(versionRegex))
+            {
+                OWSException ex = new OWSException(OWSException.invalid_param_code, "VERSION");
+                ex.setBadValue(request.getVersion());
+                report.add(ex);
+            }
 		}
 		
 		// need REQUEST

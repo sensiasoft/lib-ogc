@@ -21,6 +21,9 @@
 
 package org.vast.ows;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * <p>
@@ -33,12 +36,14 @@ package org.vast.ows;
 public class GetCapabilitiesRequest extends OWSRequest
 {
     protected String section;
+    protected Set<String> acceptedVersions;
 	
     
     public GetCapabilitiesRequest()
     {
         service = "OWS";
         operation = "GetCapabilities";
+        acceptedVersions = new HashSet<String>();
     }
 
 
@@ -52,4 +57,10 @@ public class GetCapabilitiesRequest extends OWSRequest
 	{
 		this.section = section;
 	}
+
+
+    public Set<String> getAcceptedVersions()
+    {
+        return acceptedVersions;
+    }
 }

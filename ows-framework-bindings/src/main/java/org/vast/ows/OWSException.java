@@ -34,6 +34,8 @@ public class OWSException extends Exception
 {
 	static final long serialVersionUID = 0xED126190670F4F6AL;
 	
+	public final static String version_nego_failed_code = "VersionNegotiationFailed";
+	public final static String version_nego_failed_text = "Version Negotiation Failed";
 	public final static String invalid_request_code = "InvalidRequest";	
 	public final static String invalid_request_text = "Invalid Request";
 	public final static String invalid_param_code = "InvalidParameterValue";
@@ -160,6 +162,8 @@ public class OWSException extends Exception
 			return message;
 		
 		// otherwise build generic message
+		else if (this.code == version_nego_failed_code)
+            return version_nego_failed_text;
 		else if (this.code == invalid_request_code)
 			return invalid_request_text;
 		else if (this.code == missing_param_code)

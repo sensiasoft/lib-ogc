@@ -40,16 +40,29 @@ public class GetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilities
 {
 	
 	@Override
-	public String buildURLQuery(GetCapabilitiesRequest query) throws OWSException
+	public String buildURLQuery(GetCapabilitiesRequest request) throws OWSException
 	{
-		StringBuffer urlBuff = new StringBuffer(query.getGetServer());
+		StringBuffer urlBuff = new StringBuffer(request.getGetServer());
 		
-        urlBuff.append("SERVICE=" + query.getService());
-        urlBuff.append("&VERSION=" + query.getVersion());
-        urlBuff.append("&REQUEST=" + query.getOperation());
+        urlBuff.append("service=" + request.getService());
+        
+        if (request.getAcceptedVersions().isEmpty())
+        {
+            if (request.getVersion() != null)
+                urlBuff.append("&version=" + request.getVersion());
+        }
+        else
+        {
+            urlBuff.append("&acceptVersions=");
+            for (String version: request.getAcceptedVersions())
+                urlBuff.append(version).append(',');
+            urlBuff.deleteCharAt(urlBuff.length()-1);
+        }
+            
+        urlBuff.append("&request=" + request.getOperation());
 		
-        if (query.getSection() != null)
-        	urlBuff.append("&SECTION=" + query.getSection());
+        if (request.getSection() != null)
+        	urlBuff.append("&section=" + request.getSection());
         
         return urlBuff.toString();
 	}
@@ -61,12 +74,22 @@ public class GetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilities
 		String nsUri = OGCRegistry.getNamespaceURI(request.getService(), request.getVersion());
 		dom.addUserPrefix(QName.DEFAULT_PREFIX, nsUri);
 		
-		Element rootElt = dom.createElement(request.getOperation());
-		dom.setAttributeValue(rootElt, "version", request.getVersion());
+		Element rootElt = dom.createElement(request.getOperation());		
 		dom.setAttributeValue(rootElt, "service", request.getService());
 		
+		if (request.getAcceptedVersions().isEmpty())
+        {
+            if (request.getVersion() != null)
+                dom.setAttributeValue(rootElt, "version", request.getVersion());
+        }
+        else
+        {
+            for (String version: request.getAcceptedVersions())
+                dom.setElementValue(rootElt, "+AcceptVersions", version);
+        }
+		
 		if (request.getSection() != null)
-			dom.setElementValue(rootElt, "section", request.getSection());
+			dom.setElementValue(rootElt, "Sections", request.getSection());
 		
 		return rootElt;
 	}
