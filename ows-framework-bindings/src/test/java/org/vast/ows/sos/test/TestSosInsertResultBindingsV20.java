@@ -76,7 +76,7 @@ public class TestSosInsertResultBindingsV20 extends OWSTestCase
     
     public void testReadXmlInsertResult() throws Exception
     {
-        InsertResultRequest request = readXmlInsertResult("examples_v20/resultHandling/InsertResult1_SOAP.xml", "examples_v20/resultHandling/InsertResultTemplate1.xml");
+        InsertResultRequest request = readXmlInsertResult("examples_v20/resultHandling/InsertResult1.xml", "examples_v20/resultHandling/InsertResultTemplate1.xml");
         assertEquals(OWSUtils.SOS, request.getService());
         assertEquals("2.0.0", request.getVersion());
         assertEquals("InsertResult", request.getOperation());
@@ -94,7 +94,7 @@ public class TestSosInsertResultBindingsV20 extends OWSTestCase
     
     public void testReadXmlInsertResultTemplate() throws Exception
     {
-        InsertResultTemplateRequest request = (InsertResultTemplateRequest)readXmlRequest("examples_v20/resultHandling/InsertResultTemplate1_SOAP.xml");
+        InsertResultTemplateRequest request = (InsertResultTemplateRequest)readXmlRequest("examples_v20/resultHandling/InsertResultTemplate1.xml");
         assertEquals(OWSUtils.SOS, request.getService());
         assertEquals("2.0.0", request.getVersion());
         assertEquals("InsertResultTemplate", request.getOperation());
