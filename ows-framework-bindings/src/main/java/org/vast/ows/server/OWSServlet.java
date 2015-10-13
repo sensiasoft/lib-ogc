@@ -47,6 +47,7 @@ import org.vast.ows.OWSUtils;
 import org.vast.ows.util.PostRequestFilter;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
+import org.w3c.dom.Element;
 
 
 /**
@@ -63,7 +64,7 @@ public abstract class OWSServlet extends HttpServlet
     protected static final String invalidKVPRequestMsg = "Invalid KVP request. Please check your syntax";
     protected static final String invalidXMLRequestMsg = "Invalid XML request. Please check your syntax";
     protected static final String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
-    
+        
     private static Logger log = LoggerFactory.getLogger(OWSServlet.class);
     protected String owsVersion = "1.0";
     protected OWSUtils owsUtils = new OWSUtils();
@@ -184,7 +185,11 @@ public abstract class OWSServlet extends HttpServlet
             try
             {
                 resp.setContentType(OWSUtils.XML_MIME_TYPE);
-                String version = (request != null) ? request.getVersion() : getDefaultVersion();
+                String version = null;
+                if (request != null)
+                    version = request.getVersion();
+                if (version == null)
+                    version = getDefaultVersion();
                 owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), getServiceType(), version, e);
                 log.trace(e.getMessage(), e);
             }
@@ -237,7 +242,19 @@ public abstract class OWSServlet extends HttpServlet
                 InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
                 DOMHelper dom = new DOMHelper(xmlRequest, false);
                 //dom.serialize(dom.getBaseElement(), System.out, true);
-                return owsUtils.readXMLQuery(dom, dom.getBaseElement());
+                Element requestElt = dom.getBaseElement();
+                
+                // detect and skip SOAP envelope if present
+                String soapVersion = getSoapVersion(dom);
+                if (soapVersion != null)
+                    requestElt = getSoapBody(dom);
+                                
+                // parse request
+                OWSRequest owsRequest = owsUtils.readXMLQuery(dom, requestElt);
+                if (soapVersion != null)
+                    owsRequest.setSoapVersion(soapVersion);
+                
+                return owsRequest;
             }
             else
             {
@@ -289,11 +306,31 @@ public abstract class OWSServlet extends HttpServlet
     }
     
     
+    protected String getSoapVersion(DOMHelper dom)
+    {
+        Element requestElt = dom.getBaseElement();
+        String nsUri = requestElt.getNamespaceURI();        
+        if (nsUri.equals(OWSUtils.SOAP11_URI) || nsUri.equals(OWSUtils.SOAP12_URI))
+            return nsUri;
+        return null;
+    }
+    
+    
+    protected Element getSoapBody(DOMHelper dom) throws IOException
+    {
+        Element requestElt = dom.getBaseElement();
+        requestElt = dom.getElement(requestElt, "Body/*");
+        if (requestElt == null)
+            throw new IOException("No request in SOAP body");        
+        return requestElt;
+    }
+    
+    
     protected void sendResponse(OWSRequest request, OWSResponse resp) throws OWSException, IOException
     {
         // write response to response stream
         OutputStream os = new BufferedOutputStream(request.getResponseStream());
-        owsUtils.writeXMLResponse(os, resp, request.getVersion());
+        owsUtils.writeXMLResponse(os, resp, request.getVersion(), request.getSoapVersion());        
         os.flush();
     }
     

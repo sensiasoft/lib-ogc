@@ -70,11 +70,12 @@ public class OWSUtils extends OWSCommonUtils
 	public final static String WPS = "WPS";	
 	public final static String SLD = "SLD";
     
-	public final static String soap11Uri = "http://schemas.xmlsoap.org/soap/envelope/";
-	public final static String soap12Uri = "http://www.w3.org/2003/05/soap-envelope";
 	public final static String unsupportedSpec = "No support for ";
     public final static String invalidEndpoint = "No Endpoint URL specified in request object";
     public final static String ioError = "IO Error while sending request: ";
+    
+    public final static String SOAP11_URI = "http://schemas.xmlsoap.org/soap/envelope/";
+    public final static String SOAP12_URI = "http://www.w3.org/2003/05/soap-envelope";
     
     OWSCommonUtils dataTypeUtils = new OWSCommonUtils();
     
@@ -103,16 +104,6 @@ public class OWSUtils extends OWSCommonUtils
     }
     
     
-    public Element skipSoapEnvelope(DOMHelper dom, Element requestElt)
-    {
-        // skip SOAP envelope if present
-        if (requestElt.getNamespaceURI().equals(soap12Uri))
-            requestElt = dom.getElement(requestElt, "Body/*");
-        
-        return requestElt;
-    }
-    
-    
     /**
      * Helper method to parse any OWS query from an XML/DOM tree
      * @param dom DOM helper instance that will be used to parse the DOM tree
@@ -124,9 +115,7 @@ public class OWSUtils extends OWSCommonUtils
      */
     public OWSRequest readXMLQuery(DOMHelper dom, Element requestElt, String serviceType, String defaultVersion) throws OWSException
     {
-        requestElt = skipSoapEnvelope(dom, requestElt);
-        
-    	// read common params and check that they're present
+        // read common params and check that they're present
         OWSRequest request = new OWSRequest();
         request.setVersion(defaultVersion);
     	AbstractRequestReader.readCommonXML(dom, requestElt, request);
@@ -138,7 +127,7 @@ public class OWSUtils extends OWSCommonUtils
         try
         {
             OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(request.service, request.operation, request.version);
-            request = reader.readXMLQuery(dom, requestElt);            
+            request = reader.readXMLQuery(dom, requestElt);
             return request;
         }
         catch (IllegalStateException e)
@@ -413,10 +402,6 @@ public class OWSUtils extends OWSCommonUtils
      */
     public OWSResponse readXMLResponse(DOMHelper dom, Element responseElt, String serviceType, String responseType, String version) throws OWSException
     {
-        // skip SOAP envelope if present
-        if (responseElt.getNamespaceURI().equals(soap12Uri))
-            responseElt = dom.getElement(responseElt, "Body/*");
-        
         // this will throw an exception if the response contains one 
         // instead of the actual response message
         OWSExceptionReader.checkException(dom, responseElt);
@@ -514,16 +499,7 @@ public class OWSUtils extends OWSCommonUtils
      */
     public void writeXMLResponse(OutputStream os, OWSResponse response, String version) throws OWSException
     {
-    	try
-        {
-            DOMHelper dom = new DOMHelper();
-            Element responseElt = buildXMLResponse(dom, response, version);
-            dom.serialize(responseElt, os, true);
-        }
-        catch (IOException e)
-        {
-            throw new OWSException(AbstractResponseWriter.ioError, e);
-        }        
+    	writeXMLResponse(os, response, version, null);      
     }
     
     
@@ -537,6 +513,44 @@ public class OWSUtils extends OWSCommonUtils
     public void writeXMLResponse(OutputStream os, OWSResponse response) throws OWSException
     {
     	writeXMLResponse(os, response, response.getVersion());
+    }
+    
+    
+    /**
+     * Helper method to write any OWS XML response directly to an output stream
+     * @param os output stream to write to
+     * @param response OWS response object
+     * @param version version of writer to use
+     * @param soapVersion version of SOAP used to wrap the response ({@link #SOAP11_URI} or {@link #SOAP12_URI}).
+     *                    If null, response is sent as-is without envelope
+     * @throws OWSException 
+     */
+    public void writeXMLResponse(OutputStream os, OWSResponse response, String version, String soapVersion) throws OWSException
+    {
+        try
+        {
+            DOMHelper dom = new DOMHelper();
+            Element responseElt = buildXMLResponse(dom, response, version);
+            
+            // wrap with SOAP envelope if requested
+            if (soapVersion != null)
+            {
+                dom.addUserPrefix("soap", soapVersion);
+                
+                Element bodyElt = dom.createElement("soap:Body");
+                bodyElt.appendChild(responseElt);
+                
+                Element envElt = dom.createElement("soap:Envelope");
+                envElt.appendChild(bodyElt);
+                responseElt = envElt;
+            }            
+            
+            dom.serialize(responseElt, os, true);
+        }
+        catch (IOException e)
+        {
+            throw new OWSException(AbstractResponseWriter.ioError, e);
+        }        
     }
     
     
@@ -773,9 +787,14 @@ public class OWSUtils extends OWSCommonUtils
             connection.setRequestProperty("SOAPAction", request.getOperation());
             PrintStream out = new PrintStream(connection.getOutputStream());
             
+            // determine SOAP version/namespace
+            String soapUri = request.getSoapVersion();
+            if (soapUri == null)
+                soapUri = OWSUtils.SOAP12_URI;
+            
             // send post data
             DOMHelper dom = new DOMHelper();
-            dom.addUserPrefix("soap", soap11Uri);
+            dom.addUserPrefix("soap", soapUri);
             Element envElt = dom.createElement("soap:Envelope");		
 			Element bodyElt = dom.addElement(envElt, "soap:Body");
 			Element reqElt = buildXMLQuery(dom, request);

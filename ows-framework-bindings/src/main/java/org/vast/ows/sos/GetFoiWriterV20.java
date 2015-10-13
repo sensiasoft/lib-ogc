@@ -120,7 +120,7 @@ public class GetFoiWriterV20 extends SWERequestWriter<GetFeatureOfInterestReques
 		fesUtils.resetIdCounters();
 		
 		// root element
-		Element rootElt = dom.createElement("sos:GetObservation");
+		Element rootElt = dom.createElement("sos:GetFeatureOfInterest");
 		addCommonXML(dom, rootElt, request);
 		
 		// procedures

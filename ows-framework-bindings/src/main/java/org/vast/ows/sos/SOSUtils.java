@@ -45,8 +45,6 @@ public class SOSUtils extends OWSUtils
     
     public OWSRequest readSweEncodedRequest(DOMHelper dom, Element requestElt, DataComponent structure, DataEncoding encoding) throws OWSException
     {
-        requestElt = skipSoapEnvelope(dom, requestElt);
-        
         // read common params and check that they're present
         OWSRequest request = new OWSRequest();        
         AbstractRequestReader.readCommonXML(dom, requestElt, request);

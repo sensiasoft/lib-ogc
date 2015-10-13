@@ -51,6 +51,7 @@ public class OWSRequest
 	protected String operation;
     protected String exceptionType;
     protected Map<QName, Object> extensions;
+    protected String soapVersion;
     
 	
     public OWSRequest()
@@ -214,4 +215,16 @@ public class OWSRequest
 	{
 		this.httpResponse = httpResponse;
 	}
+
+
+    public String getSoapVersion()
+    {
+        return soapVersion;
+    }
+
+
+    public void setSoapVersion(String soapVersion)
+    {
+        this.soapVersion = soapVersion;
+    }    
 }
