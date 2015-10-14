@@ -20,7 +20,6 @@
 
 package org.vast.ows.sos;
 
-import java.io.OutputStream;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.server.OWSServlet;
@@ -145,19 +144,6 @@ public abstract class SOSServlet extends OWSServlet
 	protected void handleRequest(InsertResultRequest request) throws Exception
     {
 	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
-    }
-	
-	
-	/**
-     * This method inits the data stream by setting correct MIME type and writing necessary header info
-     * Sub-classes can override this method to use specific wrapper formats (e.g. video containers such as MP4)
-     * @param request
-     * @param resultEncoding
-     * @param os
-     */
-    protected boolean writeCustomFormatStream(GetResultRequest request, ISOSDataProvider dataProvider, OutputStream os) throws Exception
-    {
-        return false;
     }
 	
 	
