@@ -34,6 +34,8 @@ import org.vast.ows.OWSException;
 public class SOSException extends OWSException
 {
 	static final long serialVersionUID = 0x59DB55493721FA3CL;
+	
+	public static final String response_too_big_code = "ResponseExceedsSizeLimit";
 		
 	
 	public SOSException(String message)
