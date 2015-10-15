@@ -27,7 +27,6 @@ import java.util.Map.Entry;
 import org.vast.util.Bbox;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.w3c.dom.*;
 import org.vast.ows.*;
 
@@ -160,7 +159,7 @@ public class GetMapReaderV10 extends AbstractRequestReader<GetMapRequest>
 				{
 				    if (argValue == null)
 				    	argValue = "";
-					request.getExtensions().put(new QName(argName), argValue);
+				    addKVPExtension(argName, argValue, request);
 				}
 			}
 			catch (Exception e)

@@ -25,8 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.namespace.QName;
 import org.vast.ogc.OGCRegistry;
-import org.vast.xml.QName;
 
 
 /**

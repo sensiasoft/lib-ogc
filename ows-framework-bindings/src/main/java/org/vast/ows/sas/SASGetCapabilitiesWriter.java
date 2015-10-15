@@ -27,7 +27,6 @@ import org.vast.ows.AbstractRequestWriter;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 
 
 /**
@@ -62,7 +61,7 @@ public class SASGetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilit
 	public Element buildXMLQuery(DOMHelper dom, GetCapabilitiesRequest request) throws OWSException
 	{
 		String nsUri = OGCRegistry.getNamespaceURI(request.getService(), request.getVersion());
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, nsUri);
+		dom.addUserPrefix(DOMHelper.DEFAULT_PREFIX, nsUri);
 		
 		Element rootElt = dom.createElement(request.getOperation());
 		dom.setAttributeValue(rootElt, "version", request.getVersion());

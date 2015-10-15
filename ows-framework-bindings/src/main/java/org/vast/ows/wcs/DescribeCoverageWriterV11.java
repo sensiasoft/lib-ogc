@@ -26,7 +26,6 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 
 
 /**
@@ -70,7 +69,7 @@ public class DescribeCoverageWriterV11 extends AbstractRequestWriter<DescribeCov
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, DescribeCoverageRequest request) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, request.getVersion()));
+		dom.addUserPrefix(DOMHelper.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, request.getVersion()));
 				
 		// root element
 		Element rootElt = dom.createElement("DescribeCoverage");

@@ -21,8 +21,8 @@
 package org.vast.ows.swe;
 
 import java.util.Map;
+import javax.xml.namespace.QName;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.vast.ows.AbstractRequestReader;
 import org.vast.ows.OWSRequest;
 import org.w3c.dom.Element;

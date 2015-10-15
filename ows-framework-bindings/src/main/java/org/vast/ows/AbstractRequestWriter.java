@@ -26,9 +26,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.xml.namespace.QName;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.TimeExtent;
@@ -263,7 +263,7 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
     {
     	for (Entry<QName, Object> extension : request.getExtensions().entrySet())
         {
-            String paramName = extension.getKey().getLocalName();
+            String paramName = extension.getKey().getLocalPart();
             Object extValue = extension.getValue();
             String paramValue = getExtensionKvpValue(extValue);
             
@@ -287,7 +287,7 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
     {
         for (Entry<QName, Object> extension : request.getExtensions().entrySet())
         {
-            String paramName = extension.getKey().getLocalName();
+            String paramName = extension.getKey().getLocalPart();
             Object extValue = extension.getValue();
             String paramValue = getExtensionKvpValue(extValue);
             

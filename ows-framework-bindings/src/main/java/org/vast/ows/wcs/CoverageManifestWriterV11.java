@@ -30,7 +30,6 @@ import org.vast.ows.OWSCommonWriterV11;
 import org.vast.ows.OWSUtils;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 
 
 /**
@@ -50,7 +49,7 @@ public class CoverageManifestWriterV11 extends AbstractResponseWriter<CoverageMa
 	public Element buildXMLResponse(DOMHelper dom, CoverageManifest manifest, String version) throws OWSException
 	{
 		// setup ns and create root elt
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, version));
+		dom.addUserPrefix(DOMHelper.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, version));
 		dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
 		
 		// root element

@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.vast.ows.*;
@@ -75,7 +74,7 @@ public class GetResultTemplateReaderV20 extends SWERequestReader<GetResultTempla
             {
                 if (argValue == null)
                     argValue = "";
-                request.getExtensions().put(new QName(argName), argValue);
+                addKVPExtension(argName, argValue, request);
             }
 		}
 

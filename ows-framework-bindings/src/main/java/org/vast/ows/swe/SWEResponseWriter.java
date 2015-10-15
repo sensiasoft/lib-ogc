@@ -21,9 +21,9 @@
 package org.vast.ows.swe;
 
 import java.util.Map;
+import javax.xml.namespace.QName;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.vast.ows.AbstractResponseWriter;
 import org.vast.ows.OWSResponse;
 

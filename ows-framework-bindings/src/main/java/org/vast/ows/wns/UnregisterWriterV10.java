@@ -26,7 +26,6 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 
 
 /**
@@ -51,7 +50,7 @@ public class UnregisterWriterV10 extends AbstractRequestWriter<UnregisterRequest
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, UnregisterRequest request) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WNS));
+		dom.addUserPrefix(DOMHelper.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WNS));
 		
 		// root element
 		Element rootElt = dom.createElement("Unregister");

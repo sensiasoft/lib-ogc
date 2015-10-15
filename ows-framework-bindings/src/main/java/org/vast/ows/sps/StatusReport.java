@@ -29,9 +29,9 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+import javax.xml.namespace.QName;
 import org.vast.swe.SWEData;
 import org.vast.util.DateTime;
-import org.vast.xml.QName;
 import org.w3c.dom.Element;
 
 

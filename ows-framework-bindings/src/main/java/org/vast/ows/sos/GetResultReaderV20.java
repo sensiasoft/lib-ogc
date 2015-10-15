@@ -20,7 +20,6 @@ import java.util.Map.Entry;
 import net.opengis.fes.v20.BinarySpatialOp;
 import net.opengis.fes.v20.BinaryTemporalOp;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.vast.ows.*;
@@ -136,7 +135,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
             {
                 if (argValue == null)
                     argValue = "";
-                request.getExtensions().put(new QName(argName), argValue);
+                addKVPExtension(argName, argValue, request);
             }
 		}
 

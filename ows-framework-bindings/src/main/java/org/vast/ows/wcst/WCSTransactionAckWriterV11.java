@@ -23,7 +23,6 @@
 package org.vast.ows.wcst;
 
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.w3c.dom.*;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
@@ -46,7 +45,7 @@ public class WCSTransactionAckWriterV11 extends AbstractResponseWriter<WCSTransa
 	public Element buildXMLResponse(DOMHelper dom, WCSTransactionAck response, String version) throws OWSException
 	{
 		WCSTransactionRequest request = response.getRequest();
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, request.getVersion()));
+		dom.addUserPrefix(DOMHelper.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, request.getVersion()));
 		
 		// root element
 		Element rootElt = dom.createElement("Acknowledgement");

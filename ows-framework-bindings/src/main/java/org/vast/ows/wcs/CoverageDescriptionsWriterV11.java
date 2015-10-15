@@ -31,7 +31,6 @@ import org.vast.ows.OWSUtils;
 import org.w3c.dom.*;
 import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 
 
 /**
@@ -51,7 +50,7 @@ public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<Covera
 	public Element buildXMLResponse(DOMHelper dom, CoverageDescriptions response, String version) throws OWSException
 	{
 		// setup ns and create root elt
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, version));
+		dom.addUserPrefix(DOMHelper.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, version));
 		Element rootElt = dom.createElement("CoverageDescriptions");
 
 		// add all coverage descriptions

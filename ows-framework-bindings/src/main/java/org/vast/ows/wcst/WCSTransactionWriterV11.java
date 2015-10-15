@@ -23,7 +23,6 @@
 package org.vast.ows.wcst;
 
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.w3c.dom.*;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
@@ -54,7 +53,7 @@ public class WCSTransactionWriterV11 extends AbstractRequestWriter<WCSTransactio
 	@Override
 	public Element buildXMLQuery(DOMHelper dom, WCSTransactionRequest request) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, request.getVersion()));
+		dom.addUserPrefix(DOMHelper.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WCS, request.getVersion()));
 		
 		// root element
 		Element rootElt = dom.createElement("Transaction");

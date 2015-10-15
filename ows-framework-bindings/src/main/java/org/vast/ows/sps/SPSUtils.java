@@ -26,6 +26,7 @@
 package org.vast.ows.sps;
 
 import java.util.Map;
+import javax.xml.namespace.QName;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.AbstractRequestReader;
@@ -37,7 +38,6 @@ import org.vast.ows.OWSUtils;
 import org.vast.ows.SweEncodedMessageProcessor;
 import org.vast.ows.swe.SWESUtils;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.w3c.dom.Element;
 
 

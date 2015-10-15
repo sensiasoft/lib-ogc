@@ -24,11 +24,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.xml.namespace.QName;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSUtils;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -81,12 +81,12 @@ public class SWESUtils
         	}
 			else if (extValue instanceof String || extValue instanceof Number || extValue instanceof Boolean)
 	        {
-			    extContent = dom.getDocument().createElementNS(extName.getNsUri(), extName.getLocalName());
+			    extContent = dom.getDocument().createElementNS(extName.getNamespaceURI(), extName.getLocalPart());
 			    dom.setElementValue(extContent, extValue.toString());
 	        }
 	        else if (extValue instanceof Date)
 	        {
-	            extContent = dom.getDocument().createElementNS(extName.getNsUri(), extName.getLocalName());
+	            extContent = dom.getDocument().createElementNS(extName.getNamespaceURI(), extName.getLocalPart());
 	            dom.setElementValue(extContent, new DateTimeFormat().formatIso(((Date)extValue).getTime() / 1000.0, 0));
 	        }
 			

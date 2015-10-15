@@ -22,9 +22,9 @@ package org.vast.ows;
 
 import java.io.*;
 import java.util.Map;
+import javax.xml.namespace.QName;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
-import org.vast.xml.QName;
 import org.w3c.dom.Element;
 
 

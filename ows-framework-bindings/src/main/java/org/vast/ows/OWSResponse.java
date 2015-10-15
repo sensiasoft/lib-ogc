@@ -22,8 +22,8 @@ package org.vast.ows;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.namespace.QName;
 import org.vast.ogc.OGCRegistry;
-import org.vast.xml.QName;
 
 
 /**

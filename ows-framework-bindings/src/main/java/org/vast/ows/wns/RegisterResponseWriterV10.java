@@ -26,7 +26,6 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ows.*;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 
 
 /**
@@ -44,7 +43,7 @@ public class RegisterResponseWriterV10 extends AbstractResponseWriter<RegisterRe
 	@Override
 	public Element buildXMLResponse(DOMHelper dom, RegisterResponse response, String version) throws OWSException
 	{
-		dom.addUserPrefix(QName.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WNS));
+		dom.addUserPrefix(DOMHelper.DEFAULT_PREFIX, OGCRegistry.getNamespaceURI(OWSUtils.WNS));
 		
 		// root element
 		Element respElt = dom.createElement("RegisterResponse");

@@ -23,6 +23,7 @@ package org.vast.ows.sps;
 
 import java.io.IOException;
 import java.util.Map;
+import javax.xml.namespace.QName;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ows.OWSException;
@@ -35,7 +36,6 @@ import org.vast.swe.SWEData;
 import org.vast.util.DateTime;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
 

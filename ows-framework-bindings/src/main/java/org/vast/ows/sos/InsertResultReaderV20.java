@@ -21,7 +21,6 @@ import java.util.Map.Entry;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.vast.ows.*;
 import org.vast.ows.swe.SWERequestReader;
@@ -83,7 +82,7 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
             {
                 if (argValue == null)
                     argValue = "";
-                request.getExtensions().put(new QName(argName), argValue);
+                addKVPExtension(argName, argValue, request);
             }
         }        
         

@@ -23,8 +23,8 @@ Contributor(s):
 package org.vast.ows.sps;
 
 import java.util.Map;
+import javax.xml.namespace.QName;
 import org.vast.swe.SWEData;
-import org.vast.xml.QName;
 import org.w3c.dom.Element;
 
 

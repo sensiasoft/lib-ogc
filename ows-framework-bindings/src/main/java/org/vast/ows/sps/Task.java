@@ -26,7 +26,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.vast.xml.QName;
+import javax.xml.namespace.QName;
 import org.w3c.dom.Element;
 
 
