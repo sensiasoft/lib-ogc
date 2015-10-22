@@ -52,7 +52,7 @@ public class OWSExceptionWriter
 		if (e instanceof OWSExceptionReport)
 		{
 			OWSExceptionReport report = (OWSExceptionReport)e;
-						
+			
 			// use right namespace depending on version
 			String version = report.getVersion();
 			if (version == null || version.equals(OWSException.VERSION_10))
@@ -83,6 +83,34 @@ public class OWSExceptionWriter
 					dom.setElementValue(excElt, "ows:ExceptionText", text);
 			}
 			
+			// wrap with SOAP envelope if requested
+			OWSException firstExc = report.getExceptionList().get(0);
+			String soapVersion = e.getSoapVersion();
+            if (OWSUtils.SOAP11_URI.equals(soapVersion))
+            {
+                dom.addUserPrefix("soap", soapVersion);
+                Element envElt = dom.createElement("soap:Envelope");
+                Element faultElt =  dom.addElement(envElt, "soap:Body/soap:Fault");
+                dom.setElementValue(faultElt, "soap:faultcode", firstExc.getCode());
+                dom.setElementValue(faultElt, "soap:faultstring", firstExc.getMessage());
+                dom.setElementValue(faultElt, "soap:faultactor", "soap:Client");
+                Element detailElt = dom.addElement(faultElt,"soap:detail");
+                detailElt.appendChild(reportElt.getFirstChild());
+                reportElt = envElt;
+            }
+            else if (OWSUtils.SOAP12_URI.equals(soapVersion))
+            {
+                dom.addUserPrefix("soap", soapVersion);
+                Element envElt = dom.createElement("soap:Envelope");
+                Element faultElt =  dom.addElement(envElt, "soap:Body/soap:Fault");
+                dom.setElementValue(faultElt, "soap:Code/soap:Value", "soap:Sender");
+                dom.setElementValue(faultElt, "soap:Code/soap:Subcode/soap:Value", firstExc.getCode());
+                dom.setElementValue(faultElt, "soap:Reason/soap:Text", firstExc.getMessage());
+                Element detailElt = dom.addElement(faultElt,"soap:Detail");
+                detailElt.appendChild(reportElt.getFirstChild());
+                reportElt = envElt;
+            }
+			
 			return reportElt;
 		}
 		else
@@ -97,14 +125,14 @@ public class OWSExceptionWriter
 	 */
 	public void writeException(OutputStream os, OWSException e)
 	{
-		try
-		{
-			Element reportElt = (new OWSExceptionWriter()).buildXML(e);
-			dom.serialize(reportElt, os, true);
-		}
-		catch (IOException e1)
-		{
-			e1.printStackTrace();
-		}
-	}
+	    try
+        {
+            Element reportElt = buildXML(e);
+            dom.serialize(reportElt, os, true);
+        }
+        catch (IOException e1)
+        {
+            e1.printStackTrace();
+        }
+	}	
 }

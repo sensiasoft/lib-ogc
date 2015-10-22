@@ -61,6 +61,7 @@ public class OWSExceptionReport extends OWSException
 	{
 		this();
 		version = e.version;
+		soapVersion = e.soapVersion;
 		exceptionList.add(e);
 	}
 	

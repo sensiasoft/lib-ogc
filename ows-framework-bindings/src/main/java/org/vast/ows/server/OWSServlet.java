@@ -155,6 +155,7 @@ public abstract class OWSServlet extends HttpServlet
         //  get actual request URL
         String requestURL = req.getRequestURL().toString();
         OWSRequest request = null;
+        String soapVersion = null;
         
         try
         {
@@ -163,6 +164,8 @@ public abstract class OWSServlet extends HttpServlet
             
             if (request != null)
             {
+                soapVersion = request.getSoapVersion();
+                
                 // set default mime type 
                 resp.setContentType(OWSUtils.XML_MIME_TYPE);
                 
@@ -190,6 +193,7 @@ public abstract class OWSServlet extends HttpServlet
                     version = request.getVersion();
                 if (version == null)
                     version = getDefaultVersion();
+                e.setSoapVersion(soapVersion);
                 owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), getServiceType(), version, e);
                 log.trace(e.getMessage(), e);
             }
@@ -235,6 +239,8 @@ public abstract class OWSServlet extends HttpServlet
      */
     protected OWSRequest parseRequest(HttpServletRequest req, HttpServletResponse resp, boolean isXmlRequest) throws Exception
     {
+        String soapVersion = null;
+        
         try
         {
             if (isXmlRequest)
@@ -245,7 +251,7 @@ public abstract class OWSServlet extends HttpServlet
                 Element requestElt = dom.getBaseElement();
                 
                 // detect and skip SOAP envelope if present
-                String soapVersion = getSoapVersion(dom);
+                soapVersion = getSoapVersion(dom);
                 if (soapVersion != null)
                     requestElt = getSoapBody(dom);
                                 
@@ -294,6 +300,7 @@ public abstract class OWSServlet extends HttpServlet
                 String version = req.getParameter("version");
                 if (version == null)
                     version = getDefaultVersion();
+                e.setSoapVersion(soapVersion);
                 owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), getServiceType(), version, e);
                 log.trace(e.getMessage(), e);
             }

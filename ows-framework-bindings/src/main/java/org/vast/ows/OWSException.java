@@ -54,6 +54,7 @@ public class OWSException extends Exception
 	protected String locator;
 	protected String badValue;
 	protected String version;
+	protected String soapVersion;
 	
 	
 	public OWSException(String message)
@@ -152,7 +153,19 @@ public class OWSException extends Exception
 	}
 	
 	
-	@Override
+	public String getSoapVersion()
+    {
+        return soapVersion;
+    }
+
+
+    public void setSoapVersion(String soapVersion)
+    {
+        this.soapVersion = soapVersion;
+    }
+
+
+    @Override
 	public String getMessage()
 	{
 		String message = super.getMessage();
