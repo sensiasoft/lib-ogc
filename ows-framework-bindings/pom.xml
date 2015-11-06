@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.vast.opengis</groupId>
     <artifactId>ows-framework-all</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <relativePath>../ows-framework-all/pom.xml</relativePath>
   </parent>
   <artifactId>ows-framework-bindings</artifactId>
