@@ -77,8 +77,11 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         try
         {
             Element obsElt = dom.getElement(templateElt, "observationTemplate/*");
-            IObservation obs = obsReader.read(dom, obsElt);
-            request.setObservationTemplate(obs);
+            if (obsElt != null)
+            {
+                IObservation obs = obsReader.read(dom, obsElt);
+                request.setObservationTemplate(obs);
+            }
         }
         catch (XMLReaderException e)
         {
@@ -136,8 +139,8 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
             report.add(new OWSException(OWSException.missing_param_code, "offering"));
         
         // need observation
-        if (request.getObservationTemplate() == null)
-            report.add(new OWSException(OWSException.missing_param_code, "observationTemplate"));
+        //if (request.getObservationTemplate() == null)
+        //    report.add(new OWSException(OWSException.missing_param_code, "observationTemplate"));
         
         // need result structure
         if (request.getResultStructure() == null)

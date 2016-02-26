@@ -317,7 +317,7 @@ public abstract class OWSServlet extends HttpServlet
     {
         Element requestElt = dom.getBaseElement();
         String nsUri = requestElt.getNamespaceURI();        
-        if (nsUri.equals(OWSUtils.SOAP11_URI) || nsUri.equals(OWSUtils.SOAP12_URI))
+        if (OWSUtils.SOAP11_URI.equals(nsUri) || OWSUtils.SOAP12_URI.equals(nsUri))
             return nsUri;
         return null;
     }

@@ -46,7 +46,7 @@ public class PostRequestFilter extends FilterInputStream
 				in.mark(1);
 				val = (char)in.read();
 			}
-			while(val != '<');
+			while (val != '<' && val != -1);
 			
 			in.reset();
 		}
