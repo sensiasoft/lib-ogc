@@ -129,6 +129,12 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
                     throw new SOSException(SOSException.invalid_param_code, "xmlWrapper", argValue, null);
                 }
             }
+			
+			// format argument
+            else if (argName.equalsIgnoreCase("responseFormat"))
+            {
+                request.setFormat(argValue);
+            }
 
 			// vendor parameters
             else
@@ -203,6 +209,10 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
         {
             throw new SOSException(SOSException.invalid_param_code, "spatialFilter", null, null);
         }
+        
+        // response format
+        String resFormat = dom.getElementValue(requestElt, "responseFormat");
+        request.setFormat(resFormat);
 
         this.checkParameters(request, report);
         return request;
