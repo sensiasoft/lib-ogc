@@ -67,10 +67,6 @@
    <sos:contents>
       <sos:Contents>
          <swes:procedureDescriptionFormat>http://www.opengis.net/sensorML/1.0.1</swes:procedureDescriptionFormat>
-         <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[NH3]</swes:observableProperty>
-         <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[CO]</swes:observableProperty>
-         <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[H2S]</swes:observableProperty>
-         <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[SO2]</swes:observableProperty>
          <!-- ... -->
          <!-- relatedFeature for discovery purposes. Not the sampling features!! sampling features are queried via GetFeatureOfInterest -->
          <!-- The country within which the measurements were taken -->
@@ -111,7 +107,6 @@
                <swes:identifier>http://myServer.org/offerings/Observations_of_sensor_system_AQ_0001</swes:identifier>
                <swes:name>Offering of AQ 0001</swes:name>
                <swes:procedure>http://myServer.org/sensors/AQ_0001</swes:procedure>
-               <!-- This sensor station only measures NH3 and CO. Hence, we override the inherited observable properties here. -->
                <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[NH3]</swes:observableProperty>
                <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[CO]</swes:observableProperty>
                <sos:observedArea>
@@ -134,7 +129,10 @@
                <swes:identifier>http://myServer.org/offerings/Observations_of_sensor_system_AQ_0002</swes:identifier>
                <swes:name>Offering of AQ 0002</swes:name>
                <swes:procedure>http://myServer.org/sensors/AQ_0002</swes:procedure>
-               <!-- This sensor station measures all observable properties defined in the Contents section. Hence, we do not have to specify them here. -->
+               <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[NH3]</swes:observableProperty>
+               <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[CO]</swes:observableProperty>
+               <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[H2S]</swes:observableProperty>
+               <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[SO2]</swes:observableProperty>
                <sos:observedArea>
                   <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326" srsDimension="2">
                      <gml:lowerCorner>51.7167 6.86667</gml:lowerCorner>
@@ -155,7 +153,6 @@
                <swes:identifier>http://myServer.org/offerings/Observations_of_sensor_system_AQ_0003</swes:identifier>
                <swes:name>Offering of AQ 0003</swes:name>
                <swes:procedure>http://myServer.org/sensors/AQ_0003</swes:procedure>
-               <!-- This sensor station only measures H2S. Hence, we override the inherited observable properties here. -->
                <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[H2S]</swes:observableProperty>
                <sos:observedArea>
                   <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326" srsDimension="2">
@@ -177,7 +174,10 @@
                <swes:identifier>http://myServer.org/offerings/Observations_of_sensor_system_AQ_0004</swes:identifier>
                <swes:name>Offering of AQ 0004</swes:name>
                <swes:procedure>http://myServer.org/sensors/AQ_0004</swes:procedure>
-               <!-- This sensor station measures all observable properties defined in the Contents section. Hence, we do not have to specify them here. -->
+               <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[NH3]</swes:observableProperty>
+               <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[CO]</swes:observableProperty>
+               <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[H2S]</swes:observableProperty>
+               <swes:observableProperty>http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[SO2]</swes:observableProperty>
                <sos:observedArea>
                   <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326" srsDimension="2">
                      <gml:lowerCorner>51.7167 4.86667</gml:lowerCorner>

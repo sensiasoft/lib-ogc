@@ -161,6 +161,10 @@ public abstract class SWESCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
 	    }
 	    */
 	    
+	    // if there is only one offering, don't use the common section
+	    if (caps.getLayers().size() <= 1)
+	        return Collections.EMPTY_SET;
+	    
 	    // keep set if common to all offerings
 	    Set<String> firstSet = null;
 	    for (OWSLayerCapabilities layerCaps: caps.getLayers())
