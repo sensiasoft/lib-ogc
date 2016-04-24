@@ -25,11 +25,8 @@
 
 package org.vast.ows.swe;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Set;
 import org.vast.ows.OWSCapabilitiesWriterV11;
 import org.vast.ows.OWSException;
@@ -113,11 +110,12 @@ public abstract class SWESCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
 	
 	
 	/*
-	 * Extracts largest set common to the maximum of offerings
+	 * Extracts token sets common to all offerings
 	 */
 	protected Collection<String> getCommonListEntries(OWSServiceCapabilities caps, String getListMethodName)
 	{
-	    // collect all offering sets
+	    /*
+        // collect all offering sets
 	    List<Set<String>> offeringSets = new ArrayList<Set<String>>(caps.getLayers().size());
 	    for (OWSLayerCapabilities layerCaps: caps.getLayers())
 	    {
@@ -161,7 +159,24 @@ public abstract class SWESCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
     	        bestSet = refSet;
     	    }
 	    }
+	    */
 	    
-	    return bestSet;
+	    // keep set if common to all offerings
+	    Set<String> firstSet = null;
+	    for (OWSLayerCapabilities layerCaps: caps.getLayers())
+        {
+            try
+            {
+                Set<String> tokenSet = (Set<String>)layerCaps.getClass().getMethod(getListMethodName).invoke(layerCaps);
+                if (firstSet != null && !tokenSet.equals(firstSet))
+                    return Collections.EMPTY_SET;
+                firstSet = tokenSet;
+            }
+            catch (Exception e)
+            {
+            }
+        }
+	    
+	    return firstSet;
 	}
 }
