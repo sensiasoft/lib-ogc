@@ -63,7 +63,7 @@ public class FESRequestUtils
     public static BinaryTemporalOp timeExtentToFilter(TimeExtent timeExtent)
     {
         BinaryTemporalOp temporalFilter;
-        AbstractTimeGeometricPrimitive timePrim = gmlUtils.timeExtentToTimePrimitive(timeExtent);
+        AbstractTimeGeometricPrimitive timePrim = gmlUtils.timeExtentToTimePrimitive(timeExtent, false);
                 
         if (timePrim instanceof TimeInstant)
         {

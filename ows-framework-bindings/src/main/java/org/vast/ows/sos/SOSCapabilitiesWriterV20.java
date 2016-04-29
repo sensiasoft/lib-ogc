@@ -139,17 +139,17 @@ public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
                 
                 // phenomenon time
                 TimeExtent timePeriod = offeringCaps.getPhenomenonTime();
-                if (timePeriod != null && !timePeriod.isNull())
+                if (timePeriod != null)
                 {
-                    Element envElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom, timePeriod);
+                    Element envElt = gmlUtils.writeTimeExtentAsTimePeriod(dom, timePeriod);
                     dom.addElement(offeringElt, "sos:phenomenonTime").appendChild(envElt);
                 }
                 
                 // result time
                 timePeriod = offeringCaps.getResultTime();
-                if (timePeriod != null && !timePeriod.isNull())
+                if (timePeriod != null)
                 {
-                    Element envElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom, timePeriod);
+                    Element envElt = gmlUtils.writeTimeExtentAsTimePeriod(dom, timePeriod);
                     dom.addElement(offeringElt, "sos:resultTime").appendChild(envElt);
                 }
                 
