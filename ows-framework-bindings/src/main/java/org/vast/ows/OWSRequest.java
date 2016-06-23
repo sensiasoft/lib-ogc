@@ -52,6 +52,7 @@ public class OWSRequest
     protected String exceptionType;
     protected Map<QName, Object> extensions;
     protected String soapVersion;
+    protected int connectTimeOut = 5000;
     
 	
     public OWSRequest()
@@ -226,5 +227,17 @@ public class OWSRequest
     public void setSoapVersion(String soapVersion)
     {
         this.soapVersion = soapVersion;
+    }
+
+
+    public int getConnectTimeOut()
+    {
+        return connectTimeOut;
+    }
+
+
+    public void setConnectTimeOut(int connectTimeOut)
+    {
+        this.connectTimeOut = connectTimeOut;
     }    
 }

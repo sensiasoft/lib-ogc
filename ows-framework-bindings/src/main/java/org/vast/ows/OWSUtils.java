@@ -626,6 +626,8 @@ public class OWSUtils extends OWSCommonUtils
             requestString = buildURLQuery(request);
             URL url = new URL(requestString);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setConnectTimeout(request.getConnectTimeOut());
+            connection.setReadTimeout(request.getConnectTimeOut());
             connection.connect();
             
             // catch server side exceptions
@@ -672,6 +674,8 @@ public class OWSUtils extends OWSCommonUtils
             
             // initiatlize HTTP connection
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setConnectTimeout(request.getConnectTimeOut());
+            connection.setReadTimeout(request.getConnectTimeOut());
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");

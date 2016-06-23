@@ -44,6 +44,11 @@ public class SOSServiceCapabilities extends OWSServiceCapabilities
     public static String PROFILE_RESULT_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/resultInsertion";
     public static String PROFILE_OMXML = "http://www.opengis.net/spec/OMXML/2.0/conf/observation";
     
+    public static String SWE_ENCODING_TEXT = "http://www.opengis.net/swe/2.0/TextEncoding";
+    public static String SWE_ENCODING_XML = "http://www.opengis.net/swe/2.0/XMLEncoding";
+    public static String SWE_ENCODING_BINARY = "http://www.opengis.net/swe/2.0/BinaryEncoding";
+    public static String SWE_ENCODING_JSON = "http://www.opengis.net/swe/2.0/JSONEncoding";
+    
     SOSInsertionCapabilities insertionCapabilities;
     FilterCapabilities filterCapabilities;
 	
