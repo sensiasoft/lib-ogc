@@ -23,7 +23,6 @@ package org.vast.ows.server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -144,6 +143,25 @@ public abstract class OWSServlet extends HttpServlet
     }
     
     
+    /*
+     * Checks if client was disconnected
+     * This is used so we can ignore exceptions due to interrupted connections
+     */
+    protected boolean isClientDisconnected(HttpServletRequest req, HttpServletResponse resp)
+    {
+        try
+        {
+            resp.flushBuffer();
+        }
+        catch (IOException e)
+        {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    
     /**
      * Process all types of requests
      * @param req
@@ -181,6 +199,8 @@ public abstract class OWSServlet extends HttpServlet
                 // else let specific code handle the request
                 else
                     this.handleRequest(request);
+                
+                resp.getOutputStream().flush();
             }
         }
         catch (OWSException e)
@@ -188,43 +208,43 @@ public abstract class OWSServlet extends HttpServlet
             try
             {
                 resp.setContentType(OWSUtils.XML_MIME_TYPE);
-                String version = null;
-                if (request != null)
-                    version = request.getVersion();
-                if (version == null)
-                    version = getDefaultVersion();
-                e.setSoapVersion(soapVersion);
-                owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), getServiceType(), version, e);
-                log.trace(e.getMessage(), e);
+                
+                if (!isClientDisconnected(req, resp))
+                {
+                    log.trace(e.getMessage(), e);
+                    
+                    String version = null;
+                    if (request != null)
+                        version = request.getVersion();
+                    if (version == null)
+                        version = getDefaultVersion();
+                    e.setSoapVersion(soapVersion);
+                    
+                    owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), getServiceType(), version, e);
+                    resp.getOutputStream().close();
+                }
             }
             catch (IOException e1)
             {
+                log.error("Cannot send OWS exception report to client", e);
             }            
-        }
-        catch (EOFException e)
-        {
-            // do nothing when client close stream
         }
         catch (Exception e)
         {
             try
             {
-                if (!resp.isCommitted())
-                    resp.sendError(500, internalErrorMsg);
-                log.error(internalErrorMsg, e);
+                resp.setStatus(500);
+                
+                if (!isClientDisconnected(req, resp))
+                {
+                    log.error(internalErrorMsg, e);
+                    resp.getOutputStream().print(internalErrorMsg);
+                    resp.getOutputStream().close();
+                }
             }
             catch (IOException e1)
             {
-            }
-        }
-        finally
-        {
-            try
-            {
-                resp.getOutputStream().flush();
-            }
-            catch (IOException e)
-            {
+                log.error("Cannot send HTTP error message to client", e);
             }
         }
     }

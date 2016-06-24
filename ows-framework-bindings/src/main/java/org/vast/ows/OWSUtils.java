@@ -72,7 +72,7 @@ public class OWSUtils extends OWSCommonUtils
     
 	public final static String unsupportedSpec = "No support for ";
     public final static String invalidEndpoint = "No Endpoint URL specified in request object";
-    public final static String ioError = "IO Error while sending request: ";
+    public final static String ioError = "I/O Error while sending request: ";
     
     public final static String SOAP11_URI = "http://schemas.xmlsoap.org/soap/envelope/";
     public final static String SOAP12_URI = "http://www.w3.org/2003/05/soap-envelope";
