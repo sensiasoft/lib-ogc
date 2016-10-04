@@ -229,22 +229,24 @@ public abstract class OWSServlet extends HttpServlet
                 log.error("Cannot send OWS exception report to client", e);
             }            
         }
+        catch (SecurityException e)
+        {
+            try
+            {
+                resp.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+            }
+            catch (IOException e1)
+            {
+            }
+        }
         catch (Exception e)
         {
             try
             {
-                resp.setStatus(500);
-                
-                if (!isClientDisconnected(req, resp))
-                {
-                    log.error(internalErrorMsg, e);
-                    resp.getOutputStream().print(internalErrorMsg);
-                    resp.getOutputStream().close();
-                }
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
             }
             catch (IOException e1)
             {
-                log.error("Cannot send HTTP error message to client", e);
             }
         }
     }
