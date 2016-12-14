@@ -193,36 +193,22 @@ public abstract class OWSServlet extends HttpServlet
         }
         catch (OWSException e)
         {
-            try
+            if (!isClientDisconnected(req, resp))
             {
-                resp.setContentType(OWSUtils.XML_MIME_TYPE);
-                
-                if (!isClientDisconnected(req, resp))
-                {
-                    log.trace(e.getMessage(), e);
-                    
-                    String version = null;
-                    if (request != null)
-                        version = request.getVersion();
-                    if (version == null)
-                        version = getDefaultVersion();
-                    e.setSoapVersion(soapVersion);
-                    
-                    owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), getServiceType(), version, e);
-                    resp.getOutputStream().close();
-                }
-            }
-            catch (IOException e1)
-            {
-                log.error("Cannot send OWS exception report to client", e);
-            }            
+                log.trace("Error while processing request", e);
+                String version = null;
+                if (request != null)
+                    version = request.getVersion();
+                e.setSoapVersion(soapVersion);
+                sendException(req, resp, e, version);
+            }           
         }
         catch (SecurityException e)
         {
             try
             {
-                resp.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
                 log.trace("Access Forbidden", e.getMessage());
+                resp.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
             }
             catch (IOException e1)
             {
@@ -232,8 +218,8 @@ public abstract class OWSServlet extends HttpServlet
         {
             try
             {
-                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, internalErrorMsg);
                 log.error(internalErrorMsg, e);
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, internalErrorMsg);
             }
             catch (IOException e1)
             {
@@ -271,8 +257,7 @@ public abstract class OWSServlet extends HttpServlet
                                 
                 // parse request
                 owsRequest = owsUtils.readXMLQuery(dom, requestElt);
-                if (soapVersion != null)
-                    owsRequest.setSoapVersion(soapVersion);                
+                owsRequest.setSoapVersion(soapVersion);                
                 owsRequest.setPostServer(requestURL);
             }
             else
@@ -286,11 +271,8 @@ public abstract class OWSServlet extends HttpServlet
             }
             
             // keep http objects in request
-            if (owsRequest != null)
-            {
-                owsRequest.setHttpRequest(req);
-                owsRequest.setHttpResponse(resp);
-            }
+            owsRequest.setHttpRequest(req);
+            owsRequest.setHttpResponse(resp);
             
             return owsRequest;
         }
@@ -298,8 +280,8 @@ public abstract class OWSServlet extends HttpServlet
         {
             try
             {
-                resp.sendError(400, invalidKVPRequestMsg);
                 log.trace(invalidKVPRequestMsg, e);
+                resp.sendError(400, invalidKVPRequestMsg);
             }
             catch (IOException e1)
             {
@@ -309,8 +291,8 @@ public abstract class OWSServlet extends HttpServlet
         {
             try
             {
-                resp.sendError(400, invalidXMLRequestMsg);
                 log.trace(invalidXMLRequestMsg, e);
+                resp.sendError(400, invalidXMLRequestMsg);
             }
             catch (IOException e1)
             {
@@ -318,19 +300,9 @@ public abstract class OWSServlet extends HttpServlet
         }
         catch (OWSException e)
         {
-            try
-            {
-                resp.setContentType(OWSUtils.XML_MIME_TYPE);
-                String version = req.getParameter("version");
-                if (version == null)
-                    version = getDefaultVersion();
-                e.setSoapVersion(soapVersion);
-                owsUtils.writeXMLException(new BufferedOutputStream(resp.getOutputStream()), getServiceType(), version, e);
-                log.trace(e.getMessage(), e);
-            }
-            catch (IOException e1)
-            {
-            }            
+            log.trace("Error while parsing request", e);
+            e.setSoapVersion(soapVersion);
+            sendException(req, resp, e, req.getParameter("version"));
         }
         
         return null;
@@ -354,6 +326,24 @@ public abstract class OWSServlet extends HttpServlet
         if (requestElt == null)
             throw new IOException("No request in SOAP body");        
         return requestElt;
+    }
+    
+    
+    protected void sendException(HttpServletRequest req, HttpServletResponse resp, OWSException e, String version)
+    {
+        try
+        {
+            resp.setContentType(OWSUtils.XML_MIME_TYPE);
+            if (version == null)
+                version = getDefaultVersion();
+            BufferedOutputStream os = new BufferedOutputStream(resp.getOutputStream());
+            owsUtils.writeXMLException(os, getServiceType(), version, e);
+            os.close();
+        }
+        catch (IOException e1)
+        {
+            log.trace("Error while sending exception report", e1);
+        }
     }
     
     
