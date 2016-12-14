@@ -170,8 +170,6 @@ public abstract class OWSServlet extends HttpServlet
      */
     protected void processRequest(HttpServletRequest req, HttpServletResponse resp, boolean isXmlRequest)
     {
-        //  get actual request URL
-        String requestURL = req.getRequestURL().toString();
         OWSRequest request = null;
         String soapVersion = null;
         
@@ -187,18 +185,8 @@ public abstract class OWSServlet extends HttpServlet
                 // set default mime type 
                 resp.setContentType(OWSUtils.XML_MIME_TYPE);
                 
-                // keep http objects in request
-                request.setHttpRequest(req);
-                request.setHttpResponse(resp);
-                request.setPostServer(requestURL);
-                
-                // if capabilities request, deal with it in a generic manner
-                if (request instanceof GetCapabilitiesRequest)
-                    this.handleRequest(request);
-                    
-                // else let specific code handle the request
-                else
-                    this.handleRequest(request);
+                // handle request
+                this.handleRequest(request);
                 
                 resp.getOutputStream().flush();
             }
@@ -234,6 +222,7 @@ public abstract class OWSServlet extends HttpServlet
             try
             {
                 resp.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+                log.trace("Access Forbidden", e.getMessage());
             }
             catch (IOException e1)
             {
@@ -243,7 +232,8 @@ public abstract class OWSServlet extends HttpServlet
         {
             try
             {
-                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, internalErrorMsg);
+                log.error(internalErrorMsg, e);
             }
             catch (IOException e1)
             {
@@ -261,7 +251,9 @@ public abstract class OWSServlet extends HttpServlet
      */
     protected OWSRequest parseRequest(HttpServletRequest req, HttpServletResponse resp, boolean isXmlRequest) throws Exception
     {
+        String requestURL = req.getRequestURL().toString();
         String soapVersion = null;
+        OWSRequest owsRequest = null;
         
         try
         {
@@ -278,19 +270,29 @@ public abstract class OWSServlet extends HttpServlet
                     requestElt = getSoapBody(dom);
                                 
                 // parse request
-                OWSRequest owsRequest = owsUtils.readXMLQuery(dom, requestElt);
+                owsRequest = owsUtils.readXMLQuery(dom, requestElt);
                 if (soapVersion != null)
-                    owsRequest.setSoapVersion(soapVersion);
-                
-                return owsRequest;
+                    owsRequest.setSoapVersion(soapVersion);                
+                owsRequest.setPostServer(requestURL);
             }
             else
             {
                 String queryString = req.getQueryString();
                 if (queryString == null)
                     throw new IllegalArgumentException();
-                return owsUtils.readURLQuery(queryString);
+                
+                owsRequest = owsUtils.readURLQuery(queryString);
+                owsRequest.setGetServer(requestURL);
             }
+            
+            // keep http objects in request
+            if (owsRequest != null)
+            {
+                owsRequest.setHttpRequest(req);
+                owsRequest.setHttpResponse(resp);
+            }
+            
+            return owsRequest;
         }
         catch (IllegalArgumentException e)
         {
