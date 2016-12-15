@@ -79,7 +79,9 @@
    <Reader type="SPS" subType="Reserve" version="2.0" class="org.vast.ows.sps.ReserveRequestReaderV20"/>
    <Reader type="SPS" subType="ReserveResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseReaderV20"/>   
    <Reader type="SPS" subType="Confirm" version="2.0" class="org.vast.ows.sps.ConfirmRequestReaderV20"/>
-   <Reader type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseReaderV20"/>     
+   <Reader type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseReaderV20"/>
+   <Reader type="SPS" subType="InsertSensor" version="2.0" class="org.vast.ows.sps.InsertSensorReaderV20"/>
+   <Reader type="SPS" subType="InsertSensorResponse" version="2.0" class="org.vast.ows.swe.InsertSensorResponseReaderV20"/>
    <!-- -->
    <Writer type="SPS" subType="Capabilities" version="2.0" class="org.vast.ows.sps.SPSCapabilitiesWriterV20"/>
    <Writer type="SPS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorWriterV20"/>  
@@ -100,7 +102,9 @@
    <Writer type="SPS" subType="Reserve" version="2.0" class="org.vast.ows.sps.ReserveRequestWriterV20"/>
    <Writer type="SPS" subType="ReserveResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseWriterV20"/>   
    <Writer type="SPS" subType="Confirm" version="2.0" class="org.vast.ows.sps.ConfirmRequestWriterV20"/>
-   <Writer type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseWriterV20"/>   
+   <Writer type="SPS" subType="ConfirmResponse" version="2.0" class="org.vast.ows.sps.TaskingResponseWriterV20"/>
+   <Writer type="SPS" subType="InsertSensor" version="2.0" class="org.vast.ows.sps.InsertSensorWriterV20"/>
+   <Writer type="SPS" subType="InsertSensorResponse" version="2.0" class="org.vast.ows.swe.InsertSensorResponseWriterV20"/> 
    <!-- -->
    <Reader type="WCS" subType="GetCoverage" version="1.1.1" class="org.vast.ows.wcs.GetCoverageReaderV11"/>
    <Reader type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageReaderV11"/>

@@ -23,42 +23,23 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
-
-import java.util.ArrayList;
-import java.util.List;
+package org.vast.ows.sps;
 
 
 /**
  * <p>
- * Container for SOS InsertSensor request parameters
+ * Container for SPS InsertSensor response data
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
- * @date Feb 02, 2014
- * */
-public class InsertSensorRequest extends org.vast.ows.swe.InsertSensorRequest
+ * @since Dec 14, 2016
+ */
+public class InsertSensorResponse extends org.vast.ows.swe.InsertSensorResponse
 {
-    protected List<String> observationTypes;
-    protected List<String> foiTypes;
-    
-	
-	public InsertSensorRequest()
-	{
-		super(SOSUtils.SOS);
-		observationTypes = new ArrayList<String>(2);
-		foiTypes = new ArrayList<String>(2);
-	}
 
-
-    public List<String> getObservationTypes()
+    public InsertSensorResponse()
     {
-        return observationTypes;
+        super(SPSUtils.SPS);
     }
 
-
-    public List<String> getFoiTypes()
-    {
-        return foiTypes;
-    }   
 }

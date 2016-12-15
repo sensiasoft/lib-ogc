@@ -12,12 +12,10 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows.sps;
 
 import org.vast.xml.DOMHelper;
-import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
-import org.vast.ows.OWSUtils;
 import org.vast.sensorML.SMLUtils;
 import org.w3c.dom.Element;
 
@@ -46,15 +44,11 @@ public class InsertSensorWriterV20 extends org.vast.ows.swe.InsertSensorWriterV2
 	public Element buildXMLQuery(DOMHelper dom, InsertSensorRequest request) throws OWSException
 	{
 		Element rootElt = super.buildXMLQuery(dom, request);
-        
-        // sos specific metadata
-		dom.addUserPrefix("sos", OGCRegistry.getNamespaceURI(OWSUtils.SOS, request.getVersion()));
-		Element insertMetaElt = dom.addElement(rootElt, "swes:metadata/sos:SosInsertionMetadata");
-        for (String obsType: request.getObservationTypes())
-            dom.setElementValue(insertMetaElt, "+sos:observationType", obsType);
-        for (String foiType: request.getFoiTypes())
-            dom.setElementValue(insertMetaElt, "+sos:featureOfInterestType", foiType);
-        
+		
+		// sps specific metadata
+		// dom.addUserPrefix("sps", OGCRegistry.getNamespaceURI(OWSUtils.SOS, request.getVersion()));
+		// nothing to add for now
+		
 		return rootElt;
 	}
 }

@@ -12,12 +12,11 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ows.sos;
+package org.vast.ows.sps;
 
 import java.util.Map;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.vast.ows.*;
 
 
@@ -28,7 +27,7 @@ import org.vast.ows.*;
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
- * @date Feb 2, 2014
+ * @date Dec 14, 2016
  * */
 public class InsertSensorReaderV20 extends org.vast.ows.swe.InsertSensorReaderV20<InsertSensorRequest>
 {
@@ -41,7 +40,7 @@ public class InsertSensorReaderV20 extends org.vast.ows.swe.InsertSensorReaderV2
     @Override
     public InsertSensorRequest readURLParameters(Map<String, String> queryParameters) throws OWSException
     {
-        throw new SOSException(noKVP + "SOS 2.0 InsertSensor");
+        throw new SPSException(noKVP + "SPS 2.0 InsertSensor");
     }
     
     
@@ -54,25 +53,13 @@ public class InsertSensorReaderV20 extends org.vast.ows.swe.InsertSensorReaderV2
 		// read common swes InsertSensor params
 		super.readXMLQuery(dom, requestElt, request, report);
 		
-		// insertion metadata
+		/*// insertion metadata
 		String val;
-        Element metadataElt = dom.getElement(requestElt, "metadata/SosInsertionMetadata");
+        Element metadataElt = dom.getElement(requestElt, "metadata/SpsInsertionMetadata");
         if (metadataElt != null)
         {
-            NodeList obsTypeElts = dom.getElements(metadataElt, "observationType");
-            for (int i=0; i<obsTypeElts.getLength(); i++)
-            {
-                val = dom.getElementValue((Element)obsTypeElts.item(i));
-                request.getObservationTypes().add(val);
-            }
             
-            NodeList foiTypeElts = dom.getElements(metadataElt, "featureOfInterestType");
-            for (int i=0; i<foiTypeElts.getLength(); i++)
-            {
-                val = dom.getElementValue((Element)foiTypeElts.item(i));
-                request.getFoiTypes().add(val);
-            }
-        }
+        }*/
         
         this.checkParameters(request, report);
         return request;
@@ -82,15 +69,7 @@ public class InsertSensorReaderV20 extends org.vast.ows.swe.InsertSensorReaderV2
     protected void checkParameters(InsertSensorRequest request, OWSExceptionReport report) throws OWSException
     {
     	// check common params
-		super.checkParameters(request, report, OWSUtils.SOS);
-        
-        // need observation type
-        if (request.getObservationTypes().isEmpty())
-            report.add(new OWSException(OWSException.missing_param_code, "observationType"));
-        
-        // need foi type
-        if (request.getFoiTypes().isEmpty())
-            report.add(new OWSException(OWSException.missing_param_code, "featureOfInterestType"));
+		super.checkParameters(request, report, OWSUtils.SPS);
         
         // procedure
         if (request.getProcedureDescription() == null)
