@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSUtils;
+import org.vast.sensorML.SMLUtils;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -43,7 +44,15 @@ import org.w3c.dom.NodeList;
  * */
 public class SWESUtils
 {
-		
+    public final static String DEFAULT_PROCEDURE_FORMAT;
+    
+    static
+    {
+        SMLUtils.loadRegistry();
+        DEFAULT_PROCEDURE_FORMAT = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0");
+    }
+    
+    
 	public static Map<QName, Object> readXMLExtensions(DOMHelper dom, Element parentElt)
 	{
 		NodeList extensions = dom.getElements(parentElt, "extension");

@@ -41,7 +41,7 @@ public class InsertSensorRequest extends OWSRequest
 {
     public final static String DEFAULT_FEATURE_ROLE = "http://www.opengis.net/def/nil/OGC/0/unknown";
     
-    protected String procedureDescriptionFormat = DescribeSensorResponse.DEFAULT_PROCEDURE_FORMAT;
+    protected String procedureDescriptionFormat = SWESUtils.DEFAULT_PROCEDURE_FORMAT;
     protected AbstractProcess procedureDescription;
     protected List<String> observableProperties;
     protected List<FeatureRef> relatedFeatures;    

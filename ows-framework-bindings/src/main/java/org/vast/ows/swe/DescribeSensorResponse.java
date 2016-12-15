@@ -26,9 +26,7 @@
 
 package org.vast.ows.swe;
 
-import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSResponse;
-import org.vast.sensorML.SMLUtils;
 import net.opengis.sensorml.v20.AbstractProcess;
 
 
@@ -42,16 +40,8 @@ import net.opengis.sensorml.v20.AbstractProcess;
  * */
 public class DescribeSensorResponse extends OWSResponse
 {
-    public final static String DEFAULT_PROCEDURE_FORMAT;
-    
-    protected String procedureDescriptionFormat = DEFAULT_PROCEDURE_FORMAT;
+    protected String procedureDescriptionFormat = SWESUtils.DEFAULT_PROCEDURE_FORMAT;
     protected AbstractProcess procedureDescription;
-    
-    static
-    {
-        SMLUtils.loadRegistry();
-        DEFAULT_PROCEDURE_FORMAT = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0");
-    }
     
         
     protected DescribeSensorResponse()
