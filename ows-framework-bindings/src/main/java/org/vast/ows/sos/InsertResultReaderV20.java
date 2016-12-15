@@ -143,7 +143,7 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
     	// check common params
 		super.checkParameters(request, report, OWSUtils.SOS);		
         
-        // need offering
+        // need template ID
         if (request.getTemplateId() == null)
             report.add(new OWSException(OWSException.missing_param_code, "template"));
         
