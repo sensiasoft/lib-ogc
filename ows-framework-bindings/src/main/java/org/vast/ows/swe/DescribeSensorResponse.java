@@ -11,9 +11,13 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is Sensia Software LLC.
- Portions created by the Initial Developer are Copyright (C) 2014
- the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is the VAST team at the
+ University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
+
+ Please Contact Mike Botts <mike.botts@uah.edu>
+ or Alexandre Robin <alex.robin@sensiasoftware.com> for more information.
  
  Contributor(s): 
     Alexandre Robin <alex.robin@sensiasoftware.com>
@@ -22,38 +26,38 @@
 
 package org.vast.ows.swe;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.vast.ogc.OGCRegistry;
+import org.vast.ows.OWSResponse;
+import org.vast.sensorML.SMLUtils;
 import net.opengis.sensorml.v20.AbstractProcess;
-import org.vast.ogc.gml.FeatureRef;
-import org.vast.ows.OWSRequest;
 
 
 /**
  * <p>
- * Container for SWES InsertSensor request parameters
+ * Container for SWES DescribeSensor response data
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
- * @date Feb 02, 2014
+ * @date Dec 14, 2016
  * */
-public class InsertSensorRequest extends OWSRequest
+public class DescribeSensorResponse extends OWSResponse
 {
-    public final static String DEFAULT_FEATURE_ROLE = "http://www.opengis.net/def/nil/OGC/0/unknown";
+    public final static String DEFAULT_PROCEDURE_FORMAT;
     
-    protected String procedureDescriptionFormat = DescribeSensorResponse.DEFAULT_PROCEDURE_FORMAT;
+    protected String procedureDescriptionFormat = DEFAULT_PROCEDURE_FORMAT;
     protected AbstractProcess procedureDescription;
-    protected List<String> observableProperties;
-    protected List<FeatureRef> relatedFeatures;    
     
-	
-	public InsertSensorRequest(String serviceType)
+    static
     {
-        service = serviceType;
-		operation = "InsertSensor";
-		observableProperties = new ArrayList<String>(5);
-		relatedFeatures = new ArrayList<FeatureRef>(2);
-	}
+        SMLUtils.loadRegistry();
+        DEFAULT_PROCEDURE_FORMAT = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0");
+    }
+    
+        
+    protected DescribeSensorResponse()
+    {
+        messageType = "DescribeSensorResponse";
+    }
 
 
     public String getProcedureDescriptionFormat()
@@ -77,29 +81,5 @@ public class InsertSensorRequest extends OWSRequest
     public void setProcedureDescription(AbstractProcess procedureDescription)
     {
         this.procedureDescription = procedureDescription;
-    }
-
-
-    public List<String> getObservableProperties()
-    {
-        return observableProperties;
-    }
-
-
-    public void setObservableProperties(List<String> observableProperties)
-    {
-        this.observableProperties = observableProperties;
-    }
-
-
-    public List<FeatureRef> getRelatedFeatures()
-    {
-        return relatedFeatures;
-    }
-
-
-    public void setRelatedFeatures(List<FeatureRef> relatedFeatures)
-    {
-        this.relatedFeatures = relatedFeatures;
     }
 }

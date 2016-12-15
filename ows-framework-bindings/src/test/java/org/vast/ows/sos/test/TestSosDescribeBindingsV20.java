@@ -50,4 +50,10 @@ public class TestSosDescribeBindingsV20 extends OWSTestCase
         assertEquals("urn:test:sensors:fakegps", request.getProcedureID());
         assertEquals("http://www.opengis.net/sensorml/2.0.0", request.getFormat());
     }
+    
+    
+    public void testReadWriteXmlDescribeSensorResponse() throws Exception
+    {
+        readWriteCompareXmlResponse("examples_v20/core/DescribeSensor1_response.xml", SOSUtils.SOS);
+    }
 }
