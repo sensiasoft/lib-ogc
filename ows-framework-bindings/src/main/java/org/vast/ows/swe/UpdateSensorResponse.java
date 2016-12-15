@@ -42,10 +42,16 @@ public class UpdateSensorResponse extends OWSResponse
     protected String updatedProcedure;
     
 	
-	public UpdateSensorResponse(String serviceType)
+    protected UpdateSensorResponse()
     {
+        messageType = "UpdateSensorDescriptionResponse";
+    }
+    
+    
+    public UpdateSensorResponse(String serviceType)
+    {
+        this();
         service = serviceType;
-		messageType = "UpdateSensorDescriptionResponse";
 	}
 
 

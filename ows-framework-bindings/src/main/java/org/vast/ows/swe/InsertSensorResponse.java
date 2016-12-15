@@ -43,10 +43,16 @@ public class InsertSensorResponse extends OWSResponse
     protected String assignedOffering;
     
 	
+    protected InsertSensorResponse()
+    {
+        messageType = "InsertSensorResponse";
+    }
+    
+    
 	public InsertSensorResponse(String serviceType)
     {
-        service = serviceType;
-		messageType = "InsertSensorResponse";
+        this();
+	    service = serviceType;
 	}
 
 

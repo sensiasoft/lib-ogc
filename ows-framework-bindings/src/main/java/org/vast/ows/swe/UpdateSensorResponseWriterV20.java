@@ -25,38 +25,39 @@
 
 package org.vast.ows.swe;
 
+import org.vast.ogc.OGCRegistry;
 import org.vast.ows.OWSException;
+import org.vast.ows.sos.SOSUtils;
+import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.w3c.dom.Element;
 
 
 /**
  * <p>
- * Reader for XML InsertSensor response for SWES v2.0 
+ * Writer to generate an XML UpdateSensorDescription response based
+ * on values contained in a UpdateSensorResponse object for SWES v2.0
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
- * @date Feb, 19 2014
+ * @date Dec 14, 2016
  * */
-public class InsertSensorResponseReaderV20 extends SWEResponseReader<InsertSensorResponse>
+public class UpdateSensorResponseWriterV20 extends SWEResponseWriter<UpdateSensorResponse>
 {
 		
-	public InsertSensorResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+	public Element buildXMLResponse(DOMHelper dom, UpdateSensorResponse response, String version) throws OWSException
 	{
-	    InsertSensorResponse response = new InsertSensorResponse();
-	    response.setVersion("2.0");		
-		
-		// read extensions
-		readXMLExtensions(dom, responseElt, response);
-		
-		// assigned procedure
-		String val = dom.getElementValue(responseElt, "assignedProcedure");
-		response.setAssignedProcedureId(val);
-		
-		// assigned offering
-		val = dom.getElementValue(responseElt, "assignedOffering");
-        response.setAssignedOffering(val);
+	    dom.addUserPrefix("swes", OGCRegistry.getNamespaceURI(SOSUtils.SWES, version));
         
-		return response;
-	}	
+        // root element
+        Element rootElt = dom.createElement("swes:" + response.getMessageType());
+        
+        // write extensions
+        writeExtensions(dom, rootElt, response);
+        
+        // assigned procedure
+        dom.setElementValue(rootElt, "+swes:updatedProcedure", response.getUpdatedProcedure());
+        
+        return rootElt;
+	}
+	
 }

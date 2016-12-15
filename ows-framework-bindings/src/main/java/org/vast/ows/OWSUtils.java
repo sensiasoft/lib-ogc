@@ -418,6 +418,7 @@ public class OWSUtils extends OWSCommonUtils
         {
         	OWSResponseReader<OWSResponse> reader = (OWSResponseReader<OWSResponse>)OGCRegistry.createReader(serviceType, responseType, version);
             OWSResponse response = reader.readXMLResponse(dom, responseElt);
+            response.setService(serviceType);
             return response;
         }
         catch (IllegalStateException e)

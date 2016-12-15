@@ -39,10 +39,16 @@ public class UpdateSensorRequest extends OWSRequest
     protected AbstractProcess procedureDescription;  
     
 	
+    protected UpdateSensorRequest()
+    {
+        operation = "UpdateSensorDescription";
+    }
+    
+    
 	public UpdateSensorRequest(String serviceType)
     {
-        service = serviceType;
-		operation = "UpdateSensorDescription";
+        this();
+	    service = serviceType;
 	}
 
 

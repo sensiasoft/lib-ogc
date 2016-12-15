@@ -32,31 +32,27 @@ import org.w3c.dom.Element;
 
 /**
  * <p>
- * Reader for XML InsertSensor response for SWES v2.0 
+ * Reader for XML DeleteSensor response for SWES v2.0 
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
- * @date Feb, 19 2014
+ * @date Dec, 14 2016
  * */
-public class InsertSensorResponseReaderV20 extends SWEResponseReader<InsertSensorResponse>
+public class DeleteSensorResponseReaderV20 extends SWEResponseReader<DeleteSensorResponse>
 {
 		
-	public InsertSensorResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+	public DeleteSensorResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
-	    InsertSensorResponse response = new InsertSensorResponse();
-	    response.setVersion("2.0");		
+	    DeleteSensorResponse response = new DeleteSensorResponse();
+		response.setVersion("2.0");		
 		
 		// read extensions
 		readXMLExtensions(dom, responseElt, response);
 		
 		// assigned procedure
-		String val = dom.getElementValue(responseElt, "assignedProcedure");
-		response.setAssignedProcedureId(val);
+		String val = dom.getElementValue(responseElt, "deletedProcedure");
+		response.setDeletedProcedure(val);
 		
-		// assigned offering
-		val = dom.getElementValue(responseElt, "assignedOffering");
-        response.setAssignedOffering(val);
-        
 		return response;
 	}	
 }

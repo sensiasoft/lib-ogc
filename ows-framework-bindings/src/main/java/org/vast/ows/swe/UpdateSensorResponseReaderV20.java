@@ -32,31 +32,27 @@ import org.w3c.dom.Element;
 
 /**
  * <p>
- * Reader for XML InsertSensor response for SWES v2.0 
+ * Reader for XML UpdateSensor response for SWES v2.0 
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
- * @date Feb, 19 2014
+ * @date Dec, 14 2016
  * */
-public class InsertSensorResponseReaderV20 extends SWEResponseReader<InsertSensorResponse>
+public class UpdateSensorResponseReaderV20 extends SWEResponseReader<UpdateSensorResponse>
 {
 		
-	public InsertSensorResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+	public UpdateSensorResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
-	    InsertSensorResponse response = new InsertSensorResponse();
-	    response.setVersion("2.0");		
+	    UpdateSensorResponse response = new UpdateSensorResponse();
+		response.setVersion("2.0");		
 		
 		// read extensions
 		readXMLExtensions(dom, responseElt, response);
 		
 		// assigned procedure
-		String val = dom.getElementValue(responseElt, "assignedProcedure");
-		response.setAssignedProcedureId(val);
+		String val = dom.getElementValue(responseElt, "updatedProcedure");
+		response.setUpdatedProcedure(val);
 		
-		// assigned offering
-		val = dom.getElementValue(responseElt, "assignedOffering");
-        response.setAssignedOffering(val);
-        
 		return response;
 	}	
 }

@@ -36,10 +36,16 @@ public class DeleteSensorRequest extends OWSRequest
     protected String procedureId;
     
 	
+    protected DeleteSensorRequest()
+    {
+        operation = "DeleteSensor";
+    }
+    
+    
 	public DeleteSensorRequest(String serviceType)
     {
-        service = serviceType;
-        operation = "DeleteSensor";
+        this();
+	    service = serviceType;
 	}
 
 

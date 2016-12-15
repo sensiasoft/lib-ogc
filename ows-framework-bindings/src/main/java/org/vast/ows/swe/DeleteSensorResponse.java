@@ -42,10 +42,16 @@ public class DeleteSensorResponse extends OWSResponse
     protected String deletedProcedure;
     
 	
-	public DeleteSensorResponse(String serviceType)
+    protected DeleteSensorResponse()
+    {
+        messageType = "DeleteSensorResponse";
+    }
+    
+    
+    public DeleteSensorResponse(String serviceType)
 	{
-		service = serviceType;
-	    messageType = "DeleteSensorResponse";
+		this();
+        service = serviceType;
 	}
 
 

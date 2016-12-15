@@ -37,4 +37,28 @@ public class TestSosInsertSensorBindingsV20 extends OWSTestCase
     {
         readWriteCompareXmlResponse("examples_v20/transactional/InsertSensor1_response.xml", OWSUtils.SOS);
     }
+    
+    
+    public void testReadWriteXmlDeleteSensor() throws Exception
+    {
+        readWriteCompareXmlRequest("examples_v20/transactional/DeleteSensor1.xml");
+    }
+    
+    
+    public void testReadWriteXmlDeleteSensorResponse() throws Exception
+    {
+        readWriteCompareXmlResponse("examples_v20/transactional/DeleteSensor1_response.xml", OWSUtils.SOS);
+    }
+    
+    
+    public void testReadWriteXmlUpdateSensor() throws Exception
+    {
+        readWriteCompareXmlRequest("examples_v20/transactional/UpdateSensorDescription1.xml");
+    }
+    
+    
+    public void testReadWriteXmlUpdateSensorResponse() throws Exception
+    {
+        readWriteCompareXmlResponse("examples_v20/transactional/UpdateSensorDescription1_response.xml", OWSUtils.SOS);
+    }
 }

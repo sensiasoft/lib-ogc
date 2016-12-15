@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swes:DeleteSensorResponse xmlns:swes="http://www.opengis.net/swes/2.0">  
+  <swes:deletedProcedure>http://www.my_namespace.org/sensors/Water_Gage_2</swes:deletedProcedure>  
+</swes:DeleteSensorResponse>
