@@ -195,12 +195,18 @@ public abstract class OWSServlet extends HttpServlet
         {
             if (!isClientDisconnected(req, resp))
             {
-                log.trace("Error while processing request", e);
-                String version = null;
-                if (request != null)
-                    version = request.getVersion();
-                e.setSoapVersion(soapVersion);
-                sendException(req, resp, e, version);
+                try
+                {
+                    log.trace("Error while processing request", e);
+                    String version = null;
+                    if (request != null)
+                        version = request.getVersion();
+                    e.setSoapVersion(soapVersion);
+                    sendException(req, resp, e, version);
+                }
+                catch (Exception e1)
+                {
+                }
             }           
         }
         catch (SecurityException e)
