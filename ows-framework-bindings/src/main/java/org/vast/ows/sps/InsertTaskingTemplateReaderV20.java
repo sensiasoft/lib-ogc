@@ -66,8 +66,8 @@ public class InsertTaskingTemplateReaderV20 extends SWERequestReader<InsertTaski
 		Element templateElt = dom.getElement(requestElt, "proposedTemplate/TaskingTemplate");
         
         // offering
-        val = dom.getElementValue(templateElt, "offering");
-        request.setOffering(val);
+        val = dom.getElementValue(templateElt, "procedure");
+        request.setProcedureID(val);
         
         // tasking parameters structure
         DataComponent structure = null;
@@ -111,8 +111,8 @@ public class InsertTaskingTemplateReaderV20 extends SWERequestReader<InsertTaski
 		super.checkParameters(request, report, OWSUtils.SPS);		
         
         // need offering
-        if (request.getOffering() == null)
-            report.add(new OWSException(OWSException.missing_param_code, "offering"));
+        if (request.getProcedureID() == null)
+            report.add(new OWSException(OWSException.missing_param_code, "procedure"));
         
         // need tasking parameters
         if (request.getTaskingParameters() == null)

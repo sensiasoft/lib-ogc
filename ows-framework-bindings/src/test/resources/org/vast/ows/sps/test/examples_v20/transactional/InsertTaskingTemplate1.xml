@@ -2,8 +2,8 @@
 <sps:InsertTaskingTemplate xmlns:sps="http://www.opengis.net/sps/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" service="SPS" version="2.0.0">
    <sps:proposedTemplate>
       <sps:TaskingTemplate>
-         <!--identifier of offering to which the tasking message shall be added -->
-         <sps:offering>http://www.my_namespace.org/my_ptz_camera</sps:offering>
+         <!--identifier of procedure to which the tasking message shall be added -->
+         <sps:procedure>http://www.my_namespace.org/my_ptz_camera</sps:procedure>
          <!--definition of tasking message structure; in this case is swe:DataRecord consisting of three elements: phenomenonTime, waterlevel and flowrate -->
          <sps:taskingParameters>
             <swe:DataRecord>

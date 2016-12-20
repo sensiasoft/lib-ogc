@@ -40,7 +40,7 @@ import org.vast.ows.OWSRequest;
  * */
 public class InsertTaskingTemplateRequest extends OWSRequest
 {
-    protected String offering;
+    protected String procedureID;
     protected DataComponent taskingParameters;
     protected DataEncoding encoding;
     
@@ -52,15 +52,15 @@ public class InsertTaskingTemplateRequest extends OWSRequest
 	}
 
 
-    public String getOffering()
+    public String getProcedureID()
     {
-        return offering;
+        return procedureID;
     }
 
 
-    public void setOffering(String offering)
+    public void setProcedureID(String offering)
     {
-        this.offering = offering;
+        this.procedureID = offering;
     }
 
 

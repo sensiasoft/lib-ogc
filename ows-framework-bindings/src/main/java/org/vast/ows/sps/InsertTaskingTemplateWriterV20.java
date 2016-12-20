@@ -58,7 +58,7 @@ public class InsertTaskingTemplateWriterV20 extends SWERequestWriter<InsertTaski
         Element templateElt = dom.addElement(rootElt, "sps:proposedTemplate/sps:TaskingTemplate");
         
         // offering
-		dom.setElementValue(templateElt, "+sps:offering", request.getOffering());
+		dom.setElementValue(templateElt, "+sps:procedure", request.getProcedureID());
 		
 		// result structure
         try
