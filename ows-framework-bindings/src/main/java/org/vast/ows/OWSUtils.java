@@ -739,6 +739,8 @@ public class OWSUtils extends OWSCommonUtils
             String requestString = buildURLQuery(request);
             URL url = new URL(requestString);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setConnectTimeout(request.getConnectTimeOut());
+            connection.setReadTimeout(request.getConnectTimeOut());
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
@@ -786,6 +788,8 @@ public class OWSUtils extends OWSCommonUtils
             
             // initialize HTTP connection
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setConnectTimeout(request.getConnectTimeOut());
+            connection.setReadTimeout(request.getConnectTimeOut());
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-type", XML_MIME_TYPE);
