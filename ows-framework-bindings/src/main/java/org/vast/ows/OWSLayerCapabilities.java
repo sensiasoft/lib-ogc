@@ -34,6 +34,7 @@ package org.vast.ows;
 public abstract class OWSLayerCapabilities extends OWSIdentification
 {
 	protected OWSServiceCapabilities parent;
+	protected boolean enabled = true;
 	    
 
     public OWSLayerCapabilities()
@@ -53,7 +54,19 @@ public abstract class OWSLayerCapabilities extends OWSIdentification
 	}
 	
 	
-	public String toString()
+	public boolean isEnabled()
+    {
+        return enabled;
+    }
+
+
+    public void setEnabled(boolean enabled)
+    {
+        this.enabled = enabled;
+    }
+
+
+    public String toString()
     {
     	return title;
     }

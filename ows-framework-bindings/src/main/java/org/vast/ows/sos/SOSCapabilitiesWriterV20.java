@@ -122,7 +122,11 @@ public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
 	    // SOS offerings
 	    for (SOSOfferingCapabilities offeringCaps: ((SOSServiceCapabilities)serviceCaps).getLayers())
 	    {
-	        try
+	        // skip disabled offerings
+            if (!offeringCaps.isEnabled())
+                continue;
+            
+            try
             {
                 Element offeringElt = dom.addElement(contentsElt, "+swes:offering/sos:ObservationOffering");
                 

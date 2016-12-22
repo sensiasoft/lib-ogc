@@ -84,6 +84,10 @@ public class SPSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
             // SPS offerings
             for (OWSLayerCapabilities layerCaps: serviceCaps.getLayers())
             {
+                // skip disabled offerings
+                if (!layerCaps.isEnabled())
+                    continue;
+                
                 Element offeringElt = dom.addElement(contentsElt, "+swes:offering/sps:SensorOffering");
                 SPSOfferingCapabilities offering = (SPSOfferingCapabilities)layerCaps;
                 
