@@ -22,7 +22,7 @@ import org.vast.ows.test.OWSTestCase;
 public class TestSpsInsertTaskingBindingsV20 extends OWSTestCase
 {    
     
-    public void testReadWriteXmlInsertResultTemplate() throws Exception
+    public void testReadWriteXmlInsertTaskingTemplate() throws Exception
     {
         readWriteCompareXmlRequest("examples_v20/transactional/InsertTaskingTemplate1.xml");
     }
@@ -31,7 +31,7 @@ public class TestSpsInsertTaskingBindingsV20 extends OWSTestCase
     public void testReadWriteKvpConnectTasking() throws Exception
     {
         SPSUtils utils = new SPSUtils();
-        String kvp = "service=SPS&version=2.0&request=ConnectTasking&template=urn%3Asps%3Atasking%3A001";
+        String kvp = "service=SPS&version=2.0&request=ConnectTasking&session=urn%3Asps%3Atasking%3A001";
         
         ConnectTaskingRequest request = (ConnectTaskingRequest)utils.readURLQuery(kvp);
         assertEquals("urn:sps:tasking:001", request.getSessionID());

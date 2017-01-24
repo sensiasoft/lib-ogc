@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sps:DirectTaskingResponse xmlns:sps="http://www.opengis.net/sps/2.0">
+	<sps:result>
+    <sps:StatusReport>
+      <sps:task>urn:sps:task:direct:001</sps:task>
+      <sps:event>DirectTaskingRequested</sps:event>
+      <sps:percentCompletion>0.0</sps:percentCompletion>
+      <sps:procedure>http://www.ogc.org/procedure/camera/1</sps:procedure>
+      <sps:requestStatus>Accepted</sps:requestStatus>
+      <sps:taskStatus>Reserved</sps:taskStatus>
+      <sps:updateTime>2010-08-20T11:12:04Z</sps:updateTime>
+    </sps:StatusReport>
+  </sps:result>
+</sps:DirectTaskingResponse>
