@@ -8,7 +8,7 @@ Software distributed under the License is distributed on an "AS IS" basis,
 WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the License.
  
-Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
+Copyright (C) 2016-2017 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -36,9 +36,9 @@ public class InsertTaskingTemplateResponseReaderV20 extends SWEResponseReader<In
 	    InsertTaskingTemplateResponse response = new InsertTaskingTemplateResponse();
 		response.setVersion("2.0");
 		
-		// template id
-		String templateId = dom.getElementValue("acceptedTemplate");
-		response.setAcceptedTemplateId(templateId);
+		// session id
+		String sessionID = dom.getElementValue("session");
+		response.setSessionID(sessionID);
 		
 		// read extensions
 		readXMLExtensions(dom, responseElt, response);

@@ -8,7 +8,7 @@ Software distributed under the License is distributed on an "AS IS" basis,
 WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the License.
  
-Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
+Copyright (C) 2016-2017 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -34,7 +34,7 @@ public class TestSpsInsertTaskingBindingsV20 extends OWSTestCase
         String kvp = "service=SPS&version=2.0&request=ConnectTasking&template=urn%3Asps%3Atasking%3A001";
         
         ConnectTaskingRequest request = (ConnectTaskingRequest)utils.readURLQuery(kvp);
-        assertEquals("urn:sps:tasking:001", request.getTemplateId());
+        assertEquals("urn:sps:tasking:001", request.getSessionID());
         
         request.setGetServer("http://myserver.org");
         String url = utils.buildURLQuery(request);
