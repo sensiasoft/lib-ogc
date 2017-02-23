@@ -61,6 +61,10 @@ public class GetResultTemplateReaderV20 extends SWERequestReader<GetResultTempla
 			if (argName.equalsIgnoreCase("offering"))
 			    request.setOffering(argValue);
 			
+			// format
+            else if (argName.equalsIgnoreCase("responseFormat"))
+                request.setFormat(argValue);
+            
 			// observed properties (only one officially supported by SOS 2.0!)
             else if (argName.equalsIgnoreCase("observedProperty"))
             {

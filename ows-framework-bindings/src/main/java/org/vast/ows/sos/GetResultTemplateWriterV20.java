@@ -65,6 +65,10 @@ public class GetResultTemplateWriterV20 extends SWERequestWriter<GetResultTempla
             
             urlParams.put("observedProperty", buf.toString());
         }
+        
+        // format
+        if (request.getFormat() != null)
+            urlParams.put("responseFormat", request.getFormat());
                 		
         return urlParams;
 	}
