@@ -31,7 +31,7 @@ import org.vast.ows.OWSIdentification;
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
- * @date 4 d�c. 07
+ * @date Dec 4, 2007
  * */
 public class FieldSubset extends OWSIdentification
 {

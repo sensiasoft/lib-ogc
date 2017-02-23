@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
- * @date 4 d�c. 07
+ * @date Dec 4, 2007
  * */
 public class WCSCommonWriterV11
 {
