@@ -941,7 +941,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         Map<String, String> attrMap = collectAttributes(reader);
         this.readLiteralTypeAttributes(attrMap, bean);
         
-        bean.setValue(reader.getElementText());
+        String val = reader.getElementText();
+        if (val != null)
+            bean.setValue(trimStringValue(val));
         
         return bean;
     }
