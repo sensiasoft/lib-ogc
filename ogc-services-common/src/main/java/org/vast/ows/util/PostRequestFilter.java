@@ -52,7 +52,7 @@ public class PostRequestFilter extends FilterInputStream
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new IllegalStateException("Error in POST filter", e);
 		}
 	}
 }

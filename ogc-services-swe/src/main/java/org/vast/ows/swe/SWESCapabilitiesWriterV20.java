@@ -178,6 +178,7 @@ public abstract class SWESCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11
             }
             catch (Exception e)
             {
+                throw new IllegalArgumentException("Invalid getList method", e);
             }
         }
 	    

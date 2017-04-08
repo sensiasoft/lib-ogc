@@ -97,8 +97,7 @@ public class OWSRequest
     		}
 		    catch (IOException e)
 		    {
-    			e.printStackTrace();
-    			return null;
+    			throw new IllegalStateException("Cannot obtain HTTP response stream", e);
     		}
 		}
 	}

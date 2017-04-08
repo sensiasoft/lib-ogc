@@ -42,15 +42,9 @@ public class WPSException extends OWSException
 	}
 	
 	
-	public WPSException(Exception e)
+	public WPSException(String message, Throwable cause)
 	{
-		super(e);
-	}
-	
-	
-	public WPSException(String message, Exception e)
-	{
-		super(message, e);
+		super(message, cause);
 	}
 	
 	

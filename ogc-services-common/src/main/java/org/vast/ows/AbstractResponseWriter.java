@@ -39,14 +39,11 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractResponseWriter<ResponseType extends OWSResponse> implements OWSResponseWriter<ResponseType>
 {
-    public final static String xmlError = "Error while generating XML for ";
-    public final static String ioError = "IO error while writing XML response to stream";
-	public final static String unsupportedVersion = "No support for version ";
+    public static final String xmlError = "Error while generating XML for ";
+    public static final String ioError = "IO error while writing XML response to stream";
+	public static final String unsupportedVersion = "No support for version ";
 	
 	protected DateTimeFormat timeFormat = new DateTimeFormat();
-	
-	
-	public abstract Element buildXMLResponse(DOMHelper dom, ResponseType response, String version) throws OWSException;
 	
 	
 	@Override
@@ -62,7 +59,7 @@ public abstract class AbstractResponseWriter<ResponseType extends OWSResponse> i
 		}
 		catch (Exception e)
         {
-            throw new RuntimeException(xmlError + response.getClass().getName(), e);
+            throw new IllegalStateException(xmlError + response.getClass().getName(), e);
         }
 	}
 	

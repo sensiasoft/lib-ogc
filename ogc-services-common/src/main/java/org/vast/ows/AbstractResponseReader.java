@@ -24,7 +24,6 @@ import java.io.*;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
-import org.w3c.dom.Element;
 
 
 /**
@@ -39,13 +38,11 @@ import org.w3c.dom.Element;
  */
 public abstract class AbstractResponseReader<ResponseType extends OWSResponse> implements OWSResponseReader<ResponseType>
 {
-	protected final static String invalidResp = "Invalid Response";
-	protected final static String invalidXML = "Invalid XML Response";
+    protected static final String READ_ERROR_MSG = "Cannot read ";
+    protected static final String invalidResp = "Invalid Response";
+	protected static final String invalidXML = "Invalid XML Response";
 	
 	protected DateTimeFormat timeFormat = new DateTimeFormat();
-	
-    
-    public abstract ResponseType readXMLResponse(DOMHelper domHelper, Element responseElt) throws OWSException;
 	
     
     public ResponseType readXMLResponse(InputStream input) throws OWSException
@@ -57,7 +54,7 @@ public abstract class AbstractResponseReader<ResponseType extends OWSResponse> i
 		}
 		catch (DOMHelperException e)
 		{
-			throw new OWSException(e);
+			throw new OWSException("Cannot read XML response", e);
 		}
 	}
 }

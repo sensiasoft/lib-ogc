@@ -45,9 +45,6 @@ public abstract class AbstractCapabilitiesReader extends AbstractResponseReader<
     }
     
     
-    public abstract OWSServiceCapabilities readXMLResponse(DOMHelper dom, Element capabilitiesElt) throws OWSException;
-    
-    
     protected abstract void readContents(DOMHelper dom, Element capsElt, OWSServiceCapabilities serviceCaps) throws OWSException;
            
         

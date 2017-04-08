@@ -53,6 +53,7 @@ public enum TemporalOperatorName
     /**
      * To convert an enum constant to its String representation
      */
+    @Override
     public String toString()
     {
         return text;
@@ -65,31 +66,31 @@ public enum TemporalOperatorName
      */
     public static TemporalOperatorName fromString(String s)
     {
-        if (s.equals("After"))
+        if ("After".equals(s))
             return AFTER;
-        else if (s.equals("Before"))
+        else if ("Before".equals(s))
             return BEFORE;
-        else if (s.equals("Begins"))
+        else if ("Begins".equals(s))
             return BEGINS;
-        else if (s.equals("BegunBy"))
+        else if ("BegunBy".equals(s))
             return BEGUN_BY;
-        else if (s.equals("TContains"))
+        else if ("TContains".equals(s))
             return T_CONTAINS;
-        else if (s.equals("During"))
+        else if ("During".equals(s))
             return DURING;
-        else if (s.equals("TEquals"))
+        else if ("TEquals".equals(s))
             return T_EQUALS;
-        else if (s.equals("TOverlaps"))
+        else if ("TOverlaps".equals(s))
             return T_OVERLAPS;
-        else if (s.equals("Meets"))
+        else if ("Meets".equals(s))
             return MEETS;
-        else if (s.equals("OverlappedBy"))
+        else if ("OverlappedBy".equals(s))
             return OVERLAPPED_BY;
-        else if (s.equals("MetBy"))
+        else if ("MetBy".equals(s))
             return MET_BY;
-        else if (s.equals("Ends"))
+        else if ("Ends".equals(s))
             return ENDS;
-        else if (s.equals("EndedBy"))
+        else if ("EndedBy".equals(s))
             return ENDED_BY;
         
         throw new IllegalArgumentException("Invalid token " + s + " for enum TemporalOperatorName");

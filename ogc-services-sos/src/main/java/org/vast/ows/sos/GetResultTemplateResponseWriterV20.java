@@ -77,7 +77,7 @@ public class GetResultTemplateResponseWriterV20 extends SWEResponseWriter<GetRes
 		}
 		catch (XMLWriterException e)
 		{
-			throw new SOSException(e);
+			throw new SOSException("Cannot write result template", e);
 		}
 	}
 	

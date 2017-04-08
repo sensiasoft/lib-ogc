@@ -44,6 +44,8 @@ import org.vast.xml.DOMHelper;
  * */
 public class DescribeSensorResponseWriterV20 extends SWEResponseWriter<DescribeSensorResponse>
 {
+    protected static final String SML_WRITE_ERROR = "Cannot write SensorML document";
+    
     SMLUtils smlUtils = new SMLUtils(SMLUtils.V2_0);
     
     
@@ -69,7 +71,7 @@ public class DescribeSensorResponseWriterV20 extends SWEResponseWriter<DescribeS
         }
         catch (IOException e)
         {
-            throw new RuntimeException("Error while writing SensorML document", e);
+            throw new OWSException("Cannot write SensorML document", e);
         }
         
         return rootElt;

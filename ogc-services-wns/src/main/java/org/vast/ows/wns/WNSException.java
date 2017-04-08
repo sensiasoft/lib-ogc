@@ -44,15 +44,9 @@ public class WNSException extends OWSException
 	}
 	
 	
-	public WNSException(Exception e)
+	public WNSException(String message, Throwable cause)
 	{
-		super(e);
-	}
-	
-	
-	public WNSException(String message, Exception e)
-	{
-		super(message, e);
+		super(message, cause);
 	}
 	
 	

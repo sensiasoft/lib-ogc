@@ -22,6 +22,7 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
+import java.io.Serializable;
 import java.util.Map;
 import javax.xml.namespace.QName;
 import org.vast.swe.SWEData;
@@ -36,8 +37,10 @@ import org.w3c.dom.Element;
  * @author Alex Robin
  * @date Feb 25, 2008
  * */
-public class Alternative
+public class Alternative implements Serializable
 {
+	private static final long serialVersionUID = -1306855847347283938L;
+    
 	protected String id;
 	protected String title;
 	protected String description;

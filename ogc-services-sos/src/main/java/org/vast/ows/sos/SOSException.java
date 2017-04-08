@@ -44,21 +44,21 @@ public class SOSException extends OWSException
 	}
 	
 	
-	public SOSException(Exception e)
+	public SOSException(String message, Throwable cause)
 	{
-		super(e);
-	}
-	
-	
-	public SOSException(String message, Exception e)
-	{
-		super(message, e);
+		super(message, cause);
 	}
 	
 	
 	public SOSException(String code, String locator)
     {
         super(code, locator);
+    }
+    
+    
+    public SOSException(String code, String locator, Throwable cause)
+    {
+        super(code, locator, cause);
     }
 	
 	

@@ -37,17 +37,17 @@ import org.vast.ows.OWSServiceCapabilities;
  */
 public class SOSServiceCapabilities extends OWSServiceCapabilities
 {
-    public static String PROFILE_RESULT_RETRIEVAL = "http://www.opengis.net/spec/SOS/2.0/conf/resultRetrieval";
-    public static String PROFILE_SENSOR_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/sensorInsertion";
-    public static String PROFILE_SENSOR_DELETION = "http://www.opengis.net/spec/SOS/2.0/conf/sensorDeletion";
-    public static String PROFILE_OBS_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/obsInsertion";
-    public static String PROFILE_RESULT_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/resultInsertion";
-    public static String PROFILE_OMXML = "http://www.opengis.net/spec/OMXML/2.0/conf/observation";
+    public static final String PROFILE_RESULT_RETRIEVAL = "http://www.opengis.net/spec/SOS/2.0/conf/resultRetrieval";
+    public static final String PROFILE_SENSOR_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/sensorInsertion";
+    public static final String PROFILE_SENSOR_DELETION = "http://www.opengis.net/spec/SOS/2.0/conf/sensorDeletion";
+    public static final String PROFILE_OBS_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/obsInsertion";
+    public static final String PROFILE_RESULT_INSERTION = "http://www.opengis.net/spec/SOS/2.0/conf/resultInsertion";
+    public static final String PROFILE_OMXML = "http://www.opengis.net/spec/OMXML/2.0/conf/observation";
     
-    public static String SWE_ENCODING_TEXT = "http://www.opengis.net/swe/2.0/TextEncoding";
-    public static String SWE_ENCODING_XML = "http://www.opengis.net/swe/2.0/XMLEncoding";
-    public static String SWE_ENCODING_BINARY = "http://www.opengis.net/swe/2.0/BinaryEncoding";
-    public static String SWE_ENCODING_JSON = "http://www.opengis.net/swe/2.0/JSONEncoding";
+    public static final String SWE_ENCODING_TEXT = "http://www.opengis.net/swe/2.0/TextEncoding";
+    public static final String SWE_ENCODING_XML = "http://www.opengis.net/swe/2.0/XMLEncoding";
+    public static final String SWE_ENCODING_BINARY = "http://www.opengis.net/swe/2.0/BinaryEncoding";
+    public static final String SWE_ENCODING_JSON = "http://www.opengis.net/swe/2.0/JSONEncoding";
     
     SOSInsertionCapabilities insertionCapabilities;
     FilterCapabilities filterCapabilities;

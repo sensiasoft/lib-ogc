@@ -43,12 +43,14 @@ public class GetStatusResponseReaderV20 extends SWEResponseReader<GetStatusRespo
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
 	
 	
-	public GetStatusResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+	@Override
+    public GetStatusResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
-		try
+	    GetStatusResponse response = new GetStatusResponse();
+	    
+        try
 		{
-			GetStatusResponse response = new GetStatusResponse();
-            response.setVersion("2.0");
+			response.setVersion("2.0");
             
             // status reports
             NodeList reportElts = dom.getElements(responseElt, "status/*");
@@ -66,7 +68,7 @@ public class GetStatusResponseReaderV20 extends SWEResponseReader<GetStatusRespo
 		}
 		catch (Exception e)
 		{
-			throw new SPSException(e);
+			throw new SPSException(READ_ERROR_MSG + response.getMessageType(), e);
 		}
 	}	
 }

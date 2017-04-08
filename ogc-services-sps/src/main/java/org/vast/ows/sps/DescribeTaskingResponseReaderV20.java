@@ -44,11 +44,13 @@ public class DescribeTaskingResponseReaderV20 extends SWEResponseReader<Describe
     protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
 	
 	
-	public DescribeTaskingResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+    @Override
+    public DescribeTaskingResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
-		try
+	    DescribeTaskingResponse response = new DescribeTaskingResponse();
+	    
+	    try
 		{
-			DescribeTaskingResponse response = new DescribeTaskingResponse();
 			response.setVersion("2.0");
 			Element paramsElt;
 			
@@ -66,7 +68,7 @@ public class DescribeTaskingResponseReaderV20 extends SWEResponseReader<Describe
 		}
 		catch (Exception e)
 		{
-			throw new SPSException(e);
+			throw new SPSException(READ_ERROR_MSG + response.getMessageType(), e);
 		}
 	}
 }

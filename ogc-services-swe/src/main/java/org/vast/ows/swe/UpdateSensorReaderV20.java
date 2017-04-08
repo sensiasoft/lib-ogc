@@ -82,7 +82,7 @@ public class UpdateSensorReaderV20 extends SWERequestReader<UpdateSensorRequest>
         }
         catch (XMLReaderException e)
         {
-            throw new OWSException(OWSException.invalid_param_code, "description", "Unable to read SensorML description:\n" + e.getMessage());
+            throw new OWSException(OWSException.invalid_param_code, "description", "Unable to read SensorML description:\n" + e.getMessage(), e);
         }
         
         this.checkParameters(request, report);

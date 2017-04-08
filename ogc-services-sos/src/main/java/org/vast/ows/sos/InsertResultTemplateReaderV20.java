@@ -26,7 +26,6 @@ import org.vast.ogc.om.ObservationReaderV20;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSUtils;
-import org.vast.ows.sos.*;
 import org.vast.ows.swe.SWERequestReader;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEValidator;
@@ -88,7 +87,7 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         }
         catch (XMLReaderException e)
         {
-            throw new OWSException(OWSException.invalid_param_code, "observationTemplate", "Unable to read O&M observation");
+            throw new SOSException(OWSException.invalid_param_code, "observationTemplate", e);
         }
         
         // result structure
@@ -104,7 +103,7 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         }
         catch (XMLReaderException e)
         {
-            throw new OWSException(OWSException.invalid_param_code, "resultStructure", "Unable to read SWE Common data");
+            throw new SOSException(OWSException.invalid_param_code, "resultStructure", e);
         }
         
         // result encoding
@@ -119,7 +118,7 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         }
         catch (XMLReaderException e)
         {
-            throw new OWSException(OWSException.invalid_param_code, "resultEncoding", "Unable to read SWE Common encoding");
+            throw new SOSException(OWSException.invalid_param_code, "resultEncoding", e);
         }
         
         this.checkParameters(request, report);
@@ -139,7 +138,7 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         
         // need offering
         if (request.getOffering() == null)
-            report.add(new OWSException(OWSException.missing_param_code, "offering"));
+            report.add(new SOSException(OWSException.missing_param_code, "offering"));
         
         // need observation
         //if (request.getObservationTemplate() == null)
@@ -147,11 +146,11 @@ public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResult
         
         // need result structure
         if (request.getResultStructure() == null)
-            report.add(new OWSException(OWSException.missing_param_code, "resultStructure"));
+            report.add(new SOSException(OWSException.missing_param_code, "resultStructure"));
         
         // need result encoding
         if (request.getResultEncoding() == null)
-            report.add(new OWSException(OWSException.missing_param_code, "resultEncoding"));
+            report.add(new SOSException(OWSException.missing_param_code, "resultEncoding"));
         
         report.process();
     }

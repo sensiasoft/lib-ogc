@@ -23,7 +23,6 @@ import org.vast.ogc.om.ObservationReaderV20;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSUtils;
-import org.vast.ows.sos.*;
 import org.vast.ows.swe.SWERequestReader;
 
 

@@ -82,7 +82,7 @@ public class InsertTaskingTemplateReaderV20 extends SWERequestReader<InsertTaski
         }
         catch (XMLReaderException e)
         {
-            throw new OWSException(OWSException.invalid_param_code, "taskingParameters", "Unable to read SWE Common tasking parameters");
+            throw new SPSException(SPSException.invalid_param_code, "taskingParameters", e);
         }
         
         // encoding
@@ -92,12 +92,12 @@ public class InsertTaskingTemplateReaderV20 extends SWERequestReader<InsertTaski
             DataEncoding encoding = sweUtils.readEncoding(dom, resultEncodingElt);
             List<Exception> errors = validator.validateEncoding(encoding, structure, null);
             for (Exception e: errors)
-                report.add(new OWSException(OWSException.invalid_param_code, "encoding", "Invalid encoding definition: " + e.getMessage()));
+                report.add(new SPSException(SPSException.invalid_param_code, "encoding", "Invalid encoding definition: " + e.getMessage()));
             request.setEncoding(encoding);
         }
         catch (XMLReaderException e)
         {
-            throw new OWSException(OWSException.invalid_param_code, "encoding", "Unable to read SWE Common encoding");
+            throw new SPSException(SPSException.invalid_param_code, "encoding", e);
         }
         
         this.checkParameters(request, report);
@@ -112,15 +112,15 @@ public class InsertTaskingTemplateReaderV20 extends SWERequestReader<InsertTaski
         
         // need offering
         if (request.getProcedureID() == null)
-            report.add(new OWSException(OWSException.missing_param_code, "procedure"));
+            report.add(new SPSException(OWSException.missing_param_code, "procedure"));
         
         // need tasking parameters
         if (request.getTaskingParameters() == null)
-            report.add(new OWSException(OWSException.missing_param_code, "taskingParameters"));
+            report.add(new SPSException(OWSException.missing_param_code, "taskingParameters"));
         
         // need encoding
         if (request.getEncoding() == null)
-            report.add(new OWSException(OWSException.missing_param_code, "encoding"));
+            report.add(new SPSException(OWSException.missing_param_code, "encoding"));
         
         report.process();
     }

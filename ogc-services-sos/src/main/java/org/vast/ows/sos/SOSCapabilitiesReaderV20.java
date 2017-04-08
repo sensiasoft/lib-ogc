@@ -153,7 +153,7 @@ public class SOSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20
         }
         catch (XMLReaderException e)
         {
-            throw new SOSException(e.getMessage());
+            throw new SOSException("Error in capabilities document", e);
         }
 	}
     

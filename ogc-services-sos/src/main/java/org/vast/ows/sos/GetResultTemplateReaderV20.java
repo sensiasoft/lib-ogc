@@ -23,7 +23,6 @@ import org.w3c.dom.NodeList;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSUtils;
-import org.vast.ows.sos.*;
 import org.vast.ows.swe.SWERequestReader;
 
 
@@ -132,7 +131,7 @@ public class GetResultTemplateReaderV20 extends SWERequestReader<GetResultTempla
             report.add(new OWSException(OWSException.missing_param_code, "offering"));
         
         // need observed property
-        if (request.getObservables().size() < 1)
+        if (request.getObservables().isEmpty())
             report.add(new OWSException(OWSException.missing_param_code, "observedProperty"));
         
         report.process();

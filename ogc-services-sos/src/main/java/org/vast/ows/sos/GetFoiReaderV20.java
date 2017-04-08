@@ -25,7 +25,6 @@ import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.fes.FESUtils;
-import org.vast.ows.sos.*;
 import org.vast.ows.swe.SWERequestReader;
 
 
@@ -103,7 +102,7 @@ public class GetFoiReaderV20 extends SWERequestReader<GetFeatureOfInterestReques
                 }
                 catch (Exception e)
                 {
-                    throw new SOSException(SOSException.invalid_param_code, "spatialFilter", null, null);
+                    throw new SOSException(SOSException.invalid_param_code, "spatialFilter", e);
                 }
             }
 
@@ -166,7 +165,7 @@ public class GetFoiReaderV20 extends SWERequestReader<GetFeatureOfInterestReques
         }
         catch (Exception e)
         {
-            throw new SOSException(SOSException.invalid_param_code, "spatialFilter", null, null);
+            throw new SOSException(SOSException.invalid_param_code, "spatialFilter", e);
         }
 
         this.checkParameters(request, report);

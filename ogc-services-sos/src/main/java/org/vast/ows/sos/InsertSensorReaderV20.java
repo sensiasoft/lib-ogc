@@ -18,7 +18,6 @@ import java.util.Map;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSUtils;
-import org.vast.ows.sos.*;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

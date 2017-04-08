@@ -69,7 +69,7 @@ public abstract class InsertSensorReaderV20<RequestType extends InsertSensorRequ
         }
         catch (XMLReaderException e)
         {
-            throw new OWSException(OWSException.invalid_param_code, "procedureDescription", "Unable to read SensorML description:\n" + e.getMessage());
+            throw new OWSException(OWSException.invalid_param_code, "procedureDescription", "Unable to read SensorML description:\n" + e.getMessage(), e);
         }
         
         // observable properties

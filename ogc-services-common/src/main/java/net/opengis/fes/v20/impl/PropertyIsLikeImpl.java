@@ -39,6 +39,7 @@ public class PropertyIsLikeImpl implements PropertyIsLike
     }
     
     
+    @Override
     public void setOperand1(Expression exp)
     {
         this.expression1 = exp;

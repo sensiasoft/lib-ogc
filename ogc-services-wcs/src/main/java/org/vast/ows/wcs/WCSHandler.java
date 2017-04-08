@@ -21,6 +21,8 @@
 
 package org.vast.ows.wcs;
 
+import java.io.IOException;
+import org.vast.ows.OWSException;
 import org.vast.ows.wcs.GetCoverageRequest;
 
 
@@ -36,5 +38,5 @@ import org.vast.ows.wcs.GetCoverageRequest;
  * */
 public interface WCSHandler
 {
-	public abstract void getCoverage(GetCoverageRequest req) throws Exception;
+	public abstract void getCoverage(GetCoverageRequest req) throws OWSException, IOException;
 }

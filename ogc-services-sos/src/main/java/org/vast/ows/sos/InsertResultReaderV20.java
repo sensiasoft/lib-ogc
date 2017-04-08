@@ -26,7 +26,6 @@ import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.SweEncodedMessageProcessor;
-import org.vast.ows.sos.*;
 import org.vast.ows.swe.SWERequestReader;
 import org.vast.swe.DataSourceDOM;
 import org.vast.swe.DataSourceURI;
@@ -129,7 +128,7 @@ public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest>
         }
         catch (IOException e)
         {
-            throw new OWSException(OWSException.invalid_param_code, "resultValues", "Unable to read SWE Common data");
+            throw new SOSException(OWSException.invalid_param_code, "resultValues", e);
         }
         
         this.checkParameters(request, report);

@@ -42,44 +42,40 @@ public class TaskingResponseReaderV20 extends SWEResponseReader<TaskingResponse<
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
 	
 	
+	@Override
 	public TaskingResponse<StatusReport> readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
+		TaskingResponse<StatusReport> response = null;			
+		String respName = responseElt.getLocalName();
+		String className = getClass().getPackage().getName() + "." + respName;
+		
 		try
-		{
-			TaskingResponse<StatusReport> response;			
-			String respName = responseElt.getLocalName();
-			String className = getClass().getPackage().getName() + "." + respName;
-			
-			try
-	        {
-			    Class<?> respClass = Class.forName(className);
-			    response = (TaskingResponse<StatusReport>)respClass.newInstance();
-	            response.setVersion("2.0");
-	            
-	            // status or feasibility report
-	            Element reportElt = dom.getElement(responseElt, "result/*");	            
-	            if (reportElt != null)
-	            {
-	                StatusReport report = (StatusReport)commonReader.readReport(dom, reportElt);
-	                response.setReport(report);
-	            }
-	            
-	            // read extensions
-	            readXMLExtensions(dom, responseElt, response);
-	            
-	            return response;
-	        }
-	        catch (ClassNotFoundException e)
-	        {
-	            // problem if class is not found in class path
-	            throw new IllegalStateException("Error while instantiating SPS response Class " + className, e);
-	        }
-			
-			
-		}
+        {
+		    Class<?> respClass = Class.forName(className);
+		    response = (TaskingResponse<StatusReport>)respClass.newInstance();
+            response.setVersion("2.0");
+            
+            // status or feasibility report
+            Element reportElt = dom.getElement(responseElt, "result/*");	            
+            if (reportElt != null)
+            {
+                StatusReport report = (StatusReport)commonReader.readReport(dom, reportElt);
+                response.setReport(report);
+            }
+            
+            // read extensions
+            readXMLExtensions(dom, responseElt, response);
+            
+            return response;
+        }
+        catch (ClassNotFoundException e)
+        {
+            // problem if class is not found in class path
+            throw new IllegalStateException("Error while instantiating SPS response Class " + className, e);
+        }
 		catch (Exception e)
-		{
-			throw new SPSException(e);
-		}
+        {
+            throw new SPSException(READ_ERROR_MSG + response.getMessageType(), e);
+        }
 	}	
 }

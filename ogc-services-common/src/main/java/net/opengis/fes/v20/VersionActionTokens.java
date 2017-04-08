@@ -45,6 +45,7 @@ public enum VersionActionTokens
     /**
      * To convert an enum constant to its String representation
      */
+    @Override
     public String toString()
     {
         return text;
@@ -57,15 +58,15 @@ public enum VersionActionTokens
      */
     public static VersionActionTokens fromString(String s)
     {
-        if (s.equals("FIRST"))
+        if ("FIRST".equals(s))
             return FIRST;
-        else if (s.equals("LAST"))
+        else if ("LAST".equals(s))
             return LAST;
-        else if (s.equals("PREVIOUS"))
+        else if ("PREVIOUS".equals(s))
             return PREVIOUS;
-        else if (s.equals("NEXT"))
+        else if ("NEXT".equals(s))
             return NEXT;
-        else if (s.equals("ALL"))
+        else if ("ALL".equals(s))
             return ALL;
         
         throw new IllegalArgumentException("Invalid token " + s + " for enum VersionActionTokens");

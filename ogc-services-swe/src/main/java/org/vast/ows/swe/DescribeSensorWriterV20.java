@@ -110,7 +110,7 @@ public class DescribeSensorWriterV20 extends AbstractRequestWriter<DescribeSenso
             }
             catch (XMLWriterException e)
             {
-                throw new OWSException(e.getMessage());
+                throw new OWSException("Cannot write time primitive", e);
             }
         }
         

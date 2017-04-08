@@ -113,13 +113,10 @@ public class ExecuteProcessRequestWriter extends AbstractRequestWriter<ExecutePr
         else if (encoding instanceof BinaryEncoding)
         	requestFormat = "application/binary";
 		else
-			try {
-				throw new IOException(ioError + "\n" + "this content-type is not handled. " +
+			throw new WPSException(ioError + "\n" + "this content-type is not handled. " +
 						"The content type can only be ascii (text/plain), xml (text/xml)" +
 						" or pure binary (application/binary)");
-			} catch (IOException e) {
-				throw new OWSException(e);
-			}
+        
 		return requestFormat;
 	}
 	

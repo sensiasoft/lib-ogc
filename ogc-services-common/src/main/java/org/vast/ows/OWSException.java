@@ -32,8 +32,8 @@ package org.vast.ows;
  * */
 public class OWSException extends Exception
 {
-	static final long serialVersionUID = 0xED126190670F4F6AL;
-	
+	private static final long serialVersionUID = 430944706383046157L;
+    
 	public final static String version_nego_failed_code = "VersionNegotiationFailed";
 	public final static String version_nego_failed_text = "Version Negotiation Failed";
 	public final static String invalid_request_code = "InvalidRequest";	
@@ -61,6 +61,12 @@ public class OWSException extends Exception
 	{
 		super(message);
 	}
+    
+    
+    public OWSException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
 	
 	
 	public OWSException(String code, String locator)
@@ -70,12 +76,28 @@ public class OWSException extends Exception
 	}
 	
 	
+	public OWSException(String code, String locator, Throwable cause)
+    {
+        super(cause);
+	    this.code = code;
+        this.locator = locator;
+    }
+	
+	
 	public OWSException(String code, String locator, String message)
 	{
 		super(message);
 		this.code = code;
 		this.locator = locator;
 	}
+    
+    
+    public OWSException(String code, String locator, String message, Throwable cause)
+    {
+        super(message, cause);
+        this.code = code;
+        this.locator = locator;
+    }
 	
 	
 	public OWSException(String code, String locator, String badValue, String message)
@@ -83,18 +105,13 @@ public class OWSException extends Exception
 		this(code, locator, message);
 		this.badValue = badValue;
 	}
-	
-	
-	public OWSException(Exception e)
-	{
-		super(e);
-	}
-	
-	
-	public OWSException(String message, Exception e)
-	{
-		super(message, e);
-	}
+    
+    
+    public OWSException(String code, String locator, String badValue, String message, Throwable e)
+    {
+        this(code, locator, message, e);
+        this.badValue = badValue;
+    }
 	
 	
 	public OWSException(String code, String locator, String message, Exception e)

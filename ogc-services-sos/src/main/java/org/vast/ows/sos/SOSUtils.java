@@ -44,6 +44,7 @@ import org.w3c.dom.Element;
 public class SOSUtils extends OWSUtils implements OWSBindingProvider
 {
     
+    @Override
     public void loadBindings()
     {
         String mapFileUrl = getClass().getResource("SOSRegistry.xml").toString();
@@ -70,7 +71,7 @@ public class SOSUtils extends OWSUtils implements OWSBindingProvider
         catch (IllegalStateException e)
         {
             String spec = SOSUtils.SOS + " " + request.getOperation() + " v" + request.getVersion();
-            throw new OWSException(unsupportedSpec + spec, e);
+            throw new OWSException(UNSUPPORTED_SPEC_MSG + spec, e);
         }
     }
     

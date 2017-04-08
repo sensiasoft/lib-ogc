@@ -42,22 +42,22 @@ public class SPSException extends OWSException
 	}
 	
 	
-	public SPSException(Exception e)
+	public SPSException(String message, Throwable cause)
 	{
-		super(e);
-	}
-	
-	
-	public SPSException(String message, Exception e)
-	{
-		super(message, e);
+		super(message, cause);
 	}
 	
 	
 	public SPSException(String code, String locator)
 	{
-		super(code, locator, null);
+		super(code, locator);
 	}
+    
+    
+    public SPSException(String code, String locator, Throwable cause)
+    {
+        super(code, locator, cause);
+    }
 	
 	
 	public SPSException(String code, String locator, String badValue)

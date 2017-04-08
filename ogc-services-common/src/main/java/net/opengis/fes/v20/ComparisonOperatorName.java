@@ -50,6 +50,7 @@ public enum ComparisonOperatorName
     /**
      * To convert an enum constant to its String representation
      */
+    @Override
     public String toString()
     {
         return text;
@@ -62,25 +63,25 @@ public enum ComparisonOperatorName
      */
     public static ComparisonOperatorName fromString(String s)
     {
-        if (s.equals("PropertyIsEqualTo"))
+        if ("PropertyIsEqualTo".equals(s))
             return PROPERTY_IS_EQUAL_TO;
-        else if (s.equals("PropertyIsNotEqualTo"))
+        else if ("PropertyIsNotEqualTo".equals(s))
             return PROPERTY_IS_NOT_EQUAL_TO;
-        else if (s.equals("PropertyIsLessThan"))
+        else if ("PropertyIsLessThan".equals(s))
             return PROPERTY_IS_LESS_THAN;
-        else if (s.equals("PropertyIsGreaterThan"))
+        else if ("PropertyIsGreaterThan".equals(s))
             return PROPERTY_IS_GREATER_THAN;
-        else if (s.equals("PropertyIsLessThanOrEqualTo"))
+        else if ("PropertyIsLessThanOrEqualTo".equals(s))
             return PROPERTY_IS_LESS_THAN_OR_EQUAL_TO;
-        else if (s.equals("PropertyIsGreaterThanOrEqualTo"))
+        else if ("PropertyIsGreaterThanOrEqualTo".equals(s))
             return PROPERTY_IS_GREATER_THAN_OR_EQUAL_TO;
-        else if (s.equals("PropertyIsLike"))
+        else if ("PropertyIsLike".equals(s))
             return PROPERTY_IS_LIKE;
-        else if (s.equals("PropertyIsNull"))
+        else if ("PropertyIsNull".equals(s))
             return PROPERTY_IS_NULL;
-        else if (s.equals("PropertyIsNil"))
+        else if ("PropertyIsNil".equals(s))
             return PROPERTY_IS_NIL;
-        else if (s.equals("PropertyIsBetween"))
+        else if ("PropertyIsBetween".equals(s))
             return PROPERTY_IS_BETWEEN;
         
         throw new IllegalArgumentException("Invalid token " + s + " for enum ComparisonOperatorName");

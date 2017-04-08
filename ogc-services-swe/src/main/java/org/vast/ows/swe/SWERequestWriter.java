@@ -51,6 +51,7 @@ public abstract class SWERequestWriter<RequestType extends OWSRequest> extends A
      * @param requestElt
      * @param request
      */
+	@Override
     protected void addCommonXML(DOMHelper dom, Element requestElt, OWSRequest request)
 	{
     	super.addCommonXML(dom, requestElt, request);

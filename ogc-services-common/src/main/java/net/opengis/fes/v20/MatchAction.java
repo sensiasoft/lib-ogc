@@ -43,6 +43,7 @@ public enum MatchAction
     /**
      * To convert an enum constant to its String representation
      */
+    @Override
     public String toString()
     {
         return text;
@@ -55,11 +56,11 @@ public enum MatchAction
      */
     public static MatchAction fromString(String s)
     {
-        if (s.equals("All"))
+        if ("All".equals(s))
             return ALL;
-        else if (s.equals("Any"))
+        else if ("Any".equals(s))
             return ANY;
-        else if (s.equals("One"))
+        else if ("One".equals(s))
             return ONE;
         
         throw new IllegalArgumentException("Invalid token " + s + " for enum MatchAction");

@@ -21,6 +21,7 @@
 
 package org.vast.ows.wcs;
 
+import java.io.IOException;
 import java.util.*;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
@@ -51,7 +52,7 @@ public abstract class WCSServlet extends OWSServlet
         
 
     @Override
-    public void handleRequest(OWSRequest request) throws Exception
+    public void handleRequest(OWSRequest request) throws OWSException
     {
         if (request instanceof GetCoverageRequest)
         {
@@ -62,7 +63,7 @@ public abstract class WCSServlet extends OWSServlet
     }
     
 
-    protected void processQuery(GetCoverageRequest query) throws Exception
+    protected void processQuery(GetCoverageRequest query) throws OWSException
     {
     	String coverage = query.getCoverage();
         WCSHandler handler = dataSetHandlers.get(coverage);
@@ -89,7 +90,14 @@ public abstract class WCSServlet extends OWSServlet
              handler.getCoverage(query);
              }*/
 
-            handler.getCoverage(query);
+            try
+            {
+                handler.getCoverage(query);
+            }
+            catch (IOException e)
+            {
+                throw new OWSException("Error retrieving coverage data", e);
+            }
         }
         else
             throw new WCSException("COVERAGE " + coverage + " is unavailable on this server");        

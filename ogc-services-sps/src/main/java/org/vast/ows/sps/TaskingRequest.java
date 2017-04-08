@@ -43,13 +43,15 @@ public abstract class TaskingRequest extends OWSRequest implements Parameterized
 	}
 
 
-	public SWEData getParameters()
+	@Override
+    public SWEData getParameters()
 	{
 		return taskingParameters;
 	}
 
 
-	public void setParameters(SWEData taskingParameters)
+	@Override
+    public void setParameters(SWEData taskingParameters)
 	{
 		this.taskingParameters = taskingParameters;
 	}

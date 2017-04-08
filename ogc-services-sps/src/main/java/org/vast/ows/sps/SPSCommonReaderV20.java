@@ -177,7 +177,7 @@ public class SPSCommonReaderV20
 		}
 		catch (Exception e)
 		{
-			throw new SPSException(e);
+			throw new SPSException("Cannot read StatusReport", e);
 		}
 	}
 	
@@ -242,7 +242,7 @@ public class SPSCommonReaderV20
 		}
 		catch (Exception e)
 		{
-			throw new SPSException(e);
+			throw new SPSException("Cannot read ReservationReport", e);
 		}
 	}
 	
@@ -267,7 +267,7 @@ public class SPSCommonReaderV20
 		}
 		catch (Exception e)
 		{
-			throw new SPSException(e);
+			throw new SPSException("Cannot read FeasibilityReport", e);
 		}
 	}
 	

@@ -42,15 +42,9 @@ public class WFSException extends OWSException
 	}
 	
 	
-	public WFSException(Exception e)
+	public WFSException(String message, Throwable cause)
 	{
-		super(e);
-	}
-	
-	
-	public WFSException(String message, Exception e)
-	{
-		super(message, e);
+		super(message, cause);
 	}
 	
 	

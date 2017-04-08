@@ -73,7 +73,7 @@ public class UpdateSensorWriterV20<RequestType extends UpdateSensorRequest> exte
         }
         catch (IOException e)
         {
-            throw new RuntimeException("Error while writing SensorML document", e);
+            throw new OWSException("Cannot write SensorML document", e);
         }
         
         return rootElt;

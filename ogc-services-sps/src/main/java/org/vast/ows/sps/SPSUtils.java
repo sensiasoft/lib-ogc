@@ -52,19 +52,20 @@ import org.w3c.dom.Element;
  */
 public class SPSUtils extends OWSUtils implements OWSBindingProvider
 {
-	public static String EVENT_TASK_EXPIRED = "TaskingRequestExpired";
-	public static String EVENT_TASK_SUBMITTED = "TaskSubmitted";
-	public static String EVENT_TASK_COMPLETED = "TaskCompleted";
-	public static String EVENT_DATA_PUBLISHED = "DataPublished";
-	public static String EVENT_TASK_FAILED = "TaskFailed";
-	public static String EVENT_TASK_CANCELLED = "TaskCancelled";
-	public static String EVENT_TASK_UPDATED = "TaskUpdated";
-	public static String EVENT_TASK_RESERVED = "TaskReserved";
-	public static String EVENT_TASK_CONFIRMED = "TaskConfirmed";
-	public static String EVENT_RESERVATION_EXPIRED = "ReservationExpired";
+	public static final String EVENT_TASK_EXPIRED = "TaskingRequestExpired";
+	public static final String EVENT_TASK_SUBMITTED = "TaskSubmitted";
+	public static final String EVENT_TASK_COMPLETED = "TaskCompleted";
+	public static final String EVENT_DATA_PUBLISHED = "DataPublished";
+	public static final String EVENT_TASK_FAILED = "TaskFailed";
+	public static final String EVENT_TASK_CANCELLED = "TaskCancelled";
+	public static final String EVENT_TASK_UPDATED = "TaskUpdated";
+	public static final String EVENT_TASK_RESERVED = "TaskReserved";
+	public static final String EVENT_TASK_CONFIRMED = "TaskConfirmed";
+	public static final String EVENT_RESERVATION_EXPIRED = "ReservationExpired";
 	
 	
-	public void loadBindings()
+	@Override
+    public void loadBindings()
     {
         String mapFileUrl = getClass().getResource("SPSRegistry.xml").toString();
         OGCRegistry.loadMaps(mapFileUrl, false);
@@ -93,7 +94,7 @@ public class SPSUtils extends OWSUtils implements OWSBindingProvider
         catch (IllegalStateException e)
         {
             String spec = SPSUtils.SPS + " " + request.getOperation() + " v" + request.getVersion();
-            throw new OWSException(unsupportedSpec + spec, e);
+            throw new OWSException(UNSUPPORTED_SPEC_MSG + spec, e);
         }
 	}
 	

@@ -27,7 +27,6 @@ import org.vast.ows.swe.SWEResponseWriter;
 import org.vast.swe.SWEUtils;
 import org.w3c.dom.*;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.XMLWriterException;
 
 
 /**
@@ -72,9 +71,9 @@ public class DescribeTaskingResponseWriterV20 extends SWEResponseWriter<Describe
 			
 			return rootElt;
 		}
-		catch (XMLWriterException e)
+		catch (Exception e)
 		{
-			throw new SPSException(e);
+			throw new SPSException("Cannot write " + response.getMessageType(), e);
 		}
 	}
 	

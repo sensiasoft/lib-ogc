@@ -41,7 +41,8 @@ import org.w3c.dom.Element;
 public class UpdateSensorResponseReaderV20 extends SWEResponseReader<UpdateSensorResponse>
 {
 		
-	public UpdateSensorResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+    @Override
+    public UpdateSensorResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 	    UpdateSensorResponse response = new UpdateSensorResponse();
 		response.setVersion("2.0");		

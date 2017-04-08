@@ -47,7 +47,7 @@ public abstract class WMSServlet extends OWSServlet
 	
 	
 	@Override
-    public void handleRequest(OWSRequest request) throws Exception
+    public void handleRequest(OWSRequest request) throws OWSException
     {
         if (request instanceof GetMapRequest)
         {
@@ -58,5 +58,5 @@ public abstract class WMSServlet extends OWSServlet
     }
 
 
-    public abstract void processQuery(GetMapRequest request) throws Exception;
+    public abstract void processQuery(GetMapRequest request) throws OWSException;
 }

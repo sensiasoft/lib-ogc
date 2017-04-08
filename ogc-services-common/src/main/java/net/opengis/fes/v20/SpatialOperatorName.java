@@ -51,6 +51,7 @@ public enum SpatialOperatorName
     /**
      * To convert an enum constant to its String representation
      */
+    @Override
     public String toString()
     {
         return text;
@@ -63,27 +64,27 @@ public enum SpatialOperatorName
      */
     public static SpatialOperatorName fromString(String s)
     {
-        if (s.equals("BBOX"))
+        if ("BBOX".equals(s))
             return BBOX;
-        else if (s.equals("Equals"))
+        else if ("Equals".equals(s))
             return EQUALS;
-        else if (s.equals("Disjoint"))
+        else if ("Disjoint".equals(s))
             return DISJOINT;
-        else if (s.equals("Intersects"))
+        else if ("Intersects".equals(s))
             return INTERSECTS;
-        else if (s.equals("Touches"))
+        else if ("Touches".equals(s))
             return TOUCHES;
-        else if (s.equals("Crosses"))
+        else if ("Crosses".equals(s))
             return CROSSES;
-        else if (s.equals("Within"))
+        else if ("Within".equals(s))
             return WITHIN;
-        else if (s.equals("Contains"))
+        else if ("Contains".equals(s))
             return CONTAINS;
-        else if (s.equals("Overlaps"))
+        else if ("Overlaps".equals(s))
             return OVERLAPS;
-        else if (s.equals("Beyond"))
+        else if ("Beyond".equals(s))
             return BEYOND;
-        else if (s.equals("DWithin"))
+        else if ("DWithin".equals(s))
             return D_WITHIN;
         
         throw new IllegalArgumentException("Invalid token " + s + " for enum SpatialOperatorName");

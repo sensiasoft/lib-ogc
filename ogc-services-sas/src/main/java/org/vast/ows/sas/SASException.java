@@ -42,15 +42,9 @@ public class SASException extends OWSException
 	}
 	
 	
-	public SASException(Exception e)
+	public SASException(String message, Throwable cause)
 	{
-		super(e);
-	}
-	
-	
-	public SASException(String message, Exception e)
-	{
-		super(message, e);
+		super(message, cause);
 	}
 	
 	

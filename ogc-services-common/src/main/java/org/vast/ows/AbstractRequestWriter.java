@@ -22,6 +22,7 @@ package org.vast.ows;
 
 import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -59,12 +60,11 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
 
 	public Map<String, String> buildURLParameters(RequestType request) throws OWSException
 	{
-	    throw new RuntimeException("buildURLParameters() method not implemented");
+	    throw new UnsupportedOperationException("buildURLParameters() method not implemented");
 	}
 	
-	public abstract Element buildXMLQuery(DOMHelper dom, RequestType request) throws OWSException;
-    
 	
+	@Override
 	public String buildURLQuery(RequestType request) throws OWSException
 	{
 	    Map<String, String> urlParams = buildURLParameters(request);
@@ -117,8 +117,15 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
         urlParam = urlParam.replaceAll("\\+", "%2B");
         urlParam = urlParam.replaceAll("\\?", "%3F");
         //urlParam = urlParam.replaceAll("\\/", "%2F");*/
-        try { urlParam = URLEncoder.encode(urlParam, "UTF-8"); }
-        catch (UnsupportedEncodingException e) { }
+        try
+        {
+            urlParam = URLEncoder.encode(urlParam, StandardCharsets.UTF_8.name());
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new IllegalStateException(e);
+        }
+        
         return urlParam;
     }
     
@@ -189,7 +196,7 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
         buffer.append("," + bbox.getMinY());
         buffer.append("," + bbox.getMaxX());
         buffer.append("," + bbox.getMaxY());        
-        if (bbox.getCrs() != null)
+        if (bbox.getCrs() != null && writeCrs)
             buffer.append(',').append(bbox.getCrs());
     }
     
@@ -214,14 +221,13 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
     
     /**
      * Adds common attributes to XML request element
-     * @param dom
      * @param requestElt
      * @param request
      */
     protected void addCommonXML(DOMHelper dom, Element requestElt, OWSRequest request)
 	{
-    	requestElt.setAttribute("service", request.getService());
-    	requestElt.setAttribute("version", request.getVersion());
+    	dom.setAttributeValue(requestElt, "service", request.getService());
+    	dom.setAttributeValue(requestElt, "version", request.getVersion());
 	}
     
     

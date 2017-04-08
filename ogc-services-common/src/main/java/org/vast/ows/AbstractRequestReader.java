@@ -47,11 +47,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> exte
     protected String owsVersion = OWSException.VERSION_10;
     
     
-    public abstract RequestType readURLParameters(Map<String, String> queryParameters) throws OWSException;
-	public abstract RequestType readXMLQuery(DOMHelper domHelper, Element requestElt) throws OWSException;
-	
-    
-	/**
+    /**
      * Reads common XML request parameters and fill up the OWSQuery accordingly
      * @param dom
      * @param requestElt
@@ -65,6 +61,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> exte
     }
     
     
+	@Override
 	public RequestType readURLQuery(String queryString) throws OWSException
 	{
 	    Map<String, String> queryParams = parseQueryParameters(queryString); 
@@ -81,7 +78,7 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> exte
 		}
 		catch (DOMHelperException e)
 		{
-			throw new OWSException(e);
+			throw new OWSException("Cannot read XML request", e);
 		}
 	}
     
@@ -155,11 +152,11 @@ public abstract class AbstractRequestReader<RequestType extends OWSRequest> exte
 		}
 		
 		// need VERSION
-		// VERSION is no longer required parameter for all services.  SOS doesn't use it at all
+		// VERSION is no longer required parameter for all services. SOS doesn't use it at all
 		// in any case it's not mandatory for GetCapabilities
 		if (request.getVersion() == null)
 		{
-			if (request.getOperation() != null && !request.getOperation().equalsIgnoreCase("GetCapabilities"))
+			if (!"GetCapabilities".equalsIgnoreCase(request.getOperation()))
 				report.add(new OWSException(OWSException.missing_param_code, "VERSION"));
 		}
 		

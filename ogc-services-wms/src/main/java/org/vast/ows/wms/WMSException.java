@@ -50,15 +50,9 @@ public class WMSException extends OWSException
 	}
 	
 	
-	public WMSException(Exception e)
+	public WMSException(String message, Throwable cause)
 	{
-		super(e);
-	}
-	
-	
-	public WMSException(String message, Exception e)
-	{
-		super(message, e);
+		super(message, cause);
 	}
 	
 	

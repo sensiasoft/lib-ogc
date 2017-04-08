@@ -51,15 +51,9 @@ public class WCSException extends OWSException
 	}
 	
 	
-	public WCSException(Exception e)
+	public WCSException(String message, Throwable cause)
 	{
-		super(e);
-	}
-	
-	
-	public WCSException(String message, Exception e)
-	{
-		super(message, e);
+		super(message, cause);
 	}
 	
 	

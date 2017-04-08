@@ -132,7 +132,7 @@ public class OWSExceptionWriter
         }
         catch (IOException e1)
         {
-            e1.printStackTrace();
+            throw new IllegalStateException("Cannot write exception", e1);
         }
 	}	
 }

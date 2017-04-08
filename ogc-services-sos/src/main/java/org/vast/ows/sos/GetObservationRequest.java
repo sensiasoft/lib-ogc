@@ -46,7 +46,7 @@ public class GetObservationRequest extends OWSRequest
         INLINE, ATTACHED, OUT_OF_BAND, RESULT_TEMPLATE, RESULT_ONLY
     }
     
-    public static String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0");
+    public static final String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0");
     
     protected List<String> procedures;
 	protected List<String> offerings;
@@ -72,7 +72,7 @@ public class GetObservationRequest extends OWSRequest
 	
 	public String getOffering()
 	{
-		if (offerings.size() == 0)
+		if (offerings.isEmpty())
 		    return null;
 		else
 		    return offerings.get(0);

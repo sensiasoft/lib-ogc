@@ -81,7 +81,7 @@ public class FESUtils extends OWSCommonUtils
         }
         catch (Exception e)
         {
-            throw new OWSException("Invalid temporal filter: " + arg);
+            throw new OWSException("Invalid temporal filter: " + arg, e);
         }
     }
     
@@ -113,7 +113,7 @@ public class FESUtils extends OWSCommonUtils
         }
         catch (Exception e)
         {
-            throw new OWSException("Invalid spatial filter: " + arg);
+            throw new OWSException("Invalid spatial filter: " + arg, e);
         }
     }
     

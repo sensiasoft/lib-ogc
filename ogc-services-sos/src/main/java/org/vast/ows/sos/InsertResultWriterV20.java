@@ -78,7 +78,7 @@ public class InsertResultWriterV20 extends SWERequestWriter<InsertResultRequest>
         }
         catch (IOException e)
         {
-            throw new RuntimeException("Error while writing SWE Common data", e);
+            throw new SOSException("Cannot write result template", e);
         }   
         
 		return rootElt;

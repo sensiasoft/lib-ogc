@@ -40,6 +40,7 @@ public abstract class BinaryComparisonOpImpl implements BinaryComparisonOp
     }
     
     
+    @Override
     public void setOperand1(Expression exp)
     {
         this.operand1 = exp;

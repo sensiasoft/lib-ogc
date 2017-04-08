@@ -31,7 +31,8 @@ import org.w3c.dom.Element;
 public class InsertResultTemplateResponseReaderV20 extends SWEResponseReader<InsertResultTemplateResponse>
 {
 		
-	public InsertResultTemplateResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+    @Override
+    public InsertResultTemplateResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 	    InsertResultTemplateResponse response = new InsertResultTemplateResponse();
 		response.setVersion("2.0");

@@ -43,11 +43,13 @@ public class GetFeasibilityResponseReaderV20 extends SWEResponseReader<GetFeasib
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
 		
 	
-	public GetFeasibilityResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+	@Override
+    public GetFeasibilityResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
-		try
+	    GetFeasibilityResponse response = new GetFeasibilityResponse();
+	    
+	    try
 		{
-			GetFeasibilityResponse response = new GetFeasibilityResponse();
 			response.setVersion("2.0");
 			
 			// latest response time
@@ -73,7 +75,7 @@ public class GetFeasibilityResponseReaderV20 extends SWEResponseReader<GetFeasib
 		}
 		catch (Exception e)
 		{
-			throw new SPSException(e);
+			throw new SPSException(READ_ERROR_MSG + response.getMessageType(), e);
 		}
 	}
 	

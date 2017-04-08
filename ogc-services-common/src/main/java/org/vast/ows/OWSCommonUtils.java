@@ -26,6 +26,7 @@
 package org.vast.ows;
 
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -77,14 +78,14 @@ public class OWSCommonUtils
                 String argValue = nextArg.substring(sepIndex + 1);
                 
                 // URL decode
-                argValue = URLDecoder.decode(argValue, "UTF-8");
+                argValue = URLDecoder.decode(argValue, StandardCharsets.UTF_8.name());
                 
                 // add to map
                 queryParams.put(argName.toLowerCase(), argValue);
             }
             catch (Exception e)
             {
-                throw new OWSException(invalidKVP);
+                throw new OWSException(invalidKVP, e);
             }
         }
         
@@ -182,7 +183,7 @@ public class OWSCommonUtils
             }
             
             else
-                throw new Exception();
+                throw new IllegalArgumentException("Wrong number of coordinates");
             
             // try to parse crs id as the last part
             // if number of coords is odd

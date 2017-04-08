@@ -116,7 +116,7 @@ public class SPSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20
         }
         catch (XMLReaderException | ParseException e)
         {
-            throw new SPSException(e.getMessage());
+            throw new SPSException(READ_ERROR_MSG + spsCaps.getMessageType(), e);
         }
 	}
 	

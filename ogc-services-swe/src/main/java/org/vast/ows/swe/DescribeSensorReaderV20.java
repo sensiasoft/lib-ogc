@@ -71,20 +71,20 @@ public class DescribeSensorReaderV20 extends SWERequestReader<DescribeSensorRequ
             String argValue = item.getValue();
 			
 			// time
-			if (argName.equalsIgnoreCase("validTime"))
+			if ("validTime".equalsIgnoreCase(argName))
 			{
 				TimeExtent time = parseTimeArg(argValue);
             	request.setTime(time);
 			}
 			
 			// procedure
-			else if (argName.equalsIgnoreCase("procedure"))
+			else if ("procedure".equalsIgnoreCase(argName))
 			{
 				request.setProcedureID(argValue);
 			}
 			
 			// format
-			else if (argName.equalsIgnoreCase("procedureDescriptionFormat"))
+			else if ("procedureDescriptionFormat".equalsIgnoreCase(argName))
 			{
 				request.setFormat(argValue);
 			}
@@ -127,7 +127,7 @@ public class DescribeSensorReaderV20 extends SWERequestReader<DescribeSensorRequ
 		}
 		catch (XMLReaderException e)
 		{
-			report.add(new OWSException(OWSException.invalid_param_code, "validTime"));
+			report.add(new OWSException(OWSException.invalid_param_code, "validTime", e));
 		}
 		
 		this.checkParameters(request, report); 

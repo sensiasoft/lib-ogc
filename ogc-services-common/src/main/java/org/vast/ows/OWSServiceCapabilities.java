@@ -87,21 +87,6 @@ public class OWSServiceCapabilities extends OWSResponse
 	{
 		this.updateSequence = updateSequence;
 	}
-	
-	
-	public void increaseUpdateSequence()
-	{
-		try
-		{
-			int seq = Integer.parseInt(this.updateSequence);
-			seq++;
-			this.updateSequence = Integer.toString(seq);
-		}
-		catch (Exception e)
-		{
-			this.updateSequence = "1";
-		}
-	}
 
 
 	public OWSIdentification getIdentification()
@@ -250,7 +235,8 @@ public class OWSServiceCapabilities extends OWSResponse
 	}
 	
 	
-	public String toString()
+	@Override
+    public String toString()
     {
     	StringBuffer text = new StringBuffer(service + " Service Capabilities: ");
     	

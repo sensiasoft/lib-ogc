@@ -88,7 +88,7 @@ public class DirectTaskingReaderV20 extends SWERequestReader<DirectTaskingReques
         }
         catch (XMLReaderException e)
         {
-            throw new OWSException(OWSException.invalid_param_code, "encoding", "Unable to read SWE Common encoding");
+            throw new SPSException(OWSException.invalid_param_code, "encoding", e);
         }
         
         // latest response time

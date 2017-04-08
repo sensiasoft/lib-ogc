@@ -26,7 +26,6 @@ import org.vast.ows.OWSException;
 import org.vast.ows.OWSExceptionReport;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.fes.FESUtils;
-import org.vast.ows.sos.*;
 import org.vast.ows.swe.SWERequestReader;
 
 
@@ -102,7 +101,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
                 }
                 catch (Exception e)
                 {
-                    throw new SOSException(SOSException.invalid_param_code, "temporalFilter", null, null);
+                    throw new SOSException(SOSException.invalid_param_code, "temporalFilter", e);
                 }
             }
             
@@ -116,7 +115,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
                 }
                 catch (Exception e)
                 {
-                    throw new SOSException(SOSException.invalid_param_code, "spatialFilter", null, null);
+                    throw new SOSException(SOSException.invalid_param_code, "spatialFilter", e);
                 }
             }
 			
@@ -129,7 +128,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
                 }
                 catch (Exception e)
                 {
-                    throw new SOSException(SOSException.invalid_param_code, "xmlWrapper", argValue, null);
+                    throw new SOSException(SOSException.invalid_param_code, "xmlWrapper", e);
                 }
             }
 			
@@ -187,7 +186,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
         }
         catch (Exception e)
         {
-            throw new SOSException(SOSException.invalid_param_code, "temporalFilter", null, null);
+            throw new SOSException(SOSException.invalid_param_code, "temporalFilter", e);
         }
         
         // features of interest
@@ -210,7 +209,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
         }
         catch (Exception e)
         {
-            throw new SOSException(SOSException.invalid_param_code, "spatialFilter", null, null);
+            throw new SOSException(SOSException.invalid_param_code, "spatialFilter", e);
         }
         
         // response format
@@ -237,7 +236,7 @@ public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>
             report.add(new OWSException(OWSException.missing_param_code, "offering"));
         
         // need observedProperty
-        if (request.getObservables().size() < 1)
+        if (request.getObservables().isEmpty())
             report.add(new OWSException(OWSException.missing_param_code, "observedProperty"));
         
 		report.process();

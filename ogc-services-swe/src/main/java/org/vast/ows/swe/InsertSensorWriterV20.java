@@ -71,7 +71,7 @@ public class InsertSensorWriterV20<RequestType extends InsertSensorRequest> exte
         }
         catch (IOException e)
         {
-            throw new RuntimeException("Error while writing SensorML document", e);
+            throw new OWSException("Cannot write SensorML document", e);
         }   
         
         // observable properties

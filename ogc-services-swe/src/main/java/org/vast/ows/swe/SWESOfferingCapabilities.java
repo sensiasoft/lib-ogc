@@ -40,10 +40,10 @@ import org.vast.ows.OWSLayerCapabilities;
  */
 public abstract class SWESOfferingCapabilities extends OWSLayerCapabilities
 {
-    public static String FORMAT_OM2 = "http://www.opengis.net/om/2.0";
-    public static String FORMAT_OM2_JSON = FORMAT_OM2.replaceAll("om", "om-json");
-    public static String FORMAT_SML2 = "http://www.opengis.net/sensorml/2.0";
-    public static String FORMAT_SML2_JSON = FORMAT_SML2.replaceAll("sensorml", "sensorml-json");;
+    public static final String FORMAT_OM2 = "http://www.opengis.net/om/2.0";
+    public static final String FORMAT_OM2_JSON = FORMAT_OM2.replaceAll("om", "om-json");
+    public static final String FORMAT_SML2 = "http://www.opengis.net/sensorml/2.0";
+    public static final String FORMAT_SML2_JSON = FORMAT_SML2.replaceAll("sensorml", "sensorml-json");;
 
     protected Set<String> observableProperties;
     protected Set<String> procedures;

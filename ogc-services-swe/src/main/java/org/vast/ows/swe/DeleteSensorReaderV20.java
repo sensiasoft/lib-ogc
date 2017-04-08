@@ -55,7 +55,7 @@ public class DeleteSensorReaderV20 extends SWERequestReader<DeleteSensorRequest>
             String argValue = item.getValue();
             
             // procedure
-            if (argName.equalsIgnoreCase("procedure"))
+            if ("procedure".equalsIgnoreCase(argName))
             {
                 request.setProcedureId(argValue);
             }

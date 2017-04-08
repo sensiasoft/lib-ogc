@@ -69,7 +69,7 @@ public class InsertObservationWriterV20 extends SWERequestWriter<InsertObservati
         }
         catch (IOException e)
         {
-            throw new RuntimeException("Error while writing Observation", e);
+            throw new SOSException("Cannot write observation", e);
         }   
         
 		return rootElt;

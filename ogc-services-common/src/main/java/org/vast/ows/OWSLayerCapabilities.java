@@ -66,6 +66,7 @@ public abstract class OWSLayerCapabilities extends OWSIdentification
     }
 
 
+    @Override
     public String toString()
     {
     	return title;

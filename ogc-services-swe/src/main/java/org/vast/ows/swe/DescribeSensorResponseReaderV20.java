@@ -46,7 +46,8 @@ public class DescribeSensorResponseReaderV20 extends SWEResponseReader<DescribeS
     SMLUtils smlUtils = new SMLUtils(SMLUtils.V2_0);
     
     
-	public DescribeSensorResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
+    @Override
+    public DescribeSensorResponse readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 	    DescribeSensorResponse response = new DescribeSensorResponse();
 	    response.setVersion("2.0");		
@@ -68,7 +69,7 @@ public class DescribeSensorResponseReaderV20 extends SWEResponseReader<DescribeS
         }
         catch (XMLReaderException e)
         {
-            throw new OWSException(OWSException.invalid_param_code, "procedureDescription", "Unable to read SensorML description:\n" + e.getMessage());
+            throw new OWSException(OWSException.invalid_param_code, "procedureDescription", "Unable to read SensorML description:\n" + e.getMessage(), e);
         }
         
 		return response;

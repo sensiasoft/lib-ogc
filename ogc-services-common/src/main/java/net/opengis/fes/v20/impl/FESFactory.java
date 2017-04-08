@@ -539,7 +539,7 @@ public class FESFactory implements Factory
                 break;
                 
             default:
-                throw new RuntimeException("Unsupported temporal operator " + opName);
+                throw new IllegalArgumentException("Unsupported temporal operator " + opName);
         }
         
         binaryOp.setOperand1(newValueReference(propRef));
@@ -587,7 +587,7 @@ public class FESFactory implements Factory
                 break;
                 
             default:
-                throw new RuntimeException("Unsupported spatial operator " + opName); 
+                throw new IllegalArgumentException("Unsupported spatial operator " + opName); 
         }
         
         binaryOp.setOperand1(newValueReference(propRef));
@@ -611,7 +611,7 @@ public class FESFactory implements Factory
                 break;
                 
             default:
-                throw new RuntimeException("Unsupported spatial operator " + opName); 
+                throw new IllegalArgumentException("Unsupported spatial operator " + opName); 
         }
         
         bufferOp.setOperand1(newValueReference(propRef));

@@ -53,30 +53,33 @@ public class OWSUtils extends OWSCommonUtils
 {
     private final static Logger log = LoggerFactory.getLogger(OWSUtils.class);
     
+    public static final String TEXT_MIME_TYPE = "text/plain";
     public static final String XML_MIME_TYPE = "text/xml";
     public static final String XML_MIME_TYPE2 = "application/xml";
     public static final String JSON_MIME_TYPE = "application/json";
-    
-    public final static String OGC = "OGC";
-    public final static String OWS = "OWS";
-	public final static String WMS = "WMS";
-	public final static String WFS = "WFS";
-	public final static String WCS = "WCS";
-	public final static String SWES = "SWES";
-	public final static String SOS = "SOS";
-	public final static String CSW = "CSW";
-	public final static String WNS = "WNS";
-	public final static String SAS = "SAS";	
-	public final static String SPS = "SPS";
-	public final static String WPS = "WPS";	
-	public final static String SLD = "SLD";
-    
-	public final static String unsupportedSpec = "No support for ";
-    public final static String invalidEndpoint = "No Endpoint URL specified in request object";
-    public final static String ioError = "I/O Error while sending request: ";
-    
+    public static final String BINARY_MIME_TYPE = "application/octet-stream";
     public final static String SOAP11_URI = "http://schemas.xmlsoap.org/soap/envelope/";
     public final static String SOAP12_URI = "http://www.w3.org/2003/05/soap-envelope";
+    
+    public static final String OGC = "OGC";
+    public static final String OWS = "OWS";
+	public static final String WMS = "WMS";
+	public static final String WFS = "WFS";
+	public static final String WCS = "WCS";
+	public static final String SWES = "SWES";
+	public static final String SOS = "SOS";
+	public static final String CSW = "CSW";
+	public static final String WNS = "WNS";
+	public static final String SAS = "SAS";	
+	public static final String SPS = "SPS";
+	public static final String WPS = "WPS";	
+	public static final String SLD = "SLD";
+    
+	protected static final String UNSUPPORTED_SPEC_MSG = "No support for ";
+	protected static final String INVALID_ENDPOINT_MSG = "No Endpoint URL specified in request object";
+	protected static final String IO_ERROR_MSG = "I/O Error while sending request: ";
+	protected static final String SERVER_ERROR_MSG = "Exception received from server";
+    
     
     OWSCommonUtils dataTypeUtils = new OWSCommonUtils();
     
@@ -148,7 +151,7 @@ public class OWSUtils extends OWSCommonUtils
         catch (IllegalStateException e)
         {
             String spec = request.service + " " + request.operation + " v" + request.version;
-        	throw new OWSException(unsupportedSpec + spec, e);
+        	throw new OWSException(UNSUPPORTED_SPEC_MSG + spec, e);
         }
     }
     
@@ -249,7 +252,7 @@ public class OWSUtils extends OWSCommonUtils
         catch (IllegalStateException e)
         {
             String spec = request.service + " " + request.operation + " v" + request.version;
-            throw new OWSException(unsupportedSpec + spec, e);
+            throw new OWSException(UNSUPPORTED_SPEC_MSG + spec, e);
         }
     }
     
@@ -324,7 +327,7 @@ public class OWSUtils extends OWSCommonUtils
         catch (IllegalStateException e)
         {
         	String spec = request.service + " " + request.operation + " v" + request.version;
-        	throw new OWSException(unsupportedSpec + spec, e);
+        	throw new OWSException(UNSUPPORTED_SPEC_MSG + spec, e);
         }
     }
 
@@ -348,7 +351,7 @@ public class OWSUtils extends OWSCommonUtils
         catch (IllegalStateException e)
         {
         	String spec = request.service + " " + request.operation + " v" + request.version;
-        	throw new OWSException(unsupportedSpec + spec, e);
+        	throw new OWSException(UNSUPPORTED_SPEC_MSG + spec, e);
         }
     }
     
@@ -439,7 +442,7 @@ public class OWSUtils extends OWSCommonUtils
         catch (IllegalStateException e)
         {
             String spec = serviceType + " " + responseType + " v" + version;
-        	throw new OWSException(unsupportedSpec + spec, e);
+        	throw new OWSException(UNSUPPORTED_SPEC_MSG + spec, e);
         }
     }
     
@@ -487,7 +490,7 @@ public class OWSUtils extends OWSCommonUtils
 	    catch (IllegalStateException e)
 	    {
 	    	String spec = response.service + " " + response.messageType + " v" + version;
-	    	throw new OWSException(unsupportedSpec + spec, e);
+	    	throw new OWSException(UNSUPPORTED_SPEC_MSG + spec, e);
 	    }
 	}
 	
@@ -637,7 +640,7 @@ public class OWSUtils extends OWSCommonUtils
         try
         {
         	if (request.getGetServer() == null)
-        		throw new OWSException(invalidEndpoint);
+        		throw new OWSException(INVALID_ENDPOINT_MSG);
             
             requestString = buildURLQuery(request);
             URL url = new URL(requestString);
@@ -654,11 +657,11 @@ public class OWSUtils extends OWSCommonUtils
         }
         catch (OGCException e)
 		{
-	    	throw new OWSException(e.getMessage());
+	    	throw new OWSException(SERVER_ERROR_MSG, e);
 		}
         catch (IOException e)
         {
-            throw new OWSException(ioError + requestString, e);
+            throw new OWSException(IO_ERROR_MSG + requestString, e);
         }
     }
     
@@ -680,7 +683,7 @@ public class OWSUtils extends OWSCommonUtils
         		endpoint = request.getGetServer();
         	
         	if (endpoint == null)
-        		throw new OWSException(invalidEndpoint);
+        		throw new OWSException(INVALID_ENDPOINT_MSG);
         	
             // remove ? at the end of Endpoint URL
             if (endpoint.endsWith("?"))
@@ -712,7 +715,7 @@ public class OWSUtils extends OWSCommonUtils
         }
 	    catch (OGCException e)
 		{
-	    	throw new OWSException(e.getMessage());
+	    	throw new OWSException(SERVER_ERROR_MSG, e);
 		}
         catch (IOException e)
         {
@@ -720,10 +723,10 @@ public class OWSUtils extends OWSCommonUtils
         	{
         	    ByteArrayOutputStream buf = new ByteArrayOutputStream();
         	    writeXMLQuery(buf, request);
-        	    log.debug(ioError + "\n" + buf);
+        	    log.debug(IO_ERROR_MSG + "\n" + buf);
         	}
         	
-        	throw new OWSException(ioError + request.getOperation(), e);
+        	throw new OWSException(IO_ERROR_MSG + request.getOperation(), e);
         }
     }
     
@@ -748,7 +751,7 @@ public class OWSUtils extends OWSCommonUtils
             }
             
             if (endpoint == null)
-                throw new OWSException(invalidEndpoint);            
+                throw new OWSException(INVALID_ENDPOINT_MSG);            
             
             // initiatlize HTTP connection
             String requestString = buildURLQuery(request);
@@ -768,10 +771,10 @@ public class OWSUtils extends OWSCommonUtils
             {
                 ByteArrayOutputStream buf = new ByteArrayOutputStream();
                 writeXMLQuery(buf, request);
-                log.debug(ioError + "\n" + buf);
+                log.debug(IO_ERROR_MSG + "\n" + buf);
             }
             
-            throw new OWSException(ioError + request.getOperation(), e);
+            throw new OWSException(IO_ERROR_MSG + request.getOperation(), e);
         }
     }
     
@@ -793,7 +796,7 @@ public class OWSUtils extends OWSCommonUtils
         		endpoint = request.getGetServer();
         	
         	if (endpoint == null)
-        		throw new OWSException(invalidEndpoint);
+        		throw new OWSException(INVALID_ENDPOINT_MSG);
         	
             // remove ? at the end of Endpoint URL
             if (endpoint.endsWith("?"))
@@ -836,7 +839,7 @@ public class OWSUtils extends OWSCommonUtils
         }
 	    catch (OGCException e)
 		{
-	    	throw new OWSException(e.getMessage());
+	    	throw new OWSException(SERVER_ERROR_MSG, e);
 		}
         catch (IOException e)
         {
@@ -844,10 +847,10 @@ public class OWSUtils extends OWSCommonUtils
             {
                 ByteArrayOutputStream buf = new ByteArrayOutputStream();
                 writeXMLQuery(buf, request);
-                log.debug(ioError + "\n" + buf);
+                log.debug(IO_ERROR_MSG + "\n" + buf);
             }
             
-        	throw new OWSException(ioError + request.getOperation(), e);
+        	throw new OWSException(IO_ERROR_MSG + request.getOperation(), e);
         }
     }
     
@@ -875,7 +878,7 @@ public class OWSUtils extends OWSCommonUtils
         catch (IllegalStateException e)
         {
             String spec = serviceType + " " + message + " v" + version;
-        	throw new OWSException(unsupportedSpec + spec, e);
+        	throw new OWSException(UNSUPPORTED_SPEC_MSG + spec, e);
         }
     }
 
@@ -907,7 +910,7 @@ public class OWSUtils extends OWSCommonUtils
         }
         catch (IOException e)
 		{
-			throw new OWSException(ioError, e);
+			throw new OWSException(IO_ERROR_MSG, e);
 		}
         catch (DOMHelperException e)
 		{
@@ -916,7 +919,7 @@ public class OWSUtils extends OWSCommonUtils
         catch (IllegalStateException e)
         {
         	String spec = serviceType + " Capabilities v" + version;
-        	throw new OWSException(unsupportedSpec + spec, e);
+        	throw new OWSException(UNSUPPORTED_SPEC_MSG + spec, e);
         }
     }
 }
