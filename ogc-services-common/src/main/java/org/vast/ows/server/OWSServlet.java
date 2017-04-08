@@ -30,15 +30,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.OWSResponse;
@@ -60,67 +53,36 @@ import org.w3c.dom.Element;
 public abstract class OWSServlet extends HttpServlet
 {
     private static final long serialVersionUID = 4970153267344348035L;
-    protected static final String invalidKVPRequestMsg = "Invalid KVP request. Please check your syntax";
-    protected static final String invalidXMLRequestMsg = "Invalid XML request. Please check your syntax";
-    protected static final String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
-        
     private static final Logger log = LoggerFactory.getLogger(OWSServlet.class);
-    protected String owsVersion = "1.0";
-    protected transient OWSUtils owsUtils = new OWSUtils();
-    protected transient DOMHelper capsHelper;
-        
     
-    protected abstract void handleRequest(OWSRequest request) throws Exception;
+    protected static final String INVALID_KVP_REQUEST_MSG = "Invalid KVP request. Please check your syntax";
+    protected static final String INVALID_XML_REQUEST_MSG = "Invalid XML request. Please check your syntax";
+    protected static final String INTERNAL_ERROR_MSG = "Internal Error while processing the request. Please contact maintenance";
+    protected static final String INTERNAL_SEND_ERROR_MSG = "Could not send error";
+    protected static final String UNSUPPORTED_MSG = " operation is not supported on this server";
     
-
-	protected void handleRequest(GetCapabilitiesRequest request) throws Exception
-	{
-	    sendCapabilities(((GetCapabilitiesRequest)request).getSection(), request.getResponseStream());
-	}
-
-
-	/**
-	 * Sends the whole capabilities document in response to GetCapabilities request
-	 * @param resp
-	 * @throws IOException
-	 */
-	protected void sendCapabilities(String section, OutputStream resp) throws Exception
-	{
-//	    OWSCapabilitiesSerializer serializer = new OWSCapabilitiesSerializer();
-//	    serializer.setOutputByteStream(resp);
-//	    serializer.serialize(capsHelper.getRootElement());
+    protected transient final OWSUtils owsUtils;
+    
         
-        // The code below is a better way to do it but we cannot remove the internalInfo elements on the fly
-	    try
-		{
-		    Transformer serializer = TransformerFactory.newInstance().newTransformer();
-		    serializer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
-		    Source input = new DOMSource(capsHelper.getRootElement());
-		    Result output = new StreamResult(resp);
-		    serializer.transform(input, output);
-		}
-		catch (Exception e)
-		{
-		}
-	}
-	
-
-	public synchronized void updateCapabilities(InputStream capsFile)
+    public OWSServlet()
     {
-        try
-        {
-            capsHelper = new DOMHelper(capsFile, false);
-        }
-        catch (DOMHelperException e)
-        {
-            e.printStackTrace();
-        }
+        this(new OWSUtils());
     }
+    
+    
+    protected OWSServlet(OWSUtils owsUtils)
+    {
+        this.owsUtils = owsUtils;
+    }
+    
+    
+    protected abstract void handleRequest(OWSRequest request) throws OWSException, IOException;
 	
 	
 	/**
      * Parse and process HTTP GET request
      */
+    @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException
     {
         log.info("GET REQUEST from IP " + req.getRemoteAddr());       
@@ -131,6 +93,7 @@ public abstract class OWSServlet extends HttpServlet
 	/**
      * Parse and process HTTP POST request
      */
+    @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
     {
         log.info("POST REQUEST from IP " + req.getRemoteAddr());
@@ -155,7 +118,7 @@ public abstract class OWSServlet extends HttpServlet
         }
         catch (IOException e)
         {
-            return true;
+            log.trace("Cannot flush response buffer", e);
         }
         
         return false;
@@ -195,40 +158,36 @@ public abstract class OWSServlet extends HttpServlet
         {
             if (!isClientDisconnected(req, resp))
             {
-                try
-                {
-                    log.trace("Error while processing request", e);
-                    String version = null;
-                    if (request != null)
-                        version = request.getVersion();
-                    e.setSoapVersion(soapVersion);
-                    sendException(req, resp, e, version);
-                }
-                catch (Exception e1)
-                {
-                }
+                log.trace("Error while processing request", e);
+                String version = null;
+                if (request != null)
+                    version = request.getVersion();
+                e.setSoapVersion(soapVersion);
+                sendException(req, resp, e, version);
             }           
         }
         catch (SecurityException e)
         {
             try
             {
-                log.trace("Access Forbidden", e.getMessage());
+                log.trace("Access Forbidden", e);
                 resp.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
             }
             catch (IOException e1)
             {
+                log.trace(INTERNAL_SEND_ERROR_MSG, e1);
             }
         }
         catch (Exception e)
         {
             try
             {
-                log.error(internalErrorMsg, e);
-                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, internalErrorMsg);
+                log.error(INTERNAL_ERROR_MSG, e);
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, INTERNAL_ERROR_MSG);
             }
             catch (IOException e1)
             {
+                log.trace(INTERNAL_SEND_ERROR_MSG, e1);
             }
         }
     }
@@ -241,7 +200,7 @@ public abstract class OWSServlet extends HttpServlet
      * @return
      * @throws Exception
      */
-    protected OWSRequest parseRequest(HttpServletRequest req, HttpServletResponse resp, boolean isXmlRequest) throws Exception
+    protected OWSRequest parseRequest(HttpServletRequest req, HttpServletResponse resp, boolean isXmlRequest) throws OWSException
     {
         String requestURL = req.getRequestURL().toString();
         String soapVersion = null;
@@ -262,7 +221,7 @@ public abstract class OWSServlet extends HttpServlet
                     requestElt = getSoapBody(dom);
                                 
                 // parse request
-                owsRequest = owsUtils.readXMLQuery(dom, requestElt);
+                owsRequest = parseRequest(dom, requestElt);
                 owsRequest.setSoapVersion(soapVersion);                
                 owsRequest.setPostServer(requestURL);
             }
@@ -286,22 +245,24 @@ public abstract class OWSServlet extends HttpServlet
         {
             try
             {
-                log.trace(invalidKVPRequestMsg, e);
-                resp.sendError(400, invalidKVPRequestMsg);
+                log.trace(INVALID_KVP_REQUEST_MSG, e);
+                resp.sendError(400, INVALID_KVP_REQUEST_MSG);
             }
             catch (IOException e1)
             {
+                log.trace(INTERNAL_SEND_ERROR_MSG, e1);
             }            
         }
         catch (IOException | DOMHelperException e)
         {
             try
             {
-                log.trace(invalidXMLRequestMsg, e);
-                resp.sendError(400, invalidXMLRequestMsg);
+                log.trace(INVALID_XML_REQUEST_MSG, e);
+                resp.sendError(400, INVALID_XML_REQUEST_MSG);
             }
             catch (IOException e1)
             {
+                log.trace(INTERNAL_SEND_ERROR_MSG, e1);
             }            
         }
         catch (OWSException e)
@@ -312,6 +273,15 @@ public abstract class OWSServlet extends HttpServlet
         }
         
         return null;
+    }
+    
+    
+    /*
+     * parse in separate method so it can be overriden
+     */
+    protected OWSRequest parseRequest(DOMHelper dom, Element requestElt) throws OWSException
+    {
+        return owsUtils.readXMLQuery(dom, requestElt);
     }
     
     
@@ -330,7 +300,7 @@ public abstract class OWSServlet extends HttpServlet
         Element requestElt = dom.getBaseElement();
         requestElt = dom.getElement(requestElt, "Body/*");
         if (requestElt == null)
-            throw new IOException("No request in SOAP body");        
+            throw new IOException("No request in SOAP body");
         return requestElt;
     }
     
@@ -348,17 +318,24 @@ public abstract class OWSServlet extends HttpServlet
         }
         catch (IOException e1)
         {
-            log.trace("Error while sending exception report", e1);
+            log.trace(INTERNAL_SEND_ERROR_MSG, e1);
         }
     }
     
     
     protected void sendResponse(OWSRequest request, OWSResponse resp) throws OWSException, IOException
     {
-        // write response to response stream
-        OutputStream os = new BufferedOutputStream(request.getResponseStream());
-        owsUtils.writeXMLResponse(os, resp, request.getVersion(), request.getSoapVersion());        
-        os.flush();
+        try
+        {
+            // write response to response stream
+            OutputStream os = new BufferedOutputStream(request.getResponseStream());
+            owsUtils.writeXMLResponse(os, resp, request.getVersion(), request.getSoapVersion());        
+            os.flush();
+        }
+        catch (OWSException e)
+        {
+            throw new IllegalStateException("Cannot write response", e);
+        }
     }
     
     

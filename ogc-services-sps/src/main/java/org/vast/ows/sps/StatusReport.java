@@ -22,7 +22,6 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -43,10 +42,8 @@ import org.w3c.dom.Element;
  * @author Alex Robin
  * @date Feb 25, 2008
  * */
-public class StatusReport implements Serializable, Cloneable
+public class StatusReport
 {
-	private static final long serialVersionUID = -2881367421680156901L;
-
 	// request status codes
 	public enum RequestStatus {Pending, Accepted, Rejected};
 	
@@ -266,19 +263,5 @@ public class StatusReport implements Serializable, Cloneable
 	{
 		QName qname = new QName(extElt.getNamespaceURI(), extElt.getLocalName());
 		extensions.put(qname, extElt);
-	}
-	
-	
-	@Override
-	public StatusReport clone()
-	{
-		try
-		{
-			return (StatusReport)super.clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			return null;
-		}
 	}
 }

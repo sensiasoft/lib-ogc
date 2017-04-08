@@ -22,7 +22,6 @@ Contributor(s):
 
 package org.vast.ows.sps;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,10 +37,8 @@ import org.w3c.dom.Element;
  * @author Alex Robin
  * @date Feb 25, 2008
  * */
-public class Task implements Serializable
+public class Task
 {
-	private static final long serialVersionUID = 1808382961794965581L;
-	
 	protected String id;
 	protected String title;
 	protected String description;
