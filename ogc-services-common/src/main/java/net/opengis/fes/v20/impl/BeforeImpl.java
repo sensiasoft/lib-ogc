@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Before;
  */
 public class BeforeImpl extends BinaryTemporalOpImpl implements Before
 {
-    static final long serialVersionUID = 1L;
     
     
     public BeforeImpl()

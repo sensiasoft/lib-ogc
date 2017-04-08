@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Intersects;
  */
 public class IntersectsImpl extends BinarySpatialOpImpl implements Intersects
 {
-    static final long serialVersionUID = 1L;
     
     
     public IntersectsImpl()

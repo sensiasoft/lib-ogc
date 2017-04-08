@@ -24,7 +24,6 @@ import net.opengis.fes.v20.TContains;
  */
 public class TContainsImpl extends BinaryTemporalOpImpl implements TContains
 {
-    static final long serialVersionUID = 1L;
     
     
     public TContainsImpl()

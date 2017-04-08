@@ -14,14 +14,13 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.fes.v20.impl;
 
+import java.util.Objects;
 import net.opengis.fes.v20.BBOX;
-import net.opengis.fes.v20.BinarySpatialOp;
 import net.opengis.fes.v20.Expression;
 
 
-public class BBOXImpl extends SpatialOpsImpl implements BBOX
+public class BBOXImpl implements BBOX
 {
-    static final long serialVersionUID = 1L;
     protected Expression operand1;
     protected Expression operand2;
     
@@ -62,15 +61,15 @@ public class BBOXImpl extends SpatialOpsImpl implements BBOX
     @Override
     public boolean equals(Object obj)
     {
-        if (!this.getClass().equals(obj.getClass()))
-            return false;
-        
-        if (!getOperand1().equals(((BinarySpatialOp)obj).getOperand1()))
-            return false;
-        
-        if (!getOperand2().equals(((BinarySpatialOp)obj).getOperand2()))
-            return false;
-        
-        return true;
+        return obj instanceof BBOX &&
+               Objects.equals(operand1, ((BBOX)obj).getOperand1()) &&
+               Objects.equals(operand2, ((BBOX)obj).getOperand2());
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(operand1, operand2);
     }
 }

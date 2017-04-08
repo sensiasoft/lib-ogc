@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Begins;
  */
 public class BeginsImpl extends BinaryTemporalOpImpl implements Begins
 {
-    static final long serialVersionUID = 1L;
     
     
     public BeginsImpl()

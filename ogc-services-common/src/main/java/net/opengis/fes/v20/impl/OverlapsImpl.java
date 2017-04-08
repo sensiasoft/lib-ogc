@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Overlaps;
  */
 public class OverlapsImpl extends BinarySpatialOpImpl implements Overlaps
 {
-    static final long serialVersionUID = 1L;
     
     
     public OverlapsImpl()

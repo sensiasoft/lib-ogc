@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.fes.v20.impl;
 
+import java.util.Objects;
 import net.opengis.fes.v20.ValueReference;
 
 
@@ -24,7 +25,6 @@ import net.opengis.fes.v20.ValueReference;
  */
 public class ValueReferenceImpl implements ValueReference
 {
-    static final long serialVersionUID = 1L;
     protected String value;
     
     
@@ -59,13 +59,19 @@ public class ValueReferenceImpl implements ValueReference
     {
         return getValue();
     }
-
-
+    
+    
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof ValueReference))
-            return false;
-        return getValue().equals(((ValueReference)obj).getValue());
+        return obj instanceof ValueReference &&
+               Objects.equals(value, ((ValueReference)obj).getValue());
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(value);
     }
 }

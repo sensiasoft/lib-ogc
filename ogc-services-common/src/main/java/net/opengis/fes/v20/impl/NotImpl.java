@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Not;
  */
 public class NotImpl extends UnaryLogicOpImpl implements Not
 {
-    static final long serialVersionUID = 1L;
     
     
     public NotImpl()

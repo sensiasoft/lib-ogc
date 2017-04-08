@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.fes.v20.impl;
 
+import java.util.Objects;
 import javax.xml.namespace.QName;
 import net.opengis.fes.v20.Literal;
 
@@ -25,7 +26,6 @@ import net.opengis.fes.v20.Literal;
  */
 public class LiteralImpl implements Literal
 {
-    static final long serialVersionUID = 1L;
     protected QName type;
     protected String value;
     
@@ -82,7 +82,7 @@ public class LiteralImpl implements Literal
     @Override
     public void setValue(String value)
     {
-        this.value = value;        
+        this.value = value;
     }
     
     
@@ -96,8 +96,16 @@ public class LiteralImpl implements Literal
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof Literal))
-            return false;
-        return getValue().equals(((Literal)obj).getValue());
+        return obj instanceof Literal &&
+               Objects.equals(type, ((Literal)obj).getType()) &&
+               Objects.equals(value, ((Literal)obj).getValue());
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(type,
+                            value);
     }
 }

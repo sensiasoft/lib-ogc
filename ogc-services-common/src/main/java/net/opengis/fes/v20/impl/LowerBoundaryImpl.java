@@ -25,7 +25,6 @@ import net.opengis.fes.v20.LowerBoundary;
  */
 public class LowerBoundaryImpl implements LowerBoundary
 {
-    static final long serialVersionUID = 1L;
     protected Expression expression;
     
     

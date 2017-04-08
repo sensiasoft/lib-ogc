@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Crosses;
  */
 public class CrossesImpl extends BinarySpatialOpImpl implements Crosses
 {
-    static final long serialVersionUID = 1L;
     
     
     public CrossesImpl()

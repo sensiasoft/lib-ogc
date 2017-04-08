@@ -13,7 +13,6 @@ import net.opengis.ows.v11.Domain;
  */
 public class ConformanceImpl implements Conformance
 {
-    static final long serialVersionUID = 1L;
     protected OgcPropertyList<Domain> constraintList = new OgcPropertyList<Domain>();
     
     

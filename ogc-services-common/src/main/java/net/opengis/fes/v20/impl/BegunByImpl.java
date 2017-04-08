@@ -24,7 +24,6 @@ import net.opengis.fes.v20.BegunBy;
  */
 public class BegunByImpl extends BinaryTemporalOpImpl implements BegunBy
 {
-    static final long serialVersionUID = 1L;
     
     
     public BegunByImpl()

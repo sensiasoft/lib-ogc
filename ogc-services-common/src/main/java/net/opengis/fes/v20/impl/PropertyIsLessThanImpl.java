@@ -24,7 +24,6 @@ import net.opengis.fes.v20.PropertyIsLessThan;
  */
 public class PropertyIsLessThanImpl extends BinaryComparisonOpImpl implements PropertyIsLessThan
 {
-    static final long serialVersionUID = 1L;
     
     
     public PropertyIsLessThanImpl()

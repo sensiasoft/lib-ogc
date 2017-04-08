@@ -24,7 +24,6 @@ import net.opengis.fes.v20.TOverlaps;
  */
 public class TOverlapsImpl extends BinaryTemporalOpImpl implements TOverlaps
 {
-    static final long serialVersionUID = 1L;
     
     
     public TOverlapsImpl()

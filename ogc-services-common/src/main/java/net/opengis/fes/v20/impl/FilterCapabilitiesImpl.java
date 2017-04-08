@@ -23,7 +23,6 @@ import net.opengis.fes.v20.TemporalCapabilities;
 
 public class FilterCapabilitiesImpl implements FilterCapabilities
 {
-    static final long serialVersionUID = 1L;
     protected Conformance conformance = new ConformanceImpl();
     protected ScalarCapabilities scalarCapabilities;
     protected SpatialCapabilities spatialCapabilities;

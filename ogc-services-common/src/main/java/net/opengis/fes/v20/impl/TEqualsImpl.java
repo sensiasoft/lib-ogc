@@ -24,7 +24,6 @@ import net.opengis.fes.v20.TEquals;
  */
 public class TEqualsImpl extends BinaryTemporalOpImpl implements TEquals
 {
-    static final long serialVersionUID = 1L;
     
     
     public TEqualsImpl()

@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Meets;
  */
 public class MeetsImpl extends BinaryTemporalOpImpl implements Meets
 {
-    static final long serialVersionUID = 1L;
     
     
     public MeetsImpl()

@@ -24,7 +24,6 @@ import net.opengis.fes.v20.And;
  */
 public class AndImpl extends BinaryLogicOpImpl implements And
 {
-    static final long serialVersionUID = 1L;
     
     
     public AndImpl()

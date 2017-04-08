@@ -14,13 +14,13 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.fes.v20.impl;
 
+import java.util.Objects;
 import net.opengis.fes.v20.BinarySpatialOp;
 import net.opengis.fes.v20.Expression;
 
 
-public abstract class BinarySpatialOpImpl extends SpatialOpsImpl implements BinarySpatialOp
+public abstract class BinarySpatialOpImpl implements BinarySpatialOp
 {
-    static final long serialVersionUID = 1L;
     protected Expression operand1;
     protected Expression operand2;
     
@@ -75,17 +75,16 @@ public abstract class BinarySpatialOpImpl extends SpatialOpsImpl implements Bina
     @Override
     public boolean equals(Object obj)
     {
-        if (!this.getClass().equals(obj.getClass()))
-            return false;
-        
-        BinarySpatialOp other = (BinarySpatialOp)obj;
-        
-        if (!getOperand1().equals(other.getOperand1()))
-            return false;
-        
-        if (!getOperand2().equals(other.getOperand2()))
-            return false;
-        
-        return true;
+        return obj instanceof BinarySpatialOp &&
+               Objects.equals(operand1, ((BinarySpatialOp)obj).getOperand1()) &&
+               Objects.equals(operand2, ((BinarySpatialOp)obj).getOperand2());
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(operand1,
+                            operand2);
     }
 }

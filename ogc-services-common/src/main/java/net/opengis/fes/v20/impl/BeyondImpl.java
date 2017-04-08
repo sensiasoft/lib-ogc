@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Beyond;
  */
 public class BeyondImpl extends DistanceBufferImpl implements Beyond
 {
-    static final long serialVersionUID = 1L;
     
     
     public BeyondImpl()

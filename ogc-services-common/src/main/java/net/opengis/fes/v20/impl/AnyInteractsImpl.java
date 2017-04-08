@@ -24,7 +24,6 @@ import net.opengis.fes.v20.AnyInteracts;
  */
 public class AnyInteractsImpl extends BinaryTemporalOpImpl implements AnyInteracts
 {
-    static final long serialVersionUID = 1L;
     
     
     public AnyInteractsImpl()

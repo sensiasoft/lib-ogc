@@ -28,7 +28,6 @@ import net.opengis.fes.v20.SpatialOperator;
  */
 public class SpatialCapabilitiesImpl implements SpatialCapabilities
 {
-    static final long serialVersionUID = 1L;
     protected List<QName> geometryOperands = new ArrayList<QName>();
     protected List<SpatialOperator> spatialOperators = new ArrayList<SpatialOperator>();
     

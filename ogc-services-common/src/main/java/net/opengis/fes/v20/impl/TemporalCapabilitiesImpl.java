@@ -23,7 +23,6 @@ import net.opengis.fes.v20.TemporalOperator;
 
 public class TemporalCapabilitiesImpl implements TemporalCapabilities
 {
-    static final long serialVersionUID = 1L;
     protected List<QName> temporalOperands = new ArrayList<QName>();
     protected List<TemporalOperator> temporalOperators = new ArrayList<TemporalOperator>();
     

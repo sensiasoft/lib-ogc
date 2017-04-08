@@ -18,9 +18,8 @@ import net.opengis.fes.v20.Expression;
 import net.opengis.fes.v20.PropertyIsLike;
 
 
-public class PropertyIsLikeImpl extends ComparisonOpsImpl implements PropertyIsLike
+public class PropertyIsLikeImpl implements PropertyIsLike
 {
-    static final long serialVersionUID = 1L;
     protected Expression expression1;
     protected Expression expression2;
     protected String wildCard = "";

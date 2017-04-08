@@ -24,7 +24,6 @@ import net.opengis.fes.v20.OverlappedBy;
  */
 public class OverlappedByImpl extends BinaryTemporalOpImpl implements OverlappedBy
 {
-    static final long serialVersionUID = 1L;
     
     
     public OverlappedByImpl()

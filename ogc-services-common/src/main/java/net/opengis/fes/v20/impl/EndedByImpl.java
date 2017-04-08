@@ -24,7 +24,6 @@ import net.opengis.fes.v20.EndedBy;
  */
 public class EndedByImpl extends BinaryTemporalOpImpl implements EndedBy
 {
-    static final long serialVersionUID = 1L;
     
     
     public EndedByImpl()

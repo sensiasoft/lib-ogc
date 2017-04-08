@@ -25,7 +25,6 @@ import net.opengis.fes.v20.UpperBoundary;
  */
 public class UpperBoundaryImpl implements UpperBoundary
 {
-    static final long serialVersionUID = 1L;
     protected Expression expression;
     
     

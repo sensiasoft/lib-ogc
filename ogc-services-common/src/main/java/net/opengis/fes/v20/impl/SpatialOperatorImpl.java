@@ -23,7 +23,6 @@ import net.opengis.fes.v20.SpatialOperatorName;
 
 public class SpatialOperatorImpl implements SpatialOperator
 {
-    static final long serialVersionUID = 1L;
     protected List<QName> geometryOperands = new ArrayList<QName>();
     protected SpatialOperatorName name;
     

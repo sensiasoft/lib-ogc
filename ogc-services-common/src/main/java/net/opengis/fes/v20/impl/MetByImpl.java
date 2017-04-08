@@ -24,7 +24,6 @@ import net.opengis.fes.v20.MetBy;
  */
 public class MetByImpl extends BinaryTemporalOpImpl implements MetBy
 {
-    static final long serialVersionUID = 1L;
     
     
     public MetByImpl()

@@ -18,9 +18,8 @@ import net.opengis.fes.v20.Expression;
 import net.opengis.fes.v20.PropertyIsNil;
 
 
-public class PropertyIsNilImpl extends ComparisonOpsImpl implements PropertyIsNil
+public class PropertyIsNilImpl implements PropertyIsNil
 {
-    static final long serialVersionUID = 1L;
     protected Expression expression;
     protected String nilReason;
     

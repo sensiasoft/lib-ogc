@@ -24,7 +24,6 @@ import net.opengis.fes.v20.LogicOps;
  */
 public abstract class LogicOpsImpl implements LogicOps
 {
-    static final long serialVersionUID = 1L;
     
     
     public LogicOpsImpl()

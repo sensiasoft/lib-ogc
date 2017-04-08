@@ -24,7 +24,6 @@ import net.opengis.fes.v20.PropertyIsEqualTo;
  */
 public class PropertyIsEqualToImpl extends BinaryComparisonOpImpl implements PropertyIsEqualTo
 {
-    static final long serialVersionUID = 1L;
     
     
     public PropertyIsEqualToImpl()

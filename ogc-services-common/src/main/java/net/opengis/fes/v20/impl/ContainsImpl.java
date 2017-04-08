@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Contains;
  */
 public class ContainsImpl extends BinarySpatialOpImpl implements Contains
 {
-    static final long serialVersionUID = 1L;
     
     
     public ContainsImpl()

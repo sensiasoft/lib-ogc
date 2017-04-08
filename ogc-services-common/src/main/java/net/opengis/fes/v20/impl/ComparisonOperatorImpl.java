@@ -25,7 +25,6 @@ import net.opengis.fes.v20.ComparisonOperatorName;
  */
 public class ComparisonOperatorImpl implements ComparisonOperator
 {
-    static final long serialVersionUID = 1L;
     protected ComparisonOperatorName name;
     
     

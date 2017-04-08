@@ -20,9 +20,8 @@ import net.opengis.fes.v20.PropertyIsBetween;
 import net.opengis.fes.v20.UpperBoundary;
 
 
-public class PropertyIsBetweenImpl extends ComparisonOpsImpl implements PropertyIsBetween
+public class PropertyIsBetweenImpl implements PropertyIsBetween
 {
-    static final long serialVersionUID = 1L;
     protected Expression expression;
     protected LowerBoundary lowerBoundary;
     protected UpperBoundary upperBoundary;

@@ -24,7 +24,6 @@ import net.opengis.fes.v20.PropertyIsGreaterThan;
  */
 public class PropertyIsGreaterThanImpl extends BinaryComparisonOpImpl implements PropertyIsGreaterThan
 {
-    static final long serialVersionUID = 1L;
     
     
     public PropertyIsGreaterThanImpl()

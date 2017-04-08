@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.fes.v20.impl;
 
+import java.util.Objects;
 import net.opengis.fes.v20.GMLExpression;
 
 
@@ -43,21 +44,23 @@ public class GMLExpressionImpl implements GMLExpression
 
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (!(obj instanceof GMLExpression))
-            return false;
-        
-        if (!getGmlObject().equals(((GMLExpression)obj).getGmlObject()))
-            return false;
-        
-        return true;
-    }
-
-
-    @Override
     public String toString()
     {
         return gmlObj.toString();
+    }
+    
+    
+    @Override
+    public boolean equals(Object obj)
+    {
+        return obj instanceof GMLExpression &&
+               Objects.equals(gmlObj, ((GMLExpression)obj).getGmlObject());
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(gmlObj);
     }
 }

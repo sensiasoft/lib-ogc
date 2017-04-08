@@ -24,7 +24,6 @@ import net.opengis.fes.v20.After;
  */
 public class AfterImpl extends BinaryTemporalOpImpl implements After
 {
-    static final long serialVersionUID = 1L;
     
     
     public AfterImpl()

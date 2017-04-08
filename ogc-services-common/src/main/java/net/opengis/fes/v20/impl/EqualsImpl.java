@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Equals;
  */
 public class EqualsImpl extends BinarySpatialOpImpl implements Equals
 {
-    static final long serialVersionUID = 1L;
     
     
     public EqualsImpl()

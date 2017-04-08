@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Touches;
  */
 public class TouchesImpl extends BinarySpatialOpImpl implements Touches
 {
-    static final long serialVersionUID = 1L;
     
     
     public TouchesImpl()

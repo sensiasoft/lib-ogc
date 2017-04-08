@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Disjoint;
  */
 public class DisjointImpl extends BinarySpatialOpImpl implements Disjoint
 {
-    static final long serialVersionUID = 1L;
     
     
     public DisjointImpl()

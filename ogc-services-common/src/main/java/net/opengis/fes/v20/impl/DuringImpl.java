@@ -24,7 +24,6 @@ import net.opengis.fes.v20.During;
  */
 public class DuringImpl extends BinaryTemporalOpImpl implements During
 {
-    static final long serialVersionUID = 1L;
     
     
     public DuringImpl()

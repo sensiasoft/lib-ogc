@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Or;
  */
 public class OrImpl extends BinaryLogicOpImpl implements Or
 {
-    static final long serialVersionUID = 1L;
     
     
     public OrImpl()

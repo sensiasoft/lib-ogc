@@ -14,12 +14,13 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.fes.v20.impl;
 
+import java.util.Objects;
+import org.vast.util.NumberUtils;
 import net.opengis.fes.v20.Measure;
 
 
 public class MeasureImpl implements Measure
 {
-    static final long serialVersionUID = 1L;
     protected String uom;
     protected double value;
     
@@ -54,5 +55,22 @@ public class MeasureImpl implements Measure
     public void setValue(double value)
     {
         this.value = value;
+    }
+    
+    
+    @Override
+    public boolean equals(Object obj)
+    {
+        return obj instanceof Measure &&
+                Objects.equals(uom, ((Measure)obj).getUom()) &&
+                NumberUtils.ulpEquals(value, ((Measure)obj).getValue());
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(uom,
+                            value);
     }
 }

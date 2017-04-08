@@ -24,7 +24,6 @@ import net.opengis.fes.v20.Within;
  */
 public class WithinImpl extends BinarySpatialOpImpl implements Within
 {
-    static final long serialVersionUID = 1L;
     
     
     public WithinImpl()

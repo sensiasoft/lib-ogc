@@ -14,13 +14,13 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.fes.v20.impl;
 
+import java.util.Objects;
 import net.opengis.fes.v20.BinaryLogicOp;
 import net.opengis.fes.v20.FilterPredicate;
 
 
 public abstract class BinaryLogicOpImpl extends LogicOpsImpl implements BinaryLogicOp
 {
-    static final long serialVersionUID = 1L;
     protected FilterPredicate operand1;
     protected FilterPredicate operand2;
     
@@ -75,17 +75,16 @@ public abstract class BinaryLogicOpImpl extends LogicOpsImpl implements BinaryLo
     @Override
     public boolean equals(Object obj)
     {
-        if (!this.getClass().equals(obj.getClass()))
-            return false;
-        
-        BinaryLogicOp other = (BinaryLogicOp)obj;
-        
-        if (!getOperand1().equals(other.getOperand1()))
-            return false;
-        
-        if (!getOperand2().equals(other.getOperand2()))
-            return false;
-        
-        return true;
+        return obj instanceof BinaryLogicOp &&
+               Objects.equals(operand1, ((BinaryLogicOp)obj).getOperand1()) &&
+               Objects.equals(operand2, ((BinaryLogicOp)obj).getOperand2());
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(operand1,
+                            operand2);
     }
 }
