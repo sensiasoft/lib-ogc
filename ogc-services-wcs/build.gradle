@@ -1,0 +1,26 @@
+group = 'org.vast.opengis'
+description = 'OGC Web Coverage Service (WMS)'
+
+dependencies {
+  compile project(':ogc-services-common')
+  testCompile project(path: ':ogc-services-common', configuration: 'testArtifacts')
+}
+
+// add info to OSGI manifest
+jar {
+  manifest {
+    instruction 'Bundle-Vendor', 'Sensia Software LLC'
+  }
+}
+
+// add info to maven pom
+ext.pom >>= {
+  developers {
+    developer {
+      id 'alexrobin'
+      name 'Alex Robin'
+      organization 'Sensia Software LLC'
+      organizationUrl 'http://www.sensiasoft.com' 
+    }
+  } 
+}

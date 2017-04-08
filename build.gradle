@@ -1,0 +1,36 @@
+description = 'Lib OWS'
+
+allprojects  {
+  repositories {
+    //jcenter() 
+    maven { url "http://repo.maven.apache.org/maven2" }
+  }
+}
+
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'osgi'
+  apply plugin: 'maven-publish' 
+
+ 
+  sourceCompatibility = 1.7
+  targetCompatibility = 1.7
+  ext.details = null
+  ext.pom = {} // pom data that subprojects can append to
+  
+  tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:-options"
+  }
+  
+  tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+    options.addStringOption('Xdoclint:none', '-quiet')
+  }
+
+  // default test dependencies
+  dependencies {
+    testCompile 'junit:junit:4.11'
+    testCompile 'xmlunit:xmlunit:1.6'
+  }
+}
