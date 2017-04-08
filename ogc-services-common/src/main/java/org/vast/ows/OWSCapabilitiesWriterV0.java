@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  * pre-version of OWS common (here called v0)
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 27 nov. 07
  * */
 public abstract class OWSCapabilitiesWriterV0 extends AbstractResponseWriter<OWSServiceCapabilities>

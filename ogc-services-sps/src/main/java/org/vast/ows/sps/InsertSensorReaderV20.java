@@ -26,7 +26,7 @@ import org.vast.ows.*;
  * request and create a InsertSensorRequest object for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public class InsertSensorReaderV20 extends org.vast.ows.swe.InsertSensorReaderV20<InsertSensorRequest>

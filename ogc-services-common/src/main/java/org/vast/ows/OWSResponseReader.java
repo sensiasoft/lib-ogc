@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * Base interface for all OWS response readers
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since 21 nov. 07
  * * @param <ResponseType> Type of response object supported by this reader
  */

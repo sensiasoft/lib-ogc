@@ -20,7 +20,7 @@ package org.vast.ows.sps;
  * Container for SPS InsertSensor response data
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 14, 2016
  */
 public class InsertSensorResponse extends org.vast.ows.swe.InsertSensorResponse

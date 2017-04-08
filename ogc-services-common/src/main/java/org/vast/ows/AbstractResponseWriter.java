@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * Abstract base for all DOM based service response writers
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since 28 nov. 07
  * * @param <ResponseType> Type of OWS response object accepted by this writer
  */

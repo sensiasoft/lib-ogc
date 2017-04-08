@@ -31,7 +31,7 @@ import org.vast.ows.OWSRequest;
  * Container for SPS Confirm request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 25, 2008
  * */
 public class ConfirmRequest extends OWSRequest

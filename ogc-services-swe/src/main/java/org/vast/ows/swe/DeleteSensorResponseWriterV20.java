@@ -37,7 +37,7 @@ import org.vast.xml.DOMHelper;
  * on values contained in a DeleteSensorResponse object for SWES v2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public class DeleteSensorResponseWriterV20 extends SWEResponseWriter<DeleteSensorResponse>

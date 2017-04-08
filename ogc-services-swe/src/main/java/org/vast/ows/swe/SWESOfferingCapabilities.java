@@ -35,7 +35,7 @@ import org.vast.ows.OWSLayerCapabilities;
  * SWES offering capabilities (base class for SOS and SP capabilities) 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 13, 2014
  */
 public abstract class SWESOfferingCapabilities extends OWSLayerCapabilities

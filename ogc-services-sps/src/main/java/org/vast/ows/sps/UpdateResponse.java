@@ -28,7 +28,7 @@ package org.vast.ows.sps;
  * Container for a Update response
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb, 29 2008
  * */
 public class UpdateResponse extends TaskingResponse<StatusReport>

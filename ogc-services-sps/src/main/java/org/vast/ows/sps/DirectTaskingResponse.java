@@ -20,7 +20,7 @@ package org.vast.ows.sps;
  * Container for SPS DirectTasking response data
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 24, 2017
  * */
 public class DirectTaskingResponse extends TaskingResponse<StatusReport>

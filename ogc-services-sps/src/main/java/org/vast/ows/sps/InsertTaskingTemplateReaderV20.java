@@ -33,7 +33,7 @@ import org.vast.swe.SWEValidator;
  * request and create the corresponding object for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public class InsertTaskingTemplateReaderV20 extends SWERequestReader<InsertTaskingTemplateRequest>

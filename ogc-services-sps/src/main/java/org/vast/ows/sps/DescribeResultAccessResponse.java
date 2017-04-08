@@ -33,7 +33,7 @@ import org.vast.ows.OWSResponse;
  * TODO DescribeResultAccessResponse type description
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Mar, 03 2008
  * */
 public class DescribeResultAccessResponse extends OWSResponse

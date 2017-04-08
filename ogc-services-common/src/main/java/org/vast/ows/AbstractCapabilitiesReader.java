@@ -32,7 +32,7 @@ import org.vast.xml.DOMHelper;
  * to the list in OWSServiceCapablities.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 30, 2005
  * */
 public abstract class AbstractCapabilitiesReader extends AbstractResponseReader<OWSServiceCapabilities>

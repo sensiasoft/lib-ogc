@@ -26,7 +26,7 @@ import org.vast.xml.DOMHelper;
  * Writer to generate an XML InsertTaskingTemplate response for SPS v2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public class InsertTaskingTemplateResponseWriterV20 extends SWEResponseWriter<InsertTaskingTemplateResponse>

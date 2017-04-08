@@ -32,7 +32,7 @@ import org.vast.util.TimeExtent;
  * observables, procedures...
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 27, 2005
  * */
 public class SOSOfferingCapabilities extends SWESOfferingCapabilities

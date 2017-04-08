@@ -32,7 +32,7 @@ import org.vast.util.DateTime;
  * Provides methods to parse a SOAP/XML SPS DirectTasking request
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 24, 2017
  * */
 public class DirectTaskingReaderV20 extends SWERequestReader<DirectTaskingRequest>

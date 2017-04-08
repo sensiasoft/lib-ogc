@@ -38,7 +38,7 @@ import net.opengis.sensorml.v20.AbstractProcess;
  * Reader for XML DescribeSensor response for SWES v2.0 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec, 14 2016
  * */
 public class DescribeSensorResponseReaderV20 extends SWEResponseReader<DescribeSensorResponse>

@@ -33,7 +33,7 @@ import org.vast.ows.OWSResponse;
  * Container for SOS InsertResult response data
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 02, 2014
  * */
 public class InsertResultResponse extends OWSResponse

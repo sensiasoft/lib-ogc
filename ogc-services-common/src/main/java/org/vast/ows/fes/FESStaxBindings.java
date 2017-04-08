@@ -25,7 +25,7 @@ import net.opengis.fes.v20.bind.XMLStreamBindings;
  * Helper wrapping the auto-generated FES StAX bindings
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 25, 2014
  */
 public class FESStaxBindings extends XMLStreamBindings

@@ -27,7 +27,7 @@ import org.vast.xml.DOMHelper;
  * on values contained in a InsertResultTemplateResponse object for SOS v2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 3, 2014
  * */
 public class InsertResultTemplateResponseWriterV20 extends SWEResponseWriter<InsertResultTemplateResponse>

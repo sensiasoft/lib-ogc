@@ -35,7 +35,7 @@ import org.vast.xml.XMLWriterException;
  * on values contained in a GetFeasibilityResponse object for SPS v2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Mar 04, 2008
  * */
 public class GetFeasibilityResponseWriterV20 extends SWEResponseWriter<GetFeasibilityResponse>

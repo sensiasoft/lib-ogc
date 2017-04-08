@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  * values contained in a GetFeatureOfInterestRequest object 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date May 21, 2015
  * */
 public class GetFoiWriterV20 extends SWERequestWriter<GetFeatureOfInterestRequest>

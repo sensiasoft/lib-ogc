@@ -30,7 +30,7 @@ import org.vast.ows.OWSRequest;
  * Container for SPS Cancel request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Mar 03, 2008
  * */
 public class CancelRequest extends OWSRequest

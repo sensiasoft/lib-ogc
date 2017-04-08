@@ -28,7 +28,7 @@ package org.vast.ows.sps;
  * Container for a Cancel response
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Mar, 03 2008
  * */
 public class CancelResponse extends TaskingResponse<StatusReport>

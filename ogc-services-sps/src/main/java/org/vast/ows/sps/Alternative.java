@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 25, 2008
  * */
 public class Alternative

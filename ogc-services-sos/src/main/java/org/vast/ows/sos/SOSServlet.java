@@ -33,7 +33,7 @@ import org.vast.ows.swe.UpdateSensorRequest;
  * Base abstract class for implementing SOS servlets
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 24, 2012
  * */
 @SuppressWarnings("serial")

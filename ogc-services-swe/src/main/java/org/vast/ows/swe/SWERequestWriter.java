@@ -33,7 +33,7 @@ import org.vast.ows.OWSRequest;
  * Base abstract class for SWE services POST/GET request builders
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 30, 2005
  * @param <RequestType> Type of OWS request object accepted by this writer
  */

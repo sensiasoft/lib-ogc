@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * Base writer for all service capabilities based on OWS common 1.1
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since 27 nov. 07
  * */
 public abstract class OWSCapabilitiesWriterV11 extends AbstractResponseWriter<OWSServiceCapabilities>

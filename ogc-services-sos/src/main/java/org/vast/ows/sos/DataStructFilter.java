@@ -32,7 +32,7 @@ import org.vast.data.BaseTreeVisitor;
  * SWE Common result structure.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 9, 2015
  */
 public class DataStructFilter extends BaseTreeVisitor

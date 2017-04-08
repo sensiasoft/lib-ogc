@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
  * on a pre-version of OWS common (here called version 0)
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 27 nov. 07
  * */
 public abstract class OWSCapabilitiesReaderV0 extends AbstractCapabilitiesReader

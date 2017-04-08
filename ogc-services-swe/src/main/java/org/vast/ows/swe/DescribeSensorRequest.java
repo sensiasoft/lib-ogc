@@ -32,7 +32,7 @@ import org.vast.util.TimeExtent;
  * Container for SOS Describe Sensor request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 09, 2007
  * */
 public class DescribeSensorRequest extends OWSRequest

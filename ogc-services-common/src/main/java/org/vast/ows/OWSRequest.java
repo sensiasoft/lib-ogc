@@ -34,7 +34,7 @@ import org.vast.ogc.OGCRegistry;
  * Base class for all OWS style request objects
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 27, 2005
  * */
 public class OWSRequest

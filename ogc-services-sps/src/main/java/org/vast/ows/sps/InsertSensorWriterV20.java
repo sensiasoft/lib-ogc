@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * values contained in a InsertSensorRequest object 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 2, 2014
  * */
 public class InsertSensorWriterV20 extends org.vast.ows.swe.InsertSensorWriterV20<InsertSensorRequest>

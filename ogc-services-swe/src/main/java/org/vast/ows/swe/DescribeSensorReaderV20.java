@@ -43,7 +43,7 @@ import org.vast.ows.*;
  * request and create a DescribeSensorRequest object for version 1.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 10, 2007
  * */
 public class DescribeSensorReaderV20 extends SWERequestReader<DescribeSensorRequest>

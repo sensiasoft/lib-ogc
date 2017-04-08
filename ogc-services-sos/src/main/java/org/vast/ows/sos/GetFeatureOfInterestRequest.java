@@ -32,7 +32,7 @@ import org.vast.util.Bbox;
  * Container for SOS GetFeatureOfInterest request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 02, 2014
  * */
 public class GetFeatureOfInterestRequest extends OWSRequest

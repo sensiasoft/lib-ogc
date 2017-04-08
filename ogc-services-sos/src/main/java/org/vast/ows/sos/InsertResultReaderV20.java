@@ -39,7 +39,7 @@ import org.vast.swe.SWEData;
  * request and create a InsertResultRequest object for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 2, 2014
  * */
 public class InsertResultReaderV20 extends SWERequestReader<InsertResultRequest> implements SweEncodedMessageProcessor

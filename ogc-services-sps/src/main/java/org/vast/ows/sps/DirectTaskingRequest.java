@@ -30,7 +30,7 @@ import org.vast.util.TimeExtent;
  * This is used to reserve a slot for direct exclusive access to a taskable asset
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 24, 2017
  * */
 public class DirectTaskingRequest extends OWSRequest

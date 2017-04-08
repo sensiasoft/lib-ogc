@@ -36,7 +36,7 @@ import org.vast.ows.swe.SWERequestReader;
  * request and create a GetResultRequest object for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Aug 1, 2012
  * */
 public class GetResultReaderV20 extends SWERequestReader<GetResultRequest>

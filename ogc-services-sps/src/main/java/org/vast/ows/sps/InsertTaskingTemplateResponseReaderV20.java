@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * Reader for XML InsertTaskingTemplate response for SPS v2.0 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public class InsertTaskingTemplateResponseReaderV20 extends SWEResponseReader<InsertTaskingTemplateResponse>

@@ -24,7 +24,7 @@ import org.vast.ows.OWSRequest;
  * Container for SPS InsertTaskingTemplate request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public class InsertTaskingTemplateRequest extends OWSRequest

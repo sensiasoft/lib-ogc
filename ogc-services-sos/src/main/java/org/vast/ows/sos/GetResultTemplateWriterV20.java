@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * values contained in a GetResultTemplateRequest object 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Aug 8, 2012
  * */
 public class GetResultTemplateWriterV20 extends SWERequestWriter<GetResultTemplateRequest>

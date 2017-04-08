@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * Class representing an SPS task as a chronological list of status changes.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 25, 2008
  * */
 public class Task implements Serializable

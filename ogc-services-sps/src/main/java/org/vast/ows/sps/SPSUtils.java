@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  * Utility methods for common stuffs in SPS services
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 08, 2008
  */
 public class SPSUtils extends OWSUtils implements OWSBindingProvider

@@ -36,7 +36,7 @@ import org.w3c.dom.NodeList;
  * TODO DescribeResultAccessResponseReaderV11 type description
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Mar, 19 2008
  * */
 public class DescribeResultAccessResponseReaderV20 extends SWEResponseReader<DescribeResultAccessResponse>

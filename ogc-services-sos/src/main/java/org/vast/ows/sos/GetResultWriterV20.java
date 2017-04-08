@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  * values contained in a GetResultRequest object 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Aug 6, 2012
  * */
 public class GetResultWriterV20 extends SWERequestWriter<GetResultRequest>

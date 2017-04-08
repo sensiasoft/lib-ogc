@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * Utility class to serialize an OWS exception to XML
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 23, 2007
  * */
 public class OWSExceptionWriter

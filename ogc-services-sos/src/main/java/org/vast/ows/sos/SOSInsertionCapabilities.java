@@ -31,7 +31,7 @@ import java.util.Set;
  * Representation of SOS insertion capabilities section.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Sep 15, 2013
  */
 public class SOSInsertionCapabilities

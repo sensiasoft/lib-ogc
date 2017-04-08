@@ -33,7 +33,7 @@ import java.util.List;
  * It itself derives from OWSException can be thrown as such. 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since 23 oct. 07
  * */
 public class OWSExceptionReport extends OWSException

@@ -35,7 +35,7 @@ import org.vast.xml.DOMHelper;
  * on values contained in a DescribeResultAccessResponse object for SPS v2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Mar 19, 2008
  * */
 public class DescribeResultAccessResponseWriterV20 extends SWEResponseWriter<DescribeResultAccessResponse>

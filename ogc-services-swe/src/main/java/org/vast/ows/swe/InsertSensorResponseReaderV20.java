@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * Reader for XML InsertSensor response for SWES v2.0 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb, 19 2014
  * */
 public class InsertSensorResponseReaderV20 extends SWEResponseReader<InsertSensorResponse>

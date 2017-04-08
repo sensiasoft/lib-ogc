@@ -39,7 +39,7 @@ import org.w3c.dom.NodeList;
  * Utility methods to read SWES common structures
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 22 jun. 10
  * */
 public class SWESUtils extends OWSUtils

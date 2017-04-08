@@ -36,7 +36,7 @@ import org.vast.ows.OWSResponse;
  * Container for SOS GetFeatureOfInterest response data
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 02, 2014
  * */
 public class GetFeatureOfInterestResponse extends OWSResponse

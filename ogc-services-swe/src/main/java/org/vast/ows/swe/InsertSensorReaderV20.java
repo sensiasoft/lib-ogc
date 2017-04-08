@@ -33,7 +33,7 @@ import org.vast.sensorML.SMLUtils;
  * request and create a InsertSensorRequest object for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public abstract class InsertSensorReaderV20<RequestType extends InsertSensorRequest> extends SWERequestReader<RequestType>

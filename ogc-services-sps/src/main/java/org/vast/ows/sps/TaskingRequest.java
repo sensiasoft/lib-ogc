@@ -21,7 +21,7 @@ import org.vast.util.DateTime;
  * Base class for all SPS tasking requests
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 25, 2008
  * */
 public abstract class TaskingRequest extends OWSRequest implements ParameterizedRequest

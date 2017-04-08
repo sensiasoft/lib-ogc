@@ -30,7 +30,7 @@ import org.w3c.dom.NodeList;
  * request and create a InsertSensorRequest object for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 2, 2014
  * */
 public class InsertSensorReaderV20 extends org.vast.ows.swe.InsertSensorReaderV20<InsertSensorRequest>

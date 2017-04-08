@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * values contained in a InsertResultRequest object 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 2, 2014
  * */
 public class InsertResultWriterV20 extends SWERequestWriter<InsertResultRequest>

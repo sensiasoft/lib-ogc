@@ -35,7 +35,7 @@ import org.w3c.dom.NodeList;
  * a GetStatusResponse object
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb, 29 2008
  * */
 public class GetStatusResponseReaderV20 extends SWEResponseReader<GetStatusResponse>

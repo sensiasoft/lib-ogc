@@ -32,7 +32,7 @@ import org.vast.ows.OWSServiceCapabilities;
  * Representation of SOS service capabilities document.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Sep 15, 2013
  */
 public class SOSServiceCapabilities extends OWSServiceCapabilities

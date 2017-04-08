@@ -36,7 +36,7 @@ import org.vast.xml.XMLWriterException;
  * on values contained in a DescribeTaskingResponse object for SPS v2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 29, 2008
  * */
 public class DescribeTaskingResponseWriterV20 extends SWEResponseWriter<DescribeTaskingResponse>

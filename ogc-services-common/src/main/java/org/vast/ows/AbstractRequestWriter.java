@@ -40,7 +40,7 @@ import org.vast.util.TimeExtent;
  * request builders
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 30, 2005
  * * @param <RequestType> Type of OWS request object accepted by this writer
  */

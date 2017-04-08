@@ -31,7 +31,7 @@ import java.io.IOException;
  * Implementations can support different formats like XML Tuple, Base64, Raw Binary etc...
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 9, 2005
  * */
 public interface SweDataWriter

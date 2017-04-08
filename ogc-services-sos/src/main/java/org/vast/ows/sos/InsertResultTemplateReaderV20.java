@@ -38,7 +38,7 @@ import org.vast.swe.SWEValidator;
  * request and create a InsertResultTemplateRequest object for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 2, 2014
  * */
 public class InsertResultTemplateReaderV20 extends SWERequestReader<InsertResultTemplateRequest>

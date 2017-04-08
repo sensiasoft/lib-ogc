@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * values contained in a ConnectTaskingRequest object for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public class ConnectTaskingWriterV20 extends AbstractRequestWriter<ConnectTaskingRequest>

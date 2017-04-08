@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * Base interface for all OWS request writers
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Jan 16, 2007
  * * @param <RequestType> Type of request object supported by this writer
  */

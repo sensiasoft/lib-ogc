@@ -32,7 +32,7 @@ import org.vast.ogc.OGCRegistry;
  * Base class for all OWS service responses
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since 21 nov. 07
  * */
 public class OWSResponse

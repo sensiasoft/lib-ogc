@@ -28,7 +28,7 @@ package org.vast.ows.sps;
  * Container for a Submit response
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb, 29 2008
  * */
 public class SubmitResponse extends TaskingResponse<StatusReport>

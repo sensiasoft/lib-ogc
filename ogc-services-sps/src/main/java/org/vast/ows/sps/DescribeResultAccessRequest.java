@@ -31,7 +31,7 @@ import org.vast.ows.OWSRequest;
  * Container for SPS DescribeResultAccess request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Mar 03, 2008
  * */
 public class DescribeResultAccessRequest extends OWSRequest

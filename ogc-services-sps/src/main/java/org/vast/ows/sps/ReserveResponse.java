@@ -29,7 +29,7 @@ package org.vast.ows.sps;
  * It can contain either a StatusReport 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec, 10 2008
  * */
 public class ReserveResponse extends TaskingResponse<ReservationReport>

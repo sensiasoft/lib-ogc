@@ -31,7 +31,7 @@ import org.vast.sensorML.SMLUtils;
  * request and create a UpdateSensorRequest object for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public class UpdateSensorReaderV20 extends SWERequestReader<UpdateSensorRequest>

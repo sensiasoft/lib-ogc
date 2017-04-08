@@ -31,7 +31,7 @@ import org.vast.xml.XMLWriterException;
  * on values contained in a GetResultTemplateResponse object for SOS v2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Aug 19, 2012
  * */
 public class GetResultTemplateResponseWriterV20 extends SWEResponseWriter<GetResultTemplateResponse>

@@ -33,7 +33,7 @@ import org.vast.ows.swe.SWESCapabilitiesReaderV20;
  * SOSOfferingCapabilities objects for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 15, 2013
  */
 public class SOSCapabilitiesReaderV20 extends SWESCapabilitiesReaderV20

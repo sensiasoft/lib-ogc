@@ -22,7 +22,7 @@ import org.vast.ows.OWSRequest;
  * Container for SPS ConnectTasking request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public class ConnectTaskingRequest extends OWSRequest

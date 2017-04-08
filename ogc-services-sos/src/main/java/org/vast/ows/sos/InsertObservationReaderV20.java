@@ -33,7 +33,7 @@ import org.vast.ows.swe.SWERequestReader;
  * request and create a InsertInsertObservationRequest object for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 2, 2014
  * */
 public class InsertObservationReaderV20 extends SWERequestReader<InsertObservationRequest>

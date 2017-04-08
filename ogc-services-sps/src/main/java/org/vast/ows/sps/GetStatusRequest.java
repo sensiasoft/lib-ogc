@@ -32,7 +32,7 @@ import org.vast.util.DateTime;
  * Container for SPS GetStatus request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 25, 2008
  * */
 public class GetStatusRequest extends OWSRequest

@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * corresponding object 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public class InsertTaskingTemplateWriterV20 extends SWERequestWriter<InsertTaskingTemplateRequest>

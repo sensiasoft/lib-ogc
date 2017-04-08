@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
  * objects for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 27 nov. 07
  * */
 public class SPSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20

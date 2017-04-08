@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * Provides methods to generate an XML SPS DirectTasking request 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 24, 2017
  * */
 public class DirectTaskingWriterV20 extends SWERequestWriter<DirectTaskingRequest>

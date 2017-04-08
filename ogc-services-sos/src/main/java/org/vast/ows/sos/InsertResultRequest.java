@@ -35,7 +35,7 @@ import org.vast.swe.SWEData;
  * Container for SOS InsertResult request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 02, 2014
  * */
 public class InsertResultRequest extends OWSRequest

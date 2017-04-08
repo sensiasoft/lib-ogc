@@ -38,7 +38,7 @@ import org.vast.xml.XMLWriterException;
  * contained in concrete subclasses of TaskingResponse object for SPS v2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Mar 04, 2008
  * */
 public class TaskingResponseWriterV20 extends SWEResponseWriter<TaskingResponse<?>>

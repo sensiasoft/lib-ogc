@@ -32,7 +32,7 @@ import org.vast.ows.OWSResponse;
  * Container for a GetStatus response
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb, 29 2008
  * */
 public class GetStatusResponse extends OWSResponse

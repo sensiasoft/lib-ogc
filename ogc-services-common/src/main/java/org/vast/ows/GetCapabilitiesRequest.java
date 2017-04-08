@@ -30,7 +30,7 @@ import java.util.Set;
  * Container for GetCapabilities query parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 21, 2007
  * */
 public class GetCapabilitiesRequest extends OWSRequest

@@ -29,7 +29,7 @@ import java.io.*;
  * This removes all characters before the first '<'
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 9, 2005
  * */
 public class PostRequestFilter extends FilterInputStream

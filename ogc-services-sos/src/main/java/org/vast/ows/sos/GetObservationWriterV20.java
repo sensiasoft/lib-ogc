@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  * values contained in a GetObservationRequest object 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Aug 4, 2012
  * */
 public class GetObservationWriterV20 extends SWERequestWriter<GetObservationRequest>

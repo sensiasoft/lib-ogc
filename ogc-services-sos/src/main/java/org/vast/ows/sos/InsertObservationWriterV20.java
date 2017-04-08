@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  * values contained in a InsertObservationRequest object 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 2, 2014
  * */
 public class InsertObservationWriterV20 extends SWERequestWriter<InsertObservationRequest>

@@ -31,7 +31,7 @@ package org.vast.ows.sos;
  * Container for SOS InsertSensor response data
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Mar 10, 2014
  */
 public class InsertSensorResponse extends org.vast.ows.swe.InsertSensorResponse

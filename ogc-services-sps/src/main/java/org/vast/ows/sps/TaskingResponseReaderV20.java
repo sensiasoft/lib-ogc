@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  * the corresponding object
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb, 29 2008
  * */
 public class TaskingResponseReaderV20 extends SWEResponseReader<TaskingResponse<?>>

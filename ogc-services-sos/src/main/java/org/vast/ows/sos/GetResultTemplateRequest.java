@@ -36,7 +36,7 @@ import org.vast.ows.OWSRequest;
  * Container for SOS GetResultTemplate request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Aug 08, 2012
  * */
 public class GetResultTemplateRequest extends OWSRequest

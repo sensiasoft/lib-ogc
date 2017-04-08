@@ -33,7 +33,7 @@ import org.vast.ows.sps.SPSOfferingCapabilities;
  * Representation of SPS service capabilities document.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 10, 2008
  * */
 public class SPSServiceCapabilities extends OWSServiceCapabilities

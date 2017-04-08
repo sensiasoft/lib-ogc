@@ -33,7 +33,7 @@ import org.vast.ows.OWSResponse;
  * TODO DescribeTaskingResponse type description
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb, 25 2008
  * */
 public class DescribeTaskingResponse extends OWSResponse

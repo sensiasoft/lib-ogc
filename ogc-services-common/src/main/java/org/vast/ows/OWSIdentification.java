@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * Container for common OWS Identification info
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 11, 2007
  * */
 public class OWSIdentification

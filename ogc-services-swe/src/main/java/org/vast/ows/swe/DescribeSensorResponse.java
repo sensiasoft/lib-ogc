@@ -35,7 +35,7 @@ import net.opengis.sensorml.v20.AbstractProcess;
  * Container for SWES DescribeSensor response data
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public class DescribeSensorResponse extends OWSResponse

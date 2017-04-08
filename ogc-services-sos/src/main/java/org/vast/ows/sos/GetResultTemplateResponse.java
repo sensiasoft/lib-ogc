@@ -36,7 +36,7 @@ import org.vast.ows.OWSResponse;
  * Container for SOS GetResultTemplate response data
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Aug 19, 2012
  * */
 public class GetResultTemplateResponse extends OWSResponse

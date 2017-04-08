@@ -28,7 +28,7 @@ package org.vast.ows.sps;
  * Container for a Confirm response
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec, 10 2008
  * */
 public class ConfirmResponse extends TaskingResponse<StatusReport>

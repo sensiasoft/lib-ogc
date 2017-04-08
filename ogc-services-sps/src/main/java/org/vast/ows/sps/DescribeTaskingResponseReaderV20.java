@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * a DescribeTaskingResponse object
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb, 25 2008
  * */
 public class DescribeTaskingResponseReaderV20 extends SWEResponseReader<DescribeTaskingResponse>

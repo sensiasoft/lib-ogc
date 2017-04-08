@@ -34,7 +34,7 @@ import java.util.List;
  * Container for SOS InsertSensor request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 02, 2014
  * */
 public class InsertSensorRequest extends org.vast.ows.swe.InsertSensorRequest

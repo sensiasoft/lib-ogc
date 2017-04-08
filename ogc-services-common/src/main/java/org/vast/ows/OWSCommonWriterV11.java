@@ -32,7 +32,7 @@ import org.vast.xml.DOMHelper;
  * Utility methods to write OWS common References and Reference Groups
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since 22 nov. 07
  * */
 public class OWSCommonWriterV11

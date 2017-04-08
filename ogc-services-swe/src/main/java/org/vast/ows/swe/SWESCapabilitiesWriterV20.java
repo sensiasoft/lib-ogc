@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  * Helper methods to write SWES v2.0 capabilities documents
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 12, 2014
  */
 public abstract class SWESCapabilitiesWriterV20 extends OWSCapabilitiesWriterV11

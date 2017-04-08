@@ -54,7 +54,7 @@ import org.w3c.dom.Element;
  * Abstract Base Class for all OWS Style Servlets
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 9, 2005
  * */
 public abstract class OWSServlet extends HttpServlet
@@ -64,10 +64,10 @@ public abstract class OWSServlet extends HttpServlet
     protected static final String invalidXMLRequestMsg = "Invalid XML request. Please check your syntax";
     protected static final String internalErrorMsg = "Internal Error while processing the request. Please contact maintenance";
         
-    private static Logger log = LoggerFactory.getLogger(OWSServlet.class);
+    private static final Logger log = LoggerFactory.getLogger(OWSServlet.class);
     protected String owsVersion = "1.0";
-    protected OWSUtils owsUtils = new OWSUtils();
-    protected DOMHelper capsHelper;
+    protected transient OWSUtils owsUtils = new OWSUtils();
+    protected transient DOMHelper capsHelper;
         
     
     protected abstract void handleRequest(OWSRequest request) throws Exception;

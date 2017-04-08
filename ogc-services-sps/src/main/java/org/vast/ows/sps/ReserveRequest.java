@@ -31,7 +31,7 @@ import org.vast.util.DateTime;
  * Container for SPS Reserve request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 10, 2008
  * */
 public class ReserveRequest extends TaskingRequest

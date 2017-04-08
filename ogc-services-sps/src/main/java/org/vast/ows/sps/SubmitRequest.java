@@ -29,7 +29,7 @@ package org.vast.ows.sps;
  * Container for SPS Submit request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 25, 2008
  * */
 public class SubmitRequest extends TaskingRequest

@@ -34,7 +34,7 @@ import org.w3c.dom.*;
  * create a GetCapabilities object for all version
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 21, 2007
  * */
 public class GetCapabilitiesReader extends AbstractRequestReader<GetCapabilitiesRequest>

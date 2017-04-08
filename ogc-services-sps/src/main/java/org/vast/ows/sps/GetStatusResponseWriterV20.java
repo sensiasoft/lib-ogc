@@ -36,7 +36,7 @@ import org.vast.xml.XMLWriterException;
  * contained in a GetStatusResponse object for SPS v2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Mar 04, 2008
  * */
 public class GetStatusResponseWriterV20 extends SWEResponseWriter<GetStatusResponse>

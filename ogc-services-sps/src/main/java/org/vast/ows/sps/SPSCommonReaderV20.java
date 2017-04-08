@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  * in several SPS requests/responses
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb, 29 2008
  * */
 public class SPSCommonReaderV20

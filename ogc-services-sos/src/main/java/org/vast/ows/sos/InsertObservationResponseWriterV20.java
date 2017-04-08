@@ -28,7 +28,7 @@ import org.vast.xml.DOMHelper;
  * on values contained in a InsertObservationResponse object for SOS v2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 3, 2014
  * */
 public class InsertObservationResponseWriterV20 extends SWEResponseWriter<InsertObservationResponse>

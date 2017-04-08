@@ -35,7 +35,7 @@ import org.vast.util.TimeExtent;
  * Container for SOS GetResult request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 09, 2007
  * */
 public class GetResultRequest extends OWSRequest

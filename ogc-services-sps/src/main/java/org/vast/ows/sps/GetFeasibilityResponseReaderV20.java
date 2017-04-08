@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * a GetFeasibilityResponse object
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb, 29 2008
  * */
 public class GetFeasibilityResponseReaderV20 extends SWEResponseReader<GetFeasibilityResponse>

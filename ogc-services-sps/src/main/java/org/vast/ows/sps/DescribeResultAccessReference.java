@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * of data access operation or service to be used to retrieve task data.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 8 oct. 2010
  * */
 public class DescribeResultAccessReference extends OWSReference

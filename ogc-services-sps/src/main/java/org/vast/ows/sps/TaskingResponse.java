@@ -36,7 +36,7 @@ import org.vast.util.DateTime;
  * (i.e. GetFeasibility, Submit, Update, Reserve or Confirm operations)
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb, 29 2008
  * @param <Report> Type of status report contained in this response
  */

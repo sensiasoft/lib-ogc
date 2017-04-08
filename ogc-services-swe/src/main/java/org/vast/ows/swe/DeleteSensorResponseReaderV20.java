@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * Reader for XML DeleteSensor response for SWES v2.0 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec, 14 2016
  * */
 public class DeleteSensorResponseReaderV20 extends SWEResponseReader<DeleteSensorResponse>

@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  * Utility methods for common handling of requests/responses in OGC web services
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Jan 16, 2007
  */
 public class OWSUtils extends OWSCommonUtils

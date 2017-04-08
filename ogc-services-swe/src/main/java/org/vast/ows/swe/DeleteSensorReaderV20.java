@@ -29,7 +29,7 @@ import org.vast.ows.swe.SWERequestReader;
  * request and create a DeleteSensorRequest object for version 2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 14, 2016
  * */
 public class DeleteSensorReaderV20 extends SWERequestReader<DeleteSensorRequest>

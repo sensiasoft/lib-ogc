@@ -27,7 +27,7 @@ package org.vast.ows;
  * Contains the fields necessary to generate an exception report.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since 23 oct. 07
  * */
 public class OWSException extends Exception

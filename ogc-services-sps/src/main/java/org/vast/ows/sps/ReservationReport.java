@@ -34,7 +34,7 @@ import org.vast.util.DateTime;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec, 10 2008
  * */
 public class ReservationReport extends StatusReport

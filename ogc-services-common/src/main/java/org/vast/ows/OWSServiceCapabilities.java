@@ -29,7 +29,7 @@ import org.vast.util.ResponsibleParty;
  * Representation of an OWS service capabilities document.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 27, 2005
  * */
 public class OWSServiceCapabilities extends OWSResponse

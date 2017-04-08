@@ -34,7 +34,7 @@ import org.vast.ows.OWSRequest;
  * Container for SWES InsertSensor request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb 02, 2014
  * */
 public class InsertSensorRequest extends OWSRequest

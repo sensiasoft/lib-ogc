@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * Reader for XML GetResultTemplate response for SOS v2.0 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Mar, 19 2008
  * */
 public class GetResultTemplateResponseReaderV20 extends SWEResponseReader<GetResultTemplateResponse>

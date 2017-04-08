@@ -30,7 +30,7 @@ import java.util.List;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Feb, 25 2008
  * */
 public class FeasibilityReport extends StatusReport
