@@ -620,7 +620,7 @@ public class OWSUtils extends OWSCommonUtils
             OWSExceptionReader.checkException(dom, dom.getBaseElement());
             return (ResponseType)readXMLResponse(dom, dom.getBaseElement(), request.getService(), dom.getBaseElement().getLocalName(), request.getVersion());
         }
-        catch (DOMHelperException | IOException e)
+        catch (IOException e)
         {
             throw new OWSException("Error while reading service response", e);
         }
@@ -908,14 +908,14 @@ public class OWSUtils extends OWSCommonUtils
     		OWSServiceCapabilities caps = (OWSServiceCapabilities)readXMLResponse(dom, dom.getBaseElement(), serviceType, "Capabilities");
     		return caps;    		          
         }
-        catch (IOException e)
-		{
-			throw new OWSException(IO_ERROR_MSG, e);
-		}
         catch (DOMHelperException e)
 		{
 			throw new OWSException(AbstractResponseReader.invalidXML, e);
-		}  
+		}
+        catch (IOException e)
+        {
+            throw new OWSException(IO_ERROR_MSG, e);
+        }  
         catch (IllegalStateException e)
         {
         	String spec = serviceType + " Capabilities v" + version;

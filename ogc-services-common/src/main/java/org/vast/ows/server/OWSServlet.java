@@ -38,7 +38,6 @@ import org.vast.ows.OWSResponse;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.util.PostRequestFilter;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.DOMHelperException;
 import org.w3c.dom.Element;
 
 
@@ -61,7 +60,7 @@ public abstract class OWSServlet extends HttpServlet
     protected static final String INTERNAL_SEND_ERROR_MSG = "Could not send error";
     protected static final String UNSUPPORTED_MSG = " operation is not supported on this server";
     
-    protected transient final OWSUtils owsUtils;
+    protected final transient OWSUtils owsUtils;
     
         
     public OWSServlet()
@@ -253,7 +252,7 @@ public abstract class OWSServlet extends HttpServlet
                 log.trace(INTERNAL_SEND_ERROR_MSG, e1);
             }            
         }
-        catch (IOException | DOMHelperException e)
+        catch (IOException e)
         {
             try
             {
@@ -264,12 +263,6 @@ public abstract class OWSServlet extends HttpServlet
             {
                 log.trace(INTERNAL_SEND_ERROR_MSG, e1);
             }            
-        }
-        catch (OWSException e)
-        {
-            log.trace("Error while parsing request", e);
-            e.setSoapVersion(soapVersion);
-            sendException(req, resp, e, req.getParameter("version"));
         }
         
         return null;
@@ -323,7 +316,7 @@ public abstract class OWSServlet extends HttpServlet
     }
     
     
-    protected void sendResponse(OWSRequest request, OWSResponse resp) throws OWSException, IOException
+    protected void sendResponse(OWSRequest request, OWSResponse resp) throws IOException
     {
         try
         {
@@ -334,7 +327,7 @@ public abstract class OWSServlet extends HttpServlet
         }
         catch (OWSException e)
         {
-            throw new IllegalStateException("Cannot write response", e);
+            throw new IOException("Cannot write response", e);
         }
     }
     
