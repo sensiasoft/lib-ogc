@@ -1,5 +1,6 @@
 package net.opengis.ows.v11;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -8,7 +9,7 @@ import java.util.List;
  *
  * This is a complex type.
  */
-public interface UnNamedDomain
+public interface UnNamedDomain extends Serializable
 {
     
     

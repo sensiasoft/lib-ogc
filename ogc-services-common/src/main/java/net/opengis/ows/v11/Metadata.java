@@ -1,20 +1,21 @@
 package net.opengis.ows.v11;
 
-
+import java.io.Serializable;
+import net.opengis.OgcProperty;
 
 /**
  * POJO class for XML type MetadataType(@http://www.opengis.net/ows/1.1).
  *
  * This is a complex type.
  */
-public interface Metadata extends net.opengis.OgcProperty<Object>
+public interface Metadata extends OgcProperty<Serializable>
 {
     
     
     /**
      * Gets the abstractMetaData property
      */
-    public Object getAbstractMetaData();
+    public Serializable getAbstractMetaData();
     
     
     /**
@@ -26,7 +27,7 @@ public interface Metadata extends net.opengis.OgcProperty<Object>
     /**
      * Sets the abstractMetaData property
      */
-    public void setAbstractMetaData(Object abstractMetaData);
+    public void setAbstractMetaData(Serializable abstractMetaData);
     
     
     /**

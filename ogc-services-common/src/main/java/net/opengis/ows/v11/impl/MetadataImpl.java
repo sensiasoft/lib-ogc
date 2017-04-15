@@ -1,5 +1,7 @@
 package net.opengis.ows.v11.impl;
 
+import java.io.Serializable;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.ows.v11.Metadata;
 
 
@@ -8,12 +10,11 @@ import net.opengis.ows.v11.Metadata;
  *
  * This is a complex type.
  */
-public class MetadataImpl extends net.opengis.OgcPropertyImpl<Object> implements Metadata
+public class MetadataImpl extends OgcPropertyImpl<Serializable> implements Metadata
 {
-    static final long serialVersionUID = 1L;
-    protected Object abstractMetaData;
+    private static final long serialVersionUID = -7178639924829147249L;
+    protected Serializable abstractMetaData;
     protected String about;
-    
     
     public MetadataImpl()
     {
@@ -24,7 +25,7 @@ public class MetadataImpl extends net.opengis.OgcPropertyImpl<Object> implements
      * Gets the abstractMetaData property
      */
     @Override
-    public Object getAbstractMetaData()
+    public Serializable getAbstractMetaData()
     {
         return abstractMetaData;
     }
@@ -44,7 +45,7 @@ public class MetadataImpl extends net.opengis.OgcPropertyImpl<Object> implements
      * Sets the abstractMetaData property
      */
     @Override
-    public void setAbstractMetaData(Object abstractMetaData)
+    public void setAbstractMetaData(Serializable abstractMetaData)
     {
         this.abstractMetaData = abstractMetaData;
     }
