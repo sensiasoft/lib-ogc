@@ -39,7 +39,6 @@ import org.vast.ows.OWSResponseReader;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.util.PostRequestFilter;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.DOMHelperException;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -184,8 +183,6 @@ public class WPSUtils extends OWSUtils implements OWSBindingProvider
 		} catch (UnsupportedEncodingException e) {
 			throw new SOAPException(e);
 		} catch (IOException e) {
-			throw new SOAPException(e);
-		} catch (DOMHelperException e) {
 			throw new SOAPException(e);
 		}	
 		
