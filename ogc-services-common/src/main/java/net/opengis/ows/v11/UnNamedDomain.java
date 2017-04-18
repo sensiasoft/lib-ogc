@@ -70,7 +70,7 @@ public interface UnNamedDomain extends Serializable
     /**
      * Sets the valuesReference property
      */
-    public void setValuesReference(Object valuesReference);
+    public void setValuesReference(Serializable valuesReference);
     
     
     /**

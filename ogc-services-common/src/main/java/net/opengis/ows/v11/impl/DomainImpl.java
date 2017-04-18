@@ -10,7 +10,7 @@ import net.opengis.ows.v11.Domain;
  */
 public class DomainImpl extends UnNamedDomainImpl implements Domain
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -6578864006061374321L;
     protected String name = "";
     
     

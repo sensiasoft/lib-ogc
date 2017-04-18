@@ -1,13 +1,13 @@
 package net.opengis.ows.v11;
 
-
+import java.io.Serializable;
 
 /**
  * POJO class for XML type RangeType(@http://www.opengis.net/ows/1.1).
  *
  * This is a complex type.
  */
-public interface Range
+public interface Range extends Serializable
 {
     
     

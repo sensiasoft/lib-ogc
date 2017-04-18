@@ -1,5 +1,6 @@
 package net.opengis.ows.v11.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import net.opengis.ows.v11.DomainMetadata;
@@ -15,17 +16,17 @@ import net.opengis.ows.v11.UnNamedDomain;
  */
 public class UnNamedDomainImpl implements UnNamedDomain
 {
-    static final long serialVersionUID = 1L;
-    protected List<Object> allowedValues = new ArrayList<Object>();
+    private static final long serialVersionUID = 6484393159497882372L;
+    protected ArrayList<Object> allowedValues = new ArrayList<Object>();
     protected boolean anyValue;
     protected boolean noValues = true;
-    protected Object valuesReference;
+    protected Serializable valuesReference;
     protected String defaultValue;
     protected DomainMetadata meaning;
     protected DomainMetadata dataType;
     protected DomainMetadata uom;
     protected DomainMetadata referenceSystem;
-    protected List<Metadata> metadataList = new ArrayList<Metadata>();
+    protected ArrayList<Metadata> metadataList = new ArrayList<Metadata>();
     
     
     public UnNamedDomainImpl()
@@ -128,7 +129,7 @@ public class UnNamedDomainImpl implements UnNamedDomain
      * Sets the valuesReference property
      */
     @Override
-    public void setValuesReference(Object valuesReference)
+    public void setValuesReference(Serializable valuesReference)
     {
         this.valuesReference = valuesReference;
     }

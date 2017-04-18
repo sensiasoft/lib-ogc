@@ -56,8 +56,10 @@ public abstract class OWSServlet extends HttpServlet
     
     protected static final String INVALID_KVP_REQUEST_MSG = "Invalid KVP request. Please check your syntax";
     protected static final String INVALID_XML_REQUEST_MSG = "Invalid XML request. Please check your syntax";
-    protected static final String INTERNAL_ERROR_MSG = "Internal Error while processing the request. Please contact maintenance";
-    protected static final String INTERNAL_SEND_ERROR_MSG = "Could not send error";
+    protected static final String INTERNAL_ERROR_MSG = "Internal error while processing request";
+    protected static final String INTERNAL_ERROR_HTTP_MSG = INTERNAL_ERROR_MSG + ". Please contact maintenance";
+    protected static final String INTERNAL_SEND_ERROR_MSG = "Cannot send error";
+    protected static final String SEND_RESPONSE_ERROR_MSG = "Cannot write response";
     protected static final String UNSUPPORTED_MSG = " operation is not supported on this server";
     
     protected final transient OWSUtils owsUtils;
@@ -182,7 +184,7 @@ public abstract class OWSServlet extends HttpServlet
             try
             {
                 log.error(INTERNAL_ERROR_MSG, e);
-                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, INTERNAL_ERROR_MSG);
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, INTERNAL_ERROR_HTTP_MSG);
             }
             catch (IOException e1)
             {
@@ -327,7 +329,7 @@ public abstract class OWSServlet extends HttpServlet
         }
         catch (OWSException e)
         {
-            throw new IOException("Cannot write response", e);
+            throw new IOException(SEND_RESPONSE_ERROR_MSG, e);
         }
     }
     

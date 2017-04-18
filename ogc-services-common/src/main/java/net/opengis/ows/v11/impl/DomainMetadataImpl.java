@@ -9,7 +9,7 @@ import net.opengis.ows.v11.DomainMetadata;
  */
 public class DomainMetadataImpl implements DomainMetadata
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 3240152314511963585L;
     protected String reference;
     protected String value;
     

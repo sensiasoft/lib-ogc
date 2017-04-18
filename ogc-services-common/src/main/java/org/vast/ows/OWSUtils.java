@@ -620,6 +620,10 @@ public class OWSUtils extends OWSCommonUtils
             OWSExceptionReader.checkException(dom, dom.getBaseElement());
             return (ResponseType)readXMLResponse(dom, dom.getBaseElement(), request.getService(), dom.getBaseElement().getLocalName(), request.getVersion());
         }
+        catch (OWSException e)
+        {
+            throw e;
+        }
         catch (IOException e)
         {
             throw new OWSException("Error while reading service response", e);

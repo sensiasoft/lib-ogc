@@ -10,7 +10,7 @@ import net.opengis.ows.v11.Range;
  */
 public class RangeImpl implements Range
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -4762293372970086016L;
     protected String minimumValue;
     protected String maximumValue;
     protected String spacing;

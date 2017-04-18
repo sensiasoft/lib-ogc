@@ -1,12 +1,12 @@
 package net.opengis.ows.v11;
 
-
+import java.io.Serializable;
 
 /**
  * POJO class for XML type DomainMetadataType(@http://www.opengis.net/ows/1.1).
  *
  */
-public interface DomainMetadata
+public interface DomainMetadata extends Serializable
 {
     
     
