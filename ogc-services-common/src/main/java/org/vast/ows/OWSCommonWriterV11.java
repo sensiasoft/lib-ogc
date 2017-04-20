@@ -108,7 +108,7 @@ public class OWSCommonWriterV11
 		// mandatory href
 		String href = ref.getHref();
 		if (href != null)
-		dom.setAttributeValue(refElt, "@xlink:href", href);
+		    dom.setAttributeValue(refElt, "@xlink:href", href);
 		
 		// optional identifier
 		String identifier = ref.getIdentifier();
