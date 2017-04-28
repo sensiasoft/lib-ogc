@@ -42,6 +42,7 @@ public abstract class SWESOfferingCapabilities extends OWSLayerCapabilities
 {
     public static final String FORMAT_OM2 = "http://www.opengis.net/om/2.0";
     public static final String FORMAT_OM2_JSON = FORMAT_OM2.replaceAll("om", "om-json");
+    public static final String FORMAT_SML1 = "http://www.opengis.net/sensorML/1.0.1";
     public static final String FORMAT_SML2 = "http://www.opengis.net/sensorml/2.0";
     public static final String FORMAT_SML2_JSON = FORMAT_SML2.replaceAll("sensorml", "sensorml-json");;
 
@@ -54,10 +55,10 @@ public abstract class SWESOfferingCapabilities extends OWSLayerCapabilities
     public SWESOfferingCapabilities()
     {
         super();
-        observableProperties = new LinkedHashSet<String>(10);
-        procedures = new LinkedHashSet<String>(2);
-        relatedFeatures = new LinkedHashSet<String>(2);        
-        procedureFormats = new LinkedHashSet<String>(2);        
+        observableProperties = new LinkedHashSet<>(10);
+        procedures = new LinkedHashSet<>(2);
+        relatedFeatures = new LinkedHashSet<>(2);        
+        procedureFormats = new LinkedHashSet<>(2);        
     }
 
 
