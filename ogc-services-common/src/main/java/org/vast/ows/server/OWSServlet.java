@@ -254,6 +254,10 @@ public abstract class OWSServlet extends HttpServlet
                 log.trace(INTERNAL_SEND_ERROR_MSG, e1);
             }            
         }
+        catch (OWSException e)
+        {
+            throw e;
+        }
         catch (IOException e)
         {
             try
