@@ -25,7 +25,6 @@ import java.net.URISyntaxException;
 import org.vast.xml.DOMHelper;
 import org.vast.ows.sld.VectorSymbolizer.DirectionType;
 import org.vast.ows.sld.functions.StringIdProvider;
-import org.vast.util.MessageSystem;
 import org.vast.util.URIResolver;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -84,7 +83,7 @@ public class SLDReader
         else if (symElt.getLocalName().equals("TextureSymbolizer"))
             sym = readTexture(dom, symElt);
         else
-            MessageSystem.display("Unknown Symbolizer: " + symElt.getLocalName(), true);
+            throw new IllegalStateException("Unknown Symbolizer: " + symElt.getLocalName());
         
 		return sym;
 	}
