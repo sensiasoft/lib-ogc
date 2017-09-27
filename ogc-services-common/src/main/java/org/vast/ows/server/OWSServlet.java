@@ -52,8 +52,8 @@ import org.w3c.dom.Element;
 public abstract class OWSServlet extends HttpServlet
 {
     private static final long serialVersionUID = 4970153267344348035L;
-    private static final Logger log = LoggerFactory.getLogger(OWSServlet.class);
     
+    protected static final String LOG_REQUEST_MSG = "{} {}{} (from ip={}, user={})";
     protected static final String INVALID_KVP_REQUEST_MSG = "Invalid KVP request. Please check your syntax";
     protected static final String INVALID_XML_REQUEST_MSG = "Invalid XML request. Please check your syntax";
     protected static final String INTERNAL_ERROR_MSG = "Internal error while processing request";
@@ -62,6 +62,7 @@ public abstract class OWSServlet extends HttpServlet
     protected static final String SEND_RESPONSE_ERROR_MSG = "Cannot write response";
     protected static final String UNSUPPORTED_MSG = " operation is not supported on this server";
     
+    protected final transient Logger log;
     protected final transient OWSUtils owsUtils;
     
         
@@ -73,11 +74,24 @@ public abstract class OWSServlet extends HttpServlet
     
     protected OWSServlet(OWSUtils owsUtils)
     {
-        this.owsUtils = owsUtils;
+        this(owsUtils, LoggerFactory.getLogger(OWSServlet.class));
     }
     
     
-    protected abstract void handleRequest(OWSRequest request) throws OWSException, IOException;
+    protected OWSServlet(Logger log)
+    {
+        this(new OWSUtils(), log);
+    }
+    
+    
+    protected OWSServlet(OWSUtils owsUtils, Logger log)
+    {
+        this.owsUtils = owsUtils;
+        this.log = log;
+    }
+    
+    
+    protected abstract void handleRequest(OWSRequest request) throws IOException;
 	
 	
 	/**
@@ -86,7 +100,6 @@ public abstract class OWSServlet extends HttpServlet
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException
     {
-        log.info("GET REQUEST from IP " + req.getRemoteAddr());       
         processRequest(req, resp, false);
     }
     
@@ -97,32 +110,11 @@ public abstract class OWSServlet extends HttpServlet
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException
     {
-        log.info("POST REQUEST from IP " + req.getRemoteAddr());
-        
         // assume XML if content type is not specified
         String contentType = req.getContentType();
         boolean isXml = (contentType == null) || (contentType.contains("xml"));
         
         processRequest(req, resp, isXml);
-    }
-    
-    
-    /*
-     * Checks if client was disconnected
-     * This is used so we can ignore exceptions due to interrupted connections
-     */
-    protected boolean isClientDisconnected(HttpServletRequest req, HttpServletResponse resp)
-    {
-        try
-        {
-            resp.flushBuffer();
-        }
-        catch (IOException e)
-        {
-            log.trace("Cannot flush response buffer", e);
-        }
-        
-        return false;
     }
     
     
@@ -155,40 +147,29 @@ public abstract class OWSServlet extends HttpServlet
                 resp.getOutputStream().flush();
             }
         }
+        catch (SecurityException e)
+        {
+            log.info("Access Forbidden", e);
+            sendError(resp, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+        }
         catch (OWSException e)
         {
-            if (!isClientDisconnected(req, resp))
+            if (!OWSUtils.isClientDisconnectError(e))
             {
-                log.trace("Error while processing request", e);
+                log.debug("Error while processing request", e);
                 String version = null;
                 if (request != null)
                     version = request.getVersion();
                 e.setSoapVersion(soapVersion);
                 sendException(req, resp, e, version);
-            }           
-        }
-        catch (SecurityException e)
-        {
-            try
-            {
-                log.trace("Access Forbidden", e);
-                resp.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
-            }
-            catch (IOException e1)
-            {
-                log.trace(INTERNAL_SEND_ERROR_MSG, e1);
             }
         }
         catch (Exception e)
         {
-            try
+            if (!OWSUtils.isClientDisconnectError(e))
             {
                 log.error(INTERNAL_ERROR_MSG, e);
-                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, INTERNAL_ERROR_HTTP_MSG);
-            }
-            catch (IOException e1)
-            {
-                log.trace(INTERNAL_SEND_ERROR_MSG, e1);
+                sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, INTERNAL_ERROR_HTTP_MSG);
             }
         }
     }
@@ -206,24 +187,27 @@ public abstract class OWSServlet extends HttpServlet
         String requestURL = req.getRequestURL().toString();
         String soapVersion = null;
         OWSRequest owsRequest = null;
+        DOMHelper dom = null;
         
         try
         {
             if (isXmlRequest)
             {
                 InputStream xmlRequest = new PostRequestFilter(new BufferedInputStream(req.getInputStream()));
-                DOMHelper dom = new DOMHelper(xmlRequest, false);
-                //dom.serialize(dom.getBaseElement(), System.out, true);
+                dom = new DOMHelper(xmlRequest, false);
                 Element requestElt = dom.getBaseElement();
                 
                 // detect and skip SOAP envelope if present
                 soapVersion = getSoapVersion(dom);
                 if (soapVersion != null)
                     requestElt = getSoapBody(dom);
-                                
+                
+                // log request
+                logRequest(req, requestElt.getLocalName());
+                
                 // parse request
                 owsRequest = parseRequest(dom, requestElt);
-                owsRequest.setSoapVersion(soapVersion);                
+                owsRequest.setSoapVersion(soapVersion);
                 owsRequest.setPostServer(requestURL);
             }
             else
@@ -231,6 +215,9 @@ public abstract class OWSServlet extends HttpServlet
                 String queryString = req.getQueryString();
                 if (queryString == null)
                     throw new IllegalArgumentException();
+                
+                // log request
+                logRequest(req, null);
                 
                 owsRequest = owsUtils.readURLQuery(queryString);
                 owsRequest.setGetServer(requestURL);
@@ -242,33 +229,19 @@ public abstract class OWSServlet extends HttpServlet
             
             return owsRequest;
         }
-        catch (IllegalArgumentException e)
-        {
-            try
-            {
-                log.trace(INVALID_KVP_REQUEST_MSG, e);
-                resp.sendError(400, INVALID_KVP_REQUEST_MSG);
-            }
-            catch (IOException e1)
-            {
-                log.trace(INTERNAL_SEND_ERROR_MSG, e1);
-            }            
-        }
         catch (OWSException e)
         {
             throw e;
         }
+        catch (IllegalArgumentException e)
+        {
+            log.debug(INVALID_KVP_REQUEST_MSG, e);
+            sendError(resp, 400, INVALID_KVP_REQUEST_MSG);          
+        }
         catch (IOException e)
         {
-            try
-            {
-                log.trace(INVALID_XML_REQUEST_MSG, e);
-                resp.sendError(400, INVALID_XML_REQUEST_MSG);
-            }
-            catch (IOException e1)
-            {
-                log.trace(INTERNAL_SEND_ERROR_MSG, e1);
-            }            
+            log.debug(INVALID_XML_REQUEST_MSG, e);
+            sendError(resp, 400, INVALID_XML_REQUEST_MSG);
         }
         
         return null;
@@ -304,6 +277,20 @@ public abstract class OWSServlet extends HttpServlet
     }
     
     
+    protected void sendError(HttpServletResponse resp, int errorCode, String errorMsg)
+    {
+        try
+        {
+            resp.sendError(errorCode, errorMsg);
+        }
+        catch (IOException e)
+        {
+            if (!OWSUtils.isClientDisconnectError(e))
+                log.debug(INTERNAL_SEND_ERROR_MSG, e);
+        } 
+    }
+    
+    
     protected void sendException(HttpServletRequest req, HttpServletResponse resp, OWSException e, String version)
     {
         try
@@ -317,7 +304,8 @@ public abstract class OWSServlet extends HttpServlet
         }
         catch (IOException e1)
         {
-            log.trace(INTERNAL_SEND_ERROR_MSG, e1);
+            if (!OWSUtils.isClientDisconnectError(e))
+                log.debug(INTERNAL_SEND_ERROR_MSG, e1);
         }
     }
     
@@ -334,6 +322,34 @@ public abstract class OWSServlet extends HttpServlet
         catch (OWSException e)
         {
             throw new IOException(SEND_RESPONSE_ERROR_MSG, e);
+        }
+    }
+    
+    
+    /*
+     * Log request details
+     */
+    protected void logRequest(HttpServletRequest req, String opName)
+    {
+        if (log.isInfoEnabled())
+        {
+            String method = req.getMethod();
+            String url = req.getRequestURI();
+            String ip = req.getRemoteAddr();
+            String user = req.getRemoteUser() != null ? req.getRemoteUser() : OWSUtils.ANONYMOUS_USER;
+            
+            // detect websocket upgrade
+            if ("websocket".equalsIgnoreCase(req.getHeader("Upgrade")))
+                method += "/Websocket";
+            
+            // append decoded request if any
+            String query = "";
+            if (req.getQueryString() != null)
+                query = "?" + req.getQueryString();
+            if (opName != null)
+                query += " " + opName;
+            
+            log.info(LOG_REQUEST_MSG, method, url, query, ip, user);
         }
     }
     

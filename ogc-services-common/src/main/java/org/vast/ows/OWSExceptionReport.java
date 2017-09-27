@@ -85,17 +85,15 @@ public class OWSExceptionReport extends OWSException
 	@Override
 	public String getMessage()
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		
 		for (int i=0; i<exceptionList.size(); i++)
 		{
 			OWSException e = exceptionList.get(i);
-			String code = e.getCode();
-			String locator = e.getLocator();
-			String text = e.getMessage();
-			buf.append("Exception code=\"" + code + "\" locator=\"" + locator + "\" text=" + text + "\n");
+			buf.append(e.getMessage()).append('\n');
 		}
 		
+		buf.setLength(buf.length()-1);
 		return buf.toString();
 	}
 	

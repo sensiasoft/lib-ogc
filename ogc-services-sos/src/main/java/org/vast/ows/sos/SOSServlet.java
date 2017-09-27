@@ -21,6 +21,7 @@
 package org.vast.ows.sos;
 
 import java.io.IOException;
+import org.slf4j.Logger;
 import org.vast.ows.GetCapabilitiesRequest;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.server.OWSServlet;
@@ -45,6 +46,12 @@ public abstract class SOSServlet extends OWSServlet
     protected static final String SOS_PREFIX = "sos";
     protected static final String SWES_PREFIX = "swe";
     protected static final String SOAP_PREFIX = "soap";
+    
+    
+    public SOSServlet(Logger log)
+    {
+        super(log);
+    }
     
     
 	@Override

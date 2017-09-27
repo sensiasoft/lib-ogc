@@ -22,6 +22,7 @@ package org.vast.ows;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -51,15 +52,17 @@ import org.w3c.dom.Element;
  */
 public class OWSUtils extends OWSCommonUtils
 {
-    private final static Logger log = LoggerFactory.getLogger(OWSUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(OWSUtils.class);
+    
+    public static final String ANONYMOUS_USER = "anonymous";
     
     public static final String TEXT_MIME_TYPE = "text/plain";
     public static final String XML_MIME_TYPE = "text/xml";
     public static final String XML_MIME_TYPE2 = "application/xml";
     public static final String JSON_MIME_TYPE = "application/json";
     public static final String BINARY_MIME_TYPE = "application/octet-stream";
-    public final static String SOAP11_URI = "http://schemas.xmlsoap.org/soap/envelope/";
-    public final static String SOAP12_URI = "http://www.w3.org/2003/05/soap-envelope";
+    public static final String SOAP11_URI = "http://schemas.xmlsoap.org/soap/envelope/";
+    public static final String SOAP12_URI = "http://www.w3.org/2003/05/soap-envelope";
     
     public static final String OGC = "OGC";
     public static final String OWS = "OWS";
@@ -114,6 +117,26 @@ public class OWSUtils extends OWSCommonUtils
     public static String getNamespaceURI(String spec, String version)
     {
     	return OGCRegistry.getNamespaceURI(spec, version);
+    }
+    
+    
+    /**
+     * Checks if exception was caused by EOF<br/>
+     * This is used so we can ignore exceptions due to client disconnections
+     * @param e exception to check (along with its causes)
+     * @return true if exception trace contains an EOF exception, false otherwise
+     */
+    public static boolean isClientDisconnectError(Exception e)
+    {
+        Throwable ex = e.getCause();
+        while (ex != null)
+        {
+            if (ex instanceof EOFException)
+                return true;
+            ex = ex.getCause();
+        }
+        
+        return false;
     }
     
     
