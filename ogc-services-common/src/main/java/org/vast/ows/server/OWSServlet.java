@@ -54,6 +54,7 @@ public abstract class OWSServlet extends HttpServlet
     private static final long serialVersionUID = 4970153267344348035L;
     
     protected static final String LOG_REQUEST_MSG = "{} {}{} (from ip={}, user={})";
+    protected static final String INVALID_REQUEST_MSG = "Invalid request: {}";
     protected static final String INVALID_KVP_REQUEST_MSG = "Invalid KVP request. Please check your syntax";
     protected static final String INVALID_XML_REQUEST_MSG = "Invalid XML request. Please check your syntax";
     protected static final String INTERNAL_ERROR_MSG = "Internal error while processing request";
@@ -149,14 +150,15 @@ public abstract class OWSServlet extends HttpServlet
         }
         catch (SecurityException e)
         {
-            log.info("Access Forbidden", e);
+            log.info("Access Forbidden: {}", e.getMessage());
             sendError(resp, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
         }
         catch (OWSException e)
         {
             if (!OWSUtils.isClientDisconnectError(e))
             {
-                log.debug("Error while processing request", e);
+                if (log.isDebugEnabled()) // these are client errors so we log them only in debug
+                    log.error(INVALID_REQUEST_MSG, e.getMessage());
                 String version = null;
                 if (request != null)
                     version = request.getVersion();
@@ -233,15 +235,12 @@ public abstract class OWSServlet extends HttpServlet
         {
             throw e;
         }
-        catch (IllegalArgumentException e)
+        catch (Exception e)
         {
-            log.debug(INVALID_KVP_REQUEST_MSG, e);
-            sendError(resp, 400, INVALID_KVP_REQUEST_MSG);          
-        }
-        catch (IOException e)
-        {
-            log.debug(INVALID_XML_REQUEST_MSG, e);
-            sendError(resp, 400, INVALID_XML_REQUEST_MSG);
+            String msg = isXmlRequest ? INVALID_XML_REQUEST_MSG : INVALID_KVP_REQUEST_MSG;
+            if (log.isDebugEnabled()) // these are usually client errors so we log them only in debug
+                log.error(msg, e);
+            sendError(resp, 400, msg);          
         }
         
         return null;
@@ -285,8 +284,8 @@ public abstract class OWSServlet extends HttpServlet
         }
         catch (IOException e)
         {
-            if (!OWSUtils.isClientDisconnectError(e))
-                log.debug(INTERNAL_SEND_ERROR_MSG, e);
+            if (!OWSUtils.isClientDisconnectError(e) && log.isDebugEnabled())
+                log.error(INTERNAL_SEND_ERROR_MSG, e);
         } 
     }
     
@@ -304,8 +303,8 @@ public abstract class OWSServlet extends HttpServlet
         }
         catch (IOException e1)
         {
-            if (!OWSUtils.isClientDisconnectError(e))
-                log.debug(INTERNAL_SEND_ERROR_MSG, e1);
+            if (!OWSUtils.isClientDisconnectError(e) && log.isDebugEnabled())
+                log.error(INTERNAL_SEND_ERROR_MSG, e1);
         }
     }
     
