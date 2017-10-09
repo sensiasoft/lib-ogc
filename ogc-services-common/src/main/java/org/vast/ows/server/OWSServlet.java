@@ -26,6 +26,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.AccessControlException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -148,8 +149,15 @@ public abstract class OWSServlet extends HttpServlet
                 resp.getOutputStream().flush();
             }
         }
-        catch (SecurityException e)
+        catch (AccessControlException e)
         {
+            // ask to authenticate if anonymous wasn't allowed
+            if (req.getRemoteUser() == null)
+            {
+                sendAuthRequested(req, resp);
+                return;
+            }
+            
             log.info("Access Forbidden: {}", e.getMessage());
             sendError(resp, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
         }
@@ -306,6 +314,20 @@ public abstract class OWSServlet extends HttpServlet
             if (!OWSUtils.isClientDisconnectError(e) && log.isDebugEnabled())
                 log.error(INTERNAL_SEND_ERROR_MSG, e1);
         }
+    }
+    
+    
+    protected void sendAuthRequested(HttpServletRequest req, HttpServletResponse resp)
+    {
+        try
+        {
+            req.authenticate(resp);
+        }
+        catch (Exception e)
+        {
+            if (!OWSUtils.isClientDisconnectError(e) && log.isDebugEnabled())
+                log.error(INTERNAL_SEND_ERROR_MSG, e);
+        } 
     }
     
     
