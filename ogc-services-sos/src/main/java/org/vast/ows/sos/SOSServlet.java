@@ -23,6 +23,7 @@ package org.vast.ows.sos;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.vast.ows.GetCapabilitiesRequest;
+import org.vast.ows.OWSException;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.server.OWSServlet;
 import org.vast.ows.swe.DeleteSensorRequest;
@@ -55,7 +56,7 @@ public abstract class SOSServlet extends OWSServlet
     
     
 	@Override
-    public void handleRequest(OWSRequest request) throws IOException
+    public void handleRequest(OWSRequest request) throws IOException, OWSException
     {
 	    // core operations
 	    if (request instanceof GetCapabilitiesRequest)
@@ -89,64 +90,64 @@ public abstract class SOSServlet extends OWSServlet
     }
 
 
-    protected abstract void handleRequest(GetCapabilitiesRequest query) throws IOException;
+    protected abstract void handleRequest(GetCapabilitiesRequest query) throws IOException, OWSException;
 	    
 	
-    protected abstract void handleRequest(DescribeSensorRequest request) throws IOException;
+    protected abstract void handleRequest(DescribeSensorRequest request) throws IOException, OWSException;
 	
 	
-	protected abstract void handleRequest(GetObservationRequest request) throws IOException;
+	protected abstract void handleRequest(GetObservationRequest request) throws IOException, OWSException;
 	
 	
-	protected void handleRequest(GetResultTemplateRequest request) throws IOException
+	protected void handleRequest(GetResultTemplateRequest request) throws IOException, OWSException
 	{
 	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
 	}
 	
 	
-	protected void handleRequest(GetResultRequest request) throws IOException
+	protected void handleRequest(GetResultRequest request) throws IOException, OWSException
 	{
 	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
 	}
     
 	
-	protected void handleRequest(GetFeatureOfInterestRequest request) throws IOException
+	protected void handleRequest(GetFeatureOfInterestRequest request) throws IOException, OWSException
 	{
 	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
 	}
 	
 	
-	protected void handleRequest(InsertSensorRequest request) throws IOException
+	protected void handleRequest(InsertSensorRequest request) throws IOException, OWSException
     {
 	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
     }
 	
 	
-	protected void handleRequest(UpdateSensorRequest request) throws IOException
+	protected void handleRequest(UpdateSensorRequest request) throws IOException, OWSException
     {
         throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
     }
 	
 	
-	protected void handleRequest(DeleteSensorRequest request) throws IOException
+	protected void handleRequest(DeleteSensorRequest request) throws IOException, OWSException
     {
         throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
     }
 	
 	
-	protected void handleRequest(InsertObservationRequest request) throws IOException
+	protected void handleRequest(InsertObservationRequest request) throws IOException, OWSException
     {
 	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
     }
 	
 	
-	protected void handleRequest(InsertResultTemplateRequest request) throws IOException
+	protected void handleRequest(InsertResultTemplateRequest request) throws IOException, OWSException
     {
 	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
     }
 	
 	
-	protected void handleRequest(InsertResultRequest request) throws IOException
+	protected void handleRequest(InsertResultRequest request) throws IOException, OWSException
     {
 	    throw new UnsupportedOperationException(request.getOperation() + UNSUPPORTED_MSG);
     }

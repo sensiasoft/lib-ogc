@@ -20,7 +20,6 @@
 
 package org.vast.ows;
 
-import java.io.IOException;
 
 /**
  * <p>
@@ -31,7 +30,7 @@ import java.io.IOException;
  * @author Alex Robin
  * @since 23 oct. 07
  * */
-public class OWSException extends IOException
+public class OWSException extends Exception
 {
 	private static final long serialVersionUID = 430944706383046157L;
     

@@ -93,7 +93,7 @@ public abstract class OWSServlet extends HttpServlet
     }
     
     
-    protected abstract void handleRequest(OWSRequest request) throws IOException;
+    protected abstract void handleRequest(OWSRequest request) throws IOException, OWSException;
 	
 	
 	/**
