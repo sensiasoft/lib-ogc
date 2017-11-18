@@ -359,6 +359,15 @@ public abstract class OWSServlet extends HttpServlet
             String ip = req.getRemoteAddr();
             String user = req.getRemoteUser() != null ? req.getRemoteUser() : OWSUtils.ANONYMOUS_USER;
             
+            // if proxy header present, use source ip instead of proxy ip
+            String proxyHeader = req.getHeader("X-Forwarded-For");
+            if (proxyHeader != null)
+            {
+                String[] ips = proxyHeader.split(",");
+                if (ips.length >= 1)
+                    ip = ips[0];
+            }
+            
             // detect websocket upgrade
             if ("websocket".equalsIgnoreCase(req.getHeader("Upgrade")))
                 method += "/Websocket";
