@@ -20,8 +20,8 @@
 
 package org.vast.ows.sos;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import net.opengis.fes.v20.BinarySpatialOp;
 import net.opengis.fes.v20.BinaryTemporalOp;
 import org.vast.ows.OWSRequest;
@@ -41,9 +41,9 @@ import org.vast.util.TimeExtent;
 public class GetResultRequest extends OWSRequest
 {
     protected String offering;
-    protected List<String> procedures;
-    protected List<String> observables;
-    protected List<String> foiIDs;
+    protected Set<String> procedures;
+    protected Set<String> observables;
+    protected Set<String> foiIDs;
     protected BinaryTemporalOp temporalFilter;
     protected BinarySpatialOp spatialFilter;
     protected String format;
@@ -54,9 +54,9 @@ public class GetResultRequest extends OWSRequest
 	{
 		service = "SOS";
 		operation = "GetResult";
-		procedures = new ArrayList<String>(2);
-        observables = new ArrayList<String>(2);
-        foiIDs = new ArrayList<String>(2);
+		procedures = new LinkedHashSet<>();
+        observables = new LinkedHashSet<>();
+        foiIDs = new LinkedHashSet<>();
 	}
 
 
@@ -72,39 +72,21 @@ public class GetResultRequest extends OWSRequest
     }
 
 
-    public List<String> getProcedures()
+    public Set<String> getProcedures()
     {
         return procedures;
     }
 
 
-    public void setProcedures(List<String> procedures)
-    {
-        this.procedures = procedures;
-    }
-
-
-    public List<String> getObservables()
+    public Set<String> getObservables()
     {
         return observables;
     }
 
 
-    public void setObservables(List<String> observables)
-    {
-        this.observables = observables;
-    }
-
-
-    public List<String> getFoiIDs()
+    public Set<String> getFoiIDs()
     {
         return foiIDs;
-    }
-
-
-    public void setFoiIDs(List<String> foiIDs)
-    {
-        this.foiIDs = foiIDs;
     }
 
 

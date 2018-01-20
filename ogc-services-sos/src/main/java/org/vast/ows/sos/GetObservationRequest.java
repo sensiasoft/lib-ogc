@@ -48,10 +48,10 @@ public class GetObservationRequest extends OWSRequest
     
     public static final String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0");
     
-    protected List<String> procedures;
-	protected List<String> offerings;
-	protected List<String> observables;
-	protected List<String> foiIDs;
+    protected Set<String> procedures;
+	protected Set<String> offerings;
+	protected Set<String> observables;
+	protected Set<String> foiIDs;
 	protected BinaryTemporalOp temporalFilter;
 	protected BinarySpatialOp spatialFilter;
     protected String format;
@@ -63,10 +63,10 @@ public class GetObservationRequest extends OWSRequest
 	{
 		service = "SOS";
 		operation = "GetObservation";
-		procedures = new ArrayList<String>(2);
-		offerings = new ArrayList<String>(2);
-		observables = new ArrayList<String>(2);
-		foiIDs = new ArrayList<String>(2);
+		procedures = new LinkedHashSet<>();
+		offerings = new LinkedHashSet<>();
+		observables = new LinkedHashSet<>();
+		foiIDs = new LinkedHashSet<>();
 	}
 	
 	
@@ -75,7 +75,7 @@ public class GetObservationRequest extends OWSRequest
 		if (offerings.isEmpty())
 		    return null;
 		else
-		    return offerings.get(0);
+		    return offerings.iterator().next();
 	}
 
 
@@ -85,25 +85,25 @@ public class GetObservationRequest extends OWSRequest
 	}
 	
 	
-	public List<String> getOfferings()
+	public Set<String> getOfferings()
     {
         return offerings;
     }
 
 
-    public List<String> getObservables()
+    public Set<String> getObservables()
 	{
 		return observables;
 	}
 
 
-	public List<String> getProcedures()
+	public Set<String> getProcedures()
 	{
 		return procedures;
 	}
 
 
-	public List<String> getFoiIDs()
+	public Set<String> getFoiIDs()
     {
         return foiIDs;
     }

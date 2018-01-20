@@ -17,7 +17,8 @@ package org.vast.ows.sos.test;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
+import java.util.Iterator;
+import java.util.Set;
 import net.opengis.fes.v20.GMLExpression;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.sos.GetObservationRequest;
@@ -49,11 +50,11 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(1, request.getOfferings().size());
         assertEquals("http://www.my_namespace.org/thermometer1_observations", request.getOffering());
         assertEquals(1, request.getObservables().size());
-        assertEquals("http://sweet.jpl.nasa.gov/2.0/atmoThermo.owl#EffectiveTemperature", request.getObservables().get(0));
+        assertEquals("http://sweet.jpl.nasa.gov/2.0/atmoThermo.owl#EffectiveTemperature", request.getObservables().iterator().next());
         assertEquals(1, request.getFoiIDs().size());
-        assertEquals("http://wfs.example.org?request=getFeature&featureid=building1", request.getFoiIDs().get(0));
+        assertEquals("http://wfs.example.org?request=getFeature&featureid=building1", request.getFoiIDs().iterator().next());
         assertEquals(1, request.getProcedures().size());
-        assertEquals("http://www.my_namespace.org/sensors/thermometer1", request.getProcedures().get(0));
+        assertEquals("http://www.my_namespace.org/sensors/thermometer1", request.getProcedures().iterator().next());
         assertEquals("2009-01-10T10:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStartTime(), 0));
         assertEquals("2009-01-10T11:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStopTime(), 0));
         assertEquals(22.32, request.getBbox().getMinX());
@@ -75,8 +76,9 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(2, request.getProcedures().size());
         assertTrue("Time is not null", request.getTime().isNull());
         assertTrue("BBOX is not null", request.getBbox().isNull());
-        assertEquals("http://myserver.org/sensors/th1", request.getProcedures().get(0));
-        assertEquals("http://myserver.org/sensors/th2", request.getProcedures().get(1));
+        Iterator<String> proceduresIt = request.getProcedures().iterator();
+        assertEquals("http://myserver.org/sensors/th1", proceduresIt.next());
+        assertEquals("http://myserver.org/sensors/th2", proceduresIt.next());
         assertEquals("http://www.opengis.net/om/1.0", request.getFormat());
         
         r.close();
@@ -96,7 +98,7 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(1, request.getOfferings().size());
         assertEquals("http://www.my_namespace.org/water_gage_1_observations", request.getOffering());
         assertEquals(1, request.getObservables().size());
-        assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().get(0));
+        assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().iterator().next());
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(0, request.getProcedures().size());
         assertEquals("2008-03-01T17:44:15Z", new DateTimeFormat().formatIso(request.getTime().getBaseTime(), 0));
@@ -112,10 +114,10 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(1, request.getOfferings().size());
         assertEquals("http://www.my_namespace.org/water_gage_1_observations", request.getOffering());
         assertEquals(1, request.getObservables().size());
-        assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().get(0));
+        assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().iterator().next());
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(1, request.getProcedures().size());
-        assertEquals("http://www.my_namespace.org/sensors/Water_Gage_1", request.getProcedures().get(0));
+        assertEquals("http://www.my_namespace.org/sensors/Water_Gage_1", request.getProcedures().iterator().next());
         assertTrue("Time is not null", request.getTime().isNull());
         assertTrue("BBOX is not null", request.getBbox().isNull());
         assertEquals(null, request.getFormat());
@@ -129,11 +131,11 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(1, request.getOfferings().size());
         assertEquals("http://www.my_namespace.org/water_gage_1_observations", request.getOffering());
         assertEquals(1, request.getObservables().size());
-        assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().get(0));
+        assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().iterator().next());
         assertEquals(1, request.getFoiIDs().size());
-        assertEquals("http://wfs.example.org?request=getFeature&featureid=\"river1\"", request.getFoiIDs().get(0));
+        assertEquals("http://wfs.example.org?request=getFeature&featureid=\"river1\"", request.getFoiIDs().iterator().next());
         assertEquals(1, request.getProcedures().size());
-        assertEquals("http://www.my_namespace.org/sensors/Water_Gage_1", request.getProcedures().get(0));
+        assertEquals("http://www.my_namespace.org/sensors/Water_Gage_1", request.getProcedures().iterator().next());
         assertTrue("Time is not null", request.getTime().isNull());
         assertTrue("BBOX is not null", request.getBbox().isNull());
         assertEquals(null, request.getFormat());
@@ -147,10 +149,10 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(1, request.getOfferings().size());
         assertEquals("http://www.my_namespace.org/water_gage_1_observations", request.getOffering());
         assertEquals(1, request.getObservables().size());
-        assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().get(0));
+        assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().iterator().next());
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(1, request.getProcedures().size());
-        assertEquals("http://www.my_namespace.org/sensors/Water_Gage_1", request.getProcedures().get(0));
+        assertEquals("http://www.my_namespace.org/sensors/Water_Gage_1", request.getProcedures().iterator().next());
         assertTrue("Time is not null", request.getTime().isNull());
         Polygon poly = (Polygon)((GMLExpression)request.getSpatialFilter().getOperand2()).getGmlObject();
         assertEquals(52.90, poly.getCoordinates()[0].x);
@@ -171,11 +173,12 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals("GetObservation", request.getOperation());
         assertEquals(0, request.getOfferings().size());
         assertEquals(2, request.getObservables().size());
-        assertEquals("http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[NH3]", request.getObservables().get(0));
-        assertEquals("http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[CO]", request.getObservables().get(1));
+        Iterator<String> observablesIt = request.getObservables().iterator();
+        assertEquals("http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[NH3]", observablesIt.next());
+        assertEquals("http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[CO]", observablesIt.next());
         assertEquals(2, request.getFoiIDs().size());
-        assertEquals("http://myServer.org/features/SamplingPointAtMoersbach", request.getFoiIDs().get(0));
-        assertEquals("http://myServer.org/features/SamplingPointAtMoersbach", request.getFoiIDs().get(0));
+        assertEquals("http://myServer.org/features/SamplingPointAtMoersbach", request.getFoiIDs().iterator().next());
+        assertEquals("http://myServer.org/features/SamplingPointAtMoersbach", request.getFoiIDs().iterator().next());
         assertEquals(0, request.getProcedures().size());
         assertEquals("2008-01-01T00:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStartTime(), 0));
         assertEquals("2011-05-01T17:44:15Z", new DateTimeFormat().formatIso(request.getTime().getStopTime(), 0));
@@ -190,10 +193,10 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals("GetObservation", request.getOperation());
         assertEquals(0, request.getOfferings().size());
         assertEquals(1, request.getObservables().size());
-        assertEquals("http://marinemetadata.org/cf#sea_water_salinity", request.getObservables().get(0));
+        assertEquals("http://marinemetadata.org/cf#sea_water_salinity", request.getObservables().iterator().next());
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(1, request.getProcedures().size());
-        assertEquals("http://myServer.org/sensors/glider1", request.getProcedures().get(0));
+        assertEquals("http://myServer.org/sensors/glider1", request.getProcedures().iterator().next());
         assertEquals("2008-01-01T00:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStartTime(), 0));
         assertEquals("2008-01-02T00:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStopTime(), 0));
         Bbox bbox = request.getBbox();
@@ -211,12 +214,13 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals("GetObservation", request.getOperation());
         assertEquals(0, request.getOfferings().size());
         assertEquals(4, request.getObservables().size());
-        assertEquals("http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[NH3]", request.getObservables().get(0));
-        assertEquals("http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[CO]", request.getObservables().get(1));
-        assertEquals("http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[H2S]", request.getObservables().get(2));
-        assertEquals("http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[SO2]", request.getObservables().get(3));
+        observablesIt = request.getObservables().iterator();
+        assertEquals("http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[NH3]", observablesIt.next());
+        assertEquals("http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[CO]", observablesIt.next());
+        assertEquals("http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[H2S]", observablesIt.next());
+        assertEquals("http://giv-genesis.uni-muenster.de:8080/SOR/REST/phenomenon/OGC/Concentration[SO2]", observablesIt.next());
         assertEquals(1, request.getFoiIDs().size());
-        assertEquals("http://myServer.org/features/SamplingPointAtMoersbach", request.getFoiIDs().get(0));
+        assertEquals("http://myServer.org/features/SamplingPointAtMoersbach", request.getFoiIDs().iterator().next());
         assertEquals(0, request.getProcedures().size());
         assertEquals("2008-01-01T00:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStartTime(), 0));
         assertEquals("2011-05-01T17:44:15Z", new DateTimeFormat().formatIso(request.getTime().getStopTime(), 0));
@@ -265,21 +269,19 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(request1.getService(), request2.getService());
         assertEquals(request1.getOperation(), request2.getOperation());
         assertEquals(request1.getVersion(), request2.getVersion());
-        checkListsEquals(request1.getProcedures(), request2.getProcedures());
-        checkListsEquals(request1.getOfferings(), request2.getOfferings());
-        checkListsEquals(request1.getObservables(), request2.getObservables());
-        checkListsEquals(request1.getFoiIDs(), request2.getFoiIDs());
+        checkSetsEquals(request1.getProcedures(), request2.getProcedures());
+        checkSetsEquals(request1.getOfferings(), request2.getOfferings());
+        checkSetsEquals(request1.getObservables(), request2.getObservables());
+        checkSetsEquals(request1.getFoiIDs(), request2.getFoiIDs());
         assertEquals(request1.getTemporalFilter(), request2.getTemporalFilter());
         assertEquals(request1.getSpatialFilter(), request2.getSpatialFilter());
         assertEquals(request1.getFormat(), request2.getFormat());
     }
     
     
-    protected void checkListsEquals(List<String> list1, List<String> list2)
+    protected void checkSetsEquals(Set<String> set1, Set<String> set2)
     {
-        assertTrue("List are not of same size", list1.size() == list2.size());
-        
-        for (int i = 0; i < list1.size(); i++)
-            assertEquals(list1.get(i), list2.get(i));
+        assertTrue("Sets are not of same size", set1.size() == set2.size());
+        assertEquals("Sets don't contain the same elements", set1, set2);
     }
 }

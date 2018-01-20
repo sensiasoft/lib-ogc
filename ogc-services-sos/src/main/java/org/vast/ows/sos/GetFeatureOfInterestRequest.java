@@ -37,9 +37,9 @@ import org.vast.util.Bbox;
  * */
 public class GetFeatureOfInterestRequest extends OWSRequest
 {
-    protected List<String> procedures;
-	protected List<String> observables;
-	protected List<String> foiIDs;
+    protected Set<String> procedures;
+	protected Set<String> observables;
+	protected Set<String> foiIDs;
 	protected BinarySpatialOp spatialFilter;
 	
 	
@@ -47,25 +47,25 @@ public class GetFeatureOfInterestRequest extends OWSRequest
 	{
 		service = "SOS";
 		operation = "GetFeatureOfInterest";
-		procedures = new ArrayList<String>(2);
-		observables = new ArrayList<String>(2);
-		foiIDs = new ArrayList<String>(2);
+		procedures = new LinkedHashSet<>(2);
+		observables = new LinkedHashSet<>(2);
+		foiIDs = new LinkedHashSet<>(2);
 	}
 
 
-    public List<String> getObservables()
+    public Set<String> getObservables()
 	{
 		return observables;
 	}
 
 
-	public List<String> getProcedures()
+	public Set<String> getProcedures()
 	{
 		return procedures;
 	}
 
 
-	public List<String> getFoiIDs()
+	public Set<String> getFoiIDs()
     {
         return foiIDs;
     }	

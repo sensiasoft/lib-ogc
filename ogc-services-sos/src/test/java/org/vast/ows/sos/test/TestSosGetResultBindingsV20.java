@@ -19,7 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
+import java.util.Set;
 import net.opengis.fes.v20.GMLExpression;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -60,10 +60,10 @@ public class TestSosGetResultBindingsV20 extends XMLTestCase
         assertEquals("GetResult", request.getOperation());
         assertEquals("urn:sensia:th1_observations", request.getOffering());
         assertEquals(1, request.getObservables().size());
-        assertEquals("http://sweet.jpl.nasa.gov/2.0/atmoThermo.owl#EffectiveTemperature", request.getObservables().get(0));
+        assertEquals("http://sweet.jpl.nasa.gov/2.0/atmoThermo.owl#EffectiveTemperature", request.getObservables().iterator().next());
         assertEquals(1, request.getFoiIDs().size());
         assertEquals(0, request.getProcedures().size());
-        assertEquals("urn:sensia:foi:b1", request.getFoiIDs().get(0));
+        assertEquals("urn:sensia:foi:b1", request.getFoiIDs().iterator().next());
         assertEquals("2009-01-10T10:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStartTime(), 0));
         assertEquals("2009-01-10T11:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStopTime(), 0));
         assertEquals(22.32, request.getBbox().getMinX());
@@ -90,7 +90,7 @@ public class TestSosGetResultBindingsV20 extends XMLTestCase
         assertEquals("GetResultTemplate", request.getOperation());
         assertEquals("urn:sensia:barometer_observations", request.getOffering());
         assertEquals(1, request.getObservables().size());
-        assertEquals("http://sweet.jpl.nasa.gov/2.0/atmoThermo.owl#AtmosphericPressure", request.getObservables().get(0));
+        assertEquals("http://sweet.jpl.nasa.gov/2.0/atmoThermo.owl#AtmosphericPressure", request.getObservables().iterator().next());
     }
     
     
@@ -107,7 +107,7 @@ public class TestSosGetResultBindingsV20 extends XMLTestCase
         assertEquals("GetResult", request.getOperation());
         assertEquals("http://www.my_namespace.org/water_gage_1_observations", request.getOffering());
         assertEquals(1, request.getObservables().size());
-        assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().get(0));
+        assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().iterator().next());
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(0, request.getProcedures().size());
         assertEquals("2008-03-01T17:44:15Z", new DateTimeFormat().formatIso(request.getTime().getBaseTime(), 0));
@@ -121,7 +121,7 @@ public class TestSosGetResultBindingsV20 extends XMLTestCase
         assertEquals("GetResult", request.getOperation());
         assertEquals("urn:nga:datasets:off1", request.getOffering());
         assertEquals(1, request.getObservables().size());
-        assertEquals("urn:nga:video", request.getObservables().get(0));
+        assertEquals("urn:nga:video", request.getObservables().iterator().next());
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(0, request.getProcedures().size());
         assertTrue("Temporal filter is not null", request.getTemporalFilter() == null);
@@ -135,7 +135,7 @@ public class TestSosGetResultBindingsV20 extends XMLTestCase
         assertEquals("GetResult", request.getOperation());
         assertEquals("urn:nga:datasets:off1", request.getOffering());
         assertEquals(1, request.getObservables().size());
-        assertEquals("urn:nga:video", request.getObservables().get(0));
+        assertEquals("urn:nga:video", request.getObservables().iterator().next());
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(0, request.getProcedures().size());
         assertTrue("Temporal filter is not null", request.getTemporalFilter() == null);
@@ -165,7 +165,7 @@ public class TestSosGetResultBindingsV20 extends XMLTestCase
         assertEquals("GetResultTemplate", request.getOperation());
         assertEquals("http://www.my_namespace.org/water_gage_1_observations", request.getOffering());
         assertEquals(1, request.getObservables().size());
-        assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().get(0));
+        assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().iterator().next());
         is.close();
     }
     
@@ -278,9 +278,9 @@ public class TestSosGetResultBindingsV20 extends XMLTestCase
         assertEquals(request1.getOperation(), request2.getOperation());
         assertEquals(request1.getVersion(), request2.getVersion());
         assertEquals(request1.getOffering(), request2.getOffering());
-        checkListsEquals(request1.getProcedures(), request2.getProcedures());
-        checkListsEquals(request1.getObservables(), request2.getObservables());
-        checkListsEquals(request1.getFoiIDs(), request2.getFoiIDs());
+        checkSetsEquals(request1.getProcedures(), request2.getProcedures());
+        checkSetsEquals(request1.getObservables(), request2.getObservables());
+        checkSetsEquals(request1.getFoiIDs(), request2.getFoiIDs());
         assertEquals(request1.getTemporalFilter(), request2.getTemporalFilter());
         assertEquals(request1.getSpatialFilter(), request2.getSpatialFilter());
         assertEquals(request1.getFormat(), request2.getFormat());
@@ -293,17 +293,15 @@ public class TestSosGetResultBindingsV20 extends XMLTestCase
         assertEquals(request1.getOperation(), request2.getOperation());
         assertEquals(request1.getVersion(), request2.getVersion());
         assertEquals(request1.getOffering(), request2.getOffering());
-        checkListsEquals(request1.getObservables(), request2.getObservables());
+        checkSetsEquals(request1.getObservables(), request2.getObservables());
         assertEquals(request1.getFormat(), request2.getFormat());
     }
     
     
-    protected void checkListsEquals(List<String> list1, List<String> list2)
+    protected void checkSetsEquals(Set<String> set1, Set<String> set2)
     {
-        assertTrue("List are not of same size", list1.size() == list2.size());
-        
-        for (int i = 0; i < list1.size(); i++)
-            assertEquals(list1.get(i), list2.get(i));
+        assertTrue("Sets are not of same size", set1.size() == set2.size());
+        assertEquals("Sets don't contain the same elements", set1, set2);
     }
     
     

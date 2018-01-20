@@ -26,8 +26,8 @@
 
 package org.vast.ows.sos;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.vast.ows.OWSRequest;
 
 
@@ -42,7 +42,7 @@ import org.vast.ows.OWSRequest;
 public class GetResultTemplateRequest extends OWSRequest
 {
     protected String offering;
-    protected List<String> observables;
+    protected Set<String> observables;
     protected String format;
     
 	
@@ -50,7 +50,7 @@ public class GetResultTemplateRequest extends OWSRequest
 	{
 		service = "SOS";
 		operation = "GetResultTemplate";
-        observables = new ArrayList<String>(2);
+        observables = new LinkedHashSet<>();
 	}
 
 
@@ -66,13 +66,13 @@ public class GetResultTemplateRequest extends OWSRequest
     }
 
 
-    public List<String> getObservables()
+    public Set<String> getObservables()
     {
         return observables;
     }
 
 
-    public void setObservables(List<String> observables)
+    public void setObservables(Set<String> observables)
     {
         this.observables = observables;
     }
