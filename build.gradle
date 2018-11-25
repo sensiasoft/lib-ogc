@@ -11,10 +11,9 @@ subprojects {
   apply plugin: 'java'
   apply plugin: 'osgi'
   apply plugin: 'maven-publish' 
-
  
-  sourceCompatibility = 1.7
-  targetCompatibility = 1.7
+  sourceCompatibility = 1.10
+  targetCompatibility = 1.10
   ext.details = null
   ext.pom = {} // pom data that subprojects can append to
   
