@@ -4,6 +4,7 @@ description = 'OGC Services Common'
 dependencies {
   compile project(':swe-common-om')
   compile 'javax.servlet:javax.servlet-api:3.1.0'
+  compile 'javax.activation:activation:1.1.1'
 }
 
 // add info to OSGI manifest
