@@ -21,6 +21,7 @@
 package org.vast.ows;
 
 import java.util.*;
+import java.util.Map.Entry;
 import org.vast.util.ResponsibleParty;
 
 
@@ -232,6 +233,15 @@ public class OWSServiceCapabilities extends OWSResponse
 	public void setExceptionTypes(List<String> exceptionTypes)
 	{
 		this.exceptionTypes = exceptionTypes;
+	}
+	
+	
+	public void updateAllEndpointUrls(String endpointUrl)
+	{
+	    for (Entry<String, String> op: getServers.entrySet())
+            getServers.put(op.getKey(), endpointUrl);
+        for (Entry<String, String> op: postServers.entrySet())
+            postServers.put(op.getKey(), endpointUrl);
 	}
 	
 	
