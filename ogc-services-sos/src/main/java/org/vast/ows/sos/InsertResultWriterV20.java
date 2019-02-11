@@ -47,7 +47,7 @@ public class InsertResultWriterV20 extends SWERequestWriter<InsertResultRequest>
 	@Override
 	public Map<String, String> buildURLParameters(InsertResultRequest request) throws OWSException
 	{
-		Map<String, String> urlParams = new LinkedHashMap<String, String>();
+		Map<String, String> urlParams = new LinkedHashMap<>();
         addCommonArgs(urlParams, request);
 		
 		// template id
@@ -78,7 +78,7 @@ public class InsertResultWriterV20 extends SWERequestWriter<InsertResultRequest>
         }
         catch (IOException e)
         {
-            throw new SOSException("Cannot write result template", e);
+            throw new SOSException("Cannot write result data", e);
         }   
         
 		return rootElt;
