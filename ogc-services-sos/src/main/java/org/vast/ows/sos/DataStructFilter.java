@@ -37,7 +37,7 @@ import org.vast.data.BaseTreeVisitor;
  */
 public class DataStructFilter extends BaseTreeVisitor
 {
-    HashSet<String> selectedObsProperties = new HashSet<String>();
+    HashSet<String> selectedObsProperties = new HashSet<>();
     
     
     public DataStructFilter(Collection<String> selectedObsProperties)
@@ -72,8 +72,8 @@ public class DataStructFilter extends BaseTreeVisitor
     
     protected void filterChildren(String parentDef, Iterator<? extends DataComponent> it)
     {
-        // if the parent has selected, stop recursing cause we want to keep all descendants
-        if (parentDef == null || selectedObsProperties.contains(parentDef))
+        // if the parent is selected, stop recursing cause we want to keep all descendants
+        if (parentDef != null && selectedObsProperties.contains(parentDef))
             return;
         
         while (it.hasNext())
