@@ -35,7 +35,7 @@ import org.vast.ows.wcs.WCSException;
  * on values contained in a WCSTransactionRequest object. 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 22 nov. 07
  * */
 public class WCSTransactionWriterV11 extends AbstractRequestWriter<WCSTransactionRequest>

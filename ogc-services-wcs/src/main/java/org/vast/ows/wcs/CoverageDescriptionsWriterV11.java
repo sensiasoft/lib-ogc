@@ -38,7 +38,7 @@ import org.vast.xml.DOMHelper;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 23 nov. 07
  * */
 public class CoverageDescriptionsWriterV11 extends AbstractResponseWriter<CoverageDescriptions>

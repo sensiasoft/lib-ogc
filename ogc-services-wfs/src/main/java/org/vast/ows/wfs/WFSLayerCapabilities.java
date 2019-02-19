@@ -32,7 +32,7 @@ import org.vast.util.Bbox;
  * reference systems (srs), max bbox...
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 30, 2005
  * */
 public class WFSLayerCapabilities extends OWSLayerCapabilities

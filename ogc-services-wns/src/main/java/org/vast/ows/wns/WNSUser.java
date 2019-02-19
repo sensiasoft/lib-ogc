@@ -28,7 +28,7 @@ package org.vast.ows.wns;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 16, 2008
  * */
 public abstract class WNSUser

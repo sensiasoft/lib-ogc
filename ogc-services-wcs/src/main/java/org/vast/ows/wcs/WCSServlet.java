@@ -39,7 +39,7 @@ import org.vast.ows.wcs.WCSException;
  * Base abstract class for implementing WCS servlets
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * */
 public abstract class WCSServlet extends OWSServlet
 {

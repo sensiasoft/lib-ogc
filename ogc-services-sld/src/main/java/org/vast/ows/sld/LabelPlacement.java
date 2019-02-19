@@ -26,7 +26,7 @@ package org.vast.ows.sld;
  * Allows to specify label anchor, displacement, rotation.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 11, 2005
  * */
 public class LabelPlacement

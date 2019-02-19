@@ -32,7 +32,7 @@ import org.vast.ows.OWSResponse;
  * Container for a CoverageManifest response
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 11, 2007
  * */
 public class CoverageManifest extends OWSResponse

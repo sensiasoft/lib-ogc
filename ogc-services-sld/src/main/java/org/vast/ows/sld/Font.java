@@ -25,7 +25,7 @@ package org.vast.ows.sld;
  * SLD Font object
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 11, 2005
  * */
 public class Font

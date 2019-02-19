@@ -30,7 +30,7 @@ import org.vast.ows.OWSRequest;
  * Container for Register request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 16, 2008
  * */
 public class RegisterRequest extends OWSRequest

@@ -30,7 +30,7 @@ import org.vast.ows.OWSRequest;
  * Container for Unregister request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 16, 2008
  * */
 public class UnregisterRequest extends OWSRequest

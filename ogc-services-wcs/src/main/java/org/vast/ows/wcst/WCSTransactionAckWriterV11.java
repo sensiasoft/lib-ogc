@@ -34,7 +34,7 @@ import org.vast.ows.*;
  * version 1.1.1 based on a WCSTransactionAck object. 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 22 nov. 07
  * */
 public class WCSTransactionAckWriterV11 extends AbstractResponseWriter<WCSTransactionAck>

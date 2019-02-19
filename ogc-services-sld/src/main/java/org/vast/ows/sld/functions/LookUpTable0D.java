@@ -28,7 +28,7 @@ package org.vast.ows.sld.functions;
  * (i.e. the value of the previous point will be used). 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Apr 3, 2006
  * */
 public class LookUpTable0D extends AbstractMappingFunction

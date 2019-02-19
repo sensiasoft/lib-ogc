@@ -32,7 +32,7 @@ import org.vast.util.Interval;
  * Dimension subset structure for storing WCS domain subset information
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 16, 2011
  * */
 public class DimensionSubset extends Interval

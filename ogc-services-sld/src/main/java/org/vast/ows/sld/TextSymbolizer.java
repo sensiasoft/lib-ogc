@@ -26,7 +26,7 @@ package org.vast.ows.sld;
  * Allows to specify labels, placement, font, halo, and fill.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 10, 2005
  * */
 public class TextSymbolizer extends Symbolizer

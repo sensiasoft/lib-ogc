@@ -34,7 +34,7 @@ import org.w3c.dom.NodeList;
  * displayed.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 11, 2005
  * */
 public class FunctionReader

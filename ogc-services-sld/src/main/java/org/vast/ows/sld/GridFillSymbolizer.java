@@ -26,7 +26,7 @@ package org.vast.ows.sld;
  * To render data as filled polygons with the given Fill parameters.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Aug 02, 2006
  * */
 public class GridFillSymbolizer extends GridSymbolizer

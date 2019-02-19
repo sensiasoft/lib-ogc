@@ -31,7 +31,7 @@ import org.vast.util.TimeExtent;
  * Container for SOS GetObservation request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 09, 2007
  * */
 public class SASSubscribeRequest extends OWSRequest

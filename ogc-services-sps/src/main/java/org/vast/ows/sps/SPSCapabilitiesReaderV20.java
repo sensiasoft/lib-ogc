@@ -16,7 +16,7 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <alex.robin@sensiasoftware.com>
+    Alexandre Robin
  
 ******************************* END LICENSE BLOCK ***************************/
 

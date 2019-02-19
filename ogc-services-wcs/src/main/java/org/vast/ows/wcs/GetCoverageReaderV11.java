@@ -40,7 +40,7 @@ import org.vast.ows.*;
  * create a GetCoverage object for version 1.1.1
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Sep 21, 2007
  * */
 public class GetCoverageReaderV11 extends AbstractRequestReader<GetCoverageRequest>

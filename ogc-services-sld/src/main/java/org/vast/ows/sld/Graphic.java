@@ -29,7 +29,7 @@ import java.util.*;
  * Allows to specify graphic opacity, size and rotation.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 11, 2005
  * */
 public class Graphic

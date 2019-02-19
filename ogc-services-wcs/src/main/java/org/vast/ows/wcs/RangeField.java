@@ -31,7 +31,7 @@ import org.vast.ows.OWSIdentification;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 29 nov. 07
  * */
 public class RangeField extends OWSIdentification

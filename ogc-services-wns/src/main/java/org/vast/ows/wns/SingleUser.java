@@ -31,7 +31,7 @@ import java.util.List;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 16 2008
  * */
 public class SingleUser extends WNSUser

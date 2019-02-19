@@ -45,7 +45,7 @@ import org.w3c.dom.NodeList;
  * with a fixed size N-dimensional DataArray containing coverage data as the result.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 16, 2010
  * */
 public class WCSResponseReader extends SWEReader

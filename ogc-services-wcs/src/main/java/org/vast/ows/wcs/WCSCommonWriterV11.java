@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  * Util method to write XML common to several WCS documents
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 4, 2007
  * */
 public class WCSCommonWriterV11

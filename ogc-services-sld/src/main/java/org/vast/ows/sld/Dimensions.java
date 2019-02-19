@@ -29,7 +29,7 @@ import java.util.Hashtable;
  * along all any number of coordinates.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 11, 2005
  * */
 public class Dimensions extends Hashtable<String, String>

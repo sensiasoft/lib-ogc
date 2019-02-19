@@ -27,7 +27,7 @@ package org.vast.ows.sld.functions;
  * array of values to compute the output.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Apr 3, 2006
  * */
 public class DirectLookUpTable extends AbstractMappingFunction

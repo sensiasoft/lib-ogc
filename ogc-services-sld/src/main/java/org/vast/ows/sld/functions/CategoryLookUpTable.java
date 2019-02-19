@@ -29,7 +29,7 @@ import java.util.Hashtable;
  * This is used to map categorical values
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Apr 3, 2006
  * */
 public class CategoryLookUpTable extends AbstractMappingFunction

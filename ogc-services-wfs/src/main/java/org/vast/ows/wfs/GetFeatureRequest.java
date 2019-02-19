@@ -33,7 +33,7 @@ import org.vast.util.TimeExtent;
  * Container for WFS query parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 27, 2005
  * */
 public class GetFeatureRequest extends OWSRequest

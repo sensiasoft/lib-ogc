@@ -36,7 +36,7 @@ import org.vast.xml.DOMHelper;
  * on values contained in a RegisterRequest object for WNS version 1.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 16, 2008
  * */
 public class RegisterWriterV10 extends AbstractRequestWriter<RegisterRequest>

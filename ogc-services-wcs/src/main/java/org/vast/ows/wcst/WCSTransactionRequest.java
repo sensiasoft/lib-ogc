@@ -31,7 +31,7 @@ import org.vast.ows.OWSRequest;
  * Container for Transactional request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 11, 2007
  * */
 public class WCSTransactionRequest extends OWSRequest

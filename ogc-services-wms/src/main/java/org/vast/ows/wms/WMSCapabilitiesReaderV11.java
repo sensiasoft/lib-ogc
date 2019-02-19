@@ -34,7 +34,7 @@ import org.vast.ows.OWSServiceCapabilities;
  * WMSLayerCapabilities objects for version 1.1.1, 1.3
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 30, 2005
  * */
 public class WMSCapabilitiesReaderV11 extends WMSCapabilitiesReaderV10

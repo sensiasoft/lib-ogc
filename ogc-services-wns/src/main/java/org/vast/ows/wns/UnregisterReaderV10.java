@@ -34,7 +34,7 @@ import org.vast.ows.*;
  * create a UnregisterRequest object for WNS version 1.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 16, 2008
  * */
 public class UnregisterReaderV10 extends AbstractRequestReader<UnregisterRequest>

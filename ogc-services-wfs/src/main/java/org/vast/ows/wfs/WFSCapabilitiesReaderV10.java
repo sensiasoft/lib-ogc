@@ -37,7 +37,7 @@ import org.vast.ows.OWSServiceCapabilities;
  * WFSLayerCapabilities objects for version 1.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 30, 2005
  * */
 public class WFSCapabilitiesReaderV10 extends AbstractCapabilitiesReader

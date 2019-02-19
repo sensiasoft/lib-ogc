@@ -30,7 +30,7 @@ import org.vast.ows.sld.MappingFunction;
  * TODO AbstractMappingFunction type description
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 24, 2009
  * */
 public class AbstractMappingFunction implements MappingFunction

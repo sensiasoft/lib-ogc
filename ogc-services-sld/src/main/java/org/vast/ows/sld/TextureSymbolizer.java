@@ -26,7 +26,7 @@ package org.vast.ows.sld;
  * Allows to use data as a 3D mapped texture.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 10, 2005
  * */
 public class TextureSymbolizer extends RasterSymbolizer

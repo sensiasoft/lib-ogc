@@ -34,7 +34,7 @@ import org.vast.util.TimeExtent;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 27 nov. 07
  * */
 public class CoverageDescription extends OWSIdentification

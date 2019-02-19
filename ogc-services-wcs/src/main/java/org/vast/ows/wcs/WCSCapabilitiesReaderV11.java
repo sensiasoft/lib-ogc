@@ -39,7 +39,7 @@ import org.vast.ows.OWSServiceCapabilities;
  * WCSLayerCapabilities objects for version 1.1.1
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 27 nov. 07
  * */
 public class WCSCapabilitiesReaderV11 extends OWSCapabilitiesReaderV11

@@ -31,7 +31,7 @@ import org.vast.util.Bbox;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 26 nov. 07
  * */
 public class CoverageTransaction extends CoverageRefGroup

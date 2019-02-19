@@ -37,7 +37,7 @@ import org.vast.ows.wfs.GetFeatureRequest;
  * Base abstract class for implementing WFS servlets
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * */
 public abstract class WFSServlet extends OWSServlet
 {

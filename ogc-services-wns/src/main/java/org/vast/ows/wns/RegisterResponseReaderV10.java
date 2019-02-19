@@ -33,7 +33,7 @@ import org.vast.ows.*;
  * create a RegisterResponse object for WNS version 1.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 21, 2008
  * */
 public class RegisterResponseReaderV10 extends AbstractResponseReader<RegisterResponse>

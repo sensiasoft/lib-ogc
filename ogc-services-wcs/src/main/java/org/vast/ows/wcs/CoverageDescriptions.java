@@ -32,7 +32,7 @@ import org.vast.ows.OWSResponse;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 23 nov. 07
  * */
 public class CoverageDescriptions extends OWSResponse

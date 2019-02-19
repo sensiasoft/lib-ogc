@@ -38,7 +38,7 @@ import org.vast.xml.DOMHelper;
  * on values contained in a CoverageManifest object for version 1.1.1
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 11, 2007
  * */
 public class CoverageManifestWriterV11 extends AbstractResponseWriter<CoverageManifest>

@@ -33,7 +33,7 @@ import org.vast.util.TimeExtent;
  * reference systems (srs), max bbox, available time ranges...
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 30, 2005
  * */
 public class WMSLayerCapabilities extends OWSLayerCapabilities

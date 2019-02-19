@@ -35,7 +35,7 @@ import org.vast.xml.DOMHelper;
  * on values contained in a GetCapabilities object for version 1.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Sep 21, 2007
  * */
 public class SASGetCapabilitiesWriter extends AbstractRequestWriter<GetCapabilitiesRequest>

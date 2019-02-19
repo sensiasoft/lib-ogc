@@ -26,7 +26,7 @@ package org.vast.ows.sld;
  * Allows to specify fill color and opacity.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 11, 2005
  * */
 public class Fill

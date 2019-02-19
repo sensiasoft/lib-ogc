@@ -30,7 +30,7 @@ import org.vast.ows.OWSException;
  * Exception object to carry WNS error messages.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 16, 2008
  * */
 public class WNSException extends OWSException

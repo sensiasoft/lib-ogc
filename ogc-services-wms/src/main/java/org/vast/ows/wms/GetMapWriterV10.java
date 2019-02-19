@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  * on values contained in a GetMapRequest object for version 1.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 10, 2007
  * */
 public class GetMapWriterV10 extends AbstractRequestWriter<GetMapRequest>

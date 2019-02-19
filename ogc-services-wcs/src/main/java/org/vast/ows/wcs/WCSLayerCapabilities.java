@@ -14,7 +14,7 @@
  The Initial Developer of the Original Code is the VAST team at the
  University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
  Portions created by the Initial Developer are Copyright (C) 2007
- the Initial Developer. All Rights Reserved.
+ the Initial Developer. All Rights Reserved.
  Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
@@ -37,7 +37,7 @@ import org.vast.util.TimeExtent;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 27 nov. 07
  * */
 public class WCSLayerCapabilities extends OWSLayerCapabilities

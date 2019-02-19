@@ -26,7 +26,7 @@ package org.vast.ows.sld;
  * To render data as a mesh with the given Stroke parameters.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Aug 02, 2006
  * */
 public class GridMeshSymbolizer extends GridSymbolizer

@@ -34,7 +34,7 @@ import org.vast.util.TimeExtent;
  * Container for GetMap request parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 10, 2007
  * */
 public class GetMapRequest extends OWSRequest

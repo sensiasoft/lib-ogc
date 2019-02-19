@@ -28,7 +28,7 @@ import java.util.Hashtable;
  * data values mapped to rendering parameters.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 11, 2005
  * */
 public class GraphicCustom implements GraphicSource

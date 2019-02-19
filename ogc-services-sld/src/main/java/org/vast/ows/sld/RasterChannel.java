@@ -25,7 +25,7 @@ package org.vast.ows.sld;
  * Object used for one of the channel selections.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 11, 2005
  * */
 public class RasterChannel extends ScalarParameter

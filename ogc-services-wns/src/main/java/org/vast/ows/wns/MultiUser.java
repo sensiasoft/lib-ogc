@@ -30,7 +30,7 @@ import java.util.List;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 16 janv. 08
  * */
 public class MultiUser extends WNSUser

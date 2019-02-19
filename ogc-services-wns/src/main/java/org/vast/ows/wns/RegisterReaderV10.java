@@ -34,7 +34,7 @@ import org.vast.ows.*;
  * create a RegisterRequest object for WNS version 1.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Sep 21, 2007
  * */
 public class RegisterReaderV10 extends AbstractRequestReader<RegisterRequest>

@@ -32,7 +32,7 @@ import org.vast.util.Interval;
  * For space and time use Bbox and TimeInfo
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Sep 24, 2007
  * */
 public class AxisSubset extends OWSIdentification

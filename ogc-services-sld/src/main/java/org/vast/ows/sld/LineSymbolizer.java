@@ -26,7 +26,7 @@ package org.vast.ows.sld;
  * Allows to specify line geometry and stroke.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 10, 2005
  * */
 public class LineSymbolizer extends Symbolizer

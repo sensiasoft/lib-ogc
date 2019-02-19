@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  * objects for WNS version 1.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 17, 2008
  * */
 public class WNSCapabilitiesWriterV10 extends OWSCapabilitiesWriterV11

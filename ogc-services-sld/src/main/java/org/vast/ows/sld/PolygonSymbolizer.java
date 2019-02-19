@@ -26,7 +26,7 @@ package org.vast.ows.sld;
  * Allows to specify polygon geometry, fill and stroke.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 10, 2005
  * */
 public class PolygonSymbolizer extends Symbolizer

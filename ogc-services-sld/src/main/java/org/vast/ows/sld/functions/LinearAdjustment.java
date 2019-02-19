@@ -26,7 +26,7 @@ package org.vast.ows.sld.functions;
  * Linear Adjustment function of the form y = a*x + b.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Apr 3, 2006
  * */
 public class LinearAdjustment extends AbstractMappingFunction

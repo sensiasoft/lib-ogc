@@ -31,7 +31,7 @@ import org.vast.util.DateTime;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 26 nov. 07
  * */
 public class WCSTransactionAck extends OWSResponse

@@ -34,7 +34,7 @@ import org.vast.xml.DOMHelper;
  * on values contained in a GetCoverageRequest object for version 1.1.1
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Sep 21, 2007
  * */
 public class GetCoverageWriterV11 extends AbstractRequestWriter<GetCoverageRequest>

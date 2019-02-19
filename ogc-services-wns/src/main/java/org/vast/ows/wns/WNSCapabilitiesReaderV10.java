@@ -39,7 +39,7 @@ import org.vast.ows.OWSUtils;
  * WNSCapabilities objects for WNS version 1.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 17, 2008
  * */
 public class WNSCapabilitiesReaderV10 extends OWSCapabilitiesReaderV11

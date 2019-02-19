@@ -26,7 +26,7 @@ package org.vast.ows.sld;
  * Abstract Base Symbolizer
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 11, 2005
  * */
 public abstract class Symbolizer

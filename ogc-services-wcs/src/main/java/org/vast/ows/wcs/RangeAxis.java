@@ -35,7 +35,7 @@ import org.vast.unit.Unit;
  * (ex: name=xs1, uom=W.sr-1.m-2.um, type=short, min=1, max=65500, null=0) 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 6 nov. 07
  * */
 public class RangeAxis extends OWSIdentification

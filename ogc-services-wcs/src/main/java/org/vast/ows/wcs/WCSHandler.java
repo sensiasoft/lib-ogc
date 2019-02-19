@@ -33,7 +33,7 @@ import org.vast.ows.wcs.GetCoverageRequest;
  * Interface for a WCS dataset (layer) handler
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 9, 2005
  * */
 public interface WCSHandler

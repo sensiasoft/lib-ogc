@@ -36,7 +36,7 @@ import org.vast.xml.DOMHelper;
  * create a GetMapRequest object for version 1.1
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 10, 2007
  * */
 public class GetMapReaderV11 extends GetMapReaderV10

@@ -31,7 +31,7 @@ import org.vast.ows.OWSRequest;
  * Container for DescribeCoverage query parameters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Spe 21, 2007
  * */
 public class DescribeCoverageRequest extends OWSRequest

@@ -28,7 +28,7 @@ import org.vast.ows.OWSException;
  * Exception object to carry WMS error messages.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 07 jul. 06
  * */
 public class WMSException extends OWSException

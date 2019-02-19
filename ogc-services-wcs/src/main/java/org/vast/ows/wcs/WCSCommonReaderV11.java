@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * Util method to read XML common to several WCS documents
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Dec 4, 2007
  * */
 public class WCSCommonReaderV11 extends OWSCommonUtils

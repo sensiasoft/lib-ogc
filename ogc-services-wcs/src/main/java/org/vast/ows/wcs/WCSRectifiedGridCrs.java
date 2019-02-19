@@ -27,7 +27,7 @@ package org.vast.ows.wcs;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 28 nov. 07
  * */
 public class WCSRectifiedGridCrs

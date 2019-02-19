@@ -27,7 +27,7 @@ package org.vast.ows.sld;
  * utility methods to deal with colors.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 11, 2005
  * */
 public class Color

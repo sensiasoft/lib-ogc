@@ -35,7 +35,7 @@ import org.vast.ows.wcs.WCSException;
  * create a WCSTransactionRequest object for version 1.1
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Oct 11, 2007
  * */
 public class WCSTransactionReaderV11 extends AbstractRequestReader<WCSTransactionRequest>

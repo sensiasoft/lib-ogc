@@ -29,7 +29,7 @@ package org.vast.ows.sld.functions;
  * mapping can be done more efficiently
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 24, 2009
  * */
 public interface StringIdProvider

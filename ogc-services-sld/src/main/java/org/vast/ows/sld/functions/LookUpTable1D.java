@@ -27,7 +27,7 @@ package org.vast.ows.sld.functions;
  * This will interpolate at the first order between points.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Apr 3, 2006
  * */
 public class LookUpTable1D extends AbstractMappingFunction

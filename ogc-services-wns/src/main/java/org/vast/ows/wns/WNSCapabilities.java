@@ -31,7 +31,7 @@ import org.vast.ows.OWSLayerCapabilities;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Jan 17, 2008
  * */
 public class WNSCapabilities extends OWSLayerCapabilities

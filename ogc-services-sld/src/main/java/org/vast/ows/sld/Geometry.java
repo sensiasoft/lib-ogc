@@ -27,7 +27,7 @@ package org.vast.ows.sld;
  * and breaks.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date Nov 11, 2005
  * */
 public class Geometry

@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  * objects for version 1.1.1
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date 27 nov. 07
  * */
 public class WCSCapabilitiesWriterV11 extends OWSCapabilitiesWriterV11

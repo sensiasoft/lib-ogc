@@ -33,7 +33,7 @@ import org.vast.xml.XMLReaderException;
  * This won't deal with Observation Collections properly.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @date May 22, 2008
  * */
 public class ExecuteProcessResponseReader extends SWEReader
