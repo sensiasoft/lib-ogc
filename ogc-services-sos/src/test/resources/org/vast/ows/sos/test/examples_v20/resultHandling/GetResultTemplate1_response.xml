@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--=====================================================================
+Example Response for GetResult operation request which contains filters for offering and observedProperty. The response contains a template containing the observation metadata as well as information about the type and structure of the result elements which will be returned in later GetResult responses.
+
+
+In this example, the sequence of operations for retrieving results is as follows:
+1. GetResultTemplate1.xml request is sent to SOS.
+2. GetResultTemplate1_response.xml is returned from SOS.
+3. GetResult1.xml is sent to SOS
+4. GetResult1_response is returned from SOS
+=======================================================================-->
+<sos:GetResultTemplateResponse xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:sos="http://www.opengis.net/sos/2.0" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<!--information about structure of observation results-->
+	<sos:resultStructure>
+		<swe:DataRecord>
+			<swe:field name="phenomenonTime">
+				<swe:Time definition="http://www.opengis.net/def/property/OGC/0/PhenomenonTime">
+					<swe:uom code="ms"/>
+				</swe:Time>
+			</swe:field>
+			<swe:field name="waterlevel">
+				<swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight">
+					<swe:uom code="cm"/>
+				</swe:Quantity>
+			</swe:field>
+		</swe:DataRecord>
+	</sos:resultStructure>
+	<!--information about encoding of results-->
+	<sos:resultEncoding>
+		<!--results are encoded as text with token- and blockseperator as specified here-->
+		<swe:TextEncoding blockSeparator="@@" collapseWhiteSpaces="true" decimalSeparator="." tokenSeparator=","/>
+	</sos:resultEncoding>
+</sos:GetResultTemplateResponse>

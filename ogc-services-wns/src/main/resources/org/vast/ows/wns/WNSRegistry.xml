@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Map>
+   <!-- -->
+   <Reader type="WNS" subType="Capabilities" version="1.0" class="org.vast.ows.wns.WNSCapabilitiesReaderV10"/>
+   <Reader type="WNS" subType="Register" version="1.0" class="org.vast.ows.wns.RegisterReaderV10"/>
+   <Reader type="WNS" subType="Unregister" version="1.0" class="org.vast.ows.wns.UnregisterReaderV10"/>
+   <Reader type="WNS" subType="RegisterResponse" version="1.0" class="org.vast.ows.wns.RegisterResponseReaderV10"/>
+   <Reader type="WNS" subType="UnregisterResponse" version="1.0" class="org.vast.ows.wns.UnregisterResponseReaderV10"/>
+   <!-- -->
+   <Writer type="WNS" subType="Capabilities" version="1.0" class="org.vast.ows.wns.WNSCapabilitiesWriterV10"/>
+   <Writer type="WNS" subType="Register" version="1.0" class="org.vast.ows.wns.RegisterWriterV10"/>
+   <Writer type="WNS" subType="Unregister" version="1.0" class="org.vast.ows.wns.UnregisterWriterV10"/>
+   <Writer type="WNS" subType="RegisterResponse" version="1.0" class="org.vast.ows.wns.RegisterResponseWriterV10"/>
+   <Writer type="WNS" subType="UnregisterResponse" version="1.0" class="org.vast.ows.wns.UnregisterResponseWriterV10"/>
+   <!-- -->
+</Map>

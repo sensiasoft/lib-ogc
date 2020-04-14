@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GetObservation xmlns="http://www.opengis.net/sos/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" service="SOS" version="2.0.0">
+	<observedProperty>http://marinemetadata.org/cf#sea_water_salinity</observedProperty>
+	<procedure>http://myServer.org/sensors/glider1</procedure>
+	<temporalFilter>
+		<fes:During>
+			<fes:ValueReference>phenomenonTime</fes:ValueReference>
+			<gml:TimePeriod gml:id="tp1">
+				<gml:beginPosition>2008-01-01T00:00:00Z</gml:beginPosition>
+				<gml:endPosition>2008-01-02T00:00:00Z</gml:endPosition>
+			</gml:TimePeriod>
+		</fes:During>
+	</temporalFilter>
+	<spatialFilter>
+		<fes:BBOX>
+			<fes:ValueReference>om:featureOfInterest/sams:SF_SpatialSamplingFeature/sams:shape</fes:ValueReference>
+			<gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+				<gml:lowerCorner>21 -94</gml:lowerCorner>
+				<gml:upperCorner>22 -90</gml:upperCorner>
+			</gml:Envelope>
+		</fes:BBOX>
+	</spatialFilter>
+</GetObservation>

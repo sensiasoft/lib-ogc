@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Map>
+   <!-- -->
+   <Reader type="SOS" subType="Capabilities" version="2.0" class="org.vast.ows.sos.SOSCapabilitiesReaderV20"/>
+   <Reader type="SOS" subType="GetObservation" version="2.0" class="org.vast.ows.sos.GetObservationReaderV20"/>
+   <Reader type="SOS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorReaderV20"/>
+   <Reader type="SOS" subType="DescribeSensorResponse" version="2.0" class="org.vast.ows.swe.DescribeSensorResponseReaderV20"/>
+   <Reader type="SOS" subType="GetFeatureOfInterest" version="2.0" class="org.vast.ows.sos.GetFoiReaderV20"/>
+   <Reader type="SOS" subType="GetResult" version="2.0" class="org.vast.ows.sos.GetResultReaderV20"/>
+   <Reader type="SOS" subType="GetResultTemplate" version="2.0" class="org.vast.ows.sos.GetResultTemplateReaderV20"/>
+   <Reader type="SOS" subType="GetResultTemplateResponse" version="2.0" class="org.vast.ows.sos.GetResultTemplateResponseReaderV20"/>
+   <Reader type="SOS" subType="InsertObservation" version="2.0" class="org.vast.ows.sos.InsertObservationReaderV20"/>
+   <Reader type="SOS" subType="InsertObservationResponse" version="2.0" class="org.vast.ows.sos.InsertObservationResponseReaderV20"/>
+   <Reader type="SOS" subType="InsertSensor" version="2.0" class="org.vast.ows.sos.InsertSensorReaderV20"/>
+   <Reader type="SOS" subType="InsertSensorResponse" version="2.0" class="org.vast.ows.swe.InsertSensorResponseReaderV20"/>
+   <Reader type="SOS" subType="DeleteSensor" version="2.0" class="org.vast.ows.swe.DeleteSensorReaderV20"/>
+   <Reader type="SOS" subType="DeleteSensorResponse" version="2.0" class="org.vast.ows.swe.DeleteSensorResponseReaderV20"/>
+   <Reader type="SOS" subType="UpdateSensorDescription" version="2.0" class="org.vast.ows.swe.UpdateSensorReaderV20"/>
+   <Reader type="SOS" subType="UpdateSensorDescriptionResponse" version="2.0" class="org.vast.ows.swe.UpdateSensorResponseReaderV20"/>
+   <Reader type="SOS" subType="InsertResult" version="2.0" class="org.vast.ows.sos.InsertResultReaderV20"/>
+   <Reader type="SOS" subType="InsertResultResponse" version="2.0" class="org.vast.ows.sos.InsertResultResponseReaderV20"/>
+   <Reader type="SOS" subType="InsertResultTemplate" version="2.0" class="org.vast.ows.sos.InsertResultTemplateReaderV20"/>
+   <Reader type="SOS" subType="InsertResultTemplateResponse" version="2.0" class="org.vast.ows.sos.InsertResultTemplateResponseReaderV20"/>
+   <!-- -->
+   <Writer type="SOS" subType="Capabilities" version="2.0" class="org.vast.ows.sos.SOSCapabilitiesWriterV20"/>
+   <Writer type="SOS" subType="GetObservation" version="2.0" class="org.vast.ows.sos.GetObservationWriterV20"/>
+   <Writer type="SOS" subType="DescribeSensor" version="2.0" class="org.vast.ows.swe.DescribeSensorWriterV20"/> 
+   <Writer type="SOS" subType="DescribeSensorResponse" version="2.0" class="org.vast.ows.swe.DescribeSensorResponseWriterV20"/> 
+   <Writer type="SOS" subType="GetFeatureOfInterest" version="2.0" class="org.vast.ows.sos.GetFoiWriterV20"/>
+   <Writer type="SOS" subType="GetResult" version="2.0" class="org.vast.ows.sos.GetResultWriterV20"/>
+   <Writer type="SOS" subType="GetResultTemplate" version="2.0" class="org.vast.ows.sos.GetResultTemplateWriterV20"/>
+   <Writer type="SOS" subType="GetResultTemplateResponse" version="2.0" class="org.vast.ows.sos.GetResultTemplateResponseWriterV20"/>
+   <Writer type="SOS" subType="InsertObservation" version="2.0" class="org.vast.ows.sos.InsertObservationWriterV20"/>
+   <Writer type="SOS" subType="InsertObservationResponse" version="2.0" class="org.vast.ows.sos.InsertObservationResponseWriterV20"/>
+   <Writer type="SOS" subType="InsertSensor" version="2.0" class="org.vast.ows.sos.InsertSensorWriterV20"/>
+   <Writer type="SOS" subType="InsertSensorResponse" version="2.0" class="org.vast.ows.swe.InsertSensorResponseWriterV20"/>
+   <Writer type="SOS" subType="DeleteSensor" version="2.0" class="org.vast.ows.swe.DeleteSensorWriterV20"/>
+   <Writer type="SOS" subType="DeleteSensorResponse" version="2.0" class="org.vast.ows.swe.DeleteSensorResponseWriterV20"/>
+   <Writer type="SOS" subType="UpdateSensorDescription" version="2.0" class="org.vast.ows.swe.UpdateSensorWriterV20"/>
+   <Writer type="SOS" subType="UpdateSensorDescriptionResponse" version="2.0" class="org.vast.ows.swe.UpdateSensorResponseWriterV20"/>
+   <Writer type="SOS" subType="InsertResult" version="2.0" class="org.vast.ows.sos.InsertResultWriterV20"/>
+   <Writer type="SOS" subType="InsertResultResponse" version="2.0" class="org.vast.ows.sos.InsertResultResponseWriterV20"/>
+   <Writer type="SOS" subType="InsertResultTemplate" version="2.0" class="org.vast.ows.sos.InsertResultTemplateWriterV20"/>
+   <Writer type="SOS" subType="InsertResultTemplateResponse" version="2.0" class="org.vast.ows.sos.InsertResultTemplateResponseWriterV20"/>
+   <!-- -->
+</Map>

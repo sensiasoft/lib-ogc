@@ -1,0 +1,20 @@
+rootProject.name = 'lib-ows'
+
+include 'swe-common-core'
+include 'swe-common-om'
+include 'sensorml-core'
+
+project(':swe-common-core').projectDir = "$rootDir/../lib-swe-common/swe-common-core" as File
+project(':swe-common-om').projectDir = "$rootDir/../lib-swe-common/swe-common-om" as File
+project(':sensorml-core').projectDir = "$rootDir/../lib-sensorml/sensorml-core" as File
+
+// include all folders with build.gradle as subprojects
+FileTree subprojects = fileTree(rootDir).include('**/build.gradle')
+subprojects.files.each { File f ->
+  File projectFolder = f.parentFile
+  if (projectFolder != rootDir) {
+    String projectName = projectFolder.name
+    include projectName
+    project(':' + projectName).projectDir = projectFolder
+  }
+}

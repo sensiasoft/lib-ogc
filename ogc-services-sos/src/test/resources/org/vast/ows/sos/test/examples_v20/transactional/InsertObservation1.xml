@@ -1,0 +1,43 @@
+<sos:InsertObservation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sos="http://www.opengis.net/sos/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:swes="http://www.opengis.net/swes/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:ogc="http://www.opengis.net/ogc" xmlns:om="http://www.opengis.net/om/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" service="SOS" version="2.0.0">
+	<!--identifier of offering for which the observation shall be inserted-->
+	<sos:offering>http://www.my_namespace.org/water_gage_2_observations</sos:offering>
+	<!--observation which shall be inserted-->
+	<sos:observation>
+		<om:OM_Observation gml:id="obsTest1">
+			<om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"/>
+			<om:phenomenonTime>
+				<gml:TimeInstant gml:id="T1">
+					<gml:timePosition>2010-08-31T17:45:15Z</gml:timePosition>
+				</gml:TimeInstant>
+			</om:phenomenonTime>
+			<om:resultTime>
+                <gml:TimeInstant gml:id="T2">
+                    <gml:timePosition>2010-08-31T17:55:15Z</gml:timePosition>
+                </gml:TimeInstant>
+            </om:resultTime>
+			<!-- link to DescribeSensor operation of SOS which is providing the sensor description -->
+			<om:procedure xlink:href="http://www.my_namespace.org/sensors/Water_Gage_2"/>
+			<!-- parameter containing samplingPoint as defined in SOS 2.0 Extension - Data Encoding Restriction-->
+			<om:parameter>
+				<om:NamedValue>
+					<om:name xlink:href="http://www.opengis.net/req/omxml/2.0/data/samplingGeometry"/>
+					<om:value>
+						<gml:Point gml:id="SamplingPoint2">
+							<gml:pos srsName="http://www.opengis.net/def/crs/EPSG/0/4326">54.9 10.52</gml:pos>
+						</gml:Point>
+					</om:value>
+				</om:NamedValue>
+			</om:parameter>
+			<!-- a notional URN identifying the observed property -->
+			<om:observedProperty xlink:href="http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight"/>
+			<!-- a notional WFS call identifying the object regarding which the observation was made -->
+			<om:featureOfInterest xlink:href="http://wfs.example.org?request=getFeature&amp;featureid=river1"/>
+			<om:result xsi:type="swe:QuantityPropertyType">
+               <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight">
+                  <swe:uom code="m"/>
+                  <swe:value>6.3</swe:value>
+               </swe:Quantity>         
+            </om:result>
+		</om:OM_Observation>		
+	</sos:observation>
+</sos:InsertObservation>

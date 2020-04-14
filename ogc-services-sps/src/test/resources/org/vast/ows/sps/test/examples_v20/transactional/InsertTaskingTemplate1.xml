@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sps:InsertTaskingTemplate xmlns:sps="http://www.opengis.net/sps/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" service="SPS" version="2.0.0">
+   <sps:proposedTemplate>
+      <sps:TaskingTemplate>
+         <!--identifier of procedure to which the tasking message shall be added -->
+         <sps:procedure>http://www.my_namespace.org/my_ptz_camera</sps:procedure>
+         <!--definition of tasking message structure; in this case is swe:DataRecord consisting of three elements: phenomenonTime, waterlevel and flowrate -->
+         <sps:taskingParameters>
+            <swe:DataRecord>
+               <swe:field name="pan">
+                  <swe:Quantity definition="http://www.opengis.net/def/property/OGC-SPS-X-CAM/0/RelativePan">
+                     <swe:uom code="deg" />
+                  </swe:Quantity>
+               </swe:field>
+               <swe:field name="tilt">
+                  <swe:Quantity definition="http://www.opengis.net/def/property/OGC-SPS-X-CAM/0/RelativeTilt">
+                     <swe:uom code="deg" />
+                  </swe:Quantity>
+               </swe:field>
+            </swe:DataRecord>
+         </sps:taskingParameters>
+         <!--definition of message encoding; in this example, the results are encoded as text with the seperators defined in this element -->
+         <sps:encoding>
+            <swe:TextEncoding tokenSeparator="," blockSeparator="@@" decimalSeparator="." collapseWhiteSpaces="true" />
+         </sps:encoding>
+      </sps:TaskingTemplate>
+   </sps:proposedTemplate>
+</sps:InsertTaskingTemplate>

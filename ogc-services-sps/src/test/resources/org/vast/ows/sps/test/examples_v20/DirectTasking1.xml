@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sps:DirectTasking xmlns:sps="http://www.opengis.net/sps/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" service="SPS" version="2.0.0">
+   <sps:procedure>http://www.my_namespace.org/my_ptz_camera</sps:procedure>
+   <sps:timeSlot>now/2017-01-01T00:00:00Z</sps:timeSlot>
+   <sps:encoding>
+      <swe:TextEncoding tokenSeparator="," blockSeparator="@@" decimalSeparator="." collapseWhiteSpaces="true" />
+   </sps:encoding>
+</sps:DirectTasking>

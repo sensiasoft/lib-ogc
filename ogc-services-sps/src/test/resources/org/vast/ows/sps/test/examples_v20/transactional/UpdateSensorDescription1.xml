@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swes:UpdateSensorDescription xmlns:swes="http://www.opengis.net/swes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:sml="http://www.opengis.net/sensorml/2.0" service="SPS" version="2.0.0">
+  <swes:procedure>http://www.my_namespace.org/sensors/Water_Gage_2</swes:procedure>
+  <swes:procedureDescriptionFormat>http://www.opengis.net/sensorml/2.0</swes:procedureDescriptionFormat>
+  <swes:description>
+    <swes:SensorDescription>
+      <swes:data>
+        <sml:SimpleProcess gml:id="F1"/>
+      </swes:data>
+    </swes:SensorDescription>
+  </swes:description>
+</swes:UpdateSensorDescription>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Map>
+   <!-- -->
+   <Reader type="WCS" subType="GetCoverage" version="1.1.1" class="org.vast.ows.wcs.GetCoverageReaderV11"/>
+   <Reader type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageReaderV11"/>
+   <Reader type="WCS" subType="Capabilities" version="1.1.1" class="org.vast.ows.wcs.WCSCapabilitiesReaderV11"/>   
+   <Reader type="WCS" subType="CoverageManifest" version="1.1.1" class="org.vast.ows.wcs.CoverageManifestReaderV11"/>
+   <Reader type="WCS" subType="CoverageDescriptions" version="1.1.1" class="org.vast.ows.wcs.CoverageDescriptionsReaderV11"/>
+   <Reader type="WCS" subType="Transaction" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionReaderV11"/>
+   <!-- -->
+   <Writer type="WCS" subType="GetCoverage" version="1.1.1" class="org.vast.ows.wcs.GetCoverageWriterV11"/>
+   <Writer type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageWriterV11"/>
+   <Writer type="WCS" subType="Capabilities" version="1.1.1" class="org.vast.ows.wcs.WCSCapabilitiesWriterV11"/>   
+   <Writer type="WCS" subType="CoverageManifest" version="1.1.1" class="org.vast.ows.wcs.CoverageManifestWriterV11"/>
+   <Writer type="WCS" subType="CoverageDescriptions" version="1.1.1" class="org.vast.ows.wcs.CoverageDescriptionsWriterV11"/>
+   <Writer type="WCS" subType="Transaction" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionWriterV11"/>
+   <Writer type="WCS" subType="TransactionAck" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionAckWriterV11"/>
+   <!-- -->
+</Map>

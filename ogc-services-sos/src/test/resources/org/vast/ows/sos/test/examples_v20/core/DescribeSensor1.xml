@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--=====================================================================
+Example Instance for SOS 2.0 DescribeSensor request.
+=======================================================================-->
+<DescribeSensor xmlns="http://www.opengis.net/swes/2.0" service="SOS" version="2.0.0">
+	<procedure>http://my.company.org/sensors/sensor1</procedure>
+	<procedureDescriptionFormat>http://www.opengis.net/sensorml/1.0.1</procedureDescriptionFormat>
+</DescribeSensor>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Map>
+   <!-- -->
+   <Reader type="WPS" subType="Capabilities" version="2.0" class="org.vast.ows.wps.WPSCapabilitiesReader"/>
+   <Reader type="WPS" subType="DescribeProcess" version="2.0" class="org.vast.ows.wps.DescribeProcessResponseReader"/>
+   <Reader type="WPS" subType="ExecuteProcess" version="2.0" class="org.vast.ows.wps.ExecuteProcessResponseReader"/>
+   <!-- -->
+   <Writer type="WPS" subType="DescribeProcess" version="2.0" class="org.vast.ows.wps.DescribeProcessRequestWriter"/>
+   <Writer type="WPS" subType="ExecuteProcess" version="2.0" class="org.vast.ows.wps.ExecuteProcessRequestWriter"/>
+   <!-- -->
+</Map>
