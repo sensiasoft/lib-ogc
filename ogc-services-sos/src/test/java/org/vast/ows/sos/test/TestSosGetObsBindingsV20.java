@@ -17,6 +17,7 @@ package org.vast.ows.sos.test;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.Instant;
 import java.util.Iterator;
 import java.util.Set;
 import net.opengis.fes.v20.GMLExpression;
@@ -24,7 +25,6 @@ import org.vast.ows.OWSUtils;
 import org.vast.ows.sos.GetObservationRequest;
 import org.vast.ows.test.OWSTestCase;
 import org.vast.util.Bbox;
-import org.vast.util.DateTimeFormat;
 import com.vividsolutions.jts.geom.Polygon;
 
 
@@ -55,8 +55,8 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals("http://wfs.example.org?request=getFeature&featureid=building1", request.getFoiIDs().iterator().next());
         assertEquals(1, request.getProcedures().size());
         assertEquals("http://www.my_namespace.org/sensors/thermometer1", request.getProcedures().iterator().next());
-        assertEquals("2009-01-10T10:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStartTime(), 0));
-        assertEquals("2009-01-10T11:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStopTime(), 0));
+        assertEquals(Instant.parse("2009-01-10T10:00:00Z"), request.getTime().begin());
+        assertEquals(Instant.parse("2009-01-10T11:00:00Z"), request.getTime().end());
         assertEquals(22.32, request.getBbox().getMinX());
         assertEquals(11.2, request.getBbox().getMinY());
         assertEquals(32.32, request.getBbox().getMaxX());
@@ -74,8 +74,8 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(0, request.getObservables().size());
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(2, request.getProcedures().size());
-        assertTrue("Time is not null", request.getTime().isNull());
-        assertTrue("BBOX is not null", request.getBbox().isNull());
+        assertTrue("Time is not null", request.getTime() == null);
+        assertTrue("BBOX is not null", request.getBbox() == null);
         Iterator<String> proceduresIt = request.getProcedures().iterator();
         assertEquals("http://myserver.org/sensors/th1", proceduresIt.next());
         assertEquals("http://myserver.org/sensors/th2", proceduresIt.next());
@@ -101,8 +101,8 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().iterator().next());
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(0, request.getProcedures().size());
-        assertEquals("2008-03-01T17:44:15Z", new DateTimeFormat().formatIso(request.getTime().getBaseTime(), 0));
-        assertTrue("BBOX is not null", request.getBbox().isNull());
+        assertEquals(Instant.parse("2008-03-01T17:44:15Z"), request.getTime().begin());
+        assertTrue("BBOX is not null", request.getBbox() == null);
         assertEquals(null, request.getFormat());
         is.close();
         
@@ -118,8 +118,8 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(1, request.getProcedures().size());
         assertEquals("http://www.my_namespace.org/sensors/Water_Gage_1", request.getProcedures().iterator().next());
-        assertTrue("Time is not null", request.getTime().isNull());
-        assertTrue("BBOX is not null", request.getBbox().isNull());
+        assertTrue("Time is not null", request.getTime() == null);
+        assertTrue("BBOX is not null", request.getBbox() == null);
         assertEquals(null, request.getFormat());
         is.close();
         
@@ -136,8 +136,8 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals("http://wfs.example.org?request=getFeature&featureid=\"river1\"", request.getFoiIDs().iterator().next());
         assertEquals(1, request.getProcedures().size());
         assertEquals("http://www.my_namespace.org/sensors/Water_Gage_1", request.getProcedures().iterator().next());
-        assertTrue("Time is not null", request.getTime().isNull());
-        assertTrue("BBOX is not null", request.getBbox().isNull());
+        assertTrue("Time is not null", request.getTime() == null);
+        assertTrue("BBOX is not null", request.getBbox() == null);
         assertEquals(null, request.getFormat());
         is.close();
         
@@ -153,7 +153,7 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(1, request.getProcedures().size());
         assertEquals("http://www.my_namespace.org/sensors/Water_Gage_1", request.getProcedures().iterator().next());
-        assertTrue("Time is not null", request.getTime().isNull());
+        assertTrue("Time is not null", request.getTime() == null);
         Polygon poly = (Polygon)((GMLExpression)request.getSpatialFilter().getOperand2()).getGmlObject();
         assertEquals(52.90, poly.getCoordinates()[0].x);
         assertEquals(7.52, poly.getCoordinates()[0].y);
@@ -180,9 +180,9 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals("http://myServer.org/features/SamplingPointAtMoersbach", request.getFoiIDs().iterator().next());
         assertEquals("http://myServer.org/features/SamplingPointAtMoersbach", request.getFoiIDs().iterator().next());
         assertEquals(0, request.getProcedures().size());
-        assertEquals("2008-01-01T00:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStartTime(), 0));
-        assertEquals("2011-05-01T17:44:15Z", new DateTimeFormat().formatIso(request.getTime().getStopTime(), 0));
-        assertTrue("BBOX is not null", request.getBbox().isNull());
+        assertEquals(Instant.parse("2008-01-01T00:00:00Z"), request.getTime().begin());
+        assertEquals(Instant.parse("2011-05-01T17:44:15Z"), request.getTime().end());
+        assertTrue("BBOX is not null", request.getBbox() == null);
         assertEquals(null, request.getFormat());
         is.close();
         
@@ -197,8 +197,8 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(1, request.getProcedures().size());
         assertEquals("http://myServer.org/sensors/glider1", request.getProcedures().iterator().next());
-        assertEquals("2008-01-01T00:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStartTime(), 0));
-        assertEquals("2008-01-02T00:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStopTime(), 0));
+        assertEquals(Instant.parse("2008-01-01T00:00:00Z"), request.getTime().begin());
+        assertEquals(Instant.parse("2008-01-02T00:00:00Z"), request.getTime().end());
         Bbox bbox = request.getBbox();
         assertEquals( 21.0, bbox.getMinX());
         assertEquals(-94.0, bbox.getMinY());
@@ -222,9 +222,9 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(1, request.getFoiIDs().size());
         assertEquals("http://myServer.org/features/SamplingPointAtMoersbach", request.getFoiIDs().iterator().next());
         assertEquals(0, request.getProcedures().size());
-        assertEquals("2008-01-01T00:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStartTime(), 0));
-        assertEquals("2011-05-01T17:44:15Z", new DateTimeFormat().formatIso(request.getTime().getStopTime(), 0));
-        assertTrue("BBOX is not null", request.getBbox().isNull());
+        assertEquals(Instant.parse("2008-01-01T00:00:00Z"), request.getTime().begin());
+        assertEquals(Instant.parse("2011-05-01T17:44:15Z"), request.getTime().end());
+        assertTrue("BBOX is not null", request.getBbox() == null);
         assertEquals(null, request.getFormat());
         is.close();
     }

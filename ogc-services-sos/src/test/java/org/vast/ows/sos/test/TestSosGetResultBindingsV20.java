@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.Instant;
 import java.util.Set;
 import net.opengis.fes.v20.GMLExpression;
 import org.custommonkey.xmlunit.XMLTestCase;
@@ -27,7 +28,6 @@ import org.vast.ows.OWSUtils;
 import org.vast.ows.sos.GetResultRequest;
 import org.vast.ows.sos.GetResultTemplateRequest;
 import org.vast.ows.sos.GetResultTemplateResponse;
-import org.vast.util.DateTimeFormat;
 import org.xml.sax.InputSource;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -64,8 +64,8 @@ public class TestSosGetResultBindingsV20 extends XMLTestCase
         assertEquals(1, request.getFoiIDs().size());
         assertEquals(0, request.getProcedures().size());
         assertEquals("urn:sensia:foi:b1", request.getFoiIDs().iterator().next());
-        assertEquals("2009-01-10T10:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStartTime(), 0));
-        assertEquals("2009-01-10T11:00:00Z", new DateTimeFormat().formatIso(request.getTime().getStopTime(), 0));
+        assertEquals(Instant.parse("2009-01-10T10:00:00Z"), request.getTime().begin());
+        assertEquals(Instant.parse("2009-01-10T11:00:00Z"), request.getTime().end());
         assertEquals(22.32, request.getBbox().getMinX());
         assertEquals(11.2, request.getBbox().getMinY());
         assertEquals(32.32, request.getBbox().getMaxX());
@@ -110,8 +110,8 @@ public class TestSosGetResultBindingsV20 extends XMLTestCase
         assertEquals("http://sweet.jpl.nasa.gov/2.0/hydroSurface.owl#WaterHeight", request.getObservables().iterator().next());
         assertEquals(0, request.getFoiIDs().size());
         assertEquals(0, request.getProcedures().size());
-        assertEquals("2008-03-01T17:44:15Z", new DateTimeFormat().formatIso(request.getTime().getBaseTime(), 0));
-        assertTrue("BBOX is not null", request.getBbox().isNull());
+        assertEquals(Instant.parse("2008-03-01T17:44:15Z"), request.getTime().begin());
+        assertTrue("BBOX is not null", request.getBbox() == null);
         is.close();
         
         is = TestSosGetResultBindingsV20.class.getResourceAsStream("examples_v20/resultHandling/GetResult2.xml");        

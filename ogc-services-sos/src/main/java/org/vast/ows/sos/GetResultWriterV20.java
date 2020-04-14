@@ -87,7 +87,7 @@ public class GetResultWriterV20 extends SWERequestWriter<GetResultRequest>
         // TODO namespaces
         
 		// temporal filter
-		if (request.getTemporalFilter() != null && !request.getTime().isNull())
+		if (request.getTemporalFilter() != null && request.getTime() != null)
 		{
 		    StringBuilder buf = new StringBuilder();
 		    buf.append(request.getTemporalFilter().getOperand1().toString());

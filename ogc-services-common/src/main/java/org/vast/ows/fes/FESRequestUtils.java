@@ -45,13 +45,11 @@ public class FESRequestUtils
      */
     public static TimeExtent filterToTimeExtent(BinaryTemporalOp temporalFilter)
     {
-        if (temporalFilter != null)
-        {
-            AbstractTimeGeometricPrimitive timePrimitive = (AbstractTimeGeometricPrimitive) ((GMLExpression)temporalFilter.getOperand2()).getGmlObject();
-            return gmlUtils.timePrimitiveToTimeExtent(timePrimitive);            
-        }
+        if (temporalFilter == null)
+            return null;
         
-        return new TimeExtent();
+        AbstractTimeGeometricPrimitive timePrimitive = (AbstractTimeGeometricPrimitive) ((GMLExpression)temporalFilter.getOperand2()).getGmlObject();
+        return GMLUtils.timePrimitiveToTimeExtent(timePrimitive);
     }
     
     

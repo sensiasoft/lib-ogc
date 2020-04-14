@@ -28,6 +28,7 @@ package org.vast.ows;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
+import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -102,41 +103,42 @@ public class OWSCommonUtils
      */
     public TimeExtent parseTimeArg(String argValue) throws OWSException
     {
-        TimeExtent timeInfo = new TimeExtent();
+        TimeExtent timeExtent = null;
         String[] timeRange = argValue.split("/");
         
         try
         {
-            // parse start time
-            if (timeRange[0].equalsIgnoreCase("now")) {
-                timeInfo.setBaseAtNow(true);
-                timeInfo.setBeginNow(true);
-                timeInfo.setEndNow(true);
-            }
-            else
-                timeInfo.setStartTime(timeFormat.parseIso(timeRange[0]));
-            
-            // parse stop time if present
-            if (timeRange.length > 1)
+            // case of time instant
+            if (timeRange.length == 1)
             {
-                if (timeRange[1].equalsIgnoreCase("now"))
-                    timeInfo.setEndNow(true);
+                if (timeRange[0].equalsIgnoreCase("now"))
+                    timeExtent = TimeExtent.now();
                 else
-                    timeInfo.setStopTime(timeFormat.parseIso(timeRange[1]));
+                    timeExtent = TimeExtent.instant(ZonedDateTime.parse(timeRange[0]).toInstant());
             }
             
-            // parse step time if present
-            if (timeRange.length > 2)
+            // case of time range
+            else if (timeRange.length == 2)
             {
-                timeInfo.setTimeStep(timeFormat.parseIsoPeriod(timeRange[2]));
+                if (timeRange[0].equalsIgnoreCase("now"))
+                    return TimeExtent.beginNow(ZonedDateTime.parse(timeRange[1]).toInstant());
+                else if (timeRange[1].equalsIgnoreCase("now"))
+                    return TimeExtent.endNow(ZonedDateTime.parse(timeRange[0]).toInstant());
+                else
+                    return TimeExtent.period(
+                        ZonedDateTime.parse(timeRange[0]).toInstant(),
+                        ZonedDateTime.parse(timeRange[1]).toInstant());
             }
+            
+            else
+                throw new ParseException(null, 0);
+            
+            return timeExtent;
         }
-        catch (ParseException e)
+        catch (Exception e)
         {
             throw new OWSException("Invalid time argument: " + argValue);
         }
-        
-        return timeInfo;
     }
     
     

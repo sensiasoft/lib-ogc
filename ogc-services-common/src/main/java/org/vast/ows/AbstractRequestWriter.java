@@ -138,35 +138,28 @@ public abstract class AbstractRequestWriter<RequestType extends OWSRequest> impl
      */
     protected void writeTimeArgument(StringBuilder buffer, TimeExtent time)
     {
-        if (time.isTimeInstant())
+        if (time.isInstant())
         {
-            if (time.isBaseAtNow())
+            if (time.isNow())
                 buffer.append("now");
             else
-                buffer.append(timeFormat.formatIso(time.getBaseTime(), 0));
+                buffer.append(time.begin().toString());
         }
         else
         {
             // add start time
-            if (time.isBeginNow())
+            if (time.beginsNow())
                 buffer.append("now");
             else
-                buffer.append(timeFormat.formatIso(time.getStartTime(), 0));
+                buffer.append(time.begin().toString());
         
             // add stop and step time
             buffer.append('/');
             
-            if (time.isEndNow())
+            if (time.endsNow())
                 buffer.append("now");
             else
-                buffer.append(timeFormat.formatIso(time.getStopTime(), 0));
-            
-            // add time step if specified
-            if (time.getTimeStep() > 0)
-            {
-                buffer.append('/');
-                buffer.append(timeFormat.formatIsoPeriod(time.getTimeStep()));
-            }
+                buffer.append(time.end().toString());
         }
     }
     

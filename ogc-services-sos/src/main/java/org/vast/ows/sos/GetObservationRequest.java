@@ -147,6 +147,8 @@ public class GetObservationRequest extends OWSRequest
 
     public Bbox getBbox()
 	{
+        if (spatialFilter == null)
+            return null;
         return FESRequestUtils.filterToBbox(spatialFilter);
 	}
 

@@ -126,7 +126,7 @@ public class OWSUtils extends OWSCommonUtils
      * @param e exception to check (along with its causes)
      * @return true if exception trace contains an EOF exception, false otherwise
      */
-    public static boolean isClientDisconnectError(Exception e)
+    public static boolean isClientDisconnectError(Throwable e)
     {
         Throwable ex = e.getCause();
         while (ex != null)
@@ -167,6 +167,7 @@ public class OWSUtils extends OWSCommonUtils
         // parse request with appropriate reader
         try
         {
+            @SuppressWarnings("unchecked")
             OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(request.service, request.operation, request.version);
             request = reader.readXMLQuery(dom, requestElt);
             return request;
@@ -268,6 +269,7 @@ public class OWSUtils extends OWSCommonUtils
             AbstractRequestReader.checkParameters(request, report, serviceType);
             report.process();
         
+            @SuppressWarnings("unchecked")
             OWSRequestReader<OWSRequest> reader = (OWSRequestReader<OWSRequest>)OGCRegistry.createReader(request.service, request.operation, request.version);
             request = reader.readURLParameters(queryParams);
             return request;
@@ -343,6 +345,7 @@ public class OWSUtils extends OWSCommonUtils
     {
         try
         {
+            @SuppressWarnings("unchecked")
             OWSRequestWriter<OWSRequest> writer = (OWSRequestWriter<OWSRequest>)OGCRegistry.createWriter(request.service, request.operation, request.version);
             String url = writer.buildURLQuery(request);
             return url;
@@ -367,6 +370,7 @@ public class OWSUtils extends OWSCommonUtils
     {
         try
         {
+            @SuppressWarnings("unchecked")
             OWSRequestWriter<OWSRequest> writer = (OWSRequestWriter<OWSRequest>)OGCRegistry.createWriter(request.service, request.operation, request.version);
             Element requestElt = writer.buildXMLQuery(dom, request);
             return requestElt;
@@ -457,7 +461,8 @@ public class OWSUtils extends OWSCommonUtils
         
         try
         {
-        	OWSResponseReader<OWSResponse> reader = (OWSResponseReader<OWSResponse>)OGCRegistry.createReader(serviceType, responseType, version);
+        	@SuppressWarnings("unchecked")
+            OWSResponseReader<OWSResponse> reader = (OWSResponseReader<OWSResponse>)OGCRegistry.createReader(serviceType, responseType, version);
             OWSResponse response = reader.readXMLResponse(dom, responseElt);
             response.setService(serviceType);
             return response;
@@ -506,7 +511,8 @@ public class OWSUtils extends OWSCommonUtils
 	{
 		try
 	    {
-	        OWSResponseWriter<OWSResponse> writer = (OWSResponseWriter<OWSResponse>)OGCRegistry.createWriter(response.service, response.messageType, version);
+	        @SuppressWarnings("unchecked")
+            OWSResponseWriter<OWSResponse> writer = (OWSResponseWriter<OWSResponse>)OGCRegistry.createWriter(response.service, response.messageType, version);
 	        Element requestElt = writer.buildXMLResponse(dom, response, version);
 	        return requestElt;
 	    }
@@ -641,7 +647,10 @@ public class OWSUtils extends OWSCommonUtils
         {
             DOMHelper dom = new DOMHelper(new BufferedInputStream(conn.getInputStream()), false);
             OWSExceptionReader.checkException(dom, dom.getBaseElement());
-            return (ResponseType)readXMLResponse(dom, dom.getBaseElement(), request.getService(), dom.getBaseElement().getLocalName(), request.getVersion());
+            
+            @SuppressWarnings("unchecked")
+            ResponseType resp = (ResponseType)readXMLResponse(dom, dom.getBaseElement(), request.getService(), dom.getBaseElement().getLocalName(), request.getVersion());
+            return resp;
         }
         catch (OWSException e)
         {
@@ -898,6 +907,7 @@ public class OWSUtils extends OWSCommonUtils
         
         try
         {
+            @SuppressWarnings("unchecked")
             OWSResponseReader<OWSResponse> reader = (OWSResponseReader<OWSResponse>)OGCRegistry.createReader(serviceType, message, version);
             OWSServiceCapabilities caps = (OWSServiceCapabilities)reader.readXMLResponse(dom, capsElt);
             return caps;
