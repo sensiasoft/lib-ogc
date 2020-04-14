@@ -1,9 +1,8 @@
-description = 'Lib OWS'
+description = 'Lib OGC'
 
 allprojects  {
   repositories {
-    //jcenter() 
-    maven { url "http://repo.maven.apache.org/maven2" }
+    mavenCentral()
   }
 }
 
