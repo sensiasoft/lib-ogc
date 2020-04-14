@@ -128,28 +128,34 @@ public abstract class OWSServlet extends HttpServlet
      */
     protected void processRequest(HttpServletRequest req, HttpServletResponse resp, boolean isXmlRequest)
     {
-        OWSRequest request = null;
-        String soapVersion = null;
+        OWSRequest owsReq = null;
         
         try
         {
             // parse request
-            request = parseRequest(req, resp, isXmlRequest);
+            owsReq = parseRequest(req, resp, isXmlRequest);
             
-            if (request != null)
+            if (owsReq != null)
             {
-                soapVersion = request.getSoapVersion();
-                
                 // set default mime type 
                 resp.setContentType(OWSUtils.XML_MIME_TYPE);
                 
                 // handle request
-                this.handleRequest(request);
+                this.handleRequest(owsReq);
                 
                 resp.getOutputStream().flush();
             }
         }
-        catch (AccessControlException e)
+        catch (Throwable e)
+        {
+            handleError(req, resp, owsReq, e);
+        }
+    }
+    
+    
+    public void handleError(HttpServletRequest req, HttpServletResponse resp, OWSRequest owsReq, Throwable e)
+    {
+        if (e instanceof AccessControlException)
         {
             // ask to authenticate if anonymous wasn't allowed
             if (req.getRemoteUser() == null)
@@ -161,20 +167,24 @@ public abstract class OWSServlet extends HttpServlet
             log.info("Access Forbidden: {}", e.getMessage());
             sendError(resp, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
         }
-        catch (OWSException e)
+        if (e instanceof OWSException)
         {
             if (!OWSUtils.isClientDisconnectError(e))
             {
                 if (log.isDebugEnabled()) // these are client errors so we log them only in debug
                     log.error(INVALID_REQUEST_MSG, e.getMessage());
+                
                 String version = null;
-                if (request != null)
-                    version = request.getVersion();
-                e.setSoapVersion(soapVersion);
-                sendException(req, resp, e, version);
+                if (owsReq != null)
+                {
+                    version = owsReq.getVersion();
+                    ((OWSException)e).setSoapVersion(owsReq.getSoapVersion());
+                }
+                
+                sendException(req, resp, (OWSException)e, version);
             }
         }
-        catch (Exception e)
+        else
         {
             if (!OWSUtils.isClientDisconnectError(e))
             {
