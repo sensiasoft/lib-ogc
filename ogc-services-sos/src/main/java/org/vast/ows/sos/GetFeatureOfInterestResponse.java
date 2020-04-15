@@ -28,6 +28,7 @@ package org.vast.ows.sos;
 
 import java.util.List;
 import org.vast.ogc.gml.FeatureRef;
+import org.vast.ogc.gml.IFeature;
 import org.vast.ows.OWSResponse;
 
 
@@ -41,7 +42,7 @@ import org.vast.ows.OWSResponse;
  * */
 public class GetFeatureOfInterestResponse extends OWSResponse
 {
-    protected List<FeatureRef> features;
+    protected List<FeatureRef<IFeature>> features;
     
 	
 	public GetFeatureOfInterestResponse()
@@ -51,13 +52,13 @@ public class GetFeatureOfInterestResponse extends OWSResponse
 	}
 
 
-    public List<FeatureRef> getFeatures()
+    public List<FeatureRef<IFeature>> getFeatures()
     {
         return features;
     }
 
 
-    public void setFeatures(List<FeatureRef> features)
+    public void setFeatures(List<FeatureRef<IFeature>> features)
     {
         this.features = features;
     }	

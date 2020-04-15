@@ -32,20 +32,21 @@ import org.vast.util.ResolveException;
  * Implementation of Xlink Reference that keeps a cached version of the target.
  * Object is cached on the first call to getTarget().
  * Reloading the target object can be enforced by calling refresh().
- * @param <TargetType> Type of the link target object
  * </p>
+ * 
+ * @param <T> Type of the link target object
  *
  * @author Alex Robin
  * @since Sep 28, 2012
  *
  */
-public class CachedReference<TargetType> implements IXlinkReference<TargetType>
+public class CachedReference<T> implements IXlinkReference<T>
 {
     protected String href;
     protected String role;
     protected String arcRole;
-    protected TargetType value;
-    protected IReferenceResolver<? extends TargetType> resolver;
+    protected T value;
+    protected IReferenceResolver<? extends T> resolver;
 
 
     public CachedReference()
@@ -59,13 +60,13 @@ public class CachedReference<TargetType> implements IXlinkReference<TargetType>
     }
     
     
-    public CachedReference(IReferenceResolver<? extends TargetType> resolver)
+    public CachedReference(IReferenceResolver<? extends T> resolver)
     {
         setResolver(resolver);
     }
     
     
-    public CachedReference(String href, IReferenceResolver<TargetType> resolver)
+    public CachedReference(String href, IReferenceResolver<T> resolver)
     {
         setHref(href);
         setResolver(resolver);
@@ -115,7 +116,7 @@ public class CachedReference<TargetType> implements IXlinkReference<TargetType>
 
 
     @Override
-    public TargetType getTarget()
+    public T getTarget()
     {
         try
         {
@@ -131,7 +132,7 @@ public class CachedReference<TargetType> implements IXlinkReference<TargetType>
     }
     
     
-    public void setResolver(IReferenceResolver<? extends TargetType> resolver)
+    public void setResolver(IReferenceResolver<? extends T> resolver)
     {
         this.resolver = resolver;
     }
@@ -150,7 +151,7 @@ public class CachedReference<TargetType> implements IXlinkReference<TargetType>
     }
     
     
-    protected TargetType fetchTarget(String href) throws IOException
+    protected T fetchTarget(String href) throws IOException
     {
         if (href != null)
             return resolver.fetchTarget(href);

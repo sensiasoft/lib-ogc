@@ -32,11 +32,13 @@ import org.vast.util.TimeExtent;
  * Wrapper class for use when an IProcedure object is or can be included by reference.
  * This enables fetching and instantiating the target object lazily.
  * </p>
+ * 
+ * @param <T> Target Procedure Type
  *
  * @author Alex Robin
  * @since Sep 28, 2012
  * */
-public class ProcedureRef extends FeatureRef implements IProcedure
+public class ProcedureRef<T extends IProcedure> extends FeatureRef<T> implements IProcedure
 {
     
     public ProcedureRef()

@@ -42,29 +42,36 @@ import org.vast.util.URIResolver;
  * Wrapper class for use when an IFeature object is or can be included by reference.
  * This enables fetching and instantiating the target object lazily.
  * </p>
+ * 
+ * @param <T> Target Feature Type 
  *
  * @author Alex Robin
  * @since Sep 28, 2012
  * */
-public class FeatureRef extends CachedReference<IFeature> implements IGeoFeature, ITemporalFeature
+public class FeatureRef<T extends IFeature> extends CachedReference<T> implements IGeoFeature, ITemporalFeature
 {
     
     public FeatureRef()
     {
-        this.resolver = new IReferenceResolver<IFeature>()
+        this.resolver = new IReferenceResolver<T>()
         {            
             @Override
-            public GenericFeature fetchTarget(String uri) throws IOException
+            @SuppressWarnings("unchecked")
+            public T fetchTarget(String uri) throws IOException
             {
                 try
                 {
                     URIResolver resolver = new URIResolver(new URI(href));
                     InputStream is = resolver.openStream();            
-                    return new GMLUtils(GMLUtils.V3_2).readFeature(is);
+                    return (T)new GMLUtils(GMLUtils.V3_2).readFeature(is);
                 }
                 catch (URISyntaxException e)
                 {
                     throw new ResolveException("Bad URI", e);
+                }
+                catch (Exception e)
+                {
+                    throw new ResolveException("Target feature doesn't have the expected type", e);
                 }
             }
         };
