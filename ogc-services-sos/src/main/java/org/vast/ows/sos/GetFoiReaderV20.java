@@ -17,7 +17,7 @@ package org.vast.ows.sos;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import net.opengis.fes.v20.BinarySpatialOp;
+import net.opengis.fes.v20.SpatialOps;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -97,7 +97,7 @@ public class GetFoiReaderV20 extends SWERequestReader<GetFeatureOfInterestReques
             {
                 try
                 {
-                    BinarySpatialOp filter = fesUtils.readKVPSpatialFilter(argValue, namespaceMap);
+                    SpatialOps filter = fesUtils.readKVPSpatialFilter(argValue, namespaceMap);
                     request.setSpatialFilter(filter);
                 }
                 catch (Exception e)
@@ -159,7 +159,7 @@ public class GetFoiReaderV20 extends SWERequestReader<GetFeatureOfInterestReques
             Element spatialOpElt = dom.getElement(requestElt, "spatialFilter/*");
             if (spatialOpElt != null)
             {
-                BinarySpatialOp filter = fesUtils.readXMLSpatialFilter(spatialOpElt);
+                SpatialOps filter = fesUtils.readXMLSpatialFilter(spatialOpElt);
                 request.setSpatialFilter(filter);
             }
         }

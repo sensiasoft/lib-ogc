@@ -22,8 +22,8 @@ package org.vast.ows.sos;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import net.opengis.fes.v20.BinarySpatialOp;
 import net.opengis.fes.v20.BinaryTemporalOp;
+import net.opengis.fes.v20.SpatialOps;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.fes.FESRequestUtils;
 import org.vast.util.Bbox;
@@ -45,7 +45,7 @@ public class GetResultRequest extends OWSRequest
     protected Set<String> observables;
     protected Set<String> foiIDs;
     protected BinaryTemporalOp temporalFilter;
-    protected BinarySpatialOp spatialFilter;
+    protected SpatialOps spatialFilter;
     protected String format;
     protected boolean xmlWrapper;
     
@@ -114,13 +114,13 @@ public class GetResultRequest extends OWSRequest
     }   
 
 
-    public BinarySpatialOp getSpatialFilter()
+    public SpatialOps getSpatialFilter()
     {
         return spatialFilter;
     }
 
 
-    public void setSpatialFilter(BinarySpatialOp spatialFilter)
+    public void setSpatialFilter(SpatialOps spatialFilter)
     {
         this.spatialFilter = spatialFilter;
     }

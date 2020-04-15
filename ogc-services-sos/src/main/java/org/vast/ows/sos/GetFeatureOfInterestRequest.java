@@ -21,7 +21,7 @@
 package org.vast.ows.sos;
 
 import java.util.*;
-import net.opengis.fes.v20.BinarySpatialOp;
+import net.opengis.fes.v20.SpatialOps;
 import org.vast.ows.OWSRequest;
 import org.vast.ows.fes.FESRequestUtils;
 import org.vast.util.Bbox;
@@ -40,7 +40,7 @@ public class GetFeatureOfInterestRequest extends OWSRequest
     protected Set<String> procedures;
 	protected Set<String> observables;
 	protected Set<String> foiIDs;
-	protected BinarySpatialOp spatialFilter;
+	protected SpatialOps spatialFilter;
 	
 	
 	public GetFeatureOfInterestRequest()
@@ -71,13 +71,13 @@ public class GetFeatureOfInterestRequest extends OWSRequest
     }	
 
 
-    public BinarySpatialOp getSpatialFilter()
+    public SpatialOps getSpatialFilter()
     {
         return spatialFilter;
     }
 
 
-    public void setSpatialFilter(BinarySpatialOp spatialFilter)
+    public void setSpatialFilter(SpatialOps spatialFilter)
     {
         this.spatialFilter = spatialFilter;
     }

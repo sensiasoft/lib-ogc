@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.time.Instant;
 import java.util.Iterator;
 import java.util.Set;
+import net.opengis.fes.v20.BinarySpatialOp;
 import net.opengis.fes.v20.GMLExpression;
 import org.vast.ows.OWSUtils;
 import org.vast.ows.sos.GetObservationRequest;
@@ -154,7 +155,7 @@ public class TestSosGetObsBindingsV20 extends OWSTestCase
         assertEquals(1, request.getProcedures().size());
         assertEquals("http://www.my_namespace.org/sensors/Water_Gage_1", request.getProcedures().iterator().next());
         assertTrue("Time is not null", request.getTime() == null);
-        Polygon poly = (Polygon)((GMLExpression)request.getSpatialFilter().getOperand2()).getGmlObject();
+        Polygon poly = (Polygon)((GMLExpression)((BinarySpatialOp)request.getSpatialFilter()).getOperand2()).getGmlObject();
         assertEquals(52.90, poly.getCoordinates()[0].x);
         assertEquals(7.52, poly.getCoordinates()[0].y);
         assertEquals(52.92, poly.getCoordinates()[1].x);

@@ -24,6 +24,7 @@ import javax.xml.transform.dom.DOMSource;
 import net.opengis.fes.v20.BinarySpatialOp;
 import net.opengis.fes.v20.BinaryTemporalOp;
 import net.opengis.fes.v20.FilterCapabilities;
+import net.opengis.fes.v20.SpatialOps;
 import net.opengis.fes.v20.ValueReference;
 import org.vast.ows.OWSCommonUtils;
 import org.vast.ows.OWSException;
@@ -197,7 +198,7 @@ public class FESUtils extends OWSCommonUtils
      * @return spatial operator
      * @throws XMLReaderException 
      */
-    public BinarySpatialOp readXMLSpatialFilter(Element spatialOpElt) throws XMLReaderException
+    public SpatialOps readXMLSpatialFilter(Element spatialOpElt) throws XMLReaderException
     {
         try
         {
@@ -220,7 +221,7 @@ public class FESUtils extends OWSCommonUtils
      * @return DOM element containing the filter XML 
      * @throws XMLWriterException
      */
-    public Element writeSpatialFilter(DOMHelper dom, BinarySpatialOp spatialOp) throws XMLWriterException
+    public Element writeSpatialFilter(DOMHelper dom, SpatialOps spatialOp) throws XMLWriterException
     {
         try
         {

@@ -23,6 +23,7 @@ import org.vast.ows.OWSUtils;
 import org.vast.ows.fes.FESUtils;
 import org.vast.ows.swe.SWERequestWriter;
 import org.w3c.dom.Element;
+import net.opengis.fes.v20.BBOX;
 
 
 /**
@@ -102,7 +103,7 @@ public class GetFoiWriterV20 extends SWERequestWriter<GetFeatureOfInterestReques
 		if (request.getSpatialFilter() != null && !request.getBbox().isNull())
         {
             StringBuilder buf = new StringBuilder();
-            buf.append(request.getSpatialFilter().getOperand1().toString());
+            buf.append(((BBOX)request.getSpatialFilter()).getOperand1().toString());
             buf.append(',');
             this.writeBboxArgument(buf, request.getBbox(), true);
             urlParams.put("spatialFilter", buf.toString());

@@ -21,8 +21,8 @@
 package org.vast.ows.sos;
 
 import java.util.*;
-import net.opengis.fes.v20.BinarySpatialOp;
 import net.opengis.fes.v20.BinaryTemporalOp;
+import net.opengis.fes.v20.SpatialOps;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.om.OMUtils;
 import org.vast.ows.OWSRequest;
@@ -53,7 +53,7 @@ public class GetObservationRequest extends OWSRequest
 	protected Set<String> observables;
 	protected Set<String> foiIDs;
 	protected BinaryTemporalOp temporalFilter;
-	protected BinarySpatialOp spatialFilter;
+	protected SpatialOps spatialFilter;
     protected String format;
     protected String resultModel;
 	protected ResponseMode responseMode;
@@ -133,13 +133,13 @@ public class GetObservationRequest extends OWSRequest
 	}	
 
 
-    public BinarySpatialOp getSpatialFilter()
+    public SpatialOps getSpatialFilter()
     {
         return spatialFilter;
     }
 
 
-    public void setSpatialFilter(BinarySpatialOp spatialFilter)
+    public void setSpatialFilter(SpatialOps spatialFilter)
     {
         this.spatialFilter = spatialFilter;
     }

@@ -18,6 +18,7 @@ import net.opengis.fes.v20.BBOX;
 import net.opengis.fes.v20.BinarySpatialOp;
 import net.opengis.fes.v20.BinaryTemporalOp;
 import net.opengis.fes.v20.GMLExpression;
+import net.opengis.fes.v20.SpatialOps;
 import net.opengis.fes.v20.TemporalOperatorName;
 import net.opengis.fes.v20.impl.FESFactory;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
@@ -85,7 +86,7 @@ public class FESRequestUtils
      * @param spatialFilter
      * @return VAST Bbox instance, null if filter is not an FES BBOX operator
      */
-    public static Bbox filterToBbox(BinarySpatialOp spatialFilter)
+    public static Bbox filterToBbox(SpatialOps spatialFilter)
     {
         if (spatialFilter instanceof BBOX)
         {
