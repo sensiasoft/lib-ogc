@@ -122,9 +122,10 @@ public class OGCRegistry
      * @return reader instance
      * @throws IllegalStateException
      */
-    public static Object createReader(String type, String subType, String version) throws IllegalStateException
+    @SuppressWarnings("unchecked")
+    public static <T> T createReader(String type, String subType, String version) throws IllegalStateException
     {
-        return createObject(readerClasses, type, subType, version);
+        return (T)createObject(readerClasses, type, subType, version);
     }
 
 
@@ -135,9 +136,10 @@ public class OGCRegistry
      * @return reader instance
      * @throws IllegalStateException
      */
-    public static Object createReader(String type, String version) throws IllegalStateException
+    @SuppressWarnings("unchecked")
+    public static <T> T createReader(String type, String version) throws IllegalStateException
     {
-        return createObject(readerClasses, type, null, version);
+        return (T)createObject(readerClasses, type, null, version);
     }
 
 
@@ -149,9 +151,10 @@ public class OGCRegistry
      * @return writer instance
      * @throws IllegalStateException
      */
-    public static Object createWriter(String type, String subType, String version) throws IllegalStateException
+    @SuppressWarnings("unchecked")
+    public static <T> T createWriter(String type, String subType, String version) throws IllegalStateException
     {
-        return createObject(writerClasses, type, subType, version);
+        return (T)createObject(writerClasses, type, subType, version);
     }
 
 
@@ -162,9 +165,10 @@ public class OGCRegistry
      * @return writer instance
      * @throws IllegalStateException
      */
-    public static Object createWriter(String type, String version) throws IllegalStateException
+    @SuppressWarnings("unchecked")
+    public static <T> T createWriter(String type, String version) throws IllegalStateException
     {
-        return createObject(writerClasses, type, null, version);
+        return (T)createObject(writerClasses, type, null, version);
     }
 
 
@@ -342,7 +346,7 @@ public class OGCRegistry
         // instantiate using reflection
         try
         {
-            Object obj = objClass.newInstance();
+            Object obj = objClass.getDeclaredConstructor().newInstance();
             return obj;
         }
         catch (Exception e)
