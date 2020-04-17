@@ -223,7 +223,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
     {
         if (foi instanceof FeatureRef)
         {
-            XlinkUtils.writeXlinkAttributes(dom, foiPropElt, (FeatureRef)foi);
+            XlinkUtils.writeXlinkAttributes(dom, foiPropElt, (FeatureRef<?>)foi);
         }
         else
         {

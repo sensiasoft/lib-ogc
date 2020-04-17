@@ -80,7 +80,7 @@ public class OMUtils
     public IObservation readObservation(DOMHelper dom, Element obsElt) throws XMLReaderException
     {
         String version = getVersion(dom, obsElt);
-        IXMLReaderDOM<IObservation> reader = (IXMLReaderDOM<IObservation>)OGCRegistry.createReader(OM, OBSERVATION, version);
+        IXMLReaderDOM<IObservation> reader = OGCRegistry.createReader(OM, OBSERVATION, version);
         return reader.read(dom, obsElt);
     }
     
@@ -119,7 +119,7 @@ public class OMUtils
      */
     public Element writeObservation(DOMHelper dom, IObservation obs, String version) throws XMLWriterException
     {
-        IXMLWriterDOM<IObservation> writer = (IXMLWriterDOM<IObservation>)OGCRegistry.createWriter(OM, OBSERVATION, version);
+        IXMLWriterDOM<IObservation> writer = OGCRegistry.createWriter(OM, OBSERVATION, version);
         return writer.write(dom, obs);
     }
     

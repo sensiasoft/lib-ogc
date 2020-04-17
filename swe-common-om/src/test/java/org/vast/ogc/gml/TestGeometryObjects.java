@@ -9,7 +9,6 @@
 
 package org.vast.ogc.gml;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 import net.opengis.gml.v32.LineString;
 import net.opengis.gml.v32.Point;

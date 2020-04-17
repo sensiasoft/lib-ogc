@@ -94,7 +94,7 @@ public class TestGMLBindingsV32 extends XMLTestCase
         is.close();
         
         // write after conversion to TimeExtent
-        TimeExtent timeExtent = gmlUtils.timePrimitiveToTimeExtent(gmlTime);
+        TimeExtent timeExtent = GMLUtils.timePrimitiveToTimeExtent(gmlTime);
         DOMHelper dom2 = new DOMHelper();
         Element gmlElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom2, timeExtent);
         dom2.getDocument().appendChild(gmlElt);

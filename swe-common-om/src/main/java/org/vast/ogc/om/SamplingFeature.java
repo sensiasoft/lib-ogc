@@ -21,6 +21,7 @@ import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Polygon;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GenericFeatureImpl;
+import org.vast.ogc.gml.IFeature;
 import org.vast.ogc.xlink.CachedReference;
 
 
@@ -73,13 +74,13 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
         if (featureUID == null)
             properties.remove(PROP_SAMPLED_FEATURE);
         else
-            setProperty(PROP_SAMPLED_FEATURE, new FeatureRef(featureUID));
+            setProperty(PROP_SAMPLED_FEATURE, new FeatureRef<IFeature>(featureUID));
     }
     
     
     public String getSampledFeatureUID()
     {
-        FeatureRef ref = (FeatureRef)getProperty(PROP_SAMPLED_FEATURE);
+        FeatureRef<?> ref = (FeatureRef<?>)getProperty(PROP_SAMPLED_FEATURE);
         if (ref == null)
             return null;
         return ref.getHref();
@@ -91,13 +92,13 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
         if (processUID == null)
             properties.remove(PROP_HOSTED_PROCEDURE);
         else
-            setProperty(PROP_HOSTED_PROCEDURE, new FeatureRef(processUID));
+            setProperty(PROP_HOSTED_PROCEDURE, new ProcedureRef(processUID));
     }
     
     
     public String getHostedProcedureUID()
     {
-        FeatureRef ref = (FeatureRef)getProperty(PROP_HOSTED_PROCEDURE);
+        ProcedureRef ref = (ProcedureRef)getProperty(PROP_HOSTED_PROCEDURE);
         if (ref == null)
             return null;
         return ref.getHref();

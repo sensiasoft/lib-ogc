@@ -51,7 +51,7 @@ import org.vast.util.URIResolver;
  * @author Alex Robin
  * @since Sep 28, 2012
  * */
-public class ObservationRef extends FeatureRef implements IObservation
+public class ObservationRef extends FeatureRef<IObservation> implements IObservation
 {
     
     public ObservationRef()

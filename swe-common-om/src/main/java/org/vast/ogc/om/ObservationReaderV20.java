@@ -222,7 +222,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         
         else if (dom.existAttribute(foiPropElt, "href"))
         {
-            FeatureRef ref = new FeatureRef();
+            FeatureRef<?> ref = new FeatureRef<>();
             XlinkUtils.readXlinkAttributes(dom, foiPropElt, ref);
             return ref;
         }
