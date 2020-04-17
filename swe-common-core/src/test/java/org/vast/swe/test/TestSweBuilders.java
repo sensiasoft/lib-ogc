@@ -14,14 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.swe.test;
 
-import static org.junit.Assert.*;
-import net.opengis.swe.v20.DataArray;
-import net.opengis.swe.v20.DataComponent;
-import net.opengis.swe.v20.DataEncoding;
-import net.opengis.swe.v20.DataRecord;
-import net.opengis.swe.v20.DataType;
 import org.junit.Test;
-import org.vast.data.BinaryEncodingImpl;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEBuilders;
 import org.vast.swe.SWEHelper;
@@ -41,6 +34,7 @@ public class TestSweBuilders
             .withDescription("Temperature of air in the garden")
             .withUomCode("Cel")
             .build(), false, true);
+        
         System.out.println();
         System.out.println();
         
@@ -49,6 +43,7 @@ public class TestSweBuilders
             .withLabel("Acceleration")
             .withUomCode("m/s2")
             .build(), false, true);
+        
         System.out.println();
         System.out.println();
     }
@@ -84,41 +79,60 @@ public class TestSweBuilders
                 .withUomCode("km/h")
                 .done()
             .build(), false, true);
-    }
-    
-    
-    /*@Test
-    public void testWrapWithTimeStamp() throws Exception
-    {
-        DataRecord rec = createWeatherRecord();
-        rec.setName("weather");
-        DataArray img = fac.newRgbImage(800, 600, DataType.FLOAT);
-        img.setName("img");
-        DataRecord all = fac.wrapWithTimeStamp(fac.newTimeStampIsoUTC(), rec, img);
-        utils.writeComponent(System.out, all, false, true);
+        
+        System.out.println();
+        System.out.println();
     }
     
     
     @Test
-    public void testCreateDefaultEncodingForImage() throws Exception
+    public void testCreateMixedTypeRecord() throws Exception
     {
-        DataArray array = fac.newRgbImage(640, 480, DataType.BYTE);
-        DataEncoding encoding = SWEHelper.getDefaultEncoding(array);
-        assertEquals(BinaryEncodingImpl.class, encoding.getClass());
-        utils.writeEncoding(System.out, encoding, true);
+        utils.writeComponent(System.out, SWEBuilders.newRecord()
+            .withLabel("Mixed Type Record")
+            .withIsoTimeStampUTC("time")
+            .withBooleanField("boolean")
+                .withDefinition(SWEHelper.getPropertyUri("AboveThreshold"))
+                .done()
+            .withCategoryField("cat")
+                .withDefinition(SWEHelper.getPropertyUri("Species"))
+                .withLabel("Species Name")
+                .done()
+            .withTextField("text")
+                .withDefinition(SWEHelper.getPropertyUri("VIN"))
+                .withLabel("Vehicle Identification Number")
+                .visitor(t -> System.out.println(t + "@" + System.identityHashCode(t)))
+                .done()
+            .build(), false, true);
+        
+        System.out.println();
+        System.out.println();
     }
-    
+        
     
     @Test
-    public void testGetComponentByPath() throws Exception
+    public void testNestedRecords() throws Exception
     {
-        DataRecord rec = createWeatherRecord();
-        DataComponent c;
+        utils.writeComponent(System.out, SWEBuilders.newRecord()
+            .withLabel("Parent Record")
+            .withIsoTimeStampUTC("time")
+            .withBooleanField("boolean")
+                .withDefinition(SWEHelper.getPropertyUri("Flag"))
+                .done()
+            .withNestedRecord("child")
+                .withDefinition(SWEHelper.getPropertyUri("VIN"))
+                .withLabel("Child Record")
+                .withTimeField("scan_start")
+                    .withUomCode("ms")
+                    .withValue(10245)
+                    .done()
+                .withCountField("num_samples")
+                    .withValue(2400)
+                    .done()
+                .done()
+            .build(), false, true);
         
-        c = SWEHelper.findComponentByPath(rec, "temp");
-        assertEquals(c.getName(), "temp");
-        
-        c = SWEHelper.findComponentByPath(rec, "press");
-        assertEquals(c.getName(), "press");
-    }*/
+        System.out.println();
+        System.out.println();
+    }
 }
