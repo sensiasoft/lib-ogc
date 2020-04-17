@@ -32,6 +32,7 @@ import net.opengis.swe.v20.ScalarComponent;
 import org.vast.data.AbstractArrayImpl;
 import org.vast.data.XMLEncodingImpl;
 import org.vast.util.WriterException;
+import com.ctc.wstx.api.WstxOutputProperties;
 
 
 /**
@@ -62,6 +63,7 @@ public class XmlDataWriter extends AbstractDataWriter
 	    try
         {
     	    XMLOutputFactory factory = XMLOutputFactory.newInstance();
+    	    factory.setProperty(WstxOutputProperties.P_OUTPUT_VALIDATE_STRUCTURE, false);
             xmlWriter = factory.createXMLStreamWriter(outputStream);
             
             namespace = ((XMLEncodingImpl)dataEncoding).getNamespace();
@@ -199,4 +201,18 @@ public class XmlDataWriter extends AbstractDataWriter
             throw new WriterException("Error writing data for scalar component " + component.getName(), e);
         }
 	}
+    
+    
+    @Override
+    public void endStream() throws IOException
+    {
+        try
+        {
+            xmlWriter.writeEndDocument();
+        }
+        catch (XMLStreamException e)
+        {
+            throw new IOException("Error ending document", e);
+        }
+    }
 }

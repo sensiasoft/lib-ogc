@@ -60,6 +60,7 @@ import org.vast.data.SWEFactory;
 import org.vast.data.ScalarIterator;
 import org.vast.data.TextEncodingImpl;
 import org.vast.swe.fast.JsonDataWriter;
+import org.vast.swe.fast.XmlDataWriter;
 import org.vast.util.Asserts;
 
 
@@ -250,7 +251,7 @@ public class SWEHelper extends SWEFactory
      * @param definition URI pointing to semantic definition of component in a dictionary
      * @param label short human readable label identifying the component (shown in UI)
      * @param description textual description of this component (can be long) or null
-     * @param uom code or URI for this time stamp unit of measure (can be {@link SWEConstants.}) 
+     * @param uom code or URI for this time stamp unit of measure 
      * @param timeRef URI of time reference system
      * @param dataType data type to use for this component (if null, {@link DataType#DOUBLE} will be used)
      * @return the new Time component object
@@ -278,7 +279,7 @@ public class SWEHelper extends SWEFactory
      * @param definition URI pointing to semantic definition of component in a dictionary
      * @param label short human readable label identifying the component (shown in UI)
      * @param description textual description of this component (can be long) or null
-     * @param uom code or URI for this time stamp unit of measure (can be {@link SWEConstants.}) 
+     * @param uom code or URI for this time stamp unit of measure 
      * @param timeRef URI of time reference system
      * @return the new Time component object
      * @deprecated use {@link SWEBuilders} class

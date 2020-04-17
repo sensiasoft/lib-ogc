@@ -24,7 +24,7 @@ import org.vast.data.XMLEncodingImpl;
 import org.vast.swe.SWEDataTypeUtils;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.WriterException;
-import org.vast.xml.IndentingXMLStreamWriter;
+import com.ctc.wstx.api.WstxOutputProperties;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.Count;
@@ -298,13 +298,29 @@ public class XmlDataWriter extends AbstractDataWriter
         try
         {
             XMLOutputFactory factory = XMLOutputFactory.newInstance();
+            factory.setProperty(WstxOutputProperties.P_OUTPUT_VALIDATE_STRUCTURE, false);
             xmlWriter = factory.createXMLStreamWriter(os);
-            xmlWriter = new IndentingXMLStreamWriter(xmlWriter);
-            xmlWriter.writeStartElement("root");
+            //xmlWriter = new IndentingXMLStreamWriter(xmlWriter);
+            //xmlWriter.writeStartElement("root");
         }
         catch (XMLStreamException e)
         {
             throw new WriterException("Error while creating XML stream writer", e);
+        }
+    }
+    
+    
+    @Override
+    public void write(DataBlock data) throws IOException
+    {
+        try
+        {
+            super.write(data);
+            xmlWriter.writeCharacters("\n");
+        }
+        catch (XMLStreamException e)
+        {
+            throw new IOException(e);
         }
     }
     
