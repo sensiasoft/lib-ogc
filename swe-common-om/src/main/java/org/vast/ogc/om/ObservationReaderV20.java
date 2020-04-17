@@ -213,18 +213,17 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
     
     protected IGeoFeature readFOI(DOMHelper dom, Element foiPropElt) throws XMLReaderException
     {
-        Element featureElt = dom.getFirstChildElement(foiPropElt);
-        
-        if (featureElt != null)
-        {
-            return gmlUtils.readFeature(dom, featureElt);
-        }
-        
-        else if (dom.existAttribute(foiPropElt, "href"))
+        if (dom.existAttribute(foiPropElt, "href"))
         {
             FeatureRef<?> ref = new FeatureRef<>();
             XlinkUtils.readXlinkAttributes(dom, foiPropElt, ref);
             return ref;
+        }
+        else
+        {
+            Element featureElt = dom.getFirstChildElement(foiPropElt);
+            if (featureElt != null)
+                return gmlUtils.readFeature(dom, featureElt);
         }
                 
         return null;
