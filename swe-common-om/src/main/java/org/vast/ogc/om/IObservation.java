@@ -23,6 +23,7 @@
 
 package org.vast.ogc.om;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import net.opengis.swe.v20.DataComponent;
@@ -59,7 +60,7 @@ public interface IObservation extends ITemporalFeature
     
     public TimeExtent getPhenomenonTime();
     
-    public TimeExtent getResultTime();
+    public Instant getResultTime();
     
     public DefinitionRef getObservedProperty();
     

@@ -23,6 +23,7 @@
 
 package org.vast.ogc.om;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,8 +52,8 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     protected String type;
     protected ArrayList<IXlinkReference<IObservation>> relatedObservations;
     protected TimeExtent phenomenonTime;
-    protected TimeExtent resultTime;
     protected TimeExtent validTime;
+    protected Instant resultTime;
     protected IProcedure procedure;
     protected HashMap<String, Object> parameters;
     protected DefinitionRef observedProperty;
@@ -111,16 +112,16 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
 
 
     @Override
-    public TimeExtent getResultTime()
+    public Instant getResultTime()
     {
         if (resultTime == null)
-            return phenomenonTime;
+            return phenomenonTime.begin();
         else
             return resultTime;
     }
 
 
-    public void setResultTime(TimeExtent resultTime)
+    public void setResultTime(Instant resultTime)
     {
         this.resultTime = resultTime;
     }

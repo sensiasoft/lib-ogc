@@ -120,7 +120,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         // result time
         timeElt = dom.getElement(obsElt, "resultTime/*");
         time = gmlUtils.readTimePrimitiveAsTimeExtent(dom, timeElt);
-        obs.setResultTime(time);
+        obs.setResultTime(time.begin());
         
         // optional valid time
         timeElt = dom.getElement(obsElt, "validTime/*");

@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import net.opengis.swe.v20.DataComponent;
@@ -111,7 +112,7 @@ public class ObservationRef extends FeatureRef<IObservation> implements IObserva
 
 
     @Override
-    public TimeExtent getResultTime()
+    public Instant getResultTime()
     {
         return getTarget().getResultTime();
     }

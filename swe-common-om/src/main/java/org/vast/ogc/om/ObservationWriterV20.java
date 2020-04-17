@@ -35,6 +35,7 @@ import org.vast.ogc.gml.SequentialIdGenerator;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.swe.SWEUtils;
+import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLWriterDOM;
 import org.vast.xml.XMLWriterException;
@@ -119,7 +120,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         
         // result time (mandatory)
         timePropElt = dom.addElement(obsElt, "om:resultTime");
-        timeElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom, obs.getResultTime());
+        timeElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom, TimeExtent.instant(obs.getResultTime()));
         timePropElt.appendChild(timeElt);
         
         // valid time
