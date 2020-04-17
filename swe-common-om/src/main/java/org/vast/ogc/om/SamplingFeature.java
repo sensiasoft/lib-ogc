@@ -14,6 +14,13 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.ogc.om;
 
+import java.util.AbstractMap;
+import java.util.AbstractSet;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import javax.xml.namespace.QName;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.LineString;
@@ -141,6 +148,51 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
             return geom;
         else
             return getShape();
+    }
+
+    
+    /*
+     * Override so we can reorder properties according to schema
+     */
+    @Override
+    public Map<QName, Object> getProperties()
+    {
+        return new AbstractMap<>() {
+            @Override
+            public Set<Entry<QName, Object>> entrySet()
+            {
+                return new AbstractSet<>() {
+                    
+                    QName[] propOrder = {
+                      PROP_TYPE,
+                      PROP_SAMPLED_FEATURE,
+                      PROP_HOSTED_PROCEDURE,
+                      PROP_SHAPE
+                    };
+                    
+                    @Override
+                    public Iterator<Entry<QName, Object>> iterator()
+                    {
+                        return Arrays.stream(propOrder)
+                            .map(qname -> {
+                                Object val = properties.get(qname);
+                                return (Entry<QName, Object>)(val != null ?
+                                    new AbstractMap.SimpleEntry<>(qname, val) : null);
+                            })
+                            .filter(Objects::nonNull)
+                            .iterator();
+                    }
+
+                    @Override
+                    public int size()
+                    {
+                        return (int)Arrays.stream(propOrder)
+                            .filter(qname -> properties.containsKey(qname))
+                            .count();
+                    }                    
+                };
+            }            
+        };
     }
     
     

@@ -15,7 +15,17 @@
    </om:resultTime>
    <om:procedure xlink:href="urn:vast:sensor:weatherStation" />
    <om:observedProperty xlink:href="weather1.xml" />
-   <om:featureOfInterest xlink:href="http://www.ga.gov.au/bin/gazd01?rec=293604" xlink:role="urn:ogc:def:featuretype:SEEGRID:locality" />
+   <om:featureOfInterest>
+      <sams:SF_SpatialSamplingFeature xmlns:sf="http://www.opengis.net/sampling/2.0" xmlns:sams="http://www.opengis.net/samplingSpatial/2.0" gml:id="SF1">
+         <sf:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint"/>
+         <sf:sampledFeature xlink:href="http://my.hydrology.example.org/storages/aquifer/abc345"/>
+         <sams:shape>
+           <gml:Point gml:id="st1p" srsName="urn:ogc:def:crs:EPSG:6.8:4283" srsDimension="2">
+              <gml:pos>-30.702 134.199</gml:pos>
+           </gml:Point>
+         </sams:shape>
+      </sams:SF_SpatialSamplingFeature>
+   </om:featureOfInterest>
    <om:result xsi:type="swe:DataArrayPropertyType">
       <swe:DataArray>
          <swe:elementCount>
