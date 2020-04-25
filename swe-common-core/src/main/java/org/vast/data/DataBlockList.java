@@ -40,6 +40,14 @@ public class DataBlockList extends AbstractDataBlock
 	protected int blockIndex;
 	protected int localIndex;
 	protected boolean equalBlockSize;
+	ThreadLocal<CachedIndex> cachedIndex = new ThreadLocal<>();
+	
+	static class CachedIndex
+	{
+	    int lastIndex; // last requested index
+	    int cumulIndex;
+	    int blockIndex;
+	}
     
     
     public DataBlockList()
@@ -57,9 +65,9 @@ public class DataBlockList extends AbstractDataBlock
     public DataBlockList(int listSize, boolean useArrayList)
     {
     	if (useArrayList)
-    		this.blockList = new ArrayList<DataBlock>(listSize);
+    		this.blockList = new ArrayList<>(listSize);
     	else
-    		this.blockList = new LinkedList<DataBlock>();
+    		this.blockList = new LinkedList<>();
     	
     	this.equalBlockSize = true;
     }
@@ -84,7 +92,7 @@ public class DataBlockList extends AbstractDataBlock
         newBlock.startIndex = this.startIndex;
         newBlock.blockAtomCount = this.blockAtomCount;
         newBlock.equalBlockSize = this.equalBlockSize;
-        newBlock.blockList = new LinkedList<DataBlock>();
+        newBlock.blockList = new LinkedList<>();
         
         // renew all blocks in the list
         Iterator<DataBlock> it = this.blockList.iterator();
@@ -102,7 +110,7 @@ public class DataBlockList extends AbstractDataBlock
         newBlock.startIndex = this.startIndex;
         newBlock.blockAtomCount = this.blockAtomCount;
         newBlock.equalBlockSize = this.equalBlockSize;
-        newBlock.blockList = new LinkedList<DataBlock>();
+        newBlock.blockList = new LinkedList<>();
         
         // fully copy (clone) all blocks in the list
         Iterator<DataBlock> it = this.blockList.iterator();
@@ -171,20 +179,34 @@ public class DataBlockList extends AbstractDataBlock
 		}
 		else
 		{
-	    	int size;
-			int cumul = 0;
-			int i = 0;
+	    	// use thread local cached index to speed up sequential scans
+			CachedIndex cachedIdx = cachedIndex.get();
+			if (cachedIdx == null || index <= cachedIdx.lastIndex)
+			{
+			    cachedIdx = new CachedIndex();
+			    cachedIndex.set(cachedIdx);
+			}
+			
+			int size = 0;
+            int cumul = cachedIdx.cumulIndex;
+            int i = cachedIdx.blockIndex;
 	
-			do
+			while (desiredIndex >= cumul)
 			{
 				size = blockList.get(i).getAtomCount();
 				cumul += size;
 				i++;
 			}
-			while (desiredIndex >= cumul);
 	
+			// actually use previous block because we went one block too far
+			cumul -= size;
 			blockIndex = i - 1;
-			localIndex = desiredIndex - (cumul - size);
+			localIndex = desiredIndex - cumul;
+			
+			// save indexing variables in cache for next call
+			cachedIdx.lastIndex = index;
+			cachedIdx.cumulIndex = cumul;
+			cachedIdx.blockIndex = blockIndex;
 		}
 	}
     
