@@ -95,6 +95,12 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
     {
         return false;
     }
+    
+    
+    protected String getPluralName(String localName)
+    {
+        return localName + "s";
+    }
 
 
     protected boolean isObjectElement(String namespaceURI, String localName)
@@ -252,12 +258,10 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
             {
                 if (!currentContext.isArray)
                 {
-                    //writeFieldName(localName);
-                    writer.name(localName);
-
                     // start JSON array if element has multiplicity > 1
                     if (isArray(namespaceURI, localName))
                     {
+                        writer.name(getPluralName(localName));
                         pushContext(localName);
                         /*writer.write("[\n");
                         indentSize++;
@@ -265,6 +269,11 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
                         writer.beginArray();
                         currentContext.firstChild = false;
                         currentContext.isArray = true;
+                    }
+                    else
+                    {
+                        //writeFieldName(localName);
+                        writer.name(localName);
                     }
                 }
                 
