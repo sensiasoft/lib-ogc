@@ -98,49 +98,46 @@ public class GMLStaxBindings extends XMLStreamBindings
         // also read all other properties in a generic manner
         while (reader.getEventType() != XMLStreamConstants.END_ELEMENT)
         {
-            reader.nextTag();
             QName propName = reader.getName();
             
-            if (reader.hasText())
+            // skip until next non-whitespace event
+            do {reader.next();}            
+            while (reader.isWhiteSpace());
+                        
+            int eventType = reader.getEventType();            
+            switch (eventType)
             {
-                String text = reader.getElementText();
-                Object value = null;
-                
-                if (text != null)
-                {
-                    try
-                    {
-                        value = Integer.parseInt(text);
-                    }
-                    catch (NumberFormatException e)
-                    {
-                        try
-                        {
-                            value = Double.parseDouble(text);
-                        }
-                        catch (NumberFormatException e1)
-                        {
-                            try
-                            {
-                                if (text.equalsIgnoreCase("true") || text.equalsIgnoreCase("false"))
-                                    value = Boolean.parseBoolean(text);
-                                else
-                                    this.getDateTimeFromString(text);
-                            }
-                            catch (Exception e2)
-                            {
-                                value = text.trim();
-                            }
-                        }
-                    }
+                case XMLStreamReader.CHARACTERS:
+                    String text = reader.getText();
+                    if (text != null)
+                        newFeature.setProperty(propName, text.trim());
+                    reader.nextTag();
+                    break;
                     
-                    newFeature.setProperty(propName, value);
-                }
+                case XMLStreamReader.START_ELEMENT:
+                    String objName = reader.getLocalName();
+                    if ("TimeInstant".equals(objName) ||
+                        "TimePeriod".equals(objName))
+                    {
+                        newFeature.setProperty(propName, readAbstractTimeGeometricPrimitive(reader));
+                        reader.nextTag();
+                    }
+                    else if ("Point".equals(objName) ||
+                             "LineString".equals(objName) ||
+                             "Polygon".equals(objName))
+                    {
+                        newFeature.setProperty(propName, readAbstractGeometry(reader));
+                        reader.nextTag();
+                    }
+                    else
+                        skipElementAndAllChildren(reader);
+                    break;
+                    
+                default:
+                    
             }
-            else
-            {
-                skipElementAndAllChildren(reader);
-            }
+            
+            reader.nextTag();
         }        
         
         return newFeature;
