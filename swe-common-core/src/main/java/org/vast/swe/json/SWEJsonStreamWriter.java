@@ -40,10 +40,12 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
         // elements to encode as JSON arrays
         addSpecialNames(arrays, NO_NS, "field", "coordinate", "item", "quality", "member");
         addSpecialNamesWithParent(arrays, NO_NS, "AllowedValues", "value", "interval");
+        addSpecialNamesWithParent(arrays, NO_NS, "AllowedTokens", "value");
         addSpecialNamesWithParent(valueArrays, NO_NS, "CountRange", "value");
         addSpecialNamesWithParent(valueArrays, NO_NS, "QuantityRange", "value");
         addSpecialNamesWithParent(valueArrays, NO_NS, "CategoryRange", "value");
         addSpecialNamesWithParent(valueArrays, NO_NS, "TimeRange", "value");
+        addSpecialNamesWithParent(valueArrays, NO_NS, "interval", "interval");
         
         // elements with numerical values
         addSpecialNames(numerics, NO_NS, "nilValue", "paddingBytes-after", "paddingBytes-before", "byteLength", "significantBits", "bitLength");
@@ -52,6 +54,8 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
         addSpecialNamesWithParent(numerics, NO_NS, "Time", "value");
         addSpecialNamesWithParent(numerics, NO_NS, "CountRange", "value");
         addSpecialNamesWithParent(numerics, NO_NS, "QuantityRange", "value");
+        addSpecialNamesWithParent(numerics, NO_NS, "AllowedValues", "value");
+        addSpecialNamesWithParent(numerics, NO_NS, "interval", "interval");
     }
     
     
@@ -110,6 +114,13 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
             parentName = currentContext.eltName;
             
         return isSpecialPath(arrays, parentName, namespaceURI, localName);
+    }
+    
+    
+    @Override
+    protected String getPluralName(String localName)
+    {
+        return super.getPluralName(localName);
     }
     
     
