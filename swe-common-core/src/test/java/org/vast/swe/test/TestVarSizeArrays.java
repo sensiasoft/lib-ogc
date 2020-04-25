@@ -19,7 +19,9 @@ import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.DataType;
 import org.junit.Test;
+import org.vast.data.DataBlockByte;
 import org.vast.data.DataBlockDouble;
 import org.vast.data.DataBlockFactory;
 import org.vast.data.DataBlockMixed;
@@ -32,6 +34,7 @@ public class TestVarSizeArrays
 {
     static final String TEST1_FAIL_MSG = "Wrong data block size before resizing";
     static final String TEST2_FAIL_MSG = "Wrong data block size after resizing";
+    static final String WRONG_ARRAY_SIZE_MSG = "Wrong array size";
     
     GeoPosHelper fac = new GeoPosHelper();
     SWEUtils utils = new SWEUtils(SWEUtils.V2_0);
@@ -55,7 +58,7 @@ public class TestVarSizeArrays
              
         // test initial size
         DataBlock data = rec.createDataBlock();
-        assertEquals(TEST1_FAIL_MSG, 4, data.getAtomCount());
+        assertEquals(TEST1_FAIL_MSG, 1, data.getAtomCount());
         
         // test resizing
         int arraySize = 100;
@@ -118,7 +121,7 @@ public class TestVarSizeArrays
         
         // test initial size
         DataBlock data = rec.createDataBlock();
-        assertEquals(TEST1_FAIL_MSG, 6, data.getAtomCount());
+        assertEquals(TEST1_FAIL_MSG, 3, data.getAtomCount());
         
         // test resizing
         int arraySize = 100;
@@ -157,7 +160,7 @@ public class TestVarSizeArrays
         utils.writeEncoding(System.out, SWEHelper.getDefaultBinaryEncoding(rec), true);
         
         DataBlock data = rec.createDataBlock();
-        assertEquals(TEST1_FAIL_MSG, 3, data.getAtomCount());
+        assertEquals(TEST1_FAIL_MSG, 2, data.getAtomCount());
         
         int innerSize = 100;
         innerArray.updateSize(innerSize);
@@ -165,5 +168,94 @@ public class TestVarSizeArrays
         outerArray.updateSize(outerSize);
         data = rec.createDataBlock();
         assertEquals(TEST2_FAIL_MSG, innerSize*outerSize*1+2, data.getAtomCount());        
+    }
+    
+    
+    @Test
+    public void testNestedVarSizeArrays() throws Exception
+    {
+        DataRecord rec = fac.newDataRecord();
+        
+        rec.addField("time", fac.newTimeStampIsoUTC());
+        
+        Count numObj = fac.newCount();
+        numObj.setId("NUM_OBJECTS");
+        rec.addField("numObj", numObj);
+        
+        DataArray outerArray = fac.newDataArray();
+        outerArray.setElementCount(numObj);
+        rec.addField("outer_array", outerArray);
+        
+        DataRecord outerArrElt = fac.newDataRecord();
+        outerArray.setElementType("elt", outerArrElt);
+                
+        Count numPts = fac.newCount();
+        numPts.setId("NUM_POINTS");
+        outerArrElt.addField("numPoints", numPts);
+        
+        DataArray innerArray = fac.newDataArray();
+        innerArray.setElementType("val", fac.newQuantity());
+        innerArray.setElementCount(numPts);
+        outerArrElt.addField("profile", innerArray);
+        
+        utils.writeComponent(System.out, rec, false, true);
+        utils.writeEncoding(System.out, SWEHelper.getDefaultBinaryEncoding(rec), true);
+        
+        rec.assignNewDataBlock();
+        DataBlock data = rec.getData();
+        assertEquals(TEST1_FAIL_MSG, 2, data.getAtomCount());
+        
+        int outerSize = 100;
+        outerArray.updateSize(outerSize);
+        
+        int cumulSize = 2;
+        for (int i = 0; i < outerSize; i++)
+        {
+            int innerSize = 10+(i%2)*10+i;
+            outerArray.getComponent(i);
+            innerArray.updateSize(innerSize);
+            cumulSize += innerSize+1;
+        }
+        
+        data.setUnderlyingObject(data.getUnderlyingObject()); // force recompute atom count
+        
+        assertEquals(TEST2_FAIL_MSG, cumulSize, data.getAtomCount());
+    }
+    
+    
+    @Test
+    public void testVarSizeArray2DSetData() throws Exception
+    {
+        DataRecord rec = fac.newDataRecord();
+        
+        Count w = fac.newCount();
+        w.setId("WIDTH");
+        rec.addField("w", w);
+        
+        Count h = fac.newCount();
+        h.setId("HEIGHT");
+        rec.addField("h", h);  
+                
+        DataArray innerArray = fac.newDataArray();
+        innerArray.setElementType("val", fac.newCount(DataType.BYTE));
+        innerArray.setElementCount(w);
+        
+        DataArray outerArray = fac.newDataArray();
+        outerArray.setElementType("inner", innerArray);
+        outerArray.setElementCount(h);       
+        
+        rec.addField("outer_array", outerArray);
+        
+        // create and assign datablock
+        int width = 320;
+        int height = 240; 
+        DataBlock dataBlk = rec.createDataBlock();
+        dataBlk.setIntValue(0, width);
+        dataBlk.setIntValue(1, height);
+        ((DataBlock[])dataBlk.getUnderlyingObject())[2] = new DataBlockByte(width*height);
+        
+        rec.setData(dataBlk);
+        assertEquals(WRONG_ARRAY_SIZE_MSG, height, outerArray.getComponentCount());
+        assertEquals(WRONG_ARRAY_SIZE_MSG, width, innerArray.getComponentCount());    
     }
 }
