@@ -91,11 +91,16 @@ public class SWEConstants
     // SWE definition URIs
     public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/swe/property/";
     public static final String DEF_SYSTEM_ID = SWE_PROP_URI_PREFIX + "SystemID";
-    public static final String DEF_COORD = SWE_PROP_URI_PREFIX + "Coordinate";    
+    public static final String DEF_COORD = SWE_PROP_URI_PREFIX + "Coordinate";
+    public static final String DEF_COEF = SWE_PROP_URI_PREFIX + "Coefficient";
     public static final String DEF_IMAGE = SWE_PROP_URI_PREFIX + "Image";
     public static final String DEF_MATRIX = SWE_PROP_URI_PREFIX + "Matrix";
     public static final String DEF_DN = SWE_PROP_URI_PREFIX + "DN";
     public static final String DEF_FLAG = SWE_PROP_URI_PREFIX + "Flag";
+    public static final String DEF_CODE = SWE_PROP_URI_PREFIX + "Code";
+    public static final String DEF_STATUS_CODE = SWE_PROP_URI_PREFIX + "StatusCode";
+    public static final String DEF_ERROR_CODE = SWE_PROP_URI_PREFIX + "ErrorCode";
+    public static final String DEF_COUNT = SWE_PROP_URI_PREFIX + "Counter";
     
     // SWE special units
     public static final String SWE_UOM_URI_PREFIX = "http://sensorml.com/ont/swe/uom/";
