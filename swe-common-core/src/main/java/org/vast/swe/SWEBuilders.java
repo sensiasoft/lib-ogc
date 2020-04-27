@@ -19,7 +19,6 @@ import java.time.ZoneOffset;
 import java.util.function.Consumer;
 import org.vast.data.DateTimeOrDouble;
 import org.vast.data.SWEFactory;
-import org.vast.data.UnitReferenceImpl;
 import org.vast.util.BaseBuilder;
 import org.vast.util.NestedBuilder;
 import net.opengis.swe.v20.AllowedTokens;
@@ -465,7 +464,7 @@ public class SWEBuilders
         
         public B withAllowedValues(String... values)
         {
-            var constraint = ensureConstraint();
+            AllowedTokens constraint = ensureConstraint();
             for (String val: values)
                 constraint.addValue(val);
             return (B)this;
@@ -473,7 +472,7 @@ public class SWEBuilders
         
         public B withAllowedValues(int... values)
         {
-            var constraint = ensureConstraint();
+            AllowedTokens constraint = ensureConstraint();
             for (int val: values)
                 constraint.addValue(Integer.toString(val));
             return (B)this;
@@ -545,7 +544,7 @@ public class SWEBuilders
         
         public B withAllowedValues(int... values)
         {
-            var constraint = ensureConstraint();
+            AllowedValues constraint = ensureConstraint();
             for (int val: values)
                 constraint.addValue(val);
             return (B)this;
@@ -553,7 +552,7 @@ public class SWEBuilders
         
         public B withAllowedIntervals(int[]... intervals)
         {
-            var constraint = ensureConstraint();
+            AllowedValues constraint = ensureConstraint();
             for (int[] val: intervals)
                 constraint.addInterval(new double[] {val[0], val[1]});
             return (B)this;
@@ -561,7 +560,7 @@ public class SWEBuilders
         
         public B withAllowedInterval(int min, int max)
         {
-            var constraint = ensureConstraint();
+            AllowedValues constraint = ensureConstraint();
             constraint.addInterval(new double[] {min, max});
             return (B)this;
         }
@@ -627,7 +626,7 @@ public class SWEBuilders
         
         public B withUomCode(String code)
         {
-            var uom = new UnitReferenceImpl();
+            UnitReference uom = fac.newUnitReference();
             uom.setCode(code);
             instance.setUom(uom);
             return (B)this;
@@ -635,7 +634,7 @@ public class SWEBuilders
         
         public B withUomUri(String uri)
         {
-            var uom = new UnitReferenceImpl();
+            UnitReference uom = fac.newUnitReference();
             uom.setHref(uri);
             instance.setUom(uom);
             return (B)this;
@@ -655,7 +654,7 @@ public class SWEBuilders
         
         public B withAllowedValues(double... values)
         {
-            var constraint = ensureConstraint();
+            AllowedValues constraint = ensureConstraint();
             for (double val: values)
                 constraint.addValue(val);
             return (B)this;
@@ -663,7 +662,7 @@ public class SWEBuilders
         
         public B withAllowedIntervals(double[]... intervals)
         {
-            var constraint = ensureConstraint();
+            AllowedValues constraint = ensureConstraint();
             for (double[] val: intervals)
                 constraint.addInterval(val);
             return (B)this;
@@ -671,7 +670,7 @@ public class SWEBuilders
         
         public B withAllowedInterval(double min, double max)
         {
-            var constraint = ensureConstraint();
+            AllowedValues constraint = ensureConstraint();
             constraint.addInterval(new double[] {min, max});
             return (B)this;
         }      
@@ -736,7 +735,7 @@ public class SWEBuilders
         
         public B withUomCode(String code)
         {
-            var uom = new UnitReferenceImpl();
+            UnitReference uom = fac.newUnitReference();
             uom.setCode(code);
             instance.setUom(uom);
             return (B)this;
@@ -744,7 +743,7 @@ public class SWEBuilders
         
         public B withUomUri(String uri)
         {
-            var uom = new UnitReferenceImpl();
+            UnitReference uom = fac.newUnitReference();
             uom.setHref(uri);
             instance.setUom(uom);
             return (B)this;
@@ -920,7 +919,7 @@ public class SWEBuilders
         
         public NestedBooleanBuilder<B> withBooleanField(String name)
         {
-            return new NestedBooleanBuilder<>((B)this, fac)
+            return new NestedBooleanBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -933,7 +932,7 @@ public class SWEBuilders
         
         public NestedCategoryBuilder<B> withCategoryField(String name)
         {
-            return new NestedCategoryBuilder<>((B)this, fac)
+            return new NestedCategoryBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -946,7 +945,7 @@ public class SWEBuilders
         
         public NestedCountBuilder<B> withCountField(String name)
         {
-            return new NestedCountBuilder<>((B)this, fac)
+            return new NestedCountBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -959,7 +958,7 @@ public class SWEBuilders
         
         public NestedQuantityBuilder<B> withQuantityField(String name)
         {
-            return new NestedQuantityBuilder<>((B)this, fac)
+            return new NestedQuantityBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -972,7 +971,7 @@ public class SWEBuilders
         
         public NestedTimeBuilder<B> withTimeField(String name)
         {
-            return new NestedTimeBuilder<>((B)this, fac)
+            return new NestedTimeBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -985,7 +984,7 @@ public class SWEBuilders
         
         public NestedTextBuilder<B> withTextField(String name)
         {
-            return new NestedTextBuilder<>((B)this, fac)
+            return new NestedTextBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -998,7 +997,7 @@ public class SWEBuilders
         
         public NestedRecordBuilder<B> withNestedRecord(String name)
         {
-            return new NestedRecordBuilder<>((B)this, fac)
+            return new NestedRecordBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1011,7 +1010,7 @@ public class SWEBuilders
         
         public NestedVectorBuilder<B> withNestedVector(String name)
         {
-            return new NestedVectorBuilder<>((B)this, fac)
+            return new NestedVectorBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1024,7 +1023,7 @@ public class SWEBuilders
         
         public NestedChoiceBuilder<B> withNestedChoice(String name)
         {
-            return new NestedChoiceBuilder<>((B)this, fac)
+            return new NestedChoiceBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1037,7 +1036,7 @@ public class SWEBuilders
         
         public NestedArrayBuilder<B> withNestedArray(String name)
         {
-            return new NestedArrayBuilder<>((B)this, fac)
+            return new NestedArrayBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1120,7 +1119,7 @@ public class SWEBuilders
         
         public NestedQuantityBuilder<B> withQuantityCoord(String name)
         {
-            return new NestedQuantityBuilder<>((B)this, fac)
+            return new NestedQuantityBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1133,7 +1132,7 @@ public class SWEBuilders
         
         public NestedCountBuilder<B> withCountCoord(String name)
         {
-            return new NestedCountBuilder<>((B)this, fac)
+            return new NestedCountBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1146,7 +1145,7 @@ public class SWEBuilders
         
         public NestedTimeBuilder<B> withTimeCoord(String name)
         {
-            return new NestedTimeBuilder<>((B)this, fac)
+            return new NestedTimeBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1211,7 +1210,7 @@ public class SWEBuilders
         
         public NestedBooleanBuilder<B> withBooleanField(String name)
         {
-            return new NestedBooleanBuilder<>((B)this, fac)
+            return new NestedBooleanBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1224,7 +1223,7 @@ public class SWEBuilders
         
         public NestedCategoryBuilder<B> withCategoryField(String name)
         {
-            return new NestedCategoryBuilder<>((B)this, fac)
+            return new NestedCategoryBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1237,7 +1236,7 @@ public class SWEBuilders
         
         public NestedCountBuilder<B> withCountField(String name)
         {
-            return new NestedCountBuilder<>((B)this, fac)
+            return new NestedCountBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1250,7 +1249,7 @@ public class SWEBuilders
         
         public NestedQuantityBuilder<B> withQuantityField(String name)
         {
-            return new NestedQuantityBuilder<>((B)this, fac)
+            return new NestedQuantityBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1263,7 +1262,7 @@ public class SWEBuilders
         
         public NestedTimeBuilder<B> withTimeField(String name)
         {
-            return new NestedTimeBuilder<>((B)this, fac)
+            return new NestedTimeBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1276,7 +1275,7 @@ public class SWEBuilders
         
         public NestedTextBuilder<B> withTextField(String name)
         {
-            return new NestedTextBuilder<>((B)this, fac)
+            return new NestedTextBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1289,7 +1288,7 @@ public class SWEBuilders
         
         public NestedRecordBuilder<B> withNestedRecord(String name)
         {
-            return new NestedRecordBuilder<>((B)this, fac)
+            return new NestedRecordBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1302,7 +1301,7 @@ public class SWEBuilders
         
         public NestedVectorBuilder<B> withNestedVector(String name)
         {
-            return new NestedVectorBuilder<>((B)this, fac)
+            return new NestedVectorBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1315,7 +1314,7 @@ public class SWEBuilders
         
         public NestedChoiceBuilder<B> withNestedchoice(String name)
         {
-            return new NestedChoiceBuilder<>((B)this, fac)
+            return new NestedChoiceBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1393,7 +1392,7 @@ public class SWEBuilders
         
         public NestedBooleanBuilder<B> withBooleanElement(String name)
         {
-            return new NestedBooleanBuilder<>((B)this, fac)
+            return new NestedBooleanBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1406,7 +1405,7 @@ public class SWEBuilders
         
         public NestedCategoryBuilder<B> withCategoryElement(String name)
         {
-            return new NestedCategoryBuilder<>((B)this, fac)
+            return new NestedCategoryBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1419,7 +1418,7 @@ public class SWEBuilders
         
         public NestedCountBuilder<B> withCountElement(String name)
         {
-            return new NestedCountBuilder<>((B)this, fac)
+            return new NestedCountBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1432,7 +1431,7 @@ public class SWEBuilders
         
         public NestedQuantityBuilder<B> withQuantityElement(String name)
         {
-            return new NestedQuantityBuilder<>((B)this, fac)
+            return new NestedQuantityBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1445,7 +1444,7 @@ public class SWEBuilders
         
         public NestedTimeBuilder<B> withTimeElement(String name)
         {
-            return new NestedTimeBuilder<>((B)this, fac)
+            return new NestedTimeBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1458,7 +1457,7 @@ public class SWEBuilders
         
         public NestedTextBuilder<B> withTextElement(String name)
         {
-            return new NestedTextBuilder<>((B)this, fac)
+            return new NestedTextBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1471,7 +1470,7 @@ public class SWEBuilders
         
         public NestedRecordBuilder<B> withRecordElement(String name)
         {
-            return new NestedRecordBuilder<>((B)this, fac)
+            return new NestedRecordBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1484,7 +1483,7 @@ public class SWEBuilders
         
         public NestedVectorBuilder<B> withVectorElement(String name)
         {
-            return new NestedVectorBuilder<>((B)this, fac)
+            return new NestedVectorBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1497,7 +1496,7 @@ public class SWEBuilders
         
         public NestedChoiceBuilder<B> withChoiceElement(String name)
         {
-            return new NestedChoiceBuilder<>((B)this, fac)
+            return new NestedChoiceBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1510,7 +1509,7 @@ public class SWEBuilders
         
         public NestedArrayBuilder<B> withNestedArray(String name)
         {
-            return new NestedArrayBuilder<>((B)this, fac)
+            return new NestedArrayBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()

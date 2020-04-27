@@ -157,11 +157,11 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
     @Override
     public Map<QName, Object> getProperties()
     {
-        return new AbstractMap<>() {
+        return new AbstractMap<QName, Object>() {
             @Override
             public Set<Entry<QName, Object>> entrySet()
             {
-                return new AbstractSet<>() {
+                return new AbstractSet<Entry<QName, Object>>() {
                     
                     QName[] propOrder = {
                       PROP_TYPE,

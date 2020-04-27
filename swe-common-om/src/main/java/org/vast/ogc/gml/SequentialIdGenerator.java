@@ -15,6 +15,7 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 package org.vast.ogc.gml;
 
 import org.vast.util.Asserts;
+import com.google.common.base.Strings;
 import net.opengis.gml.v32.AbstractGML;
 
 
@@ -54,8 +55,8 @@ public class SequentialIdGenerator<T> implements GmlIdGenerator<T>
         if (keepOriginal && obj instanceof AbstractGML)
         {
             String id = ((AbstractGML) obj).getId();
-            if (id != null && !id.isBlank())
-                return ((AbstractGML) obj).getId();
+            if (!Strings.isNullOrEmpty(id))
+                return id;
         }
         
         return prefix + (++counter);
