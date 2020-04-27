@@ -115,12 +115,14 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         // phenomenon time
         timeElt = dom.getElement(obsElt, "phenomenonTime/*");
         time = gmlUtils.readTimePrimitiveAsTimeExtent(dom, timeElt);
-        obs.setPhenomenonTime(time);
+        if (time != null)
+            obs.setPhenomenonTime(time);
         
         // result time
         timeElt = dom.getElement(obsElt, "resultTime/*");
         time = gmlUtils.readTimePrimitiveAsTimeExtent(dom, timeElt);
-        obs.setResultTime(time.begin());
+        if (time != null)
+            obs.setResultTime(time.begin());
         
         // optional valid time
         timeElt = dom.getElement(obsElt, "validTime/*");

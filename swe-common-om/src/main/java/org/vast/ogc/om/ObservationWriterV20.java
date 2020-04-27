@@ -120,7 +120,8 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         
         // result time (mandatory)
         timePropElt = dom.addElement(obsElt, "om:resultTime");
-        timeElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom, TimeExtent.instant(obs.getResultTime()));
+        timeElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom,
+            obs.getResultTime() != null ? TimeExtent.instant(obs.getResultTime()) : null);
         timePropElt.appendChild(timeElt);
         
         // valid time

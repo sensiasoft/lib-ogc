@@ -115,7 +115,7 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     public Instant getResultTime()
     {
         if (resultTime == null)
-            return phenomenonTime.begin();
+            return phenomenonTime == null ? null : phenomenonTime.begin();
         else
             return resultTime;
     }

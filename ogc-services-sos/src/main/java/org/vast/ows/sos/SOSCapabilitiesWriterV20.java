@@ -148,8 +148,11 @@ public class SOSCapabilitiesWriterV20 extends SWESCapabilitiesWriterV20
                 
                 // result time
                 timePeriod = offeringCaps.getResultTime();
-                Element resultTimeElt = gmlUtils.writeTimeExtentAsTimePeriod(dom, timePeriod);
-                dom.addElement(offeringElt, "sos:resultTime").appendChild(resultTimeElt);
+                if (timePeriod != null)
+                {
+                    Element resultTimeElt = gmlUtils.writeTimeExtentAsTimePeriod(dom, timePeriod);
+                    dom.addElement(offeringElt, "sos:resultTime").appendChild(resultTimeElt);
+                }
                                 
                 // response formats (inheritance = replace)
                 if (!offeringCaps.getResponseFormats().equals(getCommonListEntries(serviceCaps, "getResponseFormats")))
