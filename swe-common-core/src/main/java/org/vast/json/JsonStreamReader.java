@@ -49,7 +49,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
     protected String inputEncoding;
     protected JsonContext currentContext = new JsonContext();    
     protected int eventType;
-    protected String nextName = "root";
+    protected String nextName = null;//"root";
     protected ArrayList<String> attNames = new ArrayList<String>();
     protected ArrayList<String> attValues = new ArrayList<String>();
     protected StringBuilder valueBuilder = new StringBuilder();
@@ -91,6 +91,21 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
     protected boolean isInlineValue(String name)
     {
         return false;
+    }
+
+
+    protected boolean isValueArray(String name)
+    {
+        return false;
+    }
+    
+    
+    protected String getSingularName(String name)
+    {
+        if (name.endsWith("s"))
+            return name.substring(0, name.length()-1);
+        else
+            return name;
     }
     
     
@@ -155,10 +170,13 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
                         
             while ((nextToken = reader.peek()) != JsonToken.END_DOCUMENT)
             {
+                //System.out.println(nextToken + ": " + nextName);
+                
                 switch (nextToken)
                 {
                     case BEGIN_ARRAY:
                         reader.beginArray();
+                        nextName = getSingularName(nextName);
                         pushContext(nextName);
                         currentContext.isArray = true;
                         break;
@@ -200,7 +218,8 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
                         else if (nextName.equals(OBJECT_TYPE_PROPERTY))
                         {
                             currentContext.insertObject = true;
-                            return eventType;
+                            if (currentContext.eltName != null)
+                                return eventType;
                         }
                         
                         // if no more attributes send element start event
@@ -213,7 +232,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
                                                 
                     case STRING:
                     case NUMBER:
-                    case BOOLEAN:                    
+                    case BOOLEAN:
                         String val = reader.nextString();
                         
                         // case of attribute
@@ -225,15 +244,23 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
                                 return eventType;
                         }
                         
-                        /*// if value array
-                        if (currentContext.isArray)
+                        // if value array
+                        else if (currentContext.isArray && isValueArray(currentContext.eltName))
                         {
                             // add to value buffer
                             valueBuilder.append(val).append(' ');
                             // finish start element tag if we reached end of array
                             if (reader.peek() == JsonToken.END_ARRAY)
-                                return START_ELEMENT;
-                        }*/
+                            {
+                                valueBuilder.setLength(valueBuilder.length()-1);
+                                currentContext.text = valueBuilder.toString();
+                                currentContext.isTextOnly = true;
+                                currentContext.consumeText = true;
+                                reader.endArray();
+                                eventType = START_ELEMENT;
+                                return eventType;
+                            }
+                        }
                         
                         // if we have to insert an object element
                         else if (currentContext.insertObject)
@@ -349,7 +376,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
     public String getElementText() throws JsonStreamException
     {
         if (currentContext.text == null)
-            throw new IllegalStateException();
+            nextTag();
         String text = currentContext.text;
         nextTag();
         return text;
@@ -609,7 +636,37 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
     @Override
     public Location getLocation()
     {
-        return null;
+        return new Location() {
+            @Override
+            public int getLineNumber()
+            {
+                return -1;
+            }
+
+            @Override
+            public int getColumnNumber()
+            {
+                return -1;
+            }
+
+            @Override
+            public int getCharacterOffset()
+            {
+                return -1;
+            }
+
+            @Override
+            public String getPublicId()
+            {
+                return reader.getPath();
+            }
+
+            @Override
+            public String getSystemId()
+            {
+                return null;
+            }            
+        };
     }
 
 

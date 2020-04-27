@@ -172,7 +172,10 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     protected final String errorLocationString(XMLStreamReader reader) throws XMLStreamException
     {
         Location loc = reader.getLocation();
-        return " at line " + loc.getLineNumber() + ", col " + loc.getColumnNumber();
+        if (loc.getLineNumber() > 0)
+            return " at line " + loc.getLineNumber() + ", col " + loc.getColumnNumber();
+        else
+            return " at " + loc.getPublicId();
     }
     
     

@@ -19,24 +19,32 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
 import net.opengis.swe.v20.AbstractSWE;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataStream;
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.vast.swe.SWEStaxBindings;
+import org.vast.swe.SWEUtils;
 import org.vast.swe.json.SWEJsonStreamReader;
 import org.vast.swe.json.SWEJsonStreamWriter;
-import org.vast.xml.IndentingXMLStreamWriter;
-import junit.framework.TestCase;
-import static javax.xml.stream.XMLStreamReader.*;
+import org.xml.sax.InputSource;
 
 
-public class TestSweJsonBindingsV20 extends TestCase
+public class TestSweJsonBindingsV20 extends XMLTestCase
 {
-
-
+    
+    @Override
+    public void setUp() throws Exception
+    {
+        XMLUnit.setIgnoreComments(true);
+        XMLUnit.setIgnoreWhitespace(true);
+        XMLUnit.setNormalizeWhitespace(true);
+        XMLUnit.setIgnoreAttributeOrder(true);
+    }
+    
+    
     protected AbstractSWE readSweCommonXml(String path, boolean isDataStream) throws Exception
     {
         SWEStaxBindings sweHelper = new SWEStaxBindings();
@@ -62,15 +70,10 @@ public class TestSweJsonBindingsV20 extends TestCase
     {
         SWEStaxBindings sweHelper = new SWEStaxBindings();
         SWEJsonStreamWriter writer = new SWEJsonStreamWriter(os, "UTF-8");
-                
-        sweHelper.setNamespacePrefixes(writer);
-        writer.writeStartDocument();
-        sweHelper.declareNamespacesOnRootElement();
         if (sweObj instanceof DataStream)
             sweHelper.writeDataStream(writer, (DataStream)sweObj);
         else
             sweHelper.writeDataComponent(writer, (DataComponent)sweObj, true);
-        writer.writeEndDocument();
         writer.flush();
     }
     
@@ -96,42 +99,26 @@ public class TestSweJsonBindingsV20 extends TestCase
             // read back to check JSON is well formed
             InputStream is = new ByteArrayInputStream(os.toByteArray());
             SWEJsonStreamReader jsonReader = new SWEJsonStreamReader(is, "UTF-8");            
-            XMLOutputFactory output = new com.ctc.wstx.stax.WstxOutputFactory();
-            XMLStreamWriter xmlWriter = output.createXMLStreamWriter(System.out);
-            xmlWriter = new IndentingXMLStreamWriter(xmlWriter);
+            jsonReader.nextTag();
+            SWEStaxBindings staxBindings = new SWEStaxBindings();
+            ByteArrayOutputStream xmlOutput = new ByteArrayOutputStream();
             
-            while (jsonReader.hasNext())
+            if (sweObj instanceof DataStream)
             {
-                switch (jsonReader.next())
-                {
-                    case START_ELEMENT:
-                        String name = jsonReader.getLocalName();
-                        xmlWriter.writeStartElement(name);
-                        for(int i=0; i<jsonReader.getAttributeCount(); i++)
-                        {
-                            name = jsonReader.getAttributeLocalName(i);
-                            String val = jsonReader.getAttributeValue(i);
-                            xmlWriter.writeAttribute(name, val);
-                        }
-                        break;
-                        
-                    case END_ELEMENT:
-                        xmlWriter.writeEndElement();
-                        break;
-                        
-                    case CHARACTERS:
-                        xmlWriter.writeCharacters(jsonReader.getText());
-                        break;
-                }
-                
-                xmlWriter.flush();
+                DataStream ds = staxBindings.readDataStream(jsonReader);
+                new SWEUtils(SWEUtils.V2_0).writeDataStream(xmlOutput, ds, true);
+                new SWEUtils(SWEUtils.V2_0).writeDataStream(System.out, ds, true);
+            }
+            else
+            {
+                DataComponent comp = staxBindings.readDataComponent(jsonReader);
+                new SWEUtils(SWEUtils.V2_0).writeComponent(xmlOutput, comp, true, true);
+                new SWEUtils(SWEUtils.V2_0).writeComponent(System.out, comp, true, true);
             }
             
-            System.out.println("\n\n");
-            // read back to check JSON is well formed
-            //InputSource src1 = new InputSource(getClass().getResourceAsStream(path));
-            //InputSource src2 = new InputSource(new ByteArrayInputStream(os.toByteArray()));
-            //assertXMLEqual(src1, src2);
+            InputSource src1 = new InputSource(getClass().getResourceAsStream(path));
+            InputSource src2 = new InputSource(new ByteArrayInputStream(xmlOutput.toByteArray()));
+            assertXMLEqual(src1, src2);
         }
         catch (Throwable e)
         {

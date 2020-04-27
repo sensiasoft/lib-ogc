@@ -418,7 +418,7 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
     @Override
     public Object[] toArray()
     {
-        throw new UnsupportedOperationException();
+        return items.toArray();
     }
 
 
