@@ -40,6 +40,7 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
         // elements to encode as JSON arrays
         addSpecialNames(arrays, NO_NS, "field", "coordinate", "item", "quality", "member");
         addSpecialNamesWithParent(arrays, NO_NS, "AllowedValues", "value", "interval");
+        addSpecialNamesWithParent(arrays, NO_NS, "AllowedTimes", "value", "interval");
         addSpecialNamesWithParent(arrays, NO_NS, "AllowedTokens", "value");
         addSpecialNamesWithParent(valueArrays, NO_NS, "CountRange", "value");
         addSpecialNamesWithParent(valueArrays, NO_NS, "QuantityRange", "value");
@@ -55,6 +56,7 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
         addSpecialNamesWithParent(numerics, NO_NS, "CountRange", "value");
         addSpecialNamesWithParent(numerics, NO_NS, "QuantityRange", "value");
         addSpecialNamesWithParent(numerics, NO_NS, "AllowedValues", "value");
+        addSpecialNamesWithParent(numerics, NO_NS, "value", "value");
         addSpecialNamesWithParent(numerics, NO_NS, "interval", "interval");
     }
     

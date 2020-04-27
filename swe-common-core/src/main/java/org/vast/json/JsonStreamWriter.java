@@ -63,7 +63,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
             this.writer = new JsonWriter(new OutputStreamWriter(os, encoding));
             this.writer.setLenient(true);
             this.writer.setSerializeNulls(true);
-            this.writer.setIndent("  ");
+            this.writer.setIndent(INDENT1);
         }
         catch (UnsupportedEncodingException e)
         {
@@ -220,6 +220,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         indent();
         writer.write(']');*/
         writer.endArray();
+        writer.setIndent(INDENT1); // in case we were writing array inline
         popContext();
     }
 
@@ -373,6 +374,12 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
     protected void writeValue(String value) throws IOException
     {
+        writeValue(value, false);
+    }
+    
+    
+    protected void writeValue(String value, boolean attribute) throws IOException
+    {
         /*boolean isNumber = isNumericValue(value);
         if (!isNumber)
             writer.write('"');
@@ -386,25 +393,31 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
             if (tokens.length > 0)
             {
                 writer.beginArray();
-                if (isNumericValue(tokens[0]))
+                writer.setIndent("");
+                for (String val: tokens)
                 {
-                    for (String val: tokens)
+                    if (isNumericValue(val))
                         writer.jsonValue(val);
-                }
-                else
-                {
-                    for (String val: tokens)
+                    else
                         writer.value(val);
                 }
                 writer.endArray();
+                writer.setIndent(INDENT1);
             }
             else
                 writer.nullValue();
         }
-        else if (isNumericValue(value))
-            writer.jsonValue(value);
         else
-            writer.value(value);
+        {
+            // write simple array values inline
+            if (!attribute && currentContext.parent.isArray)
+                writer.setIndent("");
+            
+            if (isNumericValue(value))
+                writer.jsonValue(value);
+            else
+                writer.value(value);
+        }
     }
 
 
@@ -422,7 +435,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
             /*indent();            
             writeFieldName(localName);*/
             writer.name(localName);
-            writeValue(value);
+            writeValue(value, true);
         }
         catch (IOException e)
         {
