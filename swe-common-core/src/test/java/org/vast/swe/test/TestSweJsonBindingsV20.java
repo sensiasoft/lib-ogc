@@ -14,12 +14,17 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.swe.test;
 
+import static javax.xml.stream.XMLStreamConstants.CHARACTERS;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 import net.opengis.swe.v20.AbstractSWE;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataStream;
@@ -29,6 +34,7 @@ import org.vast.swe.SWEStaxBindings;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.json.SWEJsonStreamReader;
 import org.vast.swe.json.SWEJsonStreamWriter;
+import org.vast.xml.IndentingXMLStreamWriter;
 import org.xml.sax.InputSource;
 
 
@@ -96,9 +102,43 @@ public class TestSweJsonBindingsV20 extends XMLTestCase
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             writeSweCommonJsonToStream(sweObj, os, false);
             
-            // read back to check JSON is well formed
+            // read back as events to check JSON is well formed
             InputStream is = new ByteArrayInputStream(os.toByteArray());
-            SWEJsonStreamReader jsonReader = new SWEJsonStreamReader(is, "UTF-8");            
+            SWEJsonStreamReader jsonReader = new SWEJsonStreamReader(is, "UTF-8");
+            XMLOutputFactory output = new com.ctc.wstx.stax.WstxOutputFactory();
+            XMLStreamWriter xmlWriter = output.createXMLStreamWriter(System.out);
+            xmlWriter = new IndentingXMLStreamWriter(xmlWriter);
+            while (jsonReader.hasNext())
+            {
+                switch (jsonReader.next())
+                {
+                    case START_ELEMENT:
+                        String name = jsonReader.getLocalName();
+                        xmlWriter.writeStartElement(name);
+                        for(int i=0; i<jsonReader.getAttributeCount(); i++)
+                        {
+                            name = jsonReader.getAttributeLocalName(i);
+                            String val = jsonReader.getAttributeValue(i);
+                            xmlWriter.writeAttribute(name, val);
+                        }
+                        break;
+                        
+                    case END_ELEMENT:
+                        xmlWriter.writeEndElement();
+                        break;
+                        
+                    case CHARACTERS:
+                        xmlWriter.writeCharacters(jsonReader.getText());
+                        break;
+                }
+                
+                xmlWriter.flush();
+            }            
+            System.out.println("\n\n");
+            
+            // read back JSON, write as XML and compare with source XML
+            is = new ByteArrayInputStream(os.toByteArray());
+            jsonReader = new SWEJsonStreamReader(is, "UTF-8");            
             jsonReader.nextTag();
             SWEStaxBindings staxBindings = new SWEStaxBindings();
             ByteArrayOutputStream xmlOutput = new ByteArrayOutputStream();
