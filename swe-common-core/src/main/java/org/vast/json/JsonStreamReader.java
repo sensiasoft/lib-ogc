@@ -194,7 +194,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
                     
                     case END_OBJECT:
                         // don't consume close if we're ending the 'virtual' object element
-                        if (!currentContext.isObjectType)
+                        if (!currentContext.isObjectType || currentContext.parent.eltName == null)
                             reader.endObject();
                         popContext();
                         eventType = END_ELEMENT;
