@@ -22,6 +22,7 @@ import java.util.Iterator;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamWriter;
 import org.vast.util.NumberUtils;
+import com.google.common.base.Strings;
 import com.google.gson.stream.JsonWriter;
 
 
@@ -99,7 +100,10 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
     
     protected String getPluralName(String localName)
     {
-        return localName + "s";
+        if (localName.endsWith("s"))
+            return localName;
+        else
+            return localName + "s";
     }
 
 
@@ -374,11 +378,11 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
     protected void writeValue(String value) throws IOException
     {
-        writeValue(value, false);
+        writeValue(value, true);
     }
     
     
-    protected void writeValue(String value, boolean attribute) throws IOException
+    protected void writeValue(String value, boolean inline) throws IOException
     {
         /*boolean isNumber = isNumericValue(value);
         if (!isNumber)
@@ -410,7 +414,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         else
         {
             // write simple array values inline
-            if (!attribute && currentContext.parent.isArray)
+            if (inline && currentContext.parent.isArray)
                 writer.setIndent("");
             
             if (isNumericValue(value))
@@ -435,7 +439,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
             /*indent();            
             writeFieldName(localName);*/
             writer.name(localName);
-            writeValue(value, true);
+            writeValue(value, false);
         }
         catch (IOException e)
         {
@@ -465,15 +469,20 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
     {
         try
         {
+            if (Strings.isNullOrEmpty(text))
+                return;
+            
             if (!currentContext.firstChild)
             {
                 /*indent();
                 writeFieldName("value");
                 writeValue(text);*/
-                writer.name("value");                
+                writer.name("value");
+                writeValue(text, false);
             }
+            else
+                writeValue(text);
             
-            writeValue(text);
             currentContext.emptyElement = false;
         }
         catch (IOException e)

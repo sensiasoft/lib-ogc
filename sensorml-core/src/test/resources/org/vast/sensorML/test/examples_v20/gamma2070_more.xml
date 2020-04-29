@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sml:PhysicalComponent gml:id="Gamma2070" xml:lang="en" definition="http://sensorml.com/def/sensor/gammaDetector"
+<sml:PhysicalComponent gml:id="Gamma2070" definition="http://sensorml.com/def/sensor/gammaDetector"
 xmlns:sml="http://www.opengis.net/sensorml/2.0" 
 xmlns:swe="http://www.opengis.net/swe/2.0" 
 xmlns:gml="http://www.opengis.net/gml/3.2" 
@@ -13,7 +13,7 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 	<!--                  System Description               -->
 	<!-- ================================================= -->
 	<gml:description>A solid state Gamma measurement module</gml:description>
-	<gml:identifier codeSpace="UID">urn:heath:gamma2070</gml:identifier>
+	<gml:identifier codeSpace="uid">urn:heath:gamma2070</gml:identifier>
 	<gml:name>Health Physics Instruments 2070 Gamma Detector</gml:name>
 	<sml:keywords>
 		<sml:KeywordList>
@@ -256,7 +256,9 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 							</gmd:address>
 						</gmd:CI_Contact>
 					</gmd:contactInfo>
-					<gmd:role gco:nilReason="inapplicable"/>
+                    <gmd:role>
+                        <gmd:CI_RoleCode codeList="companyRoles" codeListValue="manufacturer" />
+                    </gmd:role>
 				</gmd:CI_ResponsibleParty>
 			</sml:contact>
 		</sml:ContactList>

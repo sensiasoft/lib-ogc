@@ -21,19 +21,31 @@ import java.io.OutputStream;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 import net.opengis.sensorml.v20.AbstractProcess;
+import org.custommonkey.xmlunit.XMLTestCase;
+import org.custommonkey.xmlunit.XMLUnit;
 import org.vast.sensorML.SMLStaxBindings;
 import org.vast.sensorML.SMLUtils;
 import org.vast.sensorML.json.SMLJsonStreamReader;
 import org.vast.sensorML.json.SMLJsonStreamWriter;
+import org.vast.swe.SWEUtils;
 import org.vast.xml.IndentingXMLStreamWriter;
-import junit.framework.TestCase;
+import org.xml.sax.InputSource;
 import static javax.xml.stream.XMLStreamReader.*;
 
 
-public class TestSMLJsonBindingsV20 extends TestCase
+public class TestSMLJsonBindingsV20 extends XMLTestCase
 {
 
-
+    @Override
+    public void setUp() throws Exception
+    {
+        XMLUnit.setIgnoreComments(true);
+        XMLUnit.setIgnoreWhitespace(true);
+        XMLUnit.setNormalizeWhitespace(true);
+        XMLUnit.setIgnoreAttributeOrder(true);
+    }
+    
+    
     protected void writeJsonToStream(AbstractProcess process, OutputStream os, boolean indent) throws Exception
     {
         SMLStaxBindings smlHelper = new SMLStaxBindings();
@@ -65,8 +77,7 @@ public class TestSMLJsonBindingsV20 extends TestCase
             
             // read back to check JSON is well formed
             is = new ByteArrayInputStream(os.toByteArray());
-            SMLJsonStreamReader jsonReader = new SMLJsonStreamReader(is, "UTF-8");
-            
+            SMLJsonStreamReader jsonReader = new SMLJsonStreamReader(is, "UTF-8");            
             XMLOutputFactory output = new com.ctc.wstx.stax.WstxOutputFactory();
             XMLStreamWriter xmlWriter = output.createXMLStreamWriter(System.out);
             xmlWriter = new IndentingXMLStreamWriter(xmlWriter);
@@ -96,13 +107,23 @@ public class TestSMLJsonBindingsV20 extends TestCase
                 }
                 
                 xmlWriter.flush();
-            }
-            
+            }            
             System.out.println("\n\n");
-            // read back to check JSON is well formed
-            //InputSource src1 = new InputSource(getClass().getResourceAsStream(path));
-            //InputSource src2 = new InputSource(new ByteArrayInputStream(os.toByteArray()));
-            //assertXMLEqual(src1, src2);
+            
+            // read back JSON, write as XML and compare with source XML
+            is = new ByteArrayInputStream(os.toByteArray());
+            jsonReader = new SMLJsonStreamReader(is, "UTF-8");
+            jsonReader.nextTag();
+            SMLStaxBindings staxBindings = new SMLStaxBindings();
+            ByteArrayOutputStream xmlOutput = new ByteArrayOutputStream();
+            
+            AbstractProcess proc = staxBindings.readAbstractProcess(jsonReader);
+            new SMLUtils(SWEUtils.V2_0).writeProcess(xmlOutput, proc, true);
+            new SMLUtils(SWEUtils.V2_0).writeProcess(System.out, proc, true);
+            
+            InputSource src1 = new InputSource(getClass().getResourceAsStream(path));
+            InputSource src2 = new InputSource(new ByteArrayInputStream(xmlOutput.toByteArray()));
+            assertXMLEqual(src1, src2);
         }
         catch (Throwable e)
         {

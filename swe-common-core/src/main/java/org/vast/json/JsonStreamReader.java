@@ -368,7 +368,8 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
     @Override
     public String getAttributeValue(String namespaceURI, String localName)
     {
-        return null;
+        int attIdx = attNames.indexOf(localName);
+        return attIdx < 0 ? null : attValues.get(attIdx);
     }
 
 
@@ -378,7 +379,8 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
         if (currentContext.text == null)
             nextTag();
         String text = currentContext.text;
-        nextTag();
+        if (currentContext.text != null)
+            nextTag();
         return text;
     }
 
@@ -658,13 +660,13 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
             @Override
             public String getPublicId()
             {
-                return reader.getPath();
+                return null;
             }
 
             @Override
             public String getSystemId()
             {
-                return null;
+                return reader.getPath();
             }            
         };
     }

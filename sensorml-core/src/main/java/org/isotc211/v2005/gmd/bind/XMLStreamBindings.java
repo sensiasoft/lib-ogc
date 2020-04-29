@@ -148,18 +148,17 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         found = checkElementName(reader, "role");
         if (found)
         {
-            reader.nextTag();
-            
             // only proceed if we actually have a child cause it can be nilled
-            if (reader.getEventType() == XMLStreamConstants.START_ELEMENT)
+            if (reader.getAttributeValue(ns1Bindings.NS_URI, "nilReason") == null)
             {
+                reader.nextTag();
+                        
                 CodeListValue role = this.readCIRoleCode(reader);
                 if (role != null)
                     bean.setRole(role);
-                
-                reader.nextTag(); // end property tag
             }
             
+            reader.nextTag(); // end property tag
             reader.nextTag();
         }
     }
