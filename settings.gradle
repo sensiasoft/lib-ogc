@@ -1,12 +1,20 @@
 rootProject.name = 'lib-ogc'
 
 // include all folders with build.gradle as subprojects
-FileTree subprojects = fileTree(rootDir).include('**/build.gradle')
-subprojects.files.each { File f ->
+//FileTree subprojects = fileTree(rootDir).include('**/build.gradle')
+/*subprojects.files.each { File f ->
   File projectFolder = f.parentFile
   if (projectFolder != rootDir) {
     String projectName = projectFolder.name
     include projectName
     project(':' + projectName).projectDir = projectFolder
   }
-}
+}*/
+
+include ':swe-common-core'
+include ':swe-common-om'
+include ':sensorml-core'
+include ':ogc-services-common'
+include ':ogc-services-swe'
+include ':ogc-services-sos'
+include ':ogc-services-sps'
