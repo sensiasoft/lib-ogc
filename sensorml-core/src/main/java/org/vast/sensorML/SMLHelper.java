@@ -19,15 +19,9 @@ import org.isotc211.v2005.gmd.CIResponsibleParty;
 import org.isotc211.v2005.gmd.impl.CIResponsiblePartyImpl;
 import org.vast.process.IProcessExec;
 import org.vast.swe.SWEHelper;
-import org.vast.util.Asserts;
-import net.opengis.OgcPropertyList;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.AggregateProcess;
 import net.opengis.sensorml.v20.DataInterface;
-import net.opengis.sensorml.v20.IdentifierList;
-import net.opengis.sensorml.v20.PhysicalComponent;
-import net.opengis.sensorml.v20.PhysicalSystem;
-import net.opengis.sensorml.v20.Term;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
@@ -36,27 +30,14 @@ import net.opengis.swe.v20.DataStream;
 
 /**
  * <p>
- * Helper class to generate sensor and process descriptions using the SensorML
- * model. It also defines standard properties that can easily be added to a
- * SensorML instance programmatically.
+ * Helper class to deal with process input/output structures.
  * </p>
  *
  * @author Alex Robin
  * @since May 16, 2017
  */
-public class SMLHelper extends SMLFactory
+public class SMLHelper
 {
-    public static final String LONG_NAME_DEF = SWEHelper.getPropertyUri("LongName");
-    public static final String LONG_NAME_LABEL = "Long Name";
-    public static final String SHORT_NAME_DEF = SWEHelper.getPropertyUri("ShortName");
-    public static final String SHORT_NAME_LABEL = "Short Name";
-    public static final String SERIAL_NUMBER_DEF = SWEHelper.getPropertyUri("SerialNumber");
-    public static final String SERIAL_NUMBER_LABEL = "Serial Number";
-    public static final String MODEL_NUMBER_DEF = SWEHelper.getPropertyUri("ModelNumber");
-    public static final String MODEL_NUMBER_LABEL = "Model Number";
-    public static final String MANUFACTURER_DEF = SWEHelper.getPropertyUri("Manufacturer");
-    public static final String MANUFACTURER_LABEL = "Manufacturer Name";
-    
     
     static class LinkTarget
     {
@@ -68,112 +49,6 @@ public class SMLHelper extends SMLFactory
             this.process = parent;
             this.component = component;
         }
-    }
-    
-    
-    AbstractProcess process;
-    
-    
-    public static SMLHelper createSimpleProcess(String uniqueID)
-    {
-        AbstractProcess process = new SMLFactory().newSimpleProcess();
-        process.setUniqueIdentifier(uniqueID);
-        return new SMLHelper(process);
-    }
-    
-    
-    public static SMLHelper createAggregateProcess(String uniqueID)
-    {
-        AggregateProcess process = new SMLFactory().newAggregateProcess();
-        process.setUniqueIdentifier(uniqueID);
-        return new SMLHelper(process);
-    }
-    
-    
-    public static SMLHelper createPhysicalComponent(String uniqueID)
-    {
-        PhysicalComponent process = new SMLFactory().newPhysicalComponent();
-        process.setUniqueIdentifier(uniqueID);
-        return new SMLHelper(process);
-    }
-    
-    
-    public static SMLHelper createPhysicalSystem(String uniqueID)
-    {
-        PhysicalSystem process = new SMLFactory().newPhysicalSystem();
-        process.setUniqueIdentifier(uniqueID);
-        return new SMLHelper(process);
-    }
-    
-    
-    public static SMLHelper edit(AbstractProcess process)
-    {
-        return new SMLHelper(process);
-    }
-    
-    
-    public SMLHelper(AbstractProcess process)
-    {
-        this.process = process;
-    }
-    
-    
-    public AbstractProcess getDescription()
-    {
-        return this.process;
-    }
-    
-    
-    public void addIdentifier(String label, String def, String value)
-    {
-        Asserts.checkNotNull(process);
-        
-        // ensure we have an identification section
-        OgcPropertyList<IdentifierList> sectionList = process.getIdentificationList();
-        IdentifierList idList;
-        if (sectionList.isEmpty())
-        {
-            idList = newIdentifierList();
-            sectionList.add(idList);
-        }
-        else
-            idList = sectionList.get(0);
-        
-        Term term = newTerm();
-        term.setDefinition(def);
-        term.setLabel(label);
-        term.setValue(value);
-        idList.addIdentifier(term);
-    }
-    
-    
-    public void addLongName(String value)
-    {
-        addIdentifier(LONG_NAME_LABEL, LONG_NAME_DEF, value);
-    }
-    
-    
-    public void addShortName(String value)
-    {
-        addIdentifier(SHORT_NAME_LABEL, SHORT_NAME_DEF, value);
-    }
-    
-    
-    public void addSerialNumber(String value)
-    {
-        addIdentifier(SERIAL_NUMBER_LABEL, SERIAL_NUMBER_DEF, value);
-    }
-    
-    
-    public void addModelNumber(String value)
-    {
-        addIdentifier(MODEL_NUMBER_LABEL, MODEL_NUMBER_DEF, value);
-    }
-    
-    
-    public void addManufacturerName(String value)
-    {
-        addIdentifier(MANUFACTURER_LABEL, MANUFACTURER_DEF, value);
     }
         
     
@@ -314,7 +189,7 @@ public class SMLHelper extends SMLFactory
      * Constructs the path to link to the specified component
      * @param process the process where the data component resides
      * @param component the component to link to
-     * @return
+     * @return Full path to input or output component
      */
     public static String getComponentPath(IProcessExec process, DataComponent component)
     {

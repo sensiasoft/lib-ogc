@@ -50,9 +50,10 @@ import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.isotc211.v2005.gco.impl.CodeListValueImpl;
 import org.isotc211.v2005.gmd.CIResponsibleParty;
-import org.vast.sensorML.SMLHelper;
+import org.vast.sensorML.SMLBuilders;
+import org.vast.sensorML.SMLFactory;
 import org.vast.sensorML.SMLUtils;
-import org.vast.swe.SWEHelper;
+import org.vast.swe.SWEBuilders;
 import org.xml.sax.InputSource;
 
 
@@ -167,23 +168,28 @@ public class TestSMLStaxBindingsV20 extends XMLTestCase
     {
         SMLUtils smlUtils = new SMLUtils(SMLUtils.V2_0);
         
-        SWEHelper sweFac = new SWEHelper();
+        SMLFactory smlFac = new SMLFactory();
         GMLFactory gmlFac = new GMLFactory();
         
-        SMLHelper smlFac = SMLHelper.createPhysicalSystem("urn:osh:uid");
-        PhysicalSystem system = (PhysicalSystem)smlFac.getDescription();
-        system.setId("MY_SYSTEM");
+        PhysicalSystem system = SMLBuilders.createPhysicalSystem()
+            .setID("MY_SYSTEM")
+            .setUniqueIdentifier("urn:osh:uid")
+            .build();
         
         // characteristics
         CharacteristicList mechSpecs = smlFac.newCharacteristicList();
-        Quantity weightSpec = sweFac.newQuantity("http://sweet.jpl.nasa.gov/2.3/propMass.owl#Mass", "Weight", null, "kg");
-        weightSpec.setValue(12.3);
+        Quantity weightSpec = SWEBuilders.newQuantity()
+            .setDefinition("http://sweet.jpl.nasa.gov/2.3/propMass.owl#Mass")
+            .setLabel("Weight")
+            .setUomCode("kg")
+            .setValue(12.3)
+            .build();
         mechSpecs.addCharacteristic("weight", weightSpec);
         system.addCharacteristics("mechanical", mechSpecs);
         
         // contact
         ContactList contacts = smlFac.newContactList();
-        CIResponsibleParty contact = smlFac.newResponsibleParty();
+        CIResponsibleParty contact = SMLBuilders.DEFAULT_GMD_FACTORY.newCIResponsibleParty();
         contact.setIndividualName("Gérard Blanquet");
         contact.setOrganisationName("Time Soft S.A.");
         contact.getContactInfo().getAddress().addDeliveryPoint("10 rue du Nord");
@@ -201,37 +207,47 @@ public class TestSMLStaxBindingsV20 extends XMLTestCase
         system.getInputList().add("rain", "http://remotedef.xml", null);
         
         // outputs
-        // create output record and set description                
-        DataRecord rec = sweFac.newDataRecord();
-        rec.setLabel("Weather Data Record");
-        rec.setDescription("Record of synchronous weather measurements");
+        // create output record and set description 
+        DataRecord rec = SWEBuilders.newDataRecord()
+            .setLabel("Weather Data Record")
+            .setDescription("Record of synchronous weather measurements")
+            .addIsoTimeStampUTC("time")
+            .addQuantityField("temp")
+                .setDefinition("http://mmisw.org/ont/cf/parameter/air_temperature")
+                .setLabel("Air Temperature")
+                .setUomCode("Cel")
+                .done()
+            .addQuantityField("press")
+                .setDefinition("http://mmisw.org/ont/cf/parameter/air_pressure_at_sea_level")
+                .setLabel("Air Pressure")
+                .setUomCode("mbar")
+                .done()
+            .addQuantityField("wind_speed")
+                .setDefinition("http://mmisw.org/ont/cf/parameter/wind_speed")
+                .setLabel("Wind Speed")
+                .setUomCode("km/h")
+                .done()
+            .addQuantityField("wind_dir")
+                .setDefinition("http://mmisw.org/ont/cf/parameter/wind_to_direction")
+                .setLabel("Wind Direction")
+                .setUomCode("deg")
+                .done()
+            .build();
                 
-        // sampling time
-        rec.addField("time", sweFac.newTimeStampIsoUTC());
-        
-        // temperature measurement
-        rec.addField("temp", sweFac.newQuantity("http://mmisw.org/ont/cf/parameter/air_temperature", "Air Temperature", null, "Cel"));
-        
-        // pressure
-        rec.addField("press", sweFac.newQuantity("http://mmisw.org/ont/cf/parameter/air_pressure_at_sea_level", "Air Pressure", null, "mbar"));
-        
-        // wind speed
-        rec.addField("wind_speed", sweFac.newQuantity("http://mmisw.org/ont/cf/parameter/wind_speed", "Wind Speed", null, "km/h"));
-        
-        // wind direction
-        rec.addField("wind_dir", sweFac.newQuantity("http://mmisw.org/ont/cf/parameter/wind_to_direction", "Wind Direction", null, "deg"));
-        
         // add accuracy info to temp output
-        Quantity acc = sweFac.newQuantity("http://mmisw.org/ont/cf/parameter/accuracy", "Accuracy", null, "%");
-        ((Quantity)rec.getField("temp")).addQuality(acc);
+        //Quantity acc = sweFac.newQuantity("http://mmisw.org/ont/cf/parameter/accuracy", "Accuracy", null, "%");
+        //((Quantity)rec.getField("temp")).addQuality(acc);
         
         // add as output
         system.addOutput("weather_data", rec);                      
         system.getOutputList().add("status_info", "http://remotedef.xml", null);
         
         // parameters
-        system.addParameter("samplingPeriod", sweFac.newQuantity("http://sensorml.com/ont/swe/property/SamplingPeriod", "Sampling Period", null, "s"));
-       
+        system.addParameter("samplingPeriod", SWEBuilders.newQuantity()
+            .setDefinition("http://sensorml.com/ont/swe/property/SamplingPeriod")
+            .setLabel("Sampling Period")
+            .setUomCode("s")
+            .build());       
         
         // reference frame
         SpatialFrame systemFrame = smlFac.newSpatialFrame();
@@ -256,13 +272,13 @@ public class TestSMLStaxBindingsV20 extends XMLTestCase
         PhysicalComponent sensor = smlFac.newPhysicalComponent();
         sensor.setId("SENS01");
         sensor.setTypeOf(new ReferenceImpl("http://www.mymanufacturer.net/mysensor001.xml"));
-        sensor.addOutput("temp", sweFac.newQuantity());
+        sensor.addOutput("temp", SWEBuilders.newQuantity().build());
         Settings config = smlFac.newSettings();
         config.addSetValue(smlFac.newValueSetting("parameters/samplingRate", "10.0"));
         config.addSetStatus(smlFac.newStatusSetting("parameters/active", Status.ENABLED));
         //config.addSetArrayValues(new ArraySettingImpl("parameters/calibrationTable", new EncodedValuesImpl("10.0, 20.0")));
         config.addSetMode(smlFac.newModeSetting("modes/choice1", "highAccuracy"));
-        AllowedValues newConstraint = sweFac.newAllowedValues();
+        AllowedValues newConstraint = SWEBuilders.DEFAULT_SWE_FACTORY.newAllowedValues();
         newConstraint.addValue(5.0);
         newConstraint.addValue(10.0);
         newConstraint.addValue(20.0);
