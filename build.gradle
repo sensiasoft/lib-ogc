@@ -5,6 +5,7 @@ allprojects  {
     mavenCentral()
   }
 
+  group = 'org.sensorhub'
   version = '1.5.0'
 }
 
