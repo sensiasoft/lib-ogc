@@ -631,7 +631,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         this.readCodeListValueTypeAttributes(attrMap, bean);
         
         String val = reader.getElementText();
-        if (val != null)
+        if (val != null && !val.trim().isEmpty())
             bean.setValue(trimStringValue(val));
         
         return bean;
@@ -669,7 +669,8 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     {
         this.writeCodeListValueTypeAttributes(writer, bean);
         
-        writer.writeCharacters(getStringValue(bean.getValue()));
+        if (bean.getValue() != null)
+            writer.writeCharacters(getStringValue(bean.getValue()));
     }
     
     

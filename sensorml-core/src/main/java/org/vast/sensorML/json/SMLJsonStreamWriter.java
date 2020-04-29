@@ -16,6 +16,7 @@ package org.vast.sensorML.json;
 
 import java.io.OutputStream;
 import org.vast.json.JsonStreamException;
+import org.vast.ogc.gml.GMLStaxBindings;
 import org.vast.sensorML.SMLStaxBindings;
 import org.vast.swe.json.SWEJsonStreamWriter;
 
@@ -31,7 +32,7 @@ public class SMLJsonStreamWriter extends SWEJsonStreamWriter
                         "keywords", "identification", "classification",
                         "validTime", "securityConstraints", "legalConstraints",
                         "characteristics", "capabilities", "contacts",
-                        "documentation", "history", "modes", "position",
+                        "documentation", "history", "modes", "mode", "position",
                         "localReferenceFrame", "localTimeFrame", "timePosition",
                         "keyword", "input", "output", "parameter", "identifier",
                         "classifier", "characteristic", "capability",
@@ -39,6 +40,18 @@ public class SMLJsonStreamWriter extends SWEJsonStreamWriter
                         "connection", "component", "axis", "algorithm",
                         "setValue", "setArrayValues", "setConstraint",
                         "setMode", "setStatus");
+        
+        addSpecialNames(arrays, GMLStaxBindings.NS_URI, "name");
+    }
+    
+    
+    @Override
+    protected String getPluralName(String localName)
+    {
+        if ("capability".equals(localName))
+            return "capabilities";
+        else
+            return super.getPluralName(localName);
     }
     
     

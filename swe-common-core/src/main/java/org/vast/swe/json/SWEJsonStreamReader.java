@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import org.vast.json.JsonStreamException;
 import org.vast.json.JsonStreamReader;
+import org.vast.swe.SWEStaxBindings;
 
 
 public class SWEJsonStreamReader extends JsonStreamReader
@@ -37,8 +38,8 @@ public class SWEJsonStreamReader extends JsonStreamReader
         
         // XML attributes
         addSpecialNames(xmlAttNames,
-                "name", "href", "role", "arcrole", "code", "id", "definition", "referenceFrame",
-                "localFrame", "referenceTime", "axisID", "updatable", "optional", "reason",
+                "name", "href", "title", "role", "arcrole", "code", "reason", "id", "definition",
+                "referenceFrame", "localFrame", "referenceTime", "axisID", "updatable", "optional",
                 "collapseWhiteSpaces", "decimalSeparator", "tokenSeparator", "blockSeparator",
                 "byteOrder", "byteEncoding", "byteLength", "significantBits", "bitLength", "dataType", "ref",
                 "compression", "encryption", "paddingBytes-after", "paddingBytes-before", "byteLength");
@@ -117,6 +118,13 @@ public class SWEJsonStreamReader extends JsonStreamReader
             parentName = currentContext.parent.eltName;
         
         return isSpecialPath(valueArrays, parentName, name);
+    }
+
+
+    @Override
+    public String getNamespaceURI()
+    {
+        return SWEStaxBindings.NS_URI;
     }
 
 }

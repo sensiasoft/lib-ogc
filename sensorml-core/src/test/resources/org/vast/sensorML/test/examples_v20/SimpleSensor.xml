@@ -11,6 +11,7 @@
    <!-- ================================================= -->
    <gml:description>Thermometer on the window of the Cass Building, Room 315</gml:description>
    <gml:identifier codeSpace="uid">urn:icd:stations:FR8766</gml:identifier>
+   <gml:name>Thermometer Room 315</gml:name>
    <!-- ================================================= -->
    <!--                  System Identifiers               -->
    <!-- ================================================= -->

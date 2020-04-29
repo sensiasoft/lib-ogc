@@ -323,7 +323,6 @@
    <sml:localReferenceFrame>
       <sml:SpatialFrame>
          <swe:label>Temperature Detector Spatial Frame</swe:label>
-         <swe:description></swe:description>
          <sml:origin>origin is at the tip of the thermometer</sml:origin>
          <sml:axis name="x">undetermined, in the plane normal to z</sml:axis>
          <sml:axis name="y">undetermined, in the plane normal to z</sml:axis>

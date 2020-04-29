@@ -122,7 +122,10 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
     @Override
     protected String getPluralName(String localName)
     {
-        return super.getPluralName(localName);
+        if ("quality".equals(localName))
+            return localName;
+        else
+            return super.getPluralName(localName);
     }
     
     

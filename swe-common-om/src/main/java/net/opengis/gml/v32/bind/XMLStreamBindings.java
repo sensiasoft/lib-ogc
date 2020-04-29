@@ -1505,8 +1505,11 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         {
             CodeWithAuthority identifier = this.readCodeType(reader);
             if (identifier != null)
+            {
+                if (!identifier.isSetCodeSpace())
+                    identifier.setCodeSpace("uid"); // defaults to UID identifier type
                 bean.setIdentifier(identifier);
-            
+            }
             reader.nextTag();
         }
         

@@ -3655,7 +3655,8 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     {
         this.writeNilValueAttributes(writer, bean);
         
-        writer.writeCharacters(getStringValue(bean.getValue()));
+        if (bean.getValue() != null)
+            writer.writeCharacters(getStringValue(bean.getValue()));
     }
     
     

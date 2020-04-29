@@ -175,7 +175,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
         if (loc.getLineNumber() > 0)
             return " at line " + loc.getLineNumber() + ", col " + loc.getColumnNumber();
         else
-            return " at " + loc.getPublicId();
+            return " at " + loc.getSystemId();
     }
     
     
