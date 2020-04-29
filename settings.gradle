@@ -11,10 +11,10 @@ rootProject.name = 'lib-ogc'
   }
 }*/
 
-include ':swe-common-core'
-include ':swe-common-om'
-include ':sensorml-core'
-include ':ogc-services-common'
-include ':ogc-services-swe'
-include ':ogc-services-sos'
-include ':ogc-services-sps'
+include 'swe-common-core'
+include 'swe-common-om'
+include 'sensorml-core'
+include 'ogc-services-common'
+include 'ogc-services-swe'
+include 'ogc-services-sos'
+include 'ogc-services-sps'
