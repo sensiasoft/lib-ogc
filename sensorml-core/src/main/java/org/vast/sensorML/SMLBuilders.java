@@ -7,9 +7,9 @@ at http://mozilla.org/MPL/2.0/.
 Software distributed under the License is distributed on an "AS IS" basis,
 WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the License.
- 
+
 Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
- 
+
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.sensorML;
@@ -63,8 +63,8 @@ public class SMLBuilders
     public static SWEFactory DEFAULT_SWE_FACTORY = new SWEFactory();
     public static org.isotc211.v2005.gmd.Factory DEFAULT_GMD_FACTORY = new org.isotc211.v2005.gmd.impl.GMDFactory();
     public static org.isotc211.v2005.gco.Factory DEFAULT_GCO_FACTORY = new org.isotc211.v2005.gco.impl.GCOFactory();
-    
-    
+
+
     /**
      * Helper method to edit a SensorML process in-place using a builder
      * @param <B> Type of expected builder
@@ -75,96 +75,96 @@ public class SMLBuilders
     public static <B extends AbstractProcessBuilder<?,?>> B edit(AbstractProcess process)
     {
         Asserts.checkNotNull(process, AbstractProcess.class);
-        
+
         if (process instanceof PhysicalSystem)
-            return (B)createPhysicalSystem();
+            return (B)newPhysicalSystem();
         else if (process instanceof PhysicalComponent)
-            return (B)createPhysicalComponent();
+            return (B)newPhysicalComponent();
         else if (process instanceof AggregateProcess)
-            return (B)createAggregateProcess();
+            return (B)newAggregateProcess();
         else if (process instanceof SimpleProcess)
-            return (B)createSimpleProcess();
+            return (B)newSimpleProcess();
         else
             throw new IllegalArgumentException("Unsupported process type: " + process.getClass().getCanonicalName());
     }
-    
-    
+
+
     /**
      * @return A builder to create a new SimpleProcess object
      */
-    public static SimpleProcessBuilder createSimpleProcess()
-    {        
-        return createSimpleProcess(DEFAULT_SML_FACTORY);
+    public static SimpleProcessBuilder newSimpleProcess()
+    {
+        return newSimpleProcess(DEFAULT_SML_FACTORY);
     }
-    
-    
+
+
     /**
      * @param fac Factory to use to create SML objects
      * @return A builder to create a new SimpleProcess object
      */
-    public static SimpleProcessBuilder createSimpleProcess(SMLFactory fac)
+    public static SimpleProcessBuilder newSimpleProcess(SMLFactory fac)
     {
         return new SimpleProcessBuilder(fac);
     }
-    
-    
+
+
     /**
      * @return A builder to create a new AggregateProcess object
      */
-    public static AggregateProcessBuilder createAggregateProcess()
-    {        
-        return createAggregateProcess(DEFAULT_SML_FACTORY);
+    public static AggregateProcessBuilder newAggregateProcess()
+    {
+        return newAggregateProcess(DEFAULT_SML_FACTORY);
     }
-    
-    
+
+
     /**
      * @param fac Factory to use to create SML objects
      * @return A builder to create a new AggregateProcess object
      */
-    public static AggregateProcessBuilder createAggregateProcess(SMLFactory fac)
+    public static AggregateProcessBuilder newAggregateProcess(SMLFactory fac)
     {
         return new AggregateProcessBuilder(fac);
     }
-    
-    
+
+
     /**
      * @return A builder to create a new PhysicalComponent object
      */
-    public static PhysicalComponentBuilder createPhysicalComponent()
-    {        
-        return createPhysicalComponent(DEFAULT_SML_FACTORY);
+    public static PhysicalComponentBuilder newPhysicalComponent()
+    {
+        return newPhysicalComponent(DEFAULT_SML_FACTORY);
     }
-    
-    
+
+
     /**
      * @param fac Factory to use to create SML objects
      * @return A builder to create a new PhysicalComponent object
      */
-    public static PhysicalComponentBuilder createPhysicalComponent(SMLFactory fac)
+    public static PhysicalComponentBuilder newPhysicalComponent(SMLFactory fac)
     {
         return new PhysicalComponentBuilder(fac);
     }
-    
-    
+
+
     /**
      * @return A builder to create a new PhysicalSystem object
      */
-    public static PhysicalSystemBuilder createPhysicalSystem()
-    {        
-        return createPhysicalSystem(DEFAULT_SML_FACTORY);
+    public static PhysicalSystemBuilder newPhysicalSystem()
+    {
+        return newPhysicalSystem(DEFAULT_SML_FACTORY);
     }
-    
-    
+
+
     /**
      * @param fac Factory to use to create SML objects
      * @return A builder to create a new PhysicalSystem object
      */
-    public static PhysicalSystemBuilder createPhysicalSystem(SMLFactory fac)
+    public static PhysicalSystemBuilder newPhysicalSystem(SMLFactory fac)
     {
         return new PhysicalSystemBuilder(fac);
     }
-    
-    
+
+
     /*
      * Base builder for all described objects
      */
@@ -177,13 +177,13 @@ public class SMLBuilders
         SMLFactory smlFac;
         SWEFactory sweFac;
         Consumer<T> visitor;
-        
+
         protected DescribedObjectBuilder(SMLFactory fac)
         {
             this.smlFac = fac;
             this.sweFac = DEFAULT_SWE_FACTORY;
         }
-        
+
         /**
          * Use a custom factory to create SWE data components
          * @param fac
@@ -194,7 +194,7 @@ public class SMLBuilders
             this.sweFac = fac;
             return (B)this;
         }
-        
+
         /**
          * Start from an existing instance
          * @param obj instance of DescribedObject to start from.
@@ -206,51 +206,51 @@ public class SMLBuilders
             this.instance = obj;
             return (B)this;
         }
-        
+
         /**
          * Sets the process ID
          * @param id
          * @return This builder for chaining
          */
-        public B setID(String id)
+        public B id(String id)
         {
             instance.setId(id);
             return (B)this;
         }
-        
+
         /**
          * Sets the process name
          * @param name
          * @return This builder for chaining
          */
-        public B setName(String name)
+        public B name(String name)
         {
             instance.setName(name);
             return (B)this;
         }
-        
+
         /**
          * Sets the process description
          * @param description
          * @return This builder for chaining
          */
-        public B setDescription(String description)
+        public B description(String description)
         {
             instance.setDescription(description);
             return (B)this;
         }
-        
+
         /**
          * Sets the process unique identifier
          * @param uid
          * @return This builder for chaining
          */
-        public B setUniqueIdentifier(String uid)
+        public B uniqueID(String uid)
         {
             Asserts.checkNotNull(uid, "uid");
             return (B)this;
         }
-        
+
         /**
          * Adds a custom identifier
          * @param label Label of identifier (e.g. "Serial Number")
@@ -263,7 +263,7 @@ public class SMLBuilders
             Asserts.checkNotNull(label, "label");
             Asserts.checkNotNull(def, "definition");
             Asserts.checkNotNull(value, "value");
-            
+
             // ensure we have an identification section
             OgcPropertyList<IdentifierList> sectionList = instance.getIdentificationList();
             IdentifierList idList;
@@ -274,7 +274,7 @@ public class SMLBuilders
             }
             else
                 idList = sectionList.get(0);
-            
+
             Term term = smlFac.newTerm();
             term.setDefinition(def);
             term.setLabel(label);
@@ -282,13 +282,13 @@ public class SMLBuilders
             idList.addIdentifier(term);
             return (B)this;
         }
-        
+
         public B addDocumentList(DocumentList docList)
         {
             instance.addDocumentation(docList);
             return (B)this;
         }
-        
+
         public NestedDocumentListBuilder<B> addDocumentList()
         {
             return new NestedDocumentListBuilder<B>((B)this, smlFac)
@@ -301,31 +301,31 @@ public class SMLBuilders
                 }
             };
         }
-        
+
         /**
          * Adds a "Short Name" identifier
          * @param value
          * @return This builder for chaining
          */
-        public B setShortName(String value)
+        public B shortName(String value)
         {
             addIdentifier(SHORT_NAME_LABEL, SHORT_NAME_DEF, value);
             return (B)this;
         }
-        
+
         /**
          * Adds a "Long Name" identifier
          * @param value
          * @return This builder for chaining
          */
-        public B setLongName(String value)
+        public B longName(String value)
         {
             addIdentifier(LONG_NAME_LABEL, LONG_NAME_DEF, value);
             return (B)this;
         }
     }
-    
-    
+
+
     /*
      * Base builder for all process types
      */
@@ -335,47 +335,48 @@ public class SMLBuilders
             T extends AbstractProcess>
         extends DescribedObjectBuilder<B, T>
     {
-                
+
         protected AbstractProcessBuilder(SMLFactory fac)
         {
             super(fac);
         }
-        
+
         /**
          * Adds a "Serial Number" identifier
          * @param value
          * @return This builder for chaining
          */
-        public B setSerialNumber(String value)
+        public B serialNumber(String value)
         {
             addIdentifier(SERIAL_NUMBER_LABEL, SERIAL_NUMBER_DEF, value);
             return (B)this;
         }
-        
+
         /**
          * Adds a "Model Number" identifier
          * @param value
          * @return This builder for chaining
          */
-        public B setModelNumber(String value)
+        public B modelNumber(String value)
         {
             addIdentifier(MODEL_NUMBER_LABEL, MODEL_NUMBER_DEF, value);
             return (B)this;
         }
-        
+
         /**
          * Adds a "Manufacturer" identifier
          * @param value
          * @return This builder for chaining
          */
-        public B setManufacturerName(String value)
+        public B manufacturerName(String value)
         {
             addIdentifier(MANUFACTURER_LABEL, MANUFACTURER_DEF, value);
             return (B)this;
         }
-        
+
         /**
          * Validate the process before it is built
+         * @return This builder for chaining
          * @throws SMLException
          */
         public B validate() throws SMLException
@@ -385,8 +386,8 @@ public class SMLBuilders
             return (B)this;
         }
     }
-    
-    
+
+
     /**
      * <p>
      * Builder class for SimpleProcess
@@ -395,15 +396,15 @@ public class SMLBuilders
      * @author Alex Robin
      * @date Apr 18, 2020
      */
-    public static class SimpleProcessBuilder extends BaseSimpleProcessBuilder<SimpleProcessBuilder, SimpleProcess>    
+    public static class SimpleProcessBuilder extends BaseSimpleProcessBuilder<SimpleProcessBuilder, SimpleProcess>
     {
         protected SimpleProcessBuilder(SMLFactory fac)
         {
             super(fac);
             this.instance = fac.newSimpleProcess();
-        }        
+        }
     }
-    
+
     @SuppressWarnings("unchecked")
     public abstract static class BaseSimpleProcessBuilder<
             B extends BaseSimpleProcessBuilder<B, T>,
@@ -412,27 +413,27 @@ public class SMLBuilders
     {
         protected BaseSimpleProcessBuilder(SMLFactory fac)
         {
-            super(fac);            
+            super(fac);
         }
-        
-        public B setMethodURI(String uri)
+
+        public B methodURI(String uri)
         {
             instance.getMethodProperty().setHref(uri);
             return (B)this;
         }
-        
-        public B setMethod(ProcessMethod method)
+
+        public B method(ProcessMethod method)
         {
             instance.setMethod(method);;
             return (B)this;
         }
     }
-    
+
     /* Nested builder for use within another builder */
     public static abstract class NestedSimpleProcessBuilder<B> extends BaseSimpleProcessBuilder<NestedSimpleProcessBuilder<B>, SimpleProcess> implements NestedBuilder<B>
     {
         B parent;
-        
+
         protected NestedSimpleProcessBuilder(B parent, SMLFactory fac)
         {
             super(fac);
@@ -440,8 +441,8 @@ public class SMLBuilders
             this.parent = parent;
         }
     }
-    
-    
+
+
     /**
      * <p>
      * Builder class for AggregateProcess
@@ -450,15 +451,15 @@ public class SMLBuilders
      * @author Alex Robin
      * @date Apr 28, 2020
      */
-    public static class AggregateProcessBuilder extends BaseAggregateProcessBuilder<AggregateProcessBuilder, AggregateProcess>    
+    public static class AggregateProcessBuilder extends BaseAggregateProcessBuilder<AggregateProcessBuilder, AggregateProcess>
     {
         protected AggregateProcessBuilder(SMLFactory fac)
         {
             super(fac);
             this.instance = fac.newAggregateProcess();
-        }        
+        }
     }
-    
+
     @SuppressWarnings("unchecked")
     public abstract static class BaseAggregateProcessBuilder<
             B extends BaseAggregateProcessBuilder<B, T>,
@@ -467,15 +468,15 @@ public class SMLBuilders
     {
         protected BaseAggregateProcessBuilder(SMLFactory fac)
         {
-            super(fac);            
+            super(fac);
         }
-        
+
         public B addComponent(String name, AbstractProcess p)
         {
             instance.addComponent(name, p);
             return (B)this;
         }
-        
+
         public NestedSimpleProcessBuilder<B> addSimpleProcess(String name)
         {
             return new NestedSimpleProcessBuilder<B>((B)this, smlFac)
@@ -488,7 +489,7 @@ public class SMLBuilders
                 }
             };
         }
-        
+
         public NestedAggregateProcessBuilder<B> addNestedAggregateProcess(String name)
         {
             return new NestedAggregateProcessBuilder<B>((B)this, smlFac)
@@ -502,12 +503,12 @@ public class SMLBuilders
             };
         }
     }
-    
+
     /* Nested builder for use within another builder */
     public static abstract class NestedAggregateProcessBuilder<B> extends BaseAggregateProcessBuilder<NestedAggregateProcessBuilder<B>, AggregateProcess> implements NestedBuilder<B>
     {
         B parent;
-        
+
         protected NestedAggregateProcessBuilder(B parent, SMLFactory fac)
         {
             super(fac);
@@ -515,8 +516,8 @@ public class SMLBuilders
             this.parent = parent;
         }
     }
-    
-    
+
+
     /**
      * <p>
      * Builder class for PhysicalComponent
@@ -525,15 +526,15 @@ public class SMLBuilders
      * @author Alex Robin
      * @date Apr 18, 2020
      */
-    public static class PhysicalComponentBuilder extends BasePhysicalComponentBuilder<PhysicalComponentBuilder>    
+    public static class PhysicalComponentBuilder extends BasePhysicalComponentBuilder<PhysicalComponentBuilder>
     {
         protected PhysicalComponentBuilder(SMLFactory fac)
         {
             super(fac);
             this.instance = fac.newPhysicalComponent();
-        }        
-    }    
-    
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public abstract static class BasePhysicalComponentBuilder<B extends BasePhysicalComponentBuilder<B>> extends BaseSimpleProcessBuilder<B, PhysicalComponent>
     {
@@ -542,19 +543,19 @@ public class SMLBuilders
             super(fac);
             this.instance = fac.newPhysicalComponent();
         }
-        
+
         public B attachedTo(String platformUri)
         {
             instance.setAttachedTo(new ReferenceImpl(platformUri));
             return (B)this;
         }
-        
-        public B setLocation(Vector v)
+
+        public B location(Vector v)
         {
             instance.addPositionAsVector(v);
             return (B)this;
         }
-        
+
         public NestedVectorBuilder<B> addLocation()
         {
             return new NestedVectorBuilder<B>((B)this, sweFac)
@@ -562,18 +563,18 @@ public class SMLBuilders
                 @Override
                 public B done()
                 {
-                    BasePhysicalComponentBuilder.this.setLocation(build());
+                    BasePhysicalComponentBuilder.this.location(build());
                     return (B)BasePhysicalComponentBuilder.this;
                 }
             };
         }
     }
-    
+
     /* Nested builder for use within another builder */
     public static abstract class NestedPhysicalComponentBuilder<B> extends BasePhysicalComponentBuilder<NestedPhysicalComponentBuilder<B>> implements NestedBuilder<B>
     {
         B parent;
-        
+
         protected NestedPhysicalComponentBuilder(B parent, SMLFactory fac)
         {
             super(fac);
@@ -581,8 +582,8 @@ public class SMLBuilders
             this.parent = parent;
         }
     }
-    
-    
+
+
     /**
      * <p>
      * Builder class for PhysicalSystem
@@ -591,15 +592,15 @@ public class SMLBuilders
      * @author Alex Robin
      * @date Apr 18, 2020
      */
-    public static class PhysicalSystemBuilder extends BasePhysicalSystemBuilder<PhysicalSystemBuilder>    
+    public static class PhysicalSystemBuilder extends BasePhysicalSystemBuilder<PhysicalSystemBuilder>
     {
         protected PhysicalSystemBuilder(SMLFactory fac)
         {
             super(fac);
             this.instance = fac.newPhysicalSystem();
-        }        
-    }    
-    
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public abstract static class BasePhysicalSystemBuilder<B extends BasePhysicalSystemBuilder<B>> extends BaseAggregateProcessBuilder<B, PhysicalSystem>
     {
@@ -607,20 +608,20 @@ public class SMLBuilders
         {
             super(fac);
             this.instance = fac.newPhysicalSystem();
-        }        
-        
+        }
+
         public B attachedTo(String platformUri)
         {
             instance.setAttachedTo(new ReferenceImpl(platformUri));
             return (B)this;
         }
-        
-        public B setLocation(Vector v)
+
+        public B location(Vector v)
         {
             instance.addPositionAsVector(v);
             return (B)this;
         }
-        
+
         public NestedVectorBuilder<B> addLocation()
         {
             return new NestedVectorBuilder<B>((B)this, sweFac)
@@ -628,12 +629,12 @@ public class SMLBuilders
                 @Override
                 public B done()
                 {
-                    BasePhysicalSystemBuilder.this.setLocation(build());
+                    BasePhysicalSystemBuilder.this.location(build());
                     return (B)BasePhysicalSystemBuilder.this;
                 }
             };
         }
-        
+
         public NestedPhysicalComponentBuilder<B> withPhysicalComponent(String name)
         {
             return new NestedPhysicalComponentBuilder<B>((B)this, smlFac)
@@ -646,7 +647,7 @@ public class SMLBuilders
                 }
             };
         }
-        
+
         public NestedPhysicalSystemBuilder<B> withNestedPhysicalsystem(String name)
         {
             return new NestedPhysicalSystemBuilder<B>((B)this, smlFac)
@@ -660,12 +661,12 @@ public class SMLBuilders
             };
         }
     }
-    
+
     /* Nested builder for use within another builder */
     public static abstract class NestedPhysicalSystemBuilder<B> extends BasePhysicalSystemBuilder<NestedPhysicalSystemBuilder<B>> implements NestedBuilder<B>
     {
         B parent;
-        
+
         protected NestedPhysicalSystemBuilder(B parent, SMLFactory fac)
         {
             super(fac);
