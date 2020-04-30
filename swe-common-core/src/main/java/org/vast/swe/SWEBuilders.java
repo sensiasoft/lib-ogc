@@ -1561,22 +1561,22 @@ public class SWEBuilders
             //return (B)this;
         }
 
-        public B size(int numElts)
+        public B withFixedSize(int numElts)
         {
             instance.setElementCount(newCount()
                 .value(numElts).build());
             return (B)this;
         }
 
-        public B withElementType(String name, DataComponent field)
-        {
-            instance.setElementType(name, field);
-            return (B)this;
-        }
-
         public B withVariableSize(String sizeComponentID)
         {
             instance.getElementCountProperty().setHref("#" + sizeComponentID);
+            return (B)this;
+        }
+
+        public B withElementType(String name, DataComponent field)
+        {
+            instance.setElementType(name, field);
             return (B)this;
         }
 
