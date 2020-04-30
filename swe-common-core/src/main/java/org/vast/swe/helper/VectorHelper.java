@@ -29,7 +29,7 @@ import net.opengis.swe.v20.Vector;
  * @author Alex Robin
  * @since March 2016
  */
-public class VectorHelper
+public class VectorHelper extends SWEHelper
 {
     public static final String DEF_UNIT_VECTOR = SWEHelper.getPropertyUri("UnitVector");
     public static final String DEF_ROW = SWEHelper.getPropertyUri("Row");
@@ -289,7 +289,7 @@ public class VectorHelper
      */
     public Matrix newMatrix(int nRows, int nCols)
     {
-        return newMatrix(nRows, nCols, null, null);
+        return newMatrix(null, null, nRows, nCols);
     }
 
 
@@ -301,7 +301,7 @@ public class VectorHelper
      * @param nCols number of columns
      * @return the new Matrix component object
      */
-    public Matrix newMatrix(int nRows, int nCols, String def, String refFrame)
+    public Matrix newMatrix(String def, String refFrame, int nRows, int nCols)
     {
         Matrix m = SWEBuilders.newMatrix()
             .definition(def)
@@ -325,6 +325,6 @@ public class VectorHelper
      */
     public Matrix newRotationMatrix(String refFrame)
     {
-        return newMatrix(3, 3, DEF_ROT_MATRIX, refFrame);
+        return newMatrix(DEF_ROT_MATRIX, refFrame, 3, 3);
     }
 }

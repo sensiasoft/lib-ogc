@@ -1257,6 +1257,12 @@ public class SWEBuilders
             return (B)this;
         }
 
+        public B localFrame(String localFrame)
+        {
+            instance.setLocalFrame(localFrame);
+            return (B)this;
+        }
+
         public B addCoordinate(String name, Quantity coord)
         {
             instance.addCoordinateAsQuantity(name, coord);
@@ -1764,6 +1770,12 @@ public class SWEBuilders
         public B refFrame(String refFrame)
         {
             instance.setReferenceFrame(refFrame);
+            return (B)this;
+        }
+
+        public B localFrame(String localFrame)
+        {
+            instance.setLocalFrame(localFrame);
             return (B)this;
         }
 

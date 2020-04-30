@@ -130,7 +130,7 @@ public class TestVectorHelper
     public void testCreateMatrixWithSemantics() throws Exception
     {
         String def = SWEHelper.getPropertyUri("MyMatrix");
-        Matrix m = fac.newMatrix(2, 5, def, "#SENSOR_FRAME");
+        Matrix m = fac.newMatrix(def, "#SENSOR_FRAME", 2, 5);
         utils.writeComponent(System.out, m, false, true);
 
         assertEquals(2, m.getElementCount().getData().getIntValue());

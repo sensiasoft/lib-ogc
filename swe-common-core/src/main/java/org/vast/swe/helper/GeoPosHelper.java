@@ -245,6 +245,18 @@ public class GeoPosHelper extends VectorHelper
 
 
     /**
+     * Default version of {@link #newEulerOrientationECEF(String, String)} with
+     * units set to degrees
+     * @param def
+     * @return the new Vector component object
+     */
+    public Vector newEulerOrientationECEF(String def)
+    {
+        return newEulerOrientationECEF(def, "deg");
+    }
+
+
+    /**
      * Creates an orientation vector component composed of 3 Euler angles expressed in
      * Earth-Centered-Earth-Fixed (ECEF) frame (order of rotations is X, Y, Z)
      * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_EULER} is used)
