@@ -29,19 +29,19 @@ public class TestSweBuilders
     public void testCreateQuantities() throws Exception
     {
         utils.writeComponent(System.out, SWEBuilders.newQuantity()
-            .setDefinition(SWEHelper.getPropertyUri("AirTemperature"))
-            .setLabel("Air Temperature")
-            .setDescription("Temperature of air in the garden")
-            .setUomCode("Cel")
+            .definition(SWEHelper.getPropertyUri("AirTemperature"))
+            .label("Air Temperature")
+            .description("Temperature of air in the garden")
+            .uomCode("Cel")
             .build(), false, true);
         
         System.out.println();
         System.out.println();
         
         utils.writeComponent(System.out, SWEBuilders.newQuantity()
-            .setDefinition(SWEHelper.getPropertyUri("LinearAcceleration"))
-            .setLabel("Acceleration")
-            .setUomCode("m/s2")
+            .definition(SWEHelper.getPropertyUri("LinearAcceleration"))
+            .label("Acceleration")
+            .uomCode("m/s2")
             .build(), false, true);
         
         System.out.println();
@@ -61,22 +61,22 @@ public class TestSweBuilders
     public void testCreateWeatherRecord() throws Exception
     {
         utils.writeComponent(System.out, SWEBuilders.newDataRecord()
-            .setLabel("Weather Record")
-            .addIsoTimeStampUTC("time")
+            .label("Weather Record")
+            .addSamplingTimeIsoUTC("time")
             .addQuantityField("temp")
-                .setDefinition(SWEHelper.getPropertyUri("AirTemperature"))
-                .setLabel("Air Temperature")
-                .setUomCode("Cel")
+                .definition(SWEHelper.getPropertyUri("AirTemperature"))
+                .label("Air Temperature")
+                .uomCode("Cel")
                 .done()
             .addQuantityField("press")
-                .setDefinition(SWEHelper.getPropertyUri("AtmosphericPressure"))
-                .setLabel("Air Pressure")
-                .setUomCode("hPa")
+                .definition(SWEHelper.getPropertyUri("AtmosphericPressure"))
+                .label("Air Pressure")
+                .uomCode("hPa")
                 .done()
             .addQuantityField("windSpeed")
-                .setDefinition(SWEHelper.getPropertyUri("WindSpeed"))
-                .setLabel("Wind Speed")
-                .setUomCode("km/h")
+                .definition(SWEHelper.getPropertyUri("WindSpeed"))
+                .label("Wind Speed")
+                .uomCode("km/h")
                 .done()
             .build(), false, true);
         
@@ -89,18 +89,18 @@ public class TestSweBuilders
     public void testCreateMixedTypeRecord() throws Exception
     {
         utils.writeComponent(System.out, SWEBuilders.newDataRecord()
-            .setLabel("Mixed Type Record")
-            .addIsoTimeStampUTC("time")
+            .label("Mixed Type Record")
+            .addSamplingTimeIsoUTC("time")
             .addBooleanField("boolean")
-                .setDefinition(SWEHelper.getPropertyUri("AboveThreshold"))
+                .definition(SWEHelper.getPropertyUri("AboveThreshold"))
                 .done()
             .addCategoryField("cat")
-                .setDefinition(SWEHelper.getPropertyUri("Species"))
-                .setLabel("Species Name")
+                .definition(SWEHelper.getPropertyUri("Species"))
+                .label("Species Name")
                 .done()
             .addTextField("text")
-                .setDefinition(SWEHelper.getPropertyUri("VIN"))
-                .setLabel("Vehicle Identification Number")
+                .definition(SWEHelper.getPropertyUri("VIN"))
+                .label("Vehicle Identification Number")
                 .visitor(t -> System.out.println(t + "@" + System.identityHashCode(t)))
                 .done()
             .build(), false, true);
@@ -114,20 +114,20 @@ public class TestSweBuilders
     public void testNestedRecords() throws Exception
     {
         utils.writeComponent(System.out, SWEBuilders.newDataRecord()
-            .setLabel("Parent Record")
-            .addIsoTimeStampUTC("time")
+            .label("Parent Record")
+            .addSamplingTimeIsoUTC("time")
             .addBooleanField("boolean")
-                .setDefinition(SWEHelper.getPropertyUri("Flag"))
+                .definition(SWEHelper.getPropertyUri("Flag"))
                 .done()
             .addNestedRecord("child")
-                .setDefinition(SWEHelper.getPropertyUri("VIN"))
-                .setLabel("Child Record")
+                .definition(SWEHelper.getPropertyUri("VIN"))
+                .label("Child Record")
                 .addTimeField("scan_start")
-                    .setUomCode("ms")
-                    .setValue(10245)
+                    .uomCode("ms")
+                    .value(10245)
                     .done()
                 .addCountField("num_samples")
-                    .setValue(2400)
+                    .value(2400)
                     .done()
                 .done()
             .build(), false, true);

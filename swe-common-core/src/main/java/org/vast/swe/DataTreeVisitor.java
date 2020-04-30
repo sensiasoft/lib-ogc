@@ -93,7 +93,8 @@ public abstract class DataTreeVisitor
 	
 	/**
 	 * Process the next scalar element in the stream
-	 * @throws Exception 
+	 * @throws CDMException 
+	 * @throws IOException 
 	 */
 	public void processNextElement() throws CDMException, IOException
 	{

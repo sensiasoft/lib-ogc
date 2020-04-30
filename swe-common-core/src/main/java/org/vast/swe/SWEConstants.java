@@ -4,20 +4,20 @@
  1.1 (the "License"); you may not use this file except in compliance with
  the License. You may obtain a copy of the License at
  http://www.mozilla.org/MPL/MPL-1.1.html
- 
+
  Software distributed under the License is distributed on an "AS IS" basis,
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
- 
+
  The Original Code is the "OGC Service Framework".
- 
+
  The Initial Developer of the Original Code is Spotimage S.A.
  Portions created by the Initial Developer are Copyright (C) 2007
  the Initial Developer. All Rights Reserved.
- 
- Contributor(s): 
+
+ Contributor(s):
     Alexandre Robin <alexandre.robin@spotimage.fr>
- 
+
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.swe;
 
@@ -34,7 +34,7 @@ public class SWEConstants
     public static final String URN_PREFIX = "urn:";
     public static final String HTTP_PREFIX = "http://";
     public static final String OGC_DEF_URI = "http://www.opengis.net/def/";
-	
+
     // nil values
 	public static final String OGC_NIL_URI = OGC_DEF_URI + "nil/OGC/0/";
     public static final String NIL_ABOVE_MAX = OGC_NIL_URI + "AboveDetectionRange";
@@ -44,12 +44,12 @@ public class SWEConstants
     public static final String NIL_TEMPLATE = OGC_NIL_URI + "template";
     public static final String NIL_UNKNOWN = OGC_NIL_URI + "unknown";
     public static final String NIL_WITHHELD = OGC_NIL_URI + "withheld";
-    
+
     // common temporal reference systems
     public static final String TIME_REF_UTC = OGC_DEF_URI + "trs/BIPM/0/UTC";
     public static final String TIME_REF_GPS = OGC_DEF_URI + "trs/USNO/0/GPS";
     public static final String TIME_REF_TAI = OGC_DEF_URI + "trs/BIPM/0/TAI";
-    
+
     // common spatial reference frames
     public static final String OGC_CRS_URI = OGC_DEF_URI + "crs/";
     public static final String EPSG_URI_PREFIX = OGC_CRS_URI + "EPSG/0/";
@@ -61,10 +61,10 @@ public class SWEConstants
     public static final String REF_FRAME_ECI_M50 = OGC_CRS_URI + "IERS/0/ECI_M50";
     public static final String REF_FRAME_ENU = OGC_CRS_URI + "OGC/0/ENU";
     public static final String REF_FRAME_NED = OGC_CRS_URI + "OGC/0/NED";
-    
+
     // common vertical datums
     public static final String VERT_DATUM_EGM96_MSL = EPSG_URI_PREFIX + 5773;
-    
+
     // OGC definition URIs
     public static final String OGC_PROP_URI = OGC_DEF_URI + "property/OGC/0/";
     public static final String DEF_ARRAY_SIZE = OGC_PROP_URI + "ArraySize";
@@ -87,29 +87,27 @@ public class SWEConstants
     public static final String DEF_PLATFORM_TYPE = OGC_PROP_URI + "PlatformType";
     public static final String DEF_FOI_ID = OGC_PROP_URI + "FeatureOfInterestID";
     public static final String DEF_PROCEDURE_ID = OGC_PROP_URI + "ProcedureID";
-    
+
     // SWE definition URIs
     public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/swe/property/";
     public static final String DEF_SYSTEM_ID = SWE_PROP_URI_PREFIX + "SystemID";
-    public static final String DEF_COORD = SWE_PROP_URI_PREFIX + "Coordinate";
     public static final String DEF_COEF = SWE_PROP_URI_PREFIX + "Coefficient";
     public static final String DEF_IMAGE = SWE_PROP_URI_PREFIX + "Image";
-    public static final String DEF_MATRIX = SWE_PROP_URI_PREFIX + "Matrix";
     public static final String DEF_DN = SWE_PROP_URI_PREFIX + "DN";
     public static final String DEF_FLAG = SWE_PROP_URI_PREFIX + "Flag";
     public static final String DEF_CODE = SWE_PROP_URI_PREFIX + "Code";
     public static final String DEF_STATUS_CODE = SWE_PROP_URI_PREFIX + "StatusCode";
     public static final String DEF_ERROR_CODE = SWE_PROP_URI_PREFIX + "ErrorCode";
     public static final String DEF_COUNT = SWE_PROP_URI_PREFIX + "Counter";
-    
+
     // SWE special units
     public static final String SWE_UOM_URI_PREFIX = "http://sensorml.com/ont/swe/uom/";
     public static final String UOM_ANY = SWE_UOM_URI_PREFIX + "Any";
     public static final String UOM_ANY_CODE = "any";
     public static final String UOM_UNITLESS = "1";
-    
-    
+
+
     private SWEConstants()
-    {        
+    {
     }
 }

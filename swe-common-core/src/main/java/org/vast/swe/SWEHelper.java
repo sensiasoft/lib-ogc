@@ -4,18 +4,18 @@
  1.1 (the "License"); you may not use this file except in compliance with
  the License. You may obtain a copy of the License at
  http://www.mozilla.org/MPL/MPL-1.1.html
- 
+
  Software distributed under the License is distributed on an "AS IS" basis,
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
- 
+
  The Original Code is the "SensorML DataProcessing Engine".
- 
+
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
- 
- Contributor(s): 
+
+ Contributor(s):
     Alexandre Robin <robin@nsstc.uah.edu>
- 
+
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.swe;
@@ -66,7 +66,7 @@ import org.vast.util.Asserts;
 
 /**
  * <p>
- * Helper class for creating common data structures and encodings and browsing 
+ * Helper class for creating common data structures and encodings and browsing
  * a data component tree.
  * </p>
  *
@@ -74,10 +74,10 @@ import org.vast.util.Asserts;
  * @since Feb 26, 2015
  */
 public class SWEHelper extends SWEFactory
-{  
+{
     public static final String PATH_SEPARATOR = "/";
-    
-    
+
+
     /**
      * @param epsgCode
      * @return the CRS URI for the given EPSG integer code
@@ -86,26 +86,26 @@ public class SWEHelper extends SWEFactory
     {
         return SWEConstants.EPSG_URI_PREFIX + epsgCode;
     }
-    
-    
+
+
     public static String getPropertyUri(String propName)
     {
         return SWEConstants.SWE_PROP_URI_PREFIX + propName;
     }
-    
-    
+
+
     public static OgcProperty<Serializable> newLinkProperty(String href)
     {
         return newLinkProperty(null, href, null);
     }
-    
-    
+
+
     public static OgcProperty<Serializable> newLinkProperty(String name, String href)
     {
         return newLinkProperty(name, href, null);
     }
-    
-    
+
+
     public static OgcProperty<Serializable> newLinkProperty(String name, String href, String role)
     {
         OgcPropertyImpl<Serializable> prop = new OgcPropertyImpl<>();
@@ -114,8 +114,8 @@ public class SWEHelper extends SWEFactory
         prop.setRole(role);
         return prop;
     }
-    
-    
+
+
     /**
      * Creates a new boolean component
      * @param definition URI pointing to semantic definition of component in a dictionary
@@ -124,6 +124,7 @@ public class SWEHelper extends SWEFactory
      * @return the new Boolean component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Boolean newBoolean(String definition, String label, String description)
     {
         Boolean b = newBoolean();
@@ -132,8 +133,8 @@ public class SWEHelper extends SWEFactory
         b.setDescription(description);
         return b;
     }
-    
-    
+
+
     /**
      * Creates a new Text component
      * @param definition URI pointing to semantic definition of component in a dictionary
@@ -142,6 +143,7 @@ public class SWEHelper extends SWEFactory
      * @return the new Text component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Text newText(String definition, String label, String description)
     {
         Text tx = newText();
@@ -150,8 +152,8 @@ public class SWEHelper extends SWEFactory
         tx.setDescription(description);
         return tx;
     }
-    
-    
+
+
     /**
      * Creates a new count (integer) component
      * @param definition URI pointing to semantic definition of component in a dictionary
@@ -161,6 +163,7 @@ public class SWEHelper extends SWEFactory
      * @return the new Count component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Count newCount(String definition, String label, String description, DataType dataType)
     {
         Count c = newCount(dataType == null ? DataType.INT : dataType);
@@ -169,8 +172,8 @@ public class SWEHelper extends SWEFactory
         c.setDescription(description);
         return c;
     }
-    
-    
+
+
     /**
      * Creates a new count (integer) component
      * @param definition URI pointing to semantic definition of component in a dictionary
@@ -179,12 +182,13 @@ public class SWEHelper extends SWEFactory
      * @return the new Count component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Count newCount(String definition, String label, String description)
     {
         return newCount(definition, label, description, DataType.INT);
     }
-    
-    
+
+
     /**
      * Creates a new category component
      * @param definition URI pointing to semantic definition of component in a dictionary
@@ -194,17 +198,18 @@ public class SWEHelper extends SWEFactory
      * @return the new Category component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Category newCategory(String definition, String label, String description, String codeSpace)
     {
         Category c = newCategory();
         c.setDefinition(definition);
         c.setLabel(label);
         c.setDescription(description);
-        c.setCodeSpace(codeSpace);        
+        c.setCodeSpace(codeSpace);
         return c;
     }
-    
-    
+
+
     /**
      * Creates a new quantity (decimal) component
      * @param definition URI pointing to semantic definition of component in a dictionary
@@ -215,22 +220,23 @@ public class SWEHelper extends SWEFactory
      * @return the new Quantity component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Quantity newQuantity(String definition, String label, String description, String uom, DataType dataType)
     {
         Quantity q = newQuantity(dataType == null ? DataType.DOUBLE : dataType);
         q.setDefinition(definition);
         q.setLabel(label);
         q.setDescription(description);
-        
+
         if (uom.startsWith(SWEConstants.URN_PREFIX) || uom.startsWith(SWEConstants.HTTP_PREFIX))
             q.getUom().setHref(uom);
         else
             q.getUom().setCode(uom);
-        
+
         return q;
     }
-    
-    
+
+
     /**
      * Creates a new quantity (decimal) component with default data type
      * @param definition URI pointing to semantic definition of component in a dictionary
@@ -240,23 +246,25 @@ public class SWEHelper extends SWEFactory
      * @return the new Quantity component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Quantity newQuantity(String definition, String label, String description, String uom)
     {
         return newQuantity(definition, label, description, uom, DataType.DOUBLE);
     }
-    
-    
+
+
     /**
      * Creates a new time component
      * @param definition URI pointing to semantic definition of component in a dictionary
      * @param label short human readable label identifying the component (shown in UI)
      * @param description textual description of this component (can be long) or null
-     * @param uom code or URI for this time stamp unit of measure 
+     * @param uom code or URI for this time stamp unit of measure
      * @param timeRef URI of time reference system
      * @param dataType data type to use for this component (if null, {@link DataType#DOUBLE} will be used)
      * @return the new Time component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Time newTime(String definition, String label, String description, String uom, String timeRef, DataType dataType)
     {
         Time t = newTime(dataType == null ? DataType.DOUBLE : dataType);
@@ -264,32 +272,33 @@ public class SWEHelper extends SWEFactory
         t.setLabel(label);
         t.setDescription(description);
         t.setReferenceFrame(timeRef);
-        
+
         if (uom.startsWith(SWEConstants.URN_PREFIX) || uom.startsWith(SWEConstants.HTTP_PREFIX))
             t.getUom().setHref(uom);
         else
             t.getUom().setCode(uom);
-        
+
         return t;
     }
-    
-    
+
+
     /**
      * Creates a new time component with double data type
      * @param definition URI pointing to semantic definition of component in a dictionary
      * @param label short human readable label identifying the component (shown in UI)
      * @param description textual description of this component (can be long) or null
-     * @param uom code or URI for this time stamp unit of measure 
+     * @param uom code or URI for this time stamp unit of measure
      * @param timeRef URI of time reference system
      * @return the new Time component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Time newTime(String definition, String label, String description, String uom, String timeRef)
     {
         return newTime(definition, label, description, uom, timeRef, DataType.DOUBLE);
     }
-    
-    
+
+
     /**
      * Creates new time component with ISO8601 format and UTC time frame
      * @param definition URI pointing to semantic definition of component in a dictionary
@@ -298,34 +307,37 @@ public class SWEHelper extends SWEFactory
      * @return the new Time component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Time newTimeIsoUTC(String definition, String label, String description)
     {
         return newTime(definition, label, description, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
     }
-    
-    
+
+
     /**
      * Creates a new sampling time component with ISO8601 format and UTC time frame
      * @return the new Time component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Time newTimeStampIsoUTC()
     {
         return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
     }
-    
-    
+
+
     /**
      * Creates a new sampling time component with ISO8601 format and GPS time frame
      * @return the new Time component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Time newTimeStampIsoGPS()
     {
         return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_GPS);
     }
-    
-    
+
+
     /**
      * Creates a new phenomenon time component with ISO8601 format and UTC time frame
      * @param label short human readable label (forecast, model run, valid time etc.)
@@ -333,12 +345,13 @@ public class SWEHelper extends SWEFactory
      * @return the new Time component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Time newPhenomenonTimeIsoUTC(String label, String description)
     {
         return newTime(SWEConstants.DEF_PHENOMENON_TIME, label, description, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
     }
-    
-    
+
+
     /**
      * Creates a new sampling time component with decimal unit (e.g. on board clock)
      * @param uomCode time unit used for this onboard time stamp (e.g. 's', 'ms', 'ns', etc.)
@@ -346,57 +359,61 @@ public class SWEHelper extends SWEFactory
      * @return the new Time component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Time newTimeStampOnBoardClock(String uomCode, String timeRef)
     {
         return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, uomCode, timeRef);
     }
-    
-    
+
+
     /**
      * Wraps the given component(s) into a record with a time stamp
      * @param timeStamp Time component representing the time stamp
      * @param subComponents list of components to wrap with the time stamp
      * @return new DataRecord instance containing the time stamp and all other components
      * @deprecated use {@link SWEBuilders} class
-     */    
+     */
+    @Deprecated
     public DataRecord wrapWithTimeStamp(Time timeStamp, DataComponent... subComponents)
     {
         DataRecord rec = newDataRecord(subComponents.length + 1);
         rec.addComponent("time", timeStamp);
-        
+
         for (DataComponent childComp: subComponents)
             rec.addComponent(childComp.getName(), childComp);
-        
+
         return rec;
     }
-    
-    
+
+
     /**
      * Wraps the given component(s) into a record with a UTC ISO time stamp
      * @param subComponents list of components to wrap
      * @return new DataRecord instance containing the time stamp and all other components
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public DataRecord wrapWithTimeStampUTC(DataComponent... subComponents)
-    {   
+    {
         Time timeStamp = newTimeStampIsoUTC();
         return wrapWithTimeStamp(timeStamp, subComponents);
     }
-    
-    
+
+
     /**
      * Creates a component for carrying system ID (e.g. station ID, sensor ID, device ID, etc...)
      * @return new Text instance
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Text newSystemIdComponent()
     {
         Text t = newText();
         t.setDefinition(SWEConstants.DEF_SYSTEM_ID);
         return t;
     }
-  
-    
+
+
     /**
      * Creates a 3D vector component with the specified CRS and axes
      * @param def definition of the whole vector
@@ -408,13 +425,14 @@ public class SWEHelper extends SWEFactory
      * @return the new Vector component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public Vector newVector(String def, String crs, String[] names, String[] labels, String[] uoms, String[] axes)
     {
         Vector loc = newVector();
         loc.setDefinition(def);
         loc.setReferenceFrame(crs == null ? SWEConstants.NIL_UNKNOWN : crs);
 
-        Quantity c;        
+        Quantity c;
         for (int i = 0; i < names.length; i++)
         {
             c = newQuantity(DataType.DOUBLE);
@@ -426,11 +444,11 @@ public class SWEHelper extends SWEFactory
                 c.setAxisID(axes[i]);
             loc.addComponent(names[i], c);
         }
-        
+
         return loc;
-    }    
-    
-    
+    }
+
+
     /**
      * Creates a variable size 1D array
      * @param sizeComponent
@@ -439,6 +457,7 @@ public class SWEHelper extends SWEFactory
      * @return the new DataArray component object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public DataArray newArray(Count sizeComponent, String eltName, DataComponent elementType)
     {
         DataArray array = newDataArray();
@@ -446,22 +465,21 @@ public class SWEHelper extends SWEFactory
         array.setElementType(eltName, elementType);
         return array;
     }
-    
-    
+
+
     /**
      * Creates a fixed size 2D-array component representing an RGB image
      * @param width
      * @param height
      * @param dataType
      * @return the new DataArray component object
-     * @deprecated use {@link SWEBuilders} class
      */
     public DataArray newRgbImage(int width, int height, DataType dataType)
     {
         DataArray imgArray = newDataArray(height);
         imgArray.setDefinition(SWEConstants.DEF_IMAGE);
         DataArray imgRow = newDataArray(width);
-                
+
         DataRecord imgPixel = newDataRecord(3);
         if (dataType.isIntegralType())
         {
@@ -473,15 +491,15 @@ public class SWEHelper extends SWEFactory
         {
             imgPixel.addComponent("red", newQuantity(dataType));
             imgPixel.addComponent("green", newQuantity(dataType));
-            imgPixel.addComponent("blue", newQuantity(dataType));            
+            imgPixel.addComponent("blue", newQuantity(dataType));
         }
-        
+
         imgRow.addComponent("pixel", imgPixel);
         imgArray.setElementType("row", imgRow);
         return imgArray;
     }
-    
-    
+
+
     /**
      * Creates a data stream description with given description and encoding
      * @param dataDescription description of each stream element
@@ -489,6 +507,7 @@ public class SWEHelper extends SWEFactory
      * @return the new DataStream object
      * @deprecated use {@link SWEBuilders} class
      */
+    @Deprecated
     public DataStream newDataStream(DataComponent dataDescription, DataEncoding dataEncoding)
     {
         DataStream ds = newDataStream();
@@ -496,12 +515,12 @@ public class SWEHelper extends SWEFactory
         ds.setEncoding(dataEncoding);
         return ds;
     }
-    
-    
+
+
     //////////////////////////////////////
     // Encoding and parser/writer stuff //
     //////////////////////////////////////
-    
+
     /**
      * Creates a text encoding with the specified separators.<br/>
      * Since no escaping is supported, it is up to the programmer to make sure that
@@ -514,13 +533,13 @@ public class SWEHelper extends SWEFactory
     {
         return new TextEncodingImpl(tokenSep, blockSep);
     }
-    
-    
+
+
     /**
      * Creates a binary encoding with the specified options
-     * @param byteOrder byte ordering (endianness) of the byte stream 
+     * @param byteOrder byte ordering (endianness) of the byte stream
      * @param byteEncoding byte encoding used (raw or base64)
-     * @return the BinaryEncoding instance (not that it is not fully configured 
+     * @return the BinaryEncoding instance (not that it is not fully configured
      * since data types of all fields have to be specified)
      */
     public BinaryEncoding newBinaryEncoding(ByteOrder byteOrder, ByteEncoding byteEncoding)
@@ -530,8 +549,8 @@ public class SWEHelper extends SWEFactory
         encoding.setByteEncoding(byteEncoding);
         return encoding;
     }
-    
-    
+
+
     /**
      * Helper method to instantiate the proper parser for the given encoding
      * @param encoding
@@ -540,19 +559,19 @@ public class SWEHelper extends SWEFactory
     public static DataStreamParser createDataParser(DataEncoding encoding)
     {
         DataStreamParser parser = null;
-        
+
         if (encoding instanceof TextEncoding)
             parser = new AsciiDataParser();
         else if (encoding instanceof BinaryEncoding)
             parser = new BinaryDataParser();
         else if (encoding instanceof XMLEncoding)
             parser = new XmlDataParser();
-        
+
         parser.setDataEncoding(encoding);
         return parser;
     }
-    
-    
+
+
     /**
      * Helper method to instantiate the proper writer for the given encoding
      * @param encoding
@@ -561,7 +580,7 @@ public class SWEHelper extends SWEFactory
     public static DataStreamWriter createDataWriter(DataEncoding encoding)
     {
         DataStreamWriter writer = null;
-        
+
         if (encoding instanceof TextEncoding)
             writer = new AsciiDataWriter();
         else if (encoding instanceof BinaryEncoding)
@@ -570,16 +589,16 @@ public class SWEHelper extends SWEFactory
             writer = new XmlDataWriter();
         else if (encoding instanceof JSONEncoding)
             writer = new JsonDataWriter();
-        
+
         writer.setDataEncoding(encoding);
         return writer;
     }
-    
-    
+
+
     /**
      * Gets the default encoding for the given data structure.<br/>
      * This uses BinaryEncoding if data structure contains a large array and TextEncoding
-     * otherwise. 
+     * otherwise.
      * @param dataComponents
      * @return an appropriately configured encoding
      */
@@ -595,12 +614,12 @@ public class SWEHelper extends SWEFactory
                     return getDefaultBinaryEncoding(dataComponents);
             }
         }
-        
+
         // otherwise return default text encoding
         return new TextEncodingImpl();
     }
-    
-    
+
+
     /**
      * Get default binary encoding for the given component tree.<br/>
      * Data types used will be ones specified in each scalar component.
@@ -612,14 +631,14 @@ public class SWEHelper extends SWEFactory
         BinaryEncodingImpl encoding = new BinaryEncodingImpl();
         encoding.setByteEncoding(ByteEncoding.RAW);
         encoding.setByteOrder(ByteOrder.BIG_ENDIAN);
-        
+
         // use default encoding info for each data value
         ScalarIterator it = new ScalarIterator(dataComponents);
         while (it.hasNext())
         {
             DataComponent[] nextPath = it.nextPath();
             DataValue nextScalar = (DataValue)nextPath[nextPath.length-1];
-            
+
             // build path (just use / for root)
             StringBuilder pathString = new StringBuilder();
             pathString.append(PATH_SEPARATOR);
@@ -628,19 +647,19 @@ public class SWEHelper extends SWEFactory
                 pathString.append(nextPath[i].getName());
                 pathString.append(PATH_SEPARATOR);
             }
-            
+
             BinaryComponentImpl binaryOpts = new BinaryComponentImpl();
             binaryOpts.setCdmDataType(nextScalar.getDataType());
             binaryOpts.setRef(pathString.substring(0, pathString.length()-1));
-            
+
             encoding.addMemberAsComponent(binaryOpts);
             nextScalar.setEncodingInfo(binaryOpts);
         }
-        
+
         return encoding;
     }
-    
-    
+
+
     /**
      * Ajusts encoding settings to ensures that data produced with the encoding
      * can be embedded in XML (e.g. for binary encoding this enforces base64)
@@ -655,18 +674,18 @@ public class SWEHelper extends SWEFactory
             encoding = encoding.copy();
             ((BinaryEncoding) encoding).setByteEncoding(ByteEncoding.BASE_64);
         }
-        
+
         return encoding;
     }
-    
-    
+
+
     /**
      * Assigns binary components and blocks definitions to the actual data component.
      * This sets the encodingInfo attribute of the component so it can be used to generate specialized datablocks.
      * For scalars, it also sets the default data type so it is the same as in the encoded stream.
-     * @param dataComponents 
-     * @param encoding 
-     * @throws CDMException 
+     * @param dataComponents
+     * @param encoding
+     * @throws CDMException
      */
     public static void assignBinaryEncoding(DataComponent dataComponents, BinaryEncoding encoding) throws CDMException
     {
@@ -674,12 +693,12 @@ public class SWEHelper extends SWEFactory
         {
             DataComponent comp = findComponentByPath(dataComponents, binaryOpts.getRef());
             ((AbstractDataComponentImpl)comp).setEncodingInfo(binaryOpts);
-            
+
             // for scalars, also set default data type
             if (binaryOpts instanceof BinaryComponent)
                 ((AbstractSimpleComponentImpl)comp).setDataType(((BinaryComponentImpl)binaryOpts).getCdmDataType());
         }
-        
+
         // set default data type for implicit array size components if not already set
         DataIterator it = new DataIterator(dataComponents);
         while (it.hasNext())
@@ -697,13 +716,13 @@ public class SWEHelper extends SWEFactory
             }
         }
     }
-    
-    
-    
-    ////////////////////////////////////////////// 
+
+
+
+    //////////////////////////////////////////////
     // Methods for manipulating component trees //
-    ////////////////////////////////////////////// 
-    
+    //////////////////////////////////////////////
+
     /**
      * Finds the first component in the tree matching the given filter
      * @param parent component from which to start the search
@@ -714,25 +733,25 @@ public class SWEHelper extends SWEFactory
     {
         if (parent instanceof DataArrayImpl)
             parent = ((DataArrayImpl)parent).getElementType();
-        
+
         int childCount = parent.getComponentCount();
         for (int i=0; i<childCount; i++)
         {
             DataComponent child = parent.getComponent(i);
-            
+
             if (filter.accept(child))
                 return child;
-            
+
             // try to find it recursively!
             DataComponent desiredParam = findComponent(child, filter);
             if (desiredParam != null)
                 return desiredParam;
         }
-        
+
         return null;
     }
-    
-    
+
+
     /**
      * Finds a component in the component tree using its name (property name)
      * @param parent component from which to start the search
@@ -749,7 +768,7 @@ public class SWEHelper extends SWEFactory
                 if (childName != null && childName.equals(name))
                     return true;
                 return false;
-            }            
+            }
         });
     }
 
@@ -770,13 +789,13 @@ public class SWEHelper extends SWEFactory
                 if (childDef != null && childDef.equals(defUri))
                     return true;
                 return false;
-            }            
+            }
         });
     }
-    
-    
+
+
     /**
-     * Finds a component in a component tree using a path 
+     * Finds a component in a component tree using a path
      * @param parent component from which to start the search
      * @param path desired path as a String composed of component names separated by {@value #PATH_SEPARATOR} characters
      * @return the component with the given path
@@ -793,10 +812,10 @@ public class SWEHelper extends SWEFactory
             throw new CDMException("Unknown component " + path, e);
         }
     }
-    
-    
+
+
     /**
-     * Finds a component in a component tree using a path 
+     * Finds a component in a component tree using a path
      * @param parent component from which to start the search
      * @param path desired path as a String array containing a sequence of component names
      * @return the component with the given path
@@ -805,22 +824,22 @@ public class SWEHelper extends SWEFactory
     public static DataComponent findComponentByPath(DataComponent parent, String[] path) throws CDMException
     {
         DataComponent comp = parent;
-        
+
         for (int i=0; i<path.length; i++)
         {
             String pathElt = path[i];
             if (pathElt.length() == 0) // a leading '/' create an empty array element
                 continue;
-            
+
             comp = comp.getComponent(pathElt);
             if (comp == null)
                 throw new CDMException("Unknown component " + pathElt);
         }
-        
+
         return comp;
     }
-    
-    
+
+
     /**
      * Computes the path of the component from the root of the data structure
      * @param component
@@ -830,20 +849,20 @@ public class SWEHelper extends SWEFactory
     {
         Asserts.checkNotNull(component, DataComponent.class);
         Asserts.checkNotNull(component.getName(), "Component must have a name");
-        
+
         StringBuilder path = new StringBuilder(component.getName());
         DataComponent parent = component.getParent();
-        
+
         while (parent != null && parent.getName() != null)
         {
             path.insert(0, parent.getName() + PATH_SEPARATOR);
             parent = parent.getParent();
         }
-        
+
         return path.toString();
     }
-    
-    
+
+
     /**
      * Find the root component of the data structure that this component belongs to
      * @param component
@@ -856,8 +875,8 @@ public class SWEHelper extends SWEFactory
             parentPort = parentPort.getParent();
         return parentPort;
     }
-    
-    
+
+
     /**
      * Retrieves an indexer for the first time stamp component found in the parent structure
      * @param parent
