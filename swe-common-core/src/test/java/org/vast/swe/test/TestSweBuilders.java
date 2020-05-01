@@ -7,9 +7,9 @@ at http://mozilla.org/MPL/2.0/.
 Software distributed under the License is distributed on an "AS IS" basis,
 WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the License.
- 
+
 Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
- 
+
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.swe.test;
@@ -23,8 +23,8 @@ import org.vast.swe.SWEHelper;
 public class TestSweBuilders
 {
     SWEUtils utils = new SWEUtils(SWEUtils.V2_0);
-    
-    
+
+
     @Test
     public void testCreateQuantities() throws Exception
     {
@@ -34,29 +34,29 @@ public class TestSweBuilders
             .description("Temperature of air in the garden")
             .uomCode("Cel")
             .build(), false, true);
-        
+
         System.out.println();
         System.out.println();
-        
+
         utils.writeComponent(System.out, SWEBuilders.newQuantity()
             .definition(SWEHelper.getPropertyUri("LinearAcceleration"))
             .label("Acceleration")
             .uomCode("m/s2")
             .build(), false, true);
-        
+
         System.out.println();
         System.out.println();
     }
-    
-    
+
+
     /*@Test
     public void testCreateRasters() throws Exception
     {
         // RGB
         utils.writeComponent(System.out, fac.newRgbImage(640, 480, DataType.BYTE), false, true);
     }*/
-    
-    
+
+
     @Test
     public void testCreateWeatherRecord() throws Exception
     {
@@ -79,12 +79,12 @@ public class TestSweBuilders
                 .uomCode("km/h")
                 .done()
             .build(), false, true);
-        
+
         System.out.println();
         System.out.println();
     }
-    
-    
+
+
     @Test
     public void testCreateMixedTypeRecord() throws Exception
     {
@@ -104,12 +104,12 @@ public class TestSweBuilders
                 .visitor(t -> System.out.println(t + "@" + System.identityHashCode(t)))
                 .done()
             .build(), false, true);
-        
+
         System.out.println();
         System.out.println();
     }
-        
-    
+
+
     @Test
     public void testNestedRecords() throws Exception
     {
@@ -119,7 +119,7 @@ public class TestSweBuilders
             .addBooleanField("boolean")
                 .definition(SWEHelper.getPropertyUri("Flag"))
                 .done()
-            .addNestedRecord("child")
+            .addRecordField("child")
                 .definition(SWEHelper.getPropertyUri("VIN"))
                 .label("Child Record")
                 .addTimeField("scan_start")
@@ -131,7 +131,7 @@ public class TestSweBuilders
                     .done()
                 .done()
             .build(), false, true);
-        
+
         System.out.println();
         System.out.println();
     }

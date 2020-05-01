@@ -7,9 +7,9 @@ at http://mozilla.org/MPL/2.0/.
 Software distributed under the License is distributed on an "AS IS" basis,
 WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the License.
- 
+
 Copyright (C) 2012-2017 Sensia Software LLC. All Rights Reserved.
- 
+
 ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.swe.test;
@@ -27,7 +27,6 @@ import org.vast.swe.fast.TextDataWriter;
 import org.vast.util.DateTimeFormat;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
-import net.opengis.swe.v20.DataRecord;
 
 
 public class TestTextDataParser
@@ -38,26 +37,24 @@ public class TestTextDataParser
     {
         SWEHelper fac = new SWEHelper();
         int arraySize = 5;
-        
-        DataArray array = fac.newDataArray(arraySize);
-        array.setName("array");
-        DataRecord rec = fac.newDataRecord();
-        rec.addComponent("f0", fac.newTimeStampIsoUTC());
-        rec.addComponent("f1", fac.newQuantity());
-        rec.addComponent("f2", fac.newQuantity());
-        DataRecord rec2 = fac.newDataRecord();
-        rec2.addComponent("f3", fac.newCount());
-        rec2.addComponent("f4", fac.newQuantity());
-        rec.addComponent("rec2", rec2);  
-        //DataChoice choice = fac.newDataChoice();
-        //choice.addComponent("f5", fac.newCategory());
-        //choice.addComponent("f6", fac.newQuantity());
-        //rec.addComponent("choice", choice);
-        array.setElementType("elt", rec);
-        
+
+        DataArray array = fac.createArray()
+            .withFixedSize(arraySize)
+            .name("array")
+            .withRecordElement("elt")
+                .addSamplingTimeIsoUTC("f0")
+                .addQuantityField("f1").done()
+                .addQuantityField("f2").done()
+                .addRecordField("rec2")
+                    .addCountField("f3").done()
+                    .addQuantityField("f4").done()
+                    .done()
+                .done()
+            .build();
+
         // generate data
         String tokenSep = "!";
-        String blockSep = "@@\n"; 
+        String blockSep = "@@\n";
         DateTimeFormat timeFormat = new DateTimeFormat();
         double now = new Date().getTime()/1000.;
         StringBuilder buf = new StringBuilder();
@@ -80,11 +77,11 @@ public class TestTextDataParser
             }
         }
         //System.out.println(buf.toString());
-                
+
         /*for (int it=0; it<10; it++)
         {
-            ByteArrayInputStream is = new ByteArrayInputStream(buf.toString().getBytes()); 
-            
+            ByteArrayInputStream is = new ByteArrayInputStream(buf.toString().getBytes());
+
             // init & launch parser
             //DataStreamParser parser = new AsciiDataParser();
             DataStreamParser parser = new TextDataParser();
@@ -92,7 +89,7 @@ public class TestTextDataParser
             parser.setDataEncoding(fac.newTextEncoding(tokenSep, blockSep));
             parser.setInput(is);
             parser.setRenewDataBlock(false);
-            
+
             long t0 = System.currentTimeMillis();
             DataBlock dataBlk;
             do
@@ -105,21 +102,21 @@ public class TestTextDataParser
                 //    System.out.print(dataBlk.getStringValue(i) + ",");
                 }
             }
-            while (dataBlk != null);        
+            while (dataBlk != null);
             System.out.println("Exec Time = " + (System.currentTimeMillis()-t0));
         }*/
-        
+
         for (int it=0; it<10; it++)
         {
-            ByteArrayInputStream is = new ByteArrayInputStream(buf.toString().getBytes()); 
-            
+            ByteArrayInputStream is = new ByteArrayInputStream(buf.toString().getBytes());
+
             // init parser
             DataStreamParser parser = new TextDataParser();
             parser.setDataComponents(array);
             parser.setDataEncoding(fac.newTextEncoding(tokenSep, blockSep));
             parser.setInput(is);
             parser.setRenewDataBlock(false);
-            
+
             // init writer
             DataStreamWriter writer = new TextDataWriter();
             writer.setDataComponents(array);
@@ -128,8 +125,8 @@ public class TestTextDataParser
             writer.setDataComponents(array);
             writer.setDataEncoding(fac.newXMLEncoding());*/
             //writer.setOutput(System.out);
-            writer.setOutput(new ByteArrayOutputStream(1024*1024));            
-            
+            writer.setOutput(new ByteArrayOutputStream(1024*1024));
+
             long t0 = System.currentTimeMillis();
             DataBlock dataBlk;
             do
@@ -141,8 +138,8 @@ public class TestTextDataParser
                     writer.flush();
                 }
             }
-            while (dataBlk != null); 
-            
+            while (dataBlk != null);
+
             System.out.println("Exec Time = " + (System.currentTimeMillis()-t0));
         }
     }

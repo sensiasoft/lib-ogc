@@ -23,25 +23,39 @@ package org.vast.swe;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.Boolean;
+import net.opengis.swe.v20.AllowedTimes;
+import net.opengis.swe.v20.AllowedTokens;
+import net.opengis.swe.v20.AllowedValues;
+import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.BinaryComponent;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.ByteEncoding;
 import net.opengis.swe.v20.ByteOrder;
 import net.opengis.swe.v20.Category;
+import net.opengis.swe.v20.CategoryRange;
 import net.opengis.swe.v20.Count;
+import net.opengis.swe.v20.CountRange;
 import net.opengis.swe.v20.DataArray;
+import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.EncodedValues;
 import net.opengis.swe.v20.JSONEncoding;
+import net.opengis.swe.v20.Matrix;
+import net.opengis.swe.v20.NilValue;
+import net.opengis.swe.v20.NilValues;
 import net.opengis.swe.v20.Quantity;
+import net.opengis.swe.v20.QuantityRange;
 import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.TextEncoding;
 import net.opengis.swe.v20.Time;
+import net.opengis.swe.v20.TimeRange;
+import net.opengis.swe.v20.UnitReference;
 import net.opengis.swe.v20.Vector;
 import net.opengis.swe.v20.XMLEncoding;
 import java.io.Serializable;
@@ -59,6 +73,17 @@ import org.vast.data.DataValue;
 import org.vast.data.SWEFactory;
 import org.vast.data.ScalarIterator;
 import org.vast.data.TextEncodingImpl;
+import org.vast.swe.SWEBuilders.BooleanBuilder;
+import org.vast.swe.SWEBuilders.CategoryBuilder;
+import org.vast.swe.SWEBuilders.CountBuilder;
+import org.vast.swe.SWEBuilders.DataArrayBuilder;
+import org.vast.swe.SWEBuilders.DataChoiceBuilder;
+import org.vast.swe.SWEBuilders.DataRecordBuilder;
+import org.vast.swe.SWEBuilders.MatrixBuilder;
+import org.vast.swe.SWEBuilders.QuantityBuilder;
+import org.vast.swe.SWEBuilders.TextBuilder;
+import org.vast.swe.SWEBuilders.TimeBuilder;
+import org.vast.swe.SWEBuilders.VectorBuilder;
 import org.vast.swe.fast.JsonDataWriter;
 import org.vast.swe.fast.XmlDataWriter;
 import org.vast.util.Asserts;
@@ -73,9 +98,10 @@ import org.vast.util.Asserts;
  * @author Alex Robin>
  * @since Feb 26, 2015
  */
-public class SWEHelper extends SWEFactory
+public class SWEHelper
 {
     public static final String PATH_SEPARATOR = "/";
+    protected SWEFactory fac = SWEBuilders.DEFAULT_SWE_FACTORY;
 
 
     /**
@@ -117,6 +143,107 @@ public class SWEHelper extends SWEFactory
 
 
     /**
+     * @return A builder to create a new Boolean component
+     */
+    public BooleanBuilder createBoolean()
+    {
+        return new BooleanBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new Category component
+     */
+    public CategoryBuilder createCategory()
+    {
+        return new CategoryBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new Count component
+     */
+    public CountBuilder createCount()
+    {
+        return new CountBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new Quantity component
+     */
+    public QuantityBuilder createQuantity()
+    {
+        return new QuantityBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new Time component
+     */
+    public TimeBuilder createTime()
+    {
+        return new TimeBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new Boolean component
+     */
+    public TextBuilder createText()
+    {
+        return new TextBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new DataRecord component
+     */
+    public DataRecordBuilder createRecord()
+    {
+        return new DataRecordBuilder(fac);
+    }
+
+
+    /**
+     * @param fac Factory to use to create the component objects
+     * @return A builder to create a new Vector component
+     */
+    public VectorBuilder createVector()
+    {
+        return new VectorBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new DataChoice component
+     */
+    public DataChoiceBuilder createChoice()
+    {
+        return new DataChoiceBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new DataArray component
+     */
+    public DataArrayBuilder createArray()
+    {
+        return new DataArrayBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new Matrix component
+     */
+    public MatrixBuilder createMatrix()
+    {
+        return new MatrixBuilder(fac);
+    }
+
+
+
+    /**
      * Creates a new boolean component
      * @param definition URI pointing to semantic definition of component in a dictionary
      * @param label short human readable label identifying the component (shown in UI)
@@ -127,7 +254,7 @@ public class SWEHelper extends SWEFactory
     @Deprecated
     public Boolean newBoolean(String definition, String label, String description)
     {
-        Boolean b = newBoolean();
+        Boolean b = fac.newBoolean();
         b.setDefinition(definition);
         b.setLabel(label);
         b.setDescription(description);
@@ -146,7 +273,7 @@ public class SWEHelper extends SWEFactory
     @Deprecated
     public Text newText(String definition, String label, String description)
     {
-        Text tx = newText();
+        Text tx = fac.newText();
         tx.setDefinition(definition);
         tx.setLabel(label);
         tx.setDescription(description);
@@ -166,7 +293,7 @@ public class SWEHelper extends SWEFactory
     @Deprecated
     public Count newCount(String definition, String label, String description, DataType dataType)
     {
-        Count c = newCount(dataType == null ? DataType.INT : dataType);
+        Count c = fac.newCount(dataType == null ? DataType.INT : dataType);
         c.setDefinition(definition);
         c.setLabel(label);
         c.setDescription(description);
@@ -201,7 +328,7 @@ public class SWEHelper extends SWEFactory
     @Deprecated
     public Category newCategory(String definition, String label, String description, String codeSpace)
     {
-        Category c = newCategory();
+        Category c = fac.newCategory();
         c.setDefinition(definition);
         c.setLabel(label);
         c.setDescription(description);
@@ -223,7 +350,7 @@ public class SWEHelper extends SWEFactory
     @Deprecated
     public Quantity newQuantity(String definition, String label, String description, String uom, DataType dataType)
     {
-        Quantity q = newQuantity(dataType == null ? DataType.DOUBLE : dataType);
+        Quantity q = fac.newQuantity(dataType == null ? DataType.DOUBLE : dataType);
         q.setDefinition(definition);
         q.setLabel(label);
         q.setDescription(description);
@@ -267,7 +394,7 @@ public class SWEHelper extends SWEFactory
     @Deprecated
     public Time newTime(String definition, String label, String description, String uom, String timeRef, DataType dataType)
     {
-        Time t = newTime(dataType == null ? DataType.DOUBLE : dataType);
+        Time t = fac.newTime(dataType == null ? DataType.DOUBLE : dataType);
         t.setDefinition(definition);
         t.setLabel(label);
         t.setDescription(description);
@@ -376,7 +503,7 @@ public class SWEHelper extends SWEFactory
     @Deprecated
     public DataRecord wrapWithTimeStamp(Time timeStamp, DataComponent... subComponents)
     {
-        DataRecord rec = newDataRecord(subComponents.length + 1);
+        DataRecord rec = fac.newDataRecord(subComponents.length + 1);
         rec.addComponent("time", timeStamp);
 
         for (DataComponent childComp: subComponents)
@@ -408,7 +535,7 @@ public class SWEHelper extends SWEFactory
     @Deprecated
     public Text newSystemIdComponent()
     {
-        Text t = newText();
+        Text t = fac.newText();
         t.setDefinition(SWEConstants.DEF_SYSTEM_ID);
         return t;
     }
@@ -428,14 +555,14 @@ public class SWEHelper extends SWEFactory
     @Deprecated
     public Vector newVector(String def, String crs, String[] names, String[] labels, String[] uoms, String[] axes)
     {
-        Vector loc = newVector();
+        Vector loc = fac.newVector();
         loc.setDefinition(def);
         loc.setReferenceFrame(crs == null ? SWEConstants.NIL_UNKNOWN : crs);
 
         Quantity c;
         for (int i = 0; i < names.length; i++)
         {
-            c = newQuantity(DataType.DOUBLE);
+            c = fac.newQuantity(DataType.DOUBLE);
             if (labels != null)
                 c.setLabel(labels[i]);
             if (uoms != null)
@@ -458,9 +585,9 @@ public class SWEHelper extends SWEFactory
      * @deprecated use {@link SWEBuilders} class
      */
     @Deprecated
-    public DataArray newArray(Count sizeComponent, String eltName, DataComponent elementType)
+    public DataArray newDataArray(Count sizeComponent, String eltName, DataComponent elementType)
     {
-        DataArray array = newDataArray();
+        DataArray array = fac.newDataArray();
         ((DataArrayImpl)array).setElementCount(sizeComponent);
         array.setElementType(eltName, elementType);
         return array;
@@ -476,22 +603,22 @@ public class SWEHelper extends SWEFactory
      */
     public DataArray newRgbImage(int width, int height, DataType dataType)
     {
-        DataArray imgArray = newDataArray(height);
+        DataArray imgArray = fac.newDataArray(height);
         imgArray.setDefinition(SWEConstants.DEF_IMAGE);
-        DataArray imgRow = newDataArray(width);
+        DataArray imgRow = fac.newDataArray(width);
 
-        DataRecord imgPixel = newDataRecord(3);
+        DataRecord imgPixel = fac.newDataRecord(3);
         if (dataType.isIntegralType())
         {
-            imgPixel.addComponent("red", newCount(dataType));
-            imgPixel.addComponent("green", newCount(dataType));
-            imgPixel.addComponent("blue", newCount(dataType));
+            imgPixel.addComponent("red", fac.newCount(dataType));
+            imgPixel.addComponent("green", fac.newCount(dataType));
+            imgPixel.addComponent("blue", fac.newCount(dataType));
         }
         else
         {
-            imgPixel.addComponent("red", newQuantity(dataType));
-            imgPixel.addComponent("green", newQuantity(dataType));
-            imgPixel.addComponent("blue", newQuantity(dataType));
+            imgPixel.addComponent("red", fac.newQuantity(dataType));
+            imgPixel.addComponent("green", fac.newQuantity(dataType));
+            imgPixel.addComponent("blue", fac.newQuantity(dataType));
         }
 
         imgRow.addComponent("pixel", imgPixel);
@@ -510,7 +637,7 @@ public class SWEHelper extends SWEFactory
     @Deprecated
     public DataStream newDataStream(DataComponent dataDescription, DataEncoding dataEncoding)
     {
-        DataStream ds = newDataStream();
+        DataStream ds = fac.newDataStream();
         ds.setElementType(dataDescription.getName(), dataDescription);
         ds.setEncoding(dataEncoding);
         return ds;
@@ -890,5 +1017,264 @@ public class SWEHelper extends SWEFactory
         if (timeStamp == null)
             return null;
         return new ScalarIndexer(parent, timeStamp);
+    }
+
+
+    @Deprecated
+    public DataRecord newDataRecord()
+    {
+        return fac.newDataRecord();
+    }
+
+
+    @Deprecated
+    public DataRecord newDataRecord(int recordSize)
+    {
+        return fac.newDataRecord(recordSize);
+    }
+
+
+    @Deprecated
+    public Vector newVector()
+    {
+        return fac.newVector();
+    }
+
+
+    @Deprecated
+    public DataArray newDataArray()
+    {
+        return fac.newDataArray();
+    }
+
+
+    @Deprecated
+    public DataArray newDataArray(int arraySize)
+    {
+        return fac.newDataArray(arraySize);
+    }
+
+
+    @Deprecated
+    public Matrix newMatrix()
+    {
+        return fac.newMatrix();
+    }
+
+
+    @Deprecated
+    public Matrix newMatrix(int arraySize)
+    {
+        return fac.newMatrix(arraySize);
+    }
+
+
+    @Deprecated
+    public DataStream newDataStream()
+    {
+        return fac.newDataStream();
+    }
+
+
+    @Deprecated
+    public BinaryBlock newBinaryBlock()
+    {
+        return fac.newBinaryBlock();
+    }
+
+
+    @Deprecated
+    public BinaryEncoding newBinaryEncoding()
+    {
+        return fac.newBinaryEncoding();
+    }
+
+
+    @Deprecated
+    public BinaryComponent newBinaryComponent()
+    {
+        return fac.newBinaryComponent();
+    }
+
+
+    @Deprecated
+    public DataChoice newDataChoice()
+    {
+        return fac.newDataChoice();
+    }
+
+
+    @Deprecated
+    public Count newCount()
+    {
+        return fac.newCount();
+    }
+
+
+    @Deprecated
+    public Count newCount(DataType dataType)
+    {
+        return fac.newCount(dataType);
+    }
+
+
+    @Deprecated
+    public CategoryRange newCategoryRange()
+    {
+        return fac.newCategoryRange();
+    }
+
+
+    @Deprecated
+    public QuantityRange newQuantityRange()
+    {
+        return fac.newQuantityRange();
+    }
+
+
+    @Deprecated
+    public QuantityRange newQuantityRange(DataType dataType)
+    {
+        return fac.newQuantityRange(dataType);
+    }
+
+
+    @Deprecated
+    public Time newTime()
+    {
+        return fac.newTime();
+    }
+
+
+    @Deprecated
+    public Time newTime(DataType dataType)
+    {
+        return fac.newTime(dataType);
+    }
+
+
+    @Deprecated
+    public TimeRange newTimeRange()
+    {
+        return fac.newTimeRange();
+    }
+
+
+    @Deprecated
+    public TimeRange newTimeRange(DataType dataType)
+    {
+        return fac.newTimeRange(dataType);
+    }
+
+
+    @Deprecated
+    public Boolean newBoolean()
+    {
+        return fac.newBoolean();
+    }
+
+
+    @Deprecated
+    public Text newText()
+    {
+        return fac.newText();
+    }
+
+
+    @Deprecated
+    public Category newCategory()
+    {
+        return fac.newCategory();
+    }
+
+
+    @Deprecated
+    public Quantity newQuantity()
+    {
+        return fac.newQuantity();
+    }
+
+
+    @Deprecated
+    public Quantity newQuantity(DataType dataType)
+    {
+        return fac.newQuantity(dataType);
+    }
+
+
+    @Deprecated
+    public CountRange newCountRange()
+    {
+        return fac.newCountRange();
+    }
+
+
+    @Deprecated
+    public CountRange newCountRange(DataType dataType)
+    {
+        return fac.newCountRange(dataType);
+    }
+
+
+    @Deprecated
+    public NilValues newNilValues()
+    {
+        return fac.newNilValues();
+    }
+
+
+    @Deprecated
+    public AllowedTokens newAllowedTokens()
+    {
+        return fac.newAllowedTokens();
+    }
+
+
+    @Deprecated
+    public AllowedValues newAllowedValues()
+    {
+        return fac.newAllowedValues();
+    }
+
+
+    @Deprecated
+    public AllowedTimes newAllowedTimes()
+    {
+        return fac.newAllowedTimes();
+    }
+
+
+    @Deprecated
+    public UnitReference newUnitReference()
+    {
+        return fac.newUnitReference();
+    }
+
+
+    @Deprecated
+    public NilValue newNilValue()
+    {
+        return fac.newNilValue();
+    }
+
+
+    @Deprecated
+    public XMLEncoding newXMLEncoding()
+    {
+        return fac.newXMLEncoding();
+    }
+
+
+    @Deprecated
+    public TextEncoding newTextEncoding()
+    {
+        return fac.newTextEncoding();
+    }
+
+
+    @Deprecated
+    public EncodedValues newEncodedValuesProperty()
+    {
+        return fac.newEncodedValuesProperty();
     }
 }

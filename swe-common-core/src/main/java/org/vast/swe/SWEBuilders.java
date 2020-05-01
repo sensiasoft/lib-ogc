@@ -1186,7 +1186,7 @@ public class SWEBuilders
             };
         }
 
-        public NestedRecordBuilder<B> addNestedRecord(String name)
+        public NestedRecordBuilder<B> addRecordField(String name)
         {
             return new NestedRecordBuilder<B>((B)this, fac)
             {
@@ -1508,7 +1508,7 @@ public class SWEBuilders
             };
         }
 
-        public NestedChoiceBuilder<B> addNestedChoice(String name)
+        public NestedChoiceBuilder<B> addChoiceItem(String name)
         {
             return new NestedChoiceBuilder<B>((B)this, fac)
             {
@@ -1703,7 +1703,7 @@ public class SWEBuilders
             };
         }
 
-        public NestedArrayBuilder<B> withNestedArray(String name)
+        public NestedArrayBuilder<B> withArrayElement(String name)
         {
             return new NestedArrayBuilder<B>((B)this, fac)
             {

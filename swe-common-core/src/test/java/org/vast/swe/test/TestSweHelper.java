@@ -50,7 +50,7 @@ public class TestSweHelper
             .addSamplingTimeIsoUTC("time")
             .addQuantityField("temp").done()
             .addQuantityField("press").done()
-            .addNestedRecord("rec")
+            .addRecordField("rec")
                 .addBooleanField("flag1").done()
                 .addCategoryField("status").done()
                 .done()
