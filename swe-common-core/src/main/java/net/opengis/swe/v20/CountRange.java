@@ -7,9 +7,9 @@ at http://mozilla.org/MPL/2.0/.
 Software distributed under the License is distributed on an "AS IS" basis,
 WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the License.
- 
+
 Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
- 
+
 ******************************* END LICENSE BLOCK ***************************/
 
 package net.opengis.swe.v20;
@@ -21,19 +21,19 @@ package net.opengis.swe.v20;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface CountRange extends RangeComponent, HasConstraints<AllowedValues>
+public interface CountRange extends RangeComponent, CountOrRange
 {
- 
+
     @Override
     public CountRange copy();
-    
-    
+
+
     /**
      * Gets the value property
      */
     public int[] getValue();
-    
-    
+
+
     /**
      * Sets the value property
      */
