@@ -16,6 +16,7 @@ package org.vast.swe;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.function.Consumer;
 import org.vast.data.DateTimeOrDouble;
 import org.vast.data.SWEFactory;
@@ -27,7 +28,11 @@ import net.opengis.swe.v20.AllowedTokens;
 import net.opengis.swe.v20.AllowedValues;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
+import net.opengis.swe.v20.CategoryOrRange;
+import net.opengis.swe.v20.CategoryRange;
 import net.opengis.swe.v20.Count;
+import net.opengis.swe.v20.CountOrRange;
+import net.opengis.swe.v20.CountRange;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
@@ -35,10 +40,14 @@ import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Matrix;
 import net.opengis.swe.v20.Quantity;
+import net.opengis.swe.v20.QuantityOrRange;
+import net.opengis.swe.v20.QuantityRange;
 import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.SimpleComponent;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.Time;
+import net.opengis.swe.v20.TimeOrRange;
+import net.opengis.swe.v20.TimeRange;
 import net.opengis.swe.v20.UnitReference;
 import net.opengis.swe.v20.Vector;
 
@@ -95,6 +104,25 @@ public class SWEBuilders
 
 
     /**
+     * @return A builder to create a new CategoryRange component
+     */
+    public static CategoryRangeBuilder newCategoryRange()
+    {
+        return newCategoryRange(DEFAULT_SWE_FACTORY);
+    }
+
+
+    /**
+     * @param fac Factory to use to create the component objects
+     * @return A builder to create a new CategoryRange component
+     */
+    public static CategoryRangeBuilder newCategoryRange(SWEFactory fac)
+    {
+        return new CategoryRangeBuilder(fac);
+    }
+
+
+    /**
      * @return A builder to create a new Count component
      */
     public static CountBuilder newCount()
@@ -110,6 +138,25 @@ public class SWEBuilders
     public static CountBuilder newCount(SWEFactory fac)
     {
         return new CountBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new CountRange component
+     */
+    public static CountRangeBuilder newCountRange()
+    {
+        return newCountRange(DEFAULT_SWE_FACTORY);
+    }
+
+
+    /**
+     * @param fac Factory to use to create the component objects
+     * @return A builder to create a new CountRange component
+     */
+    public static CountRangeBuilder newCountRange(SWEFactory fac)
+    {
+        return new CountRangeBuilder(fac);
     }
 
 
@@ -133,6 +180,25 @@ public class SWEBuilders
 
 
     /**
+     * @return A builder to create a new QuantityRange component
+     */
+    public static QuantityRangeBuilder newQuantityRange()
+    {
+        return newQuantityRange(DEFAULT_SWE_FACTORY);
+    }
+
+
+    /**
+     * @param fac Factory to use to create the component objects
+     * @return A builder to create a new QuantityRange component
+     */
+    public static QuantityRangeBuilder newQuantityRange(SWEFactory fac)
+    {
+        return new QuantityRangeBuilder(fac);
+    }
+
+
+    /**
      * @return A builder to create a new Time component
      */
     public static TimeBuilder newTime()
@@ -148,6 +214,25 @@ public class SWEBuilders
     public static TimeBuilder newTime(SWEFactory fac)
     {
         return new TimeBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new TimeRange component
+     */
+    public static TimeRangeBuilder newTimeRange()
+    {
+        return newTimeRange(DEFAULT_SWE_FACTORY);
+    }
+
+
+    /**
+     * @param fac Factory to use to create the component objects
+     * @return A builder to create a new TimeRange component
+     */
+    public static TimeRangeBuilder newTimeRange(SWEFactory fac)
+    {
+        return new TimeRangeBuilder(fac);
     }
 
 
@@ -459,9 +544,9 @@ public class SWEBuilders
             return (B)this;
         }
 
-        public B refFrame(String refFrame, String axisId)
+        public B refFrame(String refFrameUri, String axisId)
         {
-            instance.setReferenceFrame(refFrame);
+            instance.setReferenceFrame(refFrameUri);
             instance.setAxisID(axisId);
             return (B)this;
         }
@@ -470,6 +555,74 @@ public class SWEBuilders
         {
             instance.setAxisID(axisId);
             return (B)this;
+        }
+
+        public B addQuality(SimpleComponent q)
+        {
+            if (q instanceof Quantity)
+                instance.addQuality((Quantity)q);
+            else if (q instanceof QuantityRange)
+                instance.addQuality((QuantityRange)q);
+            else if (q instanceof Category)
+                instance.addQuality((Category)q);
+            else if (q instanceof Text)
+                instance.addQuality((Text)q);
+            else
+                throw new IllegalArgumentException("Invalid quality component. Must be one of "
+                    + Arrays.asList(Quantity.class.getSimpleName(), QuantityRange.class.getSimpleName(), Category.class.getSimpleName(), Text.class.getSimpleName()));
+            return (B)this;
+        }
+
+        public NestedQuantityBuilder<B> addQualityAsQuantity()
+        {
+            return new NestedQuantityBuilder<B>((B)this, fac)
+            {
+                @Override
+                public B done()
+                {
+                    SimpleComponentBuilder.this.addQuality(build());
+                    return (B)SimpleComponentBuilder.this;
+                }
+            };
+        }
+
+        public NestedQuantityRangeBuilder<B> addQualityAsQuantityRange()
+        {
+            return new NestedQuantityRangeBuilder<B>((B)this, fac)
+            {
+                @Override
+                public B done()
+                {
+                    SimpleComponentBuilder.this.addQuality(build());
+                    return (B)SimpleComponentBuilder.this;
+                }
+            };
+        }
+
+        public NestedCategoryBuilder<B> addQualityAsCategory()
+        {
+            return new NestedCategoryBuilder<B>((B)this, fac)
+            {
+                @Override
+                public B done()
+                {
+                    SimpleComponentBuilder.this.addQuality(build());
+                    return (B)SimpleComponentBuilder.this;
+                }
+            };
+        }
+
+        public NestedTextBuilder<B> addQualityAsText()
+        {
+            return new NestedTextBuilder<B>((B)this, fac)
+            {
+                @Override
+                public B done()
+                {
+                    SimpleComponentBuilder.this.addQuality(build());
+                    return (B)SimpleComponentBuilder.this;
+                }
+            };
         }
     }
 
@@ -526,40 +679,24 @@ public class SWEBuilders
     }
 
 
-    /**
-     * <p>
-     * Builder class for Category components
-     * </p>
-     *
-     * @author Alex Robin
-     * @date Apr 13, 2020
-     */
-    public static class CategoryBuilder extends BaseCategoryBuilder<CategoryBuilder>
-    {
-        protected CategoryBuilder(SWEFactory fac)
-        {
-            super(fac);
-        }
-    }
-
     @SuppressWarnings("unchecked")
-    public abstract static class BaseCategoryBuilder<B extends BaseCategoryBuilder<B>> extends SimpleComponentBuilder<B, Category>
+    public abstract static class CategoryOrRangeBuilder<B extends CategoryOrRangeBuilder<B, T>, T extends CategoryOrRange> extends SimpleComponentBuilder<B, T>
     {
-        protected BaseCategoryBuilder(SWEFactory fac)
+        protected CategoryOrRangeBuilder(SWEFactory fac, T instance)
         {
             super(fac);
-            this.instance = fac.newCategory();
+            this.instance = instance;
         }
 
-        public B copyFrom(Category base)
+        public B copyFrom(T base)
         {
             super.copyFrom(base);
             instance.setCodeSpace(base.getCodeSpace());
-            instance.setValue(base.getValue());
+            instance.setConstraint(base.getConstraint());
             return (B)this;
         }
 
-        public B setCodeSpace(String uri)
+        public B codeSpace(String uri)
         {
             instance.setCodeSpace(uri);
             return (B)this;
@@ -592,11 +729,22 @@ public class SWEBuilders
                 constraint.addValue(Integer.toString(val));
             return (B)this;
         }
+    }
 
-        public B value(String value)
+
+    /**
+     * <p>
+     * Builder class for Category components
+     * </p>
+     *
+     * @author Alex Robin
+     * @date Apr 13, 2020
+     */
+    public static class CategoryBuilder extends BaseCategoryBuilder<CategoryBuilder>
+    {
+        protected CategoryBuilder(SWEFactory fac)
         {
-            instance.setValue(value);
-            return (B)this;
+            super(fac);
         }
     }
 
@@ -612,36 +760,98 @@ public class SWEBuilders
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseCategoryBuilder<B extends BaseCategoryBuilder<B>> extends CategoryOrRangeBuilder<B, Category>
+    {
+        protected BaseCategoryBuilder(SWEFactory fac)
+        {
+            super(fac, fac.newCategory());
+        }
+
+        @Override
+		public B copyFrom(Category base)
+        {
+            super.copyFrom(base);
+            instance.setValue(base.getValue());
+            return (B)this;
+        }
+
+        public B value(String value)
+        {
+            instance.setValue(value);
+            return (B)this;
+        }
+    }
+
 
     /**
      * <p>
-     * Builder class for Count components
+     * Builder class for CategoryRange components
      * </p>
      *
      * @author Alex Robin
-     * @date Apr 13, 2020
+     * @date May 15, 2020
      */
-    public static class CountBuilder extends BaseCountBuilder<CountBuilder>
+    public static class CategoryRangeBuilder extends BaseCategoryRangeBuilder<CategoryRangeBuilder>
     {
-        protected CountBuilder(SWEFactory fac)
+        protected CategoryRangeBuilder(SWEFactory fac)
         {
             super(fac);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public abstract static class BaseCountBuilder<B extends BaseCountBuilder<B>> extends SimpleComponentBuilder<B, Count>
+    /* Nested builder for use within another builder */
+    public static abstract class NestedCategoryRangeBuilder<B> extends BaseCategoryRangeBuilder<NestedCategoryRangeBuilder<B>> implements NestedBuilder<B>
     {
-        protected BaseCountBuilder(SWEFactory fac)
+        B parent;
+
+        protected NestedCategoryRangeBuilder(B parent, SWEFactory fac)
         {
             super(fac);
-            this.instance = fac.newCount();
+            this.parent = parent;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseCategoryRangeBuilder<B extends BaseCategoryRangeBuilder<B>> extends CategoryOrRangeBuilder<B, CategoryRange>
+    {
+        protected BaseCategoryRangeBuilder(SWEFactory fac)
+        {
+            super(fac, fac.newCategoryRange());
         }
 
-        public B copyFrom(Count base)
+        @Override
+		public B copyFrom(CategoryRange base)
         {
             super.copyFrom(base);
             instance.setValue(base.getValue());
+            return (B)this;
+        }
+
+        public B value(String min, String max)
+        {
+            instance.setValue(new String[] {min, max});
+            return (B)this;
+        }
+    }
+
+
+    /*
+     * Base builder for Count and CountRange components
+     */
+    @SuppressWarnings("unchecked")
+    public abstract static class CountOrRangeBuilder<B extends CountOrRangeBuilder<B, T>, T extends CountOrRange> extends SimpleComponentBuilder<B, T>
+    {
+        protected CountOrRangeBuilder(SWEFactory fac, T instance)
+        {
+            super(fac);
+            this.instance = instance;
+        }
+
+        public B copyFrom(T base)
+        {
+            super.copyFrom(base);
+            instance.setConstraint(base.getConstraint());
             return (B)this;
         }
 
@@ -679,11 +889,22 @@ public class SWEBuilders
             constraint.addInterval(new double[] {min, max});
             return (B)this;
         }
+    }
 
-        public B value(int value)
+
+    /**
+     * <p>
+     * Builder class for Count components
+     * </p>
+     *
+     * @author Alex Robin
+     * @date Apr 13, 2020
+     */
+    public static class CountBuilder extends BaseCountBuilder<CountBuilder>
+    {
+        protected CountBuilder(SWEFactory fac)
         {
-            instance.setValue(value);
-            return (B)this;
+            super(fac);
         }
     }
 
@@ -699,38 +920,102 @@ public class SWEBuilders
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseCountBuilder<B extends BaseCountBuilder<B>> extends CountOrRangeBuilder<B, Count>
+    {
+        protected BaseCountBuilder(SWEFactory fac)
+        {
+            super(fac, fac.newCount());
+        }
+
+        @Override
+		public B copyFrom(Count base)
+        {
+            super.copyFrom(base);
+            instance.setValue(base.getValue());
+            return (B)this;
+        }
+
+        public B value(int value)
+        {
+            instance.setValue(value);
+            return (B)this;
+        }
+    }
+
 
     /**
      * <p>
-     * Builder class for Quantity components
+     * Builder class for CountRange components
      * </p>
      *
      * @author Alex Robin
-     * @date Apr 13, 2020
+     * @date May 15, 2020
      */
-    public static class QuantityBuilder extends BaseQuantityBuilder<QuantityBuilder>
+    public static class CountRangeBuilder extends BaseCountRangeBuilder<CountRangeBuilder>
     {
-        protected QuantityBuilder(SWEFactory fac)
+        protected CountRangeBuilder(SWEFactory fac)
         {
             super(fac);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public abstract static class BaseQuantityBuilder<B extends BaseQuantityBuilder<B>> extends SimpleComponentBuilder<B, Quantity>
+    /* Nested builder for use within another builder */
+    public static abstract class NestedCountRangeBuilder<B> extends BaseCountRangeBuilder<NestedCountRangeBuilder<B>> implements NestedBuilder<B>
     {
-        protected BaseQuantityBuilder(SWEFactory fac)
+        B parent;
+
+        protected NestedCountRangeBuilder(B parent, SWEFactory fac)
         {
             super(fac);
-            this.instance = fac.newQuantity();
+            this.parent = parent;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseCountRangeBuilder<B extends BaseCountRangeBuilder<B>> extends CountOrRangeBuilder<B, CountRange>
+    {
+        protected BaseCountRangeBuilder(SWEFactory fac)
+        {
+            super(fac, fac.newCountRange());
+        }
+
+        @Override
+		public B copyFrom(CountRange base)
+        {
+            super.copyFrom(base);
+            instance.setValue(base.getValue());
+            return (B)this;
+        }
+
+        public B value(int min, int max)
+        {
+            instance.setValue(new int[] {min, max});
+            return (B)this;
+        }
+    }
+
+
+    /*
+     * Base builder for Quantity and QuantityRange components
+     */
+    @SuppressWarnings("unchecked")
+    public abstract static class QuantityOrRangeBuilder<B extends QuantityOrRangeBuilder<B, T>, T extends QuantityOrRange> extends SimpleComponentBuilder<B, T>
+    {
+        protected QuantityOrRangeBuilder(SWEFactory fac, T instance)
+        {
+            super(fac);
+            Asserts.checkArgument(instance instanceof Quantity || instance instanceof QuantityRange,
+            		"Instance must be one of " + Arrays.asList(Quantity.class.getSimpleName(), Arrays.asList(QuantityRange.class.getSimpleName())));
+
+            this.instance = instance;
             uomUri(SWEConstants.UOM_ANY);
         }
 
-        public B copyFrom(Quantity base)
+        public B copyFrom(T base)
         {
             super.copyFrom(base);
             instance.setUom(base.getUom());
-            instance.setValue(base.getValue());
             return (B)this;
         }
 
@@ -789,11 +1074,22 @@ public class SWEBuilders
             constraint.addInterval(new double[] {min, max});
             return (B)this;
         }
+    }
 
-        public B value(double value)
+
+    /**
+     * <p>
+     * Builder class for Quantity components
+     * </p>
+     *
+     * @author Alex Robin
+     * @date Apr 13, 2020
+     */
+    public static class QuantityBuilder extends BaseQuantityBuilder<QuantityBuilder>
+    {
+        protected QuantityBuilder(SWEFactory fac)
         {
-            instance.setValue(value);
-            return (B)this;
+            super(fac);
         }
     }
 
@@ -809,36 +1105,99 @@ public class SWEBuilders
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseQuantityBuilder<B extends BaseQuantityBuilder<B>> extends QuantityOrRangeBuilder<B, Quantity>
+    {
+        protected BaseQuantityBuilder(SWEFactory fac)
+        {
+            super(fac, fac.newQuantity());
+        }
+
+        @Override
+		public B copyFrom(Quantity base)
+        {
+            super.copyFrom(base);
+            instance.setValue(base.getValue());
+            return (B)this;
+        }
+
+        public B value(double value)
+        {
+            instance.setValue(value);
+            return (B)this;
+        }
+    }
+
 
     /**
      * <p>
-     * Builder class for Time components
+     * Builder class for QuantityRange components
      * </p>
      *
      * @author Alex Robin
-     * @date Apr 13, 2020
+     * @date May 15, 2020
      */
-    public static class TimeBuilder extends BaseTimeBuilder<TimeBuilder>
+    public static class QuantityRangeBuilder extends BaseQuantityRangeBuilder<QuantityRangeBuilder>
     {
-        protected TimeBuilder(SWEFactory fac)
+        protected QuantityRangeBuilder(SWEFactory fac)
         {
             super(fac);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public abstract static class BaseTimeBuilder<B extends BaseTimeBuilder<B>> extends SimpleComponentBuilder<B, Time>
+    /* Nested builder for use within another builder */
+    public static abstract class NestedQuantityRangeBuilder<B> extends BaseQuantityRangeBuilder<NestedQuantityRangeBuilder<B>> implements NestedBuilder<B>
     {
-        protected BaseTimeBuilder(SWEFactory fac)
+        B parent;
+
+        protected NestedQuantityRangeBuilder(B parent, SWEFactory fac)
         {
             super(fac);
-            this.instance = fac.newTime();
+            this.parent = parent;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseQuantityRangeBuilder<B extends BaseQuantityRangeBuilder<B>> extends QuantityOrRangeBuilder<B, QuantityRange>
+    {
+        protected BaseQuantityRangeBuilder(SWEFactory fac)
+        {
+            super(fac, fac.newQuantityRange());
         }
 
-        public B copyFrom(Time base)
+        @Override
+		public B copyFrom(QuantityRange base)
         {
             super.copyFrom(base);
             instance.setValue(base.getValue());
+            return (B)this;
+        }
+
+        public B value(double min, double max)
+        {
+            instance.setValue(new double[] {min, max});
+            return (B)this;
+        }
+    }
+
+
+    /*
+     * Base builder for Time or TimeRange
+     */
+    @SuppressWarnings("unchecked")
+    public abstract static class TimeOrRangeBuilder<B extends TimeOrRangeBuilder<B, T>, T extends TimeOrRange> extends SimpleComponentBuilder<B, T>
+    {
+        protected TimeOrRangeBuilder(SWEFactory fac, T instance)
+        {
+            super(fac);
+            this.instance = instance;
+        }
+
+        public B copyFrom(T base)
+        {
+            super.copyFrom(base);
+            instance.setUom(base.getUom());
+            instance.setConstraint(base.getConstraint());
             return (B)this;
         }
 
@@ -864,21 +1223,15 @@ public class SWEBuilders
             return (B)this;
         }
 
+        public B refFrame(String refFrameUri)
+        {
+        	instance.setReferenceFrame(refFrameUri);
+            return (B)this;
+        }
+
         public B refTime(Instant refTime)
         {
             instance.setReferenceTime(refTime.atOffset(ZoneOffset.UTC));
-            return (B)this;
-        }
-
-        public B value(double value)
-        {
-            instance.setValue(new DateTimeOrDouble(value));
-            return (B)this;
-        }
-
-        public B value(Instant value)
-        {
-            instance.setValue(new DateTimeOrDouble(value.atOffset(ZoneOffset.UTC)));
             return (B)this;
         }
 
@@ -922,7 +1275,7 @@ public class SWEBuilders
             definition(SWEConstants.DEF_SAMPLING_TIME);
             label("Sampling Time");
             withIso8601Format();
-            withUtcTimeFrame();
+            withGpsTimeFrame();
             return (B)this;
         }
 
@@ -945,12 +1298,122 @@ public class SWEBuilders
         }
     }
 
+
+    /**
+     * <p>
+     * Builder class for Time components
+     * </p>
+     *
+     * @author Alex Robin
+     * @date Apr 13, 2020
+     */
+    public static class TimeBuilder extends BaseTimeBuilder<TimeBuilder>
+    {
+        protected TimeBuilder(SWEFactory fac)
+        {
+            super(fac);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseTimeBuilder<B extends BaseTimeBuilder<B>> extends TimeOrRangeBuilder<B, Time>
+    {
+        protected BaseTimeBuilder(SWEFactory fac)
+        {
+            super(fac, fac.newTime());
+        }
+
+        @Override
+		public B copyFrom(Time base)
+        {
+            super.copyFrom(base);
+            instance.setValue(base.getValue());
+            return (B)this;
+        }
+
+        public B value(double value)
+        {
+            instance.setValue(new DateTimeOrDouble(value));
+            return (B)this;
+        }
+
+        public B value(Instant value)
+        {
+            instance.setValue(new DateTimeOrDouble(value.atOffset(ZoneOffset.UTC)));
+            return (B)this;
+        }
+    }
+
     /* Nested builder for use within another builder */
     public static abstract class NestedTimeBuilder<B> extends BaseTimeBuilder<NestedTimeBuilder<B>> implements NestedBuilder<B>
     {
         B parent;
 
         protected NestedTimeBuilder(B parent, SWEFactory fac)
+        {
+            super(fac);
+            this.parent = parent;
+        }
+    }
+
+
+    /**
+     * <p>
+     * Builder class for TimeRange components
+     * </p>
+     *
+     * @author Alex Robin
+     * @date May 15, 2020
+     */
+    public static class TimeRangeBuilder extends BaseTimeRangeBuilder<TimeRangeBuilder>
+    {
+        protected TimeRangeBuilder(SWEFactory fac)
+        {
+            super(fac);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseTimeRangeBuilder<B extends BaseTimeRangeBuilder<B>> extends TimeOrRangeBuilder<B, TimeRange>
+    {
+        protected BaseTimeRangeBuilder(SWEFactory fac)
+        {
+            super(fac, fac.newTimeRange());
+        }
+
+        @Override
+		public B copyFrom(TimeRange base)
+        {
+            super.copyFrom(base);
+            instance.setValue(base.getValue());
+            return (B)this;
+        }
+
+        public B value(double min, double max)
+        {
+        	instance.setValue(new DateTimeOrDouble[] {
+            	new DateTimeOrDouble(min),
+            	new DateTimeOrDouble(max)
+            });
+            return (B)this;
+        }
+
+        public B value(Instant min, Instant max)
+        {
+            instance.setValue(new DateTimeOrDouble[] {
+            	new DateTimeOrDouble(min.atOffset(ZoneOffset.UTC)),
+            	new DateTimeOrDouble(max.atOffset(ZoneOffset.UTC))
+            });
+            return (B)this;
+        }
+    }
+
+    /* Nested builder for use within another builder */
+    public static abstract class NestedTimeRangeBuilder<B> extends BaseTimeBuilder<NestedTimeRangeBuilder<B>> implements NestedBuilder<B>
+    {
+        B parent;
+
+        protected NestedTimeRangeBuilder(B parent, SWEFactory fac)
         {
             super(fac);
             this.parent = parent;
@@ -1082,9 +1545,35 @@ public class SWEBuilders
             };
         }
 
+        public NestedCategoryRangeBuilder<B> addCategoryRangeField(String name)
+        {
+            return new NestedCategoryRangeBuilder<B>((B)this, fac)
+            {
+                @Override
+                public B done()
+                {
+                    BaseDataRecordBuilder.this.addField(name, build());
+                    return (B)BaseDataRecordBuilder.this;
+                }
+            };
+        }
+
         public NestedCountBuilder<B> addCountField(String name)
         {
             return new NestedCountBuilder<B>((B)this, fac)
+            {
+                @Override
+                public B done()
+                {
+                    BaseDataRecordBuilder.this.addField(name, build());
+                    return (B)BaseDataRecordBuilder.this;
+                }
+            };
+        }
+
+        public NestedCountRangeBuilder<B> addCountRangeField(String name)
+        {
+            return new NestedCountRangeBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1108,9 +1597,35 @@ public class SWEBuilders
             };
         }
 
+        public NestedQuantityRangeBuilder<B> addQuantityRangeField(String name)
+        {
+            return new NestedQuantityRangeBuilder<B>((B)this, fac)
+            {
+                @Override
+                public B done()
+                {
+                    BaseDataRecordBuilder.this.addField(name, build());
+                    return (B)BaseDataRecordBuilder.this;
+                }
+            };
+        }
+
         public NestedTimeBuilder<B> addTimeField(String name)
         {
             return new NestedTimeBuilder<B>((B)this, fac)
+            {
+                @Override
+                public B done()
+                {
+                    BaseDataRecordBuilder.this.addField(name, build());
+                    return (B)BaseDataRecordBuilder.this;
+                }
+            };
+        }
+
+        public NestedTimeRangeBuilder<B> addTimeRangeField(String name)
+        {
+            return new NestedTimeRangeBuilder<B>((B)this, fac)
             {
                 @Override
                 public B done()
@@ -1251,15 +1766,15 @@ public class SWEBuilders
             //return (B)this;
         }
 
-        public B refFrame(String refFrame)
+        public B refFrame(String refFrameUri)
         {
-            instance.setReferenceFrame(refFrame);
+            instance.setReferenceFrame(refFrameUri);
             return (B)this;
         }
 
-        public B localFrame(String localFrame)
+        public B localFrame(String localFrameUri)
         {
-            instance.setLocalFrame(localFrame);
+            instance.setLocalFrame(localFrameUri);
             return (B)this;
         }
 
@@ -1767,15 +2282,15 @@ public class SWEBuilders
             //return (B)this;
         }
 
-        public B refFrame(String refFrame)
+        public B refFrame(String refFrameUri)
         {
-            instance.setReferenceFrame(refFrame);
+            instance.setReferenceFrame(refFrameUri);
             return (B)this;
         }
 
-        public B localFrame(String localFrame)
+        public B localFrame(String localFrameUri)
         {
-            instance.setLocalFrame(localFrame);
+            instance.setLocalFrame(localFrameUri);
             return (B)this;
         }
 
