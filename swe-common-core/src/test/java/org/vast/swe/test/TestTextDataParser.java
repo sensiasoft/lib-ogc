@@ -41,15 +41,15 @@ public class TestTextDataParser
         DataArray array = fac.createArray()
             .withFixedSize(arraySize)
             .name("array")
-            .withRecordElement("elt")
+            .withElement("elt", fac.createRecord()
                 .addSamplingTimeIsoUTC("f0")
-                .addQuantityField("f1").done()
-                .addQuantityField("f2").done()
-                .addRecordField("rec2")
-                    .addCountField("f3").done()
-                    .addQuantityField("f4").done()
-                    .done()
-                .done()
+                .addField("f1", fac.createQuantity().build())
+                .addField("f2", fac.createQuantity().build())
+                .addField("rec2", fac.createRecord()
+                    .addField("f3", fac.createCount().build())
+                    .addField("f4", fac.createQuantity().build())
+                    .build())
+                .build())
             .build();
 
         // generate data

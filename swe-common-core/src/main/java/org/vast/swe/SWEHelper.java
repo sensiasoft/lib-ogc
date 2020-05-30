@@ -75,17 +75,22 @@ import org.vast.data.ScalarIterator;
 import org.vast.data.TextEncodingImpl;
 import org.vast.swe.SWEBuilders.BooleanBuilder;
 import org.vast.swe.SWEBuilders.CategoryBuilder;
+import org.vast.swe.SWEBuilders.CategoryRangeBuilder;
 import org.vast.swe.SWEBuilders.CountBuilder;
+import org.vast.swe.SWEBuilders.CountRangeBuilder;
 import org.vast.swe.SWEBuilders.DataArrayBuilder;
 import org.vast.swe.SWEBuilders.DataChoiceBuilder;
 import org.vast.swe.SWEBuilders.DataRecordBuilder;
 import org.vast.swe.SWEBuilders.MatrixBuilder;
 import org.vast.swe.SWEBuilders.QuantityBuilder;
+import org.vast.swe.SWEBuilders.QuantityRangeBuilder;
 import org.vast.swe.SWEBuilders.TextBuilder;
 import org.vast.swe.SWEBuilders.TimeBuilder;
+import org.vast.swe.SWEBuilders.TimeRangeBuilder;
 import org.vast.swe.SWEBuilders.VectorBuilder;
 import org.vast.swe.fast.JsonDataWriter;
 import org.vast.swe.fast.XmlDataWriter;
+import org.vast.swe.helper.RasterHelper;
 import org.vast.util.Asserts;
 
 
@@ -100,8 +105,9 @@ import org.vast.util.Asserts;
  */
 public class SWEHelper
 {
+    public static final SWEFactory DEFAULT_SWE_FACTORY = new SWEFactory();
     public static final String PATH_SEPARATOR = "/";
-    protected SWEFactory fac = SWEBuilders.DEFAULT_SWE_FACTORY;
+    protected SWEFactory fac = DEFAULT_SWE_FACTORY;
 
 
     /**
@@ -116,7 +122,19 @@ public class SWEHelper
 
     public static String getPropertyUri(String propName)
     {
-        return SWEConstants.SWE_PROP_URI_PREFIX + propName;
+    	return SWEConstants.SWE_PROP_URI_PREFIX + propName;
+    }
+
+
+    public static String getQudtUri(String propName)
+    {
+        return SWEConstants.QUDT_URI_PREFIX + propName;
+    }
+
+
+    public static String getDBpediaUri(String propName)
+    {
+    	return SWEConstants.DBPEDIA_URI_PREFIX + propName;
     }
 
 
@@ -161,11 +179,29 @@ public class SWEHelper
 
 
     /**
+     * @return A builder to create a new CategoryRange component
+     */
+    public CategoryRangeBuilder createCategoryRange()
+    {
+        return new CategoryRangeBuilder(fac);
+    }
+
+
+    /**
      * @return A builder to create a new Count component
      */
     public CountBuilder createCount()
     {
         return new CountBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new CountRange component
+     */
+    public CountRangeBuilder createCountRange()
+    {
+        return new CountRangeBuilder(fac);
     }
 
 
@@ -179,11 +215,29 @@ public class SWEHelper
 
 
     /**
+     * @return A builder to create a new QuantityRange component
+     */
+    public QuantityRangeBuilder createQuantityRange()
+    {
+        return new QuantityRangeBuilder(fac);
+    }
+
+
+    /**
      * @return A builder to create a new Time component
      */
     public TimeBuilder createTime()
     {
         return new TimeBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new TimeRange component
+     */
+    public TimeRangeBuilder createTimeRange()
+    {
+        return new TimeRangeBuilder(fac);
     }
 
 
@@ -199,9 +253,18 @@ public class SWEHelper
     /**
      * @return A builder to create a new DataRecord component
      */
-    public DataRecordBuilder createRecord()
+    public DataRecordBuilder createDataRecord()
     {
         return new DataRecordBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new DataRecord component
+     */
+    public DataRecordBuilder createRecord()
+    {
+        return createDataRecord();
     }
 
 
@@ -218,9 +281,27 @@ public class SWEHelper
     /**
      * @return A builder to create a new DataChoice component
      */
-    public DataChoiceBuilder createChoice()
+    public DataChoiceBuilder createDataChoice()
     {
         return new DataChoiceBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new DataChoice component
+     */
+    public DataChoiceBuilder createChoice()
+    {
+        return createDataChoice();
+    }
+
+
+    /**
+     * @return A builder to create a new DataArray component
+     */
+    public DataArrayBuilder createDataArray()
+    {
+        return new DataArrayBuilder(fac);
     }
 
 
@@ -229,7 +310,7 @@ public class SWEHelper
      */
     public DataArrayBuilder createArray()
     {
-        return new DataArrayBuilder(fac);
+        return createDataArray();
     }
 
 
@@ -239,408 +320,6 @@ public class SWEHelper
     public MatrixBuilder createMatrix()
     {
         return new MatrixBuilder(fac);
-    }
-
-
-
-    /**
-     * Creates a new boolean component
-     * @param definition URI pointing to semantic definition of component in a dictionary
-     * @param label short human readable label identifying the component (shown in UI)
-     * @param description textual description of this component (can be long)
-     * @return the new Boolean component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Boolean newBoolean(String definition, String label, String description)
-    {
-        Boolean b = fac.newBoolean();
-        b.setDefinition(definition);
-        b.setLabel(label);
-        b.setDescription(description);
-        return b;
-    }
-
-
-    /**
-     * Creates a new Text component
-     * @param definition URI pointing to semantic definition of component in a dictionary
-     * @param label short human readable label identifying the component (shown in UI)
-     * @param description textual description of this component (can be long)
-     * @return the new Text component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Text newText(String definition, String label, String description)
-    {
-        Text tx = fac.newText();
-        tx.setDefinition(definition);
-        tx.setLabel(label);
-        tx.setDescription(description);
-        return tx;
-    }
-
-
-    /**
-     * Creates a new count (integer) component
-     * @param definition URI pointing to semantic definition of component in a dictionary
-     * @param label short human readable label identifying the component (shown in UI)
-     * @param description textual description of this component (can be long)
-     * @param dataType data type to use for this component (if null, {@link DataType#INT} will be used)
-     * @return the new Count component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Count newCount(String definition, String label, String description, DataType dataType)
-    {
-        Count c = fac.newCount(dataType == null ? DataType.INT : dataType);
-        c.setDefinition(definition);
-        c.setLabel(label);
-        c.setDescription(description);
-        return c;
-    }
-
-
-    /**
-     * Creates a new count (integer) component
-     * @param definition URI pointing to semantic definition of component in a dictionary
-     * @param label short human readable label identifying the component (shown in UI)
-     * @param description textual description of this component (can be long)
-     * @return the new Count component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Count newCount(String definition, String label, String description)
-    {
-        return newCount(definition, label, description, DataType.INT);
-    }
-
-
-    /**
-     * Creates a new category component
-     * @param definition URI pointing to semantic definition of component in a dictionary
-     * @param label short human readable label identifying the component (shown in UI)
-     * @param description textual description of this component (can be long) or null
-     * @param codeSpace URI of this category code space
-     * @return the new Category component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Category newCategory(String definition, String label, String description, String codeSpace)
-    {
-        Category c = fac.newCategory();
-        c.setDefinition(definition);
-        c.setLabel(label);
-        c.setDescription(description);
-        c.setCodeSpace(codeSpace);
-        return c;
-    }
-
-
-    /**
-     * Creates a new quantity (decimal) component
-     * @param definition URI pointing to semantic definition of component in a dictionary
-     * @param label short human readable label identifying the component (shown in UI)
-     * @param description textual description of this component (can be long) or null
-     * @param uom UCUM code or URI for this decimal quantity's unit of measure
-     * @param dataType data type to use for this component (if null, {@link DataType#DOUBLE} will be used)
-     * @return the new Quantity component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Quantity newQuantity(String definition, String label, String description, String uom, DataType dataType)
-    {
-        Quantity q = fac.newQuantity(dataType == null ? DataType.DOUBLE : dataType);
-        q.setDefinition(definition);
-        q.setLabel(label);
-        q.setDescription(description);
-
-        if (uom.startsWith(SWEConstants.URN_PREFIX) || uom.startsWith(SWEConstants.HTTP_PREFIX))
-            q.getUom().setHref(uom);
-        else
-            q.getUom().setCode(uom);
-
-        return q;
-    }
-
-
-    /**
-     * Creates a new quantity (decimal) component with default data type
-     * @param definition URI pointing to semantic definition of component in a dictionary
-     * @param label short human readable label identifying the component (shown in UI)
-     * @param description textual description of this component (can be long) or null
-     * @param uom UCUM code or URI for this decimal quantity's unit of measure
-     * @return the new Quantity component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Quantity newQuantity(String definition, String label, String description, String uom)
-    {
-        return newQuantity(definition, label, description, uom, DataType.DOUBLE);
-    }
-
-
-    /**
-     * Creates a new time component
-     * @param definition URI pointing to semantic definition of component in a dictionary
-     * @param label short human readable label identifying the component (shown in UI)
-     * @param description textual description of this component (can be long) or null
-     * @param uom code or URI for this time stamp unit of measure
-     * @param timeRef URI of time reference system
-     * @param dataType data type to use for this component (if null, {@link DataType#DOUBLE} will be used)
-     * @return the new Time component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Time newTime(String definition, String label, String description, String uom, String timeRef, DataType dataType)
-    {
-        Time t = fac.newTime(dataType == null ? DataType.DOUBLE : dataType);
-        t.setDefinition(definition);
-        t.setLabel(label);
-        t.setDescription(description);
-        t.setReferenceFrame(timeRef);
-
-        if (uom.startsWith(SWEConstants.URN_PREFIX) || uom.startsWith(SWEConstants.HTTP_PREFIX))
-            t.getUom().setHref(uom);
-        else
-            t.getUom().setCode(uom);
-
-        return t;
-    }
-
-
-    /**
-     * Creates a new time component with double data type
-     * @param definition URI pointing to semantic definition of component in a dictionary
-     * @param label short human readable label identifying the component (shown in UI)
-     * @param description textual description of this component (can be long) or null
-     * @param uom code or URI for this time stamp unit of measure
-     * @param timeRef URI of time reference system
-     * @return the new Time component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Time newTime(String definition, String label, String description, String uom, String timeRef)
-    {
-        return newTime(definition, label, description, uom, timeRef, DataType.DOUBLE);
-    }
-
-
-    /**
-     * Creates new time component with ISO8601 format and UTC time frame
-     * @param definition URI pointing to semantic definition of component in a dictionary
-     * @param label short human readable label identifying the component (shown in UI)
-     * @param description textual description of this component (can be long) or null
-     * @return the new Time component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Time newTimeIsoUTC(String definition, String label, String description)
-    {
-        return newTime(definition, label, description, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
-    }
-
-
-    /**
-     * Creates a new sampling time component with ISO8601 format and UTC time frame
-     * @return the new Time component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Time newTimeStampIsoUTC()
-    {
-        return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
-    }
-
-
-    /**
-     * Creates a new sampling time component with ISO8601 format and GPS time frame
-     * @return the new Time component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Time newTimeStampIsoGPS()
-    {
-        return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_GPS);
-    }
-
-
-    /**
-     * Creates a new phenomenon time component with ISO8601 format and UTC time frame
-     * @param label short human readable label (forecast, model run, valid time etc.)
-     * @param description textual description of this component (can be long) or null
-     * @return the new Time component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Time newPhenomenonTimeIsoUTC(String label, String description)
-    {
-        return newTime(SWEConstants.DEF_PHENOMENON_TIME, label, description, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
-    }
-
-
-    /**
-     * Creates a new sampling time component with decimal unit (e.g. on board clock)
-     * @param uomCode time unit used for this onboard time stamp (e.g. 's', 'ms', 'ns', etc.)
-     * @param timeRef URI of temporal reference frame for this time stamp (e.g. missionStart, etc.)
-     * @return the new Time component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Time newTimeStampOnBoardClock(String uomCode, String timeRef)
-    {
-        return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, uomCode, timeRef);
-    }
-
-
-    /**
-     * Wraps the given component(s) into a record with a time stamp
-     * @param timeStamp Time component representing the time stamp
-     * @param subComponents list of components to wrap with the time stamp
-     * @return new DataRecord instance containing the time stamp and all other components
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public DataRecord wrapWithTimeStamp(Time timeStamp, DataComponent... subComponents)
-    {
-        DataRecord rec = fac.newDataRecord(subComponents.length + 1);
-        rec.addComponent("time", timeStamp);
-
-        for (DataComponent childComp: subComponents)
-            rec.addComponent(childComp.getName(), childComp);
-
-        return rec;
-    }
-
-
-    /**
-     * Wraps the given component(s) into a record with a UTC ISO time stamp
-     * @param subComponents list of components to wrap
-     * @return new DataRecord instance containing the time stamp and all other components
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public DataRecord wrapWithTimeStampUTC(DataComponent... subComponents)
-    {
-        Time timeStamp = newTimeStampIsoUTC();
-        return wrapWithTimeStamp(timeStamp, subComponents);
-    }
-
-
-    /**
-     * Creates a component for carrying system ID (e.g. station ID, sensor ID, device ID, etc...)
-     * @return new Text instance
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Text newSystemIdComponent()
-    {
-        Text t = fac.newText();
-        t.setDefinition(SWEConstants.DEF_SYSTEM_ID);
-        return t;
-    }
-
-
-    /**
-     * Creates a 3D vector component with the specified CRS and axes
-     * @param def definition of the whole vector
-     * @param crs reference frame of the vector
-     * @param names array containing name of each individual vector element
-     * @param labels array containing label of each individual vector element
-     * @param uoms array containing unit of measure of each individual vector element
-     * @param axes array containing axis name of each individual vector element
-     * @return the new Vector component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public Vector newVector(String def, String crs, String[] names, String[] labels, String[] uoms, String[] axes)
-    {
-        Vector loc = fac.newVector();
-        loc.setDefinition(def);
-        loc.setReferenceFrame(crs == null ? SWEConstants.NIL_UNKNOWN : crs);
-
-        Quantity c;
-        for (int i = 0; i < names.length; i++)
-        {
-            c = fac.newQuantity(DataType.DOUBLE);
-            if (labels != null)
-                c.setLabel(labels[i]);
-            if (uoms != null)
-                c.getUom().setCode(uoms[i]);
-            if (axes != null)
-                c.setAxisID(axes[i]);
-            loc.addComponent(names[i], c);
-        }
-
-        return loc;
-    }
-
-
-    /**
-     * Creates a variable size 1D array
-     * @param sizeComponent
-     * @param eltName
-     * @param elementType
-     * @return the new DataArray component object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public DataArray newDataArray(Count sizeComponent, String eltName, DataComponent elementType)
-    {
-        DataArray array = fac.newDataArray();
-        ((DataArrayImpl)array).setElementCount(sizeComponent);
-        array.setElementType(eltName, elementType);
-        return array;
-    }
-
-
-    /**
-     * Creates a fixed size 2D-array component representing an RGB image
-     * @param width
-     * @param height
-     * @param dataType
-     * @return the new DataArray component object
-     */
-    public DataArray newRgbImage(int width, int height, DataType dataType)
-    {
-        DataArray imgArray = fac.newDataArray(height);
-        imgArray.setDefinition(SWEConstants.DEF_IMAGE);
-        DataArray imgRow = fac.newDataArray(width);
-
-        DataRecord imgPixel = fac.newDataRecord(3);
-        if (dataType.isIntegralType())
-        {
-            imgPixel.addComponent("red", fac.newCount(dataType));
-            imgPixel.addComponent("green", fac.newCount(dataType));
-            imgPixel.addComponent("blue", fac.newCount(dataType));
-        }
-        else
-        {
-            imgPixel.addComponent("red", fac.newQuantity(dataType));
-            imgPixel.addComponent("green", fac.newQuantity(dataType));
-            imgPixel.addComponent("blue", fac.newQuantity(dataType));
-        }
-
-        imgRow.addComponent("pixel", imgPixel);
-        imgArray.setElementType("row", imgRow);
-        return imgArray;
-    }
-
-
-    /**
-     * Creates a data stream description with given description and encoding
-     * @param dataDescription description of each stream element
-     * @param dataEncoding data encoding spec
-     * @return the new DataStream object
-     * @deprecated use {@link SWEBuilders} class
-     */
-    @Deprecated
-    public DataStream newDataStream(DataComponent dataDescription, DataEncoding dataEncoding)
-    {
-        DataStream ds = fac.newDataStream();
-        ds.setElementType(dataDescription.getName(), dataDescription);
-        ds.setEncoding(dataEncoding);
-        return ds;
     }
 
 
@@ -845,7 +524,6 @@ public class SWEHelper
     }
 
 
-
     //////////////////////////////////////////////
     // Methods for manipulating component trees //
     //////////////////////////////////////////////
@@ -1020,6 +698,297 @@ public class SWEHelper
     }
 
 
+
+    /* Deprecated methods, replaced by builders */
+
+    /**
+     * @deprecated Use {@link #createBoolean()}
+     */
+    @Deprecated
+    public Boolean newBoolean(String definition, String label, String description)
+    {
+        Boolean b = fac.newBoolean();
+        b.setDefinition(definition);
+        b.setLabel(label);
+        b.setDescription(description);
+        return b;
+    }
+
+
+    /**
+     * @deprecated Use {@link #createText()}
+     */
+    @Deprecated
+    public Text newText(String definition, String label, String description)
+    {
+        Text tx = fac.newText();
+        tx.setDefinition(definition);
+        tx.setLabel(label);
+        tx.setDescription(description);
+        return tx;
+    }
+
+
+    /**
+     * @deprecated Use {@link #createCount()}
+     */
+    @Deprecated
+    public Count newCount(String definition, String label, String description, DataType dataType)
+    {
+        Count c = fac.newCount(dataType == null ? DataType.INT : dataType);
+        c.setDefinition(definition);
+        c.setLabel(label);
+        c.setDescription(description);
+        return c;
+    }
+
+
+    /**
+     * @deprecated Use {@link #createCount()}
+     */
+    @Deprecated
+    public Count newCount(String definition, String label, String description)
+    {
+        return newCount(definition, label, description, DataType.INT);
+    }
+
+
+    /**
+     * @deprecated Use {@link #createCategory()}
+     */
+    @Deprecated
+    public Category newCategory(String definition, String label, String description, String codeSpace)
+    {
+        Category c = fac.newCategory();
+        c.setDefinition(definition);
+        c.setLabel(label);
+        c.setDescription(description);
+        c.setCodeSpace(codeSpace);
+        return c;
+    }
+
+
+    /**
+     * @deprecated Use {@link #createQuantity()}
+     */
+    @Deprecated
+    public Quantity newQuantity(String definition, String label, String description, String uom, DataType dataType)
+    {
+        Quantity q = fac.newQuantity(dataType == null ? DataType.DOUBLE : dataType);
+        q.setDefinition(definition);
+        q.setLabel(label);
+        q.setDescription(description);
+
+        if (uom.startsWith(SWEConstants.URN_PREFIX) || uom.startsWith(SWEConstants.HTTP_PREFIX))
+            q.getUom().setHref(uom);
+        else
+            q.getUom().setCode(uom);
+
+        return q;
+    }
+
+
+    /**
+     * @deprecated Use {@link #createQuantity()}
+     */
+    @Deprecated
+    public Quantity newQuantity(String definition, String label, String description, String uom)
+    {
+        return newQuantity(definition, label, description, uom, DataType.DOUBLE);
+    }
+
+
+    /**
+     * @deprecated Use {@link #createTime()}
+     */
+    @Deprecated
+    public Time newTime(String definition, String label, String description, String uom, String timeRef, DataType dataType)
+    {
+        Time t = fac.newTime(dataType == null ? DataType.DOUBLE : dataType);
+        t.setDefinition(definition);
+        t.setLabel(label);
+        t.setDescription(description);
+        t.setReferenceFrame(timeRef);
+
+        if (uom.startsWith(SWEConstants.URN_PREFIX) || uom.startsWith(SWEConstants.HTTP_PREFIX))
+            t.getUom().setHref(uom);
+        else
+            t.getUom().setCode(uom);
+
+        return t;
+    }
+
+
+    /**
+     * @deprecated Use {@link #createTime()}
+     */
+    @Deprecated
+    public Time newTime(String definition, String label, String description, String uom, String timeRef)
+    {
+        return newTime(definition, label, description, uom, timeRef, DataType.DOUBLE);
+    }
+
+
+    /**
+     * @deprecated Use {@link #createTime()}
+     */
+    @Deprecated
+    public Time newTimeIsoUTC(String definition, String label, String description)
+    {
+        return newTime(definition, label, description, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
+    }
+
+
+    /**
+     * @deprecated Use {@link #createTime()} and {@link TimeBuilder#asSamplingTimeIsoUTC()}
+     */
+    @Deprecated
+    public Time newTimeStampIsoUTC()
+    {
+        return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
+    }
+
+
+    /**
+     * @deprecated Use {@link #createTime()} and {@link TimeBuilder#asSamplingTimeIsoGPS()}
+     */
+    @Deprecated
+    public Time newTimeStampIsoGPS()
+    {
+        return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_GPS);
+    }
+
+
+    /**
+     * @deprecated Use {@link #createTime()} and {@link TimeBuilder#asPhenomenonTimeIsoUTC()}
+     */
+    @Deprecated
+    public Time newPhenomenonTimeIsoUTC(String label, String description)
+    {
+        return newTime(SWEConstants.DEF_PHENOMENON_TIME, label, description, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
+    }
+
+
+    /**
+     * @deprecated Use {@link #createTime()}
+     */
+    @Deprecated
+    public Time newTimeStampOnBoardClock(String uomCode, String timeRef)
+    {
+        return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, uomCode, timeRef);
+    }
+
+
+    /**
+     * @deprecated Use {@link #createDataRecord()} and {@link #createTime()}
+     */
+    @Deprecated
+    public DataRecord wrapWithTimeStamp(Time timeStamp, DataComponent... subComponents)
+    {
+        DataRecord rec = fac.newDataRecord(subComponents.length + 1);
+        rec.addComponent("time", timeStamp);
+
+        for (DataComponent childComp: subComponents)
+            rec.addComponent(childComp.getName(), childComp);
+
+        return rec;
+    }
+
+
+    /**
+     * @deprecated Use {@link #createDataRecord()} and {@link #createTime()}
+     */
+    @Deprecated
+    public DataRecord wrapWithTimeStampUTC(DataComponent... subComponents)
+    {
+        Time timeStamp = newTimeStampIsoUTC();
+        return wrapWithTimeStamp(timeStamp, subComponents);
+    }
+
+
+    /**
+     * Creates a component for carrying system ID (e.g. station ID, sensor ID, device ID, etc...)
+     * @return new Text instance
+     * @deprecated use {@link SWEBuilders} class
+     */
+    @Deprecated
+    public Text newSystemIdComponent()
+    {
+        Text t = fac.newText();
+        t.setDefinition(SWEConstants.DEF_SYSTEM_ID);
+        return t;
+    }
+
+
+    /**
+     * @deprecated Use {@link #createVector()}
+     */
+    @Deprecated
+    public Vector newVector(String def, String crs, String[] names, String[] labels, String[] uoms, String[] axes)
+    {
+        Vector loc = fac.newVector();
+        loc.setDefinition(def);
+        loc.setReferenceFrame(crs == null ? SWEConstants.NIL_UNKNOWN : crs);
+
+        Quantity c;
+        for (int i = 0; i < names.length; i++)
+        {
+            c = fac.newQuantity(DataType.DOUBLE);
+            if (labels != null)
+                c.setLabel(labels[i]);
+            if (uoms != null)
+                c.getUom().setCode(uoms[i]);
+            if (axes != null)
+                c.setAxisID(axes[i]);
+            loc.addComponent(names[i], c);
+        }
+
+        return loc;
+    }
+
+
+    /**
+     * @deprecated Use {@link #createDataArray()}
+     */
+    @Deprecated
+    public DataArray newDataArray(Count sizeComponent, String eltName, DataComponent elementType)
+    {
+        DataArray array = fac.newDataArray();
+        ((DataArrayImpl)array).setElementCount(sizeComponent);
+        array.setElementType(eltName, elementType);
+        return array;
+    }
+
+
+    /**
+     * @deprecated Use {@link RasterHelper#newRgbImage(int, int, DataType)}
+     */
+    @Deprecated
+    public DataArray newRgbImage(int width, int height, DataType dataType)
+    {
+        return new RasterHelper().newRgbImage(width, height, dataType);
+    }
+
+
+    /**
+     * Creates a data stream description with given description and encoding
+     * @param dataDescription description of each stream element
+     * @param dataEncoding data encoding spec
+     * @return the new DataStream object
+     * @deprecated use {@link SWEBuilders} class
+     */
+    @Deprecated
+    public DataStream newDataStream(DataComponent dataDescription, DataEncoding dataEncoding)
+    {
+        DataStream ds = fac.newDataStream();
+        ds.setElementType(dataDescription.getName(), dataDescription);
+        ds.setEncoding(dataEncoding);
+        return ds;
+    }
+
+    /**
+     * @deprecated Use {@link #createDataRecord()}
+     */
     @Deprecated
     public DataRecord newDataRecord()
     {
@@ -1027,6 +996,9 @@ public class SWEHelper
     }
 
 
+    /**
+     * @deprecated Use {@link #createDataRecord()}
+     */
     @Deprecated
     public DataRecord newDataRecord(int recordSize)
     {
@@ -1034,6 +1006,9 @@ public class SWEHelper
     }
 
 
+    /**
+     * @deprecated Use {@link #createVector()}
+     */
     @Deprecated
     public Vector newVector()
     {
@@ -1041,6 +1016,9 @@ public class SWEHelper
     }
 
 
+    /**
+     * @deprecated Use {@link #createDataArray()}
+     */
     @Deprecated
     public DataArray newDataArray()
     {
@@ -1048,6 +1026,9 @@ public class SWEHelper
     }
 
 
+    /**
+     * @deprecated Use {@link #createDataArray()}
+     */
     @Deprecated
     public DataArray newDataArray(int arraySize)
     {
@@ -1055,6 +1036,9 @@ public class SWEHelper
     }
 
 
+    /**
+     * @deprecated Use {@link #createMatrix()}
+     */
     @Deprecated
     public Matrix newMatrix()
     {
@@ -1062,6 +1046,9 @@ public class SWEHelper
     }
 
 
+    /**
+     * @deprecated Use {@link #createMatrix()}
+     */
     @Deprecated
     public Matrix newMatrix(int arraySize)
     {
@@ -1069,34 +1056,9 @@ public class SWEHelper
     }
 
 
-    @Deprecated
-    public DataStream newDataStream()
-    {
-        return fac.newDataStream();
-    }
-
-
-    @Deprecated
-    public BinaryBlock newBinaryBlock()
-    {
-        return fac.newBinaryBlock();
-    }
-
-
-    @Deprecated
-    public BinaryEncoding newBinaryEncoding()
-    {
-        return fac.newBinaryEncoding();
-    }
-
-
-    @Deprecated
-    public BinaryComponent newBinaryComponent()
-    {
-        return fac.newBinaryComponent();
-    }
-
-
+    /**
+     * @deprecated Use {@link #createDataChoice()}
+     */
     @Deprecated
     public DataChoice newDataChoice()
     {
@@ -1104,69 +1066,19 @@ public class SWEHelper
     }
 
 
+    /**
+     * @deprecated Use {@link #createDataStream()}
+     */
     @Deprecated
-    public Count newCount()
+    public DataStream newDataStream()
     {
-        return fac.newCount();
+        return fac.newDataStream();
     }
 
 
-    @Deprecated
-    public Count newCount(DataType dataType)
-    {
-        return fac.newCount(dataType);
-    }
-
-
-    @Deprecated
-    public CategoryRange newCategoryRange()
-    {
-        return fac.newCategoryRange();
-    }
-
-
-    @Deprecated
-    public QuantityRange newQuantityRange()
-    {
-        return fac.newQuantityRange();
-    }
-
-
-    @Deprecated
-    public QuantityRange newQuantityRange(DataType dataType)
-    {
-        return fac.newQuantityRange(dataType);
-    }
-
-
-    @Deprecated
-    public Time newTime()
-    {
-        return fac.newTime();
-    }
-
-
-    @Deprecated
-    public Time newTime(DataType dataType)
-    {
-        return fac.newTime(dataType);
-    }
-
-
-    @Deprecated
-    public TimeRange newTimeRange()
-    {
-        return fac.newTimeRange();
-    }
-
-
-    @Deprecated
-    public TimeRange newTimeRange(DataType dataType)
-    {
-        return fac.newTimeRange(dataType);
-    }
-
-
+    /**
+     * @deprecated Use {@link #createBoolean()}
+     */
     @Deprecated
     public Boolean newBoolean()
     {
@@ -1174,6 +1086,9 @@ public class SWEHelper
     }
 
 
+    /**
+     * @deprecated Use {@link #createText()}
+     */
     @Deprecated
     public Text newText()
     {
@@ -1181,27 +1096,29 @@ public class SWEHelper
     }
 
 
+    /**
+     * @deprecated Use {@link #createCount()}
+     */
     @Deprecated
-    public Category newCategory()
+    public Count newCount()
     {
-        return fac.newCategory();
+        return fac.newCount();
     }
 
 
+    /**
+     * @deprecated Use {@link #createCount()}
+     */
     @Deprecated
-    public Quantity newQuantity()
+    public Count newCount(DataType dataType)
     {
-        return fac.newQuantity();
+        return fac.newCount(dataType);
     }
 
 
-    @Deprecated
-    public Quantity newQuantity(DataType dataType)
-    {
-        return fac.newQuantity(dataType);
-    }
-
-
+    /**
+     * @deprecated Use {@link #createCountRange()}
+     */
     @Deprecated
     public CountRange newCountRange()
     {
@@ -1209,10 +1126,113 @@ public class SWEHelper
     }
 
 
+    /**
+     * @deprecated Use {@link #createCountRange()}
+     */
     @Deprecated
     public CountRange newCountRange(DataType dataType)
     {
         return fac.newCountRange(dataType);
+    }
+
+
+    /**
+     * @deprecated Use {@link #createCategory()}
+     */
+    @Deprecated
+    public Category newCategory()
+    {
+        return fac.newCategory();
+    }
+
+
+    /**
+     * @deprecated Use {@link #createCategoryRange()}
+     */
+    @Deprecated
+    public CategoryRange newCategoryRange()
+    {
+        return fac.newCategoryRange();
+    }
+
+
+    /**
+     * @deprecated Use {@link #createQuantity()}
+     */
+    @Deprecated
+    public Quantity newQuantity()
+    {
+        return fac.newQuantity();
+    }
+
+
+    /**
+     * @deprecated Use {@link #createQuantity()}
+     */
+    @Deprecated
+    public Quantity newQuantity(DataType dataType)
+    {
+        return fac.newQuantity(dataType);
+    }
+
+
+    /**
+     * @deprecated Use {@link #createQuantityRange()}
+     */
+    @Deprecated
+    public QuantityRange newQuantityRange()
+    {
+        return fac.newQuantityRange();
+    }
+
+
+    /**
+     * @deprecated Use {@link #createQuantityRange()}
+     */
+    @Deprecated
+    public QuantityRange newQuantityRange(DataType dataType)
+    {
+        return fac.newQuantityRange(dataType);
+    }
+
+
+    /**
+     * @deprecated Use {@link #createTime()}
+     */
+    @Deprecated
+    public Time newTime()
+    {
+        return fac.newTime();
+    }
+
+
+    /**
+     * @deprecated Use {@link #createTime()}
+     */
+    @Deprecated
+    public Time newTime(DataType dataType)
+    {
+        return fac.newTime(dataType);
+    }
+
+
+    /**
+     * @deprecated Use {@link #createTimeRange()}
+     */
+    @Deprecated
+    public TimeRange newTimeRange()
+    {
+        return fac.newTimeRange();
+    }
+
+
+    /**
+     * @deprecated Use {@link #createTimeRange()}
+     */
+    @Deprecated
+    public TimeRange newTimeRange(DataType dataType)
+    {
+        return fac.newTimeRange(dataType);
     }
 
 
@@ -1269,6 +1289,27 @@ public class SWEHelper
     public TextEncoding newTextEncoding()
     {
         return fac.newTextEncoding();
+    }
+
+
+    @Deprecated
+    public BinaryBlock newBinaryBlock()
+    {
+        return fac.newBinaryBlock();
+    }
+
+
+    @Deprecated
+    public BinaryEncoding newBinaryEncoding()
+    {
+        return fac.newBinaryEncoding();
+    }
+
+
+    @Deprecated
+    public BinaryComponent newBinaryComponent()
+    {
+        return fac.newBinaryComponent();
     }
 
 

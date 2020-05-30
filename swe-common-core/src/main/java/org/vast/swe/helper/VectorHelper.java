@@ -14,9 +14,9 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.swe.helper;
 
-import org.vast.swe.SWEBuilders;
 import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEHelper;
+import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Matrix;
 import net.opengis.swe.v20.Vector;
 
@@ -31,20 +31,20 @@ import net.opengis.swe.v20.Vector;
  */
 public class VectorHelper extends SWEHelper
 {
-    public static final String DEF_UNIT_VECTOR = SWEHelper.getPropertyUri("UnitVector");
-    public static final String DEF_ROW = SWEHelper.getPropertyUri("Row");
     public static final String DEF_COORD = SWEHelper.getPropertyUri("Coordinate");
-    public static final String DEF_MATRIX = SWEHelper.getPropertyUri("Matrix");
     public static final String DEF_ROT_MATRIX = SWEHelper.getPropertyUri("RotationMatrix");
-    public static final String DEF_ORIENTATION_EULER = SWEHelper.getPropertyUri("Orientation/EulerAngles");
-    public static final String DEF_ORIENTATION_QUAT = SWEHelper.getPropertyUri("Orientation/Quaternion");
+    public static final String DEF_ORIENTATION_EULER = SWEHelper.getPropertyUri("EulerAngles");
+    public static final String DEF_ORIENTATION_QUAT = SWEHelper.getPropertyUri("RotationQuaternion");
+    public static final String DEF_UNIT_VECTOR = SWEHelper.getDBpediaUri("Unit_vector");
+    public static final String DEF_ROW = SWEHelper.getDBpediaUri("Row_vector");
 
-    public static final String DEF_LOCATION = SWEHelper.getPropertyUri("Location");
-    public static final String DEF_DISTANCE = SWEHelper.getPropertyUri("Distance");
-    public static final String DEF_VELOCITY = SWEHelper.getPropertyUri("LinearVelocity");
-    public static final String DEF_ACCELERATION = SWEHelper.getPropertyUri("LinearAcceleration");
-    public static final String DEF_ANGULAR_RATE = SWEHelper.getPropertyUri("AngularRate");
-    public static final String DEF_ANGLE = SWEHelper.getPropertyUri("Angle");
+    public static final String DEF_LOCATION = SWEHelper.getPropertyUri("LocationVector");
+    public static final String DEF_DISTANCE = SWEHelper.getQudtUri("Distance");
+    public static final String DEF_VELOCITY = SWEHelper.getQudtUri("LinearVelocity");
+    public static final String DEF_ACCELERATION = SWEHelper.getQudtUri("LinearAcceleration");
+    public static final String DEF_ANGULAR_VELOCITY = SWEHelper.getQudtUri("AngularVelocity");
+    public static final String DEF_ANGULAR_ACCEL = SWEHelper.getQudtUri("AngularAcceleration");
+    public static final String DEF_ANGLE = SWEHelper.getQudtUri("PlaneAngle");
 
 
     protected Vector newVector3D()
@@ -61,21 +61,21 @@ public class VectorHelper extends SWEHelper
      */
     public Vector newVector3(String def, String refFrame)
     {
-        return SWEBuilders.newVector()
+        return createVector()
             .definition(def)
             .refFrame(refFrame)
-            .addQuantityCoord("u1")
+            .addCoordinate("u1", createQuantity()
                 .definition(DEF_COORD)
                 .uomCode("1")
-                .done()
-            .addQuantityCoord("u2")
+                .build())
+            .addCoordinate("u2", createQuantity()
                 .definition(DEF_COORD)
                 .uomCode("1")
-                .done()
-            .addQuantityCoord("u3")
+                .build())
+            .addCoordinate("u3", createQuantity()
                 .definition(DEF_COORD)
                 .uomCode("1")
-                .done()
+                .build())
             .build();
 
     }
@@ -83,30 +83,31 @@ public class VectorHelper extends SWEHelper
 
     /**
      * Creates a 3D unit vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of velocity vector (if null, {@link #DEF_UNIT_VECTOR} is used)
+     * @param def semantic definition of vector (if null, {@link #DEF_UNIT_VECTOR} is used)
      * @param refFrame reference frame within which the vector is expressed
      * @return the new Vector component object
      */
     public Vector newUnitVectorXYZ(String def, String refFrame)
     {
-        return SWEBuilders.newVector()
+        return createVector()
             .definition(def != null ? def : DEF_UNIT_VECTOR)
             .refFrame(refFrame)
-            .addQuantityCoord("ux")
+            .dataType(DataType.FLOAT)
+            .addCoordinate("ux", createQuantity()
                 .definition(DEF_COORD)
                 .axisId("X")
                 .uomCode("1")
-                .done()
-            .addQuantityCoord("uy")
+                .build())
+            .addCoordinate("uy", createQuantity()
                 .definition(DEF_COORD)
                 .axisId("Y")
                 .uomCode("1")
-                .done()
-            .addQuantityCoord("uz")
+                .build())
+            .addCoordinate("uz", createQuantity()
                 .definition(DEF_COORD)
                 .axisId("Z")
                 .uomCode("1")
-                .done()
+                .build())
             .build();
     }
 
@@ -120,27 +121,27 @@ public class VectorHelper extends SWEHelper
      */
     public Vector newLocationVectorXYZ(String def, String refFrame, String uomCode)
     {
-        return SWEBuilders.newVector()
+        return createVector()
             .definition(def != null ? def : DEF_LOCATION)
             .refFrame(refFrame)
-            .addQuantityCoord("x")
+            .addCoordinate("x", createQuantity()
                 .definition(DEF_DISTANCE)
                 .label("X Pos")
                 .axisId("X")
                 .uomCode(uomCode)
-                .done()
-            .addQuantityCoord("y")
+                .build())
+            .addCoordinate("y", createQuantity()
                 .definition(DEF_DISTANCE)
                 .label("Y Pos")
                 .axisId("Y")
                 .uomCode(uomCode)
-                .done()
-            .addQuantityCoord("z")
+                .build())
+            .addCoordinate("z", createQuantity()
                 .definition(DEF_DISTANCE)
                 .label("Z Pos")
                 .axisId("Z")
                 .uomCode(uomCode)
-                .done()
+                .build())
             .build();
     }
 
@@ -154,27 +155,28 @@ public class VectorHelper extends SWEHelper
      */
     public Vector newVelocityVector(String def, String refFrame, String uomCode)
     {
-        return SWEBuilders.newVector()
+        return createVector()
             .definition(def != null ? def : DEF_VELOCITY)
             .refFrame(refFrame)
-            .addQuantityCoord("vx")
+            .dataType(DataType.FLOAT)
+            .addCoordinate("vx", createQuantity()
                 .definition(DEF_VELOCITY)
                 .label("X Velocity")
                 .axisId("X")
                 .uomCode(uomCode)
-                .done()
-            .addQuantityCoord("vy")
+                .build())
+            .addCoordinate("vy", createQuantity()
                 .definition(DEF_VELOCITY)
                 .label("Y Velocity")
                 .axisId("Y")
                 .uomCode(uomCode)
-                .done()
-            .addQuantityCoord("vz")
+                .build())
+            .addCoordinate("vz", createQuantity()
                 .definition(DEF_VELOCITY)
                 .label("Z Velocity")
                 .axisId("Z")
                 .uomCode(uomCode)
-                .done()
+                .build())
             .build();
     }
 
@@ -191,27 +193,28 @@ public class VectorHelper extends SWEHelper
         if (def == null)
             def = DEF_ACCELERATION;
 
-        return SWEBuilders.newVector()
+        return createVector()
             .definition(def != null ? def : DEF_ACCELERATION)
             .refFrame(refFrame)
-            .addQuantityCoord("ax")
+            .dataType(DataType.FLOAT)
+            .addCoordinate("ax", createQuantity()
                 .definition(DEF_ACCELERATION)
                 .label("X Accel")
                 .axisId("X")
                 .uomCode(uomCode)
-                .done()
-            .addQuantityCoord("ay")
+                .build())
+            .addCoordinate("ay", createQuantity()
                 .definition(DEF_ACCELERATION)
                 .label("Y Accel")
                 .axisId("Y")
                 .uomCode(uomCode)
-                .done()
-            .addQuantityCoord("az")
+                .build())
+            .addCoordinate("az", createQuantity()
                 .definition(DEF_ACCELERATION)
                 .label("Z Accel")
                 .axisId("Z")
                 .uomCode(uomCode)
-                .done()
+                .build())
             .build();
     }
 
@@ -225,28 +228,29 @@ public class VectorHelper extends SWEHelper
      */
     public Vector newEulerAngles(String refFrame, String uomCode)
     {
-        return SWEBuilders.newVector()
+        return createVector()
             .definition(DEF_ORIENTATION_EULER)
             .refFrame(refFrame)
-            .addQuantityCoord("r1")
+            .dataType(DataType.FLOAT)
+            .addCoordinate("r1", createQuantity()
                 .definition(DEF_ANGLE)
                 .uomCode(uomCode)
-                .done()
-            .addQuantityCoord("r2")
+                .build())
+            .addCoordinate("r2", createQuantity()
                 .definition(DEF_ANGLE)
                 .uomCode(uomCode)
-                .done()
-            .addQuantityCoord("r3")
+                .build())
+            .addCoordinate("r3", createQuantity()
                 .definition(DEF_ANGLE)
                 .uomCode(uomCode)
-                .done()
+                .build())
             .build();
     }
 
 
     /**
      * Creates a 3D angular velocity vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of angular velocity vector (if null, {@link #DEF_ANGULAR_RATE} is used)
+     * @param def semantic definition of angular velocity vector (if null, {@link #DEF_ANGULAR_VELOCITY} is used)
      * @param refFrame reference frame within which the vector is expressed
      * @param uomCode unit of acceleration to use on all 3 axes
      * @return the new Vector component object
@@ -256,27 +260,28 @@ public class VectorHelper extends SWEHelper
         if (uomCode == null)
             uomCode = "deg/s";
 
-        return SWEBuilders.newVector()
-            .definition(def != null ? def : DEF_ANGULAR_RATE)
-            .refFrame(SWEConstants.REF_FRAME_NED)
-            .addQuantityCoord("wx")
+        return createVector()
+            .definition(def != null ? def : DEF_ANGULAR_VELOCITY)
+            .refFrame(refFrame)
+            .dataType(DataType.FLOAT)
+            .addCoordinate("wx", createQuantity()
+                .definition(DEF_ANGULAR_VELOCITY)
                 .label("X Angular Rate")
-                .definition(DEF_ANGULAR_RATE)
                 .uomCode(uomCode)
                 .axisId("X")
-                .done()
-            .addQuantityCoord("wy")
+                .build())
+            .addCoordinate("wy", createQuantity()
+                .definition(DEF_ANGULAR_VELOCITY)
                 .label("Y Angular Rate")
-                .definition(DEF_ANGULAR_RATE)
                 .uomCode(uomCode)
                 .axisId("Y")
-                .done()
-            .addQuantityCoord("wz")
+                .build())
+            .addCoordinate("wz", createQuantity()
+                .definition(DEF_ANGULAR_VELOCITY)
                 .label("Z Angular Rate")
-                .definition(DEF_ANGULAR_RATE)
                 .uomCode(uomCode)
                 .axisId("Z")
-                .done()
+                .build())
             .build();
     }
 
@@ -303,14 +308,15 @@ public class VectorHelper extends SWEHelper
      */
     public Matrix newMatrix(String def, String refFrame, int nRows, int nCols)
     {
-        Matrix m = SWEBuilders.newMatrix()
+        Matrix m = createMatrix()
             .definition(def)
             .refFrame(refFrame)
             .size(nRows, nCols, true)
-            .withQuantityElement("coef")
+            .withElement("elt", createQuantity()
+                .dataType(DataType.FLOAT)
                 .definition(SWEConstants.DEF_COEF)
                 .uomCode("1")
-                .done()
+                .build())
             .build();
 
         m.getElementType().setDefinition(DEF_ROW);

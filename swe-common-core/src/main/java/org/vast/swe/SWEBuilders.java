@@ -62,293 +62,6 @@ import net.opengis.swe.v20.Vector;
  */
 public class SWEBuilders
 {
-    public static SWEFactory DEFAULT_SWE_FACTORY = new SWEFactory();
-
-
-    /**
-     * @return A builder to create a new Boolean component
-     */
-    public static BooleanBuilder newBoolean()
-    {
-        return newBoolean(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new Boolean component
-     */
-    public static BooleanBuilder newBoolean(SWEFactory fac)
-    {
-        return new BooleanBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new Category component
-     */
-    public static CategoryBuilder newCategory()
-    {
-        return newCategory(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new Category component
-     */
-    public static CategoryBuilder newCategory(SWEFactory fac)
-    {
-        return new CategoryBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new CategoryRange component
-     */
-    public static CategoryRangeBuilder newCategoryRange()
-    {
-        return newCategoryRange(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new CategoryRange component
-     */
-    public static CategoryRangeBuilder newCategoryRange(SWEFactory fac)
-    {
-        return new CategoryRangeBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new Count component
-     */
-    public static CountBuilder newCount()
-    {
-        return newCount(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new Count component
-     */
-    public static CountBuilder newCount(SWEFactory fac)
-    {
-        return new CountBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new CountRange component
-     */
-    public static CountRangeBuilder newCountRange()
-    {
-        return newCountRange(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new CountRange component
-     */
-    public static CountRangeBuilder newCountRange(SWEFactory fac)
-    {
-        return new CountRangeBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new Quantity component
-     */
-    public static QuantityBuilder newQuantity()
-    {
-        return newQuantity(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new Quantity component
-     */
-    public static QuantityBuilder newQuantity(SWEFactory fac)
-    {
-        return new QuantityBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new QuantityRange component
-     */
-    public static QuantityRangeBuilder newQuantityRange()
-    {
-        return newQuantityRange(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new QuantityRange component
-     */
-    public static QuantityRangeBuilder newQuantityRange(SWEFactory fac)
-    {
-        return new QuantityRangeBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new Time component
-     */
-    public static TimeBuilder newTime()
-    {
-        return newTime(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new Time component
-     */
-    public static TimeBuilder newTime(SWEFactory fac)
-    {
-        return new TimeBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new TimeRange component
-     */
-    public static TimeRangeBuilder newTimeRange()
-    {
-        return newTimeRange(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new TimeRange component
-     */
-    public static TimeRangeBuilder newTimeRange(SWEFactory fac)
-    {
-        return new TimeRangeBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new Text component
-     */
-    public static TextBuilder newText()
-    {
-        return newText(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new Boolean component
-     */
-    public static TextBuilder newText(SWEFactory fac)
-    {
-        return new TextBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new DataRecord component
-     */
-    public static DataRecordBuilder newDataRecord()
-    {
-        return newDataRecord(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new DataRecord component
-     */
-    public static DataRecordBuilder newDataRecord(SWEFactory fac)
-    {
-        return new DataRecordBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new Vector component
-     */
-    public static VectorBuilder newVector()
-    {
-        return newVector(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new Vector component
-     */
-    public static VectorBuilder newVector(SWEFactory fac)
-    {
-        return new VectorBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new DataChoice component
-     */
-    public static DataChoiceBuilder newDataChoice()
-    {
-        return newDataChoice(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new DataChoice component
-     */
-    public static DataChoiceBuilder newDataChoice(SWEFactory fac)
-    {
-        return new DataChoiceBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new DataArray component
-     */
-    public static DataArrayBuilder newDataArray()
-    {
-        return newDataArray(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new DataArray component
-     */
-    public static DataArrayBuilder newDataArray(SWEFactory fac)
-    {
-        return new DataArrayBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new Matrix component
-     */
-    public static MatrixBuilder newMatrix()
-    {
-        return newMatrix(DEFAULT_SWE_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create the component objects
-     * @return A builder to create a new Matrix component
-     */
-    public static MatrixBuilder newMatrix(SWEFactory fac)
-    {
-        return new MatrixBuilder(fac);
-    }
-
 
     /*
      * Base builder for all SWEIdentifiable objects
@@ -449,6 +162,12 @@ public class SWEBuilders
             this.fac = fac;
         }
 
+        public B from(T base)
+        {
+            this.instance = base;
+            return (B)this;
+        }
+
         /**
          * Copy all info from another component
          * @param base Component to copy from
@@ -544,6 +263,12 @@ public class SWEBuilders
             return (B)this;
         }
 
+        public B refFrame(String refFrameUri)
+        {
+            instance.setReferenceFrame(refFrameUri);
+            return (B)this;
+        }
+
         public B refFrame(String refFrameUri, String axisId)
         {
             instance.setReferenceFrame(refFrameUri);
@@ -557,23 +282,51 @@ public class SWEBuilders
             return (B)this;
         }
 
-        public B addQuality(SimpleComponent q)
+        public B addQuality(Quantity q)
         {
-            if (q instanceof Quantity)
-                instance.addQuality((Quantity)q);
-            else if (q instanceof QuantityRange)
-                instance.addQuality((QuantityRange)q);
-            else if (q instanceof Category)
-                instance.addQuality((Category)q);
-            else if (q instanceof Text)
-                instance.addQuality((Text)q);
-            else
-                throw new IllegalArgumentException("Invalid quality component. Must be one of "
-                    + Arrays.asList(Quantity.class.getSimpleName(), QuantityRange.class.getSimpleName(), Category.class.getSimpleName(), Text.class.getSimpleName()));
+            instance.addQuality(q);
             return (B)this;
         }
 
-        public NestedQuantityBuilder<B> addQualityAsQuantity()
+        public B addQuality(QuantityBuilder builder)
+        {
+            return addQuality(builder.build());
+        }
+
+        public B addQuality(QuantityRange q)
+        {
+            instance.addQuality(q);
+            return (B)this;
+        }
+
+        public B addQuality(QuantityRangeBuilder builder)
+        {
+            return addQuality(builder.build());
+        }
+
+        public B addQuality(Category q)
+        {
+            instance.addQuality(q);
+            return (B)this;
+        }
+
+        public B addQuality(CategoryBuilder builder)
+        {
+            return addQuality(builder.build());
+        }
+
+        public B addQuality(Text q)
+        {
+            instance.addQuality(q);
+            return (B)this;
+        }
+
+        public B addQuality(TextBuilder builder)
+        {
+            return addQuality(builder.build());
+        }
+
+        /*public NestedQuantityBuilder<B> addQualityAsQuantity()
         {
             return new NestedQuantityBuilder<B>((B)this, fac)
             {
@@ -623,7 +376,7 @@ public class SWEBuilders
                     return (B)SimpleComponentBuilder.this;
                 }
             };
-        }
+        }*/
     }
 
 
@@ -1223,7 +976,8 @@ public class SWEBuilders
             return (B)this;
         }
 
-        public B refFrame(String refFrameUri)
+        @Override
+		public B refFrame(String refFrameUri)
         {
         	instance.setReferenceFrame(refFrameUri);
             return (B)this;
@@ -1261,6 +1015,10 @@ public class SWEBuilders
             return (B)this;
         }
 
+        /**
+         * Helper to create a sampling time stamp with UTC time frame and ISO format
+         * @return this builder for chaining
+         */
         public B asSamplingTimeIsoUTC()
         {
             definition(SWEConstants.DEF_SAMPLING_TIME);
@@ -1279,7 +1037,7 @@ public class SWEBuilders
             return (B)this;
         }
 
-        public B asPhenomenonTimeUTC()
+        public B asPhenomenonTimeIsoUTC()
         {
             definition(SWEConstants.DEF_PHENOMENON_TIME);
             label("Phenomenon Time");
@@ -1288,7 +1046,7 @@ public class SWEBuilders
             return (B)this;
         }
 
-        public B asForecastTimeUTC()
+        public B asForecastTimeIsoUTC()
         {
             definition(SWEConstants.DEF_FORECAST_TIME);
             label("Forecast Time");
@@ -1453,6 +1211,33 @@ public class SWEBuilders
             return (B)this;
         }
 
+        protected AllowedTokens ensureConstraint()
+        {
+            AllowedTokens constraint = instance.getConstraint();
+            if (constraint == null)
+            {
+                constraint = fac.newAllowedTokens();
+                instance.setConstraint(constraint);
+            }
+
+            return constraint;
+        }
+
+        public B addAllowedValues(String... values)
+        {
+            AllowedTokens constraint = ensureConstraint();
+            for (String val: values)
+                constraint.addValue(val);
+            return (B)this;
+        }
+
+        public B pattern(String pattern)
+        {
+        	AllowedTokens constraint = ensureConstraint();
+        	constraint.setPattern(pattern);
+        	return (B)this;
+        }
+
         public B value(String value)
         {
             instance.setValue(value);
@@ -1511,15 +1296,20 @@ public class SWEBuilders
             return (B)this;
         }
 
+        /*public B addField(String name, ComponentBuilder<?,?> fieldBuilder)
+        {
+            return addField(name, fieldBuilder.build());
+        }*/
+
         public B addSamplingTimeIsoUTC(String name)
         {
-            instance.addField(name, newTime()
+            instance.addField(name, new TimeBuilder(fac)
                 .asSamplingTimeIsoUTC()
                 .build());
             return (B)this;
         }
 
-        public NestedBooleanBuilder<B> addBooleanField(String name)
+        /*public NestedBooleanBuilder<B> addBooleanField(String name)
         {
             return new NestedBooleanBuilder<B>((B)this, fac)
             {
@@ -1712,7 +1502,7 @@ public class SWEBuilders
                     return (B)BaseDataRecordBuilder.this;
                 }
             };
-        }
+        }*/
     }
 
     /* Nested builder for use within another builder */
@@ -1747,16 +1537,12 @@ public class SWEBuilders
     @SuppressWarnings("unchecked")
     public abstract static class BaseVectorBuilder<B extends BaseVectorBuilder<B>> extends ComponentBuilder<B, Vector>
     {
+        DataType dataType = null;
+
         protected BaseVectorBuilder(SWEFactory fac)
         {
             super(fac);
             this.instance = fac.newVector();
-        }
-
-        public B from(Vector base)
-        {
-            this.instance = base;
-            return (B)this;
         }
 
         public B copyFrom(Vector base)
@@ -1796,13 +1582,13 @@ public class SWEBuilders
             return (B)this;
         }
 
-        public B withDataType(DataType dataType)
+        public B dataType(DataType dataType)
         {
-            instance.setDataType(dataType);
+            this.dataType = dataType;
             return (B)this;
         }
 
-        public NestedQuantityBuilder<B> addQuantityCoord(String name)
+        /*public NestedQuantityBuilder<B> addQuantityCoord(String name)
         {
             return new NestedQuantityBuilder<B>((B)this, fac)
             {
@@ -1839,6 +1625,15 @@ public class SWEBuilders
                     return (B)BaseVectorBuilder.this;
                 }
             };
+        }*/
+
+        @Override
+        public Vector build()
+        {
+            Vector v = super.build();
+            if (dataType != null)
+                v.setDataType(dataType);
+            return v;
         }
     }
 
@@ -1891,6 +1686,11 @@ public class SWEBuilders
         {
             instance.addItem(name, field);
             return (B)this;
+        }
+
+        /*public B addItem(String name, ComponentBuilder<?,?> itemBuilder)
+        {
+            return addItem(name, itemBuilder.build());
         }
 
         public NestedBooleanBuilder<B> addBooleanItem(String name)
@@ -2034,7 +1834,7 @@ public class SWEBuilders
                     return (B)BaseDataChoiceBuilder.this;
                 }
             };
-        }
+        }*/
     }
 
     /* Nested builder for use within another builder */
@@ -2084,7 +1884,7 @@ public class SWEBuilders
 
         public B withFixedSize(int numElts)
         {
-            instance.setElementCount(newCount()
+            instance.setElementCount(new CountBuilder(fac)
                 .value(numElts).build());
             return (B)this;
         }
@@ -2095,10 +1895,21 @@ public class SWEBuilders
             return (B)this;
         }
 
-        public B withElementType(String name, DataComponent field)
+        public B withSizeComponent(Count sizeComponent)
+        {
+            instance.setElementCount(sizeComponent);
+            return (B)this;
+        }
+
+        public B withElement(String name, DataComponent field)
         {
             instance.setElementType(name, field);
             return (B)this;
+        }
+
+        /*public B withElement(String name, ComponentBuilder<?,?> eltBuilder)
+        {
+            return withElement(name, eltBuilder.build());
         }
 
         public NestedBooleanBuilder<B> withBooleanElement(String name)
@@ -2229,7 +2040,7 @@ public class SWEBuilders
                     return (B)BaseDataArrayBuilder.this;
                 }
             };
-        }
+        }*/
     }
 
     /* Nested builder for use within another builder */
@@ -2268,6 +2079,7 @@ public class SWEBuilders
         String[] eltNames;
         ScalarComponent eltType;
         String scalarEltName;
+        DataType dataType = null;
 
         protected BaseMatrixBuilder(SWEFactory fac)
         {
@@ -2302,14 +2114,20 @@ public class SWEBuilders
             return (B)this;
         }
 
-        public B withElementType(String name, ScalarComponent component)
+        public B withElement(String name, ScalarComponent component)
         {
             this.scalarEltName = Asserts.checkNotNull(name, "name");
             this.eltType = Asserts.checkNotNull(component, ScalarComponent.class);
             return (B)this;
         }
 
-        public NestedQuantityBuilder<B> withQuantityElement(String name)
+        public B dataType(DataType dataType)
+        {
+            this.dataType = dataType;
+            return (B)this;
+        }
+
+        /*public NestedQuantityBuilder<B> withQuantityElement(String name)
         {
             return new NestedQuantityBuilder<B>((B)this, fac)
             {
@@ -2346,7 +2164,7 @@ public class SWEBuilders
                     return (B)BaseMatrixBuilder.this;
                 }
             };
-        }
+        }*/
 
         @Override
         public Matrix build()
@@ -2355,7 +2173,7 @@ public class SWEBuilders
 
             for (int i = 0; i < dimSizes.length; i++)
             {
-                parent.setElementCount(newCount()
+                parent.setElementCount(new CountBuilder(fac)
                     .value(dimSizes[i]).build());
 
                 if (i < dimSizes.length-1)
@@ -2365,7 +2183,11 @@ public class SWEBuilders
                     parent = nestedMatrix;
                 }
                 else
+                {
                     parent.setElementType(scalarEltName, eltType);
+                    if (dataType != null)
+                        eltType.setDataType(dataType);
+                }
             }
 
             return super.build();

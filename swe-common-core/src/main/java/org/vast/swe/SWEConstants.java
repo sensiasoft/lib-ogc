@@ -52,6 +52,7 @@ public class SWEConstants
 
     // common spatial reference frames
     public static final String OGC_CRS_URI = OGC_DEF_URI + "crs/";
+    public static final String OGC_CS_URI = OGC_DEF_URI + "cs/";
     public static final String EPSG_URI_PREFIX = OGC_CRS_URI + "EPSG/0/";
     public static final String REF_FRAME_4979 = EPSG_URI_PREFIX + 4979;
     public static final String REF_FRAME_4326 = EPSG_URI_PREFIX + 4326;
@@ -59,8 +60,8 @@ public class SWEConstants
     public static final String REF_FRAME_ECI_GCRF = OGC_CRS_URI + "IERS/0/ECI_GCRF";
     public static final String REF_FRAME_ECI_J2000 = OGC_CRS_URI + "IERS/0/ECI_J2000";
     public static final String REF_FRAME_ECI_M50 = OGC_CRS_URI + "IERS/0/ECI_M50";
-    public static final String REF_FRAME_ENU = OGC_CRS_URI + "OGC/0/ENU";
-    public static final String REF_FRAME_NED = OGC_CRS_URI + "OGC/0/NED";
+    public static final String REF_FRAME_ENU = OGC_CS_URI + "OGC/0/ENU";
+    public static final String REF_FRAME_NED = OGC_CS_URI + "OGC/0/NED";
 
     // common vertical datums
     public static final String VERT_DATUM_EGM96_MSL = EPSG_URI_PREFIX + 5773;
@@ -85,23 +86,20 @@ public class SWEConstants
     public static final String DEF_SENSOR_TYPE = OGC_PROP_URI + "SensorType";
     public static final String DEF_SENSOR_STATUS = OGC_PROP_URI + "SensorStatus";
     public static final String DEF_PLATFORM_TYPE = OGC_PROP_URI + "PlatformType";
-    public static final String DEF_FOI_ID = OGC_PROP_URI + "FeatureOfInterestID";
-    public static final String DEF_PROCEDURE_ID = OGC_PROP_URI + "ProcedureID";
 
     // SWE definition URIs
-    public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/swe/property/";
+    public static final String DBPEDIA_URI_PREFIX = "http://dbpedia.org/resource/";
+    public static final String QUDT_URI_PREFIX = "http://qudt.org/vocab/quantitykind/";
+    public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/property/";
     public static final String DEF_SYSTEM_ID = SWE_PROP_URI_PREFIX + "SystemID";
     public static final String DEF_COEF = SWE_PROP_URI_PREFIX + "Coefficient";
-    public static final String DEF_IMAGE = SWE_PROP_URI_PREFIX + "Image";
     public static final String DEF_DN = SWE_PROP_URI_PREFIX + "DN";
     public static final String DEF_FLAG = SWE_PROP_URI_PREFIX + "Flag";
-    public static final String DEF_CODE = SWE_PROP_URI_PREFIX + "Code";
-    public static final String DEF_STATUS_CODE = SWE_PROP_URI_PREFIX + "StatusCode";
-    public static final String DEF_ERROR_CODE = SWE_PROP_URI_PREFIX + "ErrorCode";
+    public static final String DEF_STATUS_CODE = SWE_PROP_URI_PREFIX + "SystemStatus";
     public static final String DEF_COUNT = SWE_PROP_URI_PREFIX + "Counter";
 
     // SWE special units
-    public static final String SWE_UOM_URI_PREFIX = "http://sensorml.com/ont/swe/uom/";
+    public static final String SWE_UOM_URI_PREFIX = "http://sensorml.com/ont/uom/";
     public static final String UOM_ANY = SWE_UOM_URI_PREFIX + "Any";
     public static final String UOM_ANY_CODE = "any";
     public static final String UOM_UNITLESS = "1";

@@ -27,7 +27,7 @@ import net.opengis.swe.v20.Time;
 import net.opengis.swe.v20.Vector;
 import org.junit.Test;
 import org.vast.data.SWEFactory;
-import org.vast.swe.SWEBuilders;
+import org.vast.swe.SWEHelper;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.ScalarIndexer;
 import org.vast.swe.helper.GeoPosHelper;
@@ -36,15 +36,16 @@ import org.vast.swe.helper.GeoPosHelper;
 public class TestScalarIndexer
 {
     SWEFactory fac = new SWEFactory();
+    SWEHelper helper = new SWEHelper();
 
 
     @Test
     public void testFixedRecord()
     {
-        DataRecord rec = SWEBuilders.newDataRecord()
+        DataRecord rec = helper.createRecord()
             .addSamplingTimeIsoUTC("time")
-            .addQuantityField("q").done()
-            .addCountField("c").done()
+            .addField("q", fac.newQuantity())
+            .addField("c", fac.newCount())
             .build();
 
         ScalarIndexer indexer;
@@ -65,13 +66,13 @@ public class TestScalarIndexer
     {
         ScalarComponent t, q, c,tx, b;
 
-        DataRecord rec = SWEBuilders.newDataRecord()
+        DataRecord rec = helper.createRecord()
             .addField("t", t = fac.newTime())
-            .addChoiceField("choice")
+            .addField("choice", helper.createChoice()
                 .addItem("q", q = fac.newQuantity())
                 .addItem("c", c = fac.newCount())
                 .addItem("tx", tx = fac.newText())
-                .done()
+                .build())
             .addField("b", b = fac.newBoolean())
             .build();
 

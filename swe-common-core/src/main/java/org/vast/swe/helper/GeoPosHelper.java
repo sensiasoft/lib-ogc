@@ -17,7 +17,6 @@ package org.vast.swe.helper;
 
 import java.util.Arrays;
 import java.util.List;
-import org.vast.swe.SWEBuilders;
 import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEHelper;
 import net.opengis.swe.v20.DataRecord;
@@ -37,11 +36,16 @@ import net.opengis.swe.v20.Vector;
  */
 public class GeoPosHelper extends VectorHelper
 {
+    public static final String EPSG_AXIS_URI_PREFIX = SWEConstants.OGC_DEF_URI + "axis-name/EPSG/0/";
+    public static final String DEF_LATITUDE_GEODETIC_EPSG = EPSG_AXIS_URI_PREFIX + "9901";
+    public static final String DEF_LONGITUDE_EPSG = EPSG_AXIS_URI_PREFIX + "9902";
+    public static final String DEF_ALTITUDE_ELLIPSOID_EPSG = EPSG_AXIS_URI_PREFIX + "9903";
+    public static final String DEF_ALTITUDE_GEOID_EPSG = EPSG_AXIS_URI_PREFIX + "9904"; // orthometric height above MSL
+
     public static final String DEF_LATITUDE_GEODETIC = SWEHelper.getPropertyUri("GeodeticLatitude");
-    public static final String DEF_LATITUDE_GEOCENTRIC = SWEHelper.getPropertyUri("GeocentricLatitude");
     public static final String DEF_LONGITUDE = SWEHelper.getPropertyUri("Longitude");
-    public static final String DEF_ALTITUDE_ELLIPSOID = SWEHelper.getPropertyUri("EllipsoidalHeight");
-    public static final String DEF_ALTITUDE_GEOID = SWEHelper.getPropertyUri("OrthometricHeight");
+    public static final String DEF_ALTITUDE_ELLIPSOID = SWEHelper.getPropertyUri("HeightAboveEllipsoid");
+    public static final String DEF_ALTITUDE_GEOID = SWEHelper.getPropertyUri("HeightAboveMSL");
     public static final String DEF_HEADING_TRUE = SWEHelper.getPropertyUri("TrueHeading");
     public static final String DEF_HEADING_MAGNETIC = SWEHelper.getPropertyUri("MagneticHeading");
     public static final String DEF_YAW = SWEHelper.getPropertyUri("YawAngle");
@@ -50,33 +54,33 @@ public class GeoPosHelper extends VectorHelper
 
 
     /**
-     * Creates a 3D location vector with latitude/longitude/altitude axes (EPSG 4979)
+     * Creates a 3D location vector with latitude/longitude/altitude axes and WGS84 datum (EPSG 4979)
      * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
      * @return the new Vector component object
      */
     public Vector newLocationVectorLLA(String def)
     {
-        return SWEBuilders.newVector()
+        return createVector()
             .definition(def != null ? def : DEF_LOCATION)
             .refFrame(SWEConstants.REF_FRAME_4979)
-            .addQuantityCoord("lat")
-                .definition(DEF_LATITUDE_GEODETIC)
+            .addCoordinate("lat", createQuantity()
+                .definition(DEF_LATITUDE_GEODETIC_EPSG)
                 .label("Geodetic Latitude")
                 .axisId("Lat")
                 .uomCode("deg")
-                .done()
-            .addQuantityCoord("lon")
-                .definition(DEF_LONGITUDE)
+                .build())
+            .addCoordinate("lon", createQuantity()
+                .definition(DEF_LONGITUDE_EPSG)
                 .label("Longitude")
-                .axisId("Long")
+                .axisId("Lon")
                 .uomCode("deg")
-                .done()
-            .addQuantityCoord("alt")
-                .definition(DEF_ALTITUDE_ELLIPSOID)
-                .label("Altitude")
+                .build())
+            .addCoordinate("alt", createQuantity()
+                .definition(DEF_ALTITUDE_ELLIPSOID_EPSG)
+                .label("Ellipsoidal Height")
                 .axisId("h")
                 .uomCode("m")
-                .done()
+                .build())
             .build();
     }
 
@@ -88,21 +92,21 @@ public class GeoPosHelper extends VectorHelper
      */
     public Vector newLocationVectorLatLon(String def)
     {
-        return SWEBuilders.newVector()
+        return createVector()
             .definition(def != null ? def : DEF_LOCATION)
-            .refFrame(SWEConstants.REF_FRAME_4979)
-            .addQuantityCoord("lat")
-                .definition(DEF_LATITUDE_GEODETIC)
+            .refFrame(SWEConstants.REF_FRAME_4326)
+            .addCoordinate("lat", createQuantity()
+                .definition(DEF_LATITUDE_GEODETIC_EPSG)
                 .label("Geodetic Latitude")
                 .axisId("Lat")
                 .uomCode("deg")
-                .done()
-            .addQuantityCoord("lon")
-                .definition(DEF_LONGITUDE)
+                .build())
+            .addCoordinate("lon", createQuantity()
+                .definition(DEF_LONGITUDE_EPSG)
                 .label("Longitude")
-                .axisId("Long")
+                .axisId("Lon")
                 .uomCode("deg")
-                .done()
+                .build())
             .build();
     }
 
@@ -178,29 +182,32 @@ public class GeoPosHelper extends VectorHelper
         if (uomCode == null)
             uomCode = "deg";
 
-        return SWEBuilders.newVector()
+        return createVector()
             .definition(def != null ? def : DEF_ORIENTATION_EULER)
             .description("Euler angles with order of rotation heading/pitch/roll in rotating frame")
             .refFrame(SWEConstants.REF_FRAME_ENU)
-            .addQuantityCoord("yaw")
+            .dataType(DataType.FLOAT)
+            .addCoordinate("heading", createQuantity()
+            	.definition(DEF_HEADING_TRUE)
                 .label("Heading Angle")
-                .description("True heading to north, measured counter clockwise")
-                .definition(DEF_HEADING_TRUE)
+                .description("Heading angle from east direction, measured counter clockwise")
                 .uomCode(uomCode)
                 .axisId("Z")
-                .done()
-            .addQuantityCoord("pitch")
+                .build())
+            .addCoordinate("pitch", createQuantity()
+            	.definition(DEF_PITCH)
                 .label("Pitch Angle")
-                .definition(DEF_PITCH)
+                .description("Rotation around the lateral axis, up/down from the local horizontal plane (positive when pointing up)")
                 .uomCode(uomCode)
                 .axisId("X")
-                .done()
-            .addQuantityCoord("roll")
+                .build())
+            .addCoordinate("roll", createQuantity()
+            	.definition(DEF_ROLL)
                 .label("Roll Angle")
-                .definition(DEF_ROLL)
+                .description("Rotation around the longitudinal axis")
                 .uomCode(uomCode)
                 .axisId("Y")
-                .done()
+                .build())
             .build();
     }
 
@@ -217,29 +224,32 @@ public class GeoPosHelper extends VectorHelper
         if (uomCode == null)
             uomCode = "deg";
 
-        return SWEBuilders.newVector()
+        return createVector()
             .definition(def != null ? def : DEF_ORIENTATION_EULER)
             .description("Euler angles with order of rotation heading/pitch/roll in rotating frame")
             .refFrame(SWEConstants.REF_FRAME_NED)
-            .addQuantityCoord("yaw")
+            .dataType(DataType.FLOAT)
+            .addCoordinate("heading", createQuantity()
+            	.definition(DEF_HEADING_TRUE)
                 .label("Heading Angle")
-                .description("True heading from north, measured clockwise")
-                .definition(DEF_HEADING_TRUE)
+                .description("Heading angle from true north, measured clockwise")
                 .uomCode(uomCode)
                 .axisId("Z")
-                .done()
-            .addQuantityCoord("pitch")
+                .build())
+            .addCoordinate("pitch", createQuantity()
+            	.definition(DEF_PITCH)
                 .label("Pitch Angle")
-                .definition(DEF_PITCH)
+                .description("Rotation around the lateral axis, up/down from the local horizontal plane (positive when pointing up)")
                 .uomCode(uomCode)
                 .axisId("Y")
-                .done()
-            .addQuantityCoord("roll")
+                .build())
+            .addCoordinate("roll", createQuantity()
+            	.definition(DEF_ROLL)
                 .label("Roll Angle")
-                .definition(DEF_ROLL)
+                .description("Rotation around the longitudinal axis")
                 .uomCode(uomCode)
                 .axisId("X")
-                .done()
+                .build())
             .build();
     }
 
@@ -268,28 +278,29 @@ public class GeoPosHelper extends VectorHelper
         if (uomCode == null)
             uomCode = "deg";
 
-        return SWEBuilders.newVector()
+        return createVector()
             .definition(def != null ? def : DEF_ORIENTATION_EULER)
             .description("Euler angles with order of rotation Z/Y/X in rotating frame")
             .refFrame(SWEConstants.REF_FRAME_NED)
-            .addQuantityCoord("rz")
+            .dataType(DataType.FLOAT)
+            .addCoordinate("rz", createQuantity()
+            	.definition(DEF_ANGLE)
                 .label("Z Rotation")
-                .definition(DEF_ANGLE)
                 .uomCode(uomCode)
                 .axisId("Z")
-                .done()
-            .addQuantityCoord("ry")
+                .build())
+            .addCoordinate("ry", createQuantity()
+            	.definition(DEF_ANGLE)
                 .label("Y Rotation")
-                .definition(DEF_ANGLE)
                 .uomCode(uomCode)
                 .axisId("Y")
-                .done()
-            .addQuantityCoord("rx")
+                .build())
+            .addCoordinate("rx", createQuantity()
+            	.definition(DEF_ANGLE)
                 .label("X Rotation")
-                .definition(DEF_ANGLE)
                 .uomCode(uomCode)
                 .axisId("X")
-                .done()
+                .build())
             .build();
     }
 
@@ -302,33 +313,34 @@ public class GeoPosHelper extends VectorHelper
      */
     public Vector newQuatOrientation(String def, String refFrame)
     {
-        return SWEBuilders.newVector()
+        return createVector()
             .definition(def != null ? def : DEF_ORIENTATION_QUAT)
             .description("Orientation quaternion, usually normalized")
             .refFrame(SWEConstants.REF_FRAME_NED)
-            .addQuantityCoord("qx")
+            .dataType(DataType.FLOAT)
+            .addCoordinate("qx", createQuantity()
+            	.definition(SWEConstants.DEF_COEF)
                 .label("X Component")
-                .definition(SWEConstants.DEF_COEF)
                 .uomCode("1")
                 .axisId("X")
-                .done()
-            .addQuantityCoord("qy")
+                .build())
+            .addCoordinate("qy", createQuantity()
+            	.definition(SWEConstants.DEF_COEF)
                 .label("Y Component")
-                .definition(SWEConstants.DEF_COEF)
                 .uomCode("1")
                 .axisId("Y")
-                .done()
-            .addQuantityCoord("qz")
+                .build())
+            .addCoordinate("qz", createQuantity()
+            	.definition(SWEConstants.DEF_COEF)
                 .label("Z Component")
-                .definition(SWEConstants.DEF_COEF)
                 .uomCode("1")
                 .axisId("Z")
-                .done()
-            .addQuantityCoord("q0")
+                .build())
+            .addCoordinate("q0", createQuantity()
+            	.definition(SWEConstants.DEF_COEF)
                 .label("Scalar Component")
-                .definition(SWEConstants.DEF_COEF)
                 .uomCode("1")
-                .done()
+                .build())
             .build();
     }
 
@@ -380,7 +392,7 @@ public class GeoPosHelper extends VectorHelper
     public DataRecord newImuOutput(String name, String localFrame, ImuFields... imuFields)
     {
         List<ImuFields> fields = Arrays.asList(imuFields);
-        DataRecord imuData = SWEBuilders.newDataRecord()
+        DataRecord imuData = createDataRecord()
             .name(name)
             .definition(SWEHelper.getPropertyUri("ImuData"))
             .addSamplingTimeIsoUTC("time")
