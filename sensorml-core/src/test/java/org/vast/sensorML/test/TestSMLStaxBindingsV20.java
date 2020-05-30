@@ -53,7 +53,7 @@ import org.isotc211.v2005.gmd.CIResponsibleParty;
 import org.vast.sensorML.SMLBuilders;
 import org.vast.sensorML.SMLFactory;
 import org.vast.sensorML.SMLUtils;
-import org.vast.swe.SWEBuilders;
+import org.vast.swe.SWEHelper;
 import org.xml.sax.InputSource;
 
 
@@ -168,6 +168,7 @@ public class TestSMLStaxBindingsV20 extends XMLTestCase
     {
         SMLUtils smlUtils = new SMLUtils(SMLUtils.V2_0);
 
+        SWEHelper swe = new SWEHelper();
         SMLFactory smlFac = new SMLFactory();
         GMLFactory gmlFac = new GMLFactory();
 
@@ -178,7 +179,7 @@ public class TestSMLStaxBindingsV20 extends XMLTestCase
 
         // characteristics
         CharacteristicList mechSpecs = smlFac.newCharacteristicList();
-        Quantity weightSpec = SWEBuilders.newQuantity()
+        Quantity weightSpec = swe.createQuantity()
             .definition("http://sweet.jpl.nasa.gov/2.3/propMass.owl#Mass")
             .label("Weight")
             .uomCode("kg")
@@ -208,30 +209,30 @@ public class TestSMLStaxBindingsV20 extends XMLTestCase
 
         // outputs
         // create output record and set description
-        DataRecord rec = SWEBuilders.newDataRecord()
+        DataRecord rec = swe.createDataRecord()
             .label("Weather Data Record")
             .description("Record of synchronous weather measurements")
             .addSamplingTimeIsoUTC("time")
-            .addQuantityField("temp")
+            .addField("temp", swe.createQuantity()
                 .definition("http://mmisw.org/ont/cf/parameter/air_temperature")
                 .label("Air Temperature")
                 .uomCode("Cel")
-                .done()
-            .addQuantityField("press")
+                .build())
+            .addField("press", swe.createQuantity()
                 .definition("http://mmisw.org/ont/cf/parameter/air_pressure_at_sea_level")
                 .label("Air Pressure")
                 .uomCode("mbar")
-                .done()
-            .addQuantityField("wind_speed")
+                .build())
+            .addField("wind_speed", swe.createQuantity()
                 .definition("http://mmisw.org/ont/cf/parameter/wind_speed")
                 .label("Wind Speed")
                 .uomCode("km/h")
-                .done()
-            .addQuantityField("wind_dir")
+                .build())
+            .addField("wind_dir", swe.createQuantity()
                 .definition("http://mmisw.org/ont/cf/parameter/wind_to_direction")
                 .label("Wind Direction")
                 .uomCode("deg")
-                .done()
+                .build())
             .build();
 
         // add accuracy info to temp output
@@ -243,7 +244,7 @@ public class TestSMLStaxBindingsV20 extends XMLTestCase
         system.getOutputList().add("status_info", "http://remotedef.xml", null);
 
         // parameters
-        system.addParameter("samplingPeriod", SWEBuilders.newQuantity()
+        system.addParameter("samplingPeriod", swe.createQuantity()
             .definition("http://sensorml.com/ont/swe/property/SamplingPeriod")
             .label("Sampling Period")
             .uomCode("s")
@@ -272,13 +273,13 @@ public class TestSMLStaxBindingsV20 extends XMLTestCase
         PhysicalComponent sensor = smlFac.newPhysicalComponent();
         sensor.setId("SENS01");
         sensor.setTypeOf(new ReferenceImpl("http://www.mymanufacturer.net/mysensor001.xml"));
-        sensor.addOutput("temp", SWEBuilders.newQuantity().build());
+        sensor.addOutput("temp", swe.createQuantity().build());
         Settings config = smlFac.newSettings();
         config.addSetValue(smlFac.newValueSetting("parameters/samplingRate", "10.0"));
         config.addSetStatus(smlFac.newStatusSetting("parameters/active", Status.ENABLED));
         //config.addSetArrayValues(new ArraySettingImpl("parameters/calibrationTable", new EncodedValuesImpl("10.0, 20.0")));
         config.addSetMode(smlFac.newModeSetting("modes/choice1", "highAccuracy"));
-        AllowedValues newConstraint = SWEBuilders.DEFAULT_SWE_FACTORY.newAllowedValues();
+        AllowedValues newConstraint = SWEHelper.DEFAULT_SWE_FACTORY.newAllowedValues();
         newConstraint.addValue(5.0);
         newConstraint.addValue(10.0);
         newConstraint.addValue(20.0);
