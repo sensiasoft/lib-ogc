@@ -213,6 +213,18 @@ public class GeoPosHelper extends VectorHelper
 
 
     /**
+     * Default version of {@link #newEulerOrientationENU(String, String)} with
+     * units set to degrees
+     * @param def
+     * @return the new Vector component object
+     */
+    public Vector newEulerOrientationENU(String def)
+    {
+        return newEulerOrientationENU(def, "deg");
+    }
+
+
+    /**
      * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
      * North-East-Down (NED) frame (order of rotations is heading/Z, pitch/Y, roll/X in rotating frame)
      * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_EULER} is used)
@@ -255,14 +267,14 @@ public class GeoPosHelper extends VectorHelper
 
 
     /**
-     * Default version of {@link #newEulerOrientationECEF(String, String)} with
+     * Default version of {@link #newEulerOrientationNED(String, String)} with
      * units set to degrees
      * @param def
      * @return the new Vector component object
      */
-    public Vector newEulerOrientationECEF(String def)
+    public Vector newEulerOrientationNED(String def)
     {
-        return newEulerOrientationECEF(def, "deg");
+        return newEulerOrientationNED(def, "deg");
     }
 
 
@@ -302,6 +314,18 @@ public class GeoPosHelper extends VectorHelper
                 .axisId("X")
                 .build())
             .build();
+    }
+
+
+    /**
+     * Default version of {@link #newEulerOrientationECEF(String, String)} with
+     * units set to degrees
+     * @param def
+     * @return the new Vector component object
+     */
+    public Vector newEulerOrientationECEF(String def)
+    {
+        return newEulerOrientationECEF(def, "deg");
     }
 
 

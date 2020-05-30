@@ -1324,14 +1324,12 @@ public class SWEHelper
     }
 
 
-    @Deprecated
     public XMLEncoding newXMLEncoding()
     {
         return fac.newXMLEncoding();
     }
 
 
-    @Deprecated
     public TextEncoding newTextEncoding()
     {
         return fac.newTextEncoding();
