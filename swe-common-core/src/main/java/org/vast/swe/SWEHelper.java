@@ -705,6 +705,7 @@ public class SWEHelper
      * @deprecated Use {@link #createBoolean()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Boolean newBoolean(String definition, String label, String description)
     {
         Boolean b = fac.newBoolean();
@@ -719,6 +720,7 @@ public class SWEHelper
      * @deprecated Use {@link #createText()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Text newText(String definition, String label, String description)
     {
         Text tx = fac.newText();
@@ -733,6 +735,7 @@ public class SWEHelper
      * @deprecated Use {@link #createCount()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Count newCount(String definition, String label, String description, DataType dataType)
     {
         Count c = fac.newCount(dataType == null ? DataType.INT : dataType);
@@ -747,6 +750,7 @@ public class SWEHelper
      * @deprecated Use {@link #createCount()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Count newCount(String definition, String label, String description)
     {
         return newCount(definition, label, description, DataType.INT);
@@ -757,6 +761,7 @@ public class SWEHelper
      * @deprecated Use {@link #createCategory()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Category newCategory(String definition, String label, String description, String codeSpace)
     {
         Category c = fac.newCategory();
@@ -772,6 +777,7 @@ public class SWEHelper
      * @deprecated Use {@link #createQuantity()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Quantity newQuantity(String definition, String label, String description, String uom, DataType dataType)
     {
         Quantity q = fac.newQuantity(dataType == null ? DataType.DOUBLE : dataType);
@@ -792,6 +798,7 @@ public class SWEHelper
      * @deprecated Use {@link #createQuantity()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Quantity newQuantity(String definition, String label, String description, String uom)
     {
         return newQuantity(definition, label, description, uom, DataType.DOUBLE);
@@ -802,6 +809,7 @@ public class SWEHelper
      * @deprecated Use {@link #createTime()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Time newTime(String definition, String label, String description, String uom, String timeRef, DataType dataType)
     {
         Time t = fac.newTime(dataType == null ? DataType.DOUBLE : dataType);
@@ -823,6 +831,7 @@ public class SWEHelper
      * @deprecated Use {@link #createTime()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Time newTime(String definition, String label, String description, String uom, String timeRef)
     {
         return newTime(definition, label, description, uom, timeRef, DataType.DOUBLE);
@@ -833,6 +842,7 @@ public class SWEHelper
      * @deprecated Use {@link #createTime()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Time newTimeIsoUTC(String definition, String label, String description)
     {
         return newTime(definition, label, description, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
@@ -843,6 +853,7 @@ public class SWEHelper
      * @deprecated Use {@link #createTime()} and {@link TimeBuilder#asSamplingTimeIsoUTC()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Time newTimeStampIsoUTC()
     {
         return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
@@ -853,6 +864,7 @@ public class SWEHelper
      * @deprecated Use {@link #createTime()} and {@link TimeBuilder#asSamplingTimeIsoGPS()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Time newTimeStampIsoGPS()
     {
         return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_GPS);
@@ -863,6 +875,7 @@ public class SWEHelper
      * @deprecated Use {@link #createTime()} and {@link TimeBuilder#asPhenomenonTimeIsoUTC()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Time newPhenomenonTimeIsoUTC(String label, String description)
     {
         return newTime(SWEConstants.DEF_PHENOMENON_TIME, label, description, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
@@ -873,6 +886,7 @@ public class SWEHelper
      * @deprecated Use {@link #createTime()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Time newTimeStampOnBoardClock(String uomCode, String timeRef)
     {
         return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, uomCode, timeRef);
@@ -883,6 +897,7 @@ public class SWEHelper
      * @deprecated Use {@link #createDataRecord()} and {@link #createTime()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public DataRecord wrapWithTimeStamp(Time timeStamp, DataComponent... subComponents)
     {
         DataRecord rec = fac.newDataRecord(subComponents.length + 1);
@@ -899,6 +914,7 @@ public class SWEHelper
      * @deprecated Use {@link #createDataRecord()} and {@link #createTime()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public DataRecord wrapWithTimeStampUTC(DataComponent... subComponents)
     {
         Time timeStamp = newTimeStampIsoUTC();
@@ -912,6 +928,7 @@ public class SWEHelper
      * @deprecated use {@link SWEBuilders} class
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Text newSystemIdComponent()
     {
         Text t = fac.newText();
@@ -924,6 +941,7 @@ public class SWEHelper
      * @deprecated Use {@link #createVector()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Vector newVector(String def, String crs, String[] names, String[] labels, String[] uoms, String[] axes)
     {
         Vector loc = fac.newVector();
@@ -951,6 +969,7 @@ public class SWEHelper
      * @deprecated Use {@link #createDataArray()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public DataArray newDataArray(Count sizeComponent, String eltName, DataComponent elementType)
     {
         DataArray array = fac.newDataArray();
@@ -964,6 +983,7 @@ public class SWEHelper
      * @deprecated Use {@link RasterHelper#newRgbImage(int, int, DataType)}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public DataArray newRgbImage(int width, int height, DataType dataType)
     {
         return new RasterHelper().newRgbImage(width, height, dataType);
@@ -978,6 +998,7 @@ public class SWEHelper
      * @deprecated use {@link SWEBuilders} class
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public DataStream newDataStream(DataComponent dataDescription, DataEncoding dataEncoding)
     {
         DataStream ds = fac.newDataStream();
@@ -990,6 +1011,7 @@ public class SWEHelper
      * @deprecated Use {@link #createDataRecord()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public DataRecord newDataRecord()
     {
         return fac.newDataRecord();
@@ -1000,6 +1022,7 @@ public class SWEHelper
      * @deprecated Use {@link #createDataRecord()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public DataRecord newDataRecord(int recordSize)
     {
         return fac.newDataRecord(recordSize);
@@ -1010,6 +1033,7 @@ public class SWEHelper
      * @deprecated Use {@link #createVector()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Vector newVector()
     {
         return fac.newVector();
@@ -1020,6 +1044,7 @@ public class SWEHelper
      * @deprecated Use {@link #createDataArray()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public DataArray newDataArray()
     {
         return fac.newDataArray();
@@ -1030,6 +1055,7 @@ public class SWEHelper
      * @deprecated Use {@link #createDataArray()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public DataArray newDataArray(int arraySize)
     {
         return fac.newDataArray(arraySize);
@@ -1040,6 +1066,7 @@ public class SWEHelper
      * @deprecated Use {@link #createMatrix()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Matrix newMatrix()
     {
         return fac.newMatrix();
@@ -1050,6 +1077,7 @@ public class SWEHelper
      * @deprecated Use {@link #createMatrix()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Matrix newMatrix(int arraySize)
     {
         return fac.newMatrix(arraySize);
@@ -1060,6 +1088,7 @@ public class SWEHelper
      * @deprecated Use {@link #createDataChoice()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public DataChoice newDataChoice()
     {
         return fac.newDataChoice();
@@ -1070,6 +1099,7 @@ public class SWEHelper
      * @deprecated Use {@link #createDataStream()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public DataStream newDataStream()
     {
         return fac.newDataStream();
@@ -1080,6 +1110,7 @@ public class SWEHelper
      * @deprecated Use {@link #createBoolean()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Boolean newBoolean()
     {
         return fac.newBoolean();
@@ -1090,6 +1121,7 @@ public class SWEHelper
      * @deprecated Use {@link #createText()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Text newText()
     {
         return fac.newText();
@@ -1100,6 +1132,7 @@ public class SWEHelper
      * @deprecated Use {@link #createCount()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Count newCount()
     {
         return fac.newCount();
@@ -1110,6 +1143,7 @@ public class SWEHelper
      * @deprecated Use {@link #createCount()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Count newCount(DataType dataType)
     {
         return fac.newCount(dataType);
@@ -1120,6 +1154,7 @@ public class SWEHelper
      * @deprecated Use {@link #createCountRange()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public CountRange newCountRange()
     {
         return fac.newCountRange();
@@ -1130,6 +1165,7 @@ public class SWEHelper
      * @deprecated Use {@link #createCountRange()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public CountRange newCountRange(DataType dataType)
     {
         return fac.newCountRange(dataType);
@@ -1140,6 +1176,7 @@ public class SWEHelper
      * @deprecated Use {@link #createCategory()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Category newCategory()
     {
         return fac.newCategory();
@@ -1150,6 +1187,7 @@ public class SWEHelper
      * @deprecated Use {@link #createCategoryRange()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public CategoryRange newCategoryRange()
     {
         return fac.newCategoryRange();
@@ -1160,6 +1198,7 @@ public class SWEHelper
      * @deprecated Use {@link #createQuantity()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Quantity newQuantity()
     {
         return fac.newQuantity();
@@ -1170,6 +1209,7 @@ public class SWEHelper
      * @deprecated Use {@link #createQuantity()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Quantity newQuantity(DataType dataType)
     {
         return fac.newQuantity(dataType);
@@ -1180,6 +1220,7 @@ public class SWEHelper
      * @deprecated Use {@link #createQuantityRange()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public QuantityRange newQuantityRange()
     {
         return fac.newQuantityRange();
@@ -1190,6 +1231,7 @@ public class SWEHelper
      * @deprecated Use {@link #createQuantityRange()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public QuantityRange newQuantityRange(DataType dataType)
     {
         return fac.newQuantityRange(dataType);
@@ -1200,6 +1242,7 @@ public class SWEHelper
      * @deprecated Use {@link #createTime()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Time newTime()
     {
         return fac.newTime();
@@ -1210,6 +1253,7 @@ public class SWEHelper
      * @deprecated Use {@link #createTime()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public Time newTime(DataType dataType)
     {
         return fac.newTime(dataType);
@@ -1220,6 +1264,7 @@ public class SWEHelper
      * @deprecated Use {@link #createTimeRange()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public TimeRange newTimeRange()
     {
         return fac.newTimeRange();
@@ -1230,6 +1275,7 @@ public class SWEHelper
      * @deprecated Use {@link #createTimeRange()}
      */
     @Deprecated
+    @SuppressWarnings("javadoc")
     public TimeRange newTimeRange(DataType dataType)
     {
         return fac.newTimeRange(dataType);
