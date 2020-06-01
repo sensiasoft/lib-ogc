@@ -15,13 +15,23 @@ Copyright (C) 2012-2017 Sensia Software LLC. All Rights Reserved.
 package org.vast.sensorML;
 
 import java.util.Arrays;
-import org.isotc211.v2005.gmd.CIResponsibleParty;
-import org.isotc211.v2005.gmd.impl.CIResponsiblePartyImpl;
 import org.vast.process.IProcessExec;
+import org.vast.sensorML.SMLBuilders.AbstractProcessBuilder;
+import org.vast.sensorML.SMLBuilders.AggregateProcessBuilder;
+import org.vast.sensorML.SMLBuilders.PhysicalComponentBuilder;
+import org.vast.sensorML.SMLBuilders.PhysicalSystemBuilder;
+import org.vast.sensorML.SMLBuilders.SimpleProcessBuilder;
 import org.vast.swe.SWEHelper;
+import org.vast.util.Asserts;
+import net.opengis.OgcPropertyList;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.AggregateProcess;
 import net.opengis.sensorml.v20.DataInterface;
+import net.opengis.sensorml.v20.IdentifierList;
+import net.opengis.sensorml.v20.PhysicalComponent;
+import net.opengis.sensorml.v20.PhysicalSystem;
+import net.opengis.sensorml.v20.SimpleProcess;
+import net.opengis.sensorml.v20.Term;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
@@ -30,7 +40,8 @@ import net.opengis.swe.v20.DataStream;
 
 /**
  * <p>
- * Helper class to deal with process input/output structures.
+ * Helper class for creating SensorML process and system components and 
+ * dealing with process input/output structures.
  * </p>
  *
  * @author Alex Robin
@@ -38,6 +49,9 @@ import net.opengis.swe.v20.DataStream;
  */
 public class SMLHelper
 {
+    public static final SMLFactory DEFAULT_SML_FACTORY = new SMLFactory();
+    protected SMLFactory fac = DEFAULT_SML_FACTORY;
+    
     
     static class LinkTarget
     {
@@ -50,11 +64,83 @@ public class SMLHelper
             this.component = component;
         }
     }
-        
     
-    public CIResponsibleParty newResponsibleParty()
+    
+    /**
+     * Create a SML helper with the default factory
+     */
+    public SMLHelper()
+    {        
+    }
+    
+    
+    /**
+     * Create a SML helper with the provided factory
+     * @param fac SML process object factory
+     */
+    public SMLHelper(SMLFactory fac)
     {
-        return new CIResponsiblePartyImpl();
+        this.fac = fac;
+    }
+    
+    
+    /**
+     * Helper method to edit a SensorML process in-place using a builder
+     * @param <B> Type of expected builder
+     * @param process process instance to start from
+     * @return A builder corresponding to the provided provided process type
+     */
+    @SuppressWarnings("unchecked")
+    public <B extends AbstractProcessBuilder<?,?>> B edit(AbstractProcess process)
+    {
+        Asserts.checkNotNull(process, AbstractProcess.class);
+
+        if (process instanceof PhysicalSystem)
+            return (B)createPhysicalSystem();
+        else if (process instanceof PhysicalComponent)
+            return (B)createPhysicalComponent();
+        else if (process instanceof AggregateProcess)
+            return (B)createAggregateProcess();
+        else if (process instanceof SimpleProcess)
+            return (B)createSimpleProcess();
+        else
+            throw new IllegalArgumentException("Unsupported process type: " + process.getClass().getCanonicalName());
+    }
+
+
+    /**
+     * @return A builder to create a new SimpleProcess object
+     */
+    public SimpleProcessBuilder createSimpleProcess()
+    {
+        return new SimpleProcessBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new AggregateProcess object
+     */
+    public AggregateProcessBuilder createAggregateProcess()
+    {
+        return new AggregateProcessBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new PhysicalComponent object
+     */
+    public PhysicalComponentBuilder createPhysicalComponent()
+    {
+        return new PhysicalComponentBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new PhysicalSystem object
+     */
+    public PhysicalSystemBuilder createPhysicalSystem()
+    {
+        return new PhysicalSystemBuilder(fac);
     }
     
     
@@ -211,5 +297,62 @@ public class SMLHelper
         // append path within port structure
         linkString.append(SWEHelper.getComponentPath(component));
         return linkString.toString();
+    }
+    
+    
+    /* Deprecated methods */ 
+    
+    /**
+     * @deprecated Use {@link createPhysicalSystem()}
+     */
+    @Deprecated
+    @SuppressWarnings("javadoc")
+    public PhysicalSystem newPhysicalSystem()
+    {
+        return fac.newPhysicalSystem();
+    }
+    
+        
+    /* Deprecated way of editing a SensorML process description */
+    
+    @Deprecated
+    AbstractProcess process;
+    
+    /**
+     * @deprecated Use {@link #edit(AbstractProcess)} that returns a builder
+     */
+    @Deprecated
+    @SuppressWarnings("javadoc") 
+    public SMLHelper(AbstractProcess process)
+    {
+        this.process = process;
+    }    
+    
+    @Deprecated
+    public void addIdentifier(String label, String def, String value)
+    {
+        Asserts.checkNotNull(process);
+        
+        // ensure we have an identification section
+        OgcPropertyList<IdentifierList> sectionList = process.getIdentificationList();
+        IdentifierList idList;
+        if (sectionList.isEmpty())
+        {
+            idList = fac.newIdentifierList();
+            sectionList.add(idList);
+        }
+        else
+            idList = sectionList.get(0);
+        
+        Term term = fac.newTerm();
+        term.setDefinition(def);
+        term.setLabel(label);
+        term.setValue(value);
+        idList.addIdentifier(term);
+    }    
+    
+    public void addSerialNumber(String value)
+    {
+        addIdentifier(SMLBuilders.SERIAL_NUMBER_LABEL, SMLBuilders.SERIAL_NUMBER_DEF, value);
     }
 }

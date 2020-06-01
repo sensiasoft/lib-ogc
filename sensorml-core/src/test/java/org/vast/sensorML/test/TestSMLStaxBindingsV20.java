@@ -52,6 +52,7 @@ import org.isotc211.v2005.gco.impl.CodeListValueImpl;
 import org.isotc211.v2005.gmd.CIResponsibleParty;
 import org.vast.sensorML.SMLBuilders;
 import org.vast.sensorML.SMLFactory;
+import org.vast.sensorML.SMLHelper;
 import org.vast.sensorML.SMLUtils;
 import org.vast.swe.SWEHelper;
 import org.xml.sax.InputSource;
@@ -169,10 +170,11 @@ public class TestSMLStaxBindingsV20 extends XMLTestCase
         SMLUtils smlUtils = new SMLUtils(SMLUtils.V2_0);
 
         SWEHelper swe = new SWEHelper();
+        SMLHelper sml = new SMLHelper();
         SMLFactory smlFac = new SMLFactory();
         GMLFactory gmlFac = new GMLFactory();
 
-        PhysicalSystem system = SMLBuilders.newPhysicalSystem()
+        PhysicalSystem system = sml.createPhysicalSystem()
             .id("MY_SYSTEM")
             .uniqueID("urn:osh:uid")
             .build();

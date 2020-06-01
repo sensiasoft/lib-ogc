@@ -108,6 +108,24 @@ public class SWEHelper
     public static final SWEFactory DEFAULT_SWE_FACTORY = new SWEFactory();
     public static final String PATH_SEPARATOR = "/";
     protected SWEFactory fac = DEFAULT_SWE_FACTORY;
+    
+    
+    /**
+     * Create a SWE helper with the default factory
+     */
+    public SWEHelper()
+    {        
+    }
+    
+    
+    /**
+     * Create a SWE helper with the provided factory
+     * @param fac SWE component factory
+     */
+    public SWEHelper(SWEFactory fac)
+    {
+        this.fac = fac;
+    }
 
 
     /**
