@@ -1,0 +1,39 @@
+group = 'org.vast.opengis'
+description = 'OGC Services Common'
+
+dependencies {
+  compile project(':swe-common-om')
+  compile 'javax.servlet:javax.servlet-api:3.1.0'
+}
+
+// add info to OSGI manifest
+jar {
+  manifest {
+    instruction 'Bundle-Vendor', 'Sensia Software LLC'
+  }
+}
+
+// add info to maven pom
+ext.pom >>= {
+  developers {
+    developer {
+      id 'alexrobin'
+      name 'Alex Robin'
+      organization 'Sensia Software LLC'
+      organizationUrl 'http://www.sensiasoft.com' 
+    }
+  } 
+}
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+
+configurations {
+  testArtifacts
+}
+
+artifacts {
+  testArtifacts packageTests
+}

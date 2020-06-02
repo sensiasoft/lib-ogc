@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--=====================================================================
+Example Request for DeleteSensor operation which contains the identifier of the sensor which shall be deleted in the SOS. The response contains the ID of the sensor which has been updated.
+=======================================================================-->
+<swes:DeleteSensorResponse xmlns:swes="http://www.opengis.net/swes/2.0">
+  
+  <!--identifier of the sensor which shall be deleted-->
+  <swes:deletedProcedure>http://www.my_namespace.org/sensors/Water_Gage_2</swes:deletedProcedure>
+  
+</swes:DeleteSensorResponse>

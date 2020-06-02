@@ -1,0 +1,1 @@
+service=SOS&version=2.0.0&request=GetResultTemplate&offering=urn:sensia:barometer_observations&observedProperty=http%3A%2F%2Fsweet.jpl.nasa.gov%2F2.0%2FatmoThermo.owl%23AtmosphericPressure

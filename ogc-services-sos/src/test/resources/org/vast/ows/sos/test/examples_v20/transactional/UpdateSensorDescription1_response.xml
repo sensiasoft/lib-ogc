@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swes:UpdateSensorDescriptionResponse xmlns:swes="http://www.opengis.net/swes/2.0">
+  <swes:updatedProcedure>http://www.my_namespace.org/sensors/Water_Gage_2</swes:updatedProcedure>
+</swes:UpdateSensorDescriptionResponse>

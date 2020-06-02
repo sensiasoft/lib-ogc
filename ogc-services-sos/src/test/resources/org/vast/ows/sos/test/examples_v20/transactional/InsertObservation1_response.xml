@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:InsertObservationResponse xmlns:sos="http://www.opengis.net/sos/2.0">
+	<sos:observation>http://www.my_namespace.org/water_gage_1_observations/obs1</sos:observation>
+</sos:InsertObservationResponse>

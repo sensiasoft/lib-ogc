@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swes:InsertSensorResponse xmlns:swes="http://www.opengis.net/swes/2.0">
+    <!--identifier assigned by the SOS for this procedure-->
+    <swes:assignedProcedure>http://www.my_namespace.org/sensors/Water_Gage_2</swes:assignedProcedure>    
+    <!--sensor description encoded in SensorML 1.0.1; for more information take a look at the examples of the SensorML specification-->
+    <swes:assignedOffering>http://www.my_namespace.org/water_gage_2_observations</swes:assignedOffering>    
+</swes:InsertSensorResponse>

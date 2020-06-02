@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Map>
+   <!-- -->
+   <Reader type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.GetMapReaderV10"/>
+   <Reader type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.GetMapReaderV11"/>
+   <Reader type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.GetMapReaderV11"/>
+   <Reader type="WMS" subType="Capabilities" version="1.0" class="org.vast.ows.wms.WMSCapabilitiesReaderV10"/>
+   <Reader type="WMS" subType="Capabilities" version="1.1" class="org.vast.ows.wms.WMSCapabilitiesReaderV11"/>
+   <Reader type="WMS" subType="Capabilities" version="1.1.1" class="org.vast.ows.wms.WMSCapabilitiesReaderV11"/>
+   <!-- -->
+   <Writer type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.GetMapWriterV10"/>
+   <Writer type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.GetMapWriterV11"/>
+   <Writer type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.GetMapWriterV11"/>
+   <!-- -->
+</Map>

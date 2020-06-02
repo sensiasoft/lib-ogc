@@ -1,0 +1,12 @@
+<sps:Update service="SPS" version="2.0.0" xsi:schemaLocation="http://www.opengis.net/sps/2.0 http://schemas.opengis.net/sps/2.0/sps.xsd" xmlns:sps="http://www.opengis.net/sps/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <sps:procedure>http://www.ogc.org/procedure/camera/1</sps:procedure>
+  <sps:taskingParameters>
+    <sps:ParameterData>
+      <sps:encoding>
+        <swe:TextEncoding tokenSeparator="," blockSeparator="@@" collapseWhiteSpaces="true" decimalSeparator="." />
+      </sps:encoding>
+      <sps:values>pointToLookAt,51.902112,8.192728,0.0,3.5</sps:values>
+    </sps:ParameterData>
+  </sps:taskingParameters>
+  <sps:targetTask>T001</sps:targetTask>
+</sps:Update>

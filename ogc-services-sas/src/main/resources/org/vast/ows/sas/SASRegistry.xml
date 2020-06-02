@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Map>
+   <!-- -->
+   <Reader type="SAS" subType="Capabilities" version="*" class="org.vast.ows.sas.SASCapabilitiesReader"/>
+   <Reader type="SAS" subType="Capabilities" version="0.0" class="org.vast.ows.sas.SASCapabilitiesReader"/>
+   <Reader type="SAS" subType="Capabilities" version="0" class="org.vast.ows.sas.SASCapabilitiesReader"/>
+   <!-- -->   
+   <Writer type="SAS" subType="GetCapabilities" version="0.0" class="org.vast.ows.sas.SASGetCapabilitiesWriter"/> 
+   <Writer type="SAS" subType="GetCapabilities" version="0" class="org.vast.ows.sas.SASGetCapabilitiesWriter"/> 
+   <Writer type="SAS" subType="Subscribe" version="0.0" class="org.vast.ows.sas.SASSubscribeWriter"/>
+   <!-- -->   
+</Map>
