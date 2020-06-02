@@ -79,7 +79,7 @@ public class SMLHelper extends SMLFactory
         term.setDefinition(def);
         term.setLabel(label);
         term.setValue(value);
-        idList.addIdentifier2(term);
+        idList.addIdentifier(term);
     }    
     
     public void addSerialNumber(String value)

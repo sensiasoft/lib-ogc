@@ -2729,7 +2729,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
                 reader.nextTag();
                 if (reader.getEventType() == XMLStreamConstants.START_ELEMENT)
                 {
-                    bean.addIdentifier2(this.readTerm(reader));
+                    bean.addIdentifier(this.readTerm(reader));
                     reader.nextTag(); // end property tag
                 }
                 
@@ -2768,10 +2768,10 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         int numItems;
         
         // identifier
-        numItems = bean.getIdentifier2List().size();
+        numItems = bean.getIdentifierList().size();
         for (int i = 0; i < numItems; i++)
         {
-            Term item = bean.getIdentifier2List().get(i);
+            Term item = bean.getIdentifierList().get(i);
             writer.writeStartElement(NS_URI, "identifier");
             this.writeTerm(writer, item);
             writer.writeEndElement();
