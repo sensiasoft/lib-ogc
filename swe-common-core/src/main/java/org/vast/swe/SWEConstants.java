@@ -90,7 +90,7 @@ public class SWEConstants
     // SWE definition URIs
     public static final String DBPEDIA_URI_PREFIX = "http://dbpedia.org/resource/";
     public static final String QUDT_URI_PREFIX = "http://qudt.org/vocab/quantitykind/";
-    public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/property/";
+    public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/core/property/";
     public static final String DEF_SYSTEM_ID = SWE_PROP_URI_PREFIX + "SystemID";
     public static final String DEF_COEF = SWE_PROP_URI_PREFIX + "Coefficient";
     public static final String DEF_DN = SWE_PROP_URI_PREFIX + "DN";
@@ -99,7 +99,7 @@ public class SWEConstants
     public static final String DEF_COUNT = SWE_PROP_URI_PREFIX + "Counter";
 
     // SWE special units
-    public static final String SWE_UOM_URI_PREFIX = "http://sensorml.com/ont/uom/";
+    public static final String SWE_UOM_URI_PREFIX = "http://sensorml.com/ont/core/uom/";
     public static final String UOM_ANY = SWE_UOM_URI_PREFIX + "Any";
     public static final String UOM_ANY_CODE = "any";
     public static final String UOM_UNITLESS = "1";
