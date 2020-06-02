@@ -1,20 +1,21 @@
-description = 'Lib OWS'
+description = 'Lib OGC'
 
 allprojects  {
   repositories {
-    //jcenter() 
-    maven { url "http://repo.maven.apache.org/maven2" }
+    mavenCentral()
   }
+
+  group = 'org.sensorhub'
+  version = '1.4.0'
 }
 
 subprojects {
   apply plugin: 'java'
   apply plugin: 'osgi'
   apply plugin: 'maven-publish' 
-
  
-  sourceCompatibility = 1.7
-  targetCompatibility = 1.7
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
   ext.details = null
   ext.pom = {} // pom data that subprojects can append to
   
