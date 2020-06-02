@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Map>
+   <!-- -->
+   <Namespace type="SensorML" version="1.0" uri="http://www.opengis.net/sensorML/1.0"/>
+   <Namespace type="SensorML" version="1.0.1" uri="http://www.opengis.net/sensorML/1.0.1"/>
+   <Namespace type="SensorML" version="2.0" uri="http://www.opengis.net/sensorml/2.0"/>
+   <Namespace type="IC" uri="urn:us:gov:ic:ism:v2"/>
+   <!-- -->
+</Map>
