@@ -29,6 +29,7 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
     // array name mappings (key is parentName, subkey is localName, value is NS uri)
     protected Map<String, Map<String, String>> arrays = new HashMap<String, Map<String, String>>();
     protected Map<String, Map<String, String>> numerics = new HashMap<String, Map<String, String>>();
+    protected Map<String, Map<String, String>> valueArrays = new HashMap<String, Map<String, String>>();
     
     
     public SWEJsonStreamWriter(OutputStream os, String encoding) throws JsonStreamException
@@ -38,13 +39,19 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
         
         // elements to encode as JSON arrays
         addSpecialNames(arrays, NO_NS, "field", "coordinate", "item", "quality", "member");
-        addSpecialNamesWithParent(arrays, NO_NS, "constraint", "value", "interval");
+        addSpecialNamesWithParent(arrays, NO_NS, "AllowedValues", "value", "interval");
+        addSpecialNamesWithParent(valueArrays, NO_NS, "CountRange", "value");
+        addSpecialNamesWithParent(valueArrays, NO_NS, "QuantityRange", "value");
+        addSpecialNamesWithParent(valueArrays, NO_NS, "CategoryRange", "value");
+        addSpecialNamesWithParent(valueArrays, NO_NS, "TimeRange", "value");
         
         // elements with numerical values
-        addSpecialNames(numerics, NO_NS, "value", "nilValue", "paddingBytes-after", "paddingBytes-before", "byteLength", "significantBits", "bitLength");
+        addSpecialNames(numerics, NO_NS, "nilValue", "paddingBytes-after", "paddingBytes-before", "byteLength", "significantBits", "bitLength");
         addSpecialNamesWithParent(numerics, NO_NS, "Count", "value");
         addSpecialNamesWithParent(numerics, NO_NS, "Quantity", "value");
         addSpecialNamesWithParent(numerics, NO_NS, "Time", "value");
+        addSpecialNamesWithParent(numerics, NO_NS, "CountRange", "value");
+        addSpecialNamesWithParent(numerics, NO_NS, "QuantityRange", "value");
     }
     
     
@@ -70,27 +77,26 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
     
     protected boolean isSpecialName(Map<String, String> nameMap, String namespaceURI, String localName)
     {
-        String assocNsUri = nameMap.get(localName);
-        
-        if (assocNsUri == null)
-            return false;
-        
-        else if (assocNsUri.isEmpty() || assocNsUri.equals(namespaceURI))
-            return true;
+        if (nameMap != null)
+        {        
+            String assocNsUri = nameMap.get(localName);
+            
+            if (assocNsUri == null)
+                return false;
+            
+            else if (assocNsUri.isEmpty() || assocNsUri.equals(namespaceURI))
+                return true;
+        }
         
         return false;
     }
     
     
-    protected boolean isSpecialPath(Map<String, Map<String, String>> nameMaps, String namespaceURI, String localName)
+    protected boolean isSpecialPath(Map<String, Map<String, String>> nameMaps, String parentName, String namespaceURI, String localName)
     {
-        if (currentContext.parent != null && currentContext.parent.eltName != null)
-        {
-            String parentName = currentContext.parent.eltName;
-            Map<String, String> nameMap = nameMaps.get(parentName);
-            if (nameMap != null)
-                return isSpecialName(nameMap, namespaceURI, localName);
-        }
+        Map<String, String> nameMap = nameMaps.get(parentName);
+        if (nameMap != null)
+            return isSpecialName(nameMap, namespaceURI, localName);
         
         return isSpecialName(nameMaps.get(NO_PARENT), namespaceURI, localName);
     }
@@ -99,7 +105,22 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
     @Override
     protected boolean isArray(String namespaceURI, String localName)
     {
-        return isSpecialPath(arrays, namespaceURI, localName);
+        String parentName = NO_PARENT;
+        if (currentContext != null && currentContext.eltName != null)
+            parentName = currentContext.eltName;
+            
+        return isSpecialPath(arrays, parentName, namespaceURI, localName);
+    }
+    
+    
+    @Override
+    protected boolean isValueArray(String namespaceURI, String localName)
+    {
+        String parentName = NO_PARENT;
+        if (currentContext.parent != null && currentContext.parent.eltName != null)
+            parentName = currentContext.parent.eltName;
+        
+        return isSpecialPath(valueArrays, parentName, namespaceURI, localName);
     }
     
     
@@ -109,7 +130,7 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
         if (!super.isNumericValue(value))
             return false;
         
-        return isSpecialPath(numerics, null, currentContext.eltName);
+        return isSpecialPath(numerics, currentContext.parent.eltName, null, currentContext.eltName);
     }
 
 

@@ -16,7 +16,7 @@ package org.vast.swe.json;
 
 import java.io.InputStream;
 import java.util.HashSet;
-import javax.xml.stream.XMLStreamException;
+import org.vast.json.JsonStreamException;
 import org.vast.json.JsonStreamReader;
 
 
@@ -29,7 +29,7 @@ public class SWEJsonStreamReader extends JsonStreamReader
     protected HashSet<String> inlineValueNames = new HashSet<String>();
     
     
-    public SWEJsonStreamReader(InputStream is, String encoding) throws XMLStreamException
+    public SWEJsonStreamReader(InputStream is, String encoding) throws JsonStreamException
     {
         super(is, encoding);
         
