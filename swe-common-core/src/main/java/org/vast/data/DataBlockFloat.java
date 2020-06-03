@@ -14,6 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import net.opengis.swe.v20.DataType;
 
 
@@ -222,7 +224,10 @@ public class DataBlockFloat extends AbstractDataBlock
 	@Override
     public double getDoubleValue()
 	{
-		return primitiveArray[startIndex];
+	    BigDecimal bd = BigDecimal.valueOf(primitiveArray[startIndex]);
+        bd = bd.setScale(6, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+        //return primitiveArray[startIndex];        
 	}
 
 
