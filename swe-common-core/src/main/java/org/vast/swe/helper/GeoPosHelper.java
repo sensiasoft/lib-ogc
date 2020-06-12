@@ -36,12 +36,6 @@ import net.opengis.swe.v20.Vector;
  */
 public class GeoPosHelper extends VectorHelper
 {
-    public static final String EPSG_AXIS_URI_PREFIX = SWEConstants.OGC_DEF_URI + "axis-name/EPSG/0/";
-    public static final String DEF_LATITUDE_GEODETIC_EPSG = EPSG_AXIS_URI_PREFIX + "9901";
-    public static final String DEF_LONGITUDE_EPSG = EPSG_AXIS_URI_PREFIX + "9902";
-    public static final String DEF_ALTITUDE_ELLIPSOID_EPSG = EPSG_AXIS_URI_PREFIX + "9903";
-    public static final String DEF_ALTITUDE_GEOID_EPSG = EPSG_AXIS_URI_PREFIX + "9904"; // orthometric height above MSL
-
     public static final String DEF_LATITUDE_GEODETIC = SWEHelper.getPropertyUri("GeodeticLatitude");
     public static final String DEF_LONGITUDE = SWEHelper.getPropertyUri("Longitude");
     public static final String DEF_ALTITUDE_ELLIPSOID = SWEHelper.getPropertyUri("HeightAboveEllipsoid");
@@ -64,19 +58,19 @@ public class GeoPosHelper extends VectorHelper
             .definition(def != null ? def : DEF_LOCATION)
             .refFrame(SWEConstants.REF_FRAME_4979)
             .addCoordinate("lat", createQuantity()
-                .definition(DEF_LATITUDE_GEODETIC_EPSG)
+                .definition(DEF_LATITUDE_GEODETIC)
                 .label("Geodetic Latitude")
                 .axisId("Lat")
                 .uomCode("deg")
                 .build())
             .addCoordinate("lon", createQuantity()
-                .definition(DEF_LONGITUDE_EPSG)
+                .definition(DEF_LONGITUDE)
                 .label("Longitude")
                 .axisId("Lon")
                 .uomCode("deg")
                 .build())
             .addCoordinate("alt", createQuantity()
-                .definition(DEF_ALTITUDE_ELLIPSOID_EPSG)
+                .definition(DEF_ALTITUDE_ELLIPSOID)
                 .label("Ellipsoidal Height")
                 .axisId("h")
                 .uomCode("m")
@@ -96,13 +90,13 @@ public class GeoPosHelper extends VectorHelper
             .definition(def != null ? def : DEF_LOCATION)
             .refFrame(SWEConstants.REF_FRAME_4326)
             .addCoordinate("lat", createQuantity()
-                .definition(DEF_LATITUDE_GEODETIC_EPSG)
+                .definition(DEF_LATITUDE_GEODETIC)
                 .label("Geodetic Latitude")
                 .axisId("Lat")
                 .uomCode("deg")
                 .build())
             .addCoordinate("lon", createQuantity()
-                .definition(DEF_LONGITUDE_EPSG)
+                .definition(DEF_LONGITUDE)
                 .label("Longitude")
                 .axisId("Lon")
                 .uomCode("deg")
