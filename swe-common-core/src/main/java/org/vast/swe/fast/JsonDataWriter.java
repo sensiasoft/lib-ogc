@@ -60,6 +60,14 @@ public class JsonDataWriter extends AbstractDataWriter
 {
     static final String JSON_ERROR = "Error writing JSON stream for ";
     static final String INDENT = "  ";
+    static final Map<Character, String> ESCAPED_CHARS = new HashMap<>();
+    
+    static {
+        ESCAPED_CHARS.put('\n', "\\n");
+        ESCAPED_CHARS.put('\t', "\\t");
+        ESCAPED_CHARS.put('\"', "\\\"");
+        ESCAPED_CHARS.put('\\', "\\\\");
+    }
 
     protected Writer writer;
     protected NullWriter nullWriter = new NullWriter();
@@ -257,11 +265,27 @@ public class JsonDataWriter extends AbstractDataWriter
             if (val != null)
             {
                 writer.write('"');
-                writer.write(val);
+                writer.write(escape(val));
                 writer.write('"');
             }
             else
                 writer.write("null");
+        }
+        
+        protected String escape(String val)
+        {
+            StringBuilder buf = new StringBuilder();
+            for (int i = 0; i < val.length(); i++)
+            {
+                char c = val.charAt(i);
+                String escaped = ESCAPED_CHARS.get(c);
+                if (escaped != null)
+                    buf.append(escaped);
+                else
+                    buf.append(c);
+            }
+            
+            return buf.toString();
         }
     }
 
