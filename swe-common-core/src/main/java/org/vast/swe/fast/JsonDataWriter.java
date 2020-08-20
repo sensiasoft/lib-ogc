@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import org.vast.swe.SWEDataTypeUtils;
@@ -252,6 +253,10 @@ public class JsonDataWriter extends AbstractDataWriter
 
     protected class StringWriter extends ValueWriter
     {
+        static final int BUF_SIZE_INCREMENT = 64;
+        char[] buf = new char[2*BUF_SIZE_INCREMENT];
+        int pos;
+        
         public StringWriter(String eltName)
         {
             this.eltName = eltName;
@@ -265,27 +270,34 @@ public class JsonDataWriter extends AbstractDataWriter
             if (val != null)
             {
                 writer.write('"');
-                writer.write(escape(val));
+                writer.write(escape(val), 0, pos);
                 writer.write('"');
             }
             else
                 writer.write("null");
         }
         
-        protected String escape(String val)
+        protected char[] escape(String val)
         {
-            StringBuilder buf = new StringBuilder();
+            pos = 0;
+            if (buf.length < 2*val.length())
+                buf = Arrays.copyOf(buf, (2*val.length()/BUF_SIZE_INCREMENT+1)*BUF_SIZE_INCREMENT);
+            
             for (int i = 0; i < val.length(); i++)
             {
                 char c = val.charAt(i);
                 String escaped = ESCAPED_CHARS.get(c);
+                
                 if (escaped != null)
-                    buf.append(escaped);
+                {
+                    for (int j = 0; j < escaped.length(); j++)
+                        buf[pos++] = escaped.charAt(j);                        
+                }
                 else
-                    buf.append(c);
+                    buf[pos++] = c;
             }
             
-            return buf.toString();
+            return buf;
         }
     }
 
