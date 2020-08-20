@@ -12,7 +12,7 @@ Copyright (C) 2012-2017 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.swe.test;
+package org.vast.swe.fast;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
