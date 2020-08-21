@@ -72,7 +72,7 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
         
         // prepare inputs
         IOPropertyList wrapperInputs = wrapperProcess.getInputList();
-        if (inputData.size() != 0)
+        if (!inputData.isEmpty())
         {
             // replace wrapper inputs if defined by this exec impl
             wrapperInputs.clear();
@@ -80,13 +80,13 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
         }
         inputData = wrapperProcess.getInputList();
         int numInputs = wrapperProcess.getNumInputs();
-        inputConnections = new ArrayList<DataConnectionList>(numInputs);
+        inputConnections = new ArrayList<>(numInputs);
         for (int i = 0; i < numInputs; i++)
             inputConnections.add(new DataConnectionList());
         
         // prepare outputs
         IOPropertyList wrapperOutputs = wrapperProcess.getOutputList();
-        if (outputData.size() != 0)
+        if (!outputData.isEmpty())
         {
             // replace wrapper outputs if defined by this exec impl
             wrapperOutputs.clear();
@@ -94,13 +94,13 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
         }
         outputData = wrapperProcess.getOutputList();
         int numOutputs = wrapperProcess.getNumOutputs();
-        outputConnections = new ArrayList<DataConnectionList>(numOutputs);
+        outputConnections = new ArrayList<>(numOutputs);
         for (int i = 0; i < numOutputs; i++)
             outputConnections.add(new DataConnectionList());
         
         // prepare parameters
         IOPropertyList wrapperParams = wrapperProcess.getParameterList();
-        if (paramData.size() != 0)
+        if (!paramData.isEmpty())
         {
             // replace wrapper params if defined by this exec impl
             wrapperParams.clear();
@@ -108,7 +108,7 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
         }
         paramData = wrapperProcess.getParameterList();
         int numParams = wrapperProcess.getNumParameters();
-        paramConnections = new ArrayList<DataConnectionList>(numParams);
+        paramConnections = new ArrayList<>(numParams);
         for (int i = 0; i < numParams; i++)
             paramConnections.add(new DataConnectionList());
     }
@@ -275,7 +275,7 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
     /**
      * Writes new data to output queues in async mode (threaded)
      */
-    protected void writeData(List<DataConnectionList> allConnections) throws InterruptedException
+    protected void writeData(List<DataConnectionList> allConnections)
     {
         for (int i = 0; i < allConnections.size(); i++)
         {
@@ -379,7 +379,7 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
             {
                 String processClass = getClass().getName();
                 processClass = processClass.substring(processClass.lastIndexOf('.') + 1);
-                LOGGER.debug("Process " + getName() + " (" + processClass + ") Thread started");
+                LOGGER.debug("Process {} ({}) thread started", getName(), processClass);
             }
 
             this.init();
@@ -401,7 +401,7 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
             {
                 String processClass = getClass().getName();
                 processClass = processClass.substring(processClass.lastIndexOf('.') + 1);
-                LOGGER.debug("Process " + getName() + " (" + processClass + ") Thread stopped");
+                LOGGER.debug("Process {} ({}) thread stopped", getName(), processClass);
             }
 
             // set a stop flag and let the run method return cleanely
@@ -422,7 +422,7 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
     @Override
     public String toString()
     {
-        StringBuffer text = new StringBuffer();
+        StringBuilder text = new StringBuilder(128);
         String indent = "    ";
 
         text.append("Process: ");
@@ -570,14 +570,14 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
 
 
     @Override
-    public List<DataConnectionList> getParamConnections()
+    public List<DataConnectionList> getOutputConnections()
     {
         return outputConnections;
     }
 
 
     @Override
-    public List<DataConnectionList> getOutputConnections()
+    public List<DataConnectionList> getParamConnections()
     {
         return paramConnections;
     }
