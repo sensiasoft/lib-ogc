@@ -12,4 +12,8 @@
       <uri>http://sensors.ws/process/clip</uri>
       <class>org.vast.sensorML.test.Clip_Process</class>
    </Process>
+   <Process>
+      <uri>http://sensors.ws/process/TimeSeriesStats</uri>
+      <class>org.vast.sensorML.test.TimeSeriesStats_Process</class>
+   </Process>
 </ProcessMap>

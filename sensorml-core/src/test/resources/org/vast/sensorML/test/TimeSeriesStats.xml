@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sml:SimpleProcess gml:id="TemporalStats01" xmlns:sml="http://www.opengis.net/sensorml/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.net/sensorML/2.0/sensorML.xsd" definition="http://sensors.ws/process/linearInterpolator">
+   <!-- ============================= -->
+   <!-- Descriptions -->
+   <!-- ============================= -->
+   <gml:description>Computation of time series statistics</gml:description>
+   <gml:identifier codeSpace="uid">urn:net:swe:process:timeSeriesStats</gml:identifier>
+   <gml:name>Time Series Statistics</gml:name>
+   <!-- ============================= -->
+   <!-- Inputs -->
+   <!-- ============================= -->
+   <sml:inputs>
+      <sml:InputList>
+         <sml:input name="sample">
+            <swe:DataRecord>
+               <swe:label>Input Sample</swe:label>
+               <swe:field name="time">
+                  <swe:Time definition="http://www.opengis.net/def/property/OGC/0/SamplingTime">
+                     <swe:uom href="http://www.opengis.net/def/uom/ISO-8601/0/Gregorian" />
+                  </swe:Time>               
+               </swe:field>
+               <swe:field name="val">
+                  <swe:Quantity definition="http://sensorml.com/ont/swe/property/DN">
+                     <swe:uom href="http://sensorml.com/ont/swe/uom/Any" />
+                  </swe:Quantity>               
+               </swe:field>
+            </swe:DataRecord>
+         </sml:input>
+      </sml:InputList>
+   </sml:inputs>
+   <!-- ============================= -->
+   <!-- Outputs -->
+   <!-- ============================= -->
+   <sml:outputs>
+      <sml:OutputList>
+         <sml:output name="stats">
+            <swe:DataRecord definition="http://sensors.ws/process/TimeSeriesStatsRecord">
+               <swe:label>Statistics Report</swe:label>
+               <swe:field name="time">
+                  <swe:Time definition="http://www.opengis.net/def/property/OGC/0/SamplingTime">
+                     <swe:label>Report Time</swe:label>
+                     <swe:uom href="http://www.opengis.net/def/uom/ISO-8601/0/Gregorian" />
+                  </swe:Time>               
+               </swe:field>
+               <swe:field name="mean">
+                  <swe:Quantity definition="http://dbpedia.org/resource/Mean">
+                     <swe:label>Temporal Mean</swe:label>
+                     <swe:uom href="http://sensorml.com/ont/swe/uom/Any" />
+                  </swe:Quantity>               
+               </swe:field>
+               <swe:field name="stdev">
+                  <swe:Quantity definition="http://dbpedia.org/resource/Standard_deviation">
+                     <swe:label>Standard Deviation</swe:label>
+                     <swe:uom href="http://sensorml.com/ont/swe/uom/Any" />
+                  </swe:Quantity>               
+               </swe:field>
+            </swe:DataRecord>
+         </sml:output>
+      </sml:OutputList>
+   </sml:outputs>
+   <!-- ============================= -->
+   <!-- Parameters -->
+   <!-- ============================= -->
+   <sml:parameters>
+      <sml:ParameterList>
+         <sml:parameter name="windowSize">
+            <swe:Quantity definition="http://sensorml.com/ont/swe/property/Duration">
+               <swe:label>Temporal Window Size</swe:label>
+               <swe:description>Size of the temporal window used to compute statistics</swe:description>
+               <swe:uom code="s" />
+               <swe:value>30.0</swe:value>
+            </swe:Quantity>
+         </sml:parameter>
+         <sml:parameter name="reportingPeriod">
+            <swe:Quantity definition="http://sensorml.com/ont/swe/property/Duration">
+               <swe:label>Min Reporting Period</swe:label>
+               <swe:description>Minimum time period at which output statistics are produced</swe:description>
+               <swe:uom code="s" />
+               <swe:value>10.0</swe:value>
+            </swe:Quantity>
+         </sml:parameter>
+      </sml:ParameterList>
+   </sml:parameters>
+   <sml:method xlink:href="http://sensors.ws/process/TimeSeriesStats" />
+</sml:SimpleProcess>
