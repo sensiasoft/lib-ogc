@@ -317,11 +317,11 @@ public class JsonDataWriter extends AbstractDataWriter
             try
             {
                 writer.write('[');
-                fieldProcessors.get(0).process(data, index);
+                fieldProcessors.get(0).process(data, index++);
                 writer.write(", ");
-                fieldProcessors.get(1).process(data, index);
+                fieldProcessors.get(1).process(data, index++);
                 writer.write(']');
-                return index+2;
+                return index;
             }
             catch (IOException e)
             {
