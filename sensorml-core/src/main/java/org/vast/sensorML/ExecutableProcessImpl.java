@@ -294,7 +294,7 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
                 }
 
                 // renew output dataBlock
-                DataComponent comp = inputData.getComponent(i);
+                DataComponent comp = outputData.getComponent(i);
                 comp.renewDataBlock();
             }
         }
