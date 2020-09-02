@@ -74,7 +74,7 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
         
         // prepare process collections
         OgcPropertyList<AbstractProcess> componentList = ((AggregateProcess)wrapperProcess).getComponentList();
-        int numComponents = componentList.size();        
+        int numComponents = componentList.size();
         processTable = new LinkedHashMap<String, IProcessExec>(numComponents);
         processExecList = new ArrayList<IProcessExec>(numComponents);
         
@@ -109,17 +109,17 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
         internalConnections = new ArrayList<DataConnection>(numConnections);
         for (Link link: ((AggregateProcess)wrapperProcess).getConnectionList())
         {
-            DataQueue dataQueue = new DataQueue();
-            connectSignal(dataQueue, link.getSource());
-            connectSignal(dataQueue, link.getDestination());
-            internalConnections.add(dataQueue);
+            DataConnection connection = childrenThreadsOn ? new DataQueue() : new DataConnection();
+            connectSignal(connection, link.getSource());
+            connectSignal(connection, link.getDestination());
+            internalConnections.add(connection);
         }
     }
 
 
     @Override
     public void init() throws SMLException
-    {               
+    {
         // keep ref to generate exception message
         IProcessExec currentProcess = null;
         
@@ -137,7 +137,7 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
                 {
                     currentProcess = childProcess;
                     childProcess.init();
-                    childProcess.createNewOutputBlocks();                    
+                    childProcess.createNewOutputBlocks();
                     if (childProcess.needSync())
                         this.needSync = true;
                 }
@@ -163,9 +163,9 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
             throw new SMLException(errMsg, e);
         }
     }
-        
 
-    protected void connectSignal(DataQueue dataQueue, String linkString) throws SMLException
+
+    protected void connectSignal(DataConnection dataQueue, String linkString) throws SMLException
     {
         boolean internalConnection = false;
         IProcessExec selectedProcess = null;
@@ -183,7 +183,7 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
         String part2 = linkString.substring(sep1, sep2++);
         
         // if we're linking to a component IO
-        if ("components".equals(part1)) // support only links to components for now 
+        if ("components".equals(part1)) // support only links to components for now
         {
             processName = part2;
             selectedProcess = processTable.get(processName);
@@ -205,11 +205,10 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
             selectedProcess = this;
             portType = part1;
             portName = part2;
-            int sep3 = linkString.indexOf(Link.PATH_SEPARATOR, sep2);
-            if (sep3 > 0)
-                dataPath = linkString.substring(sep3);
-        }        
-        
+            if (sep2 < linkString.length())
+                dataPath = linkString.substring(sep2);
+        }
+
         // connect connection to input, output or parameter port
         if ("inputs".equals(portType))
         {
@@ -265,9 +264,9 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
             String destName = dataQueue.getDestinationProcess().getName();
             throw new SMLException("Connection " + linkString + " cannot be made between " + srcName + " and " + destName, e);
         }
-    }  
-    
-    
+    }
+
+
     @Override
     public void reset() throws SMLException
     {
@@ -317,7 +316,7 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
                         ensureOrder(upStreamProcess, process);
                 }
             }
-        }       
+        }
     }
     
     
@@ -450,8 +449,8 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
                 //super.writeOutputData(this.internalInputConnections);
                 // TODO deal with params
                 //super.fetchInputData(this.internalOutputConnections);
-            }           
-        }       
+            }
+        }
         catch (Exception e)
         {
             String errMsg = EXEC_ERROR_MSG + currentProcess.getName() + " (" + currentProcess.getClass().getCanonicalName() + ")";
@@ -543,7 +542,7 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
         catch (CDMException e)
         {
             throw new SMLException("Unable to connect internal signal to output '" + outputName + "'", e);
-        } 
+        }
     }
     
     
@@ -619,5 +618,5 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
     public void setOutputNeeded(int outputIndex, boolean needed)
     {
         internalOutputConnections.get(outputIndex).setNeeded(needed);
-    }    
+    }
 }
