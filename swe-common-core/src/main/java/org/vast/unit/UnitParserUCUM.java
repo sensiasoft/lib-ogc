@@ -46,59 +46,66 @@ import org.w3c.dom.NodeList;
 public class UnitParserUCUM implements UnitParser
 {
 	private static Logger log = LoggerFactory.getLogger(UnitParserUCUM.class);
-    private static HashMap<String, Double> prefixTable = new HashMap<>();
     private static String termRegex = "[./]?[0-9 a-z A-Z \\[ \\] \\- \\+ \\! \\# \\* \\_]+";
     private static String intRegex = "[./]?[-+]?[0-9]+([-+][0-9])?";
     private static String funcRegex = "^[0-9 a-z A-Z]+\\(.+\\)$";
+    private static HashMap<String, Double> prefixTable = new HashMap<>();
     private static HashMap<String, Unit> unitTable = new HashMap<>();
-    
-    
+
+
     static
     {
-        // load prefix scale factors
-        prefixTable.put("Y", 1e24);
-        prefixTable.put("Z", 1e21);
-        prefixTable.put("E", 1e18);
-        prefixTable.put("P", 1e15);
-        prefixTable.put("T", 1e12);
-        prefixTable.put("G", 1e9);
-        prefixTable.put("M", 1e6);
-        prefixTable.put("k", 1e3);
-        prefixTable.put("h", 1e2);
-        prefixTable.put("da", 1e1);
-        prefixTable.put("d", 1e-1);
-        prefixTable.put("c", 1e-2);
-        prefixTable.put("m", 1e-3);
-        prefixTable.put("u", 1e-6);
-        prefixTable.put("n", 1e-9);
-        prefixTable.put("p", 1e-12);
-        prefixTable.put("f", 1e-15);
-        prefixTable.put("a", 1e-18);
-        prefixTable.put("z", 1e-21);
-        prefixTable.put("y", 1e-24);
+        synchronized(unitTable)
+        {
+            prefixTable.clear();
+            unitTable.clear();
+
+            // load prefix scale factors
+            prefixTable.put("Y", 1e24);
+            prefixTable.put("Z", 1e21);
+            prefixTable.put("E", 1e18);
+            prefixTable.put("P", 1e15);
+            prefixTable.put("T", 1e12);
+            prefixTable.put("G", 1e9);
+            prefixTable.put("M", 1e6);
+            prefixTable.put("k", 1e3);
+            prefixTable.put("h", 1e2);
+            prefixTable.put("da", 1e1);
+            prefixTable.put("d", 1e-1);
+            prefixTable.put("c", 1e-2);
+            prefixTable.put("m", 1e-3);
+            prefixTable.put("u", 1e-6);
+            prefixTable.put("n", 1e-9);
+            prefixTable.put("p", 1e-12);
+            prefixTable.put("f", 1e-15);
+            prefixTable.put("a", 1e-18);
+            prefixTable.put("z", 1e-21);
+            prefixTable.put("y", 1e-24);
+
+            preloadUCUMUnits();
+        }
     }
-    
-    
-    public UnitParserUCUM()
-    {
-        if (unitTable.isEmpty())
-            this.preloadUCUMUnits();
-    }
-    
-    
+
+
     /**
      * Call this to get a Unit object corresponding to the given ucum string
      */
     @Override
     public Unit getUnit(String ucumDef)
     {
+        return decodeUnit(ucumDef);
+    }
+
+
+    private static Unit decodeUnit(String ucumDef)
+    {
         ucumDef = ucumDef.trim();
-        
+
         // first check if we already have it in the table
         Unit uom = unitTable.get(ucumDef);
         if (uom != null)
-            return uom.copy();        
-        
+            return uom.copy();
+
         // otherwise it is probably a composed unit so create a new one
         uom = new Unit();
         uom.setExpression(ucumDef);
@@ -111,7 +118,7 @@ public class UnitParserUCUM implements UnitParser
             int closeBracketIndex = ucumDef.indexOf(')');
             
             // extract function name, scale and term
-            String funcName = ucumDef.substring(0, openBracketIndex);            
+            String funcName = ucumDef.substring(0, openBracketIndex);
             String scale = ucumDef.substring(openBracketIndex+1, spaceIndex);
             ucumDef = ucumDef.substring(spaceIndex+1, closeBracketIndex);
             
@@ -140,20 +147,20 @@ public class UnitParserUCUM implements UnitParser
             
             else
                 parseUnitCode(token, uom);
-        }        
-        
+        }
+
         return uom;
     }
-    
-    
-    private void parseUnitCode(String token, Unit uom)
+
+
+    private static void parseUnitCode(String token, Unit uom)
     {
         Unit unit = null;
         double power = 1.0;
         double prefixScale = 1.0;
         
         // extract trailing power
-        int expIndex = this.findExponentIndex(token);
+        int expIndex = findExponentIndex(token);
         String expString = token.substring(expIndex);
         String unitString = token.substring(0, expIndex);
         if (expString.length() != 0)
@@ -178,8 +185,8 @@ public class UnitParserUCUM implements UnitParser
             if (unitString.startsWith(prefix))
             {
                 // get remaining of string after prefix
-                String unitAtom = unitString.substring(prefix.length());                
-                                
+                String unitAtom = unitString.substring(prefix.length());
+
                 // only if remaining of string also matches a unit
                 if (unitTable.containsKey(unitAtom))
                 {
@@ -191,7 +198,7 @@ public class UnitParserUCUM implements UnitParser
                         continue;
                     
                     // get prefix scale factor
-                    prefixScale = prefixTable.get(prefix);                    
+                    prefixScale = prefixTable.get(prefix);
                     prefixFound = true;
                     
                     break;
@@ -222,9 +229,9 @@ public class UnitParserUCUM implements UnitParser
         // combine unit with current uom
         uom.multiply(unit);
     }
-    
-    
-    private int findExponentIndex(String token)
+
+
+    private static int findExponentIndex(String token)
     {
         int i = token.length();
         char c;
@@ -238,13 +245,13 @@ public class UnitParserUCUM implements UnitParser
             
             c = token.charAt(i);
         }
-        while (c == '+' || c == '-' || (c >= '0' && c <= '9'));        
-        
+        while (c == '+' || c == '-' || (c >= '0' && c <= '9'));
+
         return i+1;
     }
-    
-    
-    private void parsePower10(String token, Unit uom)
+
+
+    private static void parsePower10(String token, Unit uom)
     {
         int powerCharPos = token.indexOf('*');
         if (powerCharPos < 0)
@@ -256,30 +263,27 @@ public class UnitParserUCUM implements UnitParser
         if (token.charAt(0) == '/')
             uom.scaleToSI /= Math.pow(10, power);
         else
-            uom.scaleToSI *= Math.pow(10, power);        
+            uom.scaleToSI *= Math.pow(10, power);
     }
-    
-    
-    private void parseNumber(String token, Unit uom)
+
+
+    private static void parseNumber(String token, Unit uom)
     {
         double val;
         
         if (token.charAt(0) == '/')
-            val = 1.0 / Double.parseDouble(token.substring(1));            
+            val = 1.0 / Double.parseDouble(token.substring(1));
         else if ((token.charAt(0) == '.'))
             val = Double.parseDouble(token.substring(1));
         else
-            val = Double.parseDouble(token);           
-        
+            val = Double.parseDouble(token);
+
         uom.scaleToSI *= val;
     }
 
 
     public static Map<String, Unit> getUnitTable()
     {
-        if (unitTable.isEmpty())
-            new UnitParserUCUM().preloadUCUMUnits();
-        
         return unitTable;
     }
     
@@ -287,7 +291,7 @@ public class UnitParserUCUM implements UnitParser
     /**
      * Call this method to preload all units defined in UCUM essence
      */
-    public void preloadUCUMUnits()
+    private static void preloadUCUMUnits()
     {
         try
         {
@@ -301,7 +305,7 @@ public class UnitParserUCUM implements UnitParser
             {
                 Element unitElt = (Element) baseUnitList.item(i);
                 String unitCode = dom.getAttributeValue(unitElt, "Code");
-                String unitName = dom.getElementValue(unitElt, "name");                
+                String unitName = dom.getElementValue(unitElt, "name");
                 String unitSymbol = readPrintSymbol(dom, unitElt);
                 String property = dom.getElementValue(unitElt, "property");
                 
@@ -316,11 +320,11 @@ public class UnitParserUCUM implements UnitParser
                 if (unitCode.equals("m"))
                     unit.setMeter(1.0);
                 else if (unitCode.equals("s"))
-                    unit.setSecond(1.0);                
+                    unit.setSecond(1.0);
                 else if (unitCode.equals("rad"))
                     unit.setRadian(1.0);
                 else if (unitCode.equals("K"))
-                    unit.setKelvin(1.0);                
+                    unit.setKelvin(1.0);
                 else if (unitCode.equals("cd"))
                     unit.setCandela(1.0);
                 else if (unitCode.equals("g"))
@@ -359,7 +363,7 @@ public class UnitParserUCUM implements UnitParser
                 Unit ucumUnit;
                 try
                 {
-                    ucumUnit = getUnit(unitString);
+                    ucumUnit = decodeUnit(unitString);
                     ucumUnit.setCode(unitCode);
                     ucumUnit.setPrintSymbol(unitSymbol);
                     ucumUnit.setName(unitName);
@@ -390,9 +394,9 @@ public class UnitParserUCUM implements UnitParser
             log.error("Error while parsing UCUM definition file", e);
         }
     }
-    
-    
-    private String readPrintSymbol(DOMHelper dom, Element unitElt)
+
+
+    private static String readPrintSymbol(DOMHelper dom, Element unitElt)
     {
         Element printSymElt = dom.getElement(unitElt, "printSymbol");
         
@@ -402,7 +406,7 @@ public class UnitParserUCUM implements UnitParser
             String code = dom.getAttributeValue(unitElt, "Code");
             // remove brackets if present
             if (code.matches("^\\[.*\\]$"))
-                code = code.substring(1, code.length()-1);                        
+                code = code.substring(1, code.length()-1);
             return code;
         }
                 
