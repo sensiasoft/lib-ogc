@@ -137,7 +137,7 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
     @Override
     public String getName()
     {
-        return wrapperProcess.getId();
+        return wrapperProcess.getName();
     }
 
 
@@ -171,13 +171,8 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
 
             if (connectionList.isNeeded())
             {
-                // loop through all connections in each list
-                for (int j = 0; j < connectionList.size(); j++)
-                {
-                    DataConnection connection = connectionList.get(j);
-                    if (connection.isDataAvailable() != availability)
-                        return false;
-                }
+                if (!checkAvailability(connectionList, availability))
+                    return false;
             }
         }
 
@@ -198,6 +193,12 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
         for (int j = 0; j < connectionList.size(); j++)
         {
             DataConnection connection = connectionList.get(j);
+            
+            // always ok if source and dest process are the same
+            // e.g. process chain input connected directly to its output
+            if (connection.getDestinationProcess() == connection.getSourceProcess())
+                continue;
+            
             if (connection.isDataAvailable() != availability)
                 return false;
         }
@@ -352,6 +353,7 @@ public abstract class ExecutableProcessImpl implements IProcessExec, Runnable
             try
             {
                 // fetch inputs, execute process and write outputs
+                LOGGER.debug("Running " + getName());
                 this.fetchData(inputConnections);
                 this.fetchData(paramConnections);
                 this.execute();

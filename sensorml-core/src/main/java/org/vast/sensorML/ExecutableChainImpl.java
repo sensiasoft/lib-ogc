@@ -355,7 +355,7 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
                 if (processExecList != null)
                 {
                     // combine input blocks
-                    this.combineInputBlocks();
+                    combineInputBlocks();
                     
                     if (needSync)
                     {
@@ -365,19 +365,19 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
                         // if chain can run it means values are available
                         for (int i=0; i<inputConnections.size(); i++)
                             if (inputConnections.get(i).isNeeded())
-                                this.setAvailability(internalInputConnections.get(i), true);
+                                setAvailability(internalInputConnections.get(i), true);
                         
                         // reset available flag for all needed internal parameter connections
                         // if chain can run it means values are available
                         for (int i=0; i<paramConnections.size(); i++)
                             if (paramConnections.get(i).isNeeded())
-                                this.setAvailability(internalParamConnections.get(i), true);
+                                setAvailability(internalParamConnections.get(i), true);
                         
                         // reset available flag for all needed internal outputs
                         // if chain can run it means outputs are free (no value available)
                         for (int i=0; i<outputConnections.size(); i++)
                             if (outputConnections.get(i).isNeeded())
-                                this.setAvailability(internalOutputConnections.get(i), false);
+                                setAvailability(internalOutputConnections.get(i), false);
                         
                         //System.out.println("Exec");
                         // loop until no more processes can run or all internalOutputs are full
@@ -408,25 +408,26 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
                                     //System.out.println("--> Waiting: " + childProcess.getName());
                             }
                         }
-                        while (moreToRun && !this.checkAvailability(internalOutputConnections, true));
+                        while (moreToRun && !checkAvailability(internalOutputConnections, true));
                         
                         // transfer data to chain outputs when sub processes are done
-                        this.transferData(internalOutputConnections);
-                        
-                        // combine output blocks
-                        this.combineOutputBlocks();
+                        transferData(internalOutputConnections);
+                        combineOutputBlocks();
                         
                         // determine what inputs are needed for next run
-                        for (int i=0; i<inputConnections.size(); i++)
-                            inputConnections.get(i).setNeeded(this.checkAvailability(internalInputConnections.get(i), false));
+                        for (int i=0; i<inputConnections.size(); i++) {
+                            inputConnections.get(i).setNeeded(checkAvailability(internalInputConnections.get(i), false));
+                        }
                         
                         // determine what params are needed for next run
-                        for (int i=0; i<paramConnections.size(); i++)
-                            paramConnections.get(i).setNeeded(this.checkAvailability(internalParamConnections.get(i), false));
+                        for (int i=0; i<paramConnections.size(); i++) {
+                            paramConnections.get(i).setNeeded(checkAvailability(internalParamConnections.get(i), false));
+                        }
                         
                         // determine what outputs are needed for next run
-                        for (int i=0; i<outputConnections.size(); i++)
-                            outputConnections.get(i).setNeeded(this.checkAvailability(internalOutputConnections.get(i), true));
+                        for (int i=0; i<outputConnections.size(); i++) {
+                            outputConnections.get(i).setNeeded(checkAvailability(internalOutputConnections.get(i), true));
+                        }
                     }
                     else
                     {
@@ -440,7 +441,7 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
                         }
                         
                         // transfer data to chain outputs when sub processes are done
-                        this.transferData(internalOutputConnections);
+                        transferData(internalOutputConnections);
                     }
                 }
             }
