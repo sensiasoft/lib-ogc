@@ -9,7 +9,7 @@
 	<!-- -->
 	<gml:description>A single CTD profile (with sampling time given by the observation phenomenonTime)</gml:description>
 	<gml:name>CTD Profile</gml:name>
-	<om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation"/>
+	<om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEArrayObservation"/>
 	<!-- -->
 	<om:phenomenonTime>
 		<gml:TimeInstant gml:id="T1">

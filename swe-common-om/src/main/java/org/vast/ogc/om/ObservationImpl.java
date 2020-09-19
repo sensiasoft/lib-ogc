@@ -29,7 +29,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
+
+import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.SimpleComponent;
+import net.opengis.swe.v20.Vector;
+
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.GenericFeatureImpl;
@@ -220,6 +226,13 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     public void setResult(DataComponent result)
     {
         this.result = result;
+        
+        if (result instanceof SimpleComponent)
+            this.type = IObservation.OBS_TYPE_SCALAR;
+        else if (result instanceof DataRecord || result instanceof Vector)
+            this.type = IObservation.OBS_TYPE_RECORD;
+        else if (result instanceof BlockComponent)
+            this.type = IObservation.OBS_TYPE_ARRAY;
     }
     
     
