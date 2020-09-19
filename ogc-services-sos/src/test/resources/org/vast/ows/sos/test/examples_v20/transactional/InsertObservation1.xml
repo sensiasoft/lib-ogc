@@ -4,7 +4,7 @@
 	<!--observation which shall be inserted-->
 	<sos:observation>
 		<om:OM_Observation gml:id="obsTest1">
-			<om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"/>
+			<om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEScalarObservation"/>
 			<om:phenomenonTime>
 				<gml:TimeInstant gml:id="T1">
 					<gml:timePosition>2010-08-31T17:45:15Z</gml:timePosition>

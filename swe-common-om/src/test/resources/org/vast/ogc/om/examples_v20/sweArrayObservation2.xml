@@ -9,7 +9,7 @@
 	<!-- -->
 	<gml:description>Array of CTD profiles taken at different times and locations</gml:description>
 	<gml:name>CTD Profiles</gml:name>
-	<om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation"/>
+	<om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEArrayObservation"/>
 	<!-- -->
 	<om:phenomenonTime>
 		<gml:TimePeriod gml:id="T1">

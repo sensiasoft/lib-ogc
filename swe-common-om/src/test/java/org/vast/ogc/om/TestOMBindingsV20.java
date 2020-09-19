@@ -86,7 +86,6 @@ public class TestOMBindingsV20 extends XMLTestCase
     public void testReadWriteObsRecord() throws Exception
     {
         readWriteCompareOmXml("examples_v20/sweRecordObservation3.xml");
-        readWriteCompareOmXml("examples_v20/weatherObservation.xml");
     }
     
     
@@ -94,6 +93,7 @@ public class TestOMBindingsV20 extends XMLTestCase
     {
         readWriteCompareOmXml("examples_v20/sweArrayObservation1.xml");
         readWriteCompareOmXml("examples_v20/sweArrayObservation2.xml");
+        readWriteCompareOmXml("examples_v20/weatherObservation.xml");
     }
     
 }

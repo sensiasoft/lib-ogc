@@ -9,7 +9,8 @@
 	<gml:description>Observation test instance - soft-typed result using swe:Data
 		element</gml:description>
 	<gml:name>Observation test 4</gml:name>
-	<om:phenomenonTime>
+	<om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEScalarObservation" />
+  <om:phenomenonTime>
 		<gml:TimeInstant
 			gml:id="T1">
 			<gml:timePosition>2005-01-11T17:22:25Z</gml:timePosition>
