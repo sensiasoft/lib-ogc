@@ -206,6 +206,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     protected void writePropertyAttributes(XMLStreamWriter writer, OgcProperty<?> prop) throws XMLStreamException
     {
         String val;
+        String xlinkPrefix = nsContext.getPrefix(XLINK_NS_URI);
         
         val = prop.getName();
         if (val != null)
@@ -213,19 +214,19 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
         
         val = prop.getTitle();
         if (val != null)
-            writer.writeAttribute(XLINK_NS_URI, "title", val);
+            writer.writeAttribute(xlinkPrefix, XLINK_NS_URI, "title", val);
         
         val = prop.getRole();
         if (val != null)
-            writer.writeAttribute(XLINK_NS_URI, "role", val);
+            writer.writeAttribute(xlinkPrefix, XLINK_NS_URI, "role", val);
         
         val = prop.getArcRole();
         if (val != null)
-            writer.writeAttribute(XLINK_NS_URI, "arcrole", val);
+            writer.writeAttribute(xlinkPrefix, XLINK_NS_URI, "arcrole", val);
         
         val = prop.getHref();
         if (val != null)
-            writer.writeAttribute(XLINK_NS_URI, "href", val);
+            writer.writeAttribute(xlinkPrefix, XLINK_NS_URI, "href", val);
     }
     
     

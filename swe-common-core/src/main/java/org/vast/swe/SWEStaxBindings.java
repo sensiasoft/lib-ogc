@@ -30,8 +30,13 @@ public class SWEStaxBindings extends XMLStreamBindings
     
     public SWEStaxBindings()
     {
-        super(new SWEFactory());
-        
+        this(new SWEFactory());
+    }
+    
+     
+    public SWEStaxBindings(net.opengis.swe.v20.Factory factory)
+    {
+        super(factory);
         nsContext.registerNamespace(NS_PREFIX_SWE, net.opengis.swe.v20.bind.XMLStreamBindings.NS_URI);
         nsContext.registerNamespace(NS_PREFIX_XLINK, net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
     }

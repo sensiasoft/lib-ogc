@@ -238,9 +238,9 @@ public class GMLStaxBindings extends XMLStreamBindings
         else if (bean instanceof AbstractFeature)
             gmlID = featureIds.nextId(bean);
         else
-            gmlID = bean.getId();
+            gmlID = getStringValue(bean.getId());
         
-        writer.writeAttribute(NS_URI, "id", gmlID);
+        writer.writeAttribute(nsContext.getPrefix(NS_URI), NS_URI, "id", gmlID);
     }
     
     
