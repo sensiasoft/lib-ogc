@@ -19,6 +19,8 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import org.vast.data.EncodedValuesImpl;
+import org.vast.data.TextEncodingImpl;
 import net.opengis.AbstractXMLStreamBindings;
 import net.opengis.IDateTime;
 import net.opengis.HrefResolverXML;
@@ -474,23 +476,29 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             this.writeDataComponent(writer, bean.getElementType(), false);
         writer.writeEndElement();
         
-        if (writeInlineValues)
+        if (writeInlineValues && bean.hasData())
         {
-            // encoding
-            if (bean.isSetEncoding())
+            // if not set, use text encoding by default
+            if (!bean.isSetEncoding())
             {
-                writer.writeStartElement(NS_URI, "encoding");
-                this.writeAbstractEncoding(writer, bean.getEncoding());
-                writer.writeEndElement();
-                
-                // values
-                if (bean.isSetValues())
-                {
-                    writer.writeStartElement(NS_URI, "values");
-                    this.writeEncodedValuesPropertyType(writer, bean, bean.getEncoding(), bean.getValues());
-                    writer.writeEndElement();
-                }
+                if (bean.getElementType() instanceof ScalarComponent)
+                    bean.setEncoding(new TextEncodingImpl(",", " "));
+                else
+                    bean.setEncoding(new TextEncodingImpl());
             }
+            
+            // encoding            
+            writer.writeStartElement(NS_URI, "encoding");
+            this.writeAbstractEncoding(writer, bean.getEncoding());
+            writer.writeEndElement();
+            
+            // add encoded values object if needed
+            if (!bean.isSetValues())
+                bean.setValues(new EncodedValuesImpl());
+            
+            writer.writeStartElement(NS_URI, "values");
+            this.writeEncodedValuesPropertyType(writer, bean, bean.getEncoding(), bean.getValues());
+            writer.writeEndElement();
         }
     }
     
