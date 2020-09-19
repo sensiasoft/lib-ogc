@@ -223,7 +223,7 @@ public class GMLStaxBindings extends XMLStreamBindings
     public void writeAbstractGMLTypeAttributes(XMLStreamWriter writer, AbstractGML bean) throws XMLStreamException
     {        
         // automatically generate gml:id if not set
-        String gmlID = bean.getId();        
+        String gmlID = getStringValue(bean.getId());        
         if (gmlID == null || gmlID.length() == 0)
         {
             sb.setLength(0);
@@ -247,7 +247,7 @@ public class GMLStaxBindings extends XMLStreamBindings
             gmlID = sb.toString();
         }
         
-        writer.writeAttribute(NS_URI, "id", gmlID);
+        writer.writeAttribute(nsContext.getPrefix(NS_URI), NS_URI, "id", gmlID);
     }
     
     

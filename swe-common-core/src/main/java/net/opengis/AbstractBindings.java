@@ -193,6 +193,8 @@ public abstract class AbstractBindings
 
     protected String getStringValue(Object obj)
     {
+        if (obj == null)
+            return null;
         return obj.toString();
     }
     
