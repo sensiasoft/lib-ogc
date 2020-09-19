@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.swe.test;
 
 import static org.junit.Assert.*;
+import java.io.ByteArrayOutputStream;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
@@ -31,14 +32,58 @@ import org.vast.swe.SWEHelper;
 import org.vast.swe.helper.GeoPosHelper;
 
 
-public class TestVarSizeArrays
+public class TestDataArrays
 {
     static final String TEST1_FAIL_MSG = "Wrong data block size before resizing";
     static final String TEST2_FAIL_MSG = "Wrong data block size after resizing";
     static final String WRONG_ARRAY_SIZE_MSG = "Wrong array size";
 
-    SWEFactory fac = new SWEFactory();
+    GeoPosHelper fac = new GeoPosHelper();
     SWEUtils utils = new SWEUtils(SWEUtils.V2_0);
+    
+    
+    @Test
+    public void testFixedSizeArray() throws Exception
+    {
+        int size = 15;
+        DataArray arr = fac.createArray()
+                .withFixedSize(size)
+                .withElement("sample", fac.createQuantity().build())
+                .build();
+        
+        utils.writeComponent(System.out, arr, true, true);
+        assertEquals(size, arr.getComponentCount());
+    }
+    
+    
+    @Test
+    public void testFixedSizeArrayWithInlineValues() throws Exception
+    {
+        int size = 10;
+        DataArray arr = fac.createArray()
+                .withFixedSize(size)
+                .withElement("sample", fac.createQuantity().build())
+                .build();
+        
+        arr.assignNewDataBlock();
+        for (int i = 0; i < arr.getComponentCount(); i++)
+            arr.getData().setDoubleValue(i, i);
+        
+        assertEquals(size, arr.getComponentCount());
+        utils.writeComponent(System.out, arr, true, true);
+        
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        utils.writeComponent(os, arr, true, true);
+        
+        // check values were serialized correctly
+        StringBuilder expectedValues = new StringBuilder();
+        for (int i = 0; i < arr.getComponentCount(); i++)
+            expectedValues.append((double)i).append(' ');
+        expectedValues.setLength(expectedValues.length()-1);
+        String output = new String(os.toByteArray());
+        String serializedValues = output.substring(output.indexOf("<swe:values>")+12, output.lastIndexOf("</swe:values>")); 
+        assertEquals(expectedValues.toString(), serializedValues);        
+    }
 
 
     @Test
@@ -62,7 +107,7 @@ public class TestVarSizeArrays
         assertEquals(TEST1_FAIL_MSG, 1, data.getAtomCount());
 
         // test resizing
-        int arraySize = 100;
+        int arraySize = 10;
         array.updateSize(arraySize);
         data = rec.createDataBlock();
         assertEquals(TEST2_FAIL_MSG, arraySize*3+1, data.getAtomCount());
@@ -80,7 +125,8 @@ public class TestVarSizeArrays
         );
         rec.setData(newData);
         assertEquals(arraySize, array.getComponentCount());
-
+        utils.writeComponent(System.out, rec, true, true);
+        
         // test set new datablock with empty array
         arraySize = 0;
         newData = new DataBlockMixed(
@@ -125,12 +171,20 @@ public class TestVarSizeArrays
         assertEquals(TEST1_FAIL_MSG, 3, data.getAtomCount());
 
         // test resizing
-        int arraySize = 100;
+        rec.assignNewDataBlock();
+        int arraySize = 10;
+        numBins.getData().setIntValue(arraySize);
         array1.updateSize(arraySize);
-        array2.updateSize();
-        array3.updateSize();
-        data = rec.createDataBlock();
+        array2.updateSize(arraySize);
+        array3.updateSize(arraySize);        
+        data = rec.getData();
+        assertEquals(TEST2_FAIL_MSG, arraySize, numBins.getData().getIntValue());
+        assertEquals(TEST2_FAIL_MSG, arraySize, array1.getData().getAtomCount());
+        assertEquals(TEST2_FAIL_MSG, arraySize, array2.getData().getAtomCount());
+        assertEquals(TEST2_FAIL_MSG, arraySize, array3.getData().getAtomCount());
         assertEquals(TEST2_FAIL_MSG, arraySize*3+3, data.getAtomCount());
+        
+        utils.writeComponent(System.out, rec, true, true);
     }
 
 

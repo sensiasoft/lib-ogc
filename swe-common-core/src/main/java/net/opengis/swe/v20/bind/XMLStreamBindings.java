@@ -8,7 +8,7 @@ Software distributed under the License is distributed on an "AS IS" basis,
 WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the License.
 
-Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
+Copyright (C) 2012-2019 Sensia Software LLC. All Rights Reserved.
 
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -20,6 +20,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import org.vast.data.DateTimeOrDouble;
+import org.vast.data.EncodedValuesImpl;
+import org.vast.data.TextEncodingImpl;
 import net.opengis.AbstractXMLStreamBindings;
 import net.opengis.HrefResolverXML;
 import net.opengis.OgcProperty;
@@ -474,24 +476,30 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (elementTypeProp.hasValue() && !elementTypeProp.hasHref())
             this.writeDataComponent(writer, bean.getElementType(), false);
         writer.writeEndElement();
-
-        if (writeInlineValues)
+        
+        if (writeInlineValues && bean.hasData())
         {
-            // encoding
-            if (bean.isSetEncoding())
+            // if not set, use text encoding by default
+            if (!bean.isSetEncoding())
             {
-                writer.writeStartElement(NS_URI, "encoding");
-                this.writeAbstractEncoding(writer, bean.getEncoding());
-                writer.writeEndElement();
-
-                // values
-                if (bean.isSetValues())
-                {
-                    writer.writeStartElement(NS_URI, "values");
-                    this.writeEncodedValuesPropertyType(writer, bean, bean.getEncoding(), bean.getValues());
-                    writer.writeEndElement();
-                }
+                if (bean.getElementType() instanceof ScalarComponent)
+                    bean.setEncoding(new TextEncodingImpl(",", " "));
+                else
+                    bean.setEncoding(new TextEncodingImpl());
             }
+            
+            // encoding            
+            writer.writeStartElement(NS_URI, "encoding");
+            this.writeAbstractEncoding(writer, bean.getEncoding());
+            writer.writeEndElement();
+            
+            // add encoded values object if needed
+            if (!bean.isSetValues())
+                bean.setValues(new EncodedValuesImpl());
+            
+            writer.writeStartElement(NS_URI, "values");
+            this.writeEncodedValuesPropertyType(writer, bean, bean.getEncoding(), bean.getValues());
+            writer.writeEndElement();
         }
     }
 
@@ -3655,7 +3663,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     public void writeNilValue(XMLStreamWriter writer, NilValue bean) throws XMLStreamException
     {
         this.writeNilValueAttributes(writer, bean);
-
+        
         if (bean.getValue() != null)
             writer.writeCharacters(getStringValue(bean.getValue()));
     }

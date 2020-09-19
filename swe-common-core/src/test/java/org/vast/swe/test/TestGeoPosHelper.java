@@ -14,9 +14,14 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.swe.test;
 
+import static org.junit.Assert.*;
+import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.Vector;
 import org.junit.Test;
 import org.vast.swe.SWEUtils;
+import org.vast.data.TextEncodingImpl;
 import org.vast.swe.SWEConstants;
+import org.vast.swe.SWEHelper;
 import org.vast.swe.helper.GeoPosHelper;
 
 
@@ -46,5 +51,15 @@ public class TestGeoPosHelper
         utils.writeComponent(System.out, fac.newQuatOrientationENU(SWEConstants.DEF_SENSOR_ORIENT), false, true);
         utils.writeComponent(System.out, fac.newQuatOrientationNED(SWEConstants.DEF_SENSOR_ORIENT), false, true);
         utils.writeComponent(System.out, fac.newQuatOrientationECEF(SWEConstants.DEF_PLATFORM_ORIENT), false, true);
+    }
+    
+    
+    @Test
+    public void testCreateDefaultEncodingForVector() throws Exception
+    {
+        Vector vec = fac.newLocationVectorLLA(null);
+        DataEncoding encoding = SWEHelper.getDefaultEncoding(vec);
+        assertEquals(TextEncodingImpl.class, encoding.getClass());
+        utils.writeEncoding(System.out, encoding, true);
     }
 }
