@@ -23,7 +23,8 @@ package org.vast.sensorML;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
@@ -122,7 +123,7 @@ public class SMLUtils extends XMLBindingsUtils
      * @param dom DOM helper wrapping the XML document to read from
      * @param processElt DOM element to read from. Must be of one of the types derived from AbstractProcess
      * @return the process instance
-     * @throws XMLReaderException if an error occured while reading the XML
+     * @throws XMLReaderException if an error occurs while reading the XML
      */
     public AbstractProcess readProcess(DOMHelper dom, Element processElt) throws XMLReaderException
     {
@@ -135,7 +136,7 @@ public class SMLUtils extends XMLBindingsUtils
      * The root element must be of one of the types derived from AbstractProcess
      * @param is Input stream to read from
      * @return the process instance
-     * @throws XMLReaderException if an error occured while reading the XML
+     * @throws XMLReaderException if an error occurs while reading the XML
      */
     public AbstractProcess readProcess(InputStream is) throws XMLReaderException
     {
@@ -144,16 +145,26 @@ public class SMLUtils extends XMLBindingsUtils
     
     
     /**
-     * Reads a SensorML process from an InputStream
+     * Reads a SensorML process from a URL
      * The root element must be of one of the types derived from AbstractProcess
-     * @param is Input stream to read from
-     * @param baseURI Base URI of the document being read (used to resolve relative xlinks)
+     * @param url URL to fetch data from
      * @return the process instance
-     * @throws XMLReaderException if an error occured while reading the XML
+     * @throws XMLReaderException if an error occurs while fetching data or reading the XML
      */
-    public AbstractProcess readProcess(InputStream is, URI baseURI) throws XMLReaderException
+    public AbstractProcess readProcess(URL url) throws XMLReaderException
     {
-        return (AbstractProcess)readFromStream(is, baseURI, ObjectType.Process);
+        try
+        {
+            return (AbstractProcess)readFromStream(url.openStream(), url.toURI(), ObjectType.Process);
+        }
+        catch (IOException e)
+        {
+            throw new XMLReaderException("Cannot open stream from URL", e);
+        }
+        catch (URISyntaxException e)
+        {
+            throw new XMLReaderException("Invalid URI", e);
+        }
     }
     
     
