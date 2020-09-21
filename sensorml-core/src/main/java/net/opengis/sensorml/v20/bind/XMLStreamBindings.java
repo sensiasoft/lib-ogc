@@ -1561,6 +1561,20 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
                             reader.nextTag(); // end property tag
                         }
                         
+                        // prepare resolver
+                        if (!componentProp.hasValue())
+                        {
+                            String baseURI = reader.getLocation().getPublicId();
+                            
+                            componentProp.setHrefResolver(new HrefResolverXML(baseURI) {
+                                @Override
+                                public void parseContent(XMLStreamReader reader) throws XMLStreamException
+                                {
+                                    componentProp.setValue(XMLStreamBindings.this.readAbstractProcess(reader));                                    
+                                }                                
+                            });
+                        }
+                        
                         bean.getComponentList().add(componentProp);
                         reader.nextTag();
                     }
