@@ -17,6 +17,7 @@ package org.vast.ows.sos;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataRecord;
@@ -67,6 +68,13 @@ public class DataStructFilter extends BaseTreeVisitor
     {
         Iterator<DataComponent> it = choice.getItemList().iterator();
         filterChildren(choice.getDefinition(), it);
+    }
+    
+    
+    @Override
+    public void visit(DataArray array)
+    {
+        // do nothing, that is we always keep entire array
     }
     
     
