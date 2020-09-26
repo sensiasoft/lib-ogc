@@ -44,11 +44,21 @@ public class TimeExtent
     
     
     /**
-     * @return A time extent representing the 'now' instant
+     * @return A time extent representing the special value 'now'
      */
     public static TimeExtent now()
     {
         return new TimeExtent();
+    }
+    
+    
+    /**
+     * @return A time extent representing the current time instant, that is
+     * to say the value returned by {@link Instant#now()}
+     */
+    public static TimeExtent currentTime()
+    {
+        return TimeExtent.instant(Instant.now());
     }
 
 

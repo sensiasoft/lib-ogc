@@ -35,9 +35,9 @@ public class TestCreateObservations
     @Test
     public void testCreateScalarObs() throws Exception
     {
-        IObservation obs = new ObservationImpl();
-        obs.setPhenomenonTime(new TimeExtent(Instant.now().getEpochSecond()));
-        obs.setResultTime(new TimeExtent(Instant.now().getEpochSecond()));
+    	ObservationImpl obs = new ObservationImpl();
+        obs.setPhenomenonTime(TimeExtent.currentTime());
+        obs.setResultTime(Instant.now());
         obs.setProcedure(new ProcedureRef("urn:ogc:sensor:001"));
         obs.setObservedProperty(new DefinitionRef(SWEHelper.getPropertyUri("Temperature")));
         obs.setResult(geoHelper.createQuantity()
@@ -54,11 +54,11 @@ public class TestCreateObservations
     @Test
     public void testCreateComplexObs() throws Exception
     {
-        IObservation obs = new ObservationImpl();
-        obs.setPhenomenonTime(new TimeExtent(Instant.now().getEpochSecond()));
-        obs.setResultTime(new TimeExtent(Instant.now().getEpochSecond()));
+    	ObservationImpl obs = new ObservationImpl();
+    	obs.setPhenomenonTime(TimeExtent.currentTime());
+        obs.setResultTime(Instant.now());
         obs.setProcedure(new ProcedureRef("urn:ogc:sensor:001"));
-        obs.setObservedProperty(new DefinitionRef(SWEHelper.getPropertyUri("Temperature")));
+        obs.setObservedProperty(new DefinitionRef(SWEConstants.DEF_PLATFORM_LOC));
         obs.setResult(geoHelper.newLocationVectorLatLon(SWEConstants.DEF_PLATFORM_LOC));
         obs.getResult().assignNewDataBlock();
         obs.getResult().getData().setDoubleValue(0, 45.6);
@@ -71,11 +71,11 @@ public class TestCreateObservations
     @Test
     public void testCreateArrayObs() throws Exception
     {
-        IObservation obs = new ObservationImpl();        
-        obs.setPhenomenonTime(new TimeExtent(Instant.now().getEpochSecond()));
-        obs.setResultTime(new TimeExtent(Instant.now().getEpochSecond()));
+    	ObservationImpl obs = new ObservationImpl();        
+    	obs.setPhenomenonTime(TimeExtent.currentTime());
+        obs.setResultTime(Instant.now());
         obs.setProcedure(new ProcedureRef("urn:ogc:sensor:001"));
-        obs.setObservedProperty(new DefinitionRef(SWEHelper.getPropertyUri("Temperature")));
+        obs.setObservedProperty(new DefinitionRef(SWEHelper.getPropertyUri("RasterImage")));
         obs.setResult(imgHelper.newGrayscaleImage(10, 10, DataType.BYTE));
         obs.getResult().assignNewDataBlock();
         
