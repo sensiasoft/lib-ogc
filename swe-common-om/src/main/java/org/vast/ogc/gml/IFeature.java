@@ -12,6 +12,7 @@ package org.vast.ogc.gml;
 import java.util.Collections;
 import java.util.Map;
 import javax.xml.namespace.QName;
+import org.vast.util.IResource;
 
 /**
  * <p>
@@ -21,25 +22,13 @@ import javax.xml.namespace.QName;
  * @author Alex Robin
  * @date Sep 5, 2019
  */
-public interface IFeature
+public interface IFeature extends IResource
 {
 
-    /**
-     * @return the name
-     */
-    public String getName();
-    
-    
     /**
      * @return the globally unique identifier
      */
     public String getUniqueIdentifier();
-    
-    
-    /**
-     * @return the short description
-     */
-    public String getDescription();
     
     
     /**
