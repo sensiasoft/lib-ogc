@@ -144,6 +144,45 @@ public class TimeExtent
     }
     
     
+    /**
+     * @param timeExtents One or more time extents
+     * @return A time extent that contains all provided time extents, accounting
+     * for 'now' edge cases
+     */
+    public static TimeExtent span(TimeExtent... timeExtents)
+    {
+        Instant min = null;
+        Instant max = null;
+        Instant now = Instant.now();
+        
+        for (var te: timeExtents)
+        {
+            if (min == null)
+            {
+                min = te.begin;
+                max = te.end;
+            }
+            else
+            {
+                if ( (te.begin != null && min != null && te.begin.isBefore(min)) ||
+                     (te.begin == null && min != null && now.isBefore(min)) ||
+                     (te.begin != null && min == null && te.begin.isBefore(now)) )
+                    min = te.begin;
+                
+                if ( (te.end != null && max != null && te.end.isAfter(max)) ||
+                     (te.end == null && max != null && now.isAfter(max)) ||
+                     (te.end != null && max == null && te.end.isAfter(now)))
+                   max = te.end;
+            }
+        }
+        
+        TimeExtent time = new TimeExtent();
+        time.begin = min;
+        time.end = max;
+        return time;
+    }
+    
+    
     protected TimeExtent()
     {        
     }    
