@@ -92,6 +92,13 @@ public class FeatureRef<T extends IFeature> extends CachedReference<T> implement
 
 
     @Override
+    public String getId()
+    {
+        return getTarget().getId();
+    }
+
+
+    @Override
     public String getName()
     {
         return getTarget().getName();

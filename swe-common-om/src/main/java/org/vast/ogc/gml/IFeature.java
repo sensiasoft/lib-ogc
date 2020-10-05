@@ -25,6 +25,9 @@ import org.vast.util.IResource;
 public interface IFeature extends IResource
 {
 
+    String getId();
+    
+    
     /**
      * @return the globally unique identifier
      */

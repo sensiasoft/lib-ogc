@@ -76,7 +76,7 @@ public class GeoJsonBindings
     // Writing methods //
     /////////////////////
     
-    public void writeFeature(JsonWriter writer, AbstractFeature bean) throws IOException
+    public void writeFeature(JsonWriter writer, IFeature bean) throws IOException
     {
         writer.beginObject();        
         writeStandardFeatureProperties(writer, bean);
@@ -138,34 +138,34 @@ public class GeoJsonBindings
     }
     
     
-    protected void writeStandardFeatureProperties(JsonWriter writer, AbstractFeature bean) throws IOException
+    protected void writeStandardFeatureProperties(JsonWriter writer, IFeature bean) throws IOException
     {
-        writer.name("type").value(bean.getQName().getLocalPart());
+        writer.name("type").value("Feature");
         
         // common properties
         writer.name("id").value(encodeFeatureID(bean));
         
-        if (bean.isSetIdentifier())
+        if (bean.getUniqueIdentifier() != null)
             writer.name("uid").value(bean.getUniqueIdentifier());
      
-        if (bean.getNumNames() > 0)
+        if (bean.getName() != null)
             writer.name("name").value(bean.getName());
         
-        if (bean.isSetDescription())
+        if (bean.getDescription() != null)
             writer.name("description").value(bean.getDescription());
         
         // bbox
-        if (bean.isSetBoundedBy())
+        /*if (bean.isSetBoundedBy())
         {
             writer.name("bbox");
             writeEnvelope(writer, bean.getBoundedBy());
-        }
+        }*/
         
         // geometry
-        if (bean.isSetGeometry())
+        if (bean instanceof IGeoFeature && ((IGeoFeature)bean).getGeometry() != null)
         {
             writer.name("geometry");
-            writeGeometry(writer, bean.getGeometry());
+            writeGeometry(writer, ((IGeoFeature)bean).getGeometry());
         }
         
         // geometry
@@ -177,7 +177,7 @@ public class GeoJsonBindings
     }
     
     
-    protected String encodeFeatureID(AbstractFeature bean) throws IOException
+    protected String encodeFeatureID(IFeature bean) throws IOException
     {
         return bean.getId();
     }
@@ -348,7 +348,7 @@ public class GeoJsonBindings
     // Reading methods //
     /////////////////////
     
-    public GenericFeature readFeature(JsonReader reader) throws IOException
+    public IFeature readFeature(JsonReader reader) throws IOException
     {
         reader.beginObject();
         
