@@ -268,6 +268,8 @@ public class TimeExtent
      */
     public Duration duration()
     {
+        if (begin == end)
+            return Duration.ZERO;
         return Duration.between(begin(), end());
     }
     
@@ -399,8 +401,9 @@ public class TimeExtent
     
     Instant getNow()
     {
-        if (now == null)
-            now = Instant.now();
-        return now;
+        var now = Instant.now();
+        if (this.now == null || (now.getEpochSecond() - this.now.getEpochSecond()) > 1)
+            this.now = Instant.now();
+        return this.now;
     }
 }
