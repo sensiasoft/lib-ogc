@@ -79,20 +79,18 @@ public class GeoJsonBindings
     public void writeFeature(JsonWriter writer, IFeature bean) throws IOException
     {
         writer.beginObject();        
-        writeStandardFeatureProperties(writer, bean);
+        writeStandardGeoJsonProperties(writer, bean);
         
-        // custom properties
-        boolean hasCustomProperties = bean instanceof GenericFeature && !((GenericFeature)bean).getProperties().isEmpty();
-        if (hasCustomProperties)
+        // other properties
+        if (hasNonGeoJsonProperties(bean))
         {
             writer.name("properties").beginObject();
+            writeCommonFeatureProperties(writer, bean);
             
-            for (Entry<QName, Object> prop: ((GenericFeature)bean).getProperties().entrySet())
+            // custom properties
+            for (Entry<QName, Object> prop: bean.getProperties().entrySet())
             {
-                // prop name
                 QName propName = prop.getKey();
-                 
-                // prop value
                 Object val = prop.getValue();
                 
                 if (val instanceof Boolean)
@@ -138,13 +136,24 @@ public class GeoJsonBindings
     }
     
     
-    protected void writeStandardFeatureProperties(JsonWriter writer, IFeature bean) throws IOException
+    protected void writeStandardGeoJsonProperties(JsonWriter writer, IFeature bean) throws IOException
     {
         writer.name("type").value("Feature");
         
         // common properties
         writer.name("id").value(encodeFeatureID(bean));
         
+        // geometry
+        if (bean instanceof IGeoFeature && ((IGeoFeature)bean).getGeometry() != null)
+        {
+            writer.name("geometry");
+            writeGeometry(writer, ((IGeoFeature)bean).getGeometry());
+        }
+    }
+    
+    
+    protected void writeCommonFeatureProperties(JsonWriter writer, IFeature bean) throws IOException
+    {
         if (bean.getUniqueIdentifier() != null)
             writer.name("uid").value(bean.getUniqueIdentifier());
      
@@ -154,26 +163,21 @@ public class GeoJsonBindings
         if (bean.getDescription() != null)
             writer.name("description").value(bean.getDescription());
         
-        // bbox
-        /*if (bean.isSetBoundedBy())
-        {
-            writer.name("bbox");
-            writeEnvelope(writer, bean.getBoundedBy());
-        }*/
-        
-        // geometry
-        if (bean instanceof IGeoFeature && ((IGeoFeature)bean).getGeometry() != null)
-        {
-            writer.name("geometry");
-            writeGeometry(writer, ((IGeoFeature)bean).getGeometry());
-        }
-        
-        // geometry
         if (bean instanceof ITemporalFeature && ((ITemporalFeature) bean).getValidTime() != null)
         {
             writer.name("validTime");
             writeTimePeriod(writer, ((ITemporalFeature)bean).getValidTime());
         }
+    }
+    
+    
+    protected boolean hasNonGeoJsonProperties(IFeature bean)
+    {
+        return bean.getUniqueIdentifier() != null ||
+               bean.getName() != null ||
+               bean.getDescription() != null ||
+               (bean instanceof ITemporalFeature && ((ITemporalFeature)bean).getValidTime() != null) ||
+               !bean.getProperties().isEmpty();
     }
     
     
