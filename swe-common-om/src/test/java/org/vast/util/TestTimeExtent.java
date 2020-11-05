@@ -16,6 +16,9 @@ package org.vast.util;
 
 import static org.junit.Assert.*;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import org.junit.Test;
 
 
@@ -115,6 +118,81 @@ public class TestTimeExtent
         
         assertEquals(t1_min, te.begin());
         assertEquals(t1_max, te.end());
+    }
+    
+    
+    @Test
+    public void testParseInstant()
+    {
+        var isoString = "2018-04-26T12:45:58Z";
+        var te = TimeExtent.parse(isoString);
+        assertEquals(Instant.parse(isoString), te.begin());
+        assertEquals(Instant.parse(isoString), te.end());
+        
+        isoString = "2030-12-14T15:23:41+02:00";
+        te = TimeExtent.parse(isoString);
+        assertEquals(OffsetDateTime.parse(isoString).toInstant(), te.begin());
+        assertEquals(OffsetDateTime.parse(isoString).toInstant(), te.end());
+                
+        isoString = "1960-03-31";
+        te = TimeExtent.parse(isoString);
+        assertEquals(LocalDate.parse(isoString).atTime(0,0).atOffset(ZoneOffset.UTC).toInstant(), te.begin());
+        assertEquals(LocalDate.parse(isoString).atTime(0,0).atOffset(ZoneOffset.UTC).toInstant(), te.end());
+        
+        te = TimeExtent.parse("now");
+        assertTrue(te.isNow());
+        assertTrue(te.beginsNow());
+        assertTrue(te.endsNow());
+        assertTrue(te.begin().equals(te.end()));
+    }
+    
+    
+    @Test
+    public void testParsePeriod()
+    {
+        var beginString = "2018-04-26T12:45:58Z";
+        var endString = "2028-05-26T12:45:58Z";
+        var te = TimeExtent.parse(beginString + "/" + endString);
+        assertEquals(Instant.parse(beginString), te.begin());
+        assertEquals(Instant.parse(endString), te.end());
+        
+        beginString = "2018-04-26T12:45:58-06:00";
+        endString = "2028-05-26T12:45:58+08:00";
+        te = TimeExtent.parse(beginString + "/" + endString);
+        assertEquals(OffsetDateTime.parse(beginString).toInstant(), te.begin());
+        assertEquals(OffsetDateTime.parse(endString).toInstant(), te.end());
+                
+        beginString = "2200-04-20";
+        endString = "2300-05-31";
+        te = TimeExtent.parse(beginString + "/" + endString);
+        assertEquals(LocalDate.parse(beginString).atTime(0,0).atOffset(ZoneOffset.UTC).toInstant(), te.begin());
+        assertEquals(LocalDate.parse(endString).atTime(0,0).atOffset(ZoneOffset.UTC).toInstant(), te.end());
+        
+        beginString = "1980-01-01";
+        endString = "now";
+        te = TimeExtent.parse(beginString + "/" + endString);
+        assertEquals(LocalDate.parse(beginString).atTime(0,0).atOffset(ZoneOffset.UTC).toInstant(), te.begin());
+        assertTrue(te.endsNow());
+        
+        beginString = "now";
+        endString = "2030-09-30T12:00:00Z";
+        te = TimeExtent.parse(beginString + "/" + endString);
+        assertTrue(te.beginsNow());
+        assertEquals(Instant.parse(endString), te.end());
+        
+        beginString = "2024-02-29T03:45:19.333Z";
+        endString = TimeExtent.SPECIAL_VALUE_UNBOUNDED;
+        te = TimeExtent.parse(beginString + "/" + endString);
+        assertEquals(Instant.parse(beginString), te.begin());
+        assertEquals(Instant.MAX, te.end());
+        assertFalse(te.hasEnd());
+        
+        beginString = TimeExtent.SPECIAL_VALUE_UNBOUNDED;
+        endString = "1980-05-26";
+        te = TimeExtent.parse(beginString + "/" + endString);
+        assertEquals(Instant.MIN, te.begin());
+        assertEquals(LocalDate.parse(endString).atTime(0,0).atOffset(ZoneOffset.UTC).toInstant(), te.end());
+        assertFalse(te.hasBegin());
     }
 
 }
