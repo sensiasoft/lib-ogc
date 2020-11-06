@@ -361,8 +361,11 @@ public class JsonDataWriter extends AbstractDataWriter
                     // switch to null writer if this field should be skipped
                     Writer oldWriter = writer;
                     if (!p.isEnabled())
+                    {
                         writer = nullWriter;
-
+                        i--;
+                    }
+                    
                     // insert separator
                     if (i > 0)
                         writer.write(',');
