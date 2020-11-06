@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.vast.json.JsonStreamException;
 import org.vast.json.JsonStreamWriter;
+import com.google.gson.stream.JsonWriter;
 
 
 public class SWEJsonStreamWriter extends JsonStreamWriter
@@ -36,7 +37,20 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
     {
         super(os, encoding);
         this.markAttributes = false;
-        
+        initSpecialNames();        
+    }
+    
+    
+    public SWEJsonStreamWriter(JsonWriter writer) throws JsonStreamException
+    {
+        super(writer);
+        this.markAttributes = false;
+        initSpecialNames();        
+    }
+    
+    
+    protected void initSpecialNames()
+    {
         // elements to encode as JSON arrays
         addSpecialNames(arrays, NO_NS, "field", "coordinate", "item", "quality", "member");
         addSpecialNamesWithParent(arrays, NO_NS, "AllowedValues", "value", "interval");

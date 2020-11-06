@@ -19,6 +19,7 @@ import org.vast.json.JsonStreamException;
 import org.vast.ogc.gml.GMLStaxBindings;
 import org.vast.sensorML.SMLStaxBindings;
 import org.vast.swe.json.SWEJsonStreamWriter;
+import com.google.gson.stream.JsonWriter;
 
 
 public class SMLJsonStreamWriter extends SWEJsonStreamWriter
@@ -27,20 +28,31 @@ public class SMLJsonStreamWriter extends SWEJsonStreamWriter
     public SMLJsonStreamWriter(OutputStream os, String encoding) throws JsonStreamException
     {
         super(os, encoding);
-        
+    }
+    
+    
+    public SMLJsonStreamWriter(JsonWriter writer) throws JsonStreamException
+    {
+        super(writer);
+    }
+    
+    
+    @Override
+    protected void initSpecialNames()
+    {
         addSpecialNames(arrays, SMLStaxBindings.NS_URI,
-                        "keywords", "identification", "classification",
-                        "validTime", "securityConstraints", "legalConstraints",
-                        "characteristics", "capabilities", "contacts",
-                        "documentation", "history", "modes", "mode", "position",
-                        "localReferenceFrame", "localTimeFrame", "timePosition",
-                        "keyword", "input", "output", "parameter", "identifier",
-                        "classifier", "characteristic", "capability",
-                        "contact", "document", "event", "feature", "property",
-                        "connection", "component", "axis", "algorithm",
-                        "setValue", "setArrayValues", "setConstraint",
-                        "setMode", "setStatus");
-        
+            "keywords", "identification", "classification",
+            "validTime", "securityConstraints", "legalConstraints",
+            "characteristics", "capabilities", "contacts",
+            "documentation", "history", "modes", "mode", "position",
+            "localReferenceFrame", "localTimeFrame", "timePosition",
+            "keyword", "input", "output", "parameter", "identifier",
+            "classifier", "characteristic", "capability",
+            "contact", "document", "event", "feature", "property",
+            "connection", "component", "axis", "algorithm",
+            "setValue", "setArrayValues", "setConstraint",
+            "setMode", "setStatus");
+
         addSpecialNames(arrays, GMLStaxBindings.NS_URI, "name");
     }
     

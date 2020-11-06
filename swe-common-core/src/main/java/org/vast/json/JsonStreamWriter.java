@@ -73,6 +73,12 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
     }
     
     
+    public JsonStreamWriter(JsonWriter writer)
+    {
+        this.writer = writer;
+    }
+    
+    
     public void beginArray() throws IOException
     {
         writer.beginArray();
