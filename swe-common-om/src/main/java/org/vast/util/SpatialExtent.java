@@ -118,12 +118,20 @@ public class SpatialExtent
     
     public boolean isNull()
     {
+        return isNull(false);
+    }
+    
+    
+    protected boolean isNull(boolean testZ)
+    {
         if (Double.isNaN(minX)) return true;
         if (Double.isNaN(minY)) return true;
-        //if (Double.isNaN(minZ)) return true;
+        if (testZ && Double.isNaN(minZ)) return true;
+        
         if (Double.isNaN(maxX)) return true;
         if (Double.isNaN(maxY)) return true;
-        //if (Double.isNaN(maxZ)) return true;
+        if (testZ && Double.isNaN(maxZ)) return true;
+        
         return false;
     }
     
@@ -181,6 +189,7 @@ public class SpatialExtent
      */
     public void add(SpatialExtent bbox)
     {
+        Asserts.checkNotNull(bbox, Bbox.class);
         checkCrs(bbox);
         
         if (isNull())
@@ -216,23 +225,35 @@ public class SpatialExtent
      */
     public boolean intersects(SpatialExtent bbox)
     {
+        Asserts.checkNotNull(bbox, Bbox.class);
         checkCrs(bbox);
         
-        double bboxX1 = bbox.getMinX();
-        double bboxX2 = bbox.getMaxX();
-        double bboxY1 = bbox.getMinY();
-        double bboxY2 = bbox.getMaxY();
+        double otherMinX = bbox.getMinX();
+        double otherMaxX = bbox.getMaxX();
+        double otherMinY = bbox.getMinY();
+        double otherMaxY = bbox.getMaxY();
+        double otherMinZ = bbox.getMinZ();
+        double otherMaxZ = bbox.getMaxZ();
         
-        if (bboxX1 < minX && bboxX2 < minX)
+        if (isNull() || bbox.isNull())
             return false;
         
-        if (bboxX1 > maxX && bboxX2 > maxX)
+        if (otherMinX < minX && otherMaxX < minX)
             return false;
         
-        if (bboxY1 < minY && bboxY2 < minY)
+        if (otherMinX > maxX && otherMaxX > maxX)
             return false;
         
-        if (bboxY1 > maxY && bboxY2 > maxY)
+        if (otherMinY < minY && otherMaxY < minY)
+            return false;
+        
+        if (otherMinY > maxY && otherMaxY > maxY)
+            return false;
+        
+        if (otherMinZ < minZ && otherMaxZ < minZ)
+            return false;
+        
+        if (otherMinZ > maxZ && otherMaxZ > maxZ)
             return false;
         
         return true;
@@ -248,23 +269,34 @@ public class SpatialExtent
      */
     public boolean contains(SpatialExtent bbox)
     {
+        Asserts.checkNotNull(bbox, Bbox.class);
         checkCrs(bbox);
         
-        double bboxX1 = bbox.getMinX();
-        double bboxX2 = bbox.getMaxX();
-        double bboxY1 = bbox.getMinY();
-        double bboxY2 = bbox.getMaxY();
+        if (isNull() || bbox.isNull())
+            return false;        
         
-        if (bboxX1 < minX || bboxX1 > maxX)
+        double otherMinX = bbox.getMinX();
+        if (otherMinX < minX || otherMinX > maxX)
             return false;
         
-        if (bboxX2 < minX || bboxX2 > maxX)
+        double otherMaxX = bbox.getMaxX();
+        if (otherMaxX < minX || otherMaxX > maxX)
             return false;
         
-        if (bboxY1 < minY || bboxY1 > maxY)
+        double otherMinY = bbox.getMinY();
+        if (otherMinY < minY || otherMinY > maxY)
             return false;
         
-        if (bboxY2 < minY || bboxY2 > maxY)
+        double otherMaxY = bbox.getMaxY();
+        if (otherMaxY < minY || otherMaxY > maxY)
+            return false;
+        
+        double otherMinZ = bbox.getMinZ();
+        if (otherMinZ < minZ || otherMinZ > maxZ)
+            return false;
+        
+        double otherMaxZ = bbox.getMaxZ();
+        if (otherMaxZ < minZ || otherMaxZ > maxZ)
             return false;
         
         return true;
@@ -277,9 +309,8 @@ public class SpatialExtent
      */
     protected void checkCrs(SpatialExtent bbox)
     {
-        if (crs != null && bbox.crs != null)
-            if (!crs.equals(bbox.crs))
-                throw new IllegalStateException("CRS must match");
+        if (!Objects.equals(crs,  bbox.crs))
+            throw new IllegalArgumentException("CRS must match");
     }
     
     
