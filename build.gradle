@@ -31,7 +31,7 @@ subprojects {
 
   // default test dependencies
   dependencies {
-    testCompile 'junit:junit:4.11'
+    testCompile 'junit:junit:4.13'
     testCompile 'xmlunit:xmlunit:1.6'
   }
 }
