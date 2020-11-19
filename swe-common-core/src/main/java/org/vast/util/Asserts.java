@@ -1,64 +1,23 @@
-/*
- * Copyright (C) 2007 The Guava Authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- */
+/***************************** BEGIN LICENSE BLOCK ***************************
+
+The contents of this file are subject to the Mozilla Public License, v. 2.0.
+If a copy of the MPL was not distributed with this file, You can obtain one
+at http://mozilla.org/MPL/2.0/.
+
+Software distributed under the License is distributed on an "AS IS" basis,
+WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+for the specific language governing rights and limitations under the License.
+
+Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
+
+******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.util;
 
 
 /**
- * Static convenience methods that help a method or constructor check whether it was invoked
- * correctly (whether its <i>preconditions</i> have been met). These methods generally accept a
- * {@code boolean} expression which is expected to be {@code true} (or in the case of {@code
- * checkNotNull}, an object reference which is expected to be non-null). When {@code false} (or
- * {@code null}) is passed instead, the {@code Preconditions} method throws an unchecked exception,
- * which helps the calling method communicate to <i>its</i> caller that <i>that</i> caller has made
- * a mistake.
- *
- * <h3>Warning about performance</h3>
- *
- * <p>The goal of this class is to improve readability of code, but in some circumstances this may
- * come at a significant performance cost. Remember that parameter values for message construction
- * must all be computed eagerly, and autoboxing and varargs array creation may happen as well, even
- * when the precondition check then succeeds (as it should almost always do in production). In some
- * circumstances these wasted CPU cycles and allocations can add up to a real problem.
- * Performance-sensitive precondition checks can always be converted to the customary form:
- * <pre>   {@code
- *
- *   if (value < 0.0) {
- *     throw new IllegalArgumentException("negative value: " + value);
- *   }}</pre>
- *
- * <h3>Other types of preconditions</h3>
- *
- * <p>Not every type of precondition failure is supported by these methods. Continue to throw
- * standard JDK exceptions such as {@link java.util.NoSuchElementException} or
- * {@link UnsupportedOperationException} in the situations they are intended for.
- *
- * <h3>Non-preconditions</h3>
- *
- * <p>It is of course possible to use the methods of this class to check for invalid conditions
- * which are <i>not the caller's fault</i>. Doing so is <b>not recommended</b> because it is
- * misleading to future readers of the code and of stack traces.
- *
- * <h3>Only {@code %s} is supported</h3>
- *
- * <p>In {@code Preconditions} error message template strings, only the {@code "%s"} specifier is
- * supported, not the full range of {@link java.util.Formatter} specifiers.
- *
- * @author Kevin Bourrillion
- * @since 2.0
+ * Modified Asserts utility methods based on Guava implementation
  */
-@SuppressWarnings("javadoc")
 public final class Asserts
 {
     
@@ -118,274 +77,6 @@ public final class Asserts
 
 
     /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, char p1)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, int p1)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, long p1)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, Object p1)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, char p1, char p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, char p1, int p2)
-    {
-        if (!b)
-        {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, char p1, long p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, char p1, Object p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, int p1, char p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, int p1, int p2)
-    {
-        if (!b)
-        {
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-        }
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, int p1, long p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, int p1, Object p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, long p1, char p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, long p1, int p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, long p1, long p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, long p1, Object p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, Object p1, char p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, Object p1, int p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, Object p1, long p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, Object p1, Object p2)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, Object p1, Object p2, Object p3)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2, p3));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * <p>See {@link #checkArgument(boolean, String, Object...)} for details.
-     */
-    public static void checkArgument(boolean b, String errorMessageTemplate, Object p1, Object p2, Object p3, Object p4)
-    {
-        if (!b)
-            throw new IllegalArgumentException(format(errorMessageTemplate, p1, p2, p3, p4));
-    }
-
-
-    /**
      * Ensures the truth of an expression involving the state of the calling instance, but not
      * involving any parameters to the calling method.
      *
@@ -439,292 +130,6 @@ public final class Asserts
 
 
     /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, char p1)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, int p1)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, long p1)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, Object p1)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, char p1, char p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, char p1, int p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, char p1, long p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, char p1, Object p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, int p1, char p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, int p1, int p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, int p1, long p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, int p1, Object p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, long p1, char p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, long p1, int p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, long p1, long p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, long p1, Object p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, Object p1, char p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, Object p1, int p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, Object p1, long p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, Object p1, Object p2)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, Object p1, Object p2, Object p3)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2, p3));
-    }
-
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not
-     * involving any parameters to the calling method.
-     *
-     * <p>See {@link #checkState(boolean, String, Object...)} for details.
-     */
-    public static void checkState(boolean b, String errorMessageTemplate, Object p1, Object p2, Object p3, Object p4)
-    {
-        if (!b)
-            throw new IllegalStateException(format(errorMessageTemplate, p1, p2, p3, p4));
-    }
-
-
-    /**
      * Ensures that an object reference passed as a parameter to the calling method is not null.
      *
      * @param reference an object reference
@@ -752,16 +157,10 @@ public final class Asserts
     {
         if (reference == null)
         {
-            String nameOrMsg;            
-            if (errorMessage instanceof Class)
-                nameOrMsg = ((Class<?>)errorMessage).getSimpleName();
-            else
-                nameOrMsg = String.valueOf(errorMessage);
-            
-            if (nameOrMsg == null || nameOrMsg.contains(" "))
-                throw new NullPointerException(nameOrMsg);
-            else
-                throw new NullPointerException(nameOrMsg + " cannot be null");
+            String nameOrMsg = decode(errorMessage);
+            if (nameOrMsg != null && !nameOrMsg.contains(" "))
+                nameOrMsg += " cannot be null";
+            throw new NullPointerException(nameOrMsg);
         }
         
         return reference;
@@ -791,363 +190,166 @@ public final class Asserts
         }
         return reference;
     }
-
-
+    
+    
     /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
+     * Ensures that a String is neither null nor empty
+     * @param reference a string reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null
      */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, char p1)
+    public static String checkNotNullOrEmpty(String reference, Object errorMessage)
     {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1));
-        }
-        return obj;
+        if (reference == null || reference.isEmpty())
+            throwNullOrEmptyMessage(reference, errorMessage);        
+        return reference;
+    }
+    
+    
+    /**
+     * Ensures that an array is neither null nor empty
+     * @param array an array reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null
+     */
+    public static <T> T[] checkNotNullOrEmpty(T[] array, Object errorMessage)
+    {
+        if (array == null || array.length == 0)
+            throwNullOrEmptyMessage(array, errorMessage);
+        return array;
+    }
+    
+    
+    /**
+     * Ensures that a byte array is neither null nor empty
+     * @param array an array reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null
+     */
+    public static byte[] checkNotNullOrEmpty(byte[] array, Object errorMessage)
+    {
+        if (array == null || array.length == 0)
+            throwNullOrEmptyMessage(array, errorMessage);
+        return array;
+    }
+    
+    
+    /**
+     * Ensures that a char array is neither null nor empty
+     * @param array a array reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null
+     */
+    public static char[] checkNotNullOrEmpty(char[] array, Object errorMessage)
+    {
+        if (array == null || array.length == 0)
+            throwNullOrEmptyMessage(array, errorMessage);
+        return array;
+    }
+    
+    
+    /**
+     * Ensures that an int array is neither null nor empty
+     * @param array an array reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null
+     */
+    public static int[] checkNotNullOrEmpty(int[] array, Object errorMessage)
+    {
+        if (array == null || array.length == 0)
+            throwNullOrEmptyMessage(array, errorMessage);
+        return array;
+    }
+    
+    
+    /**
+     * Ensures that a long array is neither null nor empty
+     * @param array an array reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null
+     */
+    public static long[] checkNotNullOrEmpty(long[] array, Object errorMessage)
+    {
+        if (array == null || array.length == 0)
+            throwNullOrEmptyMessage(array, errorMessage);
+        return array;
+    }
+    
+    
+    /**
+     * Ensures that a float array is neither null nor empty
+     * @param array an array reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null
+     */
+    public static float[] checkNotNullOrEmpty(float[] array, Object errorMessage)
+    {
+        if (array == null || array.length == 0)
+            throwNullOrEmptyMessage(array, errorMessage);
+        return array;
+    }
+    
+    
+    /**
+     * Ensures that a double array is neither null nor empty
+     * @param array an array reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null
+     */
+    public static double[] checkNotNullOrEmpty(double[] array, Object errorMessage)
+    {
+        if (array == null || array.length == 0)
+            throwNullOrEmptyMessage(array, errorMessage);
+        return array;
+    }
+    
+    
+    private static void throwNullOrEmptyMessage(Object reference, Object errorMessage)
+    {
+        String nameOrMsg = decode(errorMessage);
+        if (nameOrMsg != null && !nameOrMsg.contains(" "))
+            nameOrMsg += " cannot be null or empty";
+        
+        if (reference == null)
+            throw new NullPointerException(nameOrMsg);
+        else
+            throw new IllegalArgumentException(nameOrMsg);
+    }
+    
+    
+    /**
+     * Ensures that an array has the correct size
+     * @param array an array reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @param minSize
+     * @param maxSize
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null
+     */
+    public static <T> T[] checkArraySize(T[] array, Object errorMessage, int minSize, int maxSize)
+    {
+        if (array == null || array.length < minSize || array.length > maxSize)
+            throwNullOrEmptyMessage(array, errorMessage);
+        return array;
     }
 
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, int p1)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, long p1)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, Object p1)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, char p1, char p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, char p1, int p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, char p1, long p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, char p1, Object p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, int p1, char p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, int p1, int p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, int p1, long p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, int p1, Object p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, long p1, char p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, long p1, int p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, long p1, long p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, long p1, Object p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, Object p1, char p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, Object p1, int p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, Object p1, long p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, Object p1, Object p2)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, Object p1, Object p2, Object p3)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2, p3));
-        }
-        return obj;
-    }
-
-
-    /**
-     * Ensures that an object reference passed as a parameter to the calling method is not null.
-     *
-     * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-     */
-    public static <T> T checkNotNull(T obj, String errorMessageTemplate, Object p1, Object p2, Object p3, Object p4)
-    {
-        if (obj == null)
-        {
-            throw new NullPointerException(format(errorMessageTemplate, p1, p2, p3, p4));
-        }
-        return obj;
-    }
-
-
-    /*
-     * All recent hotspots (as of 2009) *really* like to have the natural code
-     *
-     * if (guardExpression) {
-     *    throw new BadException(messageExpression);
-     * }
-     *
-     * refactored so that messageExpression is moved to a separate String-returning method.
-     *
-     * if (guardExpression) {
-     *    throw new BadException(badMsg(...));
-     * }
-     *
-     * The alternative natural refactorings into void or Exception-returning methods are much slower.
-     * This is a big deal - we're talking factors of 2-8 in microbenchmarks, not just 10-20%. (This is
-     * a hotspot optimizer bug, which should be fixed, but that's a separate, big project).
-     *
-     * The coding pattern above is heavily used in java.util, e.g. in ArrayList. There is a
-     * RangeCheckMicroBenchmark in the JDK that was used to test this.
-     *
-     * But the methods in this class want to throw different exceptions, depending on the args, so it
-     * appears that this pattern is not directly applicable. But we can use the ridiculous, devious
-     * trick of throwing an exception in the middle of the construction of another exception. Hotspot
-     * is fine with that.
-     */
 
     /**
      * Ensures that {@code index} specifies a valid <i>element</i> in an array, list or string of size
@@ -1293,6 +495,16 @@ public final class Asserts
         }
         // end < start
         return format("end index ({}) must not be less than start index ({})", end, start);
+    }
+    
+    
+    static String decode(Object errorMessage)
+    {
+        if (errorMessage == null)
+            return "";
+        if (errorMessage instanceof Class)
+            return ((Class<?>)errorMessage).getSimpleName();
+        return String.valueOf(errorMessage);
     }
 
 
