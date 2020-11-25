@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.AccessControlException;
+import java.util.concurrent.CompletionException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -155,6 +156,10 @@ public abstract class OWSServlet extends HttpServlet
     
     public void handleError(HttpServletRequest req, HttpServletResponse resp, OWSRequest owsReq, Throwable e)
     {
+        // unwrap exceptions sent from async executions
+        if (e instanceof CompletionException && e.getCause() != null)
+            e = e.getCause();        
+        
         if (e instanceof AccessControlException)
         {
             // ask to authenticate if anonymous wasn't allowed
