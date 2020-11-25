@@ -107,6 +107,10 @@ public class GetResultWriterV20 extends SWERequestWriter<GetResultRequest>
             urlParams.put("spatialFilter", buf.toString());
         }
 		
+		// response format
+		if (request.getFormat() != null)
+		    urlParams.put("responseFormat", request.getFormat());
+		
         return urlParams;
 	}
 	
