@@ -14,6 +14,7 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.util;
 
+import java.util.Collection;
 
 /**
  * Modified Asserts utility methods based on Guava implementation
@@ -201,6 +202,22 @@ public final class Asserts
      * @throws NullPointerException if {@code reference} is null
      */
     public static String checkNotNullOrEmpty(String reference, Object errorMessage)
+    {
+        if (reference == null || reference.isEmpty())
+            throwNullOrEmptyMessage(reference, errorMessage);        
+        return reference;
+    }
+    
+    
+    /**
+     * Ensures that a collection is neither null nor empty
+     * @param reference a collection reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null
+     */
+    public static <T> Collection<T> checkNotNullOrEmpty(Collection<T> reference, Object errorMessage)
     {
         if (reference == null || reference.isEmpty())
             throwNullOrEmptyMessage(reference, errorMessage);        
