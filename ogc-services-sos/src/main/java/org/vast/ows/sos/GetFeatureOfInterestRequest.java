@@ -41,6 +41,7 @@ public class GetFeatureOfInterestRequest extends OWSRequest
 	protected Set<String> observables;
 	protected Set<String> foiIDs;
 	protected SpatialOps spatialFilter;
+    protected String format;
 	
 	
 	public GetFeatureOfInterestRequest()
@@ -93,4 +94,16 @@ public class GetFeatureOfInterestRequest extends OWSRequest
 	{
 	    this.spatialFilter = FESRequestUtils.bboxToFilter(bbox);
 	}
+
+
+    public String getFormat()
+    {
+        return format;
+    }
+
+
+    public void setFormat(String format)
+    {
+        this.format = format;
+    }
 }

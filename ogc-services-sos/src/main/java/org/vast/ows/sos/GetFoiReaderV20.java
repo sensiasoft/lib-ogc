@@ -105,6 +105,12 @@ public class GetFoiReaderV20 extends SWERequestReader<GetFeatureOfInterestReques
                     throw new SOSException(SOSException.invalid_param_code, "spatialFilter", e);
                 }
             }
+            
+            // format argument
+            else if (argName.equalsIgnoreCase("responseFormat"))
+            {
+                request.setFormat(argValue);
+            }
 
 			// vendor parameters
             else
@@ -167,6 +173,10 @@ public class GetFoiReaderV20 extends SWERequestReader<GetFeatureOfInterestReques
         {
             throw new SOSException(SOSException.invalid_param_code, "spatialFilter", e);
         }
+        
+        // response format
+        String resFormat = dom.getElementValue(requestElt, "responseFormat");
+        request.setFormat(resFormat);
 
         this.checkParameters(request, report);
         return request;

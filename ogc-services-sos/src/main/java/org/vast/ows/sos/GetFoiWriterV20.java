@@ -108,6 +108,10 @@ public class GetFoiWriterV20 extends SWERequestWriter<GetFeatureOfInterestReques
             this.writeBboxArgument(buf, request.getBbox(), true);
             urlParams.put("spatialFilter", buf.toString());
         }
+        
+        // response format
+        if (request.getFormat() != null)
+            urlParams.put("responseFormat", request.getFormat());
 		
         return urlParams;
 	}
