@@ -144,7 +144,8 @@ public abstract class OWSServlet extends HttpServlet
                 // handle request
                 this.handleRequest(owsReq);
                 
-                resp.getOutputStream().flush();
+                if (!req.isAsyncStarted())
+                    resp.getOutputStream().flush();
             }
         }
         catch (Throwable e)
