@@ -48,6 +48,7 @@ import net.opengis.gml.v32.impl.GMLFactory;
  */
 public class GeoJsonBindings
 {
+    public static final String MIME_TYPE ="application/geo+json";
     public static final String ERROR_UNSUPPORTED_TYPE = "Unsupported type: ";
     public static final String ERROR_INVALID_COORDINATES = "Invalid coordinate array";
     DecimalFormat formatter = new DecimalFormat(GMLFactory.COORDINATE_FORMAT);
