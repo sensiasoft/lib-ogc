@@ -27,12 +27,9 @@ package org.vast.ows;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-import org.vast.ows.OWSException;
 import org.vast.util.Bbox;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.TimeExtent;
@@ -103,37 +100,9 @@ public class OWSCommonUtils
      */
     public TimeExtent parseTimeArg(String argValue) throws OWSException
     {
-        TimeExtent timeExtent = null;
-        String[] timeRange = argValue.split("/");
-        
         try
         {
-            // case of time instant
-            if (timeRange.length == 1)
-            {
-                if (timeRange[0].equalsIgnoreCase("now"))
-                    timeExtent = TimeExtent.now();
-                else
-                    timeExtent = TimeExtent.instant(ZonedDateTime.parse(timeRange[0]).toInstant());
-            }
-            
-            // case of time range
-            else if (timeRange.length == 2)
-            {
-                if (timeRange[0].equalsIgnoreCase("now"))
-                    return TimeExtent.beginNow(ZonedDateTime.parse(timeRange[1]).toInstant());
-                else if (timeRange[1].equalsIgnoreCase("now"))
-                    return TimeExtent.endNow(ZonedDateTime.parse(timeRange[0]).toInstant());
-                else
-                    return TimeExtent.period(
-                        ZonedDateTime.parse(timeRange[0]).toInstant(),
-                        ZonedDateTime.parse(timeRange[1]).toInstant());
-            }
-            
-            else
-                throw new ParseException(null, 0);
-            
-            return timeExtent;
+            return TimeExtent.parse(argValue);
         }
         catch (Exception e)
         {
