@@ -128,12 +128,11 @@ public class OWSUtils extends OWSCommonUtils
      */
     public static boolean isClientDisconnectError(Throwable e)
     {
-        Throwable ex = e.getCause();
-        while (ex != null)
+        while (e != null)
         {
-            if (ex instanceof EOFException)
+            if (e instanceof EOFException)
                 return true;
-            ex = ex.getCause();
+            e = e.getCause();
         }
         
         return false;
