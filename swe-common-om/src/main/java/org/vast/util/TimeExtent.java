@@ -196,11 +196,11 @@ public class TimeExtent
      * </p><p>
      * Example values that can be parsed:<br/>
      * <li>Time instant: "2018-03-12T00:00:00Z", "2000-05-25T00:00:00-06:00", "2019-09-25" or "now"</li>
-     * <li>Closed interval: "2020-02-12T00:00:00Z/2020-03-18T12:31:12Z" or "2020-01-15/2020-02-16"</li>
+     * <li>Closed interval: "2020-02-12T00:00:00Z/2020-03-18T12:31:12Z" or "2020-01-15Z/2020-02-16Z"</li>
      * <li>Open interval: "2020-02-12T00:00:00Z/.." or "../2020-03-18T12:31:12Z"</li>
-     * <li>Interval with indeterminate value: "2020-02-12T00:00:00Z/now", "now/2030-08-01" or "now/.."</li>
+     * <li>Interval with indeterminate value: "2020-02-12T00:00:00Z/now", "now/2030-08-01+01:00" or "now/.."</li>
      * </p><p>
-     * When a date-only time stamp is provided, the implied time is 00:00:00Z
+     * When only the date portion is provided, the implied time is 00:00:00
      * </p>
      * @param text The text to be parsed
      * @return The TimeExtent representing the same time instant or interval

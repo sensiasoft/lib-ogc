@@ -48,13 +48,12 @@ public class DateTimeFormat
             .optionalStart()
             .appendLiteral('T')
             .append(DateTimeFormatter.ISO_LOCAL_TIME)
-            .appendOffsetId()
             .optionalEnd()
+            .appendOffsetId()
             .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
             .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
             .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
-            .toFormatter(Locale.US)
-            .withZone(ZoneOffset.UTC);
+            .toFormatter(Locale.US);            
     
     
 	public DateTimeFormat()
