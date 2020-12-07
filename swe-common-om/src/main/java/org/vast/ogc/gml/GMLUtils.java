@@ -392,8 +392,12 @@ public class GMLUtils extends XMLBindingsUtils
             else if (endPos.getIndeterminatePosition() == TimeIndeterminateValue.UNKNOWN)
                 endUnknown = true;
             
-            if (beginUnknown)
+            if (beginUnknown && endUnknown)
+                timeExtent = null;
+            else if (beginUnknown)
                 timeExtent = TimeExtent.endAt(endPos.getDateTimeValue().toInstant());
+            else if (beginNow && endNow)
+                timeExtent = TimeExtent.now();
             else if (beginNow)
                 timeExtent = TimeExtent.beginNow(endPos.getDateTimeValue().toInstant());
             else if (endNow)
