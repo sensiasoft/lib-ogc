@@ -45,7 +45,6 @@ public class TimeExtent
     
     protected Instant begin = null; // null means 'now', Instant.MIN means unbounded
     protected Instant end = null; // null means 'now', Instant.MAX means unbounded
-    transient Instant now = null;
     
     
     /**
@@ -271,11 +270,11 @@ public class TimeExtent
     
     /**
      * @return The beginning instant of {@link Instant.MIN} if undefined.
-     * If {@link #beginsAtNow()} also returns true, the current system time is returned.
+     * If {@link #beginsNow()} also returns true, the current system time is returned.
      */
     public Instant begin()
     {
-        return begin != null ? begin : getNow();
+        return begin != null ? begin : Instant.now();
     }
 
 
@@ -290,11 +289,11 @@ public class TimeExtent
 
     /**
      * @return The end instant of {@link Instant.MAX} if undefined.
-     * If {@link #endsAtNow()} also returns true, the current system time is returned.
+     * If {@link #endsNow()} also returns true, the current system time is returned.
      */
     public Instant end()
     {
-        return end != null ? end : getNow();
+        return end != null ? end : Instant.now();
     }
     
     
@@ -309,7 +308,7 @@ public class TimeExtent
     
     
     /**
-     * @return True if this time extent represents 'now', false otherwise
+     * @return True if this time extent represents the 'now' instant, false otherwise
      */
     public boolean isNow()
     {
@@ -468,14 +467,5 @@ public class TimeExtent
             .append(end == null ? "now" : end == Instant.MAX ? "+∞" : end)
             .append(']');
         return sb.toString();
-    }
-    
-    
-    Instant getNow()
-    {
-        var now = Instant.now();
-        if (this.now == null || (now.getEpochSecond() - this.now.getEpochSecond()) > 1)
-            this.now = Instant.now();
-        return this.now;
     }
 }
