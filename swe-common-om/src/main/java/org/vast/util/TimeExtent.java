@@ -94,6 +94,21 @@ public class TimeExtent
     
     
     /**
+     * Build a time extent from a range of instant
+     * @param timeRange Range object. Both ends can be bounded or unbounded
+     * @return A time extent representing a time period 
+     */
+    public static TimeExtent period(Range<Instant> timeRange)
+    {
+        Asserts.checkNotNull(timeRange, Range.class);
+        TimeExtent time = new TimeExtent();
+        time.begin = timeRange.hasLowerBound() ? timeRange.lowerEndpoint() : Instant.MIN;
+        time.end = timeRange.hasUpperBound() ? timeRange.upperEndpoint() : Instant.MAX;
+        return time;
+    }
+    
+    
+    /**
      * @return A time extent representing all times
      */
     public static TimeExtent allTimes()
