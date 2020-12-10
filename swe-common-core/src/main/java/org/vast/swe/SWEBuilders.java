@@ -23,6 +23,8 @@ import org.vast.data.SWEFactory;
 import org.vast.util.Asserts;
 import org.vast.util.BaseBuilder;
 import org.vast.util.NestedBuilder;
+import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.swe.v20.AllowedTokens;
 import net.opengis.swe.v20.AllowedValues;
@@ -83,7 +85,7 @@ public class SWEBuilders
          * @param base Component to copy from
          * @return This builder for chaining
          */
-        public B copyFrom(DataComponent base)
+        public B copyFrom(AbstractSWEIdentifiable base)
         {
             instance.setId(base.getId());
             instance.setLabel(base.getLabel());
@@ -150,14 +152,14 @@ public class SWEBuilders
      * Base builder for all components
      */
     @SuppressWarnings("unchecked")
-    public static abstract class ComponentBuilder<
-            B extends ComponentBuilder<B, T>,
+    public static abstract class DataComponentBuilder<
+            B extends DataComponentBuilder<B, T>,
             T extends DataComponent>
         extends SweIdentifiableBuilder<B, T>
     {
         SWEFactory fac;
 
-        protected ComponentBuilder(SWEFactory fac)
+        protected DataComponentBuilder(SWEFactory fac)
         {
             this.fac = fac;
         }
@@ -173,10 +175,9 @@ public class SWEBuilders
          * @param base Component to copy from
          * @return This builder for chaining
          */
-        @Override
         public B copyFrom(DataComponent base)
         {
-            super.copyFrom(base);
+            super.copyFrom((AbstractSWEIdentifiable)base);
             instance.setDefinition(base.getDefinition());
             if (base.isSetOptional())
                 instance.setOptional(base.getOptional());
@@ -239,7 +240,7 @@ public class SWEBuilders
     public static abstract class SimpleComponentBuilder<
             B extends SimpleComponentBuilder<B, T>,
             T extends SimpleComponent>
-        extends ComponentBuilder<B, T>
+        extends DataComponentBuilder<B, T>
     {
         protected SimpleComponentBuilder(SWEFactory fac)
         {
@@ -281,102 +282,37 @@ public class SWEBuilders
             instance.setAxisID(axisId);
             return (B)this;
         }
-
-        public B addQuality(Quantity q)
+        
+        public B addQuality(SimpleComponent q)
         {
-            instance.addQuality(q);
-            return (B)this;
+            return addQuality(null, q);
         }
 
-        public B addQuality(QuantityBuilder builder)
+        public B addQuality(String role, SimpleComponent q)
+        {
+            Asserts.checkArgument(
+                q instanceof Quantity ||
+                q instanceof QuantityRange ||
+                q instanceof Category ||
+                q instanceof Text,
+                "Quality must be one of " + Arrays.asList("Quantity", "QuantityRange", "Category", "Text"));
+            
+            OgcProperty<SimpleComponent> prop = new OgcPropertyImpl<>(q);
+            prop.setRole(role);
+            instance.getQualityList().add(prop);
+            
+            return (B)this;
+        }
+        
+        public B addQuality(SimpleComponentBuilder<?,?> builder)
         {
             return addQuality(builder.build());
         }
 
-        public B addQuality(QuantityRange q)
+        public B addQuality(String role, SimpleComponentBuilder<?,?> builder)
         {
-            instance.addQuality(q);
-            return (B)this;
+            return addQuality(role, builder.build());
         }
-
-        public B addQuality(QuantityRangeBuilder builder)
-        {
-            return addQuality(builder.build());
-        }
-
-        public B addQuality(Category q)
-        {
-            instance.addQuality(q);
-            return (B)this;
-        }
-
-        public B addQuality(CategoryBuilder builder)
-        {
-            return addQuality(builder.build());
-        }
-
-        public B addQuality(Text q)
-        {
-            instance.addQuality(q);
-            return (B)this;
-        }
-
-        public B addQuality(TextBuilder builder)
-        {
-            return addQuality(builder.build());
-        }
-
-        /*public NestedQuantityBuilder<B> addQualityAsQuantity()
-        {
-            return new NestedQuantityBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    SimpleComponentBuilder.this.addQuality(build());
-                    return (B)SimpleComponentBuilder.this;
-                }
-            };
-        }
-
-        public NestedQuantityRangeBuilder<B> addQualityAsQuantityRange()
-        {
-            return new NestedQuantityRangeBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    SimpleComponentBuilder.this.addQuality(build());
-                    return (B)SimpleComponentBuilder.this;
-                }
-            };
-        }
-
-        public NestedCategoryBuilder<B> addQualityAsCategory()
-        {
-            return new NestedCategoryBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    SimpleComponentBuilder.this.addQuality(build());
-                    return (B)SimpleComponentBuilder.this;
-                }
-            };
-        }
-
-        public NestedTextBuilder<B> addQualityAsText()
-        {
-            return new NestedTextBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    SimpleComponentBuilder.this.addQuality(build());
-                    return (B)SimpleComponentBuilder.this;
-                }
-            };
-        }*/
     }
 
 
@@ -1275,7 +1211,7 @@ public class SWEBuilders
     }
 
     @SuppressWarnings("unchecked")
-    public abstract static class BaseDataRecordBuilder<B extends BaseDataRecordBuilder<B>> extends ComponentBuilder<B, DataRecord>
+    public abstract static class BaseDataRecordBuilder<B extends BaseDataRecordBuilder<B>> extends DataComponentBuilder<B, DataRecord>
     {
         protected BaseDataRecordBuilder(SWEFactory fac)
         {
@@ -1296,10 +1232,23 @@ public class SWEBuilders
             return (B)this;
         }
 
-        /*public B addField(String name, ComponentBuilder<?,?> fieldBuilder)
+        public B addField(String name, DataComponentBuilder<?,?> fieldBuilder)
         {
             return addField(name, fieldBuilder.build());
-        }*/
+        }
+
+        public B addField(String name, String role, DataComponent field)
+        {
+            OgcProperty<DataComponent> prop = new OgcPropertyImpl<DataComponent>(name, field);
+            prop.setRole(role);
+            instance.getFieldList().add(prop);
+            return (B)this;
+        }
+
+        public B addField(String name, String role, DataComponentBuilder<?,?> fieldBuilder)
+        {
+            return addField(name, role, fieldBuilder.build());
+        }
 
         public B addSamplingTimeIsoUTC(String name)
         {
@@ -1308,201 +1257,6 @@ public class SWEBuilders
                 .build());
             return (B)this;
         }
-
-        /*public NestedBooleanBuilder<B> addBooleanField(String name)
-        {
-            return new NestedBooleanBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedCategoryBuilder<B> addCategoryField(String name)
-        {
-            return new NestedCategoryBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedCategoryRangeBuilder<B> addCategoryRangeField(String name)
-        {
-            return new NestedCategoryRangeBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedCountBuilder<B> addCountField(String name)
-        {
-            return new NestedCountBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedCountRangeBuilder<B> addCountRangeField(String name)
-        {
-            return new NestedCountRangeBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedQuantityBuilder<B> addQuantityField(String name)
-        {
-            return new NestedQuantityBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedQuantityRangeBuilder<B> addQuantityRangeField(String name)
-        {
-            return new NestedQuantityRangeBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedTimeBuilder<B> addTimeField(String name)
-        {
-            return new NestedTimeBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedTimeRangeBuilder<B> addTimeRangeField(String name)
-        {
-            return new NestedTimeRangeBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedTextBuilder<B> addTextField(String name)
-        {
-            return new NestedTextBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedVectorBuilder<B> addVectorField(String name)
-        {
-            return new NestedVectorBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedArrayBuilder<B> addArrayField(String name)
-        {
-            return new NestedArrayBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedMatrixBuilder<B> addMatrixField(String name)
-        {
-            return new NestedMatrixBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedChoiceBuilder<B> addChoiceField(String name)
-        {
-            return new NestedChoiceBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }
-
-        public NestedRecordBuilder<B> addRecordField(String name)
-        {
-            return new NestedRecordBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataRecordBuilder.this.addField(name, build());
-                    return (B)BaseDataRecordBuilder.this;
-                }
-            };
-        }*/
     }
 
     /* Nested builder for use within another builder */
@@ -1535,7 +1289,7 @@ public class SWEBuilders
     }
 
     @SuppressWarnings("unchecked")
-    public abstract static class BaseVectorBuilder<B extends BaseVectorBuilder<B>> extends ComponentBuilder<B, Vector>
+    public abstract static class BaseVectorBuilder<B extends BaseVectorBuilder<B>> extends DataComponentBuilder<B, Vector>
     {
         DataType dataType = null;
 
@@ -1582,50 +1336,26 @@ public class SWEBuilders
             return (B)this;
         }
 
+        public <NB extends SimpleComponentBuilder<NB, T>, T extends ScalarComponent>
+            B addCoordinate(String name, SimpleComponentBuilder<NB, T> coordBuilder)
+        {
+            var coord = coordBuilder.build();
+            
+            if (coord instanceof Quantity)
+                addCoordinate(name, (Quantity)coord);
+            else if (coord instanceof Count)
+                addCoordinate(name, (Count)coord);
+            else if (coord instanceof Time)
+                addCoordinate(name, (Time)coord);
+            
+            return (B)this;
+        }
+
         public B dataType(DataType dataType)
         {
             this.dataType = dataType;
             return (B)this;
         }
-
-        /*public NestedQuantityBuilder<B> addQuantityCoord(String name)
-        {
-            return new NestedQuantityBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseVectorBuilder.this.addCoordinate(name, build());
-                    return (B)BaseVectorBuilder.this;
-                }
-            };
-        }
-
-        public NestedCountBuilder<B> addCountCoord(String name)
-        {
-            return new NestedCountBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseVectorBuilder.this.addCoordinate(name, build());
-                    return (B)BaseVectorBuilder.this;
-                }
-            };
-        }
-
-        public NestedTimeBuilder<B> addTimeCoord(String name)
-        {
-            return new NestedTimeBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseVectorBuilder.this.addCoordinate(name, build());
-                    return (B)BaseVectorBuilder.this;
-                }
-            };
-        }*/
 
         @Override
         public Vector build()
@@ -1667,7 +1397,7 @@ public class SWEBuilders
     }
 
     @SuppressWarnings("unchecked")
-    public abstract static class BaseDataChoiceBuilder<B extends BaseDataChoiceBuilder<B>> extends ComponentBuilder<B, DataChoice>
+    public abstract static class BaseDataChoiceBuilder<B extends BaseDataChoiceBuilder<B>> extends DataComponentBuilder<B, DataChoice>
     {
         protected BaseDataChoiceBuilder(SWEFactory fac)
         {
@@ -1688,153 +1418,10 @@ public class SWEBuilders
             return (B)this;
         }
 
-        /*public B addItem(String name, ComponentBuilder<?,?> itemBuilder)
+        public B addItem(String name, DataComponentBuilder<?,?> itemBuilder)
         {
             return addItem(name, itemBuilder.build());
         }
-
-        public NestedBooleanBuilder<B> addBooleanItem(String name)
-        {
-            return new NestedBooleanBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataChoiceBuilder.this.addItem(name, build());
-                    return (B)BaseDataChoiceBuilder.this;
-                }
-            };
-        }
-
-        public NestedCategoryBuilder<B> addCategoryItem(String name)
-        {
-            return new NestedCategoryBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataChoiceBuilder.this.addItem(name, build());
-                    return (B)BaseDataChoiceBuilder.this;
-                }
-            };
-        }
-
-        public NestedCountBuilder<B> addCountItem(String name)
-        {
-            return new NestedCountBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataChoiceBuilder.this.addItem(name, build());
-                    return (B)BaseDataChoiceBuilder.this;
-                }
-            };
-        }
-
-        public NestedQuantityBuilder<B> addQuantityItem(String name)
-        {
-            return new NestedQuantityBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataChoiceBuilder.this.addItem(name, build());
-                    return (B)BaseDataChoiceBuilder.this;
-                }
-            };
-        }
-
-        public NestedTimeBuilder<B> addTimeItem(String name)
-        {
-            return new NestedTimeBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataChoiceBuilder.this.addItem(name, build());
-                    return (B)BaseDataChoiceBuilder.this;
-                }
-            };
-        }
-
-        public NestedTextBuilder<B> addTextItem(String name)
-        {
-            return new NestedTextBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataChoiceBuilder.this.addItem(name, build());
-                    return (B)BaseDataChoiceBuilder.this;
-                }
-            };
-        }
-
-        public NestedRecordBuilder<B> addRecordItem(String name)
-        {
-            return new NestedRecordBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataChoiceBuilder.this.addItem(name, build());
-                    return (B)BaseDataChoiceBuilder.this;
-                }
-            };
-        }
-
-        public NestedVectorBuilder<B> addVectorItem(String name)
-        {
-            return new NestedVectorBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataChoiceBuilder.this.addItem(name, build());
-                    return (B)BaseDataChoiceBuilder.this;
-                }
-            };
-        }
-
-        public NestedMatrixBuilder<B> addMatrixItem(String name)
-        {
-            return new NestedMatrixBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataChoiceBuilder.this.addItem(name, build());
-                    return (B)BaseDataChoiceBuilder.this;
-                }
-            };
-        }
-
-        public NestedArrayBuilder<B> addArrayItem(String name)
-        {
-            return new NestedArrayBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataChoiceBuilder.this.addItem(name, build());
-                    return (B)BaseDataChoiceBuilder.this;
-                }
-            };
-        }
-
-        public NestedChoiceBuilder<B> addChoiceItem(String name)
-        {
-            return new NestedChoiceBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataChoiceBuilder.this.addItem(name, build());
-                    return (B)BaseDataChoiceBuilder.this;
-                }
-            };
-        }*/
     }
 
     /* Nested builder for use within another builder */
@@ -1867,7 +1454,7 @@ public class SWEBuilders
     }
 
     @SuppressWarnings("unchecked")
-    public abstract static class BaseDataArrayBuilder<B extends BaseDataArrayBuilder<B>> extends ComponentBuilder<B, DataArray>
+    public abstract static class BaseDataArrayBuilder<B extends BaseDataArrayBuilder<B>> extends DataComponentBuilder<B, DataArray>
     {
         protected BaseDataArrayBuilder(SWEFactory fac)
         {
@@ -1907,140 +1494,10 @@ public class SWEBuilders
             return (B)this;
         }
 
-        /*public B withElement(String name, ComponentBuilder<?,?> eltBuilder)
+        public B withElement(String name, DataComponentBuilder<?,?> eltBuilder)
         {
             return withElement(name, eltBuilder.build());
         }
-
-        public NestedBooleanBuilder<B> withBooleanElement(String name)
-        {
-            return new NestedBooleanBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataArrayBuilder.this.withElementType(name, build());
-                    return (B)BaseDataArrayBuilder.this;
-                }
-            };
-        }
-
-        public NestedCategoryBuilder<B> withCategoryElement(String name)
-        {
-            return new NestedCategoryBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataArrayBuilder.this.withElementType(name, build());
-                    return (B)BaseDataArrayBuilder.this;
-                }
-            };
-        }
-
-        public NestedCountBuilder<B> withCountElement(String name)
-        {
-            return new NestedCountBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataArrayBuilder.this.withElementType(name, build());
-                    return (B)BaseDataArrayBuilder.this;
-                }
-            };
-        }
-
-        public NestedQuantityBuilder<B> withQuantityElement(String name)
-        {
-            return new NestedQuantityBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataArrayBuilder.this.withElementType(name, build());
-                    return (B)BaseDataArrayBuilder.this;
-                }
-            };
-        }
-
-        public NestedTimeBuilder<B> withTimeElement(String name)
-        {
-            return new NestedTimeBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataArrayBuilder.this.withElementType(name, build());
-                    return (B)BaseDataArrayBuilder.this;
-                }
-            };
-        }
-
-        public NestedTextBuilder<B> withTextElement(String name)
-        {
-            return new NestedTextBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataArrayBuilder.this.withElementType(name, build());
-                    return (B)BaseDataArrayBuilder.this;
-                }
-            };
-        }
-
-        public NestedRecordBuilder<B> withRecordElement(String name)
-        {
-            return new NestedRecordBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataArrayBuilder.this.withElementType(name, build());
-                    return (B)BaseDataArrayBuilder.this;
-                }
-            };
-        }
-
-        public NestedVectorBuilder<B> withVectorElement(String name)
-        {
-            return new NestedVectorBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataArrayBuilder.this.withElementType(name, build());
-                    return (B)BaseDataArrayBuilder.this;
-                }
-            };
-        }
-
-        public NestedChoiceBuilder<B> withChoiceElement(String name)
-        {
-            return new NestedChoiceBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataArrayBuilder.this.withElementType(name, build());
-                    return (B)BaseDataArrayBuilder.this;
-                }
-            };
-        }
-
-        public NestedArrayBuilder<B> withArrayElement(String name)
-        {
-            return new NestedArrayBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseDataArrayBuilder.this.withElementType(name, build());
-                    return (B)BaseDataArrayBuilder.this;
-                }
-            };
-        }*/
     }
 
     /* Nested builder for use within another builder */
@@ -2073,7 +1530,7 @@ public class SWEBuilders
     }
 
     @SuppressWarnings("unchecked")
-    public abstract static class BaseMatrixBuilder<B extends BaseMatrixBuilder<B>> extends ComponentBuilder<B, Matrix>
+    public abstract static class BaseMatrixBuilder<B extends BaseMatrixBuilder<B>> extends DataComponentBuilder<B, Matrix>
     {
         int dimSizes[];
         String[] eltNames;
@@ -2114,6 +1571,12 @@ public class SWEBuilders
             return (B)this;
         }
 
+        public B dataType(DataType dataType)
+        {
+            this.dataType = dataType;
+            return (B)this;
+        }
+
         public B withElement(String name, ScalarComponent component)
         {
             this.scalarEltName = Asserts.checkNotNull(name, "name");
@@ -2121,50 +1584,20 @@ public class SWEBuilders
             return (B)this;
         }
 
-        public B dataType(DataType dataType)
+        public <NB extends SimpleComponentBuilder<NB, T>, T extends ScalarComponent>
+            B withElement(String name, SimpleComponentBuilder<NB, T> eltBuilder)
         {
-            this.dataType = dataType;
+            var elt = eltBuilder.build();
+            
+            if (elt instanceof Quantity)
+                withElement(name, (Quantity)elt);
+            else if (elt instanceof Count)
+                withElement(name, (Count)elt);
+            else if (elt instanceof Time)
+                withElement(name, (Time)elt);
+            
             return (B)this;
         }
-
-        /*public NestedQuantityBuilder<B> withQuantityElement(String name)
-        {
-            return new NestedQuantityBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseMatrixBuilder.this.withElementType(name, build());
-                    return (B)BaseMatrixBuilder.this;
-                }
-            };
-        }
-
-        public NestedCountBuilder<B> withCountElement(String name)
-        {
-            return new NestedCountBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseMatrixBuilder.this.withElementType(name, build());
-                    return (B)BaseMatrixBuilder.this;
-                }
-            };
-        }
-
-        public NestedTimeBuilder<B> withTimeElement(String name)
-        {
-            return new NestedTimeBuilder<B>((B)this, fac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseMatrixBuilder.this.withElementType(name, build());
-                    return (B)BaseMatrixBuilder.this;
-                }
-            };
-        }*/
 
         @Override
         public Matrix build()
