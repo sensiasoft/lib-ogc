@@ -29,11 +29,7 @@ import com.vividsolutions.jts.operation.buffer.BufferParameters;
 
 
 /**
- * <p>Title:
- * Bbox
- * </p>
- *
- * <p>Description:
+ * <p>
  * Simple structure for OGC-style bbox info.
  * </p>
  *
@@ -94,6 +90,16 @@ public class Bbox extends SpatialExtent
         bbox.setMaxZ(this.maxZ);
         return bbox;
     }
+	
+	
+	public static Bbox fromJtsEnvelope(com.vividsolutions.jts.geom.Envelope env)
+	{
+	    return new Bbox(
+	        env.getMinX(),
+	        env.getMinY(),
+	        env.getMaxX(),
+	        env.getMaxY());
+	}
 	
 	
 	public com.vividsolutions.jts.geom.Envelope toJtsEnvelope()
