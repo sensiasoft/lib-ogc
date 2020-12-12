@@ -460,8 +460,8 @@ public class TimeExtent
         
         TimeExtent other = (TimeExtent)obj;
         
-        return Objects.equals(begin, other.begin())
-            && Objects.equals(end, other.end());
+        return ( beginsNow() && other.beginsNow() || Objects.equals(begin, other.begin()) ) &&
+               ( endsNow() && other.endsNow() || Objects.equals(end, other.end()) );
     }
     
     
