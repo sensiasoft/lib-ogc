@@ -192,9 +192,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setName(String name)
+    public Unit setName(String name)
     {
         this.name = name;
+        return this;
     }
     
     
@@ -204,9 +205,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setCode(String code)
+    public Unit setCode(String code)
     {
         this.code = code;
+        return this;
     }
 
 
@@ -246,9 +248,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setPrintSymbol(String symbol)
+    public Unit setPrintSymbol(String symbol)
     {
         this.printSymbol = symbol;
+        return this;
     }
     
     
@@ -261,9 +264,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setExpression(String expression)
+    public Unit setExpression(String expression)
     {
         this.expression = expression;
+        return this;
     }
 
 
@@ -273,9 +277,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setProperty(String property)
+    public Unit setProperty(String property)
     {
         this.property = property;
+        return this;
     }
     
     
@@ -285,9 +290,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setDescription(String description)
+    public Unit setDescription(String description)
     {
         this.description = description;
+        return this;
     }
 
 
@@ -297,9 +303,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setMetric(boolean metric)
+    public Unit setMetric(boolean metric)
     {
         this.metric = metric;
+        return this;
     }
 
 
@@ -309,9 +316,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setAmpere(double ampere)
+    public Unit setAmpere(double ampere)
     {
         this.ampere = ampere;
+        return this;
     }
 
 
@@ -321,9 +329,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setCandela(double candela)
+    public Unit setCandela(double candela)
     {
         this.candela = candela;
+        return this;
     }
 
 
@@ -333,9 +342,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setKelvin(double kelvin)
+    public Unit setKelvin(double kelvin)
     {
         this.kelvin = kelvin;
+        return this;
     }
 
 
@@ -345,9 +355,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setKilogram(double kilogram)
+    public Unit setKilogram(double kilogram)
     {
         this.kilogram = kilogram;
+        return this;
     }
 
 
@@ -357,9 +368,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setMeter(double meter)
+    public Unit setMeter(double meter)
     {
         this.meter = meter;
+        return this;
     }
 
 
@@ -369,9 +381,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setMole(double mole)
+    public Unit setMole(double mole)
     {
         this.mole = mole;
+        return this;
     }
 
 
@@ -381,9 +394,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setPi(double pi)
+    public Unit setPi(double pi)
     {
         this.pi = pi;
+        return this;
     }
 
 
@@ -393,9 +407,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setRadian(double radian)
+    public Unit setRadian(double radian)
     {
         this.radian = radian;
+        return this;
     }
 
 
@@ -405,9 +420,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setSecond(double second)
+    public Unit setSecond(double second)
     {
         this.second = second;
+        return this;
     }
     
     
@@ -417,9 +433,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setScaleToSI(double scaleToSI)
+    public Unit setScaleToSI(double scaleToSI)
     {
         this.scaleToSI = scaleToSI;
+        return this;
     }
     
     
@@ -429,9 +446,10 @@ public class Unit implements Serializable
     }
 
 
-    public void setFunction(UnitFunction function)
+    public Unit setFunction(UnitFunction function)
     {
         this.function = function;
+        return this;
     }
     
     
