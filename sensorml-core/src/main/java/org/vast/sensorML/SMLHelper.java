@@ -15,12 +15,25 @@ Copyright (C) 2012-2017 Sensia Software LLC. All Rights Reserved.
 package org.vast.sensorML;
 
 import java.util.Arrays;
+import org.vast.data.SWEFactory;
 import org.vast.process.IProcessExec;
 import org.vast.sensorML.SMLBuilders.AbstractProcessBuilder;
 import org.vast.sensorML.SMLBuilders.AggregateProcessBuilder;
+import org.vast.sensorML.SMLBuilders.ObsPropBuilder;
 import org.vast.sensorML.SMLBuilders.PhysicalComponentBuilder;
 import org.vast.sensorML.SMLBuilders.PhysicalSystemBuilder;
 import org.vast.sensorML.SMLBuilders.SimpleProcessBuilder;
+import org.vast.sensorML.SMLBuilders.TermBuilder;
+import org.vast.sensorML.SMLMetadataBuilders.CapabilityListBuilder;
+import org.vast.sensorML.SMLMetadataBuilders.CharacteristicListBuilder;
+import org.vast.sensorML.SMLMetadataBuilders.ClassifierListBuilder;
+import org.vast.sensorML.SMLMetadataBuilders.DocumentListBuilder;
+import org.vast.sensorML.SMLMetadataBuilders.IdentifierListBuilder;
+import org.vast.sensorML.helper.CommonCapabilities;
+import org.vast.sensorML.helper.CommonCharacteristics;
+import org.vast.sensorML.helper.CommonClassifiers;
+import org.vast.sensorML.helper.CommonConditions;
+import org.vast.sensorML.helper.CommonIdentifiers;
 import org.vast.swe.SWEHelper;
 import org.vast.util.Asserts;
 import net.opengis.OgcPropertyList;
@@ -47,10 +60,22 @@ import net.opengis.swe.v20.DataStream;
  * @author Alex Robin
  * @since May 16, 2017
  */
-public class SMLHelper
+public class SMLHelper extends SWEHelper
 {
-    public static final SMLFactory DEFAULT_SML_FACTORY = new SMLFactory();
+    public final static SMLFactory DEFAULT_SML_FACTORY = new SMLFactory();
+    public final static SWEFactory DEFAULT_SWE_FACTORY = new SWEFactory();
+    public final static net.opengis.gml.v32.Factory DEFAULT_GML_FACTORY = new net.opengis.gml.v32.impl.GMLFactory();
+    public final static org.isotc211.v2005.gmd.Factory DEFAULT_GMD_FACTORY = new org.isotc211.v2005.gmd.impl.GMDFactory();
+    public final static org.isotc211.v2005.gco.Factory DEFAULT_GCO_FACTORY = new org.isotc211.v2005.gco.impl.GCOFactory();
+    
     protected SMLFactory fac = DEFAULT_SML_FACTORY;
+    
+    
+    public final CommonIdentifiers identifiers = new CommonIdentifiers();
+    public final CommonClassifiers classifiers = new CommonClassifiers();
+    public final CommonCharacteristics characteristics = new CommonCharacteristics(this);
+    public final CommonCapabilities capabilities = new CommonCapabilities(this);
+    public final CommonConditions conditions = new CommonConditions(this);
     
     
     static class LinkTarget
@@ -109,7 +134,7 @@ public class SMLHelper
 
 
     /**
-     * @return A builder to create a new SimpleProcess object
+     * @return A builder to create a new SimpleProcess
      */
     public SimpleProcessBuilder createSimpleProcess()
     {
@@ -118,7 +143,7 @@ public class SMLHelper
 
 
     /**
-     * @return A builder to create a new AggregateProcess object
+     * @return A builder to create a new AggregateProcess
      */
     public AggregateProcessBuilder createAggregateProcess()
     {
@@ -127,7 +152,7 @@ public class SMLHelper
 
 
     /**
-     * @return A builder to create a new PhysicalComponent object
+     * @return A builder to create a new PhysicalComponent
      */
     public PhysicalComponentBuilder createPhysicalComponent()
     {
@@ -136,12 +161,89 @@ public class SMLHelper
 
 
     /**
-     * @return A builder to create a new PhysicalSystem object
+     * @return A builder to create a new PhysicalSystem
      */
     public PhysicalSystemBuilder createPhysicalSystem()
     {
         return new PhysicalSystemBuilder(fac);
     }
+    
+    
+    /**
+     * @return A builder to create a new IdentifierList
+     */
+    public IdentifierListBuilder createIdentifierList()
+    {
+        return new IdentifierListBuilder(fac);
+    }
+    
+    
+    /**
+     * @return A builder to create a new ClassifierList
+     */
+    public ClassifierListBuilder createClassifierList()
+    {
+        return new ClassifierListBuilder(fac);
+    }
+    
+    
+    /**
+     * @return A builder to create a new CharacteristicList
+     */
+    public CharacteristicListBuilder createCharacteristicList()
+    {
+        return new CharacteristicListBuilder(fac);
+    }
+    
+    
+    /**
+     * @return A builder to create a new CapabilityList
+     */
+    public CapabilityListBuilder createCapabilityList()
+    {
+        return new CapabilityListBuilder(fac);
+    }
+    
+    
+    /**
+     * @return A builder to create a new DocumentList
+     */
+    public DocumentListBuilder createDocumentList()
+    {
+        return new DocumentListBuilder(fac);
+    }
+    
+    
+    /**
+     * @return A builder to create a new Term
+     */
+    public TermBuilder createTerm()
+    {
+        return new TermBuilder(fac);
+    }
+    
+    
+    /**
+     * @return A builder to create a new ObservableProperty
+     */
+    public ObsPropBuilder createObservableProperty()
+    {
+        return new ObsPropBuilder(fac);
+    }
+    
+    
+    /*
+     * Predefined identifiers
+     */
+    
+    
+    
+    
+    /*
+     * Predefined capabilities
+     */
+    
+    
     
     
     /*
@@ -300,6 +402,12 @@ public class SMLHelper
     }
     
     
+    public SMLFactory getFactory()
+    {
+        return fac;
+    }
+    
+    
     /* Deprecated methods */ 
     
     /**
@@ -351,8 +459,9 @@ public class SMLHelper
         idList.addIdentifier(term);
     }    
     
+    @Deprecated
     public void addSerialNumber(String value)
     {
-        addIdentifier(SMLBuilders.SERIAL_NUMBER_LABEL, SMLBuilders.SERIAL_NUMBER_DEF, value);
+        addIdentifier(CommonIdentifiers.SERIAL_NUMBER_LABEL, CommonIdentifiers.SERIAL_NUMBER_DEF, value);
     }
 }

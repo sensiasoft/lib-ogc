@@ -494,7 +494,7 @@ public class TestSMLProcessing
     public void testReadAndConfigureProcess() throws Exception
     {
         URL docURL = TestSMLProcessing.class.getResource("examples_v20/OwnerInstance.xml");
-        AbstractProcess p = smlUtils.readProcess(docURL.openStream(), docURL.toURI());
+        AbstractProcess p = smlUtils.readProcess(docURL);
         p = new SMLUtils(SMLUtils.V2_0).getConfiguredInstance(p);
         new SMLUtils(SMLUtils.V2_0).writeProcess(System.out, p, true);
     }

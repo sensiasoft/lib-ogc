@@ -50,7 +50,6 @@ import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.isotc211.v2005.gco.impl.CodeListValueImpl;
 import org.isotc211.v2005.gmd.CIResponsibleParty;
-import org.vast.sensorML.SMLBuilders;
 import org.vast.sensorML.SMLFactory;
 import org.vast.sensorML.SMLHelper;
 import org.vast.sensorML.SMLUtils;
@@ -192,7 +191,7 @@ public class TestSMLStaxBindingsV20 extends XMLTestCase
 
         // contact
         ContactList contacts = smlFac.newContactList();
-        CIResponsibleParty contact = SMLBuilders.DEFAULT_GMD_FACTORY.newCIResponsibleParty();
+        CIResponsibleParty contact = SMLHelper.DEFAULT_GMD_FACTORY.newCIResponsibleParty();
         contact.setIndividualName("Gérard Blanquet");
         contact.setOrganisationName("Time Soft S.A.");
         contact.getContactInfo().getAddress().addDeliveryPoint("10 rue du Nord");

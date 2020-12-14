@@ -28,14 +28,14 @@ import org.vast.swe.SWEHelper;
 
 public class TestSweHelper
 {
-    SWEHelper helper = new SWEHelper();
+    SWEHelper swe = new SWEHelper();
     SWEUtils utils = new SWEUtils(SWEUtils.V2_0);
 
 
     @Test
     public void testCreateQuantities() throws Exception
     {
-        utils.writeComponent(System.out, helper.createQuantity()
+        utils.writeComponent(System.out, swe.createQuantity()
             .definition(SWEHelper.getPropertyUri("AirTemperature"))
             .label("Air Temperature")
             .description("Temperature of air in the garden")
@@ -45,10 +45,61 @@ public class TestSweHelper
         System.out.println();
         System.out.println();
 
-        utils.writeComponent(System.out, helper.createQuantity()
+        utils.writeComponent(System.out, swe.createQuantity()
             .definition(SWEHelper.getPropertyUri("LinearAcceleration"))
             .label("Acceleration")
             .uomCode("m/s2")
+            .build(), false, true);
+
+        System.out.println();
+        System.out.println();
+    }
+    
+    
+    @Test
+    public void testCreateQuality() throws Exception
+    {
+        utils.writeComponent(System.out, swe.createQuantity()
+            .definition(SWEHelper.getQudtUri("Temperature"))
+            .label("Air Temperature")
+            .description("Temperature of air outdoor")
+            .uomCode("Cel")
+            .addQuality(SWEHelper.getPropertyUri("Accuracy"), swe.createQuantityRange()
+                .label("Tolerance")
+                .definition(SWEHelper.getDBpediaUri("Engineering_tolerance"))
+                .value(-0.01, 0.01)
+                .build())
+            .build(), false, true);
+
+        System.out.println();
+        System.out.println();
+        
+        // frequency band by name
+        utils.writeComponent(System.out, swe.createQuantity()
+            .definition(SWEHelper.getQudtUri("RF-Power"))
+            .label("RF Power Received")
+            .uomCode("dBm")
+            .addQuality("http://sensorml.com/ont/core/spectrum/FrequencyBand", swe.createCategory()
+                .label("Frequency Band")
+                .definition(SWEHelper.getQudtUri("Frequency"))
+                .value("http://sensorml.com/ont/core/spectrum/IEEE/X_band")
+                .build())
+            .build(), false, true);
+
+        System.out.println();
+        System.out.println();
+        
+        // frequency band by range
+        utils.writeComponent(System.out, swe.createQuantity()
+            .definition(SWEHelper.getQudtUri("RF-Power"))
+            .label("RF Power Received")
+            .uomCode("dBm")
+            .addQuality("http://sensorml.com/ont/core/spectrum/FrequencyBand", swe.createQuantityRange()
+                .label("Frequency Band")
+                .definition(SWEHelper.getQudtUri("Frequency"))
+                .uomCode("MHz")
+                .value(120., 250)
+                .build())
             .build(), false, true);
 
         System.out.println();
@@ -67,20 +118,20 @@ public class TestSweHelper
     @Test
     public void testCreateWeatherRecord() throws Exception
     {
-        utils.writeComponent(System.out, helper.createDataRecord()
+        utils.writeComponent(System.out, swe.createDataRecord()
             .label("Weather Record")
             .addSamplingTimeIsoUTC("time")
-            .addField("temp", helper.createQuantity()
+            .addField("temp", swe.createQuantity()
                 .definition(SWEHelper.getPropertyUri("AirTemperature"))
                 .label("Air Temperature")
                 .uomCode("Cel")
                 .build())
-            .addField("press", helper.createQuantity()
+            .addField("press", swe.createQuantity()
                 .definition(SWEHelper.getPropertyUri("AtmosphericPressure"))
                 .label("Air Pressure")
                 .uomCode("hPa")
                 .build())
-            .addField("windSpeed", helper.createQuantity()
+            .addField("windSpeed", swe.createQuantity()
                 .definition(SWEHelper.getPropertyUri("WindSpeed"))
                 .label("Wind Speed")
                 .uomCode("km/h")
@@ -95,17 +146,17 @@ public class TestSweHelper
     @Test
     public void testCreateMixedTypeRecord() throws Exception
     {
-        utils.writeComponent(System.out, helper.createDataRecord()
+        utils.writeComponent(System.out, swe.createDataRecord()
             .label("Mixed Type Record")
             .addSamplingTimeIsoUTC("time")
-            .addField("boolean", helper.createBoolean()
+            .addField("boolean", swe.createBoolean()
                 .definition(SWEHelper.getPropertyUri("AboveThreshold"))
                 .build())
-            .addField("cat", helper.createCategory()
+            .addField("cat", swe.createCategory()
                 .definition(SWEHelper.getPropertyUri("Species"))
                 .label("Species Name")
                 .build())
-            .addField("text", helper.createText()
+            .addField("text", swe.createText()
                 .definition(SWEHelper.getPropertyUri("VIN"))
                 .label("Vehicle Identification Number")
                 .visitor(t -> System.out.println(t + "@" + System.identityHashCode(t)))
@@ -120,20 +171,20 @@ public class TestSweHelper
     @Test
     public void testNestedRecords() throws Exception
     {
-        utils.writeComponent(System.out, helper.createDataRecord()
+        utils.writeComponent(System.out, swe.createDataRecord()
             .label("Parent Record")
             .addSamplingTimeIsoUTC("time")
-            .addField("boolean", helper.createBoolean()
+            .addField("boolean", swe.createBoolean()
                 .definition(SWEHelper.getPropertyUri("Flag"))
                 .build())
-            .addField("child", helper.createRecord()
+            .addField("child", swe.createRecord()
                 .definition(SWEHelper.getPropertyUri("VIN"))
                 .label("Child Record")
-                .addField("scan_start", helper.createTime()
+                .addField("scan_start", swe.createTime()
                     .uomCode("ms")
                     .value(10245)
                     .build())
-                .addField("num_samples", helper.createCount()
+                .addField("num_samples", swe.createCount()
                     .value(2400)
                     .build())
                 .build())
@@ -147,7 +198,7 @@ public class TestSweHelper
     @Test
     public void testCreateDefaultEncodingForImage() throws Exception
     {
-        DataArray array = helper.newRgbImage(640, 480, DataType.BYTE);
+        DataArray array = swe.newRgbImage(640, 480, DataType.BYTE);
         DataEncoding encoding = SWEHelper.getDefaultEncoding(array);
         assertEquals(BinaryEncodingImpl.class, encoding.getClass());
         utils.writeEncoding(System.out, encoding, true);
@@ -157,13 +208,13 @@ public class TestSweHelper
     @Test
     public void testGetComponentByPath() throws Exception
     {
-        DataRecord rec = helper.createRecord()
+        DataRecord rec = swe.createRecord()
             .addSamplingTimeIsoUTC("time")
-            .addField("temp", helper.createQuantity().build())
-            .addField("press", helper.createQuantity().build())
-            .addField("rec", helper.createRecord()
-                .addField("flag1", helper.createBoolean().build())
-                .addField("status", helper.createCategory().build())
+            .addField("temp", swe.createQuantity().build())
+            .addField("press", swe.createQuantity().build())
+            .addField("rec", swe.createRecord()
+                .addField("flag1", swe.createBoolean().build())
+                .addField("status", swe.createCategory().build())
                 .build())
             .build();
 

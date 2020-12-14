@@ -18,11 +18,17 @@ import org.isotc211.v2005.gmd.CIOnlineResource;
 import org.vast.swe.SWEBuilders.SweIdentifiableBuilder;
 import org.vast.util.BaseBuilder;
 import org.vast.util.NestedBuilder;
+import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.sensorml.v20.AbstractMetadataList;
+import net.opengis.sensorml.v20.CapabilityList;
+import net.opengis.sensorml.v20.CharacteristicList;
 import net.opengis.sensorml.v20.ClassifierList;
 import net.opengis.sensorml.v20.DocumentList;
 import net.opengis.sensorml.v20.IdentifierList;
 import net.opengis.sensorml.v20.Term;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.SimpleComponent;
 
 
 /**
@@ -35,28 +41,12 @@ import net.opengis.sensorml.v20.Term;
  */
 public class SMLMetadataBuilders
 {
-
-    /**
-     * @return A builder to create a new DocumentList object
-     */
-    public static DocumentListBuilder newDocumentList()
-    {
-        return newDocumentList(SMLBuilders.DEFAULT_SML_FACTORY);
-    }
-
-
-    /**
-     * @param fac Factory to use to create SML objects
-     * @return A builder to create a new DocumentList object
-     */
-    public static DocumentListBuilder newDocumentList(SMLFactory fac)
-    {
-        return new DocumentListBuilder(fac);
-    }
-
-
+    public final static String SYSTEM_CAPS_ROLE = "http://www.w3.org/ns/ssn/systems/SystemCapability";
+    public final static String CONDITION_ROLE = "http://www.w3.org/ns/ssn/systems/Condition";
+    
+    
     /*
-     * Base builder for all unnamed metadata lists
+     * Base builder for all metadata lists
      */
     @SuppressWarnings("unchecked")
     public static abstract class MetadataListBuilder<
@@ -88,30 +78,28 @@ public class SMLMetadataBuilders
             instance.setDefinition(defUri);
             return (B)this;
         }
-
-        public abstract B addItem(E item);
-        public abstract NestedBuilder<B> addItem();
     }
 
 
     /*
-     * Base builder for all named metadata lists
+     * Base builder for all named property lists
      */
-    public static abstract class NamedMetadataListBuilder<
-            B extends NamedMetadataListBuilder<B, T, E>,
-            T extends AbstractMetadataList, E>
+    
+    public static abstract class PropertyListBuilder<
+        B extends PropertyListBuilder<B, T, E>,
+        T extends AbstractMetadataList, E>
         extends MetadataListBuilder<B, T, E>
     {
-        protected NamedMetadataListBuilder(SMLFactory fac)
+        protected PropertyListBuilder(SMLFactory fac)
         {
             super(fac);
         }
-
-        public abstract B addItem(String name, E item);
-        public abstract NestedBuilder<B> addItem(String name);
+        
+        public abstract B add(String name, E item);
+        public abstract B addCondition(String name, SimpleComponent item);
     }
-
-
+    
+    
     /**
      * <p>
      * Builder class for IdentifierList
@@ -122,7 +110,7 @@ public class SMLMetadataBuilders
      */
     public static class IdentifierListBuilder extends BaseIdentifierListBuilder<IdentifierListBuilder>
     {
-        protected IdentifierListBuilder(SMLFactory fac)
+        public IdentifierListBuilder(SMLFactory fac)
         {
             super(fac);
             this.instance = fac.newIdentifierList();
@@ -138,18 +126,10 @@ public class SMLMetadataBuilders
             super(fac);
         }
 
-        @Override
-        public B addItem(Term item)
+        public B add(Term item)
         {
             instance.addIdentifier(item);
             return (B)this;
-        }
-
-        @Override
-        public NestedBuilder<B> addItem()
-        {
-            //TODO
-            return null;
         }
     }
 
@@ -177,7 +157,7 @@ public class SMLMetadataBuilders
      */
     public static class ClassifierListBuilder extends BaseClassifierListBuilder<ClassifierListBuilder>
     {
-        protected ClassifierListBuilder(SMLFactory fac)
+        public ClassifierListBuilder(SMLFactory fac)
         {
             super(fac);
             this.instance = fac.newClassifierList();
@@ -193,18 +173,10 @@ public class SMLMetadataBuilders
             super(fac);
         }
 
-        @Override
-        public B addItem(Term item)
+        public B add(Term item)
         {
             instance.addClassifier(item);
             return (B)this;
-        }
-
-        @Override
-        public NestedBuilder<B> addItem()
-        {
-            //TODO
-            return null;
         }
     }
 
@@ -224,6 +196,122 @@ public class SMLMetadataBuilders
 
     /**
      * <p>
+     * Builder class for CharacteristicList
+     * </p>
+     *
+     * @author Alex Robin
+     * @date June 29, 2020
+     */
+    public static class CharacteristicListBuilder extends BaseCharacteristicListBuilder<CharacteristicListBuilder>
+    {
+        public CharacteristicListBuilder(SMLFactory fac)
+        {
+            super(fac);
+            this.instance = fac.newCharacteristicList();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseCharacteristicListBuilder<B extends BaseCharacteristicListBuilder<B>>
+        extends PropertyListBuilder<B, CharacteristicList, DataComponent>
+    {
+        protected BaseCharacteristicListBuilder(SMLFactory fac)
+        {
+            super(fac);
+        }
+        
+        @Override
+        public B addCondition(String name, SimpleComponent item)
+        {
+            OgcProperty<DataComponent> prop = new OgcPropertyImpl<>(item);
+            prop.setName(name);
+            prop.setRole(CONDITION_ROLE);
+            instance.getCharacteristicList().add(prop);
+            return (B)this;
+        }
+
+        @Override
+        public B add(String name, DataComponent item)
+        {
+            instance.addCharacteristic(name, item);
+            return (B)this;
+        }
+    }
+
+    /* Nested builder for use within another builder */
+    public static abstract class NestedCharacteristicListBuilder<B> extends BaseCharacteristicListBuilder<NestedCharacteristicListBuilder<B>> implements NestedBuilder<B>
+    {
+        B parent;
+
+        protected NestedCharacteristicListBuilder(B parent, SMLFactory fac)
+        {
+            super(fac);
+            this.instance = fac.newCharacteristicList();
+            this.parent = parent;
+        }
+    }
+
+
+    /**
+     * <p>
+     * Builder class for CapabilityList
+     * </p>
+     *
+     * @author Alex Robin
+     * @date June 29, 2020
+     */
+    public static class CapabilityListBuilder extends BaseCapabilityListBuilder<CapabilityListBuilder>
+    {
+        public CapabilityListBuilder(SMLFactory fac)
+        {
+            super(fac);
+            this.instance = fac.newCapabilityList();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseCapabilityListBuilder<B extends BaseCapabilityListBuilder<B>>
+        extends PropertyListBuilder<B, CapabilityList, DataComponent>
+    {
+        protected BaseCapabilityListBuilder(SMLFactory fac)
+        {
+            super(fac);
+        }
+        
+        @Override
+        public B addCondition(String name, SimpleComponent item)
+        {
+            OgcProperty<DataComponent> prop = new OgcPropertyImpl<>(item);
+            prop.setName(name);
+            prop.setRole(CONDITION_ROLE);
+            instance.getCapabilityList().add(prop);
+            return (B)this;
+        }
+
+        @Override
+        public B add(String name, DataComponent item)
+        {
+            instance.addCapability(name, item);
+            return (B)this;
+        }
+    }
+
+    /* Nested builder for use within another builder */
+    public static abstract class NestedCapabilityListBuilder<B> extends BaseCapabilityListBuilder<NestedCapabilityListBuilder<B>> implements NestedBuilder<B>
+    {
+        B parent;
+
+        protected NestedCapabilityListBuilder(B parent, SMLFactory fac)
+        {
+            super(fac);
+            this.instance = fac.newCapabilityList();
+            this.parent = parent;
+        }
+    }
+
+
+    /**
+     * <p>
      * Builder class for DocumentList
      * </p>
      *
@@ -232,7 +320,7 @@ public class SMLMetadataBuilders
      */
     public static class DocumentListBuilder extends BaseDocumentListBuilder<DocumentListBuilder>
     {
-        protected DocumentListBuilder(SMLFactory fac)
+        public DocumentListBuilder(SMLFactory fac)
         {
             super(fac);
             this.instance = fac.newDocumentList();
@@ -248,18 +336,10 @@ public class SMLMetadataBuilders
             super(fac);
         }
 
-        @Override
-        public B addItem(CIOnlineResource item)
+        public B add(CIOnlineResource item)
         {
             instance.addDocument(item);
             return (B)this;
-        }
-
-        @Override
-        public NestedBuilder<B> addItem()
-        {
-            //TODO
-            return null;
         }
     }
 
@@ -287,7 +367,7 @@ public class SMLMetadataBuilders
      */
     public static class CIOnlineResourceBuilder extends BaseCIOnlineResourceBuilder<CIOnlineResourceBuilder>
     {
-        protected CIOnlineResourceBuilder(org.isotc211.v2005.gmd.Factory fac)
+        public CIOnlineResourceBuilder(org.isotc211.v2005.gmd.Factory fac)
         {
             super(fac);
         }
@@ -300,6 +380,24 @@ public class SMLMetadataBuilders
         protected BaseCIOnlineResourceBuilder(org.isotc211.v2005.gmd.Factory fac)
         {
             this.instance = fac.newCIOnlineResource();
+        }
+        
+        public B name(String name)
+        {
+            instance.setName(name);
+            return (B)this;
+        }
+        
+        public B description(String desc)
+        {
+            instance.setDescription(desc);
+            return (B)this;
+        }
+        
+        public B url(String url)
+        {
+            instance.setLinkage(url);
+            return (B)this;
         }
     }
 

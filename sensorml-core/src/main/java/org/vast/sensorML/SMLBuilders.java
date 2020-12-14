@@ -14,27 +14,35 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.sensorML;
 
+import java.time.OffsetDateTime;
 import java.util.function.Consumer;
-import org.vast.data.SWEFactory;
-import org.vast.sensorML.SMLMetadataBuilders.NestedDocumentListBuilder;
-import org.vast.swe.SWEHelper;
-import org.vast.swe.SWEBuilders.NestedVectorBuilder;
+import org.isotc211.v2005.gmd.CIOnlineResource;
+import org.vast.swe.SWEBuilders.SweIdentifiableBuilder;
 import org.vast.util.Asserts;
 import org.vast.util.BaseBuilder;
-import org.vast.util.NestedBuilder;
 import com.google.common.base.Strings;
+import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
+import net.opengis.gml.v32.TimeIndeterminateValue;
 import net.opengis.gml.v32.impl.ReferenceImpl;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.AggregateProcess;
+import net.opengis.sensorml.v20.CapabilityList;
+import net.opengis.sensorml.v20.CharacteristicList;
+import net.opengis.sensorml.v20.ClassifierList;
+import net.opengis.sensorml.v20.DataInterface;
 import net.opengis.sensorml.v20.DescribedObject;
 import net.opengis.sensorml.v20.DocumentList;
 import net.opengis.sensorml.v20.IdentifierList;
+import net.opengis.sensorml.v20.ObservableProperty;
 import net.opengis.sensorml.v20.PhysicalComponent;
 import net.opengis.sensorml.v20.PhysicalSystem;
 import net.opengis.sensorml.v20.ProcessMethod;
 import net.opengis.sensorml.v20.SimpleProcess;
+import net.opengis.sensorml.v20.SpatialFrame;
 import net.opengis.sensorml.v20.Term;
+import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.Vector;
 
 
@@ -48,23 +56,8 @@ import net.opengis.swe.v20.Vector;
  */
 public class SMLBuilders
 {
-    public static final String LONG_NAME_DEF = SWEHelper.getPropertyUri("LongName");
-    public static final String LONG_NAME_LABEL = "Long Name";
-    public static final String SHORT_NAME_DEF = SWEHelper.getPropertyUri("ShortName");
-    public static final String SHORT_NAME_LABEL = "Short Name";
-    public static final String SERIAL_NUMBER_DEF = SWEHelper.getPropertyUri("SerialNumber");
-    public static final String SERIAL_NUMBER_LABEL = "Serial Number";
-    public static final String MODEL_NUMBER_DEF = SWEHelper.getPropertyUri("ModelNumber");
-    public static final String MODEL_NUMBER_LABEL = "Model Number";
-    public static final String MANUFACTURER_DEF = SWEHelper.getPropertyUri("Manufacturer");
-    public static final String MANUFACTURER_LABEL = "Manufacturer Name";
 
-    public static SMLFactory DEFAULT_SML_FACTORY = new SMLFactory();
-    public static SWEFactory DEFAULT_SWE_FACTORY = new SWEFactory();
-    public static org.isotc211.v2005.gmd.Factory DEFAULT_GMD_FACTORY = new org.isotc211.v2005.gmd.impl.GMDFactory();
-    public static org.isotc211.v2005.gco.Factory DEFAULT_GCO_FACTORY = new org.isotc211.v2005.gco.impl.GCOFactory();
-
-
+    
     /*
      * Base builder for all described objects
      */
@@ -74,25 +67,14 @@ public class SMLBuilders
             T extends DescribedObject>
         extends BaseBuilder<T>
     {
-        SMLFactory smlFac;
-        SWEFactory sweFac;
+        net.opengis.sensorml.v20.Factory smlFac;
+        net.opengis.gml.v32.Factory gmlFac;
         Consumer<T> visitor;
 
-        protected DescribedObjectBuilder(SMLFactory fac)
+        protected DescribedObjectBuilder(SMLFactory smlFac)
         {
-            this.smlFac = fac;
-            this.sweFac = DEFAULT_SWE_FACTORY;
-        }
-
-        /**
-         * Use a custom factory to create SWE data components
-         * @param fac
-         * @return This builder for chaining
-         */
-        public B usingSweFactory(SWEFactory fac)
-        {
-            this.sweFac = fac;
-            return (B)this;
+            this.smlFac = smlFac;
+            this.gmlFac = SMLHelper.DEFAULT_GML_FACTORY;
         }
 
         /**
@@ -147,7 +129,13 @@ public class SMLBuilders
          */
         public B uniqueID(String uid)
         {
-            Asserts.checkNotNull(uid, "uid");
+            instance.setUniqueIdentifier(uid);
+            return (B)this;
+        }
+        
+        public B addIdentifierList(IdentifierList idList)
+        {
+            instance.addIdentification(idList);
             return (B)this;
         }
 
@@ -162,8 +150,23 @@ public class SMLBuilders
         {
             Asserts.checkNotNull(label, "label");
             Asserts.checkNotNull(def, "definition");
-            Asserts.checkNotNull(value, "value");
+            Asserts.checkNotNull(value, "value");            
 
+            Term term = smlFac.newTerm();
+            term.setDefinition(def);
+            term.setLabel(label);
+            term.setValue(value);
+            
+            return addIdentifier(term);
+        }
+        
+        /**
+         * Adds an identifier to the default list (first one in document)
+         * @param term The identifier
+         * @return This builder for chaining
+         */
+        public B addIdentifier(Term term)
+        {
             // ensure we have an identification section
             OgcPropertyList<IdentifierList> sectionList = instance.getIdentificationList();
             IdentifierList idList;
@@ -174,53 +177,98 @@ public class SMLBuilders
             }
             else
                 idList = sectionList.get(0);
-
-            Term term = smlFac.newTerm();
-            term.setDefinition(def);
-            term.setLabel(label);
-            term.setValue(value);
+            
             idList.addIdentifier(term);
             return (B)this;
         }
-
-        public B addDocumentList(DocumentList docList)
+        
+        public B addClassifierList(ClassifierList idList)
         {
-            instance.addDocumentation(docList);
+            instance.addClassification(idList);
             return (B)this;
         }
-
-        public NestedDocumentListBuilder<B> addDocumentList()
+        
+        /**
+         * Adds a classifier to the default list (first one in document)
+         * @param term The classifier
+         * @return This builder for chaining
+         */
+        public B addClassifier(Term term)
         {
-            return new NestedDocumentListBuilder<B>((B)this, smlFac)
+            // ensure we have a classification section
+            OgcPropertyList<ClassifierList> sectionList = instance.getClassificationList();
+            ClassifierList termList;
+            if (sectionList.isEmpty())
             {
-                @Override
-                public B done()
-                {
-                    DescribedObjectBuilder.this.addDocumentList(build());
-                    return (B)DescribedObjectBuilder.this;
-                }
-            };
-        }
-
-        /**
-         * Adds a "Short Name" identifier
-         * @param value
-         * @return This builder for chaining
-         */
-        public B shortName(String value)
-        {
-            addIdentifier(SHORT_NAME_LABEL, SHORT_NAME_DEF, value);
+                termList = smlFac.newClassifierList();
+                sectionList.add(termList);
+            }
+            else
+                termList = sectionList.get(0);
+            
+            termList.addClassifier(term);
             return (B)this;
         }
-
-        /**
-         * Adds a "Long Name" identifier
-         * @param value
-         * @return This builder for chaining
-         */
-        public B longName(String value)
+        
+        public B validTimePeriod(OffsetDateTime begin, OffsetDateTime end)
         {
-            addIdentifier(LONG_NAME_LABEL, LONG_NAME_DEF, value);
+            var beginPos = gmlFac.newTimePosition();
+            beginPos.setDateTimeValue(begin);            
+            var endPos = gmlFac.newTimePosition();
+            endPos.setDateTimeValue(end);            
+            var p = gmlFac.newTimePeriod();
+            p.setBeginPosition(beginPos);
+            p.setEndPosition(endPos);            
+            instance.addValidTimeAsTimePeriod(p);
+            return (B)this;
+        }
+        
+        public B validFrom(OffsetDateTime begin)
+        {
+            var beginPos = gmlFac.newTimePosition();
+            beginPos.setDateTimeValue(begin);            
+            var endPos = gmlFac.newTimePosition();
+            endPos.setIndeterminatePosition(TimeIndeterminateValue.NOW);            
+            var p = gmlFac.newTimePeriod();
+            p.setBeginPosition(beginPos);
+            p.setEndPosition(endPos);            
+            instance.addValidTimeAsTimePeriod(p);
+            return (B)this;
+        }
+        
+        public B addCharacteristicList(String name, CharacteristicList propList)
+        {
+            instance.addCharacteristics(name, propList);
+            return (B)this;
+        }
+        
+        public B addCapabilityList(String name, CapabilityList propList)
+        {
+            instance.addCapabilities(name, propList);
+            return (B)this;
+        }
+        
+        public B addDocument(String role, String label, String desc, String url)
+        {
+            // ensure we have a documentation section
+            OgcPropertyList<DocumentList> sectionList = instance.getDocumentationList();
+            DocumentList docList;
+            if (sectionList.isEmpty())
+            {
+                docList = smlFac.newDocumentList();
+                sectionList.add(docList);
+            }
+            else
+                docList = sectionList.get(0);
+            
+            CIOnlineResource doc = SMLHelper.DEFAULT_GMD_FACTORY.newCIOnlineResource();
+            doc.setName(label);
+            doc.setLinkage(url);
+            
+            OgcProperty<CIOnlineResource> prop = new OgcPropertyImpl<>(doc);
+            prop.setRole(role);
+            docList.getDocumentList().add(prop);
+            
             return (B)this;
         }
     }
@@ -240,37 +288,54 @@ public class SMLBuilders
         {
             super(fac);
         }
-
-        /**
-         * Adds a "Serial Number" identifier
-         * @param value
-         * @return This builder for chaining
-         */
-        public B serialNumber(String value)
+        
+        public B typeOf(String href)
         {
-            addIdentifier(SERIAL_NUMBER_LABEL, SERIAL_NUMBER_DEF, value);
+            instance.setTypeOf(new ReferenceImpl(href));
             return (B)this;
         }
-
-        /**
-         * Adds a "Model Number" identifier
-         * @param value
-         * @return This builder for chaining
-         */
-        public B modelNumber(String value)
+        
+        public B typeOf(String uid, String href)
         {
-            addIdentifier(MODEL_NUMBER_LABEL, MODEL_NUMBER_DEF, value);
+            ReferenceImpl ref = new ReferenceImpl(href);
+            ref.setTitle(uid);
+            instance.setTypeOf(ref);
             return (B)this;
         }
-
-        /**
-         * Adds a "Manufacturer" identifier
-         * @param value
-         * @return This builder for chaining
-         */
-        public B manufacturerName(String value)
+        
+        public B addInput(String name, ObservableProperty obsProp)
         {
-            addIdentifier(MANUFACTURER_LABEL, MANUFACTURER_DEF, value);
+            instance.addInput(name, obsProp);
+            return (B)this;
+        }
+        
+        public B addInput(String name, DataComponent comp)
+        {
+            instance.addInput(name, comp);
+            return (B)this;
+        }
+        
+        public B addInput(String name, DataInterface di)
+        {
+            instance.addOutput(name, di);
+            return (B)this;
+        }
+        
+        public B addOutput(String name, DataComponent comp)
+        {
+            instance.addOutput(name, comp);
+            return (B)this;
+        }
+        
+        public B addOutput(String name, DataInterface di)
+        {
+            instance.addOutput(name, di);
+            return (B)this;
+        }
+        
+        public B addParameter(String name, DataComponent comp)
+        {
+            instance.addParameter(name, comp);
             return (B)this;
         }
 
@@ -298,7 +363,7 @@ public class SMLBuilders
      */
     public static class SimpleProcessBuilder extends BaseSimpleProcessBuilder<SimpleProcessBuilder, SimpleProcess>
     {
-        protected SimpleProcessBuilder(SMLFactory fac)
+        public SimpleProcessBuilder(SMLFactory fac)
         {
             super(fac);
             this.instance = fac.newSimpleProcess();
@@ -329,19 +394,6 @@ public class SMLBuilders
         }
     }
 
-    /* Nested builder for use within another builder */
-    public static abstract class NestedSimpleProcessBuilder<B> extends BaseSimpleProcessBuilder<NestedSimpleProcessBuilder<B>, SimpleProcess> implements NestedBuilder<B>
-    {
-        B parent;
-
-        protected NestedSimpleProcessBuilder(B parent, SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newSimpleProcess();
-            this.parent = parent;
-        }
-    }
-
 
     /**
      * <p>
@@ -353,7 +405,7 @@ public class SMLBuilders
      */
     public static class AggregateProcessBuilder extends BaseAggregateProcessBuilder<AggregateProcessBuilder, AggregateProcess>
     {
-        protected AggregateProcessBuilder(SMLFactory fac)
+        public AggregateProcessBuilder(SMLFactory fac)
         {
             super(fac);
             this.instance = fac.newAggregateProcess();
@@ -376,45 +428,6 @@ public class SMLBuilders
             instance.addComponent(name, p);
             return (B)this;
         }
-
-        public NestedSimpleProcessBuilder<B> addSimpleProcess(String name)
-        {
-            return new NestedSimpleProcessBuilder<B>((B)this, smlFac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseAggregateProcessBuilder.this.addComponent(name, build());
-                    return (B)BaseAggregateProcessBuilder.this;
-                }
-            };
-        }
-
-        public NestedAggregateProcessBuilder<B> addNestedAggregateProcess(String name)
-        {
-            return new NestedAggregateProcessBuilder<B>((B)this, smlFac)
-            {
-                @Override
-                public B done()
-                {
-                    BaseAggregateProcessBuilder.this.addComponent(name, build());
-                    return (B)BaseAggregateProcessBuilder.this;
-                }
-            };
-        }
-    }
-
-    /* Nested builder for use within another builder */
-    public static abstract class NestedAggregateProcessBuilder<B> extends BaseAggregateProcessBuilder<NestedAggregateProcessBuilder<B>, AggregateProcess> implements NestedBuilder<B>
-    {
-        B parent;
-
-        protected NestedAggregateProcessBuilder(B parent, SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newAggregateProcess();
-            this.parent = parent;
-        }
     }
 
 
@@ -428,7 +441,7 @@ public class SMLBuilders
      */
     public static class PhysicalComponentBuilder extends BasePhysicalComponentBuilder<PhysicalComponentBuilder>
     {
-        protected PhysicalComponentBuilder(SMLFactory fac)
+        public PhysicalComponentBuilder(SMLFactory fac)
         {
             super(fac);
             this.instance = fac.newPhysicalComponent();
@@ -455,32 +468,6 @@ public class SMLBuilders
             instance.addPositionAsVector(v);
             return (B)this;
         }
-
-        public NestedVectorBuilder<B> addLocation()
-        {
-            return new NestedVectorBuilder<B>((B)this, sweFac)
-            {
-                @Override
-                public B done()
-                {
-                    BasePhysicalComponentBuilder.this.location(build());
-                    return (B)BasePhysicalComponentBuilder.this;
-                }
-            };
-        }
-    }
-
-    /* Nested builder for use within another builder */
-    public static abstract class NestedPhysicalComponentBuilder<B> extends BasePhysicalComponentBuilder<NestedPhysicalComponentBuilder<B>> implements NestedBuilder<B>
-    {
-        B parent;
-
-        protected NestedPhysicalComponentBuilder(B parent, SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newPhysicalComponent();
-            this.parent = parent;
-        }
     }
 
 
@@ -494,7 +481,7 @@ public class SMLBuilders
      */
     public static class PhysicalSystemBuilder extends BasePhysicalSystemBuilder<PhysicalSystemBuilder>
     {
-        protected PhysicalSystemBuilder(SMLFactory fac)
+        public PhysicalSystemBuilder(SMLFactory fac)
         {
             super(fac);
             this.instance = fac.newPhysicalSystem();
@@ -515,63 +502,153 @@ public class SMLBuilders
             instance.setAttachedTo(new ReferenceImpl(platformUri));
             return (B)this;
         }
-
-        public B location(Vector v)
+        
+        public B addLocalReferenceFrame(SpatialFrame refFrame)
         {
-            instance.addPositionAsVector(v);
+            instance.addLocalReferenceFrame(refFrame);
             return (B)this;
         }
 
-        public NestedVectorBuilder<B> addLocation()
+        public B setLocation(Vector loc)
         {
-            return new NestedVectorBuilder<B>((B)this, sweFac)
+            // automatically assign reference frame if already defined
+            if (!instance.getLocalReferenceFrameList().isEmpty())
             {
-                @Override
-                public B done()
-                {
-                    BasePhysicalSystemBuilder.this.location(build());
-                    return (B)BasePhysicalSystemBuilder.this;
-                }
-            };
+                SpatialFrame localFrame = instance.getLocalReferenceFrameList().get(0);
+                loc.setLocalFrame("#" + localFrame.getId());                
+            }
+            
+            instance.addPositionAsVector(loc);
+            return (B)this;
         }
 
-        public NestedPhysicalComponentBuilder<B> withPhysicalComponent(String name)
+        public B addComponent(String name, AbstractProcess component)
         {
-            return new NestedPhysicalComponentBuilder<B>((B)this, smlFac)
-            {
-                @Override
-                public B done()
-                {
-                    BasePhysicalSystemBuilder.this.addComponent(name, build());
-                    return (B)BasePhysicalSystemBuilder.this;
-                }
-            };
+            instance.addComponent(name, component);
+            return (B)this;
         }
 
-        public NestedPhysicalSystemBuilder<B> withNestedPhysicalsystem(String name)
+        public B addComponentLocation(String id, Vector loc)
         {
-            return new NestedPhysicalSystemBuilder<B>((B)this, smlFac)
-            {
-                @Override
-                public B done()
-                {
-                    BasePhysicalSystemBuilder.this.addComponent(name, build());
-                    return (B)BasePhysicalSystemBuilder.this;
-                }
-            };
+            instance.addPositionAsVector(loc);
+            return (B)this;
+        }
+    }    
+    
+    
+    /**
+     * <p>
+     * Builder class for Term object
+     * </p>
+     *
+     * @author Alex Robin
+     * @date June 21, 2020
+     */
+    public static class TermBuilder extends BaseTermBuilder<TermBuilder>
+    {
+        public TermBuilder(SMLFactory fac)
+        {
+            super(fac);
         }
     }
 
-    /* Nested builder for use within another builder */
-    public static abstract class NestedPhysicalSystemBuilder<B> extends BasePhysicalSystemBuilder<NestedPhysicalSystemBuilder<B>> implements NestedBuilder<B>
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseTermBuilder<B extends BaseTermBuilder<B>> extends BaseBuilder<Term>
     {
-        B parent;
+        SMLFactory fac;
+        
+        protected BaseTermBuilder(SMLFactory fac)
+        {
+            this.fac = fac;
+            this.instance = fac.newTerm();
+        }
 
-        protected NestedPhysicalSystemBuilder(B parent, SMLFactory fac)
+        public B copyFrom(Term base)
+        {
+            instance.setDefinition(base.getDefinition());
+            instance.setLabel(base.getLabel());
+            instance.setCodeSpace(base.getCodeSpace());
+            instance.setValue(base.getValue());
+            return (B)this;
+        }
+
+        /**
+         * Sets the term label
+         * @param label
+         * @return This builder for chaining
+         */
+        public B label(String label)
+        {
+            instance.setLabel(label);
+            return (B)this;
+        }
+
+        /**
+         * Sets the term definition URI
+         * @param defUri URI of definition
+         * @return This builder for chaining
+         */
+        public B definition(String defUri)
+        {
+            instance.setDefinition(defUri);
+            return (B)this;
+        }
+
+        /**
+         * Sets the term value
+         * @param value
+         * @return This builder for chaining
+         */
+        public B value(String value)
+        {
+            instance.setValue(value);
+            return (B)this;
+        }
+    }   
+    
+    
+    /**
+     * <p>
+     * Builder class for ObservableProperty object
+     * </p>
+     *
+     * @author Alex Robin
+     * @date June 21, 2020
+     */
+    public static class ObsPropBuilder extends BaseObsPropBuilder<ObsPropBuilder>
+    {
+        public ObsPropBuilder(SMLFactory fac)
         {
             super(fac);
-            this.instance = fac.newPhysicalSystem();
-            this.parent = parent;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseObsPropBuilder<B extends BaseObsPropBuilder<B>> 
+        extends SweIdentifiableBuilder<BaseObsPropBuilder<B>, ObservableProperty>
+    {
+                
+        protected BaseObsPropBuilder(SMLFactory fac)
+        {
+            this.instance = fac.newObservableProperty();
+        }
+
+        public B copyFrom(ObservableProperty base)
+        {
+            super.copyFrom(base);
+            instance.setDefinition(base.getDefinition());
+            return (B)this;
+        }
+        
+        /**
+         * Sets the observable definition URI
+         * @param defUri URI of definition
+         * @return This builder for chaining
+         */
+        public B definition(String defUri)
+        {
+            instance.setDefinition(defUri);
+            return (B)this;
         }
     }
 }
