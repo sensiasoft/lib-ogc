@@ -157,54 +157,62 @@ public abstract class OWSServlet extends HttpServlet
     
     public void handleError(HttpServletRequest req, HttpServletResponse resp, OWSRequest owsReq, Throwable e)
     {
-        // unwrap exceptions sent from async executions
-        if (e instanceof CompletionException && e.getCause() != null)
-            e = e.getCause();        
-        
-        if (e instanceof AccessControlException)
+        try
         {
-            // ask to authenticate if anonymous wasn't allowed
-            if (req.getRemoteUser() == null)
-            {
-                sendAuthRequested(req, resp);
-                return;
-            }
+            // unwrap exceptions sent from async executions
+            if (e instanceof CompletionException && e.getCause() != null)
+                e = e.getCause();        
             
-            log.info("Access Forbidden: {}", e.getMessage());
-            sendError(resp, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
-        }
-        if (e instanceof OWSException)
-        {
-            if (OWSUtils.isClientDisconnectError(e))
+            if (e instanceof AccessControlException)
             {
-                log.debug("Connection closed by client");
-            }
-            else
-            {
-                if (log.isDebugEnabled()) // these are client errors so we log them only in debug
-                    log.error(INVALID_REQUEST_MSG, e.getMessage());
-                
-                String version = null;
-                if (owsReq != null)
+                // ask to authenticate if anonymous wasn't allowed
+                if (req.getRemoteUser() == null)
                 {
-                    version = owsReq.getVersion();
-                    ((OWSException)e).setSoapVersion(owsReq.getSoapVersion());
+                    sendAuthRequested(req, resp);
+                    return;
                 }
                 
-                sendException(req, resp, (OWSException)e, version);
+                log.info("Access Forbidden: {}", e.getMessage());
+                sendError(resp, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
             }
-        }
-        else
-        {
-            if (OWSUtils.isClientDisconnectError(e))
+            if (e instanceof OWSException)
             {
-                log.debug("Connection closed by client");
+                if (OWSUtils.isClientDisconnectError(e))
+                {
+                    log.debug("Connection closed by client");
+                }
+                else
+                {
+                    if (log.isDebugEnabled()) // these are client errors so we log them only in debug
+                        log.error(INVALID_REQUEST_MSG, e.getMessage());
+                    
+                    String version = null;
+                    if (owsReq != null)
+                    {
+                        version = owsReq.getVersion();
+                        ((OWSException)e).setSoapVersion(owsReq.getSoapVersion());
+                    }
+                    
+                    sendException(req, resp, (OWSException)e, version);
+                }
             }
             else
             {
-                log.error(INTERNAL_ERROR_MSG, e);
-                sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, INTERNAL_ERROR_HTTP_MSG);
+                if (OWSUtils.isClientDisconnectError(e))
+                {
+                    log.debug("Connection closed by client");
+                }
+                else
+                {
+                    log.error(INTERNAL_ERROR_MSG, e);
+                    sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, INTERNAL_ERROR_HTTP_MSG);
+                }
             }
+        }
+        finally
+        {
+            if (req.isAsyncStarted())
+                req.getAsyncContext().complete();
         }
     }
     
