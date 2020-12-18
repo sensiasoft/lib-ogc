@@ -17,7 +17,7 @@
               <swe:coordinate name="lat">
                 <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/spaceCoordinates.owl#Latitude" axisID="Lat">
                   <swe:label>Geodetic latitude</swe:label>
-                  <swe:uom xlink:href="deg"/>
+                  <swe:uom code="deg"/>
                 </swe:Quantity>
               </swe:coordinate>
               <swe:coordinate name="long">
