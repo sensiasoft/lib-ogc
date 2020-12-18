@@ -334,6 +334,7 @@ public abstract class OWSServlet extends HttpServlet
     {
         try
         {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.setContentType(OWSUtils.XML_MIME_TYPE);
             if (version == null)
                 version = getDefaultVersion();

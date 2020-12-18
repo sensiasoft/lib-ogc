@@ -623,9 +623,10 @@ public class OWSUtils extends OWSCommonUtils
      * @param request OWS request object to send
      * @param useSoap set to true to wrap the POST request into a SOAP envelope
      * @return OWS response object obtained from service response
-     * @throws OWSException if service returns an OWS exception report or an HTTP error
+     * @throws OWSException if service returns an OWS exception report
+     * @throws IOException if another error occurs while connecting
      */
-    public <ResponseType extends OWSResponse> ResponseType sendRequest(OWSRequest request, boolean useSoap) throws OWSException
+    public <ResponseType extends OWSResponse> ResponseType sendRequest(OWSRequest request, boolean useSoap) throws IOException, OWSException
     {
         HttpURLConnection conn = null;
         
@@ -657,7 +658,7 @@ public class OWSUtils extends OWSCommonUtils
         }
         catch (IOException e)
         {
-            throw new OWSException("Error while reading service response", e);
+            throw new IOException("Error while reading service response", e);
         }
     }
     
@@ -666,9 +667,10 @@ public class OWSUtils extends OWSCommonUtils
      * Helper method to send any OWS request to the server URL using GET
      * @param request OWS request object
      * @return HTTP connection object
-     * @throws OWSException if service returns an OWS exception report or an HTTP error
+     * @throws OWSException if service returns an OWS exception report
+     * @throws IOException if another error occurs while connecting
      */
-    public HttpURLConnection sendGetRequest(OWSRequest request) throws OWSException
+    public HttpURLConnection sendGetRequest(OWSRequest request) throws IOException, OWSException
     {
 	    String requestString = null;
         
@@ -685,18 +687,12 @@ public class OWSUtils extends OWSCommonUtils
             connection.connect();
             
             // catch server side exceptions
-            if (connection.getResponseCode() > 202)
-            	OGCExceptionReader.parseException(connection.getErrorStream());
-            
+            tryParseException(connection);
             return connection;
         }
-        catch (OGCException e)
-		{
-	    	throw new OWSException(SERVER_ERROR_MSG, e);
-		}
         catch (IOException e)
         {
-            throw new OWSException(IO_ERROR_MSG + requestString, e);
+            throw new IOException(IO_ERROR_MSG + requestString, e);
         }
     }
     
@@ -705,9 +701,10 @@ public class OWSUtils extends OWSCommonUtils
      * Helper method to send any OWS request to the server URL using POST
      * @param request OWS request object to send
      * @return HTTP connection object
-     * @throws OWSException if service returns an OWS exception report or an HTTP error
+     * @throws OWSException if service returns an OWS exception report
+     * @throws IOException if another error occurs while connecting
      */
-    public HttpURLConnection sendPostRequest(OWSRequest request) throws OWSException
+    public HttpURLConnection sendPostRequest(OWSRequest request) throws IOException, OWSException
     {
 	    try
         {
@@ -726,7 +723,7 @@ public class OWSUtils extends OWSCommonUtils
             else
                 url = new URL(endpoint);
             
-            // initiatlize HTTP connection
+            // initialize HTTP connection
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setConnectTimeout(request.getConnectTimeOut());
             connection.setReadTimeout(request.getConnectTimeOut());
@@ -743,15 +740,9 @@ public class OWSUtils extends OWSCommonUtils
             out.close();
             
             // catch server side exceptions
-            if (connection.getResponseCode() > 202)
-            	OGCExceptionReader.parseException(connection.getErrorStream());
-            
+            tryParseException(connection);            
             return connection;
         }
-	    catch (OGCException e)
-		{
-	    	throw new OWSException(SERVER_ERROR_MSG, e);
-		}
         catch (IOException e)
         {
         	if (log.isDebugEnabled())
@@ -761,7 +752,7 @@ public class OWSUtils extends OWSCommonUtils
         	    log.debug(IO_ERROR_MSG + "\n" + buf);
         	}
         	
-        	throw new OWSException(IO_ERROR_MSG + request.getOperation(), e);
+        	throw new IOException(IO_ERROR_MSG + request.getOperation(), e);
         }
     }
     
@@ -772,9 +763,10 @@ public class OWSUtils extends OWSCommonUtils
      * object returned is not connected to let the caller add the desired content headers connection options.
      * @param request OWS request object to send
      * @return HTTP connection object
-     * @throws OWSException if there is an error serializing or sending the request
+     * @throws OWSException if service returns an OWS exception report
+     * @throws IOException if another error occurs while connecting
      */
-    public HttpURLConnection sendPostRequestWithQuery(OWSRequest request) throws OWSException
+    public HttpURLConnection sendPostRequestWithQuery(OWSRequest request) throws IOException, OWSException
     {
         try
         {
@@ -788,7 +780,7 @@ public class OWSUtils extends OWSCommonUtils
             if (endpoint == null)
                 throw new OWSException(INVALID_ENDPOINT_MSG);            
             
-            // initiatlize HTTP connection
+            // initialize HTTP connection
             String requestString = buildURLQuery(request);
             URL url = new URL(requestString);
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -809,7 +801,7 @@ public class OWSUtils extends OWSCommonUtils
                 log.debug(IO_ERROR_MSG + "\n" + buf);
             }
             
-            throw new OWSException(IO_ERROR_MSG + request.getOperation(), e);
+            throw new IOException(IO_ERROR_MSG + request.getOperation(), e);
         }
     }
     
@@ -818,9 +810,10 @@ public class OWSUtils extends OWSCommonUtils
      * Helper method to send any OWS request to the server URL using POST with SOAP
      * @param request OWS request object to send
      * @return HTTP connection object
-     * @throws OWSException if service returns an OWS exception report or an HTTP error
+     * @throws OWSException if service returns an OWS exception report
+     * @throws IOException if another error occurs while connecting
      */
-    public HttpURLConnection sendSoapRequest(OWSRequest request) throws OWSException
+    public HttpURLConnection sendSoapRequest(OWSRequest request) throws IOException, OWSException
     {
 	    try
         {
@@ -867,15 +860,9 @@ public class OWSUtils extends OWSCommonUtils
             out.close();
             
             // catch server side exceptions
-            if (connection.getResponseCode() > 202)
-            	OGCExceptionReader.parseException(connection.getErrorStream());
-
+            tryParseException(connection);
             return connection;
         }
-	    catch (OGCException e)
-		{
-	    	throw new OWSException(SERVER_ERROR_MSG, e);
-		}
         catch (IOException e)
         {
             if (log.isDebugEnabled())
@@ -885,7 +872,28 @@ public class OWSUtils extends OWSCommonUtils
                 log.debug(IO_ERROR_MSG + "\n" + buf);
             }
             
-        	throw new OWSException(IO_ERROR_MSG + request.getOperation(), e);
+        	throw new IOException(IO_ERROR_MSG + request.getOperation(), e);
+        }
+    }
+    
+    
+    protected void tryParseException(HttpURLConnection conn) throws IOException, OWSException
+    {
+        var respCode = conn.getResponseCode();
+        if (respCode != 200)
+        {
+            try
+            {
+                OGCExceptionReader.parseException(conn.getErrorStream());
+            }
+            catch (OGCException e)
+            {
+                throw new OWSException(SERVER_ERROR_MSG, e);
+            }
+            catch (IOException e)
+            {
+                throw new IOException("HTTP Error code: " + respCode);
+            }
         }
     }
     

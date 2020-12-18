@@ -20,8 +20,8 @@
 
 package org.vast.ogc;
 
+import java.io.IOException;
 import java.io.InputStream;
-import org.vast.ogc.OGCException;
 import org.vast.xml.*;
 import org.w3c.dom.Element;
 
@@ -62,20 +62,24 @@ public class OGCExceptionReader
         if (exceptionText != null)
         	throw new OGCException("ServiceException: " + exceptionText);
 	}
-	
-	
-	public static void parseException(InputStream in) throws OGCException
-	{
-		try
+    
+    
+    public static void parseException(InputStream in) throws IOException, OGCException
+    {
+        try
         {
             DOMHelper dom = new DOMHelper(in, false);
             checkException(dom);
         }
-        catch (DOMHelperException e)
+        catch (OGCException e)
         {
-            throw new OGCException("Invalid Exception", e);
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new IOException("Cannot read XML exception", e);
         }
         
-		return;
-	}
+        return;
+    }
 }
