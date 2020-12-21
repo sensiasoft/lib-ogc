@@ -15,6 +15,7 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 package org.vast.util;
 
 import static org.junit.Assert.*;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -143,7 +144,7 @@ public class TestTimeExtent
         assertTrue(te.isNow());
         assertTrue(te.beginsNow());
         assertTrue(te.endsNow());
-        assertTrue(te.begin().equals(te.end()));
+        assertTrue(Duration.between(te.begin(), te.end()).getSeconds() < 1);
     }
     
     
@@ -193,6 +194,18 @@ public class TestTimeExtent
         assertEquals(Instant.MIN, te.begin());
         assertEquals(LocalDate.parse(endString.replace("Z", "")).atTime(0,0).atOffset(ZoneOffset.UTC).toInstant(), te.end());
         assertFalse(te.hasBegin());
+        
+        te = TimeExtent.parse("now/..");
+        assertTrue(te.beginsNow());
+        assertFalse(te.endsNow());
+        assertFalse(te.hasEnd());
+        assertTrue(Duration.between(Instant.now(), te.begin()).getSeconds() < 1);
+        
+        te = TimeExtent.parse("../now");
+        assertFalse(te.beginsNow());
+        assertTrue(te.endsNow());
+        assertFalse(te.hasBegin());
+        assertTrue(Duration.between(Instant.now(), te.end()).getSeconds() < 1);
     }
 
 }

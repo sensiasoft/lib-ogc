@@ -239,33 +239,32 @@ public class TimeExtent
         {
             if (SPECIAL_VALUE_NOW.equalsIgnoreCase(tokens[0]))
             {
-                var dateTime = OffsetDateTime.parse(tokens[1], DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
-                return TimeExtent.beginNow(dateTime.toInstant());
+                var dateTime = parseInstantOrUnbounded(tokens[1], false);
+                return TimeExtent.beginNow(dateTime);
             }
             else if (SPECIAL_VALUE_NOW.equalsIgnoreCase(tokens[1]))
             {
-                var dateTime = OffsetDateTime.parse(tokens[0], DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
-                return TimeExtent.endNow(dateTime.toInstant());
-            }
-            else if (SPECIAL_VALUE_UNBOUNDED.equalsIgnoreCase(tokens[0]))
-            {
-                var dateTime = OffsetDateTime.parse(tokens[1], DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
-                return TimeExtent.endAt(dateTime.toInstant());
-            }
-            else if (SPECIAL_VALUE_UNBOUNDED.equalsIgnoreCase(tokens[1]))
-            {
-                var dateTime = OffsetDateTime.parse(tokens[0], DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
-                return TimeExtent.beginAt(dateTime.toInstant());
+                var dateTime = parseInstantOrUnbounded(tokens[0], true);
+                return TimeExtent.endNow(dateTime);
             }
             else
             {
-                var begin = OffsetDateTime.parse(tokens[0], DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
-                var end = OffsetDateTime.parse(tokens[1], DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
-                return TimeExtent.period(begin.toInstant(), end.toInstant());
+                var begin = parseInstantOrUnbounded(tokens[0], true);
+                var end = parseInstantOrUnbounded(tokens[1], false);
+                return TimeExtent.period(begin, end);
             }
         }
         
         throw new DateTimeParseException("Invalid time extent", text, 0);
+    }
+    
+    
+    private static Instant parseInstantOrUnbounded(String token, boolean isBegin)
+    {
+        if (SPECIAL_VALUE_UNBOUNDED.equalsIgnoreCase(token))
+            return isBegin ? Instant.MIN : Instant.MAX;
+        else
+            return OffsetDateTime.parse(token, DateTimeFormat.ISO_DATE_OR_TIME_FORMAT).toInstant();
     }
     
     
