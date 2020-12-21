@@ -89,6 +89,7 @@ public class TimeExtent
         TimeExtent time = new TimeExtent();
         time.begin = Asserts.checkNotNull(begin, "begin");
         time.end = Asserts.checkNotNull(end, "end");
+        Asserts.checkArgument(!begin.isAfter(end), "begin cannot be after end");
         return time;
     }
     
@@ -346,6 +347,15 @@ public class TimeExtent
     {
         return end == null;
     }
+    
+    
+    /**
+     * @return True if this time extent contains all possible time instants (i.e. no begin and end bounds)
+     */
+    public boolean isAllTimes()
+    {
+        return !hasBegin() && !hasEnd();
+    }
 
 
     /**
@@ -353,7 +363,7 @@ public class TimeExtent
      */
     public Duration duration()
     {
-        if (begin == end)
+        if (Objects.equals(begin, end))
             return Duration.ZERO;
         return Duration.between(begin(), end());
     }
@@ -395,6 +405,56 @@ public class TimeExtent
     {
         Asserts.checkNotNull(other, TimeExtent.class);
         return asRange().isConnected(other.asRange());
+    }
+    
+    
+    /**
+     * Compute the intersection between 2 time extents accouting for edge cases
+     * @param te1 First time extent
+     * @param te2 Second time extent
+     * @return A time extent representing the intersection or null if none exists
+     */
+    public static TimeExtent intersection(TimeExtent te1, TimeExtent te2)
+    {
+        // handle all times special case
+        if (te1.isAllTimes())
+            return te2;
+        else if (te2.isAllTimes())
+            return te1;
+        
+        Instant begin, end;
+        var now = Instant.now();
+        
+        // compute intersection lower bound, handling special cases with 'now'
+        if (te1.beginsNow() && te2.beginsNow())
+            begin = null;
+        else if (te1.beginsNow())
+            begin = te2.begin().isAfter(now) ? te2.begin() : null;
+        else if (te2.beginsNow())
+            begin = te1.begin().isAfter(now) ? te1.begin() : null;
+        else
+            begin = te1.begin().isAfter(te2.begin()) ? te1.begin() : te2.begin();
+                
+        // compute intersection upper bound, handling special cases with 'now'
+        if (te1.endsNow() && te2.endsNow())
+            end = null;
+        else if (te1.endsNow())
+            end = te2.end().isBefore(now) ? te2.end() : null;
+        else if (te2.endsNow())
+            end = te1.end().isBefore(now) ? te1.end() : null;
+        else
+            end = te1.end().isBefore(te2.end()) ? te1.end() : te2.end();
+        
+        // construct time extent or return null
+        // intersection is empty if computed end is before begin
+        if (begin == null && end == null)
+            return TimeExtent.now();
+        else if (begin == null)
+            return end.isAfter(now) ? TimeExtent.beginNow(end) : null;
+        else if (end == null)
+            return begin.isBefore(now) ? TimeExtent.endNow(begin) : null;
+        else
+            return begin.isAfter(end) ? null : TimeExtent.period(begin, end);
     }
 
     
