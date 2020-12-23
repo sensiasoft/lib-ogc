@@ -15,12 +15,13 @@ Copyright (C) 2012-2017 Sensia Software LLC. All Rights Reserved.
 package org.vast.swe.json;
 
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import org.vast.json.JsonStreamException;
 import org.vast.json.JsonStreamReader;
 import org.vast.swe.SWEStaxBindings;
+import com.google.gson.stream.JsonReader;
 
 
 public class SWEJsonStreamReader extends JsonStreamReader
@@ -32,10 +33,22 @@ public class SWEJsonStreamReader extends JsonStreamReader
     protected Map<String, Map<String, String>> valueArrays = new HashMap<String, Map<String, String>>();
     
     
-    public SWEJsonStreamReader(InputStream is, String encoding) throws JsonStreamException
+    public SWEJsonStreamReader(InputStream is, Charset charset)
     {
-        super(is, encoding);
-        
+        super(is, charset);
+        initSpecialNames();
+    }
+    
+    
+    public SWEJsonStreamReader(JsonReader reader)
+    {
+        super(reader);
+        initSpecialNames();        
+    }
+    
+    
+    protected void initSpecialNames()
+    {
         // XML attributes
         addSpecialNames(xmlAttNames,
                 "name", "href", "title", "role", "arcrole", "code", "reason", "id", "definition",

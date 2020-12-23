@@ -15,9 +15,9 @@ Copyright (C) 2012-2017 Sensia Software LLC. All Rights Reserved.
 package org.vast.swe.json;
 
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
-import org.vast.json.JsonStreamException;
 import org.vast.json.JsonStreamWriter;
 import com.google.gson.stream.JsonWriter;
 
@@ -33,15 +33,15 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
     protected Map<String, Map<String, String>> valueArrays = new HashMap<String, Map<String, String>>();
     
     
-    public SWEJsonStreamWriter(OutputStream os, String encoding) throws JsonStreamException
+    public SWEJsonStreamWriter(OutputStream os, Charset charset)
     {
-        super(os, encoding);
+        super(os, charset);
         this.markAttributes = false;
         initSpecialNames();        
     }
     
     
-    public SWEJsonStreamWriter(JsonWriter writer) throws JsonStreamException
+    public SWEJsonStreamWriter(JsonWriter writer)
     {
         super(writer);
         this.markAttributes = false;

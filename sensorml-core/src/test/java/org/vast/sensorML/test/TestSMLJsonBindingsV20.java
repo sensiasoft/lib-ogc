@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 import net.opengis.sensorml.v20.AbstractProcess;
@@ -49,7 +50,7 @@ public class TestSMLJsonBindingsV20 extends XMLTestCase
     protected void writeJsonToStream(AbstractProcess process, OutputStream os, boolean indent) throws Exception
     {
         SMLStaxBindings smlHelper = new SMLStaxBindings();
-        SMLJsonStreamWriter writer = new SMLJsonStreamWriter(os, "UTF-8");                
+        SMLJsonStreamWriter writer = new SMLJsonStreamWriter(os, StandardCharsets.UTF_8);                
         smlHelper.setNamespacePrefixes(writer);
         writer.writeStartDocument();
         smlHelper.writeAbstractProcess(writer, process);
@@ -77,7 +78,7 @@ public class TestSMLJsonBindingsV20 extends XMLTestCase
             
             // read back to check JSON is well formed
             is = new ByteArrayInputStream(os.toByteArray());
-            SMLJsonStreamReader jsonReader = new SMLJsonStreamReader(is, "UTF-8");            
+            SMLJsonStreamReader jsonReader = new SMLJsonStreamReader(is, StandardCharsets.UTF_8);            
             XMLOutputFactory output = new com.ctc.wstx.stax.WstxOutputFactory();
             XMLStreamWriter xmlWriter = output.createXMLStreamWriter(System.out);
             xmlWriter = new IndentingXMLStreamWriter(xmlWriter);
@@ -112,7 +113,7 @@ public class TestSMLJsonBindingsV20 extends XMLTestCase
             
             // read back JSON, write as XML and compare with source XML
             is = new ByteArrayInputStream(os.toByteArray());
-            jsonReader = new SMLJsonStreamReader(is, "UTF-8");
+            jsonReader = new SMLJsonStreamReader(is, StandardCharsets.UTF_8);
             jsonReader.nextTag();
             SMLStaxBindings staxBindings = new SMLStaxBindings();
             ByteArrayOutputStream xmlOutput = new ByteArrayOutputStream();

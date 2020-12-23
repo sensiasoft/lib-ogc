@@ -15,9 +15,11 @@ Copyright (C) 2012-2017 Sensia Software LLC. All Rights Reserved.
 package org.vast.ogc.gml.json;
 
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import org.vast.json.JsonStreamWriter;
+import com.google.gson.stream.JsonWriter;
 
 
 public class GMLJsonStreamWriter extends JsonStreamWriter
@@ -31,14 +33,26 @@ public class GMLJsonStreamWriter extends JsonStreamWriter
     protected Map<String, Map<String, String>> valueArrays = new HashMap<String, Map<String, String>>();
     
     
-    public GMLJsonStreamWriter(OutputStream os, String encoding)
+    public GMLJsonStreamWriter(OutputStream os, Charset charset)
     {
-        super(os, encoding);
+        super(os, charset);
         this.markAttributes = false;
-        
+        initSpecialNames();
+    }
+    
+    
+    public GMLJsonStreamWriter(JsonWriter writer)
+    {
+        super(writer);
+        initSpecialNames();        
+    }
+    
+    
+    protected void initSpecialNames()
+    {        
         // elements to encode as JSON arrays
         addSpecialNames(valueArrays, NO_NS, "pos", "coordinates");
-        addSpecialNames(numerics, NO_NS, "pos", "coordinates");
+        addSpecialNames(numerics, NO_NS, "pos", "coordinates");        
     }
 
 

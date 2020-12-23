@@ -15,6 +15,7 @@ Copyright (C) 2012-2017 Sensia Software LLC. All Rights Reserved.
 package org.vast.sensorML.json;
 
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import org.vast.json.JsonStreamException;
 import org.vast.ogc.gml.GMLStaxBindings;
 import org.vast.sensorML.SMLStaxBindings;
@@ -25,13 +26,13 @@ import com.google.gson.stream.JsonWriter;
 public class SMLJsonStreamWriter extends SWEJsonStreamWriter
 {
         
-    public SMLJsonStreamWriter(OutputStream os, String encoding) throws JsonStreamException
+    public SMLJsonStreamWriter(OutputStream os, Charset charset)
     {
-        super(os, encoding);
+        super(os, charset);
     }
     
     
-    public SMLJsonStreamWriter(JsonWriter writer) throws JsonStreamException
+    public SMLJsonStreamWriter(JsonWriter writer)
     {
         super(writer);
     }
@@ -40,6 +41,8 @@ public class SMLJsonStreamWriter extends SWEJsonStreamWriter
     @Override
     protected void initSpecialNames()
     {
+        super.initSpecialNames();
+        
         addSpecialNames(arrays, SMLStaxBindings.NS_URI,
             "keywords", "identification", "classification",
             "validTime", "securityConstraints", "legalConstraints",

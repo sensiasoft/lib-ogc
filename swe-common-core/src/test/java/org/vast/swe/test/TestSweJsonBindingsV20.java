@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -75,7 +76,7 @@ public class TestSweJsonBindingsV20 extends XMLTestCase
     protected void writeSweCommonJsonToStream(AbstractSWE sweObj, OutputStream os, boolean indent) throws Exception
     {
         SWEStaxBindings sweHelper = new SWEStaxBindings();
-        SWEJsonStreamWriter writer = new SWEJsonStreamWriter(os, "UTF-8");
+        SWEJsonStreamWriter writer = new SWEJsonStreamWriter(os, StandardCharsets.UTF_8);
         if (sweObj instanceof DataStream)
             sweHelper.writeDataStream(writer, (DataStream)sweObj);
         else
@@ -104,7 +105,7 @@ public class TestSweJsonBindingsV20 extends XMLTestCase
             
             // read back as events to check JSON is well formed
             InputStream is = new ByteArrayInputStream(os.toByteArray());
-            SWEJsonStreamReader jsonReader = new SWEJsonStreamReader(is, "UTF-8");
+            SWEJsonStreamReader jsonReader = new SWEJsonStreamReader(is, StandardCharsets.UTF_8);
             XMLOutputFactory output = new com.ctc.wstx.stax.WstxOutputFactory();
             XMLStreamWriter xmlWriter = output.createXMLStreamWriter(System.out);
             xmlWriter = new IndentingXMLStreamWriter(xmlWriter);
@@ -138,7 +139,7 @@ public class TestSweJsonBindingsV20 extends XMLTestCase
             
             // read back JSON, write as XML and compare with source XML
             is = new ByteArrayInputStream(os.toByteArray());
-            jsonReader = new SWEJsonStreamReader(is, "UTF-8");            
+            jsonReader = new SWEJsonStreamReader(is, StandardCharsets.UTF_8);            
             jsonReader.nextTag();
             SWEStaxBindings staxBindings = new SWEStaxBindings();
             ByteArrayOutputStream xmlOutput = new ByteArrayOutputStream();

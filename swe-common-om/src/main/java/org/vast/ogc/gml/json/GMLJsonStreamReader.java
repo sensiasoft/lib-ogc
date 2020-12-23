@@ -15,9 +15,10 @@ Copyright (C) 2012-2017 Sensia Software LLC. All Rights Reserved.
 package org.vast.ogc.gml.json;
 
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.HashSet;
-import javax.xml.stream.XMLStreamException;
 import org.vast.json.JsonStreamReader;
+import com.google.gson.stream.JsonReader;
 
 
 public class GMLJsonStreamReader extends JsonStreamReader
@@ -29,10 +30,22 @@ public class GMLJsonStreamReader extends JsonStreamReader
     protected HashSet<String> inlineValueNames = new HashSet<String>();
     
     
-    public GMLJsonStreamReader(InputStream is, String encoding) throws XMLStreamException
+    public GMLJsonStreamReader(InputStream is, Charset charset)
     {
-        super(is, encoding);
-        
+        super(is, charset);
+        initSpecialNames();
+    }
+    
+    
+    public GMLJsonStreamReader(JsonReader reader)
+    {
+        super(reader);
+        initSpecialNames();
+    }
+    
+    
+    protected void initSpecialNames()
+    {
         // XML attributes
         addSpecialNames(xmlAttNames,
                 "href", "role", "arcrole", "code", "id", "srsName");
