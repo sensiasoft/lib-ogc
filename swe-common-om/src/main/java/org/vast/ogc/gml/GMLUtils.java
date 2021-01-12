@@ -254,7 +254,7 @@ public class GMLUtils extends XMLBindingsUtils
      */
     public Element writeTimeExtentAsTimePeriod(DOMHelper dom, TimeExtent timeExtent) throws XMLWriterException
     {
-        AbstractTimeGeometricPrimitive timePrimitive = timeExtentToTimePrimitive(timeExtent, true);
+        AbstractTimeGeometricPrimitive timePrimitive = timeExtentToTimePrimitive(timeExtent, true, gmlFactory);
         return writeTimePrimitive(dom, timePrimitive);
     }
     
@@ -268,7 +268,7 @@ public class GMLUtils extends XMLBindingsUtils
      */
     public Element writeTimeExtentAsTimePrimitive(DOMHelper dom, TimeExtent timeExtent) throws XMLWriterException
     {
-        AbstractTimeGeometricPrimitive timePrimitive = timeExtentToTimePrimitive(timeExtent, false);
+        AbstractTimeGeometricPrimitive timePrimitive = timeExtentToTimePrimitive(timeExtent, false, gmlFactory);
         return writeTimePrimitive(dom, timePrimitive);
     }
     
@@ -418,9 +418,10 @@ public class GMLUtils extends XMLBindingsUtils
      * Utility method to convert a {@link TimeExtent} to a {@link AbstractTimeGeometricPrimitive} object
      * @param timeExtent TimeExtent object
      * @param forcePeriod Set to true to force output to be a GML time period
+     * @param gmlFactory GML factory to use to create time primitive objects
      * @return new GML time primitive instance
-     */
-    public AbstractTimeGeometricPrimitive timeExtentToTimePrimitive(TimeExtent timeExtent, boolean forcePeriod)
+     */ 
+    public static AbstractTimeGeometricPrimitive timeExtentToTimePrimitive(TimeExtent timeExtent, boolean forcePeriod, GMLFactory gmlFactory)
     {
         // time instant
         if ((timeExtent == null || timeExtent.isInstant()) && !forcePeriod)
@@ -475,6 +476,12 @@ public class GMLUtils extends XMLBindingsUtils
                         
             return timePeriod;
         }
+    }
+    
+    
+    public static AbstractTimeGeometricPrimitive timeExtentToTimePrimitive(TimeExtent timeExtent, boolean forcePeriod)
+    {
+        return timeExtentToTimePrimitive(timeExtent, forcePeriod, new GMLFactory());
     }
     
     

@@ -9,9 +9,7 @@
 
 package org.vast.ogc.gml;
 
-import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import javax.xml.namespace.QName;
 import org.vast.util.TimeExtent;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
@@ -40,28 +38,7 @@ public class GenericTemporalFeatureImpl extends GenericFeatureImpl implements IT
         if (validTime == null)
             return null;
         
-        if (validTime instanceof TimeInstant)
-        {
-            OffsetDateTime dateTime = ((TimeInstant)validTime).getTimePosition().getDateTimeValue();
-            if (dateTime == null)
-                return null;
-            
-            Instant instant = dateTime.withOffsetSameInstant(ZoneOffset.UTC).toInstant();
-            return TimeExtent.instant(instant);
-        }
-        else if (validTime instanceof TimePeriod)
-        {
-            OffsetDateTime beginTime = ((TimePeriod)validTime).getBeginPosition().getDateTimeValue();
-            OffsetDateTime endTime = ((TimePeriod)validTime).getEndPosition().getDateTimeValue();
-            if (beginTime == null || endTime == null)
-                return null;
-            
-            Instant begin = beginTime.withOffsetSameInstant(ZoneOffset.UTC).toInstant();            
-            Instant end = endTime.withOffsetSameInstant(ZoneOffset.UTC).toInstant();
-            return TimeExtent.period(begin, end);
-        }
-        
-        return null;
+        return GMLUtils.timePrimitiveToTimeExtent(validTime);
     }
     
     
@@ -87,5 +64,11 @@ public class GenericTemporalFeatureImpl extends GenericFeatureImpl implements IT
         TimePosition end = gmlFac.newTimePosition(endTime);
         TimePeriod period = gmlFac.newTimePeriod(begin, end);
         setProperty(PROP_VALID_TIME, period);
+    }
+    
+    
+    public void setValidTime(TimeExtent timeExtent)
+    {
+        setProperty(PROP_VALID_TIME, GMLUtils.timeExtentToTimePrimitive(timeExtent, true));
     }
 }
