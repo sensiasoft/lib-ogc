@@ -91,6 +91,7 @@ public class GeoJsonBindings
             writer.endObject();
         }
         
+        writeCustomJsonProperties(writer, bean);
         writer.endObject();
     }
     
@@ -174,6 +175,11 @@ public class GeoJsonBindings
                 writeTimePrimitive(writer, (AbstractTimeGeometricPrimitive)val);
             }
         }
+    }
+    
+    
+    protected void writeCustomJsonProperties(JsonWriter writer, IFeature bean) throws IOException
+    {        
     }
     
     
