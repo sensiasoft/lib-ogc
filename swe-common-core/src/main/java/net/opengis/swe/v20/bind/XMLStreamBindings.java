@@ -822,6 +822,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     {
         this.writeAbstractSWETypeAttributes(writer, bean);
 
+        // ref
+        writer.writeAttribute("ref", getStringValue(bean.getRef()));
+
         // compression
         if (bean.isSetCompression())
             writer.writeAttribute("compression", getStringValue(bean.getCompression()));
@@ -841,9 +844,6 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         // byteLength
         if (bean.isSetByteLength())
             writer.writeAttribute("byteLength", getStringValue(bean.getByteLength()));
-
-        // ref
-        writer.writeAttribute("ref", getStringValue(bean.getRef()));
     }
 
 
@@ -1087,6 +1087,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     {
         this.writeAbstractSWETypeAttributes(writer, bean);
 
+        // ref
+        writer.writeAttribute("ref", getStringValue(bean.getRef()));
+
         // encryption
         if (bean.isSetEncryption())
             writer.writeAttribute("encryption", getStringValue(bean.getEncryption()));
@@ -1105,9 +1108,6 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
 
         // dataType
         writer.writeAttribute("dataType", getStringValue(bean.getDataType()));
-
-        // ref
-        writer.writeAttribute("ref", getStringValue(bean.getRef()));
     }
 
 

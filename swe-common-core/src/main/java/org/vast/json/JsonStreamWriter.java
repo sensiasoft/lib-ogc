@@ -70,15 +70,15 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
     }
     
     
-    public void beginArray() throws IOException
+    public void resetContext()
     {
-        writer.beginArray();
+        currentContext.firstChild = true;
     }
     
     
-    public void nextArrayElt()
+    public void beginArray() throws IOException
     {
-        currentContext.firstChild = true;
+        writer.beginArray();
     }
     
     
