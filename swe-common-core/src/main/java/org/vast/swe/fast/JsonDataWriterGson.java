@@ -17,17 +17,16 @@ package org.vast.swe.fast;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import org.vast.swe.SWEDataTypeUtils;
+import org.vast.json.JsonInliningWriter;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.WriterException;
+import com.google.gson.stream.JsonWriter;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.CategoryRange;
@@ -52,29 +51,20 @@ import net.opengis.swe.v20.Vector;
  * New implementation of JSON data writer with better efficiency since the
  * write tree is pre-computed during init instead of being re-evaluated
  * while iterating through the component tree.
+ * </p><p>
+ * This particular implementation is based on Gson JsonWriter.
  * </p>
  *
  * @author Alex Robin
- * @since Dec 7, 2016
+ * @since Jan 26, 2021
  */
-public class JsonDataWriter extends AbstractDataWriter
+public class JsonDataWriterGson extends AbstractDataWriter
 {
-    static final String JSON_ERROR = "Error writing JSON stream for ";
-    static final String INDENT = "  ";
-    static final Map<Character, String> ESCAPED_CHARS = new HashMap<>();
-    
-    static {
-        ESCAPED_CHARS.put('\n', "\\n");
-        ESCAPED_CHARS.put('\t', "\\t");
-        ESCAPED_CHARS.put('\"', "\\\"");
-        ESCAPED_CHARS.put('\\', "\\\\");
-    }
+    static final String JSON_ERROR = "Error writing JSON ";
+    static final String DEFAULT_INDENT = "  ";
 
-    protected Writer writer;
-    protected NullWriter nullWriter = new NullWriter();
-    protected int depth;
-    boolean multipleRecords;
-    boolean firstBlock = true;
+    protected JsonWriter writer;
+    protected boolean multipleRecords;
     Map<String, IntegerWriter> countWriters = new HashMap<>();
 
 
@@ -95,12 +85,13 @@ public class JsonDataWriter extends AbstractDataWriter
         {
             try
             {
-                writeValue(data, index);
+                if (enabled)
+                    writeValue(data, index);
                 return ++index;
             }
             catch (IOException e)
             {
-                throw new WriterException(JSON_ERROR + eltName + " value", e);
+                throw new WriterException(JSON_ERROR + " value " + eltName, e);
             }
         }
 
@@ -123,7 +114,7 @@ public class JsonDataWriter extends AbstractDataWriter
         public void writeValue(DataBlock data, int index) throws IOException
         {
             boolean val = data.getBooleanValue(index);
-            writer.write(java.lang.Boolean.toString(val));
+            writer.value(val);
         }
     }
 
@@ -141,7 +132,7 @@ public class JsonDataWriter extends AbstractDataWriter
         public void writeValue(DataBlock data, int index) throws IOException
         {
             val = data.getIntValue(index);
-            writer.write(Integer.toString(val));
+            writer.value(val);
         }
     }
 
@@ -160,13 +151,13 @@ public class JsonDataWriter extends AbstractDataWriter
 
             // need to add quote on special values because they are not valid literal values in JSON
             if (Double.isNaN(val))
-                writer.write("\"NaN\"");
+                writer.value("\"NaN\"");
             else if (val == Double.POSITIVE_INFINITY)
-                writer.write("\"+INF\"");
+                writer.value("\"+INF\"");
             else if (val == Double.NEGATIVE_INFINITY)
-                writer.write("\"-INF\"");
+                writer.value("\"-INF\"");
             else
-                writer.write(Double.toString(val));
+                writer.value(val);
         }
     }
 
@@ -185,13 +176,13 @@ public class JsonDataWriter extends AbstractDataWriter
 
             // need to add quote on special values because they are not valid literal values in JSON
             if (Float.isNaN(val))
-                writer.write("\"NaN\"");
+                writer.value("\"NaN\"");
             else if (val == Float.POSITIVE_INFINITY)
-                writer.write("\"+INF\"");
+                writer.value("\"+INF\"");
             else if (val == Float.NEGATIVE_INFINITY)
-                writer.write("\"-INF\"");
+                writer.value("\"-INF\"");
             else
-                writer.write(Float.toString(val));
+                writer.value(val);
         }
     }
 
@@ -213,16 +204,16 @@ public class JsonDataWriter extends AbstractDataWriter
 
             // need to add quote on special values because they are not valid literal values in JSON
             if (Double.isNaN(val))
-                writer.write("\"NaN\"");
+                writer.value("\"NaN\"");
             else if (val == Double.POSITIVE_INFINITY)
-                writer.write("\"+INF\"");
+                writer.value("\"+INF\"");
             else if (val == Double.NEGATIVE_INFINITY)
-                writer.write("\"-INF\"");
+                writer.value("\"-INF\"");
             else
             {
                 BigDecimal bd = BigDecimal.valueOf(val);
                 bd = bd.setScale(scale, RoundingMode.HALF_UP).stripTrailingZeros();
-                writer.write(bd.toPlainString());
+                writer.jsonValue(bd.toPlainString());
             }
         }
     }
@@ -241,12 +232,14 @@ public class JsonDataWriter extends AbstractDataWriter
         public void writeValue(DataBlock data, int index) throws IOException
         {
             double val = data.getDoubleValue(index);
-            writer.write('"');
-            if (Double.isNaN(val) || Double.isInfinite(val))
-                writer.write(SWEDataTypeUtils.getDoubleOrInfAsString(val));
+            if (Double.isNaN(val))
+                writer.value("\"NaN\"");
+            else if (val == Double.POSITIVE_INFINITY)
+                writer.value("\"+INF\"");
+            else if (val == Double.NEGATIVE_INFINITY)
+                writer.value("\"-INF\"");
             else
-                writer.write(timeFormat.formatIso(val, 0));
-            writer.write('"');
+                writer.value(timeFormat.formatIso(val, 0));
         }
     }
 
@@ -266,38 +259,7 @@ public class JsonDataWriter extends AbstractDataWriter
         public void writeValue(DataBlock data, int index) throws IOException
         {
             String val = data.getStringValue(index);
-
-            if (val != null)
-            {
-                writer.write('"');
-                writer.write(escape(val), 0, pos);
-                writer.write('"');
-            }
-            else
-                writer.write("null");
-        }
-        
-        protected char[] escape(String val)
-        {
-            pos = 0;
-            if (buf.length < 2*val.length())
-                buf = Arrays.copyOf(buf, (2*val.length()/BUF_SIZE_INCREMENT+1)*BUF_SIZE_INCREMENT);
-            
-            for (int i = 0; i < val.length(); i++)
-            {
-                char c = val.charAt(i);
-                String escaped = ESCAPED_CHARS.get(c);
-                
-                if (escaped != null)
-                {
-                    for (int j = 0; j < escaped.length(); j++)
-                        buf[pos++] = escaped.charAt(j);                        
-                }
-                else
-                    buf[pos++] = c;
-            }
-            
-            return buf;
+            writer.value(val);
         }
     }
 
@@ -316,16 +278,15 @@ public class JsonDataWriter extends AbstractDataWriter
         {
             try
             {
-                writer.write('[');
+                writer.beginArray();
                 fieldProcessors.get(0).process(data, index++);
-                writer.write(", ");
                 fieldProcessors.get(1).process(data, index++);
-                writer.write(']');
+                writer.endArray();
                 return index;
             }
             catch (IOException e)
             {
-                throw new WriterException(JSON_ERROR + eltName + " range", e);
+                throw new WriterException(JSON_ERROR + " range " + eltName, e);
             }
         }
 
@@ -340,76 +301,56 @@ public class JsonDataWriter extends AbstractDataWriter
     protected class RecordWriter extends RecordProcessor implements JsonAtomWriter
     {
         String eltName;
-        boolean onlyScalars = true;
+        boolean isVector;
 
-        public RecordWriter(String eltName)
+        public RecordWriter(String eltName, boolean isVector)
         {
             this.eltName = eltName;
+            this.isVector = isVector;
         }
 
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
+            // skip if disabled
+            if (!enabled)
+                return super.process(data, index);
+            
             try
             {
-                writer.write('{');
+                writer.beginObject();
+                
+                // no indent if only scalars
+                if (isVector)
+                    writeInline(true);
 
-                depth++;
-                int i = 0;
                 for (AtomProcessor p: fieldProcessors)
                 {
-                    // switch to null writer if this field should be skipped
-                    Writer oldWriter = writer;
-                    if (!p.isEnabled())
-                    {
-                        writer = nullWriter;
-                        i--;
-                    }
-                    
-                    // insert separator
-                    if (i > 0)
-                        writer.write(',');
-
-                    // indent only if child is complex
-                    if (!onlyScalars)
-                    {
-                        writer.write('\n');
-                        indent();
-                    }
-                    else if (i > 0)
-                        writer.write(' ');
-
-                    writer.append('"').append(((JsonAtomWriter)p).getEltName()).append('"');
-                    writer.write(": ");
+                    if (p.isEnabled())
+                        writer.name(((JsonAtomWriter)p).getEltName());
                     index = p.process(data, index);
-                    i++;
-
-                    writer = oldWriter; // restore old writer
                 }
 
-                depth--;
-                if (!onlyScalars)
-                {
-                    writer.write('\n');
-                    indent();
-                }
-                writer.write('}');
+                writer.endObject();
 
+                // restore indent
+                writeInline(false);
+                
                 return index;
             }
             catch (IOException e)
             {
-                throw new WriterException(JSON_ERROR + eltName + " record", e);
+                throw new WriterException(JSON_ERROR + " record " + eltName, e);
             }
         }
 
-        @Override
+        /*@Override
         public void add(AtomProcessor processor)
         {
             fieldProcessors.add(processor);
             if (!(processor instanceof ValueWriter))
                 onlyScalars = false;
-        }
+        }*/
 
         @Override
         public String getEltName()
@@ -422,9 +363,9 @@ public class JsonDataWriter extends AbstractDataWriter
     protected class ArrayWriter extends ArrayProcessor implements JsonAtomWriter
     {
         String eltName;
-        IntegerWriter sizeWriter;
         boolean onlyScalars = true;
-
+        IntegerWriter sizeWriter;
+        
         public ArrayWriter(String eltName)
         {
             this.eltName = eltName;
@@ -433,46 +374,36 @@ public class JsonDataWriter extends AbstractDataWriter
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
+            // skip if disabled
+            if (!enabled)
+                return super.process(data, index);
+            
             try
             {
                 // retrieve variable array size
                 if (sizeWriter != null)
                     arraySize = sizeWriter.val;
 
-                writer.write('[');
+                writer.beginArray();
+                
+                // no indent if only scalars
+                if (onlyScalars)
+                    writeInline(true);
 
-                depth++;
                 for (int i = 0; i < arraySize; i++)
-                {
-                    // insert separator
-                    if (i > 0)
-                        writer.write(',');
-
-                    // indent only if child is complex
-                    if (!onlyScalars)
-                    {
-                        writer.write('\n');
-                        indent();
-                    }
-                    else if (i > 0)
-                        writer.write(' ');
-
                     index = eltProcessor.process(data, index);
-                }
+                
+                writer.endArray();
 
-                depth--;
-                if (!onlyScalars)
-                {
-                    writer.write('\n');
-                    indent();
-                }
-                writer.write(']');
-
+                // restore indent
+                if (onlyScalars)
+                    writeInline(false);
+                
                 return index;
             }
             catch (IOException e)
             {
-                throw new WriterException(JSON_ERROR + eltName + " array", e);
+                throw new WriterException(JSON_ERROR + " array " + eltName, e);
             }
         }
 
@@ -513,34 +444,32 @@ public class JsonDataWriter extends AbstractDataWriter
             if (selectedIndex < 0 || selectedIndex >= choiceTokens.size())
                 throw new WriterException(AbstractDataParser.INVALID_CHOICE_MSG + selectedIndex);
 
+            // skip if disabled
+            if (!enabled)
+                return super.process(data, index, selectedIndex);
+            
             try
             {
-                writer.write('{');
+                writer.beginObject();
+                
+                // no indent if only scalars
+                if (onlyScalars)
+                    writeInline(true);
+                
+                writer.name(choiceTokens.get(selectedIndex));
+                super.process(data, index, selectedIndex);
 
-                depth++;
-                if (!onlyScalars)
-                {
-                    writer.write('\n');
-                    indent();
-                }
+                writer.endObject();
 
-                writer.append('"').append(choiceTokens.get(selectedIndex)).append('"');
-                writer.write(": ");
-                index = super.process(data, ++index, selectedIndex);
-
-                depth--;
-                if (!onlyScalars)
-                {
-                    writer.write('\n');
-                    indent();
-                }
-                writer.write('}');
+                // restore indent
+                if (onlyScalars)
+                    writeInline(false);
 
                 return index;
             }
             catch (IOException e)
             {
-                throw new WriterException(JSON_ERROR + eltName + " choice", e);
+                throw new WriterException(JSON_ERROR + " choice " + eltName, e);
             }
         }
 
@@ -564,12 +493,16 @@ public class JsonDataWriter extends AbstractDataWriter
             return ++index;
         }
     }
-
-
-    protected void indent() throws IOException
+    
+    
+    public JsonDataWriterGson()
+    {        
+    }
+    
+    
+    public JsonDataWriterGson(JsonWriter writer)
     {
-        for (int i = 0; i < depth; i++)
-            writer.write(INDENT);
+        this.writer = writer;
     }
 
 
@@ -582,21 +515,15 @@ public class JsonDataWriter extends AbstractDataWriter
     @Override
     public void setOutput(OutputStream os)
     {
-        this.writer = new OutputStreamWriter(os, StandardCharsets.UTF_8);
+        this.writer = new JsonInliningWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+        writer.setIndent(DEFAULT_INDENT);
     }
-
-
-    @Override
-    public void write(DataBlock data) throws IOException
+    
+    
+    protected void writeInline(boolean writeInline)
     {
-        if (!firstBlock)
-            writer.write(",\n");
-
-        indent();
-        super.write(data);
-
-        if (multipleRecords)
-            firstBlock = false;
+        if (writer instanceof JsonInliningWriter)
+            ((JsonInliningWriter) writer).writeInline(writeInline);
     }
 
 
@@ -607,10 +534,7 @@ public class JsonDataWriter extends AbstractDataWriter
 
         // wrap records with array if we're writing multiple ones together
         if (multipleRecords)
-        {
-            writer.write("[\n");
-            depth++;
-        }
+            writer.beginArray();
     }
 
 
@@ -618,10 +542,7 @@ public class JsonDataWriter extends AbstractDataWriter
     public void endStream() throws IOException
     {
         if (multipleRecords)
-        {
-            writer.write("\n]");
-            flush();
-        }
+            writer.endArray();
     }
 
 
@@ -645,7 +566,6 @@ public class JsonDataWriter extends AbstractDataWriter
     public void reset()
     {
         super.reset();
-        firstBlock = true;
     }
 
 
@@ -756,7 +676,7 @@ public class JsonDataWriter extends AbstractDataWriter
     @Override
     public void visit(DataRecord rec)
     {
-        addToProcessorTree(new RecordWriter(rec.getName()));
+        addToProcessorTree(new RecordWriter(rec.getName(), false));
         for (DataComponent field: rec.getFieldList())
         {
             boolean saveEnabled = enableSubTree;
@@ -771,7 +691,7 @@ public class JsonDataWriter extends AbstractDataWriter
     @Override
     public void visit(Vector rec)
     {
-        addToProcessorTree(new RecordWriter(rec.getName()));
+        addToProcessorTree(new RecordWriter(rec.getName(), true));
         for (DataComponent field: rec.getCoordinateList())
             field.accept(this);
         processorStack.pop();
