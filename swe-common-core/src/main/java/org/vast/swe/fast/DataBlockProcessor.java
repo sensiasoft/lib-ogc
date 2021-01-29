@@ -146,7 +146,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     }
     
     
-    protected abstract void init();
+    protected abstract void init() throws IOException;
     
     
     protected void addToProcessorTree(AtomProcessor processor)

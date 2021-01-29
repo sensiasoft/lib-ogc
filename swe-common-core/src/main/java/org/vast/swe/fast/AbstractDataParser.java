@@ -57,32 +57,25 @@ public abstract class AbstractDataParser extends DataBlockProcessor implements D
     @Override
     public DataBlock parseNextBlock() throws IOException
     {
-        try
+        if (!processorTreeReady)
         {
-            if (!processorTreeReady)
-            {
-                dataComponents.accept(this);
-                processorTreeReady = true;
-                init();
-            }
-            
-            if (!moreData())
-                return null;
-            
-            // get datablock object
-            if (dataBlk == null || renewDataBlock)
-                getNextDataBlock();
-            
-            // go once through the tree of parser atoms
-            int index = rootProcessor.process(dataBlk, 0);
-            Asserts.checkState(index == dataBlk.getAtomCount(), "Data block wasn't fully deserialized");
-            
-            return dataBlk;
+            dataComponents.accept(this);
+            processorTreeReady = true;
+            init();
         }
-        catch (Exception e)
-        {
-            throw new IOException("Error while parsing text record", e);
-        }
+        
+        if (!moreData())
+            return null;
+        
+        // get datablock object
+        if (dataBlk == null || renewDataBlock)
+            getNextDataBlock();
+        
+        // go once through the tree of parser atoms
+        int index = rootProcessor.process(dataBlk, 0);
+        Asserts.checkState(index == dataBlk.getAtomCount(), "Data block wasn't fully deserialized");
+        
+        return dataBlk;
     }
     
     
