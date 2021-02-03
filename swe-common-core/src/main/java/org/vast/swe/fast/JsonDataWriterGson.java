@@ -64,7 +64,7 @@ public class JsonDataWriterGson extends AbstractDataWriter
     static final String DEFAULT_INDENT = "  ";
 
     protected JsonWriter writer;
-    protected boolean multipleRecords;
+    protected boolean wrapWithJsonArray;
     Map<String, IntegerWriter> countWriters = new HashMap<>();
 
 
@@ -528,12 +528,12 @@ public class JsonDataWriterGson extends AbstractDataWriter
 
 
     @Override
-    public void startStream(boolean multipleRecords) throws IOException
+    public void startStream(boolean addWrapper) throws IOException
     {
-        this.multipleRecords = multipleRecords;
+        this.wrapWithJsonArray = addWrapper;
 
         // wrap records with array if we're writing multiple ones together
-        if (multipleRecords)
+        if (wrapWithJsonArray)
             writer.beginArray();
     }
 
@@ -541,7 +541,7 @@ public class JsonDataWriterGson extends AbstractDataWriter
     @Override
     public void endStream() throws IOException
     {
-        if (multipleRecords)
+        if (wrapWithJsonArray)
             writer.endArray();
     }
 

@@ -68,7 +68,7 @@ public abstract class AbstractDataWriter extends DataBlockProcessor implements D
     
     
     @Override
-    public void startStream(boolean multipleRecords) throws IOException
+    public void startStream(boolean addWrapper) throws IOException
     {
     }
     

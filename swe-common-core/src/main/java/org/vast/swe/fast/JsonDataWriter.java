@@ -73,7 +73,7 @@ public class JsonDataWriter extends AbstractDataWriter
     protected Writer writer;
     protected NullWriter nullWriter = new NullWriter();
     protected int depth;
-    boolean multipleRecords;
+    boolean wrapWithJsonArray;
     boolean firstBlock = true;
     Map<String, IntegerWriter> countWriters = new HashMap<>();
 
@@ -595,18 +595,18 @@ public class JsonDataWriter extends AbstractDataWriter
         indent();
         super.write(data);
 
-        if (multipleRecords)
+        if (wrapWithJsonArray)
             firstBlock = false;
     }
 
 
     @Override
-    public void startStream(boolean multipleRecords) throws IOException
+    public void startStream(boolean addWrapper) throws IOException
     {
-        this.multipleRecords = multipleRecords;
+        this.wrapWithJsonArray = addWrapper;
 
         // wrap records with array if we're writing multiple ones together
-        if (multipleRecords)
+        if (wrapWithJsonArray)
         {
             writer.write("[\n");
             depth++;
@@ -617,7 +617,7 @@ public class JsonDataWriter extends AbstractDataWriter
     @Override
     public void endStream() throws IOException
     {
-        if (multipleRecords)
+        if (wrapWithJsonArray)
         {
             writer.write("\n]");
             flush();

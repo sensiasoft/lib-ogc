@@ -301,7 +301,6 @@ public class XmlDataWriter extends AbstractDataWriter
             factory.setProperty(WstxOutputProperties.P_OUTPUT_VALIDATE_STRUCTURE, false);
             xmlWriter = factory.createXMLStreamWriter(os);
             //xmlWriter = new IndentingXMLStreamWriter(xmlWriter);
-            //xmlWriter.writeStartElement("root");
         }
         catch (XMLStreamException e)
         {
@@ -320,7 +319,36 @@ public class XmlDataWriter extends AbstractDataWriter
         }
         catch (XMLStreamException e)
         {
-            throw new IOException(e);
+            throw new IOException(e.getMessage(), e.getCause());
+        }
+    }
+    
+    
+    @Override
+    public void startStream(boolean addWrapper) throws IOException
+    {
+        try
+        {
+            if (addWrapper)
+                xmlWriter.writeStartElement("records");
+        }
+        catch (XMLStreamException e)
+        {
+            throw new IOException(e.getMessage(), e.getCause());
+        }
+    }
+    
+    
+    @Override
+    public void endStream() throws IOException
+    {
+        try
+        {
+            xmlWriter.writeEndDocument();
+        }
+        catch (XMLStreamException e)
+        {
+            throw new IOException(e.getMessage(), e.getCause());
         }
     }
     
