@@ -42,6 +42,7 @@ public class TimeExtent
 {
     public static final String SPECIAL_VALUE_NOW = "now";
     public static final String SPECIAL_VALUE_UNBOUNDED = "..";
+    public static final TimeExtent ALL_TIMES = TimeExtent.period(Instant.MIN, Instant.MAX);
     
     protected Instant begin = null; // null means 'now', Instant.MIN means unbounded
     protected Instant end = null; // null means 'now', Instant.MAX means unbounded
@@ -106,15 +107,6 @@ public class TimeExtent
         time.begin = timeRange.hasLowerBound() ? timeRange.lowerEndpoint() : Instant.MIN;
         time.end = timeRange.hasUpperBound() ? timeRange.upperEndpoint() : Instant.MAX;
         return time;
-    }
-    
-    
-    /**
-     * @return A time extent representing all times
-     */
-    public static TimeExtent allTimes()
-    {
-        return TimeExtent.period(Instant.MIN, Instant.MAX);
     }
     
     
