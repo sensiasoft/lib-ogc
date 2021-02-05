@@ -517,6 +517,7 @@ public class JsonDataWriterGson extends AbstractDataWriter
     {
         this.writer = new JsonInliningWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
         writer.setIndent(DEFAULT_INDENT);
+        writer.setLenient(true);
     }
     
     
