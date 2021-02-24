@@ -119,18 +119,14 @@ public class SWEDataTypeUtils
     }
     
     
-    public final double parseIsoTime(String text) throws ParseException
-    {
-        return timeFormat.parseIso(text);
-    }
-    
-    
     public final String getDoubleOrTimeAsString(double val, boolean useIso)
     {
         if (val == Double.POSITIVE_INFINITY)
             return "+INF";
         else if (val == Double.NEGATIVE_INFINITY)
             return "-INF";
+        else if (Double.isNaN(val))
+            return "NaN";
         else if (useIso)
             return timeFormat.formatIso(val, 0);
         else
