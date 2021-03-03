@@ -313,7 +313,6 @@ public class VectorHelper extends SWEHelper
             .refFrame(refFrame)
             .size(nRows, nCols, true)
             .withElement("elt", createQuantity()
-                .dataType(DataType.FLOAT)
                 .definition(SWEConstants.DEF_COEF)
                 .uomCode("1")
                 .build())
