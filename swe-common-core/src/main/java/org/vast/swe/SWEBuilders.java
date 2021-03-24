@@ -1297,10 +1297,10 @@ public class SWEBuilders
             return (B)this;
         }
 
-        /*public B addField(String name, ComponentBuilder<?,?> fieldBuilder)
+        public B addField(String name, ComponentBuilder<?,?> fieldBuilder)
         {
             return addField(name, fieldBuilder.build());
-        }*/
+        }
 
         public B addSamplingTimeIsoUTC(String name)
         {
@@ -1571,15 +1571,33 @@ public class SWEBuilders
             return (B)this;
         }
 
+        public B addCoordinate(String name, QuantityBuilder coord)
+        {
+            instance.addCoordinateAsQuantity(name, coord.build());
+            return (B)this;
+        }
+
         public B addCoordinate(String name, Count coord)
         {
             instance.addCoordinateAsCount(name, coord);
             return (B)this;
         }
 
+        public B addCoordinate(String name, CountBuilder coord)
+        {
+            instance.addCoordinateAsCount(name, coord.build());
+            return (B)this;
+        }
+
         public B addCoordinate(String name, Time coord)
         {
             instance.addCoordinateAsTime(name, coord);
+            return (B)this;
+        }
+
+        public B addCoordinate(String name, TimeBuilder coord)
+        {
+            instance.addCoordinateAsTime(name, coord.build());
             return (B)this;
         }
 
@@ -1689,12 +1707,12 @@ public class SWEBuilders
             return (B)this;
         }
 
-        /*public B addItem(String name, ComponentBuilder<?,?> itemBuilder)
+        public B addItem(String name, ComponentBuilder<?,?> itemBuilder)
         {
             return addItem(name, itemBuilder.build());
         }
 
-        public NestedBooleanBuilder<B> addBooleanItem(String name)
+        /*public NestedBooleanBuilder<B> addBooleanItem(String name)
         {
             return new NestedBooleanBuilder<B>((B)this, fac)
             {
@@ -1908,12 +1926,12 @@ public class SWEBuilders
             return (B)this;
         }
 
-        /*public B withElement(String name, ComponentBuilder<?,?> eltBuilder)
+        public B withElement(String name, ComponentBuilder<?,?> eltBuilder)
         {
             return withElement(name, eltBuilder.build());
         }
 
-        public NestedBooleanBuilder<B> withBooleanElement(String name)
+        /*public NestedBooleanBuilder<B> withBooleanElement(String name)
         {
             return new NestedBooleanBuilder<B>((B)this, fac)
             {
@@ -2120,6 +2138,31 @@ public class SWEBuilders
             this.scalarEltName = Asserts.checkNotNull(name, "name");
             this.eltType = Asserts.checkNotNull(component, ScalarComponent.class);
             return (B)this;
+        }
+
+        public B withElement(String name, QuantityBuilder coord)
+        {
+            return withElement(name, coord.build());
+        }
+
+        public B withElement(String name, CountBuilder coord)
+        {
+            return withElement(name, coord.build());
+        }
+
+        public B withElement(String name, TimeBuilder coord)
+        {
+            return withElement(name, coord.build());
+        }
+
+        public B withElement(String name, BooleanBuilder coord)
+        {
+            return withElement(name, coord.build());
+        }
+
+        public B withElement(String name, TextBuilder coord)
+        {
+            return withElement(name, coord.build());
         }
 
         public B dataType(DataType dataType)
