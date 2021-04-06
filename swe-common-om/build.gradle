@@ -2,14 +2,14 @@ group = 'org.vast.opengis'
 description = 'SWE O&M and GML Models'
 
 dependencies {
-  compile project(':swe-common-core')
-  compile 'com.vividsolutions:jts:1.13'
+  api project(':swe-common-core')
+  api 'com.vividsolutions:jts:1.13'
 }
 
 // add info to OSGI manifest
 jar {
   manifest {
-    instruction 'Bundle-Vendor', 'Sensia Software LLC'
+    attributes('Bundle-Vendor': 'Sensia Software LLC')
   }
 }
 

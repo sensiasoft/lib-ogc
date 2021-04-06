@@ -2,15 +2,15 @@ group = 'org.vast.opengis'
 description = 'OGC Services Common'
 
 dependencies {
-  compile project(':swe-common-om')
-  compile 'javax.servlet:javax.servlet-api:3.1.0'
-  compile 'javax.activation:activation:1.1.1'
+  api project(':swe-common-om')
+  api 'javax.servlet:javax.servlet-api:3.1.0'
+  implementation 'javax.activation:activation:1.1.1'
 }
 
 // add info to OSGI manifest
 jar {
   manifest {
-    instruction 'Bundle-Vendor', 'Sensia Software LLC'
+    attributes('Bundle-Vendor': 'Sensia Software LLC')
   }
 }
 

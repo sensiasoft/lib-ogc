@@ -42,7 +42,8 @@ public class TaskingResponseReaderV20 extends SWEResponseReader<TaskingResponse<
 	protected SPSCommonReaderV20 commonReader = new SPSCommonReaderV20();
 	
 	
-	@Override
+	@SuppressWarnings("unchecked")
+    @Override
 	public TaskingResponse<StatusReport> readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
 		TaskingResponse<StatusReport> response = null;			
@@ -52,7 +53,7 @@ public class TaskingResponseReaderV20 extends SWEResponseReader<TaskingResponse<
 		try
         {
 		    Class<?> respClass = Class.forName(className);
-		    response = (TaskingResponse<StatusReport>)respClass.newInstance();
+		    response = (TaskingResponse<StatusReport>)respClass.getDeclaredConstructor().newInstance();
             response.setVersion("2.0");
             
             // status or feasibility report

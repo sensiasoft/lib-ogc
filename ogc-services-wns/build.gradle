@@ -2,14 +2,14 @@ group = 'org.vast.opengis'
 description = 'OGC Web Notification Service'
 
 dependencies {
-  compile project(':ogc-services-common')
-  testCompile project(path: ':ogc-services-common', configuration: 'testArtifacts')
+  api project(':ogc-services-common')
+  testImplementation project(path: ':ogc-services-common', configuration: 'testArtifacts')
 }
 
 // add info to OSGI manifest
 jar {
   manifest {
-    instruction 'Bundle-Vendor', 'Sensia Software LLC'
+    attributes('Bundle-Vendor': 'Sensia Software LLC')
   }
 }
 

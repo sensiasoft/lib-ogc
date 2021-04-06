@@ -2,21 +2,18 @@ group = 'org.vast.opengis'
 description = 'SWE Common Core'
 
 dependencies {
-  compile 'ch.qos.logback:logback-classic:1.2.3'
-  compile ('org.codehaus.woodstox:woodstox-core-asl:4.2.1') {
-    // exclude stax api since it's part of JDK
-    exclude group: 'javax.xml.stream', module: 'stax-api'
-  }
-  compile 'com.google.code.gson:gson:2.8.5'
-  compile 'com.google.guava:guava:23.6.1-jre'
-  compile 'net.sf.trove4j:core:3.1.0'
-  compile 'io.github.kostaskougios:cloning:1.10.3'
+  api 'ch.qos.logback:logback-classic:1.2.3'
+  api 'com.fasterxml.woodstox:woodstox-core:6.2.4'
+  api 'com.google.code.gson:gson:2.8.6'
+  api 'com.google.guava:guava:23.6.1-jre'
+  api 'net.sf.trove4j:core:3.1.0'
+  api 'io.github.kostaskougios:cloning:1.10.3'
 }
 
 // add info to OSGI manifest
 jar {
   manifest {
-    instruction 'Bundle-Vendor', 'Sensia Software LLC'
+    attributes('Bundle-Vendor': 'Sensia Software LLC')
   }
 }
 

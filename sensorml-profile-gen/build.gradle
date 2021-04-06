@@ -1,8 +1,8 @@
 group = 'org.vast.opengis'
-description = 'SensorML Models'
+description = 'SensorML Profile Generator'
 
 dependencies {
-  api project(':swe-common-om')
+  api project(':sensorml-core')
 }
 
 // add info to OSGI manifest
@@ -22,17 +22,4 @@ ext.pom >>= {
       organizationUrl 'http://www.sensiasoftware.com' 
     }
   } 
-}
-
-task packageTests(type: Jar) {
-  from sourceSets.test.output
-  classifier = 'tests'
-}
-
-configurations {
-  testArtifacts
-}
-
-artifacts {
-   testArtifacts packageTests
 }

@@ -2,14 +2,14 @@ group = 'org.vast.opengis'
 description = 'OGC SWE Services Common'
 
 dependencies {
-  compile project(':ogc-services-common')
-  compile project(':sensorml-core')
+  api project(':ogc-services-common')
+  api project(':sensorml-core')
 }
 
 // add info to OSGI manifest
 jar {
   manifest {
-    instruction 'Bundle-Vendor', 'Sensia Software LLC'
+    attributes('Bundle-Vendor': 'Sensia Software LLC')
   }
 }
 
