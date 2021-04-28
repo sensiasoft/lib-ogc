@@ -88,6 +88,7 @@ public class SWEConstants
     public static final String DEF_PLATFORM_TYPE = OGC_PROP_URI + "PlatformType";
 
     // SWE definition URIs
+    public static final String CF_URI_PREFIX = "http://mmisw.org/ont/cf/parameter/";
     public static final String DBPEDIA_URI_PREFIX = "http://dbpedia.org/resource/";
     public static final String QUDT_URI_PREFIX = "http://qudt.org/vocab/quantitykind/";
     public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/swe/property/";
