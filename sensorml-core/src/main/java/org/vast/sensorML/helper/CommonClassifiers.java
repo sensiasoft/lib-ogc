@@ -15,7 +15,6 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 package org.vast.sensorML.helper;
 
 import org.vast.sensorML.SMLHelper;
-import org.vast.sensorML.SMLBuilders.TermBuilder;
 import org.vast.swe.SWEHelper;
 import net.opengis.sensorml.v20.Term;
 
@@ -33,18 +32,32 @@ public class CommonClassifiers
     public static final String SENSOR_TYPE_DEF = SWEHelper.getPropertyUri("SensorType");
     public static final String SENSOR_TYPE_LABEL = "Sensor Type";
     
+    SMLHelper sml;
+    
+    
+    public CommonClassifiers(SMLHelper sml)
+    {
+        this.sml = sml;
+    }
+    
     
     public Term sensorType(String value)
     {
-        return createTerm()
+        return sml.createTerm()
             .definition(SENSOR_TYPE_DEF)
             .label(SENSOR_TYPE_LABEL)
             .value(value)
             .build();
     }
     
-    private TermBuilder createTerm()
+    
+    public Term sensorType(String codeSpace, String value)
     {
-        return new TermBuilder(SMLHelper.DEFAULT_SML_FACTORY);
+        return sml.createTerm()
+            .definition(SENSOR_TYPE_DEF)
+            .codeSpace(codeSpace)
+            .label(SENSOR_TYPE_LABEL)
+            .value(value)
+            .build();
     }
 }

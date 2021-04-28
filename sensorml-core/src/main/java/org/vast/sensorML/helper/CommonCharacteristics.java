@@ -15,12 +15,11 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 package org.vast.sensorML.helper;
 
 import org.vast.sensorML.SMLHelper;
-import org.vast.sensorML.SMLMetadataBuilders.CapabilityListBuilder;
 import org.vast.sensorML.SMLMetadataBuilders.CharacteristicListBuilder;
+import org.vast.swe.SWEBuilders.QuantityBuilder;
+import org.vast.swe.SWEBuilders.QuantityRangeBuilder;
 import org.vast.swe.SWEHelper;
-import net.opengis.swe.v20.DataComponent;
-import net.opengis.swe.v20.Quantity;
-import net.opengis.swe.v20.QuantityRange;
+
 
 /**
  * <p>
@@ -88,7 +87,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
 
     // mechanical properties
     
-    public Quantity mass(double val, String uom)
+    public QuantityBuilder mass(double val, String uom)
     {
         checkUom(uom, MASS_UNIT);
         
@@ -96,11 +95,10 @@ public class CommonCharacteristics extends SMLPropertiesHelper
             .definition(MASS_DEF)
             .label(MASS_LABEL)
             .uomCode(uom)
-            .value(val)
-            .build();
+            .value(val);
     }
     
-    public Quantity length(double val, String uom)
+    public QuantityBuilder length(double val, String uom)
     {
         checkUom(uom, DISTANCE_UNIT);
         
@@ -108,11 +106,10 @@ public class CommonCharacteristics extends SMLPropertiesHelper
             .definition(LENGTH_DEF)
             .label(LENGTH_LABEL)
             .uomCode(uom)
-            .value(val)
-            .build();
+            .value(val);
     }
     
-    public Quantity width(double val, String uom)
+    public QuantityBuilder width(double val, String uom)
     {
         checkUom(uom, DISTANCE_UNIT);
         
@@ -120,11 +117,10 @@ public class CommonCharacteristics extends SMLPropertiesHelper
             .definition(WIDTH_DEF)
             .label(WIDTH_LABEL)
             .uomCode(uom)
-            .value(val)
-            .build();
+            .value(val);
     }
     
-    public Quantity height(double val, String uom)
+    public QuantityBuilder height(double val, String uom)
     {
         checkUom(uom, DISTANCE_UNIT);
         
@@ -132,14 +128,13 @@ public class CommonCharacteristics extends SMLPropertiesHelper
             .definition(HEIGHT_DEF)
             .label(HEIGHT_LABEL)
             .uomCode(uom)
-            .value(val)
-            .build();
+            .value(val);
     }
     
     
     // electrical properties
         
-    public Quantity operatingVoltage(double val, String uom)
+    public QuantityBuilder operatingVoltage(double val, String uom)
     {
         checkUom(uom, VOLTAGE_UNIT);
         
@@ -147,11 +142,10 @@ public class CommonCharacteristics extends SMLPropertiesHelper
             .definition(VOLTAGE_DEF)
             .label(VOLTAGE_LABEL)
             .uomCode(uom)
-            .value(val)
-            .build();
+            .value(val);
     }
     
-    public QuantityRange operatingVoltageRange(double min, double max, String uom)
+    public QuantityRangeBuilder operatingVoltageRange(double min, double max, String uom)
     {
         checkUom(uom, VOLTAGE_UNIT);
         
@@ -159,12 +153,11 @@ public class CommonCharacteristics extends SMLPropertiesHelper
             .definition(VOLTAGE_DEF)
             .label(VOLTAGE_LABEL + " Range")
             .uomCode(uom)
-            .value(min, max)
-            .build();
+            .value(min, max);
     }
 
 
-    public DataComponent nominalPowerConsumption(double val, String uom)
+    public QuantityBuilder nominalPowerConsumption(double val, String uom)
     {
         checkUom(uom, POWER_UNIT);
         
@@ -172,12 +165,11 @@ public class CommonCharacteristics extends SMLPropertiesHelper
             .definition(POWER_CONSUMPTION_DEF)
             .label(POWER_CONSUMPTION_LABEL)
             .uomCode(uom)
-            .value(val)
-            .build();
+            .value(val);
     }
 
 
-    public DataComponent batteryCapacity(double val, String uom)
+    public QuantityBuilder batteryCapacity(double val, String uom)
     {
         checkUom(uom, uomParser.getUnit("W.h"));
         
@@ -185,11 +177,10 @@ public class CommonCharacteristics extends SMLPropertiesHelper
             .definition(BATT_CAPACITY_DEF)
             .label(BATT_CAPACITY_LABEL)
             .uomCode(uom)
-            .value(val)
-            .build();
+            .value(val);
     }
     
-    public Quantity batteryLifetime(double val, String uom)
+    public QuantityBuilder batteryLifetime(double val, String uom)
     {
         checkUom(uom, TIME_UNIT);
         
@@ -197,11 +188,10 @@ public class CommonCharacteristics extends SMLPropertiesHelper
             .definition(BATT_LIFETIME_DEF)
             .label(BATT_LIFETIME_LABEL)
             .uomCode(uom)
-            .value(val)
-            .build();
+            .value(val);
     }
     
-    public DataComponent systemLifetime(double val, String uom)
+    public QuantityBuilder systemLifetime(double val, String uom)
     {
         checkUom(uom, TIME_UNIT);
         
@@ -209,8 +199,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
             .definition(SYSTEM_LIFETIME_DEF)
             .label(SYSTEM_LIFETIME_LABEL)
             .uomCode(uom)
-            .value(val)
-            .build();
+            .value(val);
     }
     
 }

@@ -17,7 +17,6 @@ package org.vast.sensorML;
 import java.util.Arrays;
 import org.vast.data.SWEFactory;
 import org.vast.process.IProcessExec;
-import org.vast.sensorML.SMLBuilders.AbstractProcessBuilder;
 import org.vast.sensorML.SMLBuilders.AggregateProcessBuilder;
 import org.vast.sensorML.SMLBuilders.ObsPropBuilder;
 import org.vast.sensorML.SMLBuilders.PhysicalComponentBuilder;
@@ -64,15 +63,13 @@ public class SMLHelper extends SWEHelper
 {
     public final static SMLFactory DEFAULT_SML_FACTORY = new SMLFactory();
     public final static SWEFactory DEFAULT_SWE_FACTORY = new SWEFactory();
-    public final static net.opengis.gml.v32.Factory DEFAULT_GML_FACTORY = new net.opengis.gml.v32.impl.GMLFactory();
+    public final static net.opengis.gml.v32.Factory DEFAULT_GML_FACTORY = new net.opengis.gml.v32.impl.GMLFactory(true);
     public final static org.isotc211.v2005.gmd.Factory DEFAULT_GMD_FACTORY = new org.isotc211.v2005.gmd.impl.GMDFactory();
     public final static org.isotc211.v2005.gco.Factory DEFAULT_GCO_FACTORY = new org.isotc211.v2005.gco.impl.GCOFactory();
     
-    protected SMLFactory fac = DEFAULT_SML_FACTORY;
-    
-    
-    public final CommonIdentifiers identifiers = new CommonIdentifiers();
-    public final CommonClassifiers classifiers = new CommonClassifiers();
+    protected final SMLFactory fac;
+    public final CommonIdentifiers identifiers = new CommonIdentifiers(this);
+    public final CommonClassifiers classifiers = new CommonClassifiers(this);
     public final CommonCharacteristics characteristics = new CommonCharacteristics(this);
     public final CommonCapabilities capabilities = new CommonCapabilities(this);
     public final CommonConditions conditions = new CommonConditions(this);
@@ -95,7 +92,8 @@ public class SMLHelper extends SWEHelper
      * Create a SML helper with the default factory
      */
     public SMLHelper()
-    {        
+    {
+        this.fac = DEFAULT_SML_FACTORY;
     }
     
     
@@ -106,30 +104,6 @@ public class SMLHelper extends SWEHelper
     public SMLHelper(SMLFactory fac)
     {
         this.fac = fac;
-    }
-    
-    
-    /**
-     * Helper method to edit a SensorML process in-place using a builder
-     * @param <B> Type of expected builder
-     * @param process process instance to start from
-     * @return A builder corresponding to the provided provided process type
-     */
-    @SuppressWarnings("unchecked")
-    public <B extends AbstractProcessBuilder<?,?>> B edit(AbstractProcess process)
-    {
-        Asserts.checkNotNull(process, AbstractProcess.class);
-
-        if (process instanceof PhysicalSystem)
-            return (B)createPhysicalSystem();
-        else if (process instanceof PhysicalComponent)
-            return (B)createPhysicalComponent();
-        else if (process instanceof AggregateProcess)
-            return (B)createAggregateProcess();
-        else if (process instanceof SimpleProcess)
-            return (B)createSimpleProcess();
-        else
-            throw new IllegalArgumentException("Unsupported process type: " + process.getClass().getCanonicalName());
     }
 
 
@@ -166,6 +140,54 @@ public class SMLHelper extends SWEHelper
     public PhysicalSystemBuilder createPhysicalSystem()
     {
         return new PhysicalSystemBuilder(fac);
+    }
+    
+    
+    /**
+     * Helper method to edit a SimpleProcess description in-place using a builder
+     * @param sml SensorML instance to edit
+     * @return A builder initialized with the provided instance
+     */
+    public SimpleProcessBuilder edit(SimpleProcess sml)
+    {
+        Asserts.checkNotNull(sml, SimpleProcess.class);
+        return new SimpleProcessBuilder(fac).from(sml);
+    }
+    
+    
+    /**
+     * Helper method to edit a AggregateProcess description in-place using a builder
+     * @param sml SensorML instance to edit
+     * @return A builder initialized with the provided instance
+     */
+    public AggregateProcessBuilder edit(AggregateProcess sml)
+    {
+        Asserts.checkNotNull(sml, AggregateProcess.class);
+        return new AggregateProcessBuilder(fac).from(sml);
+    }
+    
+    
+    /**
+     * Helper method to edit a PhysicalComponent description in-place using a builder
+     * @param sml SensorML instance to edit
+     * @return A builder initialized with the provided instance
+     */
+    public PhysicalComponentBuilder edit(PhysicalComponent sml)
+    {
+        Asserts.checkNotNull(sml, PhysicalComponent.class);
+        return new PhysicalComponentBuilder(fac).from(sml);
+    }
+    
+    
+    /**
+     * Helper method to edit a PhysicalSystem description in-place using a builder
+     * @param sml SensorML instance to edit
+     * @return A builder initialized with the provided instance
+     */
+    public PhysicalSystemBuilder edit(PhysicalSystem sml)
+    {
+        Asserts.checkNotNull(sml, PhysicalSystem.class);
+        return new PhysicalSystemBuilder(fac).from(sml);
     }
     
     
@@ -230,20 +252,6 @@ public class SMLHelper extends SWEHelper
     {
         return new ObsPropBuilder(fac);
     }
-    
-    
-    /*
-     * Predefined identifiers
-     */
-    
-    
-    
-    
-    /*
-     * Predefined capabilities
-     */
-    
-    
     
     
     /*
@@ -433,6 +441,7 @@ public class SMLHelper extends SWEHelper
     @SuppressWarnings("javadoc") 
     public SMLHelper(AbstractProcess process)
     {
+        this();
         this.process = process;
     }    
     

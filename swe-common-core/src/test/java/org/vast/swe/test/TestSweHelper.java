@@ -118,7 +118,7 @@ public class TestSweHelper
     @Test
     public void testCreateWeatherRecord() throws Exception
     {
-        utils.writeComponent(System.out, swe.createDataRecord()
+        utils.writeComponent(System.out, swe.createRecord()
             .label("Weather Record")
             .addSamplingTimeIsoUTC("time")
             .addField("temp", swe.createQuantity()
@@ -146,7 +146,7 @@ public class TestSweHelper
     @Test
     public void testCreateMixedTypeRecord() throws Exception
     {
-        utils.writeComponent(System.out, swe.createDataRecord()
+        utils.writeComponent(System.out, swe.createRecord()
             .label("Mixed Type Record")
             .addSamplingTimeIsoUTC("time")
             .addField("boolean", swe.createBoolean()
@@ -171,7 +171,7 @@ public class TestSweHelper
     @Test
     public void testNestedRecords() throws Exception
     {
-        utils.writeComponent(System.out, swe.createDataRecord()
+        utils.writeComponent(System.out, swe.createRecord()
             .label("Parent Record")
             .addSamplingTimeIsoUTC("time")
             .addField("boolean", swe.createBoolean()

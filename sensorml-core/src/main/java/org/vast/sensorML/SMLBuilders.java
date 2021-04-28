@@ -17,6 +17,8 @@ package org.vast.sensorML;
 import java.time.OffsetDateTime;
 import java.util.function.Consumer;
 import org.isotc211.v2005.gmd.CIOnlineResource;
+import org.vast.sensorML.SMLMetadataBuilders.CapabilityListBuilder;
+import org.vast.sensorML.SMLMetadataBuilders.CharacteristicListBuilder;
 import org.vast.swe.SWEBuilders.SweIdentifiableBuilder;
 import org.vast.util.Asserts;
 import org.vast.util.BaseBuilder;
@@ -242,10 +244,20 @@ public class SMLBuilders
             return (B)this;
         }
         
+        public B addCharacteristicList(String name, CharacteristicListBuilder builder)
+        {
+            return addCharacteristicList(name, builder.build());
+        }
+        
         public B addCapabilityList(String name, CapabilityList propList)
         {
             instance.addCapabilities(name, propList);
             return (B)this;
+        }
+        
+        public B addCapabilityList(String name, CapabilityListBuilder builder)
+        {
+            return addCapabilityList(name, builder.build());
         }
         
         public B addDocument(String role, String label, String desc, String url)
@@ -585,12 +597,23 @@ public class SMLBuilders
 
         /**
          * Sets the term definition URI
-         * @param defUri URI of definition
+         * @param uri URI of definition
          * @return This builder for chaining
          */
-        public B definition(String defUri)
+        public B definition(String uri)
         {
-            instance.setDefinition(defUri);
+            instance.setDefinition(uri);
+            return (B)this;
+        }
+
+        /**
+         * Sets the term codespace URI
+         * @param uri URI of codespace
+         * @return This builder for chaining
+         */
+        public B codeSpace(String uri)
+        {
+            instance.setCodeSpace(uri);
             return (B)this;
         }
 

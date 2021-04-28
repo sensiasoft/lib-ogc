@@ -16,10 +16,11 @@ package org.vast.sensorML.helper;
 
 import org.vast.sensorML.SMLHelper;
 import org.vast.sensorML.SMLMetadataBuilders.CapabilityListBuilder;
+import org.vast.swe.SWEBuilders.QuantityBuilder;
+import org.vast.swe.SWEBuilders.QuantityRangeBuilder;
 import org.vast.swe.SWEHelper;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.Quantity;
-import net.opengis.swe.v20.QuantityRange;
 
 
 /**
@@ -80,129 +81,117 @@ public class CommonCapabilities extends SMLPropertiesHelper
     }
     
     
-    public QuantityRange measurementRange(double min, double max, String uom)
+    public QuantityRangeBuilder measurementRange(double min, double max, String uom)
     {
         return sml.createQuantityRange()
             .definition(MEAS_RANGE_DEF)
             .label(MEAS_RANGE_LABEL)
             .uomCode(uom)
-            .value(min, max)
-            .build();
+            .value(min, max);
     }
     
-    public QuantityRange dynamicRange(double min, double max, String uom)
+    public QuantityRangeBuilder dynamicRange(double min, double max, String uom)
     {
         return sml.createQuantityRange()
             .definition(DYNAMIC_RANGE_DEF)
             .label(DYNAMIC_RANGE_LABEL)
             .uomCode(uom)
-            .value(min, max)
-            .build();
+            .value(min, max);
     }
     
-    public Quantity samplingFrequency(double freq)
+    public QuantityBuilder samplingFrequency(double freq)
     {
         return sml.createQuantity()
             .definition(SAMPLING_FREQ_DEF)
             .label(SAMPLING_FREQ_LABEL)
             .uomCode("Hz")
-            .value(freq)
-            .build();
+            .value(freq);
     }
     
-    public Quantity reportingFrequency(double freq)
+    public QuantityBuilder reportingFrequency(double freq)
     {
         return sml.createQuantity()
             .definition(REPORTING_FREQ_DEF)
             .label(REPORTING_FREQ_LABEL)
             .uomCode("Hz")
-            .value(freq)
-            .build();
+            .value(freq);
     }
     
-    public Quantity integrationTime(double timeMs)
+    public QuantityBuilder integrationTime(double timeMs)
     {
         return sml.createQuantity()
             .definition(INTEGRATION_TIME_DEF)
             .label(INTEGRATION_TIME_LABEL)
             .uomCode("ms")
-            .value(timeMs)
-            .build();
+            .value(timeMs);
     }
     
-    public Quantity responseTime(double timeMs)
+    public QuantityBuilder responseTime(double timeMs)
     {
         return sml.createQuantity()
             .definition(RESPONSE_TIME_DEF)
             .label(RESPONSE_TIME_LABEL)
             .uomCode("ms")
-            .value(timeMs)
-            .build();
+            .value(timeMs);
     }
     
-    public Quantity resolution(double value, String uom)
+    public QuantityBuilder resolution(double value, String uom)
     {
         return sml.createQuantity()
             .definition(RESOLUTION_DEF)
             .label(RESOLUTION_LABEL)            
             .uomCode(uom)
-            .value(value)
-            .build();
+            .value(value);
     }
     
-    public Quantity absoluteAccuracy(double value, String uom)
+    public QuantityBuilder absoluteAccuracy(double value, String uom)
     {
         return sml.createQuantity()
             .definition(ABSOLUTE_ACCURACY_DEF)
             .label(ABSOLUTE_ACCURACY_LABEL)            
             .uomCode(uom)
-            .value(value)
-            .build();
+            .value(value);
     }
     
-    public Quantity relativeAccuracy(double value)
+    public QuantityBuilder relativeAccuracy(double value)
     {
         return sml.createQuantity()
             .definition(RELATIVE_ACCURACY_DEF)
             .label(RELATIVE_ACCURACY_LABEL)            
             .uomCode("%")
-            .value(value)
-            .build();
+            .value(value);
     }
     
-    public Quantity precision(double value, String uom)
+    public QuantityBuilder precision(double value, String uom)
     {
         return sml.createQuantity()
             .definition(PRECISION_DEF)
             .label(PRECISION_LABEL)            
             .uomCode(uom)
-            .value(value)
-            .build();
+            .value(value);
     }
     
-    public Quantity snr(double value)
+    public QuantityBuilder snr(double value)
     {
         return sml.createQuantity()
             .definition(SNR_DEF)
             .label(SNR_LABEL)            
             .uomCode("dB")
-            .value(value)
-            .build();
+            .value(value);
     }
     
-    public Quantity sensitivity(double value, String uom)
+    public QuantityBuilder sensitivity(double value, String uom)
     {
         return sml.createQuantity()
             .definition(SENSITIVITY_DEF)
             .label(SENSITIVITY_LABEL)            
             .uomCode(uom)
-            .value(value)
-            .build();
+            .value(value);
     }
     
     public DataArray characteristicCurve(String label, Quantity input, Quantity output)
     {
-        DataArray array = sml.createDataArray()
+        DataArray array = sml.createArray()
             .definition(SWEHelper.getPropertyUri("CharacteristicCurve"))
             .label(label != null ? label : "Characteristic Curve")
             .withFixedSize(1)
@@ -220,7 +209,7 @@ public class CommonCapabilities extends SMLPropertiesHelper
     
     public DataArray spectralResponse(String freqUnit)
     {
-        DataArray array = sml.createDataArray()
+        DataArray array = sml.createArray()
             .definition(SWEHelper.getPropertyUri("SpectralResponse"))
             .label("Frequency Response")
             .withFixedSize(1)
@@ -249,7 +238,7 @@ public class CommonCapabilities extends SMLPropertiesHelper
     
 
     
-    public Quantity fieldOfView(double value, String uom)
+    public QuantityBuilder fieldOfView(double value, String uom)
     {
         checkUom(uom, ANGLE_UNIT);
         
@@ -257,14 +246,13 @@ public class CommonCapabilities extends SMLPropertiesHelper
             .definition(FOV_DEF)
             .label(FOV_LABEL)            
             .uomCode(uom)
-            .value(value)
-            .build();
+            .value(value);
     }
     
     
     public DataArray directionalResponse()
     {
-        DataArray array = sml.createDataArray()
+        DataArray array = sml.createArray()
             .definition(SWEHelper.getPropertyUri("DirectionalResponse"))
             .label("Directional Response")
             .withFixedSize(1)

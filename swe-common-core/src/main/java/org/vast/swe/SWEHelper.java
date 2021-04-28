@@ -271,18 +271,9 @@ public class SWEHelper
     /**
      * @return A builder to create a new DataRecord component
      */
-    public DataRecordBuilder createDataRecord()
-    {
-        return new DataRecordBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new DataRecord component
-     */
     public DataRecordBuilder createRecord()
     {
-        return createDataRecord();
+        return new DataRecordBuilder(fac);
     }
 
 
@@ -299,27 +290,9 @@ public class SWEHelper
     /**
      * @return A builder to create a new DataChoice component
      */
-    public DataChoiceBuilder createDataChoice()
-    {
-        return new DataChoiceBuilder(fac);
-    }
-
-
-    /**
-     * @return A builder to create a new DataChoice component
-     */
     public DataChoiceBuilder createChoice()
     {
-        return createDataChoice();
-    }
-
-
-    /**
-     * @return A builder to create a new DataArray component
-     */
-    public DataArrayBuilder createDataArray()
-    {
-        return new DataArrayBuilder(fac);
+        return new DataChoiceBuilder(fac);
     }
 
 
@@ -328,7 +301,7 @@ public class SWEHelper
      */
     public DataArrayBuilder createArray()
     {
-        return createDataArray();
+        return new DataArrayBuilder(fac);
     }
 
 
@@ -912,7 +885,7 @@ public class SWEHelper
 
 
     /**
-     * @deprecated Use {@link #createDataRecord()} and {@link #createTime()}
+     * @deprecated Use {@link #createRecord()} and {@link #createTime()}
      */
     @Deprecated
     @SuppressWarnings("javadoc")
@@ -929,7 +902,7 @@ public class SWEHelper
 
 
     /**
-     * @deprecated Use {@link #createDataRecord()} and {@link #createTime()}
+     * @deprecated Use {@link #createRecord()} and {@link #createTime()}
      */
     @Deprecated
     @SuppressWarnings("javadoc")
@@ -984,7 +957,7 @@ public class SWEHelper
 
 
     /**
-     * @deprecated Use {@link #createDataArray()}
+     * @deprecated Use {@link #createArray()}
      */
     @Deprecated
     @SuppressWarnings("javadoc")
@@ -1026,7 +999,7 @@ public class SWEHelper
     }
 
     /**
-     * @deprecated Use {@link #createDataRecord()}
+     * @deprecated Use {@link #createRecord()}
      */
     @Deprecated
     @SuppressWarnings("javadoc")
@@ -1037,7 +1010,7 @@ public class SWEHelper
 
 
     /**
-     * @deprecated Use {@link #createDataRecord()}
+     * @deprecated Use {@link #createRecord()}
      */
     @Deprecated
     @SuppressWarnings("javadoc")
@@ -1059,7 +1032,7 @@ public class SWEHelper
 
 
     /**
-     * @deprecated Use {@link #createDataArray()}
+     * @deprecated Use {@link #createArray()}
      */
     @Deprecated
     @SuppressWarnings("javadoc")
@@ -1070,7 +1043,7 @@ public class SWEHelper
 
 
     /**
-     * @deprecated Use {@link #createDataArray()}
+     * @deprecated Use {@link #createArray()}
      */
     @Deprecated
     @SuppressWarnings("javadoc")
@@ -1103,7 +1076,7 @@ public class SWEHelper
 
 
     /**
-     * @deprecated Use {@link #createDataChoice()}
+     * @deprecated Use {@link #createChoice()}
      */
     @Deprecated
     @SuppressWarnings("javadoc")

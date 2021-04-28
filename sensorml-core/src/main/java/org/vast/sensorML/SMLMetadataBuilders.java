@@ -15,6 +15,7 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 package org.vast.sensorML;
 
 import org.isotc211.v2005.gmd.CIOnlineResource;
+import org.vast.swe.SWEBuilders.SimpleComponentBuilder;
 import org.vast.swe.SWEBuilders.SweIdentifiableBuilder;
 import org.vast.util.BaseBuilder;
 import org.vast.util.NestedBuilder;
@@ -97,6 +98,18 @@ public class SMLMetadataBuilders
         
         public abstract B add(String name, E item);
         public abstract B addCondition(String name, SimpleComponent item);
+        
+
+        public B add(String name, BaseBuilder<? extends E> builder)
+        {
+            return add(name, builder.build());
+        }
+        
+
+        public B addCondition(String name, SimpleComponentBuilder<?,?> builder)
+        {
+            return addCondition(name, builder.build());
+        }
     }
     
     

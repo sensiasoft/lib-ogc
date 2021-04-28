@@ -210,7 +210,7 @@ public class TestSMLStaxBindingsV20 extends XMLTestCase
 
         // outputs
         // create output record and set description
-        DataRecord rec = swe.createDataRecord()
+        DataRecord rec = swe.createRecord()
             .label("Weather Data Record")
             .description("Record of synchronous weather measurements")
             .addSamplingTimeIsoUTC("time")

@@ -15,7 +15,6 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 package org.vast.sensorML.helper;
 
 import org.vast.sensorML.SMLHelper;
-import org.vast.sensorML.SMLBuilders.TermBuilder;
 import org.vast.swe.SWEHelper;
 import net.opengis.sensorml.v20.Term;
 
@@ -45,10 +44,18 @@ public class CommonIdentifiers
     public static final String MANUFACTURER_DEF = SWEHelper.getPropertyUri("Manufacturer");
     public static final String MANUFACTURER_LABEL = "Manufacturer Name";
     
+    SMLHelper sml;
+    
+    
+    public CommonIdentifiers(SMLHelper sml)
+    {
+        this.sml = sml;
+    }
+    
     
     public Term shortName(String value)
     {
-        return createTerm()
+        return sml.createTerm()
             .definition(SHORT_NAME_DEF)
             .label(SHORT_NAME_LABEL)
             .value(value)
@@ -57,7 +64,7 @@ public class CommonIdentifiers
     
     public Term longName(String value)
     {
-        return createTerm()
+        return sml.createTerm()
             .definition(LONG_NAME_DEF)
             .label(LONG_NAME_LABEL)
             .value(value)
@@ -66,7 +73,7 @@ public class CommonIdentifiers
     
     public Term serialNumber(String value)
     {
-        return createTerm()
+        return sml.createTerm()
             .definition(SERIAL_NUMBER_DEF)
             .label(SERIAL_NUMBER_LABEL)
             .value(value)
@@ -75,7 +82,7 @@ public class CommonIdentifiers
     
     public Term modelNumber(String value)
     {
-        return createTerm()
+        return sml.createTerm()
             .definition(MODEL_NUMBER_DEF)
             .label(MODEL_NUMBER_LABEL)
             .value(value)
@@ -84,7 +91,7 @@ public class CommonIdentifiers
     
     public Term softwareVersion(String value)
     {
-        return createTerm()
+        return sml.createTerm()
             .definition(SOFTWARE_VERSION_DEF)
             .label(SOFTWARE_VERSION_LABEL)
             .value(value)
@@ -93,7 +100,7 @@ public class CommonIdentifiers
     
     public Term firmwareVersion(String value)
     {
-        return createTerm()
+        return sml.createTerm()
             .definition(FIRMWARE_VERSION_DEF)
             .label(FIRMWARE_VERSION_LABEL)
             .value(value)
@@ -102,15 +109,10 @@ public class CommonIdentifiers
     
     public Term manufacturer(String value)
     {
-        return createTerm()
+        return sml.createTerm()
             .definition(MANUFACTURER_DEF)
             .label(MANUFACTURER_LABEL)
             .value(value)
             .build();
-    }
-    
-    private TermBuilder createTerm()
-    {
-        return new TermBuilder(SMLHelper.DEFAULT_SML_FACTORY);
     }
 }

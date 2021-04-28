@@ -410,7 +410,7 @@ public class GeoPosHelper extends VectorHelper
     public DataRecord newImuOutput(String name, String localFrame, ImuFields... imuFields)
     {
         List<ImuFields> fields = Arrays.asList(imuFields);
-        DataRecord imuData = createDataRecord()
+        DataRecord imuData = createRecord()
             .name(name)
             .definition(SWEHelper.getPropertyUri("ImuData"))
             .addSamplingTimeIsoUTC("time")
