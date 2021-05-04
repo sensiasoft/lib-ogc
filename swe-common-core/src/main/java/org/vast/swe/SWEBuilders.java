@@ -14,6 +14,7 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.swe;
 
+import java.net.URI;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Arrays;
@@ -199,13 +200,14 @@ public class SWEBuilders
 
         /**
          * Sets the component definition URI
-         * @param defUri URI of definition (usually resolvable to the actual
+         * @param uri URI of definition (usually resolvable to the actual
          * definition of observable or concept)
          * @return This builder for chaining
          */
-        public B definition(String defUri)
+        public B definition(String uri)
         {
-            instance.setDefinition(defUri);
+            URI.create(uri); // validate URI
+            instance.setDefinition(uri);
             return (B)this;
         }
 
@@ -264,15 +266,16 @@ public class SWEBuilders
             return (B)this;
         }
 
-        public B refFrame(String refFrameUri)
+        public B refFrame(String uri)
         {
-            instance.setReferenceFrame(refFrameUri);
+            URI.create(uri); // validate URI
+            instance.setReferenceFrame(uri);
             return (B)this;
         }
 
-        public B refFrame(String refFrameUri, String axisId)
+        public B refFrame(String uri, String axisId)
         {
-            instance.setReferenceFrame(refFrameUri);
+            refFrame(uri);
             instance.setAxisID(axisId);
             return (B)this;
         }
@@ -387,6 +390,7 @@ public class SWEBuilders
 
         public B codeSpace(String uri)
         {
+            URI.create(uri); // validate URI
             instance.setCodeSpace(uri);
             return (B)this;
         }
@@ -717,16 +721,36 @@ public class SWEBuilders
         {
             UnitReference uom = fac.newUnitReference();
             uom.setCode(code);
+            uom.getValue(); // validate UCUM code is correct
             instance.setUom(uom);
             return (B)this;
         }
 
+        /**
+         * Sets the unit of measure by URI
+         * @param uri Unit URI
+         * @return This builder for chaining
+         */
         public B uomUri(String uri)
         {
+            URI.create(uri); // validate URI
             UnitReference uom = fac.newUnitReference();
-            uom.setHref(uri);
+            uom.setHref(uri);            
             instance.setUom(uom);
             return (B)this;
+        }
+        
+        /**
+         * Helper to set the unit of measure by code or URI
+         * @param codeOrUri UCUM code or URI for unit
+         * @return This builder for chaining
+         */
+        public B uom(String codeOrUri)
+        {
+            if (codeOrUri.startsWith("http") || codeOrUri.startsWith("urn"))
+                return uomUri(codeOrUri);
+            else
+                return uomCode(codeOrUri);
         }
 
         protected AllowedValues ensureConstraint()
@@ -894,28 +918,32 @@ public class SWEBuilders
         {
             UnitReference uom = fac.newUnitReference();
             uom.setCode(code);
+            uom.getValue(); // validate UCUM code is correct
             instance.setUom(uom);
             return (B)this;
         }
 
         public B uomUri(String uri)
         {
+            URI.create(uri); // validate URI
             UnitReference uom = fac.newUnitReference();
             uom.setHref(uri);
             instance.setUom(uom);
             return (B)this;
         }
 
-        public B timeFrame(String defUri)
+        public B timeFrame(String uri)
         {
-            instance.setReferenceFrame(defUri);
+            URI.create(uri); // validate URI
+            instance.setReferenceFrame(uri);
             return (B)this;
         }
 
         @Override
-		public B refFrame(String refFrameUri)
+		public B refFrame(String uri)
         {
-        	instance.setReferenceFrame(refFrameUri);
+            URI.create(uri); // validate URI
+            instance.setReferenceFrame(uri);
             return (B)this;
         }
 
@@ -1306,15 +1334,17 @@ public class SWEBuilders
             //return (B)this;
         }
 
-        public B refFrame(String refFrameUri)
+        public B refFrame(String uri)
         {
-            instance.setReferenceFrame(refFrameUri);
+            URI.create(uri); // validate URI
+            instance.setReferenceFrame(uri);
             return (B)this;
         }
 
-        public B localFrame(String localFrameUri)
+        public B localFrame(String uri)
         {
-            instance.setLocalFrame(localFrameUri);
+            URI.create(uri); // validate URI
+            instance.setLocalFrame(uri);
             return (B)this;
         }
 
@@ -1551,15 +1581,17 @@ public class SWEBuilders
             //return (B)this;
         }
 
-        public B refFrame(String refFrameUri)
+        public B refFrame(String uri)
         {
-            instance.setReferenceFrame(refFrameUri);
+            URI.create(uri); // validate URI
+            instance.setReferenceFrame(uri);
             return (B)this;
         }
 
-        public B localFrame(String localFrameUri)
+        public B localFrame(String uri)
         {
-            instance.setLocalFrame(localFrameUri);
+            URI.create(uri); // validate URI
+            instance.setLocalFrame(uri);
             return (B)this;
         }
 

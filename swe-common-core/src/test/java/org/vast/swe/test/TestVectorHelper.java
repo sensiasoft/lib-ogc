@@ -157,4 +157,29 @@ public class TestVectorHelper
         System.out.println();
         System.out.println();
     }
+
+
+    @Test
+    public void testCreateVectorWithLocalFrame() throws Exception
+    {
+        String uom = "m";
+        var v = fac.createLocationVectorXYZ(uom)
+            .refFrame(SWEConstants.REF_FRAME_ECEF)
+            .localFrame("#SENSOR_FRAME")
+            .build();
+        
+        utils.writeComponent(System.out, v, false, true);
+
+        assertEquals(3, v.getNumCoordinates());
+        assertEquals(VectorHelper.DEF_LOCATION, v.getDefinition());
+        assertEquals(SWEConstants.REF_FRAME_ECEF, v.getReferenceFrame());
+        for (ScalarComponent c: v.getCoordinateList())
+        {
+            assertEquals(uom, ((Quantity)c).getUom().getCode());
+            assertEquals(VectorHelper.DEF_DISTANCE, ((Quantity)c).getDefinition());
+        }
+
+        System.out.println();
+        System.out.println();
+    }
 }
