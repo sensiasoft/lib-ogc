@@ -15,11 +15,9 @@ Developer are Copyright (C) 2016 the Initial Developer. All Rights Reserved.
 
 package org.vast.swe.helper;
 
-import java.util.Arrays;
-import java.util.List;
+import org.vast.swe.SWEBuilders.VectorBuilder;
 import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEHelper;
-import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Vector;
 
@@ -49,13 +47,12 @@ public class GeoPosHelper extends VectorHelper
 
     /**
      * Creates a 3D location vector with latitude/longitude/altitude axes and WGS84 datum (EPSG 4979)
-     * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
-     * @return the new Vector component object
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newLocationVectorLLA(String def)
+    public VectorBuilder createLocationVectorLLA()
     {
         return createVector()
-            .definition(def != null ? def : DEF_LOCATION)
+            .definition(DEF_LOCATION)
             .refFrame(SWEConstants.REF_FRAME_4979)
             .addCoordinate("lat", createQuantity()
                 .definition(DEF_LATITUDE_GEODETIC)
@@ -74,20 +71,31 @@ public class GeoPosHelper extends VectorHelper
                 .label("Ellipsoidal Height")
                 .axisId("h")
                 .uomCode("m")
-                .build())
+                .build());
+    }
+    
+    
+    /**
+     * Creates a 3D location vector with latitude/longitude/altitude axes and WGS84 datum (EPSG 4979)
+     * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newLocationVectorLLA(String def)
+    {
+        return createLocationVectorLLA()
+            .definition(def != null ? def : DEF_LOCATION)
             .build();
     }
 
 
     /**
      * Creates a 2D location vector with latitude/longitude axes (EPSG 4326)
-     * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
-     * @return the new Vector component object
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newLocationVectorLatLon(String def)
+    public VectorBuilder createLocationVectorLatLon()
     {
         return createVector()
-            .definition(def != null ? def : DEF_LOCATION)
+            .definition(DEF_LOCATION)
             .refFrame(SWEConstants.REF_FRAME_4326)
             .addCoordinate("lat", createQuantity()
                 .definition(DEF_LATITUDE_GEODETIC)
@@ -100,8 +108,44 @@ public class GeoPosHelper extends VectorHelper
                 .label("Longitude")
                 .axisId("Lon")
                 .uomCode("deg")
-                .build())
+                .build());
+    }
+    
+    
+    /**
+     * @see #createLocationVectorLatLon(String)
+     * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newLocationVectorLatLon(String def)
+    {
+        return createLocationVectorLatLon()
+            .definition(def != null ? def : DEF_LOCATION)
             .build();
+    }
+    
+    
+    /**
+     * Creates a 3D location vector with ECEF X/Y/Z axes (EPSG 4978)
+     * @param uomCode unit of distance to use on all 3 axes
+     * @return A builder to set other options and build the final vector
+     */
+    public VectorBuilder createLocationVectorECEF(String uomCode)
+    {
+        return createLocationVectorXYZ(uomCode)
+            .refFrame(SWEConstants.REF_FRAME_ECEF);
+    }
+
+
+    /**
+     * Creates a 3D location vector with ECEF X/Y/Z axes (EPSG 4978)
+     * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
+     * @param uomCode unit of distance to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newLocationVectorECEF(String def, String uomCode)
+    {
+        return newLocationVectorXYZ(def, SWEConstants.REF_FRAME_ECEF, "m");
     }
 
 
@@ -114,17 +158,17 @@ public class GeoPosHelper extends VectorHelper
     {
         return newLocationVectorECEF(def, "m");
     }
-
-
+    
+    
     /**
-     * Creates a 3D location vector with ECEF X/Y/Z axes (EPSG 4978)
-     * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
-     * @param uomCode unit of distance to use on all 3 axes
-     * @return the new Vector component object
+     * Creates a 3D velocity vector with ECEF X/Y/Z axes (EPSG 4978)
+     * @param uomCode unit of velocity to use on all 3 axes
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newLocationVectorECEF(String def, String uomCode)
+    public VectorBuilder createVelocityVectorECEF(String uomCode)
     {
-        return newLocationVectorXYZ(def, SWEConstants.REF_FRAME_ECEF, uomCode);
+        return createVelocityVector(uomCode)
+            .refFrame(SWEConstants.REF_FRAME_ECEF);
     }
 
 
@@ -138,6 +182,18 @@ public class GeoPosHelper extends VectorHelper
     {
         return newVelocityVector(def, SWEConstants.REF_FRAME_ECEF, uomCode);
     }
+    
+    
+    /**
+     * Creates a 3D velocity vector with ENU X/Y/Z axes
+     * @param uomCode unit of velocity to use on all 3 axes
+     * @return A builder to set other options and build the final vector
+     */
+    public VectorBuilder createVelocityVectorENU(String uomCode)
+    {
+        return createVelocityVector(uomCode)
+            .refFrame(SWEConstants.REF_FRAME_ENU);
+    }
 
 
     /**
@@ -149,6 +205,18 @@ public class GeoPosHelper extends VectorHelper
     public Vector newVelocityVectorENU(String def, String uomCode)
     {
         return newVelocityVector(def, SWEConstants.REF_FRAME_ENU, uomCode);
+    }
+    
+    
+    /**
+     * Creates a 3D velocity vector with NED X/Y/Z axes
+     * @param uomCode unit of velocity to use on all 3 axes
+     * @return A builder to set other options and build the final vector
+     */
+    public VectorBuilder createVelocityVectorNED(String uomCode)
+    {
+        return createVelocityVector(uomCode)
+            .refFrame(SWEConstants.REF_FRAME_NED);
     }
 
 
@@ -167,17 +235,16 @@ public class GeoPosHelper extends VectorHelper
     /**
      * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
      * East-North-Up (ENU) frame (order of rotations is heading/Z, pitch/X, roll/Y in rotating frame)
-     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_EULER} is used)
      * @param uomCode angular unit to use on all 3 axes
-     * @return the new Vector component object
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newEulerOrientationENU(String def, String uomCode)
+    public VectorBuilder createEulerOrientationENU(String uomCode)
     {
         if (uomCode == null)
             uomCode = "deg";
 
         return createVector()
-            .definition(def != null ? def : DEF_ORIENTATION_EULER)
+            .definition(DEF_ORIENTATION_EULER)
             .description("Euler angles with order of rotation heading/pitch/roll in rotating frame")
             .refFrame(SWEConstants.REF_FRAME_ENU)
             .dataType(DataType.FLOAT)
@@ -201,37 +268,38 @@ public class GeoPosHelper extends VectorHelper
                 .description("Rotation around the longitudinal axis")
                 .uomCode(uomCode)
                 .axisId("Y")
-                .build())
-            .build();
+                .build());
     }
 
 
     /**
-     * Default version of {@link #newEulerOrientationENU(String, String)} with
-     * units set to degrees
-     * @param def
+     * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
+     * East-North-Up (ENU) frame (order of rotations is heading/Z, pitch/X, roll/Y in rotating frame)
+     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_EULER} is used)
+     * @param uomCode angular unit to use on all 3 axes
      * @return the new Vector component object
      */
-    public Vector newEulerOrientationENU(String def)
+    public Vector newEulerOrientationENU(String def, String uomCode)
     {
-        return newEulerOrientationENU(def, "deg");
+        return createEulerOrientationENU(uomCode)
+            .definition(def != null ? def : DEF_ORIENTATION_EULER)
+            .build();
     }
 
 
     /**
      * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
      * North-East-Down (NED) frame (order of rotations is heading/Z, pitch/Y, roll/X in rotating frame)
-     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_EULER} is used)
      * @param uomCode angular unit to use on all 3 axes
-     * @return the new Vector component object
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newEulerOrientationNED(String def, String uomCode)
+    public VectorBuilder createEulerOrientationNED(String uomCode)
     {
         if (uomCode == null)
             uomCode = "deg";
 
         return createVector()
-            .definition(def != null ? def : DEF_ORIENTATION_EULER)
+            .definition(DEF_ORIENTATION_EULER)
             .description("Euler angles with order of rotation heading/pitch/roll in rotating frame")
             .refFrame(SWEConstants.REF_FRAME_NED)
             .dataType(DataType.FLOAT)
@@ -255,7 +323,21 @@ public class GeoPosHelper extends VectorHelper
                 .description("Rotation around the longitudinal axis")
                 .uomCode(uomCode)
                 .axisId("X")
-                .build())
+                .build());
+    }
+
+
+    /**
+     * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
+     * North-East-Down (NED) frame (order of rotations is heading/Z, pitch/Y, roll/X in rotating frame)
+     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_EULER} is used)
+     * @param uomCode angular unit to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newEulerOrientationNED(String def, String uomCode)
+    {
+        return createEulerOrientationNED(uomCode)
+            .definition(def != null ? def : DEF_ORIENTATION_EULER)
             .build();
     }
 
@@ -275,17 +357,16 @@ public class GeoPosHelper extends VectorHelper
     /**
      * Creates an orientation vector component composed of 3 Euler angles expressed in
      * Earth-Centered-Earth-Fixed (ECEF) frame (order of rotations is X, Y, Z)
-     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_EULER} is used)
      * @param uomCode angular unit to use on all 3 axes
-     * @return the new Vector component object
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newEulerOrientationECEF(String def, String uomCode)
+    public VectorBuilder createEulerOrientationECEF(String uomCode)
     {
         if (uomCode == null)
             uomCode = "deg";
 
         return createVector()
-            .definition(def != null ? def : DEF_ORIENTATION_EULER)
+            .definition(DEF_ORIENTATION_EULER)
             .description("Euler angles with order of rotation Z/Y/X in rotating frame")
             .refFrame(SWEConstants.REF_FRAME_NED)
             .dataType(DataType.FLOAT)
@@ -306,20 +387,22 @@ public class GeoPosHelper extends VectorHelper
                 .label("X Rotation")
                 .uomCode(uomCode)
                 .axisId("X")
-                .build())
-            .build();
+                .build());
     }
 
 
     /**
-     * Default version of {@link #newEulerOrientationECEF(String, String)} with
-     * units set to degrees
-     * @param def
+     * Creates an orientation vector component composed of 3 Euler angles expressed in
+     * Earth-Centered-Earth-Fixed (ECEF) frame (order of rotations is X, Y, Z)
+     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_EULER} is used)
+     * @param uomCode angular unit to use on all 3 axes
      * @return the new Vector component object
      */
-    public Vector newEulerOrientationECEF(String def)
+    public Vector newEulerOrientationECEF(String def, String uomCode)
     {
-        return newEulerOrientationECEF(def, "deg");
+        return createEulerOrientationECEF(uomCode)
+            .definition(def != null ? def : DEF_ORIENTATION_EULER)
+            .build();
     }
 
 
@@ -327,14 +410,13 @@ public class GeoPosHelper extends VectorHelper
      * Creates a 4d vector representing an orientation quaternion expressed in the given frame (scalar comes last).
      * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_QUAT} is used)
      * @param refFrame reference frame with respect to which the coordinates of this quaternion are expressed
-     * @return the new Vector component object
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newQuatOrientation(String def, String refFrame)
+    public VectorBuilder createQuatOrientation()
     {
         return createVector()
-            .definition(def != null ? def : DEF_ORIENTATION_QUAT)
+            .definition(DEF_ORIENTATION_QUAT)
             .description("Orientation quaternion, usually normalized")
-            .refFrame(SWEConstants.REF_FRAME_NED)
             .dataType(DataType.FLOAT)
             .addCoordinate("qx", createQuantity()
             	.definition(SWEConstants.DEF_COEF)
@@ -358,8 +440,33 @@ public class GeoPosHelper extends VectorHelper
             	.definition(SWEConstants.DEF_COEF)
                 .label("Scalar Component")
                 .uomCode("1")
-                .build())
-            .build();
+                .build());
+    }
+
+
+    /**
+     * Creates a 4d vector representing an orientation quaternion expressed in the given frame (scalar comes last).
+     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_QUAT} is used)
+     * @param refFrame reference frame with respect to which the coordinates of this quaternion are expressed
+     * @return the new Vector component object
+     */
+    public Vector newQuatOrientation(String def, String refFrame)
+    {
+        return createQuatOrientation()
+            .definition(def != null ? def : DEF_ORIENTATION_QUAT)
+            .refFrame(refFrame)
+            .build();            
+    }
+
+
+    /**
+     * Creates a 4d vector representing an orientation quaternion expressed in ENU frame.
+     * @return A builder to set other options and build the final vector
+     */
+    public VectorBuilder createQuatOrientationENU()
+    {
+        return createQuatOrientation()
+            .refFrame(SWEConstants.REF_FRAME_ENU);
     }
 
 
@@ -376,6 +483,17 @@ public class GeoPosHelper extends VectorHelper
 
     /**
      * Creates a 4d vector representing an orientation quaternion expressed in NED frame.
+     * @return A builder to set other options and build the final vector
+     */
+    public VectorBuilder createQuatOrientationNED()
+    {
+        return createQuatOrientation()
+            .refFrame(SWEConstants.REF_FRAME_NED);
+    }
+
+
+    /**
+     * Creates a 4d vector representing an orientation quaternion expressed in NED frame.
      * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_QUAT} is used)
      * @return the new Vector component object
      */
@@ -387,59 +505,22 @@ public class GeoPosHelper extends VectorHelper
 
     /**
      * Creates a 4d vector representing an orientation quaternion expressed in ECEF frame.
+     * @return A builder to set other options and build the final vector
+     */
+    public VectorBuilder createQuatOrientationECEF()
+    {
+        return createQuatOrientation()
+            .refFrame(SWEConstants.REF_FRAME_ECEF);
+    }
+
+
+    /**
+     * Creates a 4d vector representing an orientation quaternion expressed in ECEF frame.
      * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_QUAT} is used)
      * @return the new Vector component object
      */
     public Vector newQuatOrientationECEF(String def)
     {
         return newQuatOrientation(def, SWEConstants.REF_FRAME_ECEF);
-    }
-
-
-    ///
-    // Methods providing complete output structure including the time tag
-    ///
-
-    public enum ImuFields
-    {
-        GYRO,
-        ACCEL,
-        MAG
-    }
-
-    public DataRecord newImuOutput(String name, String localFrame, ImuFields... imuFields)
-    {
-        List<ImuFields> fields = Arrays.asList(imuFields);
-        DataRecord imuData = createRecord()
-            .name(name)
-            .definition(SWEHelper.getPropertyUri("ImuData"))
-            .addSamplingTimeIsoUTC("time")
-            .build();
-
-        // angular rate vector
-        if (fields.contains(ImuFields.GYRO))
-        {
-            Vector angRate = newAngularVelocityVector(null, localFrame, "deg/s");
-            angRate.setDataType(DataType.FLOAT);
-            imuData.addComponent("angRate", angRate);
-        }
-
-        // acceleration vector
-        if (fields.contains(ImuFields.ACCEL))
-        {
-            Vector accel = newAccelerationVector(null, localFrame, "m/s2");
-            accel.setDataType(DataType.FLOAT);
-            imuData.addComponent("accel", accel);
-        }
-
-        // magnetic field vector
-        if (fields.contains(ImuFields.MAG))
-        {
-            Vector mag = newAngularVelocityVector(null, localFrame, "deg/s");
-            mag.setDataType(DataType.FLOAT);
-            imuData.addComponent("magField", mag);
-        }
-
-        return imuData;
     }
 }

@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.swe.helper;
 
+import org.vast.swe.SWEBuilders.VectorBuilder;
 import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEHelper;
 import net.opengis.swe.v20.DataType;
@@ -55,15 +56,12 @@ public class VectorHelper extends SWEHelper
 
     /**
      * Creates a 3D vector with arbitrary axes called u1, u2, u3
-     * @param def semantic definition of velocity vector (must be set)
-     * @param refFrame reference frame within which the vector is expressed
-     * @return the new Vector component object
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newVector3(String def, String refFrame)
+    public VectorBuilder createVector3()
     {
         return createVector()
-            .definition(def)
-            .refFrame(refFrame)
+            .definition(DEF_UNIT_VECTOR)
             .addCoordinate("u1", createQuantity()
                 .definition(DEF_COORD)
                 .uomCode("1")
@@ -75,24 +73,33 @@ public class VectorHelper extends SWEHelper
             .addCoordinate("u3", createQuantity()
                 .definition(DEF_COORD)
                 .uomCode("1")
-                .build())
+                .build());
+    }
+    
+    
+    /**
+     * Creates a 3D vector with arbitrary axes called u1, u2, u3
+     * @param def semantic definition of velocity vector (must be set)
+     * @param refFrame reference frame within which the vector is expressed
+     * @return the new Vector component object
+     */
+    public Vector newVector3(String def, String refFrame)
+    {
+        return createVector3()
+            .definition(def)
+            .refFrame(refFrame)
             .build();
-
     }
 
 
     /**
      * Creates a 3D unit vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of vector (if null, {@link #DEF_UNIT_VECTOR} is used)
-     * @param refFrame reference frame within which the vector is expressed
-     * @return the new Vector component object
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newUnitVectorXYZ(String def, String refFrame)
+    public VectorBuilder createUnitVectorXYZ()
     {
         return createVector()
-            .definition(def != null ? def : DEF_UNIT_VECTOR)
-            .refFrame(refFrame)
-            .dataType(DataType.FLOAT)
+            .definition(DEF_UNIT_VECTOR)
             .addCoordinate("ux", createQuantity()
                 .definition(DEF_COORD)
                 .axisId("X")
@@ -107,23 +114,34 @@ public class VectorHelper extends SWEHelper
                 .definition(DEF_COORD)
                 .axisId("Z")
                 .uomCode("1")
-                .build())
-            .build();
+                .build());
     }
 
 
     /**
-     * Creates a 3D location vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
+     * Creates a 3D unit vector in an ortho-normal frame with X/Y/Z axes
+     * @param def semantic definition of vector (if null, {@link #DEF_UNIT_VECTOR} is used)
      * @param refFrame reference frame within which the vector is expressed
-     * @param uomCode unit of distance to use on all 3 axes
      * @return the new Vector component object
      */
-    public Vector newLocationVectorXYZ(String def, String refFrame, String uomCode)
+    public Vector newUnitVectorXYZ(String def, String refFrame)
+    {
+        return createUnitVectorXYZ()
+            .definition(def != null ? def : DEF_UNIT_VECTOR)
+            .refFrame(refFrame)
+            .build();
+    }
+    
+    
+    /**
+     * Creates a 3D location vector in an ortho-normal frame with X/Y/Z axes
+     * @param uomCode unit of distance to use on all 3 axes
+     * @return A builder to set other options and build the final vector
+     */
+    public VectorBuilder createLocationVectorXYZ(String uomCode)
     {
         return createVector()
-            .definition(def != null ? def : DEF_LOCATION)
-            .refFrame(refFrame)
+            .definition(DEF_LOCATION)
             .addCoordinate("x", createQuantity()
                 .definition(DEF_DISTANCE)
                 .label("X Pos")
@@ -141,23 +159,35 @@ public class VectorHelper extends SWEHelper
                 .label("Z Pos")
                 .axisId("Z")
                 .uomCode(uomCode)
-                .build())
+                .build());
+    }
+    
+    
+    /**
+     * Creates a 3D location vector in an ortho-normal frame with X/Y/Z axes
+     * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
+     * @param refFrame reference frame within which the vector is expressed
+     * @param uomCode unit of distance to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newLocationVectorXYZ(String def, String refFrame, String uomCode)
+    {
+        return createLocationVectorXYZ(uomCode)
+            .definition(def != null ? def : DEF_LOCATION)
+            .refFrame(refFrame)
             .build();
     }
 
 
     /**
      * Creates a 3D velocity vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of velocity vector (if null, {@link #DEF_VELOCITY} is used)
-     * @param refFrame reference frame within which the vector is expressed
      * @param uomCode unit of velocity to use on all 3 axes
-     * @return the new Vector component object
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newVelocityVector(String def, String refFrame, String uomCode)
+    public VectorBuilder createVelocityVector(String uomCode)
     {
         return createVector()
-            .definition(def != null ? def : DEF_VELOCITY)
-            .refFrame(refFrame)
+            .definition(DEF_VELOCITY)
             .dataType(DataType.FLOAT)
             .addCoordinate("vx", createQuantity()
                 .definition(DEF_VELOCITY)
@@ -176,27 +206,35 @@ public class VectorHelper extends SWEHelper
                 .label("Z Velocity")
                 .axisId("Z")
                 .uomCode(uomCode)
-                .build())
+                .build());
+    }
+    
+    
+    /**
+     * Creates a 3D velocity vector in an ortho-normal frame with X/Y/Z axes
+     * @param def semantic definition of velocity vector (if null, {@link #DEF_VELOCITY} is used)
+     * @param refFrame reference frame within which the vector is expressed
+     * @param uomCode unit of velocity to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newVelocityVector(String def, String refFrame, String uomCode)
+    {
+        return createVelocityVector(uomCode)
+            .definition(def != null ? def : DEF_VELOCITY)
+            .refFrame(refFrame)
             .build();
     }
 
 
     /**
      * Creates a 3D acceleration vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of acceleration vector (if null, {@link #DEF_ACCELERATION} is used)
-     * @param refFrame reference frame within which the vector is expressed
      * @param uomCode unit of acceleration to use on all 3 axes
-     * @return the new Vector component object
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newAccelerationVector(String def, String refFrame, String uomCode)
+    public VectorBuilder createAccelerationVector(String uomCode)
     {
-        if (def == null)
-            def = DEF_ACCELERATION;
-
         return createVector()
-            .definition(def != null ? def : DEF_ACCELERATION)
-            .refFrame(refFrame)
-            .dataType(DataType.FLOAT)
+            .definition(DEF_ACCELERATION)
             .addCoordinate("ax", createQuantity()
                 .definition(DEF_ACCELERATION)
                 .label("X Accel")
@@ -214,7 +252,22 @@ public class VectorHelper extends SWEHelper
                 .label("Z Accel")
                 .axisId("Z")
                 .uomCode(uomCode)
-                .build())
+                .build());
+    }
+    
+    
+    /**
+     * Creates a 3D acceleration vector in an ortho-normal frame with X/Y/Z axes
+     * @param def semantic definition of acceleration vector (if null, {@link #DEF_ACCELERATION} is used)
+     * @param refFrame reference frame within which the vector is expressed
+     * @param uomCode unit of acceleration to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newAccelerationVector(String def, String refFrame, String uomCode)
+    {
+        return createAccelerationVector(uomCode)
+            .definition(def != null ? def : DEF_ACCELERATION)
+            .refFrame(refFrame)
             .build();
     }
 
@@ -250,19 +303,16 @@ public class VectorHelper extends SWEHelper
 
     /**
      * Creates a 3D angular velocity vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of angular velocity vector (if null, {@link #DEF_ANGULAR_VELOCITY} is used)
-     * @param refFrame reference frame within which the vector is expressed
      * @param uomCode unit of acceleration to use on all 3 axes
-     * @return the new Vector component object
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newAngularVelocityVector(String def, String refFrame, String uomCode)
+    public VectorBuilder createAngularVelocityVector(String uomCode)
     {
         if (uomCode == null)
             uomCode = "deg/s";
 
         return createVector()
-            .definition(def != null ? def : DEF_ANGULAR_VELOCITY)
-            .refFrame(refFrame)
+            .definition(DEF_ANGULAR_VELOCITY)
             .dataType(DataType.FLOAT)
             .addCoordinate("wx", createQuantity()
                 .definition(DEF_ANGULAR_VELOCITY)
@@ -281,8 +331,23 @@ public class VectorHelper extends SWEHelper
                 .label("Z Angular Rate")
                 .uomCode(uomCode)
                 .axisId("Z")
-                .build())
-            .build();
+                .build());
+    }
+
+
+    /**
+     * Creates a 3D angular velocity vector in an ortho-normal frame with X/Y/Z axes
+     * @param def semantic definition of angular velocity vector (if null, {@link #DEF_ANGULAR_VELOCITY} is used)
+     * @param refFrame reference frame within which the vector is expressed
+     * @param uomCode unit of acceleration to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newAngularVelocityVector(String def, String refFrame, String uomCode)
+    {
+        return createAngularVelocityVector(uomCode)
+            .definition(def != null ? def : DEF_ANGULAR_VELOCITY)
+            .refFrame(refFrame)
+            .build();            
     }
 
 
@@ -294,7 +359,16 @@ public class VectorHelper extends SWEHelper
      */
     public Matrix newMatrix(int nRows, int nCols)
     {
-        return newMatrix(null, null, nRows, nCols);
+        Matrix m = createMatrix()
+            .size(nRows, nCols, true)
+            .withElement("elt", createQuantity()
+                .definition(SWEConstants.DEF_COEF)
+                .uomCode("1")
+                .build())
+            .build();
+
+        m.getElementType().setDefinition(DEF_ROW);
+        return m;
     }
 
 
