@@ -1639,6 +1639,14 @@
          <function/>
       </value>
    </unit>
+   <unit Code="B[mW]" CODE="B[MW]" isMetric="yes" class="levels">
+      <name>bel milliwatt</name>
+      <printSymbol>B(mW)</printSymbol>
+      <property>power level</property>
+      <value Unit="lg(1 mW)" UNIT="LG(1 MW)">
+         <function/>
+      </value>
+   </unit>
    <unit Code="B[kW]" CODE="B[KW]" isMetric="yes" class="levels">
       <name>bel kilowatt</name>
       <printSymbol>B(kW)</printSymbol>

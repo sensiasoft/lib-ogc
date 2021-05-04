@@ -490,21 +490,24 @@ public class Unit implements Serializable
         addUnitString(buf, mole, "mol");
         addUnitString(buf, candela, "cd");
         
+        // insert function symbol
+        if (function != null)
+        {
+            var nestedUnit = buf.toString();
+            buf.setLength(0);
+            buf.append(function.toString(nestedUnit));
+        }
+        
         // insert scale factor
         if (!NumberUtils.ulpEquals(scaleToSI, 1.0))
             buf.insert(0, getScaleToSI() + "*");
         
-        // insert function symbol
-        if (function != null)
-        {
-            buf.insert(0, 1./function.getScaleFactor() + "*" + function.getPrintSymbol() + "(");
-            buf.append(")");
-        }
-        
-        // insert code =
+        // insert code or expression
         if (getCode() != null)
             buf.insert(0, getCode() + " = ");            
-        
+        else
+            buf.insert(0, getExpression() + " = ");
+            
         // also append unit name and printSymbol
         buf.append("  (" + getName() + " - " + getPrintSymbol() + ")");
         

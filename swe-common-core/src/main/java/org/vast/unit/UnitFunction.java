@@ -64,18 +64,18 @@ public abstract class UnitFunction implements Serializable
         }
         else if ("cel".equalsIgnoreCase(functionName))
         {
-            func = new UnitFunctionOffset(-273.15);
+            func = new UnitFunctionOffset(273.15);
             func.setScaleFactor(scaleFactor);
         }
         else if ("degf".equalsIgnoreCase(functionName))
         {
-            func = new UnitFunctionOffset(-9*273.15+32*5);
+            func = new UnitFunctionOffset(459.67);
             func.setScaleFactor(scaleFactor);
         }
         else if ("ph".equalsIgnoreCase(functionName))
         {
-            func = new UnitFunctionLog(10);
-            func.setScaleFactor(-scaleFactor);
+            func = new UnitFunctionLog(10, true);
+            func.setScaleFactor(scaleFactor);
         }
         else if ("hpx".equalsIgnoreCase(functionName))
         {
@@ -94,6 +94,7 @@ public abstract class UnitFunction implements Serializable
     
     public abstract double toProperUnit(double value);
     public abstract double fromProperUnit(double value);
+    public abstract String toString(String nestedUnit);
     
     @Override
     public abstract boolean equals(Object obj);    

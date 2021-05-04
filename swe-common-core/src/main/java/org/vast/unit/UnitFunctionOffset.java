@@ -47,22 +47,26 @@ public class UnitFunctionOffset extends UnitFunction
     @Override
     public double toProperUnit(double value)
     {
-        return value*scaleFactor - offset;
+        return (value + offset) * scaleFactor;
     }
 
 
     @Override
     public double fromProperUnit(double value)
     {
-        return (value + offset) / scaleFactor;
+        return value/scaleFactor - offset;
     }
     
     
     @Override
     public boolean equals(Object obj)
     {
-        return (obj instanceof UnitFunctionOffset &&
-                NumberUtils.ulpEquals(this.offset, ((UnitFunctionOffset)obj).offset));
+        if (!(obj instanceof UnitFunctionOffset))
+            return false;
+        
+        var otherFunc = (UnitFunctionOffset)obj;
+        return (NumberUtils.ulpEquals(this.offset, otherFunc.offset) &&
+                NumberUtils.ulpEquals(this.scaleFactor, otherFunc.scaleFactor));
     }
     
     
@@ -70,5 +74,13 @@ public class UnitFunctionOffset extends UnitFunction
     public int hashCode()
     {
         return Double.hashCode(offset);
+    }
+    
+    
+    @Override
+    public String toString(String nestedUnit)
+    {
+        return String.format("%.2f", 1./scaleFactor) + "*" + 
+               nestedUnit + (offset < 0 ? " + " : " - ") + Math.abs(offset);
     }
 }

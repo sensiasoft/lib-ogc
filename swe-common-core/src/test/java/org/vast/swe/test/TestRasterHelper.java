@@ -16,9 +16,12 @@ package org.vast.swe.test;
 
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
+import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataType;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.vast.data.BinaryEncodingImpl;
+import org.vast.swe.SWEHelper;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.helper.RasterHelper;
 
@@ -50,5 +53,15 @@ public class TestRasterHelper
         assertEquals(200, img.getComponentCount());
         assertEquals(320, img.getElementType().getComponentCount());
         assertTrue(((DataArray)img.getElementType()).getElementType() instanceof Count);        
+    }
+
+
+    @Test
+    public void testCreateDefaultEncodingForImage() throws Exception
+    {
+        DataArray array = fac.newRgbImage(640, 480, DataType.BYTE);
+        DataEncoding encoding = SWEHelper.getDefaultEncoding(array);
+        assertEquals(BinaryEncodingImpl.class, encoding.getClass());
+        utils.writeEncoding(System.out, encoding, true);
     }
 }

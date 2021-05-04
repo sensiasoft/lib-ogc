@@ -66,15 +66,15 @@ public class GenericUnitConverter extends AbstractUnitConverter
             if (!NumberUtils.ulpEquals(conversionFactor, 1.0))
                 conversionNeeded = true;
             
-            // if src or dest or both have functions            
+            // if src or dest or both have functions
             if (srcUnit.function != null || destUnit.function != null)
             {
                 noFunctions = false;
-                conversionNeeded = true;
-                
-                if (srcUnit.function != null && destUnit.function != null)
-                    if (srcUnit.function.equals(destUnit.function))
-                        conversionNeeded = false;
+                                
+                if (srcUnit.function == null ||
+                    destUnit.function == null ||
+                    !srcUnit.function.equals(destUnit.function))
+                        conversionNeeded = true;
             }
         }
 	}
@@ -106,14 +106,14 @@ public class GenericUnitConverter extends AbstractUnitConverter
                 double tempVal = value;
                 
                 // apply source scale and function -> converts to SI                                
+                tempVal = tempVal * srcUnit.getScaleToSI();
                 if (srcUnit.function != null)
                     tempVal = srcUnit.function.toProperUnit(tempVal);
-                tempVal = tempVal * srcUnit.getScaleToSI();
-                
+                                
                 // apply dest function and scale -> converts from SI
-                tempVal = tempVal / destUnit.getScaleToSI();
                 if (destUnit.function != null)
                     tempVal = destUnit.function.fromProperUnit(tempVal);                
+                tempVal = tempVal / destUnit.getScaleToSI();
                 
                 return tempVal;
             }

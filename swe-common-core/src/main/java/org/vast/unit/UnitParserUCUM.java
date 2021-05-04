@@ -88,12 +88,38 @@ public class UnitParserUCUM implements UnitParser
 
 
     /**
-     * Call this to get a Unit object corresponding to the given ucum string
+     * Get a Unit object corresponding to the given UCUM string
+     * @param ucumDef the UCUM string
+     * @throws IllegalArgumentException if UCUM string passed as argument is invalid
      */
     @Override
     public Unit getUnit(String ucumDef)
     {
+        try
+        {
+            return decodeUnit(ucumDef);
+        }
+        catch (IllegalArgumentException e)
+        {
+            throw new IllegalArgumentException("Unknown UCUM code: " + ucumDef, e);
+        }
+    }
+    
+    
+    /**
+     * Get a Unit object corresponding to the given UCUM string
+     * @param ucumDef 
+     * @return The unit instance or null of no unit can be constructed for the given UCUM string
+     */
+    public Unit findUnit(String ucumDef)
+    {
         return decodeUnit(ucumDef);
+    }
+    
+    
+    public static boolean isValidUnit(String ucumDef)
+    {
+        return decodeUnit(ucumDef) != null;
     }
 
 
@@ -212,14 +238,15 @@ public class UnitParserUCUM implements UnitParser
         else
         {
             if (!unitTable.containsKey(unitString))
-                throw new IllegalStateException("Unknown unit: " + unitString);
+                throw new IllegalArgumentException("Unknown UCUM unit atom: " + unitString);
             
             unit = unitTable.get(unitString).copy();
         }
         
-        // update unit scale factor
-        if (unit.function != null)
-            unit.function.scaleFactor *= prefixScale;
+        // apply prefix scale
+        // handle special case when there is a function
+        if (uom.function != null)
+            uom.function.scaleFactor *= prefixScale;
         else
             unit.scaleToSI *= prefixScale;
         
@@ -227,6 +254,16 @@ public class UnitParserUCUM implements UnitParser
         unit.power(power);
         
         // combine unit with current uom
+        // handle special case when there is a function
+        if (uom.function != null)
+        {
+            uom.function.scaleFactor *= unit.getScaleToSI();
+            
+            // reset scale before we multiply below
+            unit.scaleToSI = 1.0;
+            unit.pi = 0.0;
+        }
+        
         uom.multiply(unit);
     }
 
@@ -269,16 +306,26 @@ public class UnitParserUCUM implements UnitParser
 
     private static void parseNumber(String token, Unit uom)
     {
-        double val;
-        
-        if (token.charAt(0) == '/')
-            val = 1.0 / Double.parseDouble(token.substring(1));
-        else if ((token.charAt(0) == '.'))
-            val = Double.parseDouble(token.substring(1));
-        else
-            val = Double.parseDouble(token);
+        try
+        {
+            double val;
+            
+            if (token.charAt(0) == '/')
+                val = 1.0 / Double.parseDouble(token.substring(1));
+            else if ((token.charAt(0) == '.'))
+                val = Double.parseDouble(token.substring(1));
+            else
+                val = Double.parseDouble(token);
 
-        uom.scaleToSI *= val;
+            if (uom.function != null)
+                uom.function.scaleFactor *= val;
+            else
+                uom.scaleToSI *= val;
+        }
+        catch (NumberFormatException e)
+        {
+            throw new IllegalArgumentException("Invalid scale factor: " + token);
+        }
     }
 
 
@@ -371,6 +418,9 @@ public class UnitParserUCUM implements UnitParser
     
                     if ("yes".equals(isMetric))
                         ucumUnit.setMetric(true);
+                    
+                    if ("mol".equals(unitCode))
+                        ucumUnit.setMole(1.0);
                 }
                 catch (RuntimeException e)
                 {

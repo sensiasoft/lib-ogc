@@ -35,6 +35,7 @@ public class UnitFunctionLog extends UnitFunction
 {
     private static final long serialVersionUID = -4017878542967337089L;
     protected boolean eBase;
+    protected double sign;
     protected double logBase;
     
     
@@ -47,8 +48,15 @@ public class UnitFunctionLog extends UnitFunction
     
     public UnitFunctionLog(double logBase)
     {
+        this(logBase, false);
+    }
+    
+    
+    public UnitFunctionLog(double logBase, boolean negate)
+    {
         this.logBase = logBase;
-        this.printSymbol = "log" + Integer.toString((int)logBase);
+        this.sign = negate ? -1.0 : 1.0;
+        this.printSymbol = (negate ? "-" : "") + "log" + Integer.toString((int)logBase);
     }
     
     
@@ -56,9 +64,9 @@ public class UnitFunctionLog extends UnitFunction
     public double toProperUnit(double value)
     {
         if (eBase)
-            return Math.exp(value);
+            return Math.exp(sign*value)*scaleFactor;
         else
-            return Math.pow(logBase, value*scaleFactor);
+            return Math.pow(logBase, sign*value)*scaleFactor;
     }
 
 
@@ -66,11 +74,11 @@ public class UnitFunctionLog extends UnitFunction
     public double fromProperUnit(double value)
     {
         if (eBase)
-            return Math.log(value) / scaleFactor;
+            return sign*Math.log(value / scaleFactor);
         else if (NumberUtils.ulpEquals(logBase, 10.0))
-            return Math.log10(value) / scaleFactor;
+            return sign*Math.log10(value / scaleFactor);
         else
-            return logN(logBase, value) / scaleFactor;
+            return sign*logN(logBase, value / scaleFactor);
     }
 
     
@@ -89,9 +97,13 @@ public class UnitFunctionLog extends UnitFunction
     @Override
     public boolean equals(Object obj)
     {
-        return (obj instanceof UnitFunctionLog &&
-                this.eBase == ((UnitFunctionLog)obj).eBase &&
-                NumberUtils.ulpEquals(this.logBase, ((UnitFunctionLog)obj).logBase));
+        if (!(obj instanceof UnitFunctionLog))
+            return false;
+        
+        var otherFunc = (UnitFunctionLog)obj;
+        return (this.eBase == otherFunc.eBase &&
+                NumberUtils.ulpEquals(this.logBase, otherFunc.logBase) &&
+                NumberUtils.ulpEquals(this.scaleFactor, otherFunc.scaleFactor));
     }
     
     
@@ -99,5 +111,13 @@ public class UnitFunctionLog extends UnitFunction
     public int hashCode()
     {
         return Double.hashCode(logBase) + (eBase ? 31 : 0);
+    }
+
+
+    @Override
+    public String toString(String nestedUnit)
+    {
+        return printSymbol + "(" + String.format("%.2f", 1./scaleFactor) + "*" + 
+            nestedUnit + ")";
     }
 }

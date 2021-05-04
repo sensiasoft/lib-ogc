@@ -15,13 +15,9 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.swe.test;
 
 import static org.junit.Assert.*;
-import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataComponent;
-import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataRecord;
-import net.opengis.swe.v20.DataType;
 import org.junit.Test;
-import org.vast.data.BinaryEncodingImpl;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEHelper;
 
@@ -53,6 +49,15 @@ public class TestSweHelper
 
         System.out.println();
         System.out.println();
+        
+        utils.writeComponent(System.out, swe.createQuantity()
+            .definition(SWEHelper.getQudtUri("Pressure"))
+            .label("Barometer Reading")
+            .uomCode("mm[Hg]")
+            .build(), false, true);
+
+        System.out.println();
+        System.out.println();
     }
     
     
@@ -78,7 +83,7 @@ public class TestSweHelper
         utils.writeComponent(System.out, swe.createQuantity()
             .definition(SWEHelper.getQudtUri("RF-Power"))
             .label("RF Power Received")
-            .uomCode("dBm")
+            .uomCode("dB[mW]")
             .addQuality("http://sensorml.com/ont/core/spectrum/FrequencyBand", swe.createCategory()
                 .label("Frequency Band")
                 .definition(SWEHelper.getQudtUri("Frequency"))
@@ -93,7 +98,7 @@ public class TestSweHelper
         utils.writeComponent(System.out, swe.createQuantity()
             .definition(SWEHelper.getQudtUri("RF-Power"))
             .label("RF Power Received")
-            .uomCode("dBm")
+            .uomCode("dB[mW]")
             .addQuality("http://sensorml.com/ont/core/spectrum/FrequencyBand", swe.createQuantityRange()
                 .label("Frequency Band")
                 .definition(SWEHelper.getQudtUri("Frequency"))
@@ -192,16 +197,6 @@ public class TestSweHelper
 
         System.out.println();
         System.out.println();
-    }
-
-
-    @Test
-    public void testCreateDefaultEncodingForImage() throws Exception
-    {
-        DataArray array = swe.newRgbImage(640, 480, DataType.BYTE);
-        DataEncoding encoding = SWEHelper.getDefaultEncoding(array);
-        assertEquals(BinaryEncodingImpl.class, encoding.getClass());
-        utils.writeEncoding(System.out, encoding, true);
     }
 
 
