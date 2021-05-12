@@ -119,7 +119,13 @@ public class UnitParserUCUM implements UnitParser
     
     public static boolean isValidUnit(String ucumDef)
     {
-        return decodeUnit(ucumDef) != null;
+        try {
+            decodeUnit(ucumDef);
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 
 
