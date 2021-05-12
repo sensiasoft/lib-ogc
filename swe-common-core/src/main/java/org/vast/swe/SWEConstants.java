@@ -34,6 +34,7 @@ public class SWEConstants
     public static final String URN_PREFIX = "urn:";
     public static final String HTTP_PREFIX = "http://";
     public static final String OGC_DEF_URI = "http://www.opengis.net/def/";
+    public static final String SML_ONTOLOGY_ROOT = "http://sensorml.com/ont/";
 
     // nil values
 	public static final String OGC_NIL_URI = OGC_DEF_URI + "nil/OGC/0/";
@@ -91,7 +92,7 @@ public class SWEConstants
     public static final String CF_URI_PREFIX = "http://mmisw.org/ont/cf/parameter/";
     public static final String DBPEDIA_URI_PREFIX = "http://dbpedia.org/resource/";
     public static final String QUDT_URI_PREFIX = "http://qudt.org/vocab/quantitykind/";
-    public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/swe/property/";
+    public static final String SWE_PROP_URI_PREFIX = SML_ONTOLOGY_ROOT + "swe/property/";
     public static final String DEF_SYSTEM_ID = SWE_PROP_URI_PREFIX + "SystemID";
     public static final String DEF_COEF = SWE_PROP_URI_PREFIX + "Coefficient";
     public static final String DEF_DN = SWE_PROP_URI_PREFIX + "DN";
@@ -100,7 +101,7 @@ public class SWEConstants
     public static final String DEF_COUNT = SWE_PROP_URI_PREFIX + "Counter";
 
     // SWE special units
-    public static final String SWE_UOM_URI_PREFIX = "http://sensorml.com/ont/swe/uom/";
+    public static final String SWE_UOM_URI_PREFIX = SML_ONTOLOGY_ROOT + "/swe/uom/";
     public static final String UOM_ANY = SWE_UOM_URI_PREFIX + "Any";
     public static final String UOM_ANY_CODE = "any";
     public static final String UOM_UNITLESS = "1";
