@@ -42,6 +42,7 @@ import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Matrix;
+import net.opengis.swe.v20.NilValues;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.QuantityOrRange;
 import net.opengis.swe.v20.QuantityRange;
@@ -316,6 +317,31 @@ public class SWEBuilders
         {
             return addQuality(role, builder.build());
         }
+
+        protected NilValues ensureNilValues()
+        {
+            if (!instance.isSetNilValues())
+            {
+                var nilValues = fac.newNilValues();
+                instance.setNilValues(nilValues);
+                return nilValues;
+            }
+
+            return instance.getNilValues();
+        }
+        
+        protected B addNilValue(String value, String reasonUri)
+        {
+            URI.create(reasonUri); // validate URI
+            
+            var nilValues = ensureNilValues();
+            var nilValue = fac.newNilValue();
+            nilValue.setValue(value);
+            nilValue.setReason(reasonUri);
+            nilValues.addNilValue(nilValue);
+                        
+            return (B)this;
+        }
     }
 
 
@@ -421,6 +447,11 @@ public class SWEBuilders
             for (int val: values)
                 constraint.addValue(Integer.toString(val));
             return (B)this;
+        }
+        
+        public B addNilValue(String value, String reasonUri)
+        {
+            return (B)super.addNilValue(value, reasonUri);
         }
     }
 
@@ -563,7 +594,7 @@ public class SWEBuilders
         public B addAllowedValues(int... values)
         {
             AllowedValues constraint = ensureConstraint();
-            for (int val: values)
+            for (long val: values)
                 constraint.addValue(val);
             return (B)this;
         }
@@ -581,6 +612,11 @@ public class SWEBuilders
             AllowedValues constraint = ensureConstraint();
             constraint.addInterval(new double[] {min, max});
             return (B)this;
+        }
+        
+        public B addNilValue(int value, String reasonUri)
+        {
+            return (B)super.addNilValue(Integer.toString(value), reasonUri);
         }
     }
 
@@ -787,6 +823,11 @@ public class SWEBuilders
             constraint.addInterval(new double[] {min, max});
             return (B)this;
         }
+        
+        public B addNilValue(double value, String reasonUri)
+        {
+            return (B)super.addNilValue(Double.toString(value), reasonUri);
+        }
     }
 
 
@@ -951,6 +992,11 @@ public class SWEBuilders
         {
             instance.setReferenceTime(refTime.atOffset(ZoneOffset.UTC));
             return (B)this;
+        }
+        
+        public B addNilValue(double value, String reasonUri)
+        {
+            return (B)super.addNilValue(Double.toString(value), reasonUri);
         }
 
         /* More helper methods */
@@ -1200,6 +1246,11 @@ public class SWEBuilders
         	AllowedTokens constraint = ensureConstraint();
         	constraint.setPattern(pattern);
         	return (B)this;
+        }
+        
+        public B addNilValue(String value, String reasonUri)
+        {
+            return (B)super.addNilValue(value, reasonUri);
         }
 
         public B value(String value)

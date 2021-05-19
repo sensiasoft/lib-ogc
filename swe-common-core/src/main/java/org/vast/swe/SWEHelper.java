@@ -135,6 +135,8 @@ public class SWEHelper
     /**
      * Generate a definition URI resolving to SensorML ontology.
      * See http://sensorml.com/ont/ for registered terms
+     * @param propName Property name to append to base URI
+     * @return The complete definition URI
      */
     public static String getPropertyUri(String propName)
     {
@@ -145,6 +147,8 @@ public class SWEHelper
     /**
      * Generate a definition URI resolving to QUDT quantity kinds ontology.
      * See http://www.qudt.org/doc/DOC_VOCAB-QUANTITY-KINDS.html for registered quantities
+     * @param propName Property name to append to base URI
+     * @return The complete definition URI
      */
     public static String getQudtUri(String propName)
     {
@@ -155,6 +159,8 @@ public class SWEHelper
     /**
      * Generate a definition URI resolving to CF standard names dictionary
      * See https://cfconventions.org/standard-names.html for registered terms
+     * @param propName Property name to append to base URI
+     * @return The complete definition URI
      */
     public static String getCfUri(String propName)
     {
@@ -165,6 +171,8 @@ public class SWEHelper
     /**
      * Generate a definition URI resolving to DBPedia ontology
      * See https://lookup.dbpedia.org/ to searcg for registered terms
+     * @param propName Property name to append to base URI
+     * @return The complete definition URI
      */
     public static String getDBpediaUri(String propName)
     {
