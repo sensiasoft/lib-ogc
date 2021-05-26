@@ -824,6 +824,13 @@ public class SWEBuilders
             return (B)this;
         }
         
+        public B significantFigures(int digits)
+        {
+            AllowedValues constraint = ensureConstraint();
+            constraint.setSignificantFigures(digits);
+            return (B)this;
+        }
+        
         public B addNilValue(double value, String reasonUri)
         {
             return (B)super.addNilValue(Double.toString(value), reasonUri);
