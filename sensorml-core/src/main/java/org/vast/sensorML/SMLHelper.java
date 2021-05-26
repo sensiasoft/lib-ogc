@@ -68,11 +68,11 @@ public class SMLHelper extends SWEHelper
     public final static org.isotc211.v2005.gco.Factory DEFAULT_GCO_FACTORY = new org.isotc211.v2005.gco.impl.GCOFactory();
     
     protected final SMLFactory fac;
-    public final CommonIdentifiers identifiers = new CommonIdentifiers(this);
-    public final CommonClassifiers classifiers = new CommonClassifiers(this);
-    public final CommonCharacteristics characteristics = new CommonCharacteristics(this);
-    public final CommonCapabilities capabilities = new CommonCapabilities(this);
-    public final CommonConditions conditions = new CommonConditions(this);
+    public final CommonIdentifiers identifiers;
+    public final CommonClassifiers classifiers;
+    public final CommonCharacteristics characteristics;
+    public final CommonCapabilities capabilities;
+    public final CommonConditions conditions;
     
     
     static class LinkTarget
@@ -93,7 +93,7 @@ public class SMLHelper extends SWEHelper
      */
     public SMLHelper()
     {
-        this.fac = DEFAULT_SML_FACTORY;
+        this(DEFAULT_SML_FACTORY);
     }
     
     
@@ -104,6 +104,11 @@ public class SMLHelper extends SWEHelper
     public SMLHelper(SMLFactory fac)
     {
         this.fac = fac;
+        this.identifiers = new CommonIdentifiers(this);
+        this.classifiers = new CommonClassifiers(this);
+        this.characteristics = new CommonCharacteristics(this);
+        this.capabilities = new CommonCapabilities(this);
+        this.conditions = new CommonConditions(this);
     }
 
 
