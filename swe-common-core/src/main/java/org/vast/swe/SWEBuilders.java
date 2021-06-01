@@ -207,7 +207,8 @@ public class SWEBuilders
          */
         public B definition(String uri)
         {
-            URI.create(uri); // validate URI
+            if (uri != null)
+                URI.create(uri); // validate URI                
             instance.setDefinition(uri);
             return (B)this;
         }
@@ -269,7 +270,8 @@ public class SWEBuilders
 
         public B refFrame(String uri)
         {
-            URI.create(uri); // validate URI
+            if (uri != null)
+                URI.create(uri); // validate URI            
             instance.setReferenceFrame(uri);
             return (B)this;
         }
@@ -416,7 +418,8 @@ public class SWEBuilders
 
         public B codeSpace(String uri)
         {
-            URI.create(uri); // validate URI
+            if (uri != null)
+                URI.create(uri); // validate URI
             instance.setCodeSpace(uri);
             return (B)this;
         }
@@ -982,7 +985,8 @@ public class SWEBuilders
 
         public B timeFrame(String uri)
         {
-            URI.create(uri); // validate URI
+            if (uri != null)
+                URI.create(uri); // validate URI
             instance.setReferenceFrame(uri);
             return (B)this;
         }
@@ -990,7 +994,8 @@ public class SWEBuilders
         @Override
 		public B refFrame(String uri)
         {
-            URI.create(uri); // validate URI
+            if (uri != null)
+                URI.create(uri); // validate URI
             instance.setReferenceFrame(uri);
             return (B)this;
         }
@@ -1394,14 +1399,16 @@ public class SWEBuilders
 
         public B refFrame(String uri)
         {
-            URI.create(uri); // validate URI
+            if (uri != null)
+                URI.create(uri); // validate URI
             instance.setReferenceFrame(uri);
             return (B)this;
         }
 
         public B localFrame(String uri)
         {
-            URI.create(uri); // validate URI
+            if (uri != null)
+                URI.create(uri); // validate URI
             instance.setLocalFrame(uri);
             return (B)this;
         }
@@ -1641,14 +1648,16 @@ public class SWEBuilders
 
         public B refFrame(String uri)
         {
-            URI.create(uri); // validate URI
+            if (uri != null)
+                URI.create(uri); // validate URI            
             instance.setReferenceFrame(uri);
             return (B)this;
         }
 
         public B localFrame(String uri)
         {
-            URI.create(uri); // validate URI
+            if (uri != null)
+                URI.create(uri); // validate URI
             instance.setLocalFrame(uri);
             return (B)this;
         }
