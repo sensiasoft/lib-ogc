@@ -151,11 +151,11 @@ public class JsonDataWriterGson extends AbstractDataWriter
 
             // need to add quote on special values because they are not valid literal values in JSON
             if (Double.isNaN(val))
-                writer.value("\"NaN\"");
+                writer.value("NaN");
             else if (val == Double.POSITIVE_INFINITY)
-                writer.value("\"+INF\"");
+                writer.value("+INF");
             else if (val == Double.NEGATIVE_INFINITY)
-                writer.value("\"-INF\"");
+                writer.value("-INF");
             else
                 writer.value(val);
         }
@@ -176,11 +176,11 @@ public class JsonDataWriterGson extends AbstractDataWriter
 
             // need to add quote on special values because they are not valid literal values in JSON
             if (Float.isNaN(val))
-                writer.value("\"NaN\"");
+                writer.value("NaN");
             else if (val == Float.POSITIVE_INFINITY)
-                writer.value("\"+INF\"");
+                writer.value("+INF");
             else if (val == Float.NEGATIVE_INFINITY)
-                writer.value("\"-INF\"");
+                writer.value("-INF");
             else
                 writer.value(val);
         }
@@ -204,11 +204,11 @@ public class JsonDataWriterGson extends AbstractDataWriter
 
             // need to add quote on special values because they are not valid literal values in JSON
             if (Double.isNaN(val))
-                writer.value("\"NaN\"");
+                writer.value("NaN");
             else if (val == Double.POSITIVE_INFINITY)
-                writer.value("\"+INF\"");
+                writer.value("+INF");
             else if (val == Double.NEGATIVE_INFINITY)
-                writer.value("\"-INF\"");
+                writer.value("-INF");
             else
             {
                 BigDecimal bd = BigDecimal.valueOf(val);
@@ -233,11 +233,11 @@ public class JsonDataWriterGson extends AbstractDataWriter
         {
             double val = data.getDoubleValue(index);
             if (Double.isNaN(val))
-                writer.value("\"NaN\"");
+                writer.value("NaN");
             else if (val == Double.POSITIVE_INFINITY)
-                writer.value("\"+INF\"");
+                writer.value("+INF");
             else if (val == Double.NEGATIVE_INFINITY)
-                writer.value("\"-INF\"");
+                writer.value("-INF");
             else
                 writer.value(timeFormat.formatIso(val, 0));
         }
