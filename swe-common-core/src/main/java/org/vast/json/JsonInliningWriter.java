@@ -42,6 +42,15 @@ public class JsonInliningWriter extends JsonWriter
         {
             super(out);
         }
+        
+        @Override
+        public void write(int c) throws IOException
+        {
+            if (writeInline && c == '\n')
+                super.write(' ');
+            else
+                super.write(c);
+        }
 
         @Override
         public void write(String str) throws IOException
