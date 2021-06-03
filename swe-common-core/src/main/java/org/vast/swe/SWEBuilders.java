@@ -438,6 +438,11 @@ public class SWEBuilders
 
         public B addAllowedValues(String... values)
         {
+            return addAllowedValues(Arrays.asList(values));
+        }
+
+        public B addAllowedValues(Iterable<String> values)
+        {
             AllowedTokens constraint = ensureConstraint();
             for (String val: values)
                 constraint.addValue(val);
@@ -1246,6 +1251,11 @@ public class SWEBuilders
         }
 
         public B addAllowedValues(String... values)
+        {
+            return addAllowedValues(Arrays.asList(values));
+        }
+
+        public B addAllowedValues(Iterable<String> values)
         {
             AllowedTokens constraint = ensureConstraint();
             for (String val: values)
