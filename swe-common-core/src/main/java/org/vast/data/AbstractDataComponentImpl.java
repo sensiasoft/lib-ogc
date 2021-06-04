@@ -177,9 +177,9 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
     
     
     /**
-     * Update datablock atomCount (for resizable array support)
-     * Needed to update atom count info in all parents of a
-     * DataArray that has been resized!
+     * Update this component's datablock atomCount (for resizable array support).
+     * This is called by child components to notify parents that a variable
+     * size DataArray has been resized
      * @param startIndex
      */
     protected abstract void updateAtomCount(int childOffsetCount);
