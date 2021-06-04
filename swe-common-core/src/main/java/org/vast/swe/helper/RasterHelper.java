@@ -127,6 +127,7 @@ public class RasterHelper extends VectorHelper
         boolean useCount = dataType.isIntegralType();
         ScalarComponent channel = (useCount ? createCount() : createQuantity())
             .definition(DEF_GRAY_CHANNEL)
+            .dataType(dataType)
             .build();
 
         return newRasterImage(width, height, channel);
@@ -163,19 +164,22 @@ public class RasterHelper extends VectorHelper
         ScalarComponent red = (useCount ? createCount() : createQuantity())
             .definition(DEF_RED_CHANNEL)
             .name("red")
+            .dataType(dataType)
             .build();
 
         ScalarComponent green = (useCount ? createCount() : createQuantity())
             .definition(DEF_GREEN_CHANNEL)
             .name("green")
+            .dataType(dataType)
             .build();
 
         ScalarComponent blue = (useCount ? createCount() : createQuantity())
             .definition(DEF_BLUE_CHANNEL)
             .name("blue")
+            .dataType(dataType)
             .build();
 
-        return newRasterImage(width, height,red, green, blue);
+        return newRasterImage(width, height, red, green, blue);
     }
 
 
