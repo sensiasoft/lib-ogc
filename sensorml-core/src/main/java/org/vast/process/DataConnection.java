@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Count;
+import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.HasUom;
@@ -164,19 +165,36 @@ public class DataConnection implements IDataConnection
             
             DataComponent destComp = destIt.next();
             
-            // check that components are of same size
-            if (srcComp.getComponentCount() != destComp.getComponentCount())
-                throw new ProcessException(String.format("Components '%s' and '%s' are not of the same size", srcComp.getName(), destComp.getName()));
+            // if connecting arrays, check sizes are compatible
+            if (srcComp instanceof DataArray && destComp instanceof DataArray)
+                validateArray((DataArray)srcComp, (DataArray)destComp, msg);
             
-            // check that scalar components are of compatible types
-            if (srcComp instanceof ScalarComponent)
+            // if connecting scalars, check that they have compatible types
+            else if (srcComp instanceof ScalarComponent)
                 validateScalar(srcComp, destComp, msg);
+            
+            // else just check that components are of same size
+            else if (srcComp.getComponentCount() != destComp.getComponentCount())
+                throw new ProcessException(String.format("Components '%s' and '%s' are not of the same size", srcComp.getName(), destComp.getName()));            
         }
         
         if (msg.length() == 0)
             return null;
         else
             return msg.toString();
+    }
+    
+    
+    protected static void validateArray(DataArray srcComp, DataArray destComp, StringBuilder msg) throws ProcessException
+    {
+        if (destComp.isVariableSize())
+            return; // this should always work as long as size data is propagated correctly
+        
+        else if (srcComp.isVariableSize() && !destComp.isVariableSize())
+            throw new ProcessException(String.format("Array components '%s' and '%s' have incompatible variable size", srcComp.getName(), destComp.getName()));
+        
+        else if (srcComp.getComponentCount() != destComp.getComponentCount())
+            throw new ProcessException(String.format("Array components '%s' and '%s' have incompatible sizes", srcComp.getName(), destComp.getName()));
     }
     
     
