@@ -26,7 +26,6 @@ import org.vast.data.DataBlockByte;
 import org.vast.data.DataBlockDouble;
 import org.vast.data.DataBlockFactory;
 import org.vast.data.DataBlockMixed;
-import org.vast.data.SWEFactory;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEHelper;
 import org.vast.swe.helper.GeoPosHelper;
@@ -89,16 +88,18 @@ public class TestDataArrays
     @Test
     public void testVarSizeArray1D() throws Exception
     {
-        DataRecord rec = fac.newDataRecord();
-
-        Count size = fac.newCount();
-        size.setId("ARRAY_SIZE");
-        rec.addField("num_pos", size);
-
-        DataArray array = fac.newDataArray();
-        array.setElementType("pos", new GeoPosHelper().newLocationVectorLLA(null));
-        array.setElementCount(size);
-        rec.addField("pos_array", array);
+        Count size = fac.createCount()
+            .id("ARRAY_SIZE")
+            .build();
+        
+        DataArray array;
+        DataRecord rec = fac.createRecord()
+            .addField("num_pos", size)
+            .addField("pos_array", array = fac.createArray()
+                .withSizeComponent(size)
+                .withElement("pos", fac.newLocationVectorLLA(null))
+                .build())
+            .build();
 
         utils.writeComponent(System.out, rec, false, true);
 
@@ -141,28 +142,28 @@ public class TestDataArrays
     @Test
     public void testVarSizeArray1Dx3() throws Exception
     {
-        DataRecord rec = fac.newDataRecord();
-        rec.addField("el", fac.newQuantity());
-        rec.addField("az", fac.newQuantity());
-
-        Count numBins = fac.newCount();
-        numBins.setId("NUM_BINS");
-        rec.addField("num_bins", numBins);
-
-        DataArray array1 = fac.newDataArray();
-        array1.setElementType("elt", fac.newQuantity());
-        array1.setElementCount(numBins);
-        rec.addComponent("array1", array1);
-
-        DataArray array2 = fac.newDataArray();
-        array2.setElementType("elt", fac.newQuantity());
-        array2.setElementCount(numBins);
-        rec.addComponent("array2", array2);
-
-        DataArray array3 = fac.newDataArray();
-        array3.setElementType("elt", fac.newQuantity());
-        array3.setElementCount(numBins);
-        rec.addComponent("array3", array3);
+        Count numBins = fac.createCount()
+            .id("NUM_BINS")
+            .build();
+        
+        DataArray array1, array2, array3;
+        DataRecord rec = fac.createRecord()
+            .addField("el", fac.createQuantity())
+            .addField("az", fac.createQuantity())
+            .addField("num_bins", numBins)
+            .addField("array1", array1 = fac.createArray()
+                .withSizeComponent(numBins)
+                .withElement("elt", fac.createQuantity())
+                .build())
+            .addField("array2", array2 = fac.createArray()
+                .withSizeComponent(numBins)
+                .withElement("elt", fac.createQuantity())
+                .build())
+            .addField("array3", array3 = fac.createArray()
+                .withSizeComponent(numBins)
+                .withElement("elt", fac.createQuantity())
+                .build())
+            .build();
 
         utils.writeComponent(System.out, rec, false, true);
 
@@ -191,25 +192,26 @@ public class TestDataArrays
     @Test
     public void testVarSizeArray2D() throws Exception
     {
-        DataRecord rec = fac.newDataRecord();
-
-        Count w = fac.newCount();
-        w.setId("WIDTH");
-        rec.addField("w", w);
-
-        Count h = fac.newCount();
-        h.setId("HEIGHT");
-        rec.addField("h", h);
-
-        DataArray innerArray = fac.newDataArray();
-        innerArray.setElementType("val", fac.newQuantity());
-        innerArray.setElementCount(w);
-
-        DataArray outerArray = fac.newDataArray();
-        outerArray.setElementType("inner", innerArray);
-        outerArray.setElementCount(h);
-
-        rec.addField("outer_array", outerArray);
+        Count w = fac.createCount()
+            .id("WIDTH")
+            .build();
+        
+        Count h = fac.createCount()
+            .id("HEIGHT")
+            .build();
+        
+        DataArray outerArray, innerArray;
+        DataRecord rec = fac.createRecord()
+            .addField("w", w)
+            .addField("h", h)
+            .addField("outer_array", outerArray = fac.createArray()
+                .withSizeComponent(h)
+                .withElement("inner", innerArray = fac.createArray()
+                    .withSizeComponent(w)
+                    .withElement("val", fac.createQuantity())
+                    .build())
+                .build())            
+            .build();
 
         utils.writeComponent(System.out, rec, false, true);
         utils.writeEncoding(System.out, SWEHelper.getDefaultBinaryEncoding(rec), true);
@@ -222,36 +224,51 @@ public class TestDataArrays
         int outerSize = 200;
         outerArray.updateSize(outerSize);
         data = rec.createDataBlock();
-        assertEquals(TEST2_FAIL_MSG, innerSize*outerSize*1+2, data.getAtomCount());
+        int expectedSize = innerSize*outerSize;
+        assertEquals(TEST2_FAIL_MSG, expectedSize+2, data.getAtomCount());
+        var arrayData = ((DataBlockDouble)((DataBlockMixed)data).getUnderlyingObject()[2]);
+        assertEquals(TEST2_FAIL_MSG, expectedSize, arrayData.getUnderlyingObject().length);
+        
+        // also test setting dimensions first
+        innerArray.updateSize(0);
+        outerArray.updateSize(0);
+        rec.assignNewDataBlock();
+        assertEquals(0, w.getData().getIntValue());
+        assertEquals(0, h.getData().getIntValue());
+        innerSize = 800;
+        outerSize = 600;
+        w.getData().setIntValue(innerSize);
+        h.getData().setIntValue(outerSize);
+        outerArray.updateSize();
+        expectedSize = innerSize*outerSize;
+        assertEquals(TEST2_FAIL_MSG, expectedSize+2, rec.getData().getAtomCount());
+        assertEquals(TEST2_FAIL_MSG, expectedSize, ((DataBlockDouble)outerArray.getData()).getUnderlyingObject().length);
     }
 
 
     @Test
     public void testNestedVarSizeArrays() throws Exception
     {
-        DataRecord rec = fac.newDataRecord();
-
-        rec.addField("time", fac.newTime());
-
-        Count numObj = fac.newCount();
-        numObj.setId("NUM_OBJECTS");
-        rec.addField("numObj", numObj);
-
-        DataArray outerArray = fac.newDataArray();
-        outerArray.setElementCount(numObj);
-        rec.addField("outer_array", outerArray);
-
-        DataRecord outerArrElt = fac.newDataRecord();
-        outerArray.setElementType("elt", outerArrElt);
-
-        Count numPts = fac.newCount();
-        numPts.setId("NUM_POINTS");
-        outerArrElt.addField("numPoints", numPts);
-
-        DataArray innerArray = fac.newDataArray();
-        innerArray.setElementType("val", fac.newQuantity());
-        innerArray.setElementCount(numPts);
-        outerArrElt.addField("profile", innerArray);
+        Count numObj, numPts;        
+        DataArray outerArray, innerArray;
+        
+        DataRecord rec = fac.createRecord()
+            .addField("time", fac.createTime())
+            .addField("numObj", numObj = fac.createCount()
+                .id("NUM_OBJECTS")
+                .build())
+            .addField("outer_array", outerArray = fac.createArray()
+                .withSizeComponent(numObj)
+                .withElement("elt", fac.createRecord()
+                    .addField("numPoints", numPts = fac.createCount()
+                        .id("NUM_POINTS")
+                        .build())
+                    .addField("profile", innerArray = fac.createArray()
+                        .withSizeComponent(numPts)
+                        .withElement("val", fac.createQuantity())
+                        .build()))
+                .build())
+            .build();
 
         utils.writeComponent(System.out, rec, false, true);
         utils.writeEncoding(System.out, SWEHelper.getDefaultBinaryEncoding(rec), true);
@@ -281,25 +298,30 @@ public class TestDataArrays
     @Test
     public void testVarSizeArray2DSetData() throws Exception
     {
-        DataRecord rec = fac.newDataRecord();
-
-        Count w = fac.newCount();
-        w.setId("WIDTH");
-        rec.addField("w", w);
-
-        Count h = fac.newCount();
-        h.setId("HEIGHT");
-        rec.addField("h", h);
-
-        DataArray innerArray = fac.newDataArray();
-        innerArray.setElementType("val", fac.newCount(DataType.BYTE));
-        innerArray.setElementCount(w);
-
-        DataArray outerArray = fac.newDataArray();
-        outerArray.setElementType("inner", innerArray);
-        outerArray.setElementCount(h);
-
-        rec.addField("outer_array", outerArray);
+        Count w = fac.createCount()
+            .id("WIDTH")
+            .build();
+        
+        Count h = fac.createCount()
+            .id("HEIGHT")
+            .build();
+        
+        DataArray outerArray, innerArray;
+        DataRecord rec = fac.createRecord()
+            .addField("w", w)
+            .addField("h", h)
+            .addField("outer_array", outerArray = fac.createArray()
+                .withSizeComponent(h)
+                .withElement("inner", innerArray = fac.createArray()
+                    .withSizeComponent(w)
+                    .withElement("val", fac.createCount()
+                        .dataType(DataType.BYTE))
+                    .build())
+                .build())            
+            .build();
+        
+        utils.writeComponent(System.out, rec, false, true);
+        utils.writeEncoding(System.out, SWEHelper.getDefaultBinaryEncoding(rec), true);
 
         // create and assign datablock
         int width = 320;

@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.data;
 
 import java.util.List;
+import org.vast.util.Asserts;
 import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
@@ -121,7 +122,7 @@ public class DataArrayImpl extends AbstractArrayImpl
             	dataBlock.atomCount += atomCountDiff;
             }
             else
-            {        	
+            {
             	atomCountDiff = childAtomCountDiff * arraySize;
             	AbstractDataBlock childBlock = getArrayComponent().dataBlock;
 	            childBlock.resize(childBlock.atomCount * arraySize);
@@ -191,9 +192,11 @@ public class DataArrayImpl extends AbstractArrayImpl
     @Override
     public void setData(DataBlock dataBlock)
     {
-    	// HACK makes sure scalar count was properly computed
+        Asserts.checkNotNull(dataBlock, DataBlock.class);
+        
+        // HACK makes sure scalar count was properly computed
         if (scalarCount < 0)
-            this.assignNewDataBlock();
+            this.createDataBlock();
         
         this.dataBlock = (AbstractDataBlock)dataBlock;
         
@@ -232,23 +235,32 @@ public class DataArrayImpl extends AbstractArrayImpl
         if (isVariableSize() && !(dataBlock instanceof DataBlockList))
         {
             int arraySize = getArraySizeComponent().getData().getIntValue();
+            if (arraySize < 0)
+                throw new IllegalStateException("Invalid array size: " + arraySize);
+            
             int atomCount = dataBlock.getAtomCount();
             if ((arraySize == 0 && atomCount != 0) ||
                 (arraySize > 0) && (atomCount % arraySize != 0))
                 throw new IllegalStateException("Datablock is incompatible with specified array size: " + arraySize);
         }
         
-		// also assign dataBlock to child
+		// also assign dataBlock to child unless array data is zero size
+        var arrayElt = getArrayComponent();
         if (dataBlock instanceof DataBlockList)
         {
-            if (((DataBlockList)dataBlock).getListSize() > 0)
-                getArrayComponent().setData(((DataBlockList)dataBlock).get(0));
+            if (dataBlock.getAtomCount() > 0)
+                arrayElt.setData(((DataBlockList)dataBlock).get(0));
         }
         else
         {
-        	AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
-    		childBlock.atomCount = getArrayComponent().getComponentCount();
-    		getArrayComponent().setData(childBlock);
+            // also assign if array element is itself a var size array
+            if (dataBlock.getAtomCount() > 0 ||
+                (arrayElt instanceof DataArray && ((DataArray)arrayElt).isVariableSize()))
+            {
+                AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
+        		childBlock.atomCount = arrayElt.getComponentCount();
+        		arrayElt.setData(childBlock);
+            }
         }
     }
     
@@ -393,7 +405,7 @@ public class DataArrayImpl extends AbstractArrayImpl
     	this.currentSize = newArraySize;
     	
     	// update parent atom count
-        if (parent != null)
+        if (parent != null && dataBlock != null)
             parent.updateAtomCount(getArrayComponent().scalarCount * (newArraySize - oldArraySize));
     }
     
@@ -405,40 +417,27 @@ public class DataArrayImpl extends AbstractArrayImpl
     @Override
     public void updateSize()
     {
-    	if (isVariableSize())
+    	Asserts.checkState(isVariableSize(), "updateSize() should only be called on variable size arrays");
+    	
+    	// if we have a nested var-size array, just update its size
+    	// and this array resizeDataBlock() will be called automatically
+    	var arrayElt = getArrayComponent();
+    	if (arrayElt instanceof DataArray && ((DataArray)arrayElt).isVariableSize())
     	{
-    		int newSize = 0;
-    		int oldSize = this.currentSize;
-    		
-    		// stop here if parent also has variable size
-            // in this case updateSize() will be called from parent anyway (see below)!!
-            if (parent instanceof DataArray)
-            {
-                if (((DataArray)parent).isVariableSize())
-                    return;
-            }
-            
-            // get new size from array size component
-            Count sizeComponent = getArraySizeComponent();
-	    	if (sizeComponent != null && sizeComponent.hasData())
-            {
-    			// continue only if size has changed
-    			newSize = sizeComponent.getData().getIntValue();
-                if (newSize == oldSize)
-                    return;
-	    	}
-            
-            // take care of variable size child array
-	    	// before we resize everything
-	    	if (sizeComponent instanceof DataArray)
-            {
-                if (((DataArray)sizeComponent).isVariableSize())
-                    ((DataArray)sizeComponent).updateSize();
-            }
-            
-            // resize datablock
-            resizeDataBlock(oldSize, newSize);
-    	}
+    	    ((DataArray)arrayElt).updateSize();
+    	    return;
+        }    	
+    	
+    	int newSize = 0;
+        int oldSize = this.currentSize;
+        
+        // get new size from array size component
+        Count sizeComponent = getArraySizeComponent();
+        if (sizeComponent != null && sizeComponent.hasData())
+            newSize = sizeComponent.getData().getIntValue();    
+        
+        // resize datablock
+        resizeDataBlock(oldSize, newSize);
     }
     
     
@@ -450,10 +449,9 @@ public class DataArrayImpl extends AbstractArrayImpl
     @Override
     public void updateSize(int newSize)
     {
-    	if (newSize == this.currentSize)
-            return;
-    	
-    	if (newSize >= 0)
+        Asserts.checkArgument(newSize >= 0);
+        
+        if (newSize != this.currentSize)
         {
     		int oldSize = this.currentSize; // don't use getComponentCount() because elementCount may have changed already
     		updateSizeComponent(newSize);
@@ -470,23 +468,22 @@ public class DataArrayImpl extends AbstractArrayImpl
      */
     public void setFixedSize(int newSize)
     {
-        if (newSize >= 0)
-        {
-        	int oldSize = getComponentCount();
-    		
-    		// set size count to fixed value
-        	elementCount.setHref(null);
-        	if (!elementCount.hasValue())
-        	    elementCount.setValue(new CountImpl());
-        	elementCount.getValue().setValue(newSize);
-        	
-        	// stop here if size is same as before!
-        	if (newSize == oldSize)
-                return;
-        	
-        	// resize underlying datablock
-        	resizeDataBlock(oldSize, newSize);
-        }
+        Asserts.checkArgument(newSize >= 0);
+        
+        int oldSize = getComponentCount();
+        
+        // set size count to fixed value
+        elementCount.setHref(null);
+        if (!elementCount.hasValue())
+            elementCount.setValue(new CountImpl());
+        elementCount.getValue().setValue(newSize);
+        
+        // stop here if size is same as before!
+        if (newSize == oldSize)
+            return;
+        
+        // resize underlying datablock
+        resizeDataBlock(oldSize, newSize);
     }
     
     
@@ -537,13 +534,18 @@ public class DataArrayImpl extends AbstractArrayImpl
     @Override
     public String toString(String indent)
     {
+        var arraySize = getComponentCount();
+        
         StringBuffer text = new StringBuffer();
         text.append("DataArray[");
         if (isVariableSize())
         	text.append("?=");
-        text.append(getComponentCount());
+        text.append(arraySize);
         text.append("]\n");
-        text.append(getArrayComponent().toString(indent + INDENT));
+        
+        text.append(indent)
+            .append("elt: ")
+            .append(getArrayComponent().toString(indent + INDENT));
 
         return text.toString();
     }
