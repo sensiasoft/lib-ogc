@@ -289,11 +289,22 @@ public abstract class ExecutableProcessImpl implements IProcessExec
 
             // renew output dataBlock
             if (usingOutputQueues)
-            {
-                DataComponent comp = outputData.getComponent(outputName);
-                comp.renewDataBlock();
-            }
+                renewOutputData(outputName);
         }
+    }
+    
+    
+    /*
+     * Called when output data blocks need to be renewed (after output data has
+     * been pushed to the queue).
+     * The default implementation is to clone the output data block but
+     * subclasses can optimize this method if some datablock components
+     * are recreated by the process anyway
+     */
+    protected void renewOutputData(String outputName)
+    {
+        DataComponent comp = outputData.getComponent(outputName);
+        comp.setData(comp.getData().clone());
     }
     
 
@@ -521,7 +532,6 @@ public abstract class ExecutableProcessImpl implements IProcessExec
     protected void finalize() throws Throwable
     {
         this.dispose();
-        super.finalize();
     }
 
 
