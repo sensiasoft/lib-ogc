@@ -260,7 +260,7 @@ public class SMLUtils extends XMLBindingsUtils
     /**
      * Create SML process description from process executable implementation
      * @param processExec
-     * @return
+     * @return The process description object
      */
     public static AbstractProcessImpl wrapWithProcessDescription(IProcessExec processExec)
     {
@@ -422,7 +422,7 @@ public class SMLUtils extends XMLBindingsUtils
     }
     
     
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     protected void mergeMetadataList(OgcPropertyList baseList, OgcPropertyList instanceList)
     {
         baseList.addAll(instanceList);
@@ -476,8 +476,10 @@ public class SMLUtils extends XMLBindingsUtils
         {
             String refPath = setting.getRef();
             DataComponent comp = findTargetComponent(process, refPath);
-            SWEHelper.getRootComponent(comp).assignNewDataBlock();
-            
+            var rootComp = SWEHelper.getRootComponent(comp);
+            if (!rootComp.hasData())
+                rootComp.assignNewDataBlock();
+                        
             if (comp instanceof ScalarComponent)
                 comp.getData().setStringValue(setting.getValue());
             else if (comp instanceof RangeComponent)
