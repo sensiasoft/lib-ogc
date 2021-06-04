@@ -182,14 +182,14 @@ public abstract class ExecutableProcessImpl implements IProcessExec
             if (!Thread.currentThread().isInterrupted())
                 publishData();
         }
-        catch (ProcessException e)
-        {
-            getLogger().error(EXEC_ERROR_MSG, e);
-            throw new ProcessException(EXEC_ERROR_MSG, e);
-        }
         catch (InterruptedException e)
         {
             Thread.currentThread().interrupt();
+        }
+        catch (Exception e)
+        {
+            getLogger().error(EXEC_ERROR_MSG, e);
+            throw new ProcessException(EXEC_ERROR_MSG, e);
         }
     }
     
