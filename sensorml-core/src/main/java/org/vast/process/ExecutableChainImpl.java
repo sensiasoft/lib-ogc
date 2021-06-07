@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.slf4j.Logger;
 import org.vast.data.AbstractRecordImpl;
 import org.vast.swe.SWEHelper;
 import net.opengis.swe.v20.DataComponent;
@@ -86,10 +87,8 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
         if (processTable.containsKey(name))
             throw new IllegalArgumentException("A process named '" + name + "' already exists in this process chain");
         
-        // concatenate with chain instance name if set
-        String procName = (instanceName != null) ? instanceName + '.' + name : name;
-        process.setInstanceName(procName);
         process.setParentLogger(getLogger());
+        process.setInstanceName(name);
         
         processTable.put(name, process);
         return process;
@@ -266,7 +265,6 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
         }
         catch (Exception e)
         {
-            getLogger().error(INIT_ERROR_MSG, e);
             throw new ProcessException(INIT_ERROR_MSG, e);
         }
         
@@ -603,5 +601,15 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
             text.append(child.toString()).append('\n');
                 
         return text.toString();
+    }
+
+
+    @Override
+    public void setParentLogger(Logger log)
+    {
+        super.setParentLogger(log);
+        
+        for (IProcessExec child: processTable.values())
+            child.setParentLogger(getLogger());
     }
 }

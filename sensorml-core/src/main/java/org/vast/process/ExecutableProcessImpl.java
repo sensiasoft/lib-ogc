@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.vast.data.AbstractRecordImpl;
 import org.vast.swe.SWEHelper;
 import org.vast.util.Asserts;
-import org.vast.util.LoggerWrapper;
 import net.opengis.sensorml.v20.IOPropertyList;
 import net.opengis.swe.v20.DataComponent;
 
@@ -40,7 +39,7 @@ import net.opengis.swe.v20.DataComponent;
  */
 public abstract class ExecutableProcessImpl implements IProcessExec
 {
-    private Logger log;
+    private Logger log, parentLogger;
 
     protected static final String IO_ERROR_MSG = "Invalid I/O Structure";
     protected static final String INIT_ERROR_MSG = "Error during process initialization";
@@ -215,8 +214,8 @@ public abstract class ExecutableProcessImpl implements IProcessExec
         execFuture = threadPool.submit(new Runnable() {
             @Override
             public void run()
-            {                    
-                getLogger().debug("Process '{}': Thread started", process.getInstanceName());
+            {                   
+                getLogger().debug("Process thread started");
                                                 
                 try
                 {
@@ -225,10 +224,10 @@ public abstract class ExecutableProcessImpl implements IProcessExec
                 }
                 catch (ProcessException e)
                 {
-                    getLogger().error(String.format("Error during execution of process '%s'", process.getInstanceName()), e);
+                    getLogger().error("Error during execution", e);
                 }
                 
-                getLogger().debug("Process '{}': Thread stopped", process.getInstanceName());
+                getLogger().debug("Process thread stopped");
             }
         });
     }
@@ -439,8 +438,8 @@ public abstract class ExecutableProcessImpl implements IProcessExec
     @Override
     public void setParentLogger(Logger log)
     {
-        this.log = new LoggerWrapper(log);
-        setLoggerPrefix();
+        this.parentLogger = log;
+        this.log = null;
     }
     
     
@@ -448,25 +447,6 @@ public abstract class ExecutableProcessImpl implements IProcessExec
     public void setInstanceName(String name)
     {
         this.instanceName = name;
-        setLoggerPrefix();
-    }
-    
-    
-    protected void setLoggerPrefix()
-    {
-        StringBuilder prefix = new StringBuilder("Process ");
-        
-        if (instanceName != null)
-            prefix.append(instanceName).append(' ')
-                  .append('(').append(processInfo.getName()).append(')');
-        else
-            prefix.append(processInfo.getName());
-        
-        prefix.append(": ");
-       
-        if (!(getLogger() instanceof LoggerWrapper))
-            log = new LoggerWrapper(getLogger());
-        ((LoggerWrapper)log).setPrefix(prefix.toString());
     }
     
     
@@ -474,7 +454,12 @@ public abstract class ExecutableProcessImpl implements IProcessExec
     {
         // defaut logger is associated to the process class
         if (log == null)
-            log = LoggerFactory.getLogger(getClass());
+        {
+            if (parentLogger != null)
+                log = LoggerFactory.getLogger(parentLogger.getName() + "/" + instanceName);
+            else
+                log = LoggerFactory.getLogger(getClass());
+        }    
         
         return log;
     }
