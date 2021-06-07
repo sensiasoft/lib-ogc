@@ -86,6 +86,12 @@ public class DataQueue extends DataConnection
     }
     
     
+    public int getQueueSize()
+    {
+        return queue.size();
+    }
+    
+    
     @Override
 	public String toString()
 	{
