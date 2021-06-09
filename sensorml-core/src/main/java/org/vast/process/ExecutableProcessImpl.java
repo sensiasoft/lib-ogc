@@ -560,4 +560,31 @@ public abstract class ExecutableProcessImpl implements IProcessExec
 
         return text.toString();
     }
+    
+    
+    /**
+     * Helper method to log an error on the logger attached to this process and
+     * throw a ProcessException
+     * @param msg
+     * @throws ProcessException
+     */
+    public void reportError(String msg) throws ProcessException
+    {
+        getLogger().error(msg);
+        throw new ProcessException(msg);
+    }
+    
+    
+    /**
+     * Helper method to log an error on the logger attached to this process and
+     * throw a ProcessException
+     * @param msg
+     * @param e 
+     * @throws ProcessException
+     */
+    public void reportError(String msg, Throwable e) throws ProcessException
+    {
+        getLogger().error(msg, e);
+        throw new ProcessException(msg, e);
+    }
 }
