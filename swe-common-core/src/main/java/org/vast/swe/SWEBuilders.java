@@ -18,7 +18,9 @@ import java.net.URI;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import org.vast.data.DateTimeOrDouble;
 import org.vast.data.SWEFactory;
 import org.vast.util.Asserts;
@@ -447,6 +449,13 @@ public class SWEBuilders
             for (String val: values)
                 constraint.addValue(val);
             return (B)this;
+        }
+
+        public <E extends Enum<E>> B addAllowedValues(Class<E> values)
+        {
+            return addAllowedValues(EnumSet.allOf(values).stream()
+                .map(Enum::name)
+                .collect(Collectors.toList()));
         }
 
         public B addAllowedValues(int... values)
@@ -1261,6 +1270,13 @@ public class SWEBuilders
             for (String val: values)
                 constraint.addValue(val);
             return (B)this;
+        }
+
+        public <E extends Enum<E>> B addAllowedValues(Class<E> values)
+        {
+            return addAllowedValues(EnumSet.allOf(values).stream()
+                .map(Enum::name)
+                .collect(Collectors.toList()));
         }
 
         public B pattern(String pattern)
