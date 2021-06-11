@@ -44,7 +44,9 @@ public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements Encode
 {
     private static final long serialVersionUID = 5065676107640449321L;
 
-
+    private String text;
+    
+    
     @Override
     public boolean resolveHref()
     {
@@ -53,7 +55,7 @@ public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements Encode
     }
     
     
-    public void decode(BlockComponent array, DataEncoding encoding, String text)
+    public void decode(BlockComponent array, DataEncoding encoding)
     {
         try
         {
@@ -61,6 +63,7 @@ public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements Encode
             parser.setParentArray(array);
             InputStream is = new ByteArrayInputStream(text.getBytes());
             parser.parse(is);
+            this.text = null; // clear after successful decoding
         }
         catch (IOException e)
         {
@@ -98,7 +101,9 @@ public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements Encode
     @Override
     public void setAsText(DataArray array, DataEncoding encoding, String text)
     {
-        decode(array, encoding, text);
+        this.text = text;
+        if (array != null)
+            decode(array, encoding);
     }
 
 
@@ -112,7 +117,8 @@ public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements Encode
     @Override
     public void setAsText(DataStream dataStream, DataEncoding encoding, String text)
     {
-        decode(dataStream, encoding, text);        
+        this.text = text;
+        decode(dataStream, encoding);        
     }
 
 

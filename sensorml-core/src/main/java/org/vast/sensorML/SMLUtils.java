@@ -45,6 +45,7 @@ import net.opengis.swe.v20.DataConstraint;
 import net.opengis.swe.v20.HasConstraints;
 import net.opengis.swe.v20.RangeComponent;
 import net.opengis.swe.v20.ScalarComponent;
+import org.vast.data.EncodedValuesImpl;
 import org.vast.ogc.OGCRegistry;
 import org.vast.process.ExecutableChainImpl;
 import org.vast.process.IProcessChainExec;
@@ -496,10 +497,16 @@ public class SMLUtils extends XMLBindingsUtils
         {
             String refPath = setting.getRef();
             DataComponent comp = findTargetComponent(process, refPath);
-            SWEHelper.getRootComponent(comp).assignNewDataBlock();
             
             if (!(comp instanceof DataArray))
                 throw new SMLException(String.format("Array setting with path '%s' can only target a DataArray", refPath));
+            
+            var rootComp = SWEHelper.getRootComponent(comp);
+            if (!rootComp.hasData())
+                rootComp.assignNewDataBlock();
+            
+            ((DataArray)comp).updateSize();
+            ((EncodedValuesImpl)setting.getValue()).decode((DataArray)comp, setting.getEncoding());
         }        
         
         // constraint settings

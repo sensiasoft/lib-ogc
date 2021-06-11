@@ -3697,6 +3697,8 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
                 bean.setAsText((DataArray)blockComponent, encoding, text);
             else if (blockComponent instanceof DataStream)
                 bean.setAsText((DataStream)blockComponent, encoding, text);
+            else if (blockComponent == null)
+                bean.setAsText((DataArray)null, encoding, text);
         }
         else if (!bean.hasHref())
             return null;
