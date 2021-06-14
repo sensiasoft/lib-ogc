@@ -15,6 +15,8 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 package org.vast.swe.helper;
 
 import org.vast.swe.SWEBuilders.DataRecordBuilder;
+import org.vast.swe.SWEBuilders.VectorBuilder;
+import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEHelper;
 import org.vast.util.Asserts;
 import net.opengis.swe.v20.Count;
@@ -43,6 +45,10 @@ public class RasterHelper extends VectorHelper
     public static final String DEF_GREEN_CHANNEL = SWEHelper.getPropertyUri("GreenChannel");
     public static final String DEF_BLUE_CHANNEL = SWEHelper.getPropertyUri("BlueChannel");
     public static final String DEF_GRAY_CHANNEL = SWEHelper.getPropertyUri("GrayChannel");
+    
+    public static final String DEF_GRID_CRS_1D = SWEConstants.OGC_CRS_URI + "OGC/0/Index1D";
+    public static final String DEF_GRID_CRS_2D = SWEConstants.OGC_CRS_URI + "OGC/0/Index2D";
+    public static final String DEF_GRID_CRS_3D = SWEConstants.OGC_CRS_URI + "OGC/0/Index3D";
 
 
     /**
@@ -197,5 +203,27 @@ public class RasterHelper extends VectorHelper
             createCount().value(width).build(),
             createCount().value(height).build(),
             dataType);
+    }
+    
+    
+    /**
+     * Creates a 2D vector with x,y pixel coordinates
+     * @return A builder to set other options and build the final vector
+     */
+    public VectorBuilder createGridCoordinates2D()
+    {
+        return createVector()
+            .definition(DEF_UNIT_VECTOR)
+            .refFrame("http://www.opengis.net/def/crs/OGC/0/Index2D")
+            .addCoordinate("x", createQuantity()
+                .definition(DEF_COORD)
+                .uomCode("1")
+                .axisId("i")
+                .build())
+            .addCoordinate("y", createQuantity()
+                .definition(DEF_COORD)
+                .uomCode("1")
+                .axisId("j")
+                .build());
     }
 }
