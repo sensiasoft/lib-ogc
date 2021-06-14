@@ -233,6 +233,42 @@ public class GeoPosHelper extends VectorHelper
 
 
     /**
+     * Creates a 3D orientation vector composed of 3 Euler angles expressed in a local
+     * frame (order of rotations is yaw/Z, pitch/X, roll/Y in rotating frame)
+     * @param uomCode angular unit to use on all 3 axes
+     * @return A builder to set other options and build the final vector
+     */
+    public VectorBuilder createEulerOrientationYPR(String uomCode)
+    {
+        if (uomCode == null)
+            uomCode = "deg";
+
+        return createVector()
+            .definition(DEF_ORIENTATION_EULER)
+            .description("Euler angles with order of rotation yaw/pitch/roll in rotating frame")
+            .dataType(DataType.FLOAT)
+            .addCoordinate("yaw", createQuantity()
+                .definition(DEF_YAW)
+                .label("Yaw Angle")
+                .uomCode(uomCode)
+                .axisId("Z")
+                .build())
+            .addCoordinate("pitch", createQuantity()
+                .definition(DEF_PITCH)
+                .label("Pitch Angle")
+                .uomCode(uomCode)
+                .axisId("X")
+                .build())
+            .addCoordinate("roll", createQuantity()
+                .definition(DEF_ROLL)
+                .label("Roll Angle")
+                .uomCode(uomCode)
+                .axisId("Y")
+                .build());
+    }
+
+
+    /**
      * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
      * East-North-Up (ENU) frame (order of rotations is heading/Z, pitch/X, roll/Y in rotating frame)
      * @param uomCode angular unit to use on all 3 axes

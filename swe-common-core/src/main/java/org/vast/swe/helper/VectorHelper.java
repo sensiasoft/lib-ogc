@@ -270,20 +270,17 @@ public class VectorHelper extends SWEHelper
             .refFrame(refFrame)
             .build();
     }
-
+    
 
     /**
      * Creates a 3D euler angles vector with unspecified order of rotations about X/Y/Z axes.<br/>
-     * This is only used when order and axes of rotations are specified separately.
-     * @param refFrame reference frame within which the angles are expressed
      * @param uomCode angular unit to use on all 3 axes
-     * @return the new Vector component object
+     * @return A builder to set other options and build the final vector
      */
-    public Vector newEulerAngles(String refFrame, String uomCode)
+    public VectorBuilder createEulerAngles(String uomCode)
     {
         return createVector()
             .definition(DEF_ORIENTATION_EULER)
-            .refFrame(refFrame)
             .dataType(DataType.FLOAT)
             .addCoordinate("r1", createQuantity()
                 .definition(DEF_ANGLE)
@@ -296,7 +293,21 @@ public class VectorHelper extends SWEHelper
             .addCoordinate("r3", createQuantity()
                 .definition(DEF_ANGLE)
                 .uomCode(uomCode)
-                .build())
+                .build());
+    }
+
+
+    /**
+     * Creates a 3D euler angles vector with unspecified order of rotations about X/Y/Z axes.<br/>
+     * This is only used when order and axes of rotations are specified separately.
+     * @param refFrame reference frame within which the angles are expressed
+     * @param uomCode angular unit to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newEulerAngles(String refFrame, String uomCode)
+    {
+        return createEulerAngles(uomCode)
+            .refFrame(refFrame)
             .build();
     }
 
