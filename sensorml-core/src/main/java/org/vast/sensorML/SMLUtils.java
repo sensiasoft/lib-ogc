@@ -505,7 +505,8 @@ public class SMLUtils extends XMLBindingsUtils
             if (!rootComp.hasData())
                 rootComp.assignNewDataBlock();
             
-            ((DataArray)comp).updateSize();
+            if (((DataArray)comp).isVariableSize())
+                ((DataArray)comp).updateSize();
             ((EncodedValuesImpl)setting.getValue()).decode((DataArray)comp, setting.getEncoding());
         }        
         
