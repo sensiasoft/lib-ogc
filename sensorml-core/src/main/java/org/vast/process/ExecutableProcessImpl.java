@@ -54,8 +54,8 @@ public abstract class ExecutableProcessImpl implements IProcessExec
     
     protected ProcessInfo processInfo;
     protected String instanceName;
-    protected boolean initialized = false;
-    protected boolean started = false;
+    protected volatile boolean initialized = false;
+    protected volatile boolean started = false;
     protected boolean usingOutputQueues = false;
     protected Future<?> execFuture;
 
@@ -175,8 +175,8 @@ public abstract class ExecutableProcessImpl implements IProcessExec
         try
         {
             // fetch inputs, execute process and publish outputs
-            consumeData(inputConnections);
-            consumeData(paramConnections);
+            consumeInputData();
+            consumeParamData();
             execute();
             if (!Thread.currentThread().isInterrupted())
                 publishData();
@@ -244,12 +244,37 @@ public abstract class ExecutableProcessImpl implements IProcessExec
             execFuture = null;
         }
     }
+    
+    
+    /**
+     * Consume data from input ports.<br/>
+     * The default implementation waits for data to be available from all
+     * connected inputs
+     * @throws InterruptedException
+     */
+    protected void consumeInputData() throws InterruptedException
+    {
+        consumeData(inputConnections, true);
+    }
+    
+    
+    /**
+     * Consume data from parameter ports.<br/>
+     * The default implementation tries to fetch data from all connected parameters
+     * but will not wait if data is not available.
+     * connected inputs
+     * @throws InterruptedException
+     */
+    protected void consumeParamData() throws InterruptedException
+    {
+        consumeData(paramConnections, false);
+    }
 
 
     /*
-     * Consume data from all needed input ports
+     * Consume data from all specified connections
      */
-    protected void consumeData(Map<String, DataConnectionList> connectionGroup) throws InterruptedException
+    protected void consumeData(Map<String, DataConnectionList> connectionGroup, boolean block) throws InterruptedException
     {
         // loop through all inputs
         for (DataConnectionList connectionList: connectionGroup.values())
@@ -258,7 +283,7 @@ public abstract class ExecutableProcessImpl implements IProcessExec
             {
                 // loop through all connections
                 for (IDataConnection connection: connectionList)
-                    connection.transferData();
+                    connection.transferData(block);
             }
         }
     }

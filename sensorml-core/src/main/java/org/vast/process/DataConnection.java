@@ -230,29 +230,35 @@ public class DataConnection implements IDataConnection
     
 	
     @Override
-    public void transferData() throws InterruptedException
+    public boolean transferData(boolean block) throws InterruptedException
     {
-        Asserts.checkState(sourceComponent.hasData(), "Source component has no data");
-        
-        DataBlock srcBlock = sourceComponent.getData();
-        DataBlock destBlock = destinationComponent.hasData() ? destinationComponent.getData() : null;
-        
-        // apply unit conversion if needed
-        if (!componentConverters.isEmpty())
+        if (isDataAvailable())
         {
-            if (destBlock == null)
-                destinationComponent.assignNewDataBlock();
+            Asserts.checkState(sourceComponent.hasData(), "Source component has no data");
             
-            Iterator<ComponentConverter> it = componentConverters.iterator();
-            while (it.hasNext())
-                it.next().convert();
+            DataBlock srcBlock = sourceComponent.getData();
+            DataBlock destBlock = destinationComponent.hasData() ? destinationComponent.getData() : null;
+            
+            // apply unit conversion if needed
+            if (!componentConverters.isEmpty())
+            {
+                if (destBlock == null)
+                    destinationComponent.assignNewDataBlock();
+                
+                Iterator<ComponentConverter> it = componentConverters.iterator();
+                while (it.hasNext())
+                    it.next().convert();
+            }
+            
+            // else just assign data block if needed
+            else if (destBlock != srcBlock)
+                destinationComponent.setData(srcBlock);
+            
+            this.dataAvailable = false;
+            return true;
         }
-        
-        // else just assign data block if needed
-        else if (destBlock != srcBlock)
-            destinationComponent.setData(srcBlock);
-        
-        this.dataAvailable = false;
+        else
+            return false;
     }
 
 

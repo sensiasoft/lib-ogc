@@ -46,12 +46,17 @@ public interface IDataConnection
 
     /**
      * Transfer data to destination component
+     * @param block Set to true if processing should wait until data is
+     * available on this connection, false if processing should continue without it
+     * @return True if data was actually transferred, false otherwise 
+     * @throws InterruptedException if interrupted while waiting
      */
-    public void transferData() throws InterruptedException;
+    public boolean transferData(boolean block) throws InterruptedException;
 
 
     /**
      * Publish data from source component on this connection
+     * @throws InterruptedException if interrupted while waiting
      */
     public void publishData() throws InterruptedException;
 

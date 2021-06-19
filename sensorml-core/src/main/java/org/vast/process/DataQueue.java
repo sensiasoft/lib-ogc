@@ -22,6 +22,8 @@ package org.vast.process;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vast.util.Asserts;
 import net.opengis.swe.v20.DataBlock;
 
@@ -39,7 +41,8 @@ import net.opengis.swe.v20.DataBlock;
  * */
 public class DataQueue extends DataConnection
 {
-	protected BlockingQueue<DataBlock> queue = new LinkedBlockingQueue<>();
+	Logger log = LoggerFactory.getLogger(DataQueue.class);
+    protected BlockingQueue<DataBlock> queue = new LinkedBlockingQueue<>();
 	
 	
 	@Override
@@ -52,23 +55,37 @@ public class DataQueue extends DataConnection
 
 
     @Override
-	public void transferData() throws InterruptedException
+	public boolean transferData(boolean block) throws InterruptedException
     {
-        DataBlock srcBlock = queue.take();
-        
-        // apply unit conversion if needed
-        // TODO add support for unit conversion in queues
-        /*if (!componentConverters.isEmpty())
+        if (log.isTraceEnabled())
         {
-            if (destBlock == null)
-                destinationComponent.assignNewDataBlock();
-            
-            Iterator<ComponentConverter> it = componentConverters.iterator();
-            while (it.hasNext())
-                it.next().convert();
-        }*/
+            log.trace("{}.{} -> {}.{}: size={}",
+                sourceProcess.getInstanceName(), sourceComponent.getName(),
+                destinationProcess.getInstanceName(), destinationComponent.getName(),
+                queue.size());
+        }
         
-        destinationComponent.setData(srcBlock);
+        if (block || isDataAvailable())
+        {
+            DataBlock srcBlock = queue.take();
+            
+            // apply unit conversion if needed
+            // TODO add support for unit conversion in queues
+            /*if (!componentConverters.isEmpty())
+            {
+                if (destBlock == null)
+                    destinationComponent.assignNewDataBlock();
+                
+                Iterator<ComponentConverter> it = componentConverters.iterator();
+                while (it.hasNext())
+                    it.next().convert();
+            }*/
+            
+            destinationComponent.setData(srcBlock);
+            return true;
+        }
+        else
+            return false;
     }
     
     
@@ -90,19 +107,4 @@ public class DataQueue extends DataConnection
     {
         return queue.size();
     }
-    
-    
-    @Override
-	public String toString()
-	{
-		StringBuilder text = new StringBuilder("Queue size: " + queue.size() + "\n");
-
-		for (DataBlock block: queue)
-		{
-			text.append(block.toString());
-			text.append("\n");
-		}
-
-		return text.toString();
-	}
 }
