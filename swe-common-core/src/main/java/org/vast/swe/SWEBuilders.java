@@ -1477,6 +1477,32 @@ public class SWEBuilders
             this.dataType = dataType;
             return (B)this;
         }
+        
+        public B values(double[] values)
+        {
+            var vectorSize = instance.getComponentCount();
+            Asserts.checkArgument(values.length == vectorSize,
+                "Incorrect number of values. Vector is of size " + vectorSize);
+            
+            if (!instance.hasData())
+                instance.assignNewDataBlock();
+            
+            for (int i = 0; i < vectorSize; i++)
+                instance.getData().setDoubleValue(i, values[i]);
+            
+            return (B)this;
+        }
+        
+        public B fill(double value)
+        {
+            if (!instance.hasData())
+                instance.assignNewDataBlock();
+            
+            for (int i = 0; i < instance.getComponentCount(); i++)
+                instance.getData().setDoubleValue(i, value);            
+            
+            return (B)this;
+        }
 
         @Override
         public Vector build()
