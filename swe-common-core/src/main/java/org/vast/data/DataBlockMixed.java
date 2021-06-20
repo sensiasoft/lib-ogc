@@ -147,7 +147,7 @@ public class DataBlockMixed extends AbstractDataBlock
     public DataType getDataType(int index)
 	{
 		selectBlock(index);
-		return blockArray[blockIndex].getDataType();
+		return blockArray[blockIndex].getDataType(localIndex);
 	}
 
 
