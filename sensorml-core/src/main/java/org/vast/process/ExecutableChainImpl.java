@@ -381,7 +381,7 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
             }
             
             //transferOutputData();
-            consumeData(internalOutputConnections);
+            consumeData(internalOutputConnections, true);
             combineOutputBlocks();
         }  
         catch (InterruptedException e)
