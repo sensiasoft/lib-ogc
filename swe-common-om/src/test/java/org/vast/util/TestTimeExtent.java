@@ -168,7 +168,7 @@ public class TestTimeExtent
     public void testSpanOnePeriodEndingNowOtherAfter()
     {
         var t1_min = Instant.parse("2020-01-01T01:01:00Z");
-        var t1_max = Instant.parse("2021-06-10T02:19:00Z");
+        var t1_max = Instant.parse("3021-06-10T02:19:00Z");
         var t2_min = Instant.parse("2020-07-16T12:38:00Z");
         
         var te = TimeExtent.span(
