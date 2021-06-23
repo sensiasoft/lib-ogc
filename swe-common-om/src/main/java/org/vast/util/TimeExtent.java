@@ -458,10 +458,10 @@ public class TimeExtent implements Serializable
         double otherLag = timeExtent.getAdjustedLagTime();
         double otherLead = timeExtent.getAdjustedLeadTime();
         
-        if (otherLag > thisLag && otherLag < thisLead)
+        if (otherLag >= thisLag && otherLag <= thisLead)
             return true;
         
-        if (otherLead > thisLag && otherLead < thisLead)
+        if (otherLead >= thisLag && otherLead <= thisLead)
             return true;
         
         if (otherLag <= thisLag && otherLead >= thisLead)
