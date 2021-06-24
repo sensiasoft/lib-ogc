@@ -172,20 +172,20 @@ public abstract class OWSServlet extends HttpServlet
                     return;
                 }
                 
-                log.info("Access Forbidden: {}", e.getMessage());
+                // this is a client error so log only in debug
+                if (log.isDebugEnabled())
+                    log.error("Access Forbidden: {}", e.getMessage());
+                
                 sendError(resp, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
             }
             if (e instanceof OWSException)
             {
-                if (OWSUtils.isClientDisconnectError(e))
+                // this is a client error so log only in debug
+                if (log.isDebugEnabled())
+                    log.error(INVALID_REQUEST_MSG, e.getMessage());
+                
+                if (!OWSUtils.isClientDisconnectError(e))
                 {
-                    log.debug("Connection closed by client");
-                }
-                else
-                {
-                    if (log.isDebugEnabled()) // these are client errors so we log them only in debug
-                        log.error(INVALID_REQUEST_MSG, e.getMessage());
-                    
                     String version = null;
                     if (owsReq != null)
                     {
@@ -198,15 +198,11 @@ public abstract class OWSServlet extends HttpServlet
             }
             else
             {
-                if (OWSUtils.isClientDisconnectError(e))
-                {
-                    log.debug("Connection closed by client");
-                }
-                else
-                {
-                    log.error(INTERNAL_ERROR_MSG, e);
+                // internal error so always log it
+                log.error(INTERNAL_ERROR_MSG, e);
+                
+                if (!OWSUtils.isClientDisconnectError(e))
                     sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, INTERNAL_ERROR_HTTP_MSG);
-                }
             }
         }
         finally
