@@ -17,13 +17,13 @@ package org.vast.swe.fast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.ReaderException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.MalformedJsonException;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.CategoryRange;
@@ -56,7 +56,7 @@ import net.opengis.swe.v20.Vector;
  */
 public class JsonDataParserGson extends AbstractDataParser
 {
-    static final String JSON_ERROR = "Error reading JSON";
+    static final String DOUBLE_VALUE_ERROR = "Expected decimal value or one of ['NaN', '-INF', '+INF']";
     static final String DEFAULT_INDENT = "  ";
 
     protected JsonReader reader;
@@ -86,9 +86,9 @@ public class JsonDataParserGson extends AbstractDataParser
                     readValue(data, index);
                 return ++index;
             }
-            catch (IOException | IllegalStateException e)
+            catch (NumberFormatException | ReaderException e)
             {
-                throw new ReaderException(JSON_ERROR + " value " + eltName, e);
+                throw new ReaderException(e.getMessage() + " at " + reader.getPath());
             }
         }
 
@@ -162,10 +162,12 @@ public class JsonDataParserGson extends AbstractDataParser
                         val = Double.POSITIVE_INFINITY;
                     else if ("-INF".equals(str))
                         val = Double.NEGATIVE_INFINITY;
+                    else
+                        throw new NumberFormatException(DOUBLE_VALUE_ERROR);
                     break;
                     
                 default:
-                    throw new IllegalStateException("Unexpected datatype " + token);
+                    throw new IllegalStateException(DOUBLE_VALUE_ERROR + " but was " + token + " at " + reader.getPath());
             }
                         
             data.setDoubleValue(index, val);
@@ -197,7 +199,7 @@ public class JsonDataParserGson extends AbstractDataParser
             else
             {
                 try { val = timeFormat.parseIso(str); }
-                catch (ParseException e) { throw new IOException(e.getMessage()); }
+                catch (Exception e) { throw new ReaderException(e.getMessage()); }
             }
             
             data.setDoubleValue(index, val);
@@ -237,18 +239,11 @@ public class JsonDataParserGson extends AbstractDataParser
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
-            try
-            {
-                reader.beginArray();
-                fieldProcessors.get(0).process(data, index++);
-                fieldProcessors.get(1).process(data, index++);
-                reader.endArray();
-                return index;
-            }
-            catch (IOException e)
-            {
-                throw new ReaderException(JSON_ERROR + " range " + eltName, e);
-            }
+            reader.beginArray();
+            fieldProcessors.get(0).process(data, index++);
+            fieldProcessors.get(1).process(data, index++);
+            reader.endArray();
+            return index;
         }
 
         @Override
@@ -276,31 +271,24 @@ public class JsonDataParserGson extends AbstractDataParser
             if (!enabled)
                 return super.process(data, index);
             
-            try
+            reader.beginObject();
+            
+            for (AtomProcessor p: fieldProcessors)
             {
-                reader.beginObject();
-                
-                for (AtomProcessor p: fieldProcessors)
+                if (p.isEnabled())
                 {
-                    if (p.isEnabled())
-                    {
-                        var expectedName = ((JsonAtomReader)p).getEltName();
-                        var actualName = reader.nextName();
-                        if (!actualName.equals(expectedName))
-                            throw new IllegalStateException("Expected field " + expectedName + " but was " + actualName);
-                    }
-                    
-                    index = p.process(data, index);
+                    var expectedName = ((JsonAtomReader)p).getEltName();
+                    var actualName = reader.nextName();
+                    if (!actualName.equals(expectedName))
+                        throw new ReaderException("Expected field '" + expectedName + "' but was '" + actualName + "'");
                 }
-
-                reader.endObject();
                 
-                return index;
+                index = p.process(data, index);
             }
-            catch (IllegalStateException | IOException e)
-            {
-                throw new ReaderException(JSON_ERROR + " record " + eltName, e);
-            }
+
+            reader.endObject();
+            
+            return index;
         }
 
         @Override
@@ -337,21 +325,14 @@ public class JsonDataParserGson extends AbstractDataParser
             if (!enabled)
                 return super.process(data, index);
             
-            try
-            {
-                reader.beginArray();
-                
-                for (int i = 0; i < arraySize; i++)
-                    index = eltProcessor.process(data, index);
-                
-                reader.endArray();                
-                
-                return index;
-            }
-            catch (IOException e)
-            {
-                throw new ReaderException(JSON_ERROR + " array " + eltName, e);
-            }
+            reader.beginArray();
+            
+            for (int i = 0; i < arraySize; i++)
+                index = eltProcessor.process(data, index);
+            
+            reader.endArray();
+            
+            return index;
         }
 
         @Override
@@ -388,27 +369,20 @@ public class JsonDataParserGson extends AbstractDataParser
             if (!enabled)
                 return index+1;
             
-            try
-            {
-                reader.beginObject();
-                
-                var itemName = reader.nextName();
-                var selectedIndex = itemIndexes.get(itemName);
-                if (selectedIndex == null)
-                    throw new IllegalArgumentException("Invalid choice token");
-                
-                data.setIntValue(index++, selectedIndex);
-                // TODO set proper datablock for selected choice item
-                super.process(data, index, selectedIndex);
+            reader.beginObject();
+            
+            var itemName = reader.nextName();
+            var selectedIndex = itemIndexes.get(itemName);
+            if (selectedIndex == null)
+                throw new IllegalStateException("Invalid choice token: " + itemName + " at " + reader.getPath());
+            
+            data.setIntValue(index++, selectedIndex);
+            // TODO set proper datablock for selected choice item
+            super.process(data, index, selectedIndex);
 
-                reader.endObject();
+            reader.endObject();
 
-                return index;
-            }
-            catch (IOException e)
-            {
-                throw new ReaderException(JSON_ERROR + " choice " + eltName, e);
-            }
+            return index;
         }
         
         @Override
@@ -470,6 +444,26 @@ public class JsonDataParserGson extends AbstractDataParser
     public void setHasArrayWrapper()
     {
         this.hasJsonArrayWrapper = true;
+    }
+    
+    
+    @Override
+    public DataBlock parseNextBlock() throws IOException
+    {
+        try
+        {
+            return super.parseNextBlock();
+        }
+        catch (MalformedJsonException e)
+        {
+            // Fix error message advising switch to lenient mode
+            var msg = e.getMessage().replaceAll("Use JsonReader.*malformed", "Malformed");
+            throw new ReaderException(msg);
+        }
+        catch (IllegalStateException e)
+        {
+            throw new ReaderException(e.getMessage());
+        }
     }
 
 
