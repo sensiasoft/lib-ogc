@@ -259,7 +259,7 @@ public abstract class DataTreeVisitor
 	public void reset()
 	{
 		// prepare next array element
-		if (parentArray != null)
+		if (parentArray != null && parentArray.getComponentCount() > 0)
         {
             dataComponents = parentArray.getComponent(parentArrayIndex);
             parentArrayIndex++;
