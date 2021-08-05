@@ -35,6 +35,15 @@ public interface IFeature extends IResource
     
     
     /**
+     * @return the feature type URI
+     */
+    public default String getType()
+    {
+        return null;
+    }
+    
+    
+    /**
      * @return the property list
      */
     public default Map<QName, Object> getProperties()

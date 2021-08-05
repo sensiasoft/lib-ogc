@@ -34,6 +34,20 @@ public interface AbstractFeature extends IGeoFeature, AbstractGML
     public QName getQName();
     
     
+    @Override
+    public default String getType()
+    {
+        var qname = getQName();
+        if (qname == null)
+            return null;
+        
+        var nsUri = qname.getNamespaceURI();
+        return nsUri != null ?
+            nsUri + "#" + qname.getLocalPart() :
+            qname.getLocalPart();
+    }
+    
+    
     /**
      * Gets the boundedBy property
      */
