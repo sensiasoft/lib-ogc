@@ -14,6 +14,7 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.sensorML;
 
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.function.Consumer;
 import org.isotc211.v2005.gmd.CIOnlineResource;
@@ -299,6 +300,14 @@ public class SMLBuilders
         protected AbstractProcessBuilder(SMLFactory fac)
         {
             super(fac);
+        }
+        
+        public B definition(String uri)
+        {
+            if (uri != null)
+                URI.create(uri); // validate URI
+            instance.setDefinition(uri);
+            return (B)this;
         }
         
         public B typeOf(String href)

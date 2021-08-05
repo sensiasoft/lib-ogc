@@ -88,7 +88,7 @@ public class SWEConstants
     public static final String DEF_SENSOR_STATUS = OGC_PROP_URI + "SensorStatus";
     public static final String DEF_PLATFORM_TYPE = OGC_PROP_URI + "PlatformType";
 
-    // SWE definition URIs
+    // SWE property/observable definition URIs
     public static final String CF_URI_PREFIX = "http://mmisw.org/ont/cf/parameter/";
     public static final String DBPEDIA_URI_PREFIX = "http://dbpedia.org/resource/";
     public static final String QUDT_URI_PREFIX = "http://qudt.org/vocab/quantitykind/";
@@ -99,6 +99,22 @@ public class SWEConstants
     public static final String DEF_FLAG = SWE_PROP_URI_PREFIX + "Flag";
     public static final String DEF_STATUS_CODE = SWE_PROP_URI_PREFIX + "SystemStatus";
     public static final String DEF_COUNT = SWE_PROP_URI_PREFIX + "Counter";
+    
+    // SWE procedure/system definition URIs
+    public static final String SOSA_URI_PREFIX = "http://www.w3.org/ns/sosa/";
+    public static final String SSN_URI_PREFIX = "http://www.w3.org/ns/ssn/";
+    public static final String DEF_PROCEDURE = SOSA_URI_PREFIX + "Procedure";
+    public static final String DEF_SYSTEM = SSN_URI_PREFIX + "System";
+    public static final String DEF_PLATFORM = SOSA_URI_PREFIX + "Platform";
+    public static final String DEF_SENSOR = SOSA_URI_PREFIX + "Sensor";
+    public static final String DEF_ACTUATOR = SOSA_URI_PREFIX + "Actuator";
+    public static final String DEF_SAMPLER = SOSA_URI_PREFIX + "Sampler";
+
+    public static final String SWE_SYS_URI_PREFIX = SML_ONTOLOGY_ROOT + "swe/system/";
+    public static final String DEF_SENSOR_NETWORK = SWE_SYS_URI_PREFIX + "SensorNetwork";
+    public static final String DEF_HUMAN = SWE_SYS_URI_PREFIX + "HumanAgent";
+    public static final String DEF_PROCESS = SWE_SYS_URI_PREFIX + "Process";
+    public static final String DEF_MODELSIM = SWE_SYS_URI_PREFIX + "Simulation";
 
     // SWE special units
     public static final String SWE_UOM_URI_PREFIX = SML_ONTOLOGY_ROOT + "/swe/uom/";
