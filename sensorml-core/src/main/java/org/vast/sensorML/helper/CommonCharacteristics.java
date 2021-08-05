@@ -44,6 +44,8 @@ public class CommonCharacteristics extends SMLPropertiesHelper
     public static final String HEIGHT_LABEL = "Height";
     public static final String VOLTAGE_DEF = SWEHelper.getQudtUri("Voltage");
     public static final String VOLTAGE_LABEL = "Operating Voltage";
+    public static final String CURRENT_DEF = SWEHelper.getQudtUri("Current");
+    public static final String CURRENT_LABEL = "Operating Current";
     public static final String POWER_CONSUMPTION_DEF = SWEHelper.getPropertyUri("ElectricalPowerConsumption");
     public static final String POWER_CONSUMPTION_LABEL = "Power Consumption";
 
@@ -63,7 +65,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
     
     /**
      * Creates a characteristic list describing the system's operating range
-     * @return A CharacteristicListBuilder, preconfigured with operating range semantics
+     * @return The pre-configured builder for chaining
      */
     public CharacteristicListBuilder operatingCharacteristics()
     {
@@ -75,7 +77,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
     
     /**
      * Creates a characteristic list describing the system's survival range
-     * @return A CharacteristicListBuilder, preconfigured with survival range semantics
+     * @return The pre-configured builder for chaining
      */
     public CharacteristicListBuilder survivalCharacteristics()
     {
@@ -152,6 +154,30 @@ public class CommonCharacteristics extends SMLPropertiesHelper
         return sml.createQuantityRange()
             .definition(VOLTAGE_DEF)
             .label(VOLTAGE_LABEL + " Range")
+            .uomCode(uom)
+            .value(min, max);
+    }
+
+
+    public QuantityBuilder operatingCurrent(double val, String uom)
+    {
+        checkUom(uom, CURRENT_UNIT);
+        
+        return sml.createQuantity()
+            .definition(CURRENT_DEF)
+            .label(CURRENT_LABEL)
+            .uomCode(uom)
+            .value(val);
+    }
+
+
+    public QuantityRangeBuilder operatingCurrentRange(double min, double max, String uom)
+    {
+        checkUom(uom, CURRENT_UNIT);
+        
+        return sml.createQuantityRange()
+            .definition(CURRENT_DEF)
+            .label(CURRENT_LABEL)
             .uomCode(uom)
             .value(min, max);
     }

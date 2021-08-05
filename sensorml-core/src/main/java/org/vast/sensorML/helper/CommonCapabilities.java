@@ -70,8 +70,9 @@ public class CommonCapabilities extends SMLPropertiesHelper
     
     
     /**
-     * Creates a characteristic list describing the system's operating range
-     * @return A characteristic list builder, pre-configured with operating range semantics
+     * Creates a capability list describing the system capabilities,
+     * using W3C SSN semantics
+     * @return The pre-configured builder for chaining
      */
     public CapabilityListBuilder systemCapabilities()
     {
@@ -117,22 +118,26 @@ public class CommonCapabilities extends SMLPropertiesHelper
             .value(freq);
     }
     
-    public QuantityBuilder integrationTime(double timeMs)
+    public QuantityBuilder integrationTime(double value, String uom)
     {
+        checkUom(uom, TIME_UNIT);
+        
         return sml.createQuantity()
             .definition(INTEGRATION_TIME_DEF)
             .label(INTEGRATION_TIME_LABEL)
-            .uomCode("ms")
-            .value(timeMs);
+            .uomCode(uom)
+            .value(value);
     }
     
-    public QuantityBuilder responseTime(double timeMs)
+    public QuantityBuilder responseTime(double value, String uom)
     {
+        checkUom(uom, TIME_UNIT);
+        
         return sml.createQuantity()
             .definition(RESPONSE_TIME_DEF)
             .label(RESPONSE_TIME_LABEL)
             .uomCode("ms")
-            .value(timeMs);
+            .value(value);
     }
     
     public QuantityBuilder resolution(double value, String uom)

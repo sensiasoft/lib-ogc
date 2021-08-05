@@ -39,6 +39,7 @@ public class SMLPropertiesHelper
     final static Unit SURFACE_UNIT = new Unit().setMeter(2.0);
     final static Unit VOLUME_UNIT = new Unit().setMeter(3.0);
     final static Unit VOLTAGE_UNIT = new Unit().setKilogram(1.0).setMeter(2.0).setSecond(-3).setAmpere(-1);
+    final static Unit CURRENT_UNIT = new Unit().setAmpere(1);
     final static Unit POWER_UNIT = new Unit().setKilogram(1.0).setMeter(2.0).setSecond(-3);
     
     SMLHelper sml;
