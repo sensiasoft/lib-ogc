@@ -2,17 +2,10 @@ group = 'org.vast.opengis'
 description = 'SWE Common Core'
 
 dependencies {
-  compile 'ch.qos.logback:logback-classic:1.2.3'
-  compile 'org.codehaus.woodstox:woodstox-core-asl:4.2.0'
-  compile 'com.google.code.gson:gson:2.8.0'
-  compile 'com.google.guava:guava:23.6-jre'
-}
-
-// add info to OSGI manifest
-jar {
-  manifest {
-    instruction 'Bundle-Vendor', 'Sensia Software LLC'
-  }
+  api 'ch.qos.logback:logback-classic:1.2.3'
+  api 'org.codehaus.woodstox:woodstox-core-asl:4.2.0'
+  api 'com.google.code.gson:gson:2.8.0'
+  api 'com.google.guava:guava:23.6-jre'
 }
 
 // add info to maven pom

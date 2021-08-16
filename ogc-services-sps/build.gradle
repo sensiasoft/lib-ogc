@@ -2,16 +2,10 @@ group = 'org.vast.opengis'
 description = 'OGC Sensor Planning Service (SPS)'
 
 dependencies {
-  compile project(':ogc-services-common')
-  compile project(':ogc-services-swe')
-  testCompile project(path: ':ogc-services-common', configuration: 'testArtifacts')
-}
-
-// add info to OSGI manifest
-jar {
-  manifest {
-    instruction 'Bundle-Vendor', 'Sensia Software LLC'
-  }
+  api project(':ogc-services-common')
+  api project(':ogc-services-swe')
+  
+  testImplementation project(path: ':ogc-services-common', configuration: 'testArtifacts')
 }
 
 // add info to maven pom

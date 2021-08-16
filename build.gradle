@@ -10,8 +10,7 @@ allprojects  {
 }
 
 subprojects {
-  apply plugin: 'java'
-  apply plugin: 'osgi'
+  apply plugin: 'java-library'
   apply plugin: 'maven-publish' 
  
   sourceCompatibility = JavaVersion.VERSION_1_8
@@ -31,7 +30,7 @@ subprojects {
 
   // default test dependencies
   dependencies {
-    testCompile 'junit:junit:4.11'
-    testCompile 'xmlunit:xmlunit:1.6'
+    testImplementation 'junit:junit:4.11'
+    testImplementation 'xmlunit:xmlunit:1.6'
   }
 }
