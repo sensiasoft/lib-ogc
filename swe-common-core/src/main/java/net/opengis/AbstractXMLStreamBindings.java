@@ -151,7 +151,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
             String nil = reader.getAttributeValue(XSI_NS_URI, "nil");
             if ("true".equalsIgnoreCase(nil))
             {
-                reader.nextTag();
+                skipElementAndAllChildren(reader);
                 return false;
             }
             
