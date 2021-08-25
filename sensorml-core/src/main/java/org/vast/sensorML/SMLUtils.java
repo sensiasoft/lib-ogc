@@ -76,7 +76,9 @@ public class SMLUtils extends XMLBindingsUtils
 {
 	public final static String IC;
 	public final static String SENSORML;
+	public final static String V1_0 = "1.0";
     public final static String V2_0 = "2.0";
+    public final static String V2_1 = "2.1";
     
     IProcessFactory processFactory = new ProcessLoader();
     
@@ -108,8 +110,10 @@ public class SMLUtils extends XMLBindingsUtils
      */
     public SMLUtils(String version)
     {
-        // TODO select proper bindings for selected version
-        staxBindings = new SMLStaxBindings();
+        if (V1_0.equals(version))
+            staxBindings = new SMLStaxBindingsV1();
+        else
+            staxBindings = new SMLStaxBindings();
     }
     
     
@@ -221,7 +225,7 @@ public class SMLUtils extends XMLBindingsUtils
     protected Object readFromXmlStream(XMLStreamReader reader, Enum<?> eltType) throws XMLStreamException
     {
         reader.nextTag();
-        SMLStaxBindings smlBindings = (SMLStaxBindings)staxBindings;
+        ISMLStaxBindings smlBindings = (ISMLStaxBindings)staxBindings;
         
         switch ((ObjectType)eltType)
         {

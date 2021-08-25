@@ -91,7 +91,7 @@ import net.opengis.sensorml.v20.Factory;
 
 
 @SuppressWarnings("javadoc")
-public class XMLStreamBindings extends AbstractXMLStreamBindings
+public class XMLStreamBindingsV2 extends AbstractXMLStreamBindings
 {
     public final static String NS_URI = "http://www.opengis.net/sensorml/2.0";
     
@@ -101,7 +101,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     Factory factory;
     
     
-    public XMLStreamBindings(Factory factory, net.opengis.swe.v20.Factory ns1Factory, net.opengis.gml.v32.Factory ns2Factory,
+    public XMLStreamBindingsV2(Factory factory, net.opengis.swe.v20.Factory ns1Factory, net.opengis.gml.v32.Factory ns2Factory,
             org.isotc211.v2005.gmd.Factory ns3Factory, org.isotc211.v2005.gco.Factory ns4Factory)
     {
         this.factory = factory;
@@ -1570,7 +1570,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
                                 @Override
                                 public void parseContent(XMLStreamReader reader) throws XMLStreamException
                                 {
-                                    componentProp.setValue(XMLStreamBindings.this.readAbstractProcess(reader));                                    
+                                    componentProp.setValue(XMLStreamBindingsV2.this.readAbstractProcess(reader));                                    
                                 }                                
                             });
                         }

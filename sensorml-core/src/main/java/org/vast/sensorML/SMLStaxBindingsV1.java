@@ -40,7 +40,7 @@ import net.opengis.sensorml.v20.AggregateProcess;
 import net.opengis.sensorml.v20.PhysicalComponent;
 import net.opengis.sensorml.v20.PhysicalSystem;
 import net.opengis.sensorml.v20.SimpleProcess;
-import net.opengis.sensorml.v20.bind.XMLStreamBindingsV2;
+import net.opengis.sensorml.v20.bind.XMLStreamBindingsV1;
 import org.isotc211.v2005.gco.impl.GCOFactory;
 import org.isotc211.v2005.gmd.impl.GMDFactory;
 import org.vast.data.SWEFactory;
@@ -49,21 +49,21 @@ import org.vast.ogc.gml.IFeatureStaxBindings;
 
 /**
  * <p>
- * Helper wrapping the auto-generated XML stream bindings
+ * Helper wrapping SensorML v1 XML stream bindings
  * </p>
  *
  * @author Alex Robin
- * @since Sep 25, 2014
+ * @since Aug 25, 2021
  */
-public class SMLStaxBindings extends XMLStreamBindingsV2 implements ISMLStaxBindings, IFeatureStaxBindings<AbstractFeature>
+public class SMLStaxBindingsV1 extends XMLStreamBindingsV1 implements ISMLStaxBindings, IFeatureStaxBindings<AbstractFeature>
 {
 
-    public SMLStaxBindings()
-    {        
+    public SMLStaxBindingsV1()
+    {
         super(new SMLFactory(), new SWEFactory(), new GMLFactory(), new GMDFactory(), new GCOFactory());
 
         nsContext.registerNamespace("xlink", net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
-        nsContext.registerNamespace("sml", net.opengis.sensorml.v20.bind.XMLStreamBindingsV2.NS_URI);
+        nsContext.registerNamespace("sml", net.opengis.sensorml.v20.bind.XMLStreamBindingsV1.NS_URI);
         nsContext.registerNamespace("swe", net.opengis.swe.v20.bind.XMLStreamBindings.NS_URI);
         nsContext.registerNamespace("gml", net.opengis.gml.v32.bind.XMLStreamBindings.NS_URI);
         nsContext.registerNamespace("gco", org.isotc211.v2005.gco.bind.XMLStreamBindings.NS_URI);
