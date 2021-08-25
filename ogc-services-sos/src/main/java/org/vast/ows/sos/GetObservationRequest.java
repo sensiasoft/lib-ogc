@@ -81,7 +81,8 @@ public class GetObservationRequest extends OWSRequest
 
 	public void setOffering(String offering)
 	{
-		this.offerings.add(offering);
+		if (offering != null)
+		    this.offerings.add(offering);
 	}
 	
 	

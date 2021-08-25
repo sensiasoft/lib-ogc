@@ -37,7 +37,11 @@ import org.vast.util.TimeExtent;
  * */
 public class DescribeSensorRequest extends OWSRequest
 {
-    public final static String DEFAULT_FORMAT = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0");
+    public final static String FORMAT_SML_V1 = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "1.0");
+    public final static String FORMAT_SML_V1_01 = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "1.0.1");
+    public final static String FORMAT_SML_V2 = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.0");
+    public final static String FORMAT_SML_V2_1 = OGCRegistry.getNamespaceURI(SMLUtils.SENSORML, "2.1");
+    public final static String DEFAULT_FORMAT = FORMAT_SML_V2;
     	
 	protected String procedureID;
 	protected TimeExtent time;
