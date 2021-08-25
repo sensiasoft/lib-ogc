@@ -718,7 +718,6 @@ public class JsonDataWriterGson extends AbstractDataWriter
         {
             ArraySizeScanner sizeWriter = new ArraySizeScanner();
             sizeWriter.arrayProcessor = arrayWriter;
-            addToProcessorTree(sizeWriter);
         }
         else if (array.isVariableSize())
         {
