@@ -58,6 +58,8 @@ public class SWEConstants
     public static final String REF_FRAME_4979 = EPSG_URI_PREFIX + 4979;
     public static final String REF_FRAME_4326 = EPSG_URI_PREFIX + 4326;
     public static final String REF_FRAME_ECEF = EPSG_URI_PREFIX + 4978;
+    public static final String VERTICAL_CRS_MSL_HEIGHT = EPSG_URI_PREFIX + 5714;
+    public static final String VERTICAL_CRS_MSL_DEPTH = EPSG_URI_PREFIX + 5715;
     public static final String REF_FRAME_ECI_GCRF = OGC_CRS_URI + "OGC/0/ECI_GCRF";
     public static final String REF_FRAME_ECI_J2000 = OGC_CRS_URI + "OGC/0/ECI_J2000";
     public static final String REF_FRAME_ECI_M50 = OGC_CRS_URI + "OGC/0/ECI_M50";

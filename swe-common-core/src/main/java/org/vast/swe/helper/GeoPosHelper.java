@@ -37,12 +37,15 @@ public class GeoPosHelper extends VectorHelper
     public static final String DEF_LATITUDE_GEODETIC = SWEHelper.getPropertyUri("GeodeticLatitude");
     public static final String DEF_LONGITUDE = SWEHelper.getPropertyUri("Longitude");
     public static final String DEF_ALTITUDE_ELLIPSOID = SWEHelper.getPropertyUri("HeightAboveEllipsoid");
-    public static final String DEF_ALTITUDE_GEOID = SWEHelper.getPropertyUri("HeightAboveMSL");
+    public static final String DEF_ALTITUDE_MSL = SWEHelper.getPropertyUri("HeightAboveMSL");
+    public static final String DEF_ALTITUDE_BAROMETRIC = SWEHelper.getPropertyUri("BarometricAltitude");
     public static final String DEF_HEADING_TRUE = SWEHelper.getPropertyUri("TrueHeading");
     public static final String DEF_HEADING_MAGNETIC = SWEHelper.getPropertyUri("MagneticHeading");
     public static final String DEF_YAW = SWEHelper.getPropertyUri("YawAngle");
     public static final String DEF_PITCH = SWEHelper.getPropertyUri("PitchAngle");
     public static final String DEF_ROLL = SWEHelper.getPropertyUri("RollAngle");
+    public static final String DEF_AZIMUTH = SWEHelper.getPropertyUri("AzimuthAngle");
+    public static final String DEF_ELEVATION = SWEHelper.getPropertyUri("ElevationAngle");
 
 
     /**
@@ -83,6 +86,52 @@ public class GeoPosHelper extends VectorHelper
     public Vector newLocationVectorLLA(String def)
     {
         return createLocationVectorLLA()
+            .definition(def != null ? def : DEF_LOCATION)
+            .build();
+    }
+    
+    
+    /**
+     * Creates a 3D location vector with latitude/longitude on WGS84 datum (EPSG 4326)
+     * and MSL altitude (EPSG 5714)
+     * @return A builder to set other options and build the final vector
+     */
+    public VectorBuilder createLocationVectorLLA_MSL()
+    {
+        return createVector()
+            .definition(DEF_LOCATION)
+            .refFrame(SWEConstants.REF_FRAME_4326)
+            .addCoordinate("lat", createQuantity()
+                .definition(DEF_LATITUDE_GEODETIC)
+                .label("Geodetic Latitude")
+                .axisId("Lat")
+                .uomCode("deg")
+                .build())
+            .addCoordinate("lon", createQuantity()
+                .definition(DEF_LONGITUDE)
+                .label("Longitude")
+                .axisId("Lon")
+                .uomCode("deg")
+                .build())
+            .addCoordinate("alt", createQuantity()
+                .definition(DEF_ALTITUDE_MSL)
+                .refFrame(SWEConstants.VERTICAL_CRS_MSL_HEIGHT)
+                .label("MSL Height")
+                .axisId("h")
+                .uomCode("m")
+                .build());
+    }
+    
+    
+    /**
+     * Creates a 3D location vector with latitude/longitude on WGS84 datum (EPSG 4326)
+     * and MSL altitude (EPSG 5714)
+     * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newLocationVectorLLA_MSL(String def)
+    {
+        return createLocationVectorLLA_MSL()
             .definition(def != null ? def : DEF_LOCATION)
             .build();
     }
