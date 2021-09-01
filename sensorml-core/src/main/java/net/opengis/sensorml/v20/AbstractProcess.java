@@ -16,6 +16,7 @@ package net.opengis.sensorml.v20;
 
 import java.util.List;
 import org.vast.ogc.om.IProcedure;
+import org.vast.swe.SWEConstants;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.Reference;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
@@ -30,6 +31,18 @@ import net.opengis.swe.v20.DataComponent;
 @SuppressWarnings("javadoc")
 public interface AbstractProcess extends DescribedObject, IProcedure
 {
+    
+    public default String getType()
+    {
+        // use definition or generate default type
+        if (getDefinition() != null)
+            return getDefinition();
+        else if (this instanceof AbstractPhysicalProcess)
+            return SWEConstants.DEF_SYSTEM;
+        else
+            return SWEConstants.DEF_PROCESS;
+    }
+    
     
     /**
      * Gets the typeOf property
