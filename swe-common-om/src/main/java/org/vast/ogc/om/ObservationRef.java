@@ -35,7 +35,7 @@ import java.util.Map;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.FeatureRef;
-import org.vast.ogc.gml.IGeoFeature;
+import org.vast.ogc.gml.IFeature;
 import org.vast.ogc.xlink.IReferenceResolver;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.TimeExtent;
@@ -133,7 +133,7 @@ public class ObservationRef extends FeatureRef<IObservation> implements IObserva
 
 
     @Override
-    public IGeoFeature getFeatureOfInterest()
+    public IFeature getFeatureOfInterest()
     {
         return getTarget().getFeatureOfInterest();
     }

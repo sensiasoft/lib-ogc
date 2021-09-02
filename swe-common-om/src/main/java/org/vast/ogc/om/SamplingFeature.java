@@ -14,25 +14,18 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.ogc.om;
 
-import java.util.AbstractMap;
-import java.util.AbstractSet;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import javax.xml.namespace.QName;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.LineString;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Polygon;
+import org.vast.ogc.gml.ExtensibleFeatureImpl;
 import org.vast.ogc.gml.FeatureRef;
-import org.vast.ogc.gml.GenericFeatureImpl;
 import org.vast.ogc.gml.IFeature;
-import org.vast.ogc.xlink.CachedReference;
+import com.google.common.collect.ImmutableMap;
 
 
-public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericFeatureImpl
+public class SamplingFeature<GeomType extends AbstractGeometry> extends ExtensibleFeatureImpl
 {
     private static final long serialVersionUID = 6351566323396110876L;
     public static final String SAMS_NS_PREFIX = "sams";
@@ -45,6 +38,10 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
     public static final QName PROP_SAMPLED_FEATURE = new QName(SF_NS_URI, "sampledFeature", SF_NS_PREFIX);
     public static final QName PROP_HOSTED_PROCEDURE = new QName(SAMS_NS_URI, "hostedProcedure", SAMS_NS_PREFIX);
     public static final QName PROP_SHAPE = new QName(SAMS_NS_URI, "shape", SAMS_NS_PREFIX);
+    
+    protected String type;
+    protected FeatureRef<?> sampledFeature;
+    protected ProcedureRef hostedProcedure;
     
     
     public SamplingFeature()
@@ -62,144 +59,75 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
 
     public String getType()
     {
-        @SuppressWarnings("unchecked")
-        CachedReference<Object> ref = (CachedReference<Object>)getProperty(PROP_TYPE);
-        if (ref == null)
-            return null;
-        return ref.getHref();
+        return type;
     }
 
 
     public void setType(String type)
     {
-        setProperty(PROP_TYPE, new CachedReference<Object>(type));
+        properties = null; // reset cached properties map
+        this.type = type;
     }
     
     
     public void setSampledFeatureUID(String featureUID)
     {
-        if (featureUID == null)
-            properties.remove(PROP_SAMPLED_FEATURE);
-        else
-            setProperty(PROP_SAMPLED_FEATURE, new FeatureRef<IFeature>(featureUID));
+        properties = null; // reset cached properties map
+        this.sampledFeature = new FeatureRef<IFeature>(featureUID);
     }
     
     
     public String getSampledFeatureUID()
     {
-        FeatureRef<?> ref = (FeatureRef<?>)getProperty(PROP_SAMPLED_FEATURE);
-        if (ref == null)
-            return null;
-        return ref.getHref();
+        return sampledFeature != null ? sampledFeature.getHref() : null;
     }
     
     
-    public void setHostedProcedureUID(String processUID)
+    public void setHostedProcedureUID(String procUID)
     {
-        if (processUID == null)
-            properties.remove(PROP_HOSTED_PROCEDURE);
-        else
-            setProperty(PROP_HOSTED_PROCEDURE, new ProcedureRef(processUID));
+        properties = null; // reset cached properties map
+        this.hostedProcedure = new ProcedureRef(procUID);
     }
     
     
     public String getHostedProcedureUID()
     {
-        ProcedureRef ref = (ProcedureRef)getProperty(PROP_HOSTED_PROCEDURE);
-        if (ref == null)
-            return null;
-        return ref.getHref();
+        return hostedProcedure != null ? hostedProcedure.getHref() : null;
     }
     
     
     public void setShape(GeomType geom)
     {
-        if (geom == null)
-            properties.remove(PROP_SHAPE);
-        else
-            setProperty(PROP_SHAPE, geom);
+        properties = null; // reset cached properties map
+        setGeometry(geom);
     }
     
     
+    @SuppressWarnings("unchecked")
     public GeomType getShape()
     {
-        @SuppressWarnings("unchecked")
-        GeomType geom = (GeomType)getProperty(PROP_SHAPE);
-        if (geom != null)
-            return geom;
-        else
-            return getShape();
+        return (GeomType)getGeometry();
     }
     
     
-    @Override
-    public boolean isSetGeometry()
+    protected void appendProperties(ImmutableMap.Builder<QName, Object> builder)
     {
-        return properties.containsKey(PROP_SHAPE);
-    }
-    
-
-    @Override
-    public GeomType getGeometry()
-    {
-        @SuppressWarnings("unchecked")
-        GeomType geom = (GeomType)super.getGeometry();
-        if (geom != null)
-            return geom;
-        else
-            return getShape();
-    }
-
-    
-    /*
-     * Override so we can reorder properties according to schema
-     */
-    @Override
-    public Map<QName, Object> getProperties()
-    {
-        return new AbstractMap<QName, Object>() {
-            @Override
-            public Set<Entry<QName, Object>> entrySet()
-            {
-                return new AbstractSet<Entry<QName, Object>>() {
-                    
-                    QName[] propOrder = {
-                      PROP_TYPE,
-                      PROP_SAMPLED_FEATURE,
-                      PROP_HOSTED_PROCEDURE,
-                      PROP_SHAPE
-                    };
-                    
-                    @Override
-                    public Iterator<Entry<QName, Object>> iterator()
-                    {
-                        return Arrays.stream(propOrder)
-                            .map(qname -> {
-                                Object val = properties.get(qname);
-                                return (Entry<QName, Object>)(val != null ?
-                                    new AbstractMap.SimpleEntry<>(qname, val) : null);
-                            })
-                            .filter(Objects::nonNull)
-                            .iterator();
-                    }
-
-                    @Override
-                    public int size()
-                    {
-                        return (int)Arrays.stream(propOrder)
-                            .filter(qname -> properties.containsKey(qname))
-                            .count();
-                    }                    
-                };
-            }            
-        };
+        builder.put(PROP_TYPE, type);
+        
+        if (sampledFeature != null)
+            builder.put(PROP_SAMPLED_FEATURE, sampledFeature);
+        
+        if (hostedProcedure != null)
+            builder.put(PROP_HOSTED_PROCEDURE, hostedProcedure);
+        
+        if (location != null && location.hasValue())
+            builder.put(PROP_SHAPE, getShape());
     }
     
     
     public SamplingFeature<? extends AbstractGeometry> getAsSpecializedType()
     {
-        @SuppressWarnings("rawtypes")
-        String type = properties.containsKey(PROP_TYPE) ? ((CachedReference)getProperty(PROP_TYPE)).getHref() : null;
+        String type = getType();
         SamplingFeature<? extends AbstractGeometry> sf = null;
         
         if (SamplingPoint.TYPE.equals(type))

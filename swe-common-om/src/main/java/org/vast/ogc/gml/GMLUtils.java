@@ -97,9 +97,9 @@ public class GMLUtils extends XMLBindingsUtils
      * @return the new feature instance
      * @throws XMLReaderException
      */
-    public GenericFeature readFeature(InputStream inputStream) throws XMLReaderException
+    public IFeature readFeature(InputStream inputStream) throws XMLReaderException
     {
-        return (GenericFeature)readFromStream(inputStream, ObjectType.Feature);
+        return (IFeature)readFromStream(inputStream, ObjectType.Feature);
     }
     
     
@@ -110,9 +110,9 @@ public class GMLUtils extends XMLBindingsUtils
      * @return the new feature instance
      * @throws XMLReaderException
      */
-    public GenericFeature readFeature(DOMHelper dom, Element featureElt) throws XMLReaderException
+    public IFeature readFeature(DOMHelper dom, Element featureElt) throws XMLReaderException
     {
-        return (GenericFeature)readFromDom(dom, featureElt, ObjectType.Feature);
+        return (IFeature)readFromDom(dom, featureElt, ObjectType.Feature);
     }
     
     

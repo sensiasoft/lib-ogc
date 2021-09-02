@@ -23,7 +23,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import org.vast.ogc.gml.GMLStaxBindings;
-import org.vast.ogc.gml.GenericFeature;
 import org.vast.ogc.gml.IFeatureStaxBindings;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
@@ -120,7 +119,7 @@ public class SamplingFeatureReader extends GMLStaxBindings implements IFeatureSt
     @Override
     public void writeFeature(XMLStreamWriter writer, AbstractFeature bean) throws XMLStreamException
     {
-        writeGenericFeature(writer, (GenericFeature)bean);
+        writeGenericFeature(writer, bean);
     }
 
 }

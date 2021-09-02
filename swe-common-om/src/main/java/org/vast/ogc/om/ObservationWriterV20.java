@@ -30,7 +30,7 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GMLUtils;
 import org.vast.ogc.gml.GmlIdGenerator;
-import org.vast.ogc.gml.IGeoFeature;
+import org.vast.ogc.gml.IFeature;
 import org.vast.ogc.gml.SequentialIdGenerator;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.ogc.xlink.XlinkUtils;
@@ -190,7 +190,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         
         // foi
         Element foiPropElt = dom.addElement(obsElt, "om:featureOfInterest");
-        IGeoFeature foi = obs.getFeatureOfInterest();
+        IFeature foi = obs.getFeatureOfInterest();
         if (foi != null)
             writeFOI(dom, foiPropElt, foi);
         else
@@ -221,7 +221,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
     }
     
     
-    protected void writeFOI(DOMHelper dom, Element foiPropElt, IGeoFeature foi) throws XMLWriterException
+    protected void writeFOI(DOMHelper dom, Element foiPropElt, IFeature foi) throws XMLWriterException
     {
         if (foi instanceof FeatureRef)
         {

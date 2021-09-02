@@ -25,6 +25,7 @@ import net.opengis.gml.v32.AbstractGML;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.AbstractTimePrimitive;
+import net.opengis.gml.v32.Measure;
 import net.opengis.gml.v32.bind.XMLStreamBindings;
 import net.opengis.gml.v32.impl.GMLFactory;
 
@@ -144,7 +145,7 @@ public class GMLStaxBindings extends XMLStreamBindings
     }
     
     
-    public void writeGenericFeature(XMLStreamWriter writer, GenericFeature bean) throws XMLStreamException
+    public void writeGenericFeature(XMLStreamWriter writer, AbstractFeature bean) throws XMLStreamException
     {
         QName featureType = bean.getQName();
         String newPrefix = ensurePrefix(writer, featureType);
@@ -185,8 +186,13 @@ public class GMLStaxBindings extends XMLStreamBindings
             {
                 writeAbstractTimeGeometricPrimitive(writer, (AbstractTimeGeometricPrimitive)val);
             }
+            else if (val instanceof Measure)
+            {
+                writer.writeAttribute("uom", ((Measure) val).getUom());
+                writer.writeCharacters(Double.toString(((Measure) val).getValue()));
+            }
             else
-                writer.writeCharacters(val.toString());                
+                writer.writeCharacters(val.toString());
                 
             writer.writeEndElement();
         }
@@ -218,10 +224,8 @@ public class GMLStaxBindings extends XMLStreamBindings
         
         if (customBindings != null)
             customBindings.writeFeature(writer, bean);
-        else if (bean instanceof GenericFeature)
-            this.writeGenericFeature(writer, (GenericFeature)bean);
         else
-            super.writeAbstractFeature(writer, bean);
+            this.writeGenericFeature(writer, bean);
     }
 
 

@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.DefinitionRef;
-import org.vast.ogc.gml.IGeoFeature;
+import org.vast.ogc.gml.IFeature;
 import org.vast.ogc.gml.ITemporalFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.TimeExtent;
@@ -64,7 +64,7 @@ public interface IObservation extends ITemporalFeature
     
     public DefinitionRef getObservedProperty();
     
-    public IGeoFeature getFeatureOfInterest();
+    public IFeature getFeatureOfInterest();
     
     public IProcedure getProcedure();
     

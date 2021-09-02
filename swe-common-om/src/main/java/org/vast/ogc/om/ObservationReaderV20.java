@@ -28,7 +28,7 @@ import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GMLUtils;
-import org.vast.ogc.gml.IGeoFeature;
+import org.vast.ogc.gml.IFeature;
 import org.vast.ogc.xlink.CachedReference;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.ogc.xlink.XlinkUtils;
@@ -213,7 +213,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
     }
     
     
-    protected IGeoFeature readFOI(DOMHelper dom, Element foiPropElt) throws XMLReaderException
+    protected IFeature readFOI(DOMHelper dom, Element foiPropElt) throws XMLReaderException
     {
         if (dom.existAttribute(foiPropElt, "href"))
         {

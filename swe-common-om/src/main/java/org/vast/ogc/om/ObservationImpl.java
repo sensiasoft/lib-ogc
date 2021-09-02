@@ -39,7 +39,7 @@ import net.opengis.swe.v20.Vector;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.GenericFeatureImpl;
-import org.vast.ogc.gml.IGeoFeature;
+import org.vast.ogc.gml.IFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.TimeExtent;
 
@@ -63,7 +63,7 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     protected IProcedure procedure;
     protected HashMap<String, Object> parameters;
     protected DefinitionRef observedProperty;
-    protected IGeoFeature featureOfInterest;
+    protected IFeature featureOfInterest;
     protected ArrayList<Object> resultQuality;
     protected DataComponent result;
 
@@ -189,12 +189,12 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
 
 
     @Override
-    public IGeoFeature getFeatureOfInterest()
+    public IFeature getFeatureOfInterest()
     {
         return featureOfInterest;
     }
 
-    public void setFeatureOfInterest(IGeoFeature featureOfInterest)
+    public void setFeatureOfInterest(IFeature featureOfInterest)
     {
         this.featureOfInterest = featureOfInterest;
     }

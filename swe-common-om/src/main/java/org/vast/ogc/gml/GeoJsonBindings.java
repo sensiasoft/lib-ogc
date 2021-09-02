@@ -30,6 +30,7 @@ import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.LineString;
 import net.opengis.gml.v32.LinearRing;
+import net.opengis.gml.v32.Measure;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Polygon;
 import net.opengis.gml.v32.TimeInstant;
@@ -162,6 +163,14 @@ public class GeoJsonBindings
                     writer.name(propName.getLocalPart());
                     writer.value(href);
                 }
+            }
+            else if (val instanceof Measure)
+            {
+                writer.name(propName.getLocalPart());
+                writer.beginObject();
+                writer.name("uom").value(((Measure) val).getUom());
+                writer.name("value").value(((Measure) val).getValue());
+                writer.endObject();
             }
             else if (val instanceof AbstractGeometry)
             {

@@ -26,6 +26,7 @@ import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.FeatureCollection;
 import net.opengis.gml.v32.LineString;
 import net.opengis.gml.v32.LinearRing;
+import net.opengis.gml.v32.Measure;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Polygon;
 import net.opengis.gml.v32.Reference;
@@ -240,6 +241,12 @@ public class GMLFactory implements Factory
         env.setLowerCorner(new double[] {minX, minY, minZ});
         env.setUpperCorner(new double[] {maxX, maxY, maxZ});
         return env;
+    }
+    
+    
+    public Measure newMeasure(double value, String uom)
+    {
+        return new MeasureImpl(value, uom);
     }
     
     

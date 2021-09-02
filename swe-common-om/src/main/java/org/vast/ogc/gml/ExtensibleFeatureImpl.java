@@ -23,71 +23,52 @@ package org.vast.ogc.gml;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
-import org.vast.util.Asserts;
+import com.google.common.collect.ImmutableMap;
 import net.opengis.gml.v32.impl.AbstractFeatureImpl;
 
 
 /**
  * <p>
- * Generic implementation of a GML feature.
+ * Base class for implementing custom features based on application schemas.<br/>
+ * Subclasses typically add new fields along with corresponding getters and
+ * setters and must override {@link #getProperties()} to expose these
+ * properties in a generic way.
  * </p>
  *
  * @author Alex Robin
- * @since Feb 20, 2007
+ * @since Sep 2 2021
  * */
-public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFeature
+public abstract class ExtensibleFeatureImpl extends AbstractFeatureImpl
 {
-    private static final long serialVersionUID = -5445631329812411360L;
-    protected Map<QName, Object> properties;
+    private static final long serialVersionUID = -7413618024981503885L;
+    
+    /* cached properties */
+    protected transient Map<QName, Object> properties;
 
 
-    public GenericFeatureImpl(QName qname)
+    public ExtensibleFeatureImpl(QName qname)
     {
         this.qName = qname;
         this.properties = new LinkedHashMap<>();
     }
     
     
-    protected GenericFeatureImpl(QName qname, Map<QName, Object> properties)
-    {
-        this.qName = qname;
-        this.properties = Asserts.checkNotNull(properties, Map.class);
-    }
-
-    
     @Override
     public Map<QName, Object> getProperties()
     {
+        if (properties == null)
+        {
+            var builder = ImmutableMap.<QName, Object>builder();
+            appendProperties(builder);
+            properties = builder.build();
+        }
+        
         return properties;
     }
-  
     
-    @Override
-    public void setProperty(QName qname, Object prop)
+    
+    protected void appendProperties(ImmutableMap.Builder<QName, Object> builder)
     {
-        if (prop != null)
-            properties.put(qname, prop);
-    }
-    
-    
-    @Override
-    public Object getProperty(QName qname)
-    {
-        return properties.get(qname);
-    }
-    
-    
-    @Override
-    public void setProperty(String name, Object prop)
-    {
-        if (prop != null)
-            properties.put(new QName(name), prop);
-    }
-    
-    
-    @Override
-    public Object getProperty(String name)
-    {
-        return properties.get(new QName(name));
+        // subclasses can append custom properties here
     }
 }
