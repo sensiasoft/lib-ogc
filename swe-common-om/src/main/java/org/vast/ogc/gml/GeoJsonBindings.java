@@ -172,7 +172,8 @@ public class GeoJsonBindings
                 writer.name("value").value(((Measure) val).getValue());
                 writer.endObject();
             }
-            else if (val instanceof AbstractGeometry)
+            else if (val instanceof AbstractGeometry &&
+                (bean instanceof IGeoFeature && val != ((IGeoFeature)bean).getGeometry()) )
             {
                 writer.name(propName.getLocalPart());
                 writeGeometry(writer, (AbstractGeometry)val);
@@ -188,7 +189,7 @@ public class GeoJsonBindings
     
     
     protected void writeCustomJsonProperties(JsonWriter writer, IFeature bean) throws IOException
-    {        
+    {
     }
     
     
