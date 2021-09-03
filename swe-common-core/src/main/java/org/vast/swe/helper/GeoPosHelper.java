@@ -42,11 +42,11 @@ public class GeoPosHelper extends VectorHelper
     public static final String DEF_ALTITUDE_BAROMETRIC = SWEHelper.getPropertyUri("BarometricAltitude");
     public static final String DEF_HEADING_TRUE = SWEHelper.getPropertyUri("TrueHeading");
     public static final String DEF_HEADING_MAGNETIC = SWEHelper.getPropertyUri("MagneticHeading");
-    public static final String DEF_YAW = SWEHelper.getPropertyUri("YawAngle");
-    public static final String DEF_PITCH = SWEHelper.getPropertyUri("PitchAngle");
-    public static final String DEF_ROLL = SWEHelper.getPropertyUri("RollAngle");
-    public static final String DEF_AZIMUTH = SWEHelper.getPropertyUri("AzimuthAngle");
-    public static final String DEF_ELEVATION = SWEHelper.getPropertyUri("ElevationAngle");
+    public static final String DEF_YAW_ANGLE = SWEHelper.getPropertyUri("YawAngle");
+    public static final String DEF_PITCH_ANGLE = SWEHelper.getPropertyUri("PitchAngle");
+    public static final String DEF_ROLL_ANGLE = SWEHelper.getPropertyUri("RollAngle");
+    public static final String DEF_AZIMUTH_ANGLE = SWEHelper.getPropertyUri("AzimuthAngle");
+    public static final String DEF_ELEVATION_ANGLE = SWEHelper.getPropertyUri("ElevationAngle");
 
 
     /**
@@ -297,19 +297,19 @@ public class GeoPosHelper extends VectorHelper
             .description("Euler angles with order of rotation yaw/pitch/roll in rotating frame")
             .dataType(DataType.FLOAT)
             .addCoordinate("yaw", createQuantity()
-                .definition(DEF_YAW)
+                .definition(DEF_YAW_ANGLE)
                 .label("Yaw Angle")
                 .uomCode(uomCode)
                 .axisId("Z")
                 .build())
             .addCoordinate("pitch", createQuantity()
-                .definition(DEF_PITCH)
+                .definition(DEF_PITCH_ANGLE)
                 .label("Pitch Angle")
                 .uomCode(uomCode)
                 .axisId("X")
                 .build())
             .addCoordinate("roll", createQuantity()
-                .definition(DEF_ROLL)
+                .definition(DEF_ROLL_ANGLE)
                 .label("Roll Angle")
                 .uomCode(uomCode)
                 .axisId("Y")
@@ -341,14 +341,14 @@ public class GeoPosHelper extends VectorHelper
                 .axisId("Z")
                 .build())
             .addCoordinate("pitch", createQuantity()
-            	.definition(DEF_PITCH)
+            	.definition(DEF_PITCH_ANGLE)
                 .label("Pitch Angle")
                 .description("Rotation around the lateral axis, up/down from the local horizontal plane (positive when pointing up)")
                 .uomCode(uomCode)
                 .axisId("X")
                 .build())
             .addCoordinate("roll", createQuantity()
-            	.definition(DEF_ROLL)
+            	.definition(DEF_ROLL_ANGLE)
                 .label("Roll Angle")
                 .description("Rotation around the longitudinal axis")
                 .uomCode(uomCode)
@@ -396,14 +396,14 @@ public class GeoPosHelper extends VectorHelper
                 .axisId("Z")
                 .build())
             .addCoordinate("pitch", createQuantity()
-            	.definition(DEF_PITCH)
+            	.definition(DEF_PITCH_ANGLE)
                 .label("Pitch Angle")
                 .description("Rotation around the lateral axis, up/down from the local horizontal plane (positive when pointing up)")
                 .uomCode(uomCode)
                 .axisId("Y")
                 .build())
             .addCoordinate("roll", createQuantity()
-            	.definition(DEF_ROLL)
+            	.definition(DEF_ROLL_ANGLE)
                 .label("Roll Angle")
                 .description("Rotation around the longitudinal axis")
                 .uomCode(uomCode)
