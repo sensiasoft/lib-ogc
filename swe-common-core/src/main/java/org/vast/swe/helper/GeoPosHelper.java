@@ -38,6 +38,7 @@ public class GeoPosHelper extends VectorHelper
     public static final String DEF_LONGITUDE = SWEHelper.getPropertyUri("Longitude");
     public static final String DEF_ALTITUDE_ELLIPSOID = SWEHelper.getPropertyUri("HeightAboveEllipsoid");
     public static final String DEF_ALTITUDE_MSL = SWEHelper.getPropertyUri("HeightAboveMSL");
+    public static final String DEF_ALTITUDE_GROUND = SWEHelper.getPropertyUri("HeightAboveGround");
     public static final String DEF_ALTITUDE_BAROMETRIC = SWEHelper.getPropertyUri("BarometricAltitude");
     public static final String DEF_HEADING_TRUE = SWEHelper.getPropertyUri("TrueHeading");
     public static final String DEF_HEADING_MAGNETIC = SWEHelper.getPropertyUri("MagneticHeading");
@@ -56,7 +57,7 @@ public class GeoPosHelper extends VectorHelper
     {
         return createVector()
             .definition(DEF_LOCATION)
-            .refFrame(SWEConstants.REF_FRAME_4979)
+            .refFrame(SWEConstants.REF_FRAME_WGS84_HAE)
             .addCoordinate("lat", createQuantity()
                 .definition(DEF_LATITUDE_GEODETIC)
                 .label("Geodetic Latitude")
@@ -100,7 +101,7 @@ public class GeoPosHelper extends VectorHelper
     {
         return createVector()
             .definition(DEF_LOCATION)
-            .refFrame(SWEConstants.REF_FRAME_4326)
+            .refFrame(SWEConstants.REF_FRAME_WGS84_MSL)
             .addCoordinate("lat", createQuantity()
                 .definition(DEF_LATITUDE_GEODETIC)
                 .label("Geodetic Latitude")
@@ -115,7 +116,6 @@ public class GeoPosHelper extends VectorHelper
                 .build())
             .addCoordinate("alt", createQuantity()
                 .definition(DEF_ALTITUDE_MSL)
-                .refFrame(SWEConstants.VERTICAL_CRS_MSL_HEIGHT)
                 .label("MSL Height")
                 .axisId("h")
                 .uomCode("m")
@@ -182,7 +182,7 @@ public class GeoPosHelper extends VectorHelper
     public VectorBuilder createLocationVectorECEF(String uomCode)
     {
         return createLocationVectorXYZ(uomCode)
-            .refFrame(SWEConstants.REF_FRAME_ECEF);
+            .refFrame(SWEConstants.REF_FRAME_WGS84_ECEF);
     }
 
 
@@ -194,7 +194,7 @@ public class GeoPosHelper extends VectorHelper
      */
     public Vector newLocationVectorECEF(String def, String uomCode)
     {
-        return newLocationVectorXYZ(def, SWEConstants.REF_FRAME_ECEF, "m");
+        return newLocationVectorXYZ(def, SWEConstants.REF_FRAME_WGS84_ECEF, "m");
     }
 
 
@@ -217,7 +217,7 @@ public class GeoPosHelper extends VectorHelper
     public VectorBuilder createVelocityVectorECEF(String uomCode)
     {
         return createVelocityVector(uomCode)
-            .refFrame(SWEConstants.REF_FRAME_ECEF);
+            .refFrame(SWEConstants.REF_FRAME_WGS84_ECEF);
     }
 
 
@@ -229,7 +229,7 @@ public class GeoPosHelper extends VectorHelper
      */
     public Vector newVelocityVectorECEF(String def, String uomCode)
     {
-        return newVelocityVector(def, SWEConstants.REF_FRAME_ECEF, uomCode);
+        return newVelocityVector(def, SWEConstants.REF_FRAME_WGS84_ECEF, uomCode);
     }
     
     
@@ -595,7 +595,7 @@ public class GeoPosHelper extends VectorHelper
     public VectorBuilder createQuatOrientationECEF()
     {
         return createQuatOrientation()
-            .refFrame(SWEConstants.REF_FRAME_ECEF);
+            .refFrame(SWEConstants.REF_FRAME_WGS84_ECEF);
     }
 
 
@@ -606,6 +606,6 @@ public class GeoPosHelper extends VectorHelper
      */
     public Vector newQuatOrientationECEF(String def)
     {
-        return newQuatOrientation(def, SWEConstants.REF_FRAME_ECEF);
+        return newQuatOrientation(def, SWEConstants.REF_FRAME_WGS84_ECEF);
     }
 }

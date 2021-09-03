@@ -35,12 +35,12 @@ public class TestVectorHelper
     @Test
     public void testCreateUnitVector() throws Exception
     {
-        Vector v = fac.newUnitVectorXYZ(null, SWEConstants.REF_FRAME_ECEF);
+        Vector v = fac.newUnitVectorXYZ(null, SWEConstants.REF_FRAME_WGS84_ECEF);
         utils.writeComponent(System.out, v, false, true);
 
         assertEquals(3, v.getNumCoordinates());
         assertEquals(VectorHelper.DEF_UNIT_VECTOR, v.getDefinition());
-        assertEquals(SWEConstants.REF_FRAME_ECEF, v.getReferenceFrame());
+        assertEquals(SWEConstants.REF_FRAME_WGS84_ECEF, v.getReferenceFrame());
 
         System.out.println();
         System.out.println();
@@ -51,12 +51,12 @@ public class TestVectorHelper
     public void testCreateLocationVector() throws Exception
     {
         String uom = "m";
-        Vector v = fac.newLocationVectorXYZ(null, SWEConstants.REF_FRAME_ECEF, uom);
+        Vector v = fac.newLocationVectorXYZ(null, SWEConstants.REF_FRAME_WGS84_ECEF, uom);
         utils.writeComponent(System.out, v, false, true);
 
         assertEquals(3, v.getNumCoordinates());
         assertEquals(VectorHelper.DEF_LOCATION, v.getDefinition());
-        assertEquals(SWEConstants.REF_FRAME_ECEF, v.getReferenceFrame());
+        assertEquals(SWEConstants.REF_FRAME_WGS84_ECEF, v.getReferenceFrame());
         for (ScalarComponent c: v.getCoordinateList())
         {
             assertEquals(uom, ((Quantity)c).getUom().getCode());
@@ -73,12 +73,12 @@ public class TestVectorHelper
     {
         String def = SWEHelper.getPropertyUri("TargetVelocity");
         String uom = "m/s";
-        Vector v = fac.newVelocityVector(def, SWEConstants.REF_FRAME_ECEF, uom);
+        Vector v = fac.newVelocityVector(def, SWEConstants.REF_FRAME_WGS84_ECEF, uom);
         utils.writeComponent(System.out, v, false, true);
 
         assertEquals(3, v.getNumCoordinates());
         assertEquals(def, v.getDefinition());
-        assertEquals(SWEConstants.REF_FRAME_ECEF, v.getReferenceFrame());
+        assertEquals(SWEConstants.REF_FRAME_WGS84_ECEF, v.getReferenceFrame());
         for (ScalarComponent c: v.getCoordinateList())
         {
             assertEquals(uom, ((Quantity)c).getUom().getCode());
@@ -164,7 +164,7 @@ public class TestVectorHelper
     {
         String uom = "m";
         var v = fac.createLocationVectorXYZ(uom)
-            .refFrame(SWEConstants.REF_FRAME_ECEF)
+            .refFrame(SWEConstants.REF_FRAME_WGS84_ECEF)
             .localFrame("#SENSOR_FRAME")
             .build();
         
@@ -172,7 +172,7 @@ public class TestVectorHelper
 
         assertEquals(3, v.getNumCoordinates());
         assertEquals(VectorHelper.DEF_LOCATION, v.getDefinition());
-        assertEquals(SWEConstants.REF_FRAME_ECEF, v.getReferenceFrame());
+        assertEquals(SWEConstants.REF_FRAME_WGS84_ECEF, v.getReferenceFrame());
         for (ScalarComponent c: v.getCoordinateList())
         {
             assertEquals(uom, ((Quantity)c).getUom().getCode());
