@@ -46,7 +46,7 @@ public class CachedReference<T> implements IXlinkReference<T>
     protected String role;
     protected String arcRole;
     protected T value;
-    protected IReferenceResolver<? extends T> resolver;
+    protected transient IReferenceResolver<? extends T> resolver;
 
 
     public CachedReference()

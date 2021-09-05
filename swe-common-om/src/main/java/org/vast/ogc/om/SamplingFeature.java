@@ -22,6 +22,8 @@ import net.opengis.gml.v32.Polygon;
 import org.vast.ogc.gml.ExtensibleFeatureImpl;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.IFeature;
+import org.vast.ogc.xlink.CachedReference;
+import org.vast.swe.SWEConstants;
 import com.google.common.collect.ImmutableMap;
 
 
@@ -39,7 +41,7 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
     public static final QName PROP_HOSTED_PROCEDURE = new QName(SAMS_NS_URI, "hostedProcedure", SAMS_NS_PREFIX);
     public static final QName PROP_SHAPE = new QName(SAMS_NS_URI, "shape", SAMS_NS_PREFIX);
     
-    protected String type;
+    protected CachedReference<Void> type;
     protected FeatureRef<?> sampledFeature;
     protected ProcedureRef hostedProcedure;
     
@@ -47,6 +49,7 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
     public SamplingFeature()
     {
         super(SF_SAMPLING_FEATURE);
+        this.sampledFeature = new FeatureRef<>(SWEConstants.NIL_UNKNOWN);
     }
     
     
@@ -59,14 +62,16 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
 
     public String getType()
     {
-        return type;
+        if (type == null)
+            return null;
+        return type.getHref();
     }
 
 
     public void setType(String type)
     {
         properties = null; // reset cached properties map
-        this.type = type;
+        this.type = new CachedReference<Void>(type);
     }
     
     
