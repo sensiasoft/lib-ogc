@@ -21,7 +21,6 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-import org.vast.ogc.om.SamplingFeature;
 import net.opengis.AbstractXMLStreamBindings;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
@@ -158,12 +157,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         }
         
         // location
-        if (bean.isSetGeometry() && !(bean instanceof SamplingFeature))
+        if (bean.isSetGeometry() && !bean.hasCustomGeomProperty())
         {
-            writer.writeStartElement(NS_URI, "geometry");
+            writer.writeStartElement(NS_URI, "location");
             writePropertyAttributes(writer, bean.getGeometryProperty());
             if (bean.getGeometryProperty().hasValue())
-                this.writeAbstractGeometry(writer, bean.getGeometry());            
+                this.writeAbstractGeometry(writer, bean.getGeometry());
             writer.writeEndElement();
         }
     }

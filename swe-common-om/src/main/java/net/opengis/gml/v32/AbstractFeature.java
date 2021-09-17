@@ -88,5 +88,16 @@ public interface AbstractFeature extends IGeoFeature, AbstractGML
      * Sets the geometry property
      */
     public void setGeometry(AbstractGeometry geom);
+    
+    
+    /**
+     * To be overriden by subclasses when a property provides the geometry.
+     * In this case, no location property is serialized
+     * @return True if a custom property contains the geometry
+     */
+    public default boolean hasCustomGeomProperty()
+    {
+        return false;
+    }
 
 }

@@ -185,7 +185,8 @@ public class GMLStaxBindings extends XMLStreamBindings
             if (val instanceof IXlinkReference<?>)
             {
                 String href = ((IXlinkReference<?>) val).getHref();
-                writer.writeAttribute(XLINK_NS_URI, "href", href);
+                if (href != null)
+                    writer.writeAttribute(XLINK_NS_URI, "href", href);
             }
             else if (val instanceof AbstractGeometry)
             {

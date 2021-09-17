@@ -78,7 +78,8 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
     public void setSampledFeatureUID(String featureUID)
     {
         properties = null; // reset cached properties map
-        this.sampledFeature = new FeatureRef<IFeature>(featureUID);
+        this.sampledFeature =
+            new FeatureRef<IFeature>(featureUID != null ? featureUID : SWEConstants.NIL_UNKNOWN);
     }
     
     
@@ -91,7 +92,7 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
     public void setHostedProcedureUID(String procUID)
     {
         properties = null; // reset cached properties map
-        this.hostedProcedure = new ProcedureRef(procUID);
+        this.hostedProcedure = procUID != null ? new ProcedureRef(procUID) : null;
     }
     
     
@@ -164,6 +165,13 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
         sf.setHostedProcedureUID(getHostedProcedureUID());
         
         return sf;
+    }
+
+
+    @Override
+    public boolean hasCustomGeomProperty()
+    {
+        return true;
     }
 
 }
