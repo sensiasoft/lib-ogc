@@ -28,6 +28,8 @@ import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.AbstractTimePrimitive;
 import net.opengis.gml.v32.Measure;
 import net.opengis.gml.v32.bind.XMLStreamBindings;
+import net.opengis.gml.v32.impl.AbstractGMLImpl;
+import net.opengis.gml.v32.impl.CodeWithAuthorityImpl;
 import net.opengis.gml.v32.impl.GMLFactory;
 
 
@@ -217,6 +219,13 @@ public class GMLStaxBindings extends XMLStreamBindings
         {
             writer.writeStartElement(NS_URI, "description");
             writer.writeCharacters(bean.getDescription());
+            writer.writeEndElement();
+        }
+        
+        if (bean.getUniqueIdentifier() != null)
+        {
+            writer.writeStartElement(NS_URI, "identifier");
+            this.writeCodeType(writer, new CodeWithAuthorityImpl(AbstractGMLImpl.UUID_CODE, bean.getUniqueIdentifier()));
             writer.writeEndElement();
         }
         
