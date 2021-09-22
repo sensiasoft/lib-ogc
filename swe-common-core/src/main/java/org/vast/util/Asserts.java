@@ -15,12 +15,17 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 package org.vast.util;
 
 import java.util.Collection;
+import java.util.EnumSet;
+import java.util.Set;
+import com.google.common.collect.Range;
 
 /**
  * Modified Asserts utility methods based on Guava implementation
  */
 public final class Asserts
 {
+    static String NULL_ERROR_MSG = " cannot be null";
+    
     
     private Asserts()
     {
@@ -60,8 +65,8 @@ public final class Asserts
      *
      * @param expression a boolean expression
      * @param errorMessageTemplate a template for the exception message should the check fail. The
-     *     message is formed by replacing each {@code %s} placeholder in the template with an
-     *     argument. These are matched by position - the first {@code %s} gets {@code
+     *     message is formed by replacing each '{}' placeholder in the template with an
+     *     argument. These are matched by position - the first '{}' gets {@code
      *     errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
      *     square braces. Unmatched placeholders will be left as-is.
      * @param errorMessageArgs the arguments to be substituted into the message template. Arguments
@@ -74,6 +79,57 @@ public final class Asserts
     {
         if (!expression)
             throw new IllegalArgumentException(format(errorMessageTemplate, errorMessageArgs));
+    }
+
+    
+    /**
+     * Ensures that a comparable value (e.g. numerical) is within the provided range
+     * @param val value of comparable to be checked
+     * @param range range of allowed value (bounds can be inclusive or exclusive)
+     * @param desc name of variable being checked (will be used in error message)
+     * @return The provided value if valid
+     * @throws IllegalArgumentException if value is not in range
+     */
+    public static <T extends Comparable<T>> T checkValueInRange(T val, Range<T> range, String desc)
+    {
+        checkArgument(range.contains(val), "{} must be within {}", desc, range);
+        return val;
+    }
+    
+    
+    /**
+     * Ensures that a value is one of the allowed values in a set
+     * @param val value of variable to be checked
+     * @param allowedValues set of allowed values
+     * @param desc name of variable being checked (will be used in error message)
+     * @return The provided value if valid
+     * @throws IllegalArgumentException if value is not in set
+     */
+    public static <T> T checkArgumentInSet(T val, Set<T> allowedValues, String desc)
+    {
+        checkArgument(allowedValues.contains(val), "{} must be one of {}", desc, allowedValues);
+        return val;
+    }
+    
+    
+    /**
+     * Ensures that a string value is one of the allowed values from an enum
+     * @param val value of variable to be checked
+     * @param enumClass enum class
+     * @param desc name of variable being checked (will be used in error message)
+     * @return The corresponding enum constant if it exists
+     * @throws IllegalArgumentException if value is not in enum
+     */
+    public static <E extends Enum<E>> E checkArgumentInEnum(String val, Class<E> enumClass, String desc)
+    {
+        try
+        {
+            return Enum.valueOf(enumClass, val);
+        }
+        catch (Exception e)
+        {
+            throw new IllegalArgumentException(format("{} must be one of {}", val, EnumSet.allOf(enumClass)));
+        }
     }
 
 
@@ -113,8 +169,8 @@ public final class Asserts
      *
      * @param expression a boolean expression
      * @param errorMessageTemplate a template for the exception message should the check fail. The
-     *     message is formed by replacing each {@code %s} placeholder in the template with an
-     *     argument. These are matched by position - the first {@code %s} gets {@code
+     *     message is formed by replacing each '{}' placeholder in the template with an
+     *     argument. These are matched by position - the first '{}' gets {@code
      *     errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
      *     square braces. Unmatched placeholders will be left as-is.
      * @param errorMessageArgs the arguments to be substituted into the message template. Arguments
@@ -160,7 +216,7 @@ public final class Asserts
         {
             String nameOrMsg = decode(errorMessage);
             if (nameOrMsg != null && !nameOrMsg.contains(" "))
-                nameOrMsg += " cannot be null";
+                nameOrMsg += NULL_ERROR_MSG;
             throw new NullPointerException(nameOrMsg);
         }
         
@@ -173,8 +229,8 @@ public final class Asserts
      *
      * @param reference an object reference
      * @param errorMessageTemplate a template for the exception message should the check fail. The
-     *     message is formed by replacing each {@code %s} placeholder in the template with an
-     *     argument. These are matched by position - the first {@code %s} gets {@code
+     *     message is formed by replacing each '{}' placeholder in the template with an
+     *     argument. These are matched by position - the first '{}' gets {@code
      *     errorMessageArgs[0]}, etc. Unmatched arguments will be appended to the formatted message in
      *     square braces. Unmatched placeholders will be left as-is.
      * @param errorMessageArgs the arguments to be substituted into the message template. Arguments
@@ -194,17 +250,17 @@ public final class Asserts
     
     
     /**
-     * Ensures that a String is neither null nor empty
-     * @param reference a string reference
+     * Ensures that a CharSequence is neither null nor empty
+     * @param reference a CharSequence reference
      * @param errorMessage the exception message to use if the check fails; will be converted to a
      *     string using {@link String#valueOf(Object)}
      * @return the non-null reference that was validated
      * @throws NullPointerException if {@code reference} is null
      */
-    public static String checkNotNullOrEmpty(String reference, Object errorMessage)
+    public static <T extends CharSequence> T checkNotNullOrEmpty(T reference, Object errorMessage)
     {
-        if (reference == null || reference.isEmpty())
-            throwNullOrEmptyMessage(reference, errorMessage);        
+        if (reference == null || reference.length() == 0)
+            throwNullOrEmptyMessage(reference, errorMessage);
         return reference;
     }
     
@@ -220,7 +276,7 @@ public final class Asserts
     public static <T> Collection<T> checkNotNullOrEmpty(Collection<T> reference, Object errorMessage)
     {
         if (reference == null || reference.isEmpty())
-            throwNullOrEmptyMessage(reference, errorMessage);        
+            throwNullOrEmptyMessage(reference, errorMessage);
         return reference;
     }
     
@@ -340,18 +396,60 @@ public final class Asserts
     private static void throwNullOrEmptyMessage(Object reference, Object errorMessage)
     {
         String nameOrMsg = decode(errorMessage);
-        if (nameOrMsg != null && !nameOrMsg.contains(" "))
-            nameOrMsg += " cannot be null or empty";
+        boolean isName = nameOrMsg != null && !nameOrMsg.contains(" ");
         
         if (reference == null)
-            throw new NullPointerException(nameOrMsg);
+            throw new NullPointerException(isName ? nameOrMsg + NULL_ERROR_MSG : nameOrMsg);
         else
-            throw new IllegalArgumentException(nameOrMsg);
+            throw new IllegalArgumentException(isName ? nameOrMsg + " cannot be empty" : nameOrMsg);
     }
     
     
     /**
-     * Ensures that an array has the correct size
+     * Ensures that a String is not null and contains at least one non-whitespace character
+     * @param str an array reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @return the String that was validated
+     * @throws IllegalArgumentException if {@code str} is null or blank
+     */
+    public static String checkNotNullOrBlank(String str, Object errorMessage)
+    {
+        if (str == null || str.isBlank())
+        {
+            String nameOrMsg = decode(errorMessage);
+            boolean isName = nameOrMsg != null && !nameOrMsg.contains(" ");
+            
+            if (str == null)
+                throw new NullPointerException(isName ? nameOrMsg + NULL_ERROR_MSG : nameOrMsg);
+            else
+                throw new IllegalArgumentException(isName ? nameOrMsg + " cannot be blank" : nameOrMsg);
+        }
+        
+        return str;
+    }
+    
+    
+    /**
+     * Ensures that a character sequence (e.g. String) is not null and has the correct size
+     * @param str a character sequence reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @param minSize
+     * @param maxSize
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null
+     */
+    public static <T extends CharSequence> T checkCharLength(T str, Object errorMessage, int minSize, int maxSize)
+    {
+        if (str == null || str.length() < minSize || str.length() > maxSize)
+            throwNullOrInvalidSizeMessage(str, errorMessage);
+        return str;
+    }
+    
+    
+    /**
+     * Ensures that an array is not null and has the correct size
      * @param array an array reference
      * @param errorMessage the exception message to use if the check fails; will be converted to a
      *     string using {@link String#valueOf(Object)}
@@ -363,8 +461,38 @@ public final class Asserts
     public static <T> T[] checkArraySize(T[] array, Object errorMessage, int minSize, int maxSize)
     {
         if (array == null || array.length < minSize || array.length > maxSize)
-            throwNullOrEmptyMessage(array, errorMessage);
+            throwNullOrInvalidSizeMessage(array, errorMessage);
         return array;
+    }
+    
+    
+    /**
+     * Ensures that a collection is not null and has the correct size
+     * @param collection a collection reference
+     * @param errorMessage the exception message to use if the check fails; will be converted to a
+     *     string using {@link String#valueOf(Object)}
+     * @param minSize
+     * @param maxSize
+     * @return the non-null reference that was validated
+     * @throws NullPointerException if {@code reference} is null
+     */
+    public static <T extends Collection<?>> T checkCollectionSize(T collection, Object errorMessage, int minSize, int maxSize)
+    {
+        if (collection == null || collection.size() < minSize || collection.size() > maxSize)
+            throwNullOrInvalidSizeMessage(collection, errorMessage);
+        return collection;
+    }
+    
+    
+    private static void throwNullOrInvalidSizeMessage(Object reference, Object errorMessage)
+    {
+        String nameOrMsg = decode(errorMessage);
+        boolean isName = nameOrMsg != null && !nameOrMsg.contains(" ");
+        
+        if (reference == null)
+            throw new NullPointerException(isName ? nameOrMsg + NULL_ERROR_MSG : nameOrMsg);
+        else
+            throw new IllegalArgumentException(isName ? nameOrMsg + " has an incorrect size" : nameOrMsg);
     }
 
 
@@ -526,12 +654,12 @@ public final class Asserts
 
 
     /**
-     * Substitutes each {@code %s} in {@code template} with an argument. These are matched by
-     * position: the first {@code %s} gets {@code args[0]}, etc. If there are more arguments than
+     * Substitutes each '{}' in {@code template} with an argument. These are matched by
+     * position: the first '{}' gets {@code args[0]}, etc. If there are more arguments than
      * placeholders, the unmatched arguments will be appended to the end of the formatted message in
      * square braces.
      *
-     * @param template a non-null string containing 0 or more {@code %s} placeholders.
+     * @param template a non-null string containing 0 or more '{}' placeholders.
      * @param args the arguments to be substituted into the message template. Arguments are converted
      *     to strings using {@link String#valueOf(Object)}. Arguments can be null.
      */
