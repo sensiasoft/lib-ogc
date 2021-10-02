@@ -45,6 +45,7 @@ public class GMLStaxBindings extends XMLStreamBindings
 {
     public final static String NS_PREFIX_GML = "gml";
     public final static String NS_PREFIX_XLINK = "xlink";
+    public final static String NS_PREFIX_XSI = "xsi";
 
     protected GmlIdGenerator<AbstractGML> geomIds = new SequentialIdGenerator<>("G", true);
     protected GmlIdGenerator<AbstractGML> timeIds = new SequentialIdGenerator<>("T", true);
@@ -72,6 +73,7 @@ public class GMLStaxBindings extends XMLStreamBindings
         featureTypesBindings = new HashMap<>();
         nsContext.registerNamespace(NS_PREFIX_GML, net.opengis.gml.v32.bind.XMLStreamBindings.NS_URI);
         nsContext.registerNamespace(NS_PREFIX_XLINK, net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
+        nsContext.registerNamespace(NS_PREFIX_XSI, net.opengis.swe.v20.bind.XMLStreamBindings.XSI_NS_URI);
     }
     
     
@@ -105,10 +107,10 @@ public class GMLStaxBindings extends XMLStreamBindings
             QName propName = reader.getName();
             
             // skip until next non-whitespace event
-            do {reader.next();}            
+            do {reader.next();}
             while (reader.isWhiteSpace());
                         
-            int eventType = reader.getEventType();            
+            int eventType = reader.getEventType();
             switch (eventType)
             {
                 case XMLStreamReader.CHARACTERS:
@@ -171,43 +173,10 @@ public class GMLStaxBindings extends XMLStreamBindings
         else
         {
             writeCommonFeatureProperties(writer, bean);
-            writeCustomFeatureProperties(writer, bean);
         }
         
         // write all other properties
-        for (Entry<QName, Object> prop: bean.getProperties().entrySet())
-        {
-            // prop name
-            QName propName = prop.getKey();
-            writer.writeStartElement(propName.getNamespaceURI(), propName.getLocalPart());
-            
-            // prop value
-            Object val = prop.getValue();
-            
-            if (val instanceof IXlinkReference<?>)
-            {
-                String href = ((IXlinkReference<?>) val).getHref();
-                if (href != null)
-                    writer.writeAttribute(XLINK_NS_URI, "href", href);
-            }
-            else if (val instanceof AbstractGeometry)
-            {
-                writeAbstractGeometry(writer, (AbstractGeometry)val);
-            }
-            else if (val instanceof AbstractTimeGeometricPrimitive)
-            {
-                writeAbstractTimeGeometricPrimitive(writer, (AbstractTimeGeometricPrimitive)val);
-            }
-            else if (val instanceof Measure)
-            {
-                writer.writeAttribute("uom", ((Measure) val).getUom());
-                writer.writeCharacters(Double.toString(((Measure) val).getValue()));
-            }
-            else
-                writer.writeCharacters(val.toString());
-                
-            writer.writeEndElement();
-        }
+        writeCustomFeatureProperties(writer, bean);
         
         writer.writeEndElement();
     }
@@ -237,7 +206,9 @@ public class GMLStaxBindings extends XMLStreamBindings
         }
         
         // geometry
-        if (bean instanceof IGeoFeature && ((IGeoFeature)bean).getGeometry() != null)
+        if (bean instanceof IGeoFeature &&
+            ((IGeoFeature)bean).getGeometry() != null &&
+            !((IGeoFeature)bean).hasCustomGeomProperty())
         {
             writer.writeStartElement(NS_URI, "location");
             this.writeAbstractGeometry(writer, ((IGeoFeature)bean).getGeometry());
@@ -245,7 +216,9 @@ public class GMLStaxBindings extends XMLStreamBindings
         }
         
         // validTime
-        if (bean instanceof ITemporalFeature && ((ITemporalFeature)bean).getValidTime() != null)
+        if (bean instanceof ITemporalFeature &&
+            ((ITemporalFeature)bean).getValidTime() != null &&
+            !((ITemporalFeature)bean).hasCustomTimeProperty())
         {
             writer.writeStartElement(NS_URI, "validTime");
             TimeExtent validTime = ((ITemporalFeature)bean).getValidTime();
@@ -265,56 +238,44 @@ public class GMLStaxBindings extends XMLStreamBindings
             QName propName = prop.getKey();
             Object val = prop.getValue();
             String propNsUri = propName.getNamespaceURI() != null ? propName.getNamespaceURI() : nsUri;
+            writer.writeStartElement(propNsUri, propName.getLocalPart());
             
             if (val instanceof Boolean)
             {
-                writer.writeStartElement(propNsUri, propName.getLocalPart());
                 writer.writeCharacters(val.toString());
-                writer.writeEndElement();
             }
             else if (val instanceof Number)
             {
-                writer.writeStartElement(propNsUri, propName.getLocalPart());
                 writer.writeCharacters(val.toString());
-                writer.writeEndElement();
             }
             else if (val instanceof String)
             {
-                writer.writeStartElement(propNsUri, propName.getLocalPart());
                 writer.writeCharacters(val.toString());
-                writer.writeEndElement();
             }
             else if (val instanceof IXlinkReference<?>)
             {
                 String href = ((IXlinkReference<?>) val).getHref();
                 if (href != null) 
-                {
-                    writer.writeStartElement(propNsUri, propName.getLocalPart());
-                    writer.writeAttribute(NS_PREFIX_XLINK, "href", href);
-                    writer.writeEndElement();
-                }
+                    writer.writeAttribute(XLINK_NS_URI, "href", href);
+                else
+                    writer.writeAttribute(XSI_NS_URI, "nil", "true");
             }
             else if (val instanceof Measure)
             {
-                writer.writeStartElement(propNsUri, propName.getLocalPart());
                 writer.writeAttribute("uom", ((Measure) val).getUom());
                 writer.writeCharacters(Double.toString(((Measure) val).getValue()));
-                writer.writeEndElement();
             }
-            else if (val instanceof AbstractGeometry &&
-                (bean instanceof IGeoFeature && val != ((IGeoFeature)bean).getGeometry()) )
+            else if (val instanceof AbstractGeometry)
             {
-                writer.writeStartElement(propNsUri, propName.getLocalPart());
                 writeAbstractGeometry(writer, (AbstractGeometry)val);
-                writer.writeEndElement();
             }
             else if (val instanceof AbstractTimeGeometricPrimitive &&
                 !GenericTemporalFeatureImpl.PROP_VALID_TIME.equals(propName))
             {
-                writer.writeStartElement(propNsUri, propName.getLocalPart());
                 writeAbstractTimeGeometricPrimitive(writer, (AbstractTimeGeometricPrimitive)val);
-                writer.writeEndElement();
             }
+            
+            writer.writeEndElement();
         }
     }
     
@@ -386,6 +347,6 @@ public class GMLStaxBindings extends XMLStreamBindings
         if (f instanceof AbstractFeature)
             return ((AbstractFeature) f).getQName();
         else
-            return new QName(f.getClass().getPackageName(), f.getClass().getSimpleName());
+            return new QName(NS_URI, "Feature");
     }
 }

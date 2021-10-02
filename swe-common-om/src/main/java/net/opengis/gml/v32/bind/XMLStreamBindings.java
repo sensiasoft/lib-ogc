@@ -80,7 +80,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
      */
     public void readAbstractFeatureTypeAttributes(Map<String, String> attrMap, AbstractFeature bean) throws XMLStreamException
     {
-        this.readAbstractGMLTypeAttributes(attrMap, bean);        
+        this.readAbstractGMLTypeAttributes(attrMap, bean);
     }
     
     

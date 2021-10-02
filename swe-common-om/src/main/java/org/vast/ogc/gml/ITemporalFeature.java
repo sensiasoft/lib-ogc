@@ -28,4 +28,15 @@ public interface ITemporalFeature extends IFeature
      * @return feature validity period (or null if always valid)
      */
     public TimeExtent getValidTime();
+    
+    
+    /**
+     * To be overriden by subclasses when a property other than validTime provides
+     * the feature time. In this case, no validTime property is serialized
+     * @return True if a custom property contains the feature time stamp
+     */
+    public default boolean hasCustomTimeProperty()
+    {
+        return false;
+    }
 }

@@ -27,4 +27,15 @@ public interface IGeoFeature extends IFeature
      * @return the geometry/location
      */
     public AbstractGeometry getGeometry();
+    
+    
+    /**
+     * To be overriden by subclasses when a property other than location provides
+     * the geometry. In this case, no location property is serialized
+     * @return True if a custom property contains the geometry
+     */
+    public default boolean hasCustomGeomProperty()
+    {
+        return false;
+    }
 }
