@@ -23,7 +23,7 @@
 
 package org.vast.ogc.om;
 
-import org.vast.ogc.gml.ITemporalFeature;
+import org.vast.ogc.gml.IFeature;
 
 
 /**
@@ -34,7 +34,7 @@ import org.vast.ogc.gml.ITemporalFeature;
  * @author Alex Robin
  * @since Sep 28, 2012
  * */
-public interface IProcedure extends ITemporalFeature
+public interface IProcedure extends IFeature
 {
 
 }

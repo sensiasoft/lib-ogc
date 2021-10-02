@@ -48,7 +48,7 @@ import org.vast.util.URIResolver;
  * @author Alex Robin
  * @since Sep 28, 2012
  * */
-public class FeatureRef<T extends IFeature> extends CachedReference<T> implements IGeoFeature, ITemporalFeature
+public class FeatureRef<T extends IFeature> extends CachedReference<T> implements IFeature
 {
     
     public FeatureRef()
@@ -115,22 +115,14 @@ public class FeatureRef<T extends IFeature> extends CachedReference<T> implement
     @Override
     public AbstractGeometry getGeometry()
     {
-        IFeature f = getTarget();
-        if (f instanceof IGeoFeature)
-            return ((IGeoFeature)f).getGeometry();
-        else
-            return null;
+        return getTarget().getGeometry();
     }
 
 
     @Override
     public TimeExtent getValidTime()
     {
-        IFeature f = getTarget();
-        if (f instanceof ITemporalFeature)
-            return ((ITemporalFeature)f).getValidTime();
-        else
-            return null;
+        return getTarget().getValidTime();
     }
 
 

@@ -21,7 +21,6 @@ import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.TimeInstant;
 import net.opengis.gml.v32.TimePeriod;
 import org.isotc211.v2005.gmd.MDLegalConstraints;
-import org.vast.ogc.gml.ITemporalFeature;
 
 
 /**
@@ -30,7 +29,7 @@ import org.vast.ogc.gml.ITemporalFeature;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface DescribedObject extends AbstractFeature, ITemporalFeature
+public interface DescribedObject extends AbstractFeature
 {
     public final static String DEFAULT_NS_URI = "http://www.opengis.net/sensorml/2.0";
     

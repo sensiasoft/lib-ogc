@@ -34,7 +34,6 @@ import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.Reference;
 import org.vast.ogc.gml.GenericFeature;
-import org.vast.ogc.gml.ITemporalFeature;
 import org.vast.util.TimeExtent;
 import org.w3c.dom.Element;
 
@@ -380,8 +379,6 @@ public class ProcedureXML implements IProcedure, GenericFeature
     @Override
     public TimeExtent getValidTime()
     {
-        if (procedure instanceof ITemporalFeature)
-            return ((ITemporalFeature)procedure).getValidTime();
-        return null;
+        return procedure.getValidTime();
     }
 }

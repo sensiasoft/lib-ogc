@@ -20,7 +20,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import org.vast.ogc.xlink.IXlinkReference;
-import org.vast.util.TimeExtent;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.AbstractGML;
 import net.opengis.gml.v32.AbstractGeometry;
@@ -206,23 +205,18 @@ public class GMLStaxBindings extends XMLStreamBindings
         }
         
         // geometry
-        if (bean instanceof IGeoFeature &&
-            ((IGeoFeature)bean).getGeometry() != null &&
-            !((IGeoFeature)bean).hasCustomGeomProperty())
+        if (bean.getGeometry() != null && !bean.hasCustomGeomProperty())
         {
             writer.writeStartElement(NS_URI, "location");
-            this.writeAbstractGeometry(writer, ((IGeoFeature)bean).getGeometry());
+            this.writeAbstractGeometry(writer, bean.getGeometry());
             writer.writeEndElement();
         }
         
         // validTime
-        if (bean instanceof ITemporalFeature &&
-            ((ITemporalFeature)bean).getValidTime() != null &&
-            !((ITemporalFeature)bean).hasCustomTimeProperty())
+        if (bean.getValidTime() != null && !bean.hasCustomTimeProperty())
         {
             writer.writeStartElement(NS_URI, "validTime");
-            TimeExtent validTime = ((ITemporalFeature)bean).getValidTime();
-            this.writeAbstractTimeGeometricPrimitive(writer, GMLUtils.timeExtentToTimePrimitive(validTime, false));
+            this.writeAbstractTimeGeometricPrimitive(writer, GMLUtils.timeExtentToTimePrimitive(bean.getValidTime(), false));
             writer.writeEndElement();
         }
     }

@@ -29,7 +29,6 @@ import java.util.Map;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.IFeature;
-import org.vast.ogc.gml.ITemporalFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.TimeExtent;
 
@@ -42,7 +41,7 @@ import org.vast.util.TimeExtent;
  * @author Alex Robin
  * @since Sep 28, 2012
  * */
-public interface IObservation extends ITemporalFeature
+public interface IObservation extends IFeature
 {
     public final static String OBS_TYPE_GENERIC = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Observation";
     public final static String OBS_TYPE_MEAS = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement";

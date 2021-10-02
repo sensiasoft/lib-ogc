@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.Map;
 import javax.xml.namespace.QName;
 import org.vast.util.IResource;
+import org.vast.util.TimeExtent;
+import net.opengis.gml.v32.AbstractGeometry;
 
 /**
  * <p>
@@ -25,11 +27,16 @@ import org.vast.util.IResource;
 public interface IFeature extends IResource
 {
 
-    String getId();
+    /**
+     * @return the local/internal ID of the feature (often automatically
+     * assigned by the feature repository)
+     */
+    public String getId();
     
     
     /**
-     * @return the globally unique identifier
+     * @return the globally unique identifier that can be used to identify
+     * the same feature across contexts (e.g. across repositories)
      */
     public String getUniqueIdentifier();
     
@@ -40,6 +47,46 @@ public interface IFeature extends IResource
     public default String getType()
     {
         return null;
+    }
+    
+    
+    /**
+     * @return the geometry/location (or null if feature has no geometry)
+     */
+    public default AbstractGeometry getGeometry()
+    {
+        return null;
+    }
+    
+    
+    /**
+     * To be overriden by subclasses when a property other than location provides
+     * the geometry. In this case, no location property is serialized
+     * @return True if a custom property contains the geometry
+     */
+    public default boolean hasCustomGeomProperty()
+    {
+        return false;
+    }
+    
+    
+    /**
+     * @return feature validity period (or null if always valid)
+     */
+    public default TimeExtent getValidTime()
+    {
+        return null;
+    }
+    
+    
+    /**
+     * To be overriden by subclasses when a property other than validTime provides
+     * the feature time. In this case, no validTime property is serialized
+     * @return True if a custom property contains the feature time stamp
+     */
+    public default boolean hasCustomTimeProperty()
+    {
+        return false;
     }
     
     

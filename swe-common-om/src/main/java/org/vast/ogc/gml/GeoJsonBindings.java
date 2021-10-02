@@ -105,10 +105,10 @@ public class GeoJsonBindings
         writer.name("id").value(encodeFeatureID(bean));
         
         // geometry
-        if (bean instanceof IGeoFeature && ((IGeoFeature)bean).getGeometry() != null)
+        if (bean.getGeometry() != null)
         {
             writer.name("geometry");
-            writeGeometry(writer, ((IGeoFeature)bean).getGeometry());
+            writeGeometry(writer, bean.getGeometry());
         }
     }
     
@@ -124,10 +124,10 @@ public class GeoJsonBindings
         if (bean.getDescription() != null)
             writer.name("description").value(bean.getDescription());
         
-        if (bean instanceof ITemporalFeature && ((ITemporalFeature) bean).getValidTime() != null)
+        if (bean.getValidTime() != null)
         {
             writer.name("validTime");
-            writeTimePeriod(writer, ((ITemporalFeature)bean).getValidTime());
+            writeTimePeriod(writer, bean.getValidTime());
         }
     }
     
@@ -172,8 +172,7 @@ public class GeoJsonBindings
                 writer.name("value").value(((Measure) val).getValue());
                 writer.endObject();
             }
-            else if (val instanceof AbstractGeometry &&
-                (bean instanceof IGeoFeature && val != ((IGeoFeature)bean).getGeometry()) )
+            else if (val instanceof AbstractGeometry && val != bean.getGeometry())
             {
                 writer.name(propName.getLocalPart());
                 writeGeometry(writer, (AbstractGeometry)val);
@@ -198,7 +197,7 @@ public class GeoJsonBindings
         return bean.getUniqueIdentifier() != null ||
                bean.getName() != null ||
                bean.getDescription() != null ||
-               (bean instanceof ITemporalFeature && ((ITemporalFeature)bean).getValidTime() != null) ||
+               bean.getValidTime() != null ||
                !bean.getProperties().isEmpty();
     }
     
