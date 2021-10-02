@@ -17,6 +17,7 @@ package org.vast.sensorML;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import javax.xml.namespace.QName;
 import org.vast.process.IDataConnection;
 import org.vast.process.IProcessChainExec;
 import org.vast.process.IProcessExec;
@@ -44,9 +45,10 @@ public class AggregateProcessImpl extends AbstractProcessImpl implements Aggrega
     protected ArrayList<Link> connections = new ArrayList<>(5);
     
     
-    public AggregateProcessImpl()
+    @Override
+    public QName getQName()
     {
-        this.qName = AggregateProcess.DEFAULT_QNAME;
+        return AggregateProcess.DEFAULT_QNAME;
     }
     
     

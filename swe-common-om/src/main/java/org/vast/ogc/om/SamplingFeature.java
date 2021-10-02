@@ -30,12 +30,13 @@ import com.google.common.collect.ImmutableMap;
 public class SamplingFeature<GeomType extends AbstractGeometry> extends ExtensibleFeatureImpl
 {
     private static final long serialVersionUID = 6351566323396110876L;
+    
     public static final String SAMS_NS_PREFIX = "sams";
     public static final String SAMS_NS_URI = "http://www.opengis.net/samplingSpatial/2.0";
     public static final String SF_NS_PREFIX = "sf";
     public static final String SF_NS_URI = "http://www.opengis.net/sampling/2.0";
     
-    public static final QName SF_SAMPLING_FEATURE = new QName(SAMS_NS_URI, "SF_SpatialSamplingFeature", SAMS_NS_PREFIX);
+    public static final QName QNAME = new QName(SAMS_NS_URI, "SF_SpatialSamplingFeature", SAMS_NS_PREFIX);
     public static final QName PROP_TYPE = new QName(SF_NS_URI, "type", SF_NS_PREFIX);
     public static final QName PROP_SAMPLED_FEATURE = new QName(SF_NS_URI, "sampledFeature", SF_NS_PREFIX);
     public static final QName PROP_HOSTED_PROCEDURE = new QName(SAMS_NS_URI, "hostedProcedure", SAMS_NS_PREFIX);
@@ -48,8 +49,6 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
     
     public SamplingFeature()
     {
-        super(SF_SAMPLING_FEATURE);
-        this.sampledFeature = new FeatureRef<>(SWEConstants.NIL_UNKNOWN);
     }
     
     
@@ -58,8 +57,14 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
         this();
         setType(type);
     }
-
-
+    
+    
+    public QName getQName()
+    {
+        return QNAME;
+    }
+    
+    
     public String getType()
     {
         if (type == null)
@@ -120,8 +125,8 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
     {
         builder.put(PROP_TYPE, type);
         
-        if (sampledFeature != null)
-            builder.put(PROP_SAMPLED_FEATURE, sampledFeature);
+        // sampled feature is a mandatory property
+        builder.put(PROP_SAMPLED_FEATURE, sampledFeature != null ? sampledFeature : new FeatureRef<>());
         
         if (hostedProcedure != null)
             builder.put(PROP_HOSTED_PROCEDURE, hostedProcedure);

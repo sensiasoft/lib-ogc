@@ -17,6 +17,7 @@ package org.vast.sensorML;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.namespace.QName;
 import org.vast.process.ProcessException;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
@@ -51,9 +52,10 @@ public class PhysicalComponentImpl extends AbstractProcessImpl implements Physic
     protected OgcProperty<ProcessMethod> method;
     
     
-    public PhysicalComponentImpl()
+    @Override
+    public QName getQName()
     {
-        this.qName = PhysicalComponent.DEFAULT_QNAME;
+        return PhysicalComponent.DEFAULT_QNAME;
     }
     
     

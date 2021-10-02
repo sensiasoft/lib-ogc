@@ -17,6 +17,7 @@ package org.vast.sensorML;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.namespace.QName;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Reference;
@@ -46,9 +47,10 @@ public class PhysicalSystemImpl extends AggregateProcessImpl implements Physical
     protected OgcPropertyList<Time> timePositionList = new OgcPropertyList<Time>();
     
     
-    public PhysicalSystemImpl()
+    @Override
+    public QName getQName()
     {
-        this.qName = PhysicalSystem.DEFAULT_QNAME;
+        return PhysicalSystem.DEFAULT_QNAME;
     }
     
     

@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.sensorML;
 
+import javax.xml.namespace.QName;
 import org.vast.process.IProcessExec;
 import org.vast.process.ProcessException;
 import net.opengis.OgcProperty;
@@ -34,9 +35,10 @@ public class SimpleProcessImpl extends AbstractProcessImpl implements SimpleProc
     protected OgcProperty<ProcessMethod> method;
     
     
-    public SimpleProcessImpl()
+    @Override
+    public QName getQName()
     {
-        this.qName = SimpleProcess.DEFAULT_QNAME;
+        return SimpleProcess.DEFAULT_QNAME;
     }
     
     

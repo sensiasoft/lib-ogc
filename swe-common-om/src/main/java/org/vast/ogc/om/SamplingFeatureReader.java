@@ -44,7 +44,7 @@ public class SamplingFeatureReader extends GMLStaxBindings implements IFeatureSt
     @Override
     public Collection<QName> getSupportedFeatureTypes()
     {
-        return Arrays.asList(SamplingFeature.SF_SAMPLING_FEATURE);
+        return Arrays.asList(SamplingFeature.QNAME);
     }
 
 

@@ -14,9 +14,11 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import javax.xml.namespace.QName;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.FeatureCollection;
+import net.opengis.gml.v32.bind.XMLStreamBindings;
 
 
 /**
@@ -27,8 +29,17 @@ import net.opengis.gml.v32.FeatureCollection;
 public class FeatureCollectionImpl extends AbstractFeatureImpl implements FeatureCollection
 {
     private static final long serialVersionUID = 205617168330167795L;
+    public static final QName QNAME = new QName(XMLStreamBindings.NS_URI, "FeatureCollection");
+    
     protected OgcPropertyList<AbstractFeature> featureMemberList = new OgcPropertyList<>();
-        
+    
+    
+    @Override
+    public QName getQName()
+    {
+        return QNAME;
+    }
+    
     
     /**
      * Gets the list of featureMember properties

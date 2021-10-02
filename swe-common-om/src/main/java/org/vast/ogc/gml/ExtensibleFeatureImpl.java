@@ -46,9 +46,8 @@ public abstract class ExtensibleFeatureImpl extends AbstractFeatureImpl
     protected transient Map<QName, Object> properties;
 
 
-    public ExtensibleFeatureImpl(QName qname)
+    public ExtensibleFeatureImpl()
     {
-        this.qName = qname;
         this.properties = new LinkedHashMap<>();
     }
     

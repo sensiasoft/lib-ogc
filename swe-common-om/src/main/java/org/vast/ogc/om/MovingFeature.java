@@ -21,14 +21,15 @@ import org.vast.ogc.gml.GenericFeatureImpl;
 public class MovingFeature extends GenericFeatureImpl
 {
     private static final long serialVersionUID = 3975647873045316629L;
+    
     public static final String MF_NS_PREFIX = "mf";
     public static final String MF_NS_URI = "http://www.opengis.net/movingfeatures/1.0";
+    public static final QName QNAME = new QName(MF_NS_URI, "MovingFeature", MF_NS_PREFIX);
     
-    public static final QName MOVING_FEATURE = new QName(MF_NS_URI, "MovingFeature", MF_NS_PREFIX);
     
-    
-    public MovingFeature()
+    @Override
+    public QName getQName()
     {
-        super(MOVING_FEATURE);
+        return QNAME;
     }
 }
