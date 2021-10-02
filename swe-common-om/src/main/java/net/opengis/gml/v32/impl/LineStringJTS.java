@@ -37,7 +37,6 @@ public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implem
 {
     private static final long serialVersionUID = -8843421116255408427L;
     AbstractGeometryImpl geom = new AbstractGeometryImpl();
-    double[] posList;
     
     
     public LineStringJTS(GeometryFactory jtsFactory, int numDims)
@@ -50,14 +49,13 @@ public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implem
     @Override
     public final double[] getPosList()
     {
-        return posList;
+        return ((JTSCoordinatesDoubleArray)getCoordinateSequence()).posList;
     }
 
 
     @Override
     public final void setPosList(double[] posList)
     {
-        this.posList = posList;
         ((JTSCoordinatesDoubleArray)getCoordinateSequence()).setPosList(posList);
         this.geometryChanged();
         geom.envelope = null;
@@ -67,7 +65,7 @@ public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implem
     @Override
     public final boolean isSetPosList()
     {
-        return (posList != null);
+        return (getPosList() != null);
     }
     
     
@@ -309,7 +307,7 @@ public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implem
     public Envelope getGeomEnvelope()
     {
         if (geom.envelope == null)
-            geom.envelope = AbstractGeometryImpl.addCoordinatesToEnvelope(geom.envelope, posList, geom.srsDimension);
+            geom.envelope = AbstractGeometryImpl.addCoordinatesToEnvelope(geom.envelope, getPosList(), geom.srsDimension);
             
         return geom.envelope;
     }

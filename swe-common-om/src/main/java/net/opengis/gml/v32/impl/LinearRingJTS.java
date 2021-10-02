@@ -29,7 +29,6 @@ import net.opengis.gml.v32.LinearRing;
 public class LinearRingJTS extends com.vividsolutions.jts.geom.LinearRing implements LinearRing
 {
     private static final long serialVersionUID = 4092205008825991782L;
-    protected double[] posList;
     
     
     public LinearRingJTS(GeometryFactory jtsFactory, int numDims)
@@ -41,14 +40,13 @@ public class LinearRingJTS extends com.vividsolutions.jts.geom.LinearRing implem
     @Override
     public double[] getPosList()
     {
-        return posList;
+        return ((JTSCoordinatesDoubleArray)getCoordinateSequence()).posList;
     }
 
 
     @Override
     public void setPosList(double[] posList)
     {
-        this.posList = posList;
         ((JTSCoordinatesDoubleArray)getCoordinateSequence()).setPosList(posList);
         this.geometryChanged();
     }    
@@ -57,7 +55,7 @@ public class LinearRingJTS extends com.vividsolutions.jts.geom.LinearRing implem
     @Override
     public boolean isSetPosList()
     {
-        return (posList != null);
+        return (getPosList() != null);
     }
     
 }

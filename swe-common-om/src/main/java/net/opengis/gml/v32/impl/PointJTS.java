@@ -37,7 +37,6 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
 {
     private static final long serialVersionUID = -5151123418510314756L;
     AbstractGeometryImpl geom = new AbstractGeometryImpl();
-    double[] pos;
     
     
     public PointJTS(GeometryFactory jtsFactory, int numDims)
@@ -50,21 +49,20 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
     @Override
     public double[] getPos()
     {
-        return pos;
+        return ((JTSCoordinatesDoubleArray)getCoordinateSequence()).posList;
     }
     
     
     @Override
     public boolean isSetPos()
     {
-        return (pos != null);
+        return (getPos() != null);
     }
     
     
     @Override
     public void setPos(double[] pos)
     {
-        this.pos = pos;
         setSrsDimension(pos.length);
         ((JTSCoordinatesDoubleArray)getCoordinateSequence()).setPosList(pos);
         this.geometryChanged();
@@ -310,7 +308,7 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
     public Envelope getGeomEnvelope()
     {
         if (geom.envelope == null)
-            geom.envelope = AbstractGeometryImpl.addCoordinatesToEnvelope(geom.envelope, pos, geom.srsDimension);
+            geom.envelope = AbstractGeometryImpl.addCoordinatesToEnvelope(geom.envelope, getPos(), geom.srsDimension);
             
         return geom.envelope;
     }
