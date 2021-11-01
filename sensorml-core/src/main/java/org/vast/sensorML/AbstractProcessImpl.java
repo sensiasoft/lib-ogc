@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.vast.data.DataIterator;
 import org.vast.process.DataConnectionList;
@@ -241,18 +242,18 @@ public abstract class AbstractProcessImpl extends DescribedObjectImpl implements
     
     
     @Override
-    public void start() throws ProcessException
+    public void start(Consumer<Throwable> onError) throws ProcessException
     {
         checkExecutable();
-        executableProcess.start();        
+        executableProcess.start(onError);
     }
 
 
     @Override
-    public void start(ExecutorService threadPool) throws ProcessException
+    public void start(ExecutorService threadPool, Consumer<Throwable> onError) throws ProcessException
     {
         checkExecutable();
-        executableProcess.start(threadPool);        
+        executableProcess.start(threadPool, onError);
     }
 
 
@@ -260,7 +261,7 @@ public abstract class AbstractProcessImpl extends DescribedObjectImpl implements
     public void stop()
     {
         checkExecutable();
-        executableProcess.stop();        
+        executableProcess.stop();
     }
 
 

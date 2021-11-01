@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vast.data.AbstractRecordImpl;
@@ -192,16 +193,16 @@ public abstract class ExecutableProcessImpl implements IProcessExec
         }
     }
     
-
+    
     @Override
-    public void start() throws ProcessException
+    public void start(Consumer<Throwable> onError) throws ProcessException
     {
-        start(Executors.newSingleThreadExecutor());
+        start(Executors.newSingleThreadExecutor(), onError);
     }
-
-
+    
+    
     @Override
-    public synchronized void start(ExecutorService threadPool) throws ProcessException
+    public synchronized void start(ExecutorService threadPool, Consumer<Throwable> onError) throws ProcessException
     {
         if (started)
             return;
@@ -210,21 +211,23 @@ public abstract class ExecutableProcessImpl implements IProcessExec
             init();
         
         started = true;
-        final ExecutableProcessImpl process = this;
         execFuture = threadPool.submit(new Runnable() {
             @Override
             public void run()
-            {                   
+            {
                 getLogger().debug("Process thread started");
-                                                
+                
                 try
                 {
                     while (started)
-                        process.run();
+                        ExecutableProcessImpl.this.run();
                 }
-                catch (ProcessException e)
+                catch (Throwable e)
                 {
+                    started = false;
                     getLogger().error("Error during execution", e);
+                    if (onError != null)
+                        onError.accept(e);
                 }
                 
                 getLogger().debug("Process thread stopped");

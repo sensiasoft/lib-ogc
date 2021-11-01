@@ -755,7 +755,7 @@ public class SWEBuilders
             		"Instance must be one of " + Arrays.asList(Quantity.class.getSimpleName(), Arrays.asList(QuantityRange.class.getSimpleName())));
 
             this.instance = instance;
-            uomUri(SWEConstants.UOM_ANY);
+            uomUri(SWEConstants.UOM_ANY); // default to unitless
         }
 
         public B copyFrom(T base)
@@ -788,7 +788,7 @@ public class SWEBuilders
         {
             URI.create(uri); // validate URI
             UnitReference uom = fac.newUnitReference();
-            uom.setHref(uri);            
+            uom.setHref(uri);
             instance.setUom(uom);
             return (B)this;
         }

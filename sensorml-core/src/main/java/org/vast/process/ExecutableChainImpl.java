@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.vast.data.AbstractRecordImpl;
 import org.vast.swe.SWEHelper;
@@ -56,11 +57,11 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
     protected Map<String, IProcessExec> processTable = new LinkedHashMap<>();
     protected List<IProcessExec> processExecList = new ArrayList<>();
     protected boolean useChildrenThreads = false;
-    protected boolean childrenThreadsStarted = false;
     protected boolean needSync;
+    protected boolean childrenThreadsStarted = false;
     protected ExecutorService threadPool;
-       
-
+    
+    
     public ExecutableChainImpl()
     {
         super(INFO);
@@ -260,6 +261,7 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
                 {
                     childProcess.setParentLogger(getLogger());
                     childProcess.init();
+                    getLogger().debug("Initialized process '{}'", childProcess.getInstanceName());
                 }
             }
         }
@@ -360,7 +362,7 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
                                 }
                             }
                         }
-                        while (moreToRun && !checkAvailability(internalOutputConnections, true));                        
+                        while (moreToRun && !checkAvailability(internalOutputConnections, true));
                         
                         // set external inputs as needed if data has been consumed
                         // inside the chain (i.e. available = false)
@@ -386,7 +388,7 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
         }  
         catch (InterruptedException e)
         {
-            Thread.currentThread().interrupt();            
+            Thread.currentThread().interrupt();
         }     
         catch (Exception e)
         {
@@ -478,15 +480,39 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
     
     
     @Override
-    public synchronized void start() throws ProcessException
+    public synchronized void start(Consumer<Throwable> onError) throws ProcessException
     {
-        if (useChildrenThreads)
-        {
-            threadPool = Executors.newCachedThreadPool();
-            start(threadPool);
-        }
-        else
-            super.start();
+        this.threadPool = Executors.newCachedThreadPool();
+        start(threadPool, onError);
+    }
+    
+    
+    @Override
+    public synchronized void start(ExecutorService threadPool, Consumer<Throwable> onError) throws ProcessException
+    {
+        childrenThreadsStarted = true; // mark it here so children threads never start in execute
+        super.start(threadPool, onError);
+        
+        startChildrenThreads(threadPool, e -> {
+            getLogger().error("Stopping process chain because one of the child processes has stopped");
+            stop();
+            if (onError != null)
+                onError.accept(e);
+        });
+    }
+    
+    
+    protected synchronized void startChildrenThreads() throws ProcessException
+    {
+        startChildrenThreads(Executors.newCachedThreadPool(), e -> {});
+    }
+    
+    
+    protected synchronized void startChildrenThreads(ExecutorService threadPool, Consumer<Throwable> onError) throws ProcessException
+    {
+        childrenThreadsStarted = true;
+        for (final IProcessExec process: processTable.values())
+            process.start(threadPool, onError);
     }
     
     
@@ -508,19 +534,6 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
         }
         
         childrenThreadsStarted = false;
-    }
-    
-    
-    protected synchronized void startChildrenThreads() throws ProcessException
-    {
-        childrenThreadsStarted = true;
-        
-        // create new thread pool if needed
-        if (threadPool == null)
-            threadPool = Executors.newCachedThreadPool();
-        
-        for (final IProcessExec process: processTable.values())
-            process.start(threadPool);
     }
     
     

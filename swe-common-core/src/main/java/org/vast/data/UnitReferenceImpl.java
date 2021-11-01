@@ -75,10 +75,7 @@ public class UnitReferenceImpl extends OgcPropertyImpl<Unit> implements UnitRefe
     @Override
     public void setCode(String code)
     {
-        if (SWEConstants.UOM_ANY_CODE.equals(code))
-            this.code = null;
-        else
-            this.code = code;
+        this.code = code;
         this.href = null;
     }
     

@@ -121,11 +121,12 @@ public class SWEConstants
     public static final String DEF_PROCESS = SWE_SYS_URI_PREFIX + "Process";
     public static final String DEF_MODELSIM = SWE_SYS_URI_PREFIX + "Simulation";
 
-    // SWE special units
+    // Special units
+    public static final String QUDT_UOM_PREFIX = "http://qudt.org/vocab/unit/";
     public static final String SWE_UOM_URI_PREFIX = SML_ONTOLOGY_ROOT + "/swe/uom/";
     public static final String UOM_ANY = SWE_UOM_URI_PREFIX + "Any";
-    public static final String UOM_ANY_CODE = "any";
-    public static final String UOM_UNITLESS = "1";
+    public static final String UOM_UNITLESS = QUDT_UOM_PREFIX + "UNITLESS";
+    public static final String UOM_UNITLESS_CODE = "1";
 
 
     private SWEConstants()

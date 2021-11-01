@@ -12,6 +12,7 @@ package org.vast.process;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import net.opengis.sensorml.v20.IOPropertyList;
 import net.opengis.swe.v20.DataComponent;
@@ -57,6 +58,7 @@ public interface IProcessExec
     /**
      * Runs the process which includes fetching input data, calling execute
      * and producing output data
+     * @throws ProcessException 
      */
     public void run() throws ProcessException;
 
@@ -71,16 +73,19 @@ public interface IProcessExec
     
     /**
      * Start process in its own thread
+     * @param onError Called when the process ends with an unrecoverable error
      * @throws ProcessException
      */
-    public void start() throws ProcessException;
+    public void start(Consumer<Throwable> onError) throws ProcessException;
     
     
     /**
-     * Start process using the given thread pool
+     * Start process using threads from the given thread pool
+     * @param threadPool 
+     * @param onError Called when the process ends with an unrecoverable error
      * @throws ProcessException
      */
-    public void start(ExecutorService threadPool) throws ProcessException;
+    public void start(ExecutorService threadPool, Consumer<Throwable> onError) throws ProcessException;
 
 
     /**
