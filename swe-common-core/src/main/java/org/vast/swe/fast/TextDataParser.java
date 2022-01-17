@@ -20,7 +20,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.Count;
@@ -32,6 +33,8 @@ import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.TextEncoding;
 import net.opengis.swe.v20.Time;
+import org.vast.data.AbstractDataBlock;
+import org.vast.data.DataBlockMixed;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.ReaderException;
 
@@ -108,7 +111,7 @@ public class TextDataParser extends AbstractDataParser
             catch (NumberFormatException e)
             {
                 throw new ReaderException(INVALID_INTEGER_MSG + token);
-            }            
+            }
         }
     }   
     
@@ -179,13 +182,16 @@ public class TextDataParser extends AbstractDataParser
     
     protected class ChoiceTokenParser extends ChoiceProcessor
     {
-        ArrayList<String> choiceTokens;
+        DataChoice choice;
+        Map<String, Integer> itemIndexes = new HashMap<>();
         
         public ChoiceTokenParser(DataChoice choice)
         {
-            choiceTokens = new ArrayList<String>(choice.getNumItems());
+            this.choice = choice;
+            
+            int i = 0;
             for (DataComponent item: choice.getItemList())
-                choiceTokens.add(item.getName());
+                itemIndexes.put(item.getName(), i++);
         }
         
         @Override
@@ -193,12 +199,15 @@ public class TextDataParser extends AbstractDataParser
         {
             String token = readToken();
             
-            int selectedIndex = choiceTokens.indexOf(token);
-            if (selectedIndex < 0)
+            var selectedIndex = itemIndexes.get(token);
+            if (selectedIndex == null)
                 throw new ReaderException(INVALID_CHOICE_MSG + token);
             
-            data.setIntValue(index, selectedIndex);
-            // TODO set proper datablock for selected choice item
+            // set selected choice index and corresponding datablock
+            data.setIntValue(index++, selectedIndex);
+            var selectedData = choice.getComponent(selectedIndex).createDataBlock();
+            ((DataBlockMixed)data).setBlock(1, (AbstractDataBlock)selectedData);
+            
             return super.process(data, ++index, selectedIndex);
         }
     }

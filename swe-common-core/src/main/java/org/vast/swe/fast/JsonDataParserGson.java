@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import org.vast.data.AbstractDataBlock;
+import org.vast.data.DataBlockMixed;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.ReaderException;
 import com.google.gson.stream.JsonReader;
@@ -257,7 +259,6 @@ public class JsonDataParserGson extends AbstractDataParser
     protected class RecordReader extends RecordProcessor implements JsonAtomReader
     {
         String eltName;
-        boolean onlyScalars = true;
 
         public RecordReader(String eltName)
         {
@@ -292,14 +293,6 @@ public class JsonDataParserGson extends AbstractDataParser
         }
 
         @Override
-        public void add(AtomProcessor processor)
-        {
-            fieldProcessors.add(processor);
-            if (!(processor instanceof ValueReader))
-                onlyScalars = false;
-        }
-
-        @Override
         public String getEltName()
         {
             return eltName;
@@ -310,7 +303,6 @@ public class JsonDataParserGson extends AbstractDataParser
     protected class ArrayReader extends ArrayProcessor implements JsonAtomReader
     {
         String eltName;
-        boolean onlyScalars = true;
         IntegerReader sizeReader;
         
         public ArrayReader(String eltName)
@@ -336,14 +328,6 @@ public class JsonDataParserGson extends AbstractDataParser
         }
 
         @Override
-        public void add(AtomProcessor processor)
-        {
-            super.add(processor);
-            if (!(processor instanceof ValueReader))
-                onlyScalars = false;
-        }
-
-        @Override
         public String getEltName()
         {
             return eltName;
@@ -354,12 +338,17 @@ public class JsonDataParserGson extends AbstractDataParser
     protected class ChoiceReader extends ChoiceProcessor implements JsonAtomReader
     {
         String eltName;
-        boolean onlyScalars = false;
+        DataChoice choice;
         Map<String, Integer> itemIndexes = new HashMap<>();
 
         public ChoiceReader(DataChoice choice)
         {
             this.eltName = choice.getName();
+            this.choice = choice;
+            
+            int i = 0;
+            for (DataComponent item: choice.getItemList())
+                itemIndexes.put(item.getName(), i++);
         }
 
         @Override
@@ -374,23 +363,19 @@ public class JsonDataParserGson extends AbstractDataParser
             var itemName = reader.nextName();
             var selectedIndex = itemIndexes.get(itemName);
             if (selectedIndex == null)
-                throw new IllegalStateException("Invalid choice token: " + itemName + " at " + reader.getPath());
+                throw new IllegalStateException(INVALID_CHOICE_MSG + itemName + " at " + reader.getPath());
             
+            // set selected choice index and corresponding datablock
             data.setIntValue(index++, selectedIndex);
-            // TODO set proper datablock for selected choice item
-            super.process(data, index, selectedIndex);
+            var selectedData = choice.getComponent(selectedIndex).createDataBlock();
+            ((DataBlockMixed)data).setBlock(1, (AbstractDataBlock)selectedData);
+            
+            // delegate to selected item processor
+            index = super.process(data, index, selectedIndex);
 
             reader.endObject();
 
             return index;
-        }
-        
-        @Override
-        public void add(AtomProcessor processor)
-        {
-            var itemName = ((JsonAtomReader)processor).getEltName();
-            itemIndexes.put(itemName, itemProcessors.size());
-            super.add(processor);
         }
 
         @Override
