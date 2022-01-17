@@ -83,6 +83,10 @@ public abstract class TaskingRequest extends OWSRequest implements Parameterized
 	public void validate() throws OWSException
 	{
 		List<ValidationException> errorList = new ArrayList<ValidationException>();
+		
+		if (taskingParameters.getComponentCount() == 0)
+            throw new SPSException(SPSException.missing_param_code, "taskingParameters");
+        
 		taskingParameters.validateData(errorList);
 		if (errorList.size() == 0)
 			return;
