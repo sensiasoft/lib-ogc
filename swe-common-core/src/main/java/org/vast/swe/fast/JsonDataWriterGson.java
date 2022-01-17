@@ -443,7 +443,8 @@ public class JsonDataWriterGson extends AbstractDataWriter
             int selectedIndex = data.getIntValue(index);
             if (selectedIndex < 0 || selectedIndex >= choiceTokens.size())
                 throw new WriterException(AbstractDataParser.INVALID_CHOICE_MSG + selectedIndex);
-
+            index++;
+            
             // skip if disabled
             if (!enabled)
                 return super.process(data, index, selectedIndex);
@@ -457,7 +458,7 @@ public class JsonDataWriterGson extends AbstractDataWriter
                     writeInline(true);
                 
                 writer.name(choiceTokens.get(selectedIndex));
-                super.process(data, index, selectedIndex);
+                index = super.process(data, index, selectedIndex);
 
                 writer.endObject();
 
