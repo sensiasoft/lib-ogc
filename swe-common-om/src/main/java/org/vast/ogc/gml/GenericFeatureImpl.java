@@ -23,6 +23,7 @@ package org.vast.ogc.gml;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
+import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.Asserts;
 import net.opengis.gml.v32.impl.AbstractFeatureImpl;
 
@@ -67,6 +68,27 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     public QName getQName()
     {
         return qname;
+    }
+    
+    @Override
+    public String getType()
+    {
+        if (properties != null)
+        {
+            // look for a 'type' property of type String
+            for (var prop: properties.entrySet())
+            {
+                if ("type".equals(prop.getKey().getLocalPart()))
+                {
+                    if (prop.getValue() instanceof String)
+                        return (String)prop.getValue();
+                    else if (prop.getValue() instanceof IXlinkReference<?>)
+                        return ((IXlinkReference<?>)prop.getValue()).getHref();
+                }
+            }
+        }
+        
+        return super.getType();
     }
 
     
