@@ -755,7 +755,7 @@ public class SWEBuilders
             		"Instance must be one of " + Arrays.asList(Quantity.class.getSimpleName(), Arrays.asList(QuantityRange.class.getSimpleName())));
 
             this.instance = instance;
-            uomUri(SWEConstants.UOM_ANY); // default to unitless
+            uomUri(SWEConstants.UOM_UNITLESS); // default to unitless
         }
 
         public B copyFrom(T base)
