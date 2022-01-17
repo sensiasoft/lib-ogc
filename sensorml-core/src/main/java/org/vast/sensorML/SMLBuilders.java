@@ -29,6 +29,7 @@ import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.TimeIndeterminateValue;
 import net.opengis.gml.v32.impl.ReferenceImpl;
+import net.opengis.sensorml.v20.AbstractPhysicalProcess;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.AggregateProcess;
 import net.opengis.sensorml.v20.CapabilityList;
@@ -46,6 +47,7 @@ import net.opengis.sensorml.v20.SimpleProcess;
 import net.opengis.sensorml.v20.SpatialFrame;
 import net.opengis.sensorml.v20.Term;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.Vector;
 
 
@@ -483,12 +485,53 @@ public class SMLBuilders
             instance.setAttachedTo(new ReferenceImpl(platformUri));
             return (B)this;
         }
-
-        public B location(Vector v)
+        
+        public B addLocalReferenceFrame(SpatialFrame refFrame)
         {
-            instance.addPositionAsVector(v);
+            instance.addLocalReferenceFrame(refFrame);
             return (B)this;
         }
+
+        public B location(Vector loc)
+        {
+            setPositionAsVector(loc, instance);
+            return (B)this;
+        }
+        
+        public B position(DataRecord pos)
+        {
+            setPositionAsRecord(pos, instance);
+            return (B)this;
+        }
+    }
+    
+    
+    protected static void setPositionAsVector(Vector loc, AbstractPhysicalProcess comp)
+    {
+        // automatically assign reference frame if already defined
+        if (!comp.getLocalReferenceFrameList().isEmpty())
+        {
+            SpatialFrame localFrame = comp.getLocalReferenceFrameList().get(0);
+            loc.setLocalFrame("#" + localFrame.getId());
+        }
+        
+        comp.addPositionAsVector(loc);
+    }
+    
+    
+    protected static void setPositionAsRecord(DataRecord pos, AbstractPhysicalProcess comp)
+    {
+        Asserts.checkArgument(pos.getNumFields() == 2, "Position record must have 2 fields");
+        
+        // automatically assign reference frame if already defined
+        if (!comp.getLocalReferenceFrameList().isEmpty())
+        {
+            SpatialFrame localFrame = comp.getLocalReferenceFrameList().get(0);
+            ((Vector)pos.getComponent(0)).setLocalFrame("#" + localFrame.getId());
+            ((Vector)pos.getComponent(1)).setLocalFrame("#" + localFrame.getId());
+        }
+        
+        comp.addPositionAsDataRecord(pos);
     }
 
 
@@ -530,16 +573,15 @@ public class SMLBuilders
             return (B)this;
         }
 
-        public B setLocation(Vector loc)
+        public B location(Vector loc)
         {
-            // automatically assign reference frame if already defined
-            if (!instance.getLocalReferenceFrameList().isEmpty())
-            {
-                SpatialFrame localFrame = instance.getLocalReferenceFrameList().get(0);
-                loc.setLocalFrame("#" + localFrame.getId());                
-            }
-            
-            instance.addPositionAsVector(loc);
+            setPositionAsVector(loc, instance);
+            return (B)this;
+        }
+        
+        public B position(DataRecord pos)
+        {
+            setPositionAsRecord(pos, instance);
             return (B)this;
         }
 
@@ -554,7 +596,7 @@ public class SMLBuilders
             instance.addPositionAsVector(loc);
             return (B)this;
         }
-    }    
+    }
     
     
     /**
