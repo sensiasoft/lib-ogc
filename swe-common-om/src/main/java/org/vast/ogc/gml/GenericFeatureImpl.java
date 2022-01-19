@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.Asserts;
+import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.impl.AbstractFeatureImpl;
 
 
@@ -103,7 +104,13 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     public void setProperty(QName qname, Object prop)
     {
         if (prop != null)
+        {
             properties.put(qname, prop);
+            
+            // also set as geometry if prop is of geometry type
+            if (prop instanceof AbstractGeometry)
+                setGeometry((AbstractGeometry)prop);
+        }
     }
     
     

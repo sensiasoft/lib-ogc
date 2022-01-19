@@ -132,7 +132,7 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
             builder.put(PROP_HOSTED_PROCEDURE, hostedProcedure);
         
         if (location != null && location.hasValue())
-            builder.put(PROP_SHAPE, getShape());
+            builder.put(PROP_SHAPE, getGeometry());
     }
     
     

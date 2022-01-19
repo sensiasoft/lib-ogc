@@ -118,7 +118,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         }
         
         // geometry
-        found = checkElementName(reader, "geometry");
+        found = checkElementName(reader, "location");
         if (found)
         {
             reader.nextTag();

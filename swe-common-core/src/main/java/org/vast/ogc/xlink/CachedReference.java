@@ -24,6 +24,7 @@
 package org.vast.ogc.xlink;
 
 import java.io.IOException;
+import java.util.Objects;
 import org.vast.util.ResolveException;
 
 
@@ -157,5 +158,18 @@ public class CachedReference<T> implements IXlinkReference<T>
             return resolver.fetchTarget(href);
         else
             return null;
+    }
+    
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if (!(o instanceof CachedReference))
+            return false;
+        
+        var ref = (CachedReference<?>)o; 
+        return Objects.equals(href, ref.href) &&
+               Objects.equals(role, ref.role) &&
+               Objects.equals(arcRole, ref.arcRole);
     }
 }
