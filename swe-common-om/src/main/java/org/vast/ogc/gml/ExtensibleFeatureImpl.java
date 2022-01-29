@@ -31,7 +31,7 @@ import net.opengis.gml.v32.impl.AbstractFeatureImpl;
  * <p>
  * Base class for implementing custom features based on application schemas.<br/>
  * Subclasses typically add new fields along with corresponding getters and
- * setters and must override {@link #getProperties()} to expose these
+ * setters and must override {@link #appendProperties()} to expose these
  * properties in a generic way.
  * </p>
  *

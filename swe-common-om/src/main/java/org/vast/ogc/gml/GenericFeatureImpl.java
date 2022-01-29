@@ -20,6 +20,7 @@
 
 package org.vast.ogc.gml;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
@@ -96,7 +97,7 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     @Override
     public Map<QName, Object> getProperties()
     {
-        return properties;
+        return Collections.unmodifiableMap(properties);
     }
   
     
