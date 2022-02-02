@@ -198,11 +198,16 @@ public abstract class OWSServlet extends HttpServlet
             }
             else
             {
-                // internal error so always log it
-                log.error(INTERNAL_ERROR_MSG, e);
-                
                 if (!OWSUtils.isClientDisconnectError(e))
+                {
+                    log.error(INTERNAL_ERROR_MSG, e);
                     sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, INTERNAL_ERROR_HTTP_MSG);
+                }
+                else if (log.isDebugEnabled())
+                {
+                    // internal error so always log it in debug
+                    log.debug(INTERNAL_ERROR_MSG, e);
+                }
             }
         }
         finally
