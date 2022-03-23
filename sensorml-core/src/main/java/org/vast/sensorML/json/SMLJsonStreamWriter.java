@@ -16,15 +16,24 @@ package org.vast.sensorML.json;
 
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.Set;
 import org.vast.json.JsonStreamException;
 import org.vast.ogc.gml.GMLStaxBindings;
 import org.vast.sensorML.SMLStaxBindings;
 import org.vast.swe.json.SWEJsonStreamWriter;
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.stream.JsonWriter;
 
 
 public class SMLJsonStreamWriter extends SWEJsonStreamWriter
 {
+    static Set<String> ISO_BASIC_TYPES = ImmutableSet.of(
+        "Boolean", "CharacterString", "Date", "Decimal", "Real", "Integer"
+    );
+    
+    static Set<String> ISO_CODELIST_TYPES = ImmutableSet.of(
+        "CI_RoleCode"
+    );
         
     public SMLJsonStreamWriter(OutputStream os, Charset charset)
     {
@@ -73,9 +82,39 @@ public class SMLJsonStreamWriter extends SWEJsonStreamWriter
     @Override
     public void writeAttribute(String localName, String value) throws JsonStreamException
     {
-        if (localName.equals("codeSpace"))
+        if ("codeSpace".equals(localName)) // to skip UID codespace
+            return;
+        else if (ISO_BASIC_TYPES.contains(currentContext.eltName)) // skip all basic types attributes
             return;
         else
             super.writeAttribute(localName, value);
+    }
+    
+    
+    @Override
+    public void writeStartElement(String prefix, String localName, String namespaceURI) throws JsonStreamException
+    {
+        // keep only ISO basic types value
+        if (ISO_BASIC_TYPES.contains(localName))
+        {
+            pushContext(localName);
+            currentContext.skipParent = true;
+        }
+        else
+            super.writeStartElement(prefix, localName, namespaceURI);
+    }
+    
+    
+    @Override
+    public void writeEndElement() throws JsonStreamException
+    {
+        // keep only ISO basic types value
+        if (ISO_BASIC_TYPES.contains(currentContext.eltName))
+        {
+            super.writeEndElement();
+            currentContext.skipParent = true;
+        }
+        else
+            super.writeEndElement();
     }
 }

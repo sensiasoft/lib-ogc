@@ -16,6 +16,8 @@ package org.vast.sensorML.json;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.HashSet;
+import org.vast.json.JsonStreamException;
 import org.vast.sensorML.SMLStaxBindings;
 import org.vast.swe.json.SWEJsonStreamReader;
 import com.google.gson.stream.JsonReader;
@@ -23,16 +25,26 @@ import com.google.gson.stream.JsonReader;
 
 public class SMLJsonStreamReader extends SWEJsonStreamReader
 {
-        
+    protected HashSet<String> isoStringNames;
+    
+    
+    protected static class JsonSmlContext extends JsonContext
+    {
+        public boolean isIsoObject;
+    }
+    
+    
     public SMLJsonStreamReader(InputStream is, Charset charset)
     {
         super(is, charset);
+        currentContext = new JsonSmlContext();
     }
     
     
     public SMLJsonStreamReader(JsonReader reader)
     {
         super(reader);
+        currentContext = new JsonSmlContext();
     }
     
     
@@ -49,6 +61,16 @@ public class SMLJsonStreamReader extends SWEJsonStreamReader
         // XML inline values
         addSpecialNames(inlineValueNames,
             "axis", "setValue", "setStatus", "setMode", "CharacterString", "URL");
+        
+        // ISO data types
+        isoStringNames = new HashSet<String>();
+        addSpecialNames(isoStringNames,
+            "individualName", "organisationName", "positionName",
+            "hoursOfService", "contactInstructions",
+            "voice", "facsimile",
+            "deliveryPoint", "city", "administrativeArea", "postalCode", "country", "electronicMailAddress",
+            "linkage", "protocol", "applicationProfile", "name", "description", 
+            "useLimitation");
     }
 
 
@@ -73,6 +95,65 @@ public class SMLJsonStreamReader extends SWEJsonStreamReader
             return "capability";
         else
             return super.getSingularName(name);
+    }
+    
+    
+    protected void pushContext(String eltName)
+    {
+        JsonContext prevContext = currentContext;
+        currentContext = new JsonSmlContext();
+        currentContext.parent = prevContext;
+        currentContext.eltName = eltName;
+        ((JsonSmlContext)currentContext).isIsoObject = ((JsonSmlContext)prevContext).isIsoObject;
+    }
+    
+    
+    @Override
+    public int next() throws JsonStreamException
+    {
+        if (((JsonSmlContext)currentContext).isIsoObject && isoStringNames.contains(currentContext.eltName) && currentContext.consumeText)
+            return nextTag();
+        else
+            return super.next();
+    }
+    
+    
+    @Override
+    public int nextTag() throws JsonStreamException
+    {
+        if (currentContext.eltName != null)
+        {
+            String parentName = currentContext.eltName;
+            if (parentName.startsWith("CI_") || parentName.startsWith("MD_"))
+                ((JsonSmlContext)currentContext).isIsoObject = true;
+        }
+        
+        if (((JsonSmlContext)currentContext).isIsoObject && isoStringNames.contains(currentContext.eltName) && currentContext.consumeText)
+        {
+            currentContext.consumeText = false;
+            pushContext("CharacterString");
+            currentContext.text = currentContext.parent.text;
+            currentContext.isTextOnly = true;
+            currentContext.consumeText = true;
+            return eventType = START_ELEMENT;
+        }
+        else
+            return super.nextTag();
+    }
+    
+    
+    @Override
+    protected boolean isXmlAttribute(String name)
+    {
+        if ("name".equals(name) && currentContext.eltName != null)
+        {
+            String parentName = currentContext.eltName;
+            if (parentName.startsWith("CI_") || parentName.startsWith("MD_"))
+                return false;
+        }
+
+        return super.isXmlAttribute(name);
+            
     }
     
 }

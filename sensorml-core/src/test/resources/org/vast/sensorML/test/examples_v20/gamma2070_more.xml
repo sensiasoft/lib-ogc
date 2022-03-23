@@ -256,9 +256,7 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 							</gmd:address>
 						</gmd:CI_Contact>
 					</gmd:contactInfo>
-                    <gmd:role>
-                        <gmd:CI_RoleCode codeList="companyRoles" codeListValue="manufacturer" />
-                    </gmd:role>
+          <gmd:role gco:nilReason="inapplicable"/>
 				</gmd:CI_ResponsibleParty>
 			</sml:contact>
 		</sml:ContactList>

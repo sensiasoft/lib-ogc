@@ -173,7 +173,7 @@
                   </gmd:CI_Contact>
                </gmd:contactInfo>
                <gmd:role>
-                  <gmd:CI_RoleCode codeList="companyRoles" codeListValue="manufacturer" />
+                  <gmd:CI_RoleCode codeList="http://sensorml.com/def/roles" codeListValue="Manufacturer" />
                </gmd:role>
             </gmd:CI_ResponsibleParty>
          </sml:contact>
