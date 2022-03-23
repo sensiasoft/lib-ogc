@@ -39,7 +39,7 @@ public class CommonConditions extends SMLPropertiesHelper
     
     public QuantityRange temperatureRange(double min, double max, String uom)
     {
-        checkUom(uom, TEMP_UNIT);
+        checkUom(uom, SWEHelper.TEMP_UNIT);
         
         return sml.createQuantityRange()
             .definition(SWEHelper.getQudtUri("Temperature"))

@@ -120,7 +120,7 @@ public class CommonCapabilities extends SMLPropertiesHelper
     
     public QuantityBuilder integrationTime(double value, String uom)
     {
-        checkUom(uom, TIME_UNIT);
+        checkUom(uom, SWEHelper.TIME_UNIT);
         
         return sml.createQuantity()
             .definition(INTEGRATION_TIME_DEF)
@@ -131,7 +131,7 @@ public class CommonCapabilities extends SMLPropertiesHelper
     
     public QuantityBuilder responseTime(double value, String uom)
     {
-        checkUom(uom, TIME_UNIT);
+        checkUom(uom, SWEHelper.TIME_UNIT);
         
         return sml.createQuantity()
             .definition(RESPONSE_TIME_DEF)
@@ -144,7 +144,7 @@ public class CommonCapabilities extends SMLPropertiesHelper
     {
         return sml.createQuantity()
             .definition(RESOLUTION_DEF)
-            .label(RESOLUTION_LABEL)            
+            .label(RESOLUTION_LABEL)
             .uomCode(uom)
             .value(value);
     }
@@ -153,7 +153,7 @@ public class CommonCapabilities extends SMLPropertiesHelper
     {
         return sml.createQuantity()
             .definition(ABSOLUTE_ACCURACY_DEF)
-            .label(ABSOLUTE_ACCURACY_LABEL)            
+            .label(ABSOLUTE_ACCURACY_LABEL)
             .uomCode(uom)
             .value(value);
     }
@@ -162,7 +162,7 @@ public class CommonCapabilities extends SMLPropertiesHelper
     {
         return sml.createQuantity()
             .definition(RELATIVE_ACCURACY_DEF)
-            .label(RELATIVE_ACCURACY_LABEL)            
+            .label(RELATIVE_ACCURACY_LABEL)
             .uomCode("%")
             .value(value);
     }
@@ -171,7 +171,7 @@ public class CommonCapabilities extends SMLPropertiesHelper
     {
         return sml.createQuantity()
             .definition(PRECISION_DEF)
-            .label(PRECISION_LABEL)            
+            .label(PRECISION_LABEL)
             .uomCode(uom)
             .value(value);
     }
@@ -180,7 +180,7 @@ public class CommonCapabilities extends SMLPropertiesHelper
     {
         return sml.createQuantity()
             .definition(SNR_DEF)
-            .label(SNR_LABEL)            
+            .label(SNR_LABEL)
             .uomCode("dB")
             .value(value);
     }
@@ -189,7 +189,7 @@ public class CommonCapabilities extends SMLPropertiesHelper
     {
         return sml.createQuantity()
             .definition(SENSITIVITY_DEF)
-            .label(SENSITIVITY_LABEL)            
+            .label(SENSITIVITY_LABEL)
             .uomCode(uom)
             .value(value);
     }
@@ -203,11 +203,11 @@ public class CommonCapabilities extends SMLPropertiesHelper
             .withElement("point", sml.createRecord()
                 .addField(input.getName(), input)
                 .addField(output.getName(), output)
-                .build())            
+                .build())
             .build();
         
         array.assignNewDataBlock();
-        array.setEncoding(sml.newTextEncoding(",", " "));       
+        array.setEncoding(sml.newTextEncoding(",", " "));
         array.setValues(sml.newEncodedValuesProperty());
         return array;
     }
@@ -229,11 +229,11 @@ public class CommonCapabilities extends SMLPropertiesHelper
                     .label("Output Level")
                     .uomCode("dB")
                     .build())
-                .build())            
+                .build())
             .build();
         
         array.assignNewDataBlock();
-        array.setEncoding(sml.newTextEncoding(",", " "));        
+        array.setEncoding(sml.newTextEncoding(",", " "));
         array.setValues(sml.newEncodedValuesProperty());
         return array;
     }
@@ -245,11 +245,11 @@ public class CommonCapabilities extends SMLPropertiesHelper
     
     public QuantityBuilder fieldOfView(double value, String uom)
     {
-        checkUom(uom, ANGLE_UNIT);
+        checkUom(uom, SWEHelper.ANGLE_UNIT);
         
         return sml.createQuantity()
             .definition(FOV_DEF)
-            .label(FOV_LABEL)            
+            .label(FOV_LABEL)
             .uomCode(uom)
             .value(value);
     }
@@ -272,11 +272,11 @@ public class CommonCapabilities extends SMLPropertiesHelper
                     .label("Output Level")
                     .uomCode("dB")
                     .build())
-                .build())            
+                .build())
             .build();
         
         array.assignNewDataBlock();
-        array.setEncoding(sml.newTextEncoding(",", " "));        
+        array.setEncoding(sml.newTextEncoding(",", " "));
         array.setValues(sml.newEncodedValuesProperty());
         return array;
     }

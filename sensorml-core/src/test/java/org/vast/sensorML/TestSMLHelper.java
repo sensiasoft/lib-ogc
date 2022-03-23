@@ -18,10 +18,13 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.vast.sensorML.SMLBuilders.PhysicalSystemBuilder;
 import org.vast.sensorML.helper.CommonIdentifiers;
+import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEHelper;
+import org.vast.swe.helper.GeoPosHelper;
 import net.opengis.sensorml.v20.AbstractProcess;
 import net.opengis.sensorml.v20.PhysicalSystem;
 import net.opengis.sensorml.v20.Term;
+import net.opengis.sensorml.v20.impl.SpatialFrameImpl;
 
 
 public class TestSMLHelper
@@ -92,6 +95,78 @@ public class TestSMLHelper
         identifier = sys.getIdentificationList().get(0).getIdentifierList().get(1);
         assertEquals(CommonIdentifiers.MODEL_NUMBER_DEF, identifier.getDefinition());
         assertEquals(MODEL_NUM, identifier.getValue());
+    }
+    
+    
+    @Test
+    public void testRefFrameAndPosition() throws Exception
+    {
+        var vec = new GeoPosHelper();
+        
+        var uavFrame = new SpatialFrameImpl();
+        uavFrame.setId("PLATFORM_FRAME");
+        uavFrame.setLabel("UAV Platform Reference Frame");
+        uavFrame.setOrigin("Center of gravity of the aircraft");
+        uavFrame.addAxis("X", "Along the longitudinal axis of the aircraft, parallel to the fuselage reference line, directed forward (roll axis)");
+        uavFrame.addAxis("Y", "Parallel to the line drawn from wingtip to wingtip, directed to the right when looking forward in the aircraft (pitch axis)");
+        uavFrame.addAxis("Z", "Directed towards the bottom of the aircraft, perpendicular to the wings and to the fuselage reference line (yaw axis)");
+        
+        var gimbalFrame = new SpatialFrameImpl();
+        gimbalFrame.setId("GIMBAL_FRAME");
+        gimbalFrame.setLabel("Gimbal Mounting Reference Frame");
+        gimbalFrame.setOrigin("Center of rotation of the gimbal");
+        gimbalFrame.addAxis("X", "Toward the yellow X marking located on the external housing of the gimbal");
+        gimbalFrame.addAxis("Y", "Toward the yellow Y marking located on the external housing of the gimbal");
+        gimbalFrame.addAxis("Z", "Toward the yellow Z marking located on the external housing of the gimbal");
+        
+        var cameraFrame = new SpatialFrameImpl();
+        cameraFrame.setId("SENSOR_FRAME");
+        cameraFrame.setLabel("Camera Reference Frame");
+        cameraFrame.setOrigin("Optical center of the camera");
+        cameraFrame.addAxis("X", "In the plane orthogonal to the optical axis, pointing to the right of camera (in the ideal pinhole model, parallel to an image row");
+        cameraFrame.addAxis("Y", "In the plane orthogonal to the optical axis, pointing up (in the ideal pinhole model, parallel to an image column");
+        cameraFrame.addAxis("Z", "Along the optical axis of the camera, pointing in the view direction of the camera");
+        
+        var sys = sml.createPhysicalSystem()
+            .name("Predator UAV")
+            .addLocalReferenceFrame(uavFrame)
+            .position(vec.createRecord()
+                .addField("location", vec.createLocationVectorLLA()
+                    .definition(SWEConstants.DEF_PLATFORM_LOC)
+                    .values(new double[] {-86.5861, 34.7304, 3045}))
+                .addField("attitude", vec.createEulerOrientationNED("deg")
+                    .definition(SWEConstants.DEF_PLATFORM_ORIENT)
+                    .values(new double[] {25.3, -1.3, -4.6}))
+                .build())
+            .addComponent("gimbal", sml.createPhysicalComponent()
+                .name("Camera Gimbal")
+                .addLocalReferenceFrame(gimbalFrame)
+                .position(vec.createRecord()
+                    .addField("location", vec.createLocationVectorXYZ("m")
+                        .refFrame("#PLATFORM_FRAME")
+                        .values(new double[] {0, 2.3, -0.7}))
+                    .addField("orientation", vec.createEulerOrientationYPR("deg")
+                        .refFrame("#PLATFORM_FRAME")
+                        .values(new double[] {0, 0, 0}))
+                    .build())
+                .build())
+            .addComponent("camera_sensor", sml.createPhysicalComponent()
+                .name("Camera Sensor")
+                .addLocalReferenceFrame(cameraFrame)
+                .position(vec.createRecord()
+                    .addField("location", vec.createLocationVectorXYZ("m")
+                        .definition(SWEConstants.DEF_SENSOR_LOC)
+                        .refFrame("#GIMBAL_FRAME")
+                        .values(new double[] {0, 0, 0.05}))
+                    .addField("orientation", vec.createEulerOrientationYPR("deg")
+                        .definition(SWEConstants.DEF_SENSOR_ORIENT)
+                        .refFrame("#GIMBAL_FRAME")
+                        .values(new double[] {-82.3, -25.6, 0.0}))
+                    .build())
+                .build())
+            .build();
+        
+        printAsXml(sys);
     }
 
 }

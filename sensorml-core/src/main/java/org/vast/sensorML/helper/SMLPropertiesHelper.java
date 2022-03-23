@@ -16,13 +16,11 @@ package org.vast.sensorML.helper;
 
 import org.vast.sensorML.SMLHelper;
 import org.vast.unit.Unit;
-import org.vast.unit.UnitParserUCUM;
-import org.vast.util.Asserts;
 
 
 /**
  * <p>
- * Base class for property helpers providing unit validation routines
+ * Base class for SML property helpers
  * </p>
  *
  * @author Alex Robin
@@ -30,20 +28,7 @@ import org.vast.util.Asserts;
  */
 public class SMLPropertiesHelper
 {
-    final static String INVALID_UOM = "Invalid unit";
-    final static Unit MASS_UNIT = new Unit().setKilogram(1.0);
-    final static Unit TIME_UNIT = new Unit().setSecond(1.0);
-    final static Unit DISTANCE_UNIT = new Unit().setMeter(1.0);
-    final static Unit ANGLE_UNIT = new Unit().setRadian(1.0);
-    final static Unit TEMP_UNIT = new Unit().setKelvin(1.0);
-    final static Unit SURFACE_UNIT = new Unit().setMeter(2.0);
-    final static Unit VOLUME_UNIT = new Unit().setMeter(3.0);
-    final static Unit VOLTAGE_UNIT = new Unit().setKilogram(1.0).setMeter(2.0).setSecond(-3).setAmpere(-1);
-    final static Unit CURRENT_UNIT = new Unit().setAmpere(1);
-    final static Unit POWER_UNIT = new Unit().setKilogram(1.0).setMeter(2.0).setSecond(-3);
-    
     SMLHelper sml;
-    UnitParserUCUM uomParser = new UnitParserUCUM();
     
     
     public SMLPropertiesHelper(SMLHelper sml)
@@ -54,7 +39,12 @@ public class SMLPropertiesHelper
     
     void checkUom(String uom, Unit baseUnit)
     {
-        Unit uomObj = uomParser.getUnit(uom);
-        Asserts.checkArgument(uomObj.isCompatible(baseUnit), INVALID_UOM);
+        sml.checkUom(uom, baseUnit);
+    }
+    
+    
+    void checkUom(String uom, String baseUnit)
+    {
+        sml.checkUom(uom, baseUnit);
     }
 }

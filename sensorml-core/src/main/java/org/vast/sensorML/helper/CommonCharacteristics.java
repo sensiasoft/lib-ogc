@@ -91,7 +91,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
     
     public QuantityBuilder mass(double val, String uom)
     {
-        checkUom(uom, MASS_UNIT);
+        checkUom(uom, SWEHelper.MASS_UNIT);
         
         return sml.createQuantity()
             .definition(MASS_DEF)
@@ -102,7 +102,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
     
     public QuantityBuilder length(double val, String uom)
     {
-        checkUom(uom, DISTANCE_UNIT);
+        checkUom(uom, SWEHelper.DISTANCE_UNIT);
         
         return sml.createQuantity()
             .definition(LENGTH_DEF)
@@ -113,7 +113,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
     
     public QuantityBuilder width(double val, String uom)
     {
-        checkUom(uom, DISTANCE_UNIT);
+        checkUom(uom, SWEHelper.DISTANCE_UNIT);
         
         return sml.createQuantity()
             .definition(WIDTH_DEF)
@@ -124,7 +124,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
     
     public QuantityBuilder height(double val, String uom)
     {
-        checkUom(uom, DISTANCE_UNIT);
+        checkUom(uom, SWEHelper.DISTANCE_UNIT);
         
         return sml.createQuantity()
             .definition(HEIGHT_DEF)
@@ -138,7 +138,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
         
     public QuantityBuilder operatingVoltage(double val, String uom)
     {
-        checkUom(uom, VOLTAGE_UNIT);
+        checkUom(uom, SWEHelper.VOLTAGE_UNIT);
         
         return sml.createQuantity()
             .definition(VOLTAGE_DEF)
@@ -149,7 +149,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
     
     public QuantityRangeBuilder operatingVoltageRange(double min, double max, String uom)
     {
-        checkUom(uom, VOLTAGE_UNIT);
+        checkUom(uom, SWEHelper.VOLTAGE_UNIT);
         
         return sml.createQuantityRange()
             .definition(VOLTAGE_DEF)
@@ -161,7 +161,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
 
     public QuantityBuilder operatingCurrent(double val, String uom)
     {
-        checkUom(uom, CURRENT_UNIT);
+        checkUom(uom, SWEHelper.CURRENT_UNIT);
         
         return sml.createQuantity()
             .definition(CURRENT_DEF)
@@ -173,7 +173,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
 
     public QuantityRangeBuilder operatingCurrentRange(double min, double max, String uom)
     {
-        checkUom(uom, CURRENT_UNIT);
+        checkUom(uom, SWEHelper.CURRENT_UNIT);
         
         return sml.createQuantityRange()
             .definition(CURRENT_DEF)
@@ -185,7 +185,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
 
     public QuantityBuilder nominalPowerConsumption(double val, String uom)
     {
-        checkUom(uom, POWER_UNIT);
+        checkUom(uom, SWEHelper.POWER_UNIT);
         
         return sml.createQuantity()
             .definition(POWER_CONSUMPTION_DEF)
@@ -197,7 +197,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
 
     public QuantityBuilder batteryCapacity(double val, String uom)
     {
-        checkUom(uom, uomParser.getUnit("W.h"));
+        checkUom(uom, "W.h");
         
         return sml.createQuantity()
             .definition(BATT_CAPACITY_DEF)
@@ -208,7 +208,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
     
     public QuantityBuilder batteryLifetime(double val, String uom)
     {
-        checkUom(uom, TIME_UNIT);
+        checkUom(uom, SWEHelper.TIME_UNIT);
         
         return sml.createQuantity()
             .definition(BATT_LIFETIME_DEF)
@@ -219,7 +219,7 @@ public class CommonCharacteristics extends SMLPropertiesHelper
     
     public QuantityBuilder systemLifetime(double val, String uom)
     {
-        checkUom(uom, TIME_UNIT);
+        checkUom(uom, SWEHelper.TIME_UNIT);
         
         return sml.createQuantity()
             .definition(SYSTEM_LIFETIME_DEF)

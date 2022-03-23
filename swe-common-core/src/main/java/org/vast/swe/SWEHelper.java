@@ -85,6 +85,8 @@ import org.vast.swe.SWEBuilders.VectorBuilder;
 import org.vast.swe.fast.JsonDataWriter;
 import org.vast.swe.fast.XmlDataWriter;
 import org.vast.swe.helper.RasterHelper;
+import org.vast.unit.Unit;
+import org.vast.unit.UnitParserUCUM;
 import org.vast.util.Asserts;
 
 
@@ -101,14 +103,31 @@ public class SWEHelper
 {
     public static final SWEFactory DEFAULT_SWE_FACTORY = new SWEFactory();
     public static final String PATH_SEPARATOR = "/";
+    
+    public static final Unit MASS_UNIT = new Unit().setKilogram(1.0);
+    public static final Unit TIME_UNIT = new Unit().setSecond(1.0);
+    public static final Unit DISTANCE_UNIT = new Unit().setMeter(1.0);
+    public static final Unit SPEED_UNIT = new Unit().setMeter(1.0).setSecond(-1);
+    public static final Unit ACCEL_UNIT = new Unit().setMeter(1.0).setSecond(-2);
+    public static final Unit ANGLE_UNIT = new Unit().setRadian(1.0);
+    public static final Unit ANGULAR_SPEED_UNIT = new Unit().setRadian(1.0).setSecond(-1);
+    public static final Unit TEMP_UNIT = new Unit().setKelvin(1.0);
+    public static final Unit SURFACE_UNIT = new Unit().setMeter(2.0);
+    public static final Unit VOLUME_UNIT = new Unit().setMeter(3.0);
+    public static final Unit VOLTAGE_UNIT = new Unit().setKilogram(1.0).setMeter(2.0).setSecond(-3).setAmpere(-1);
+    public static final Unit CURRENT_UNIT = new Unit().setAmpere(1);
+    public static final Unit POWER_UNIT = new Unit().setKilogram(1.0).setMeter(2.0).setSecond(-3);
+    final static String INVALID_UOM = "Invalid unit '{}'. Unit must be compatible with '{}'";
+    
     protected SWEFactory fac = DEFAULT_SWE_FACTORY;
+    UnitParserUCUM uomParser = new UnitParserUCUM();
     
     
     /**
      * Create a SWE helper with the default factory
      */
     public SWEHelper()
-    {        
+    {
     }
     
     
@@ -177,6 +196,46 @@ public class SWEHelper
     public static String getDBpediaUri(String propName)
     {
     	return SWEConstants.DBPEDIA_URI_PREFIX + propName;
+    }
+    
+    
+    /**
+     * Checks that the given unit is compatible with a base unit
+     * @param uom UCUM code of unit to check
+     * @param baseUnit UCUM code of base unit
+     */
+    public void checkUom(String uom, String baseUnit)
+    {
+        Asserts.checkNotNullOrEmpty(uom, "uom");
+        Asserts.checkNotNullOrEmpty(baseUnit, "baseUnit");
+        checkUom(uomParser.getUnit(uom), uomParser.getUnit(baseUnit));
+    }
+    
+    
+    /**
+     * Checks that the given unit is compatible with a base unit
+     * @param uom UCUM code of uom to check
+     * @param baseUnit Unit object representing base unit
+     */
+    public void checkUom(String uom, Unit baseUnit)
+    {
+        Asserts.checkNotNullOrEmpty(uom, "uom");
+        checkUom(uomParser.getUnit(uom), baseUnit);
+    }
+    
+    
+    /**
+     * Checks that the given unit is compatible with a base unit
+     * @param uom Unit object representing uom to check
+     * @param baseUnit Unit object representing base unit
+     */
+    public void checkUom(Unit uom, Unit baseUnit)
+    {
+        Asserts.checkNotNull(uom, "uom");
+        Asserts.checkNotNull(baseUnit, "baseUnit");
+        
+        baseUnit = baseUnit.getCompatibleSIUnit();
+        Asserts.checkArgument(uom.isCompatible(baseUnit), INVALID_UOM, uom.getExpression(), baseUnit.getExpression());
     }
 
 

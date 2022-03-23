@@ -171,11 +171,11 @@ public class Unit implements Serializable
     {
         Unit siUnit = this.copy();
         siUnit.scaleToSI = 1.0;
-        siUnit.expression = getUCUMExpression();
         siUnit.code = null;
+        siUnit.expression = null;
         siUnit.name = null;
         siUnit.description = null;
-        siUnit.function = null;        
+        siUnit.function = null;
         return siUnit;
     }
     
@@ -455,7 +455,7 @@ public class Unit implements Serializable
     
     public String getUCUMExpression()
     {
-        if (getCode() != null)
+        if (code != null)
             return getCode();
         
         StringBuilder buf = new StringBuilder();
