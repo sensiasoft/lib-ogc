@@ -23,6 +23,7 @@ import org.vast.sensorML.SMLBuilders.PhysicalComponentBuilder;
 import org.vast.sensorML.SMLBuilders.PhysicalSystemBuilder;
 import org.vast.sensorML.SMLBuilders.SimpleProcessBuilder;
 import org.vast.sensorML.SMLBuilders.TermBuilder;
+import org.vast.sensorML.SMLHelper.LinkTarget.PortType;
 import org.vast.sensorML.SMLMetadataBuilders.CapabilityListBuilder;
 import org.vast.sensorML.SMLMetadataBuilders.CharacteristicListBuilder;
 import org.vast.sensorML.SMLMetadataBuilders.ClassifierListBuilder;
@@ -77,12 +78,18 @@ public class SMLHelper extends SWEHelper
     
     static class LinkTarget
     {
+        public enum PortType {INPUT, OUTPUT, PARAM}
+        
         public AbstractProcess process;
         public DataComponent component;
+        public DataComponent portComponent;
+        public PortType portType;
         
-        public LinkTarget(AbstractProcess parent, DataComponent component)
+        public LinkTarget(AbstractProcess parent, PortType portType, DataComponent portComponent, DataComponent component)
         {
             this.process = parent;
+            this.portType =portType;
+            this.portComponent = portComponent;
             this.component = component;
         }
     }
@@ -276,8 +283,10 @@ public class SMLHelper extends SWEHelper
             return ((DataInterface)ioDef).getData().getElementType();
         else if (ioDef instanceof DataStream)
             return ((DataStream)ioDef).getElementType();
-        else
+        else if (ioDef instanceof DataComponent)
             return (DataComponent)ioDef;
+        else
+            throw new IllegalArgumentException("Unsupported SML I/O type: " + ioDef.getClass().getSimpleName());
     }
     
     
@@ -294,8 +303,10 @@ public class SMLHelper extends SWEHelper
             return ((DataInterface)ioDef).getData().getEncoding();
         else if (ioDef instanceof DataStream)
             return ((DataStream)ioDef).getEncoding();
-        else 
-            return null;
+        else if (ioDef instanceof DataComponent)
+            return getDefaultEncoding((DataComponent)ioDef);
+        else
+            throw new IllegalArgumentException("Unsupported SML I/O type: " + ioDef.getClass().getSimpleName());
     }
     
     
@@ -310,7 +321,7 @@ public class SMLHelper extends SWEHelper
     public static LinkTarget findComponentByPath(AbstractProcess parent, String linkString) throws SMLException
     {
         String processName = null;
-        String portType = null;
+        PortType portType = null;
         String portName = null;
         String[] dataPath = null;
         int portTypeIndex = 0;
@@ -332,14 +343,24 @@ public class SMLHelper extends SWEHelper
             portTypeIndex = 2;
         }
 
-        // now extract port type, name and component path
+        // extract port type
         if (linkPath.length < portTypeIndex+1)
             throw new SMLException("At least a port type and name must be specified");
-        portType = linkPath[portTypeIndex];
+        String portTypeStr = linkPath[portTypeIndex];
+        if ("inputs".equals(portTypeStr))
+            portType = PortType.INPUT;
+        else if ("outputs".equals(portTypeStr))
+            portType = PortType.OUTPUT;
+        else if ("parameters".equals(portTypeStr))
+            portType = PortType.PARAM;
+        else
+            throw new SMLException(String.format("Invalid port type '%s'. Must be one of 'inputs', 'outputs' or 'parameters'", portTypeStr));
             
+        // extract port name
         if (linkPath.length > portTypeIndex+1)
             portName = linkPath[portTypeIndex+1];
         
+        // extract component path
         if (linkPath.length > portTypeIndex+2)
             dataPath = Arrays.copyOfRange(linkPath, portTypeIndex+2, linkPath.length);
         
@@ -360,21 +381,29 @@ public class SMLHelper extends SWEHelper
             process = parent;
         
         // find port
-        DataComponent port;
-        if ("inputs".equals(portType))
-            port = process.getInputList().getComponent(portName);
-        else if ("outputs".equals(portType))
-            port = process.getOutputList().getComponent(portName);
-        else if ("parameters".equals(portType))
-            port = process.getParameterList().getComponent(portName);
-        else
-            throw new IllegalArgumentException(String.format("Invalid port type '%s'. Must be one of 'inputs', 'outputs' or 'parameters'", portType));
-
+        DataComponent port = null;
+        switch (portType)
+        {
+            case INPUT:
+                port = process.getInputList().getComponent(portName);
+                break;
+                
+            case OUTPUT:
+                port = process.getOutputList().getComponent(portName);
+                break;
+                
+            case PARAM:
+                port = process.getParameterList().getComponent(portName);
+                break;
+        }
+        if (port == null)
+            throw new SMLException(String.format("Cannot find {} port with name '%s'", portType, portName));
+        
         // find sub component in port structure
         try
         {
             DataComponent component = (dataPath != null) ? SWEHelper.findComponentByPath(port, dataPath) : port;
-            return new LinkTarget(process, component);
+            return new LinkTarget(process, portType, port, component);
         }
         catch (Exception e)
         {
