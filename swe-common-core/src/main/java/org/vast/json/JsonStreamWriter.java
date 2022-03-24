@@ -291,10 +291,10 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
             
             if (!currentContext.skipParent)
             {
-                if (currentContext.emptyElement)
-                    writer.nullValue();
-                else if (!currentContext.firstChild)
+                if (!currentContext.firstChild)
                     writer.endObject();
+                else if (currentContext.emptyElement)
+                    writer.nullValue();
             }
             
             writer.flush();
