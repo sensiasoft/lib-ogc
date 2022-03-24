@@ -27,6 +27,7 @@ import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.ByteEncoding;
 import net.opengis.swe.v20.DataArray;
+import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.EncodedValues;
 
@@ -45,6 +46,7 @@ public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements Encode
     private static final long serialVersionUID = 5065676107640449321L;
 
     private String text;
+    private DataBlockList data;
     
     
     @Override
@@ -52,6 +54,15 @@ public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements Encode
     {
         // TODO Add support for remote data
         return false;
+    }
+
+
+    @Override
+    public void setAsText(DataArray array, DataEncoding encoding, String text)
+    {
+        this.text = text;
+        if (array != null)
+            decode(array, encoding);
     }
     
     
@@ -68,24 +79,30 @@ public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements Encode
         catch (IOException e)
         {
             throw new IllegalStateException("Cannot parse encoded values", e);
-        }        
+        }
+    }
+
+
+    @Override
+    public String getAsText(DataArray array, DataEncoding encoding)
+    {
+        return encode(array, encoding);
     }
 
 
     public String encode(BlockComponent array, DataEncoding encoding)
     {
-        ByteArrayOutputStream os = new ByteArrayOutputStream(array.getData().getAtomCount()*10);
-        
         // force base64 if byte encoding is raw
         if (encoding instanceof BinaryEncoding)
             ((BinaryEncoding) encoding).setByteEncoding(ByteEncoding.BASE_64);
-                
+        
         // write values with proper encoding to byte array
+        ByteArrayOutputStream os = new ByteArrayOutputStream(array.getData().getAtomCount()*10);
         try
         {
             DataStreamWriter writer = SWEHelper.createDataWriter(encoding);
             writer.setParentArray(array);
-            writer.write(os);            
+            writer.write(os);
             writer.flush();
         }
         catch (IOException e)
@@ -94,23 +111,7 @@ public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements Encode
         }
         
         // convert byte array to string
-        return os.toString();     
-    }
-
-
-    @Override
-    public void setAsText(DataArray array, DataEncoding encoding, String text)
-    {
-        this.text = text;
-        if (array != null)
-            decode(array, encoding);
-    }
-
-
-    @Override
-    public String getAsText(DataArray array, DataEncoding encoding)
-    {
-        return encode(array, encoding);     
+        return os.toString();
     }
 
 
@@ -118,14 +119,56 @@ public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements Encode
     public void setAsText(DataStream dataStream, DataEncoding encoding, String text)
     {
         this.text = text;
-        decode(dataStream, encoding);        
+        
+        try
+        {
+            DataStreamParser parser = SWEHelper.createDataParser(encoding);
+            parser.setDataComponents(dataStream.getElementType());
+            parser.setInput(new ByteArrayInputStream(text.getBytes()));
+            DataBlock dataBlk;
+            data = new DataBlockList();
+            while ((dataBlk = parser.parseNextBlock()) != null)
+                data.add(dataBlk);
+            this.text = null; // clear after successful decoding
+        }
+        catch (IOException e)
+        {
+            throw new IllegalStateException("Cannot parse encoded values", e);
+        }
     }
 
 
     @Override
     public String getAsText(DataStream dataStream, DataEncoding encoding)
     {
-        return encode(dataStream, encoding);        
+        return encode(dataStream, encoding);
+    }
+
+
+    String encode(DataStream dataStream, DataEncoding encoding)
+    {
+        // force base64 if byte encoding is raw
+        if (encoding instanceof BinaryEncoding)
+            ((BinaryEncoding) encoding).setByteEncoding(ByteEncoding.BASE_64);
+        
+        // write values with proper encoding to byte array
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try
+        {
+            DataStreamWriter writer = SWEHelper.createDataWriter(encoding);
+            writer.setDataComponents(dataStream.getElementType());
+            writer.setOutput(os);
+            for (DataBlock dataBlk: data.blockList)
+                writer.write(dataBlk);
+            writer.flush();
+        }
+        catch (IOException e)
+        {
+            throw new IllegalStateException("Cannot write encoded values", e);
+        }
+        
+        // convert byte array to string
+        return os.toString();
     }
 
 }

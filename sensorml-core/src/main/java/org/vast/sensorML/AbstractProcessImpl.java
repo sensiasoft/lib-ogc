@@ -41,6 +41,7 @@ import net.opengis.sensorml.v20.impl.DescribedObjectImpl;
 import net.opengis.sensorml.v20.impl.FeatureListImpl;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.HasUom;
 
 
@@ -121,7 +122,7 @@ public abstract class AbstractProcessImpl extends DescribedObjectImpl implements
                 {
                     DataComponent smlPort = smlPorts.getComponent(portName);
                     DataComponent execPort = execPorts.getComponent(portName);
-                    mergePort(smlPort, execPort);                    
+                    mergePort(smlPort, execPort);
                 }
                 catch (IllegalArgumentException e)
                 {
@@ -134,10 +135,16 @@ public abstract class AbstractProcessImpl extends DescribedObjectImpl implements
                             + " have incompatible definitions of port '%s'", processName, portName);
                     throw new ProcessException(msg, e);
                 }
-            }                
+            }
         }
         else
-            execPorts.addAll(smlPorts);
+        {
+            for (String portName: smlPorts.getPropertyNames())
+            {
+                DataComponent smlPort = smlPorts.getComponent(portName);
+                execPorts.add(portName, smlPort);
+            }
+        }
         
         return execPorts;
     }
@@ -343,7 +350,7 @@ public abstract class AbstractProcessImpl extends DescribedObjectImpl implements
     public void setParentLogger(Logger log)
     {
         checkExecutable();
-        executableProcess.setParentLogger(log);        
+        executableProcess.setParentLogger(log);
     }
 
 
@@ -541,6 +548,13 @@ public abstract class AbstractProcessImpl extends DescribedObjectImpl implements
 
 
     @Override
+    public void addInput(String name, DataStream input)
+    {
+        inputData.add(name, input);
+    }
+
+
+    @Override
     public void addInput(String name, DataInterface input)
     {
         inputData.add(name, input);
@@ -590,6 +604,13 @@ public abstract class AbstractProcessImpl extends DescribedObjectImpl implements
 
 
     @Override
+    public void addOutput(String name, DataStream output)
+    {
+        outputData.add(name, output);
+    }
+
+
+    @Override
     public void addOutput(String name, DataInterface output)
     {
         outputData.add(name, output);
@@ -626,6 +647,13 @@ public abstract class AbstractProcessImpl extends DescribedObjectImpl implements
 
     @Override
     public void addParameter(String name, ObservableProperty parameter)
+    {
+        paramData.add(name, parameter);
+    }
+
+
+    @Override
+    public void addParameter(String name, DataStream parameter)
     {
         paramData.add(name, parameter);
     }

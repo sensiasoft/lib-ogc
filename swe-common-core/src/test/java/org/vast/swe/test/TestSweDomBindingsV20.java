@@ -68,7 +68,7 @@ public class TestSweDomBindingsV20 extends XMLTestCase
         
         InputStream is = getClass().getResourceAsStream(path);
         DOMHelper dom1 = new DOMHelper(is, false);
-        DataComponent data;
+        Object data;
         if (isDataStream)
             data = utils.readDataStream(dom1, dom1.getBaseElement());
         else
@@ -82,7 +82,7 @@ public class TestSweDomBindingsV20 extends XMLTestCase
         if (isDataStream)
             domElt = utils.writeDataStream(dom, (DataStream)data);
         else
-            domElt = utils.writeComponent(dom, data, true);
+            domElt = utils.writeComponent(dom, (DataComponent)data, true);
         dom.serialize(domElt, System.out, true);
         dom.serialize(domElt, os, true);
         os.close();

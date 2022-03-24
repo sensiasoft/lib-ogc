@@ -74,7 +74,7 @@ public class SWEFactory implements Factory
     @Override
     public DataStream newDataStream()
     {
-        return new DataList();
+        return new DataStreamImpl();
     }
     
     

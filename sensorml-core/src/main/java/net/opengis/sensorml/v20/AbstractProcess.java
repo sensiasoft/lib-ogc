@@ -21,6 +21,7 @@ import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.Reference;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataStream;
 
 
 /**
@@ -135,6 +136,12 @@ public interface AbstractProcess extends DescribedObject, IProcedure
     
     
     /**
+     * Adds a new inputAsDataStream property
+     */
+    public void addInput(String name, DataStream input);
+    
+    
+    /**
      * Adds a new inputAsDataInterface property
      */
     public void addInput(String name, DataInterface input);
@@ -177,6 +184,12 @@ public interface AbstractProcess extends DescribedObject, IProcedure
     
     
     /**
+     * Adds a new outputAsDataStream property
+     */
+    public void addOutput(String name, DataStream output);
+    
+    
+    /**
      * Adds a new outputAsDataInterface property
      */
     public void addOutput(String name, DataInterface output);
@@ -216,6 +229,12 @@ public interface AbstractProcess extends DescribedObject, IProcedure
      * Adds a new parameterAsObservableProperty property
      */
     public void addParameter(String name, ObservableProperty parameter);
+    
+    
+    /**
+     * Adds a new parameterAsDataStream property
+     */
+    public void addParameter(String name, DataStream parameter);
     
     
     /**

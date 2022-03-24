@@ -7,10 +7,10 @@ at http://mozilla.org/MPL/2.0/.
 Software distributed under the License is distributed on an "AS IS" basis,
 WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the License.
- 
+
 Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
- 
-******************************* END LICENSE BLOCK ***************************/
+
+ ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.data;
 
@@ -20,7 +20,6 @@ import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataComponentVisitor;
-import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.ValidationException;
 
 
@@ -35,131 +34,131 @@ import net.opengis.swe.v20.ValidationException;
  *
  * @author Alex Robin
  * */
-public class DataList extends AbstractArrayImpl implements DataArray, DataStream, BlockComponent
+public class DataList extends AbstractArrayImpl implements DataArray, BlockComponent
 {
     private static final long serialVersionUID = 5597119200425453510L;
     protected transient ListIterator<DataBlock> blockIterator;
-    
+
 
     public DataList()
     {
     }
-    
-    
+
+
     public DataList(String name)
     {
         this();
         this.setName(name);
     }
-    
-    
+
+
     @Override
     public DataList copy()
     {
         DataList newObj = new DataList();
-        copyTo(newObj);        
+        copyTo(newObj);
         return newObj;
     }
-    
-    
+
+
     @Override
     protected void updateStartIndex(int startIndex)
-    {        
+    {
     }
-    
-    
+
+
     @Override
     protected void updateAtomCount(int childOffsetCount)
     {
     }
-    
-    
+
+
     @Override
     public AbstractDataComponentImpl getComponent(int index)
     {
         checkIndex(index);
         AbstractDataComponentImpl component = getListComponent();
-        component.setData(((DataBlockList)dataBlock).blockList.get(index));        
+        component.setData(((DataBlockList)dataBlock).blockList.get(index));
         return component;
     }
-    
-    
+
+
     public void resetIterator()
     {
         blockIterator = ((DataBlockList)dataBlock).blockIterator();
     }
-    
-    
+
+
     public boolean hasNext()
     {
         return blockIterator.hasNext();
     }
-    
-    
+
+
     public AbstractDataComponentImpl nextComponent()
     {
         if (blockIterator == null)
             resetIterator();
-        
+
         AbstractDataComponentImpl component = getListComponent();
-        component.setData(blockIterator.next());        
+        component.setData(blockIterator.next());
         return component;
     }
-    
-    
+
+
     public DataBlock nextDataBlock()
     {
         return blockIterator.next();
     }
-    
-    
+
+
     @Override
     public void setData(DataBlock dataBlock)
     {
-    	this.dataBlock = (DataBlockList)dataBlock;
+        this.dataBlock = (DataBlockList)dataBlock;
     }
-    
-    
+
+
     @Override
     public void clearData()
     {
-    	this.dataBlock = null;
-    	if (getListComponent() != null)
-    	    getListComponent().clearData();
+        this.dataBlock = null;
+        if (getListComponent() != null)
+            getListComponent().clearData();
     }
-    
-    
+
+
     @Override
     public void validateData(List<ValidationException> errorList)
     {
-    	// do only if constraints are specified on descendants
-    	if (hasConstraints())
-    	{
-    		int numErrors = errorList.size();
-    		
-    		for (int i = 0; i < getComponentCount(); i++)
-    		{
-    			getComponent(i).validateData(errorList);
-    			
-    			// max N errors generated!
-    			if (errorList.size() > numErrors + MAX_ARRAY_ERRORS)
-    				return;
-    		}
-    	}
+        // do only if constraints are specified on descendants
+        if (hasConstraints())
+        {
+            int numErrors = errorList.size();
+
+            for (int i = 0; i < getComponentCount(); i++)
+            {
+                getComponent(i).validateData(errorList);
+
+                // max N errors generated!
+                if (errorList.size() > numErrors + MAX_ARRAY_ERRORS)
+                    return;
+            }
+        }
     }
-    
-    
+
+
     public final void addData(DataBlock dataBlock)
     {
-    	// if we start adding blocks without first creating the datablock
+        // if we start adding blocks without first creating the datablock
         // let the list grow on demand
         if (this.dataBlock == null)
-    	    this.dataBlock = new DataBlockList();
-        
+            this.dataBlock = new DataBlockList();
+
         ((DataBlockList)this.dataBlock).add(dataBlock);
     }
-    
-    
+
+
     @Override
     public AbstractDataBlock createDataBlock()
     {
@@ -183,17 +182,17 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
         if ((index >= getComponentCount()) || (index < 0))
             throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
     }
-    
-    
+
+
     @Override
     public int getComponentCount()
     {
-    	if (elementCount.hasValue() && elementCount.getValue().isSetValue())
-    	    return elementCount.getValue().getValue();
-    	else if (dataBlock != null)
-    	    return ((DataBlockList)dataBlock).getListSize();
-    	else
-    	    return 0;
+        if (elementCount.hasValue() && elementCount.getValue().isSetValue())
+            return elementCount.getValue().getValue();
+        else if (dataBlock != null)
+            return ((DataBlockList)dataBlock).getListSize();
+        else
+            return 0;
     }
 
 
@@ -208,8 +207,8 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
 
         return text.toString();
     }
-    
-    
+
+
     private final AbstractDataComponentImpl getListComponent()
     {
         return (AbstractDataComponentImpl)elementType.getValue();
@@ -230,27 +229,20 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     {
         if (!name.equals(elementType.getName()))
             return null;
-        
+
         return getListComponent();
     }
 
 
     @Override
-    public boolean isSetElementCount()
-    {
-        return (elementCount != null && (elementCount.hasValue() || elementCount.hasHref()));
-    }
-
-
-    @Override
     public void updateSize()
-    {        
+    {
     }
 
 
     @Override
     public void updateSize(int arraySize)
-    {        
+    {
     }
 
 

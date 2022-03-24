@@ -316,9 +316,15 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
     protected void testReadWriteBinaryData(String path, boolean isDataStream, boolean encodeArrayElt) throws Exception
     {        
         String testName;
-        DataComponent dataStruct = (DataComponent)readSweCommonXml(path, isDataStream);
-        if (encodeArrayElt)
-            dataStruct = ((BlockComponent)dataStruct).getElementType();
+        AbstractSWE dataComp = readSweCommonXml(path, isDataStream);
+        
+        DataComponent dataStruct;
+        if (isDataStream)
+            dataStruct = ((DataStream)dataComp).getElementType();
+        else if (encodeArrayElt)
+            dataStruct = ((BlockComponent)dataComp).getElementType();
+        else
+            dataStruct = (DataComponent)dataComp;
         
         // try to use binary encoding defined in XML
         BinaryEncoding encoding = null;
