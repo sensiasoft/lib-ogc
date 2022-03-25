@@ -16,8 +16,10 @@ package net.opengis.sensorml.v20;
 
 import org.vast.sensorML.SMLHelper;
 import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataStream;
 
 
 /**
@@ -39,20 +41,42 @@ public class IOPropertyList extends SMLPropertyList<AbstractSWEIdentifiable>
     
 
     @Override
-    public OgcProperty<AbstractSWEIdentifiable> add(String name, AbstractSWEIdentifiable component)
+    public OgcProperty<AbstractSWEIdentifiable> add(String name, AbstractSWEIdentifiable ioDesc)
     {
-        if (component instanceof DataComponent)
-            ((DataComponent)component).setName(name);
-        return super.add(name, component);
+        assignComponentName(name, ioDesc);
+        return super.add(name, ioDesc);
     }
     
     
     @Override
     public void add(OgcProperty<AbstractSWEIdentifiable> prop)
     {
-        if (prop.hasValue() && prop.getValue() instanceof DataComponent)
-            ((DataComponent)prop.getValue()).setName(prop.getName());
+        if (prop.hasValue() && prop.getName() != null)
+            assignComponentName(prop.getName(), prop.getValue());
+        
         super.add(prop);
+    }
+    
+    
+    @Override
+    public void add(int index, AbstractSWEIdentifiable component)
+    {
+        String name = SMLHelper.getIOComponent(component).getName();
+        checkName(name);
+        OgcPropertyImpl<AbstractSWEIdentifiable> prop = new OgcPropertyImpl<>(name, component);
+        items.add(index, prop);
+        nameMap.put(name, prop);
+    }
+    
+    
+    protected void assignComponentName(String name, AbstractSWEIdentifiable ioDesc)
+    {
+        if (ioDesc instanceof DataComponent)
+            ((DataComponent)ioDesc).setName(name);
+        else if (ioDesc instanceof DataStream)
+            ((DataStream)ioDesc).getElementTypeProperty().setName(name);
+        else if (ioDesc instanceof DataInterface)
+            ((DataInterface)ioDesc).getData().getElementTypeProperty().setName(name);
     }
 
 

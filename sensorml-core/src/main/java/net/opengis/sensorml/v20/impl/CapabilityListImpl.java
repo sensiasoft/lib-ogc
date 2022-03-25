@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.sensorml.v20.impl;
 
+import org.vast.data.DataComponentPropertyList;
 import net.opengis.OgcPropertyList;
 import net.opengis.sensorml.v20.CapabilityList;
 import net.opengis.swe.v20.DataComponent;
@@ -27,7 +28,7 @@ import net.opengis.swe.v20.DataComponent;
 public class CapabilityListImpl extends AbstractMetadataListImpl implements CapabilityList
 {
     private static final long serialVersionUID = 1077880441572054254L;
-    protected OgcPropertyList<DataComponent> capabilityList = new OgcPropertyList<DataComponent>();
+    protected OgcPropertyList<DataComponent> capabilityList = new DataComponentPropertyList<DataComponent>();
     
     
     public CapabilityListImpl()

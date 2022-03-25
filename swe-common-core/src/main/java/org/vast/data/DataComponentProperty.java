@@ -35,9 +35,8 @@ public class DataComponentProperty<ComponentType extends DataComponent> extends 
     AbstractDataComponentImpl parent;
     
     
-    private DataComponentProperty()
+    public DataComponentProperty()
     {
-        super();
     }
     
     
@@ -57,9 +56,19 @@ public class DataComponentProperty<ComponentType extends DataComponent> extends 
     
 
     @Override
+    public void setName(String name)
+    {
+        super.setName(name);
+        if (value != null)
+            value.setName(this.name);
+        super.setValue(value);
+    }
+    
+
+    @Override
     public void setValue(ComponentType value)
     {
-        ((AbstractDataComponentImpl)value).setName(this.name);
+        value.setName(this.name);
         ((AbstractDataComponentImpl)value).setParent(parent);
         super.setValue(value);
     }

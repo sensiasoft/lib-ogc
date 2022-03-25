@@ -34,8 +34,8 @@ import net.opengis.swe.v20.EncodedValues;
 public class DataStreamImpl extends AbstractSWEIdentifiableImpl implements DataStream
 {
     private static final long serialVersionUID = 2640330595178102027L;
-    protected OgcPropertyImpl<Count> elementCount;
-    protected OgcPropertyImpl<DataComponent> elementType = new OgcPropertyImpl<DataComponent>();
+    protected OgcProperty<Count> elementCount;
+    protected OgcProperty<DataComponent> elementType = new DataComponentProperty<DataComponent>();
     protected DataEncoding encoding;
     protected OgcPropertyImpl<EncodedValues> values;
 

@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.sensorml.v20.impl;
 
+import org.vast.data.DataComponentPropertyList;
 import net.opengis.OgcPropertyList;
 import net.opengis.sensorml.v20.CharacteristicList;
 import net.opengis.swe.v20.DataComponent;
@@ -27,7 +28,7 @@ import net.opengis.swe.v20.DataComponent;
 public class CharacteristicListImpl extends AbstractMetadataListImpl implements CharacteristicList
 {
     private static final long serialVersionUID = 900221429219021927L;
-    protected OgcPropertyList<DataComponent> characteristicList = new OgcPropertyList<DataComponent>();
+    protected OgcPropertyList<DataComponent> characteristicList = new DataComponentPropertyList<DataComponent>();
     
     
     public CharacteristicListImpl()

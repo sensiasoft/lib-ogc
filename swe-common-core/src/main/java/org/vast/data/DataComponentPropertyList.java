@@ -37,10 +37,8 @@ public class DataComponentPropertyList<ComponentType extends DataComponent> exte
     AbstractDataComponentImpl parent;
     
     
-    @SuppressWarnings("unused")
-    private DataComponentPropertyList()
+    public DataComponentPropertyList()
     {
-        super();
     }
     
     

@@ -25,7 +25,7 @@ xmlns:sml="http://www.opengis.net/sensorml/2.0"
                <!-- data description -->
                <sml:data>
                   <swe:DataStream>
-                     <swe:elementType name="gamaRadiation">
+                     <swe:elementType name="gammaRadiation">
             						<swe:DataRecord>
             							<swe:field name="averageDose">
             								<swe:Quantity definition="http://sensorml.com/ont/swe/property/DoseRate.html">

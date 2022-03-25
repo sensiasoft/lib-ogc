@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import org.vast.util.Asserts;
 
 
 /**
@@ -79,7 +80,7 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
      */
     public ValueType get(String name)
     {
-        OgcProperty<ValueType> prop = getProperty(name);        
+        OgcProperty<ValueType> prop = getProperty(name);
         return prop.getValue();
     }
     
@@ -118,10 +119,12 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
      */
     public void add(OgcProperty<ValueType> prop)
     {
-        checkName(prop.getName());        
         items.add(prop);
         if (prop.getName() != null)
+        {
+            checkName(prop.getName());
             nameMap.put(prop.getName(), prop);
+        }
     }
     
     
@@ -431,8 +434,7 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
     
     protected void checkName(String name)
     {
-        if (name == null)
-            return;
+        Asserts.checkNotNull(name, "name");
         
         if (nameMap.containsKey(name))
             throw new IllegalArgumentException("Item '" + name + "' already exists");
