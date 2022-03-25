@@ -24,13 +24,19 @@ import com.google.gson.stream.JsonWriter;
 
 public class SWEJsonStreamWriter extends JsonStreamWriter
 {
-    protected final static String NO_PARENT = "";
-    protected final static String NO_NS = "";
+    protected static final String NO_PARENT = "";
+    protected static final String NO_NS = "";
     
     // array name mappings (key is parentName, subkey is localName, value is NS uri)
-    protected Map<String, Map<String, String>> arrays = new HashMap<String, Map<String, String>>();
-    protected Map<String, Map<String, String>> numerics = new HashMap<String, Map<String, String>>();
-    protected Map<String, Map<String, String>> valueArrays = new HashMap<String, Map<String, String>>();
+    protected static final Map<String, Map<String, String>> ARRAYS = new HashMap<String, Map<String, String>>();
+    protected static final Map<String, Map<String, String>> NUMERICS = new HashMap<String, Map<String, String>>();
+    protected static final Map<String, Map<String, String>> VALUE_ARRAYS = new HashMap<String, Map<String, String>>();
+    
+    
+    static
+    {
+        initSpecialNames();
+    }
     
     
     public SWEJsonStreamWriter(OutputStream os, Charset charset)
@@ -49,39 +55,39 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
     }
     
     
-    protected void initSpecialNames()
+    protected static void initSpecialNames()
     {
         // elements to encode as JSON arrays
-        addSpecialNames(arrays, NO_NS, "field", "coordinate", "item", "quality", "member");
-        addSpecialNamesWithParent(arrays, NO_NS, "AllowedValues", "value", "interval");
-        addSpecialNamesWithParent(arrays, NO_NS, "AllowedTimes", "value", "interval");
-        addSpecialNamesWithParent(arrays, NO_NS, "AllowedTokens", "value");
-        addSpecialNamesWithParent(valueArrays, NO_NS, "CountRange", "value");
-        addSpecialNamesWithParent(valueArrays, NO_NS, "QuantityRange", "value");
-        addSpecialNamesWithParent(valueArrays, NO_NS, "CategoryRange", "value");
-        addSpecialNamesWithParent(valueArrays, NO_NS, "TimeRange", "value");
-        addSpecialNamesWithParent(valueArrays, NO_NS, "interval", "interval");
+        addSpecialNames(ARRAYS, NO_NS, "field", "coordinate", "item", "quality", "member");
+        addSpecialNamesWithParent(ARRAYS, NO_NS, "AllowedValues", "value", "interval");
+        addSpecialNamesWithParent(ARRAYS, NO_NS, "AllowedTimes", "value", "interval");
+        addSpecialNamesWithParent(ARRAYS, NO_NS, "AllowedTokens", "value");
+        addSpecialNamesWithParent(VALUE_ARRAYS, NO_NS, "CountRange", "value");
+        addSpecialNamesWithParent(VALUE_ARRAYS, NO_NS, "QuantityRange", "value");
+        addSpecialNamesWithParent(VALUE_ARRAYS, NO_NS, "CategoryRange", "value");
+        addSpecialNamesWithParent(VALUE_ARRAYS, NO_NS, "TimeRange", "value");
+        addSpecialNamesWithParent(VALUE_ARRAYS, NO_NS, "interval", "interval");
         
         // elements with numerical values
-        addSpecialNames(numerics, NO_NS, "nilValue", "paddingBytes-after", "paddingBytes-before", "byteLength", "significantBits", "bitLength");
-        addSpecialNamesWithParent(numerics, NO_NS, "Count", "value");
-        addSpecialNamesWithParent(numerics, NO_NS, "Quantity", "value");
-        addSpecialNamesWithParent(numerics, NO_NS, "Time", "value");
-        addSpecialNamesWithParent(numerics, NO_NS, "CountRange", "value");
-        addSpecialNamesWithParent(numerics, NO_NS, "QuantityRange", "value");
-        addSpecialNamesWithParent(numerics, NO_NS, "AllowedValues", "value");
-        addSpecialNamesWithParent(numerics, NO_NS, "value", "value");
-        addSpecialNamesWithParent(numerics, NO_NS, "interval", "interval");
+        addSpecialNames(NUMERICS, NO_NS, "nilValue", "paddingBytes-after", "paddingBytes-before", "byteLength", "significantBits", "bitLength");
+        addSpecialNamesWithParent(NUMERICS, NO_NS, "Count", "value");
+        addSpecialNamesWithParent(NUMERICS, NO_NS, "Quantity", "value");
+        addSpecialNamesWithParent(NUMERICS, NO_NS, "Time", "value");
+        addSpecialNamesWithParent(NUMERICS, NO_NS, "CountRange", "value");
+        addSpecialNamesWithParent(NUMERICS, NO_NS, "QuantityRange", "value");
+        addSpecialNamesWithParent(NUMERICS, NO_NS, "AllowedValues", "value");
+        addSpecialNamesWithParent(NUMERICS, NO_NS, "value", "value");
+        addSpecialNamesWithParent(NUMERICS, NO_NS, "interval", "interval");
     }
     
     
-    protected void addSpecialNames(Map<String, Map<String, String>> nameMaps, String namespaceURI, String... names)
+    protected static void addSpecialNames(Map<String, Map<String, String>> nameMaps, String namespaceURI, String... names)
     {
         addSpecialNamesWithParent(nameMaps, namespaceURI, NO_PARENT, names);
     }
     
     
-    protected void addSpecialNamesWithParent(Map<String, Map<String, String>> nameMaps, String namespaceURI, String parentName, String... names)
+    protected static void addSpecialNamesWithParent(Map<String, Map<String, String>> nameMaps, String namespaceURI, String parentName, String... names)
     {
         Map<String, String> nameMapForParent = nameMaps.get(parentName);
         if (nameMapForParent == null)
@@ -129,7 +135,7 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
         if (currentContext != null && currentContext.eltName != null)
             parentName = currentContext.eltName;
             
-        return isSpecialPath(arrays, parentName, namespaceURI, localName);
+        return isSpecialPath(ARRAYS, parentName, namespaceURI, localName);
     }
     
     
@@ -150,7 +156,7 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
         if (currentContext.parent != null && currentContext.parent.eltName != null)
             parentName = currentContext.parent.eltName;
         
-        return isSpecialPath(valueArrays, parentName, namespaceURI, localName);
+        return isSpecialPath(VALUE_ARRAYS, parentName, namespaceURI, localName);
     }
     
     
@@ -160,7 +166,7 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
         if (!super.isNumericValue(value))
             return false;
         
-        return isSpecialPath(numerics, currentContext.parent.eltName, null, currentContext.eltName);
+        return isSpecialPath(NUMERICS, currentContext.parent.eltName, null, currentContext.eltName);
     }
 
 

@@ -26,31 +26,33 @@ import com.google.gson.stream.JsonReader;
 
 public class SWEJsonStreamReader extends JsonStreamReader
 {
-    protected final static String NO_PARENT = "";
+    protected static final String NO_PARENT = "";
+    protected static final HashSet<String> XML_ATT_NAMES = new HashSet<String>();
+    protected static final HashSet<String> INLINE_VALUES_NAMES = new HashSet<String>();
+    protected static final Map<String, Map<String, String>> VALUE_ARRAYS = new HashMap<String, Map<String, String>>();
     
-    protected HashSet<String> xmlAttNames = new HashSet<String>();
-    protected HashSet<String> inlineValueNames = new HashSet<String>();
-    protected Map<String, Map<String, String>> valueArrays = new HashMap<String, Map<String, String>>();
+    static
+    {
+        initSpecialNames();
+    }
     
     
     public SWEJsonStreamReader(InputStream is, Charset charset)
     {
         super(is, charset);
-        initSpecialNames();
     }
     
     
     public SWEJsonStreamReader(JsonReader reader)
     {
         super(reader);
-        initSpecialNames();        
     }
     
     
-    protected void initSpecialNames()
+    protected static void initSpecialNames()
     {
         // XML attributes
-        addSpecialNames(xmlAttNames,
+        addSpecialNames(XML_ATT_NAMES,
                 "name", "href", "title", "role", "arcrole", "code", "reason", "id", "definition",
                 "referenceFrame", "localFrame", "referenceTime", "axisID", "updatable", "optional",
                 "collapseWhiteSpaces", "decimalSeparator", "tokenSeparator", "blockSeparator",
@@ -58,25 +60,25 @@ public class SWEJsonStreamReader extends JsonStreamReader
                 "compression", "encryption", "paddingBytes-after", "paddingBytes-before", "byteLength");
         
         // XML inline values
-        addSpecialNames(inlineValueNames, "nilValue");
+        addSpecialNames(INLINE_VALUES_NAMES, "nilValue");
         
         // value arrays
-        addSpecialNamesWithParent(valueArrays, "CountRange", "value");
-        addSpecialNamesWithParent(valueArrays, "QuantityRange", "value");
-        addSpecialNamesWithParent(valueArrays, "CategoryRange", "value");
-        addSpecialNamesWithParent(valueArrays, "TimeRange", "value");
-        addSpecialNamesWithParent(valueArrays, "interval", "interval");
+        addSpecialNamesWithParent(VALUE_ARRAYS, "CountRange", "value");
+        addSpecialNamesWithParent(VALUE_ARRAYS, "QuantityRange", "value");
+        addSpecialNamesWithParent(VALUE_ARRAYS, "CategoryRange", "value");
+        addSpecialNamesWithParent(VALUE_ARRAYS, "TimeRange", "value");
+        addSpecialNamesWithParent(VALUE_ARRAYS, "interval", "interval");
     }
     
     
-    protected void addSpecialNames(HashSet<String> nameList, String... names)
+    protected static void addSpecialNames(HashSet<String> nameList, String... names)
     {
         for (String name: names)
             nameList.add(name);
     }
     
     
-    protected void addSpecialNamesWithParent(Map<String, Map<String, String>> nameMaps, String parentName, String... names)
+    protected static void addSpecialNamesWithParent(Map<String, Map<String, String>> nameMaps, String parentName, String... names)
     {
         Map<String, String> nameMapForParent = nameMaps.get(parentName);
         if (nameMapForParent == null)
@@ -93,14 +95,14 @@ public class SWEJsonStreamReader extends JsonStreamReader
     @Override
     protected boolean isXmlAttribute(String name)
     {
-        return ( (name.charAt(0) == ATT_PREFIX) || xmlAttNames.contains(name) );
+        return ( (name.charAt(0) == ATT_PREFIX) || XML_ATT_NAMES.contains(name) );
     }
     
 
     @Override
     protected boolean isInlineValue(String name)
     {
-        return inlineValueNames.contains(name);
+        return INLINE_VALUES_NAMES.contains(name);
     }
     
     
@@ -130,7 +132,7 @@ public class SWEJsonStreamReader extends JsonStreamReader
         if (currentContext.parent != null && currentContext.parent.eltName != null)
             parentName = currentContext.parent.eltName;
         
-        return isSpecialPath(valueArrays, parentName, name);
+        return isSpecialPath(VALUE_ARRAYS, parentName, name);
     }
 
 

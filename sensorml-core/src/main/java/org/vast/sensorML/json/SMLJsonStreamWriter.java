@@ -34,7 +34,17 @@ public class SMLJsonStreamWriter extends SWEJsonStreamWriter
     static Set<String> ISO_CODELIST_TYPES = ImmutableSet.of(
         "CI_RoleCode"
     );
-        
+    
+    
+    static
+    {
+        initSpecialNames();
+    }
+    
+
+    protected JsonContext isoEltRootCtx;
+    
+    
     public SMLJsonStreamWriter(OutputStream os, Charset charset)
     {
         super(os, charset);
@@ -47,12 +57,9 @@ public class SMLJsonStreamWriter extends SWEJsonStreamWriter
     }
     
     
-    @Override
-    protected void initSpecialNames()
+    protected static void initSpecialNames()
     {
-        super.initSpecialNames();
-        
-        addSpecialNames(arrays, SMLStaxBindings.NS_URI,
+        addSpecialNames(ARRAYS, SMLStaxBindings.NS_URI,
             "keywords", "identification", "classification",
             "validTime", "securityConstraints", "legalConstraints",
             "characteristics", "capabilities", "contacts",
@@ -65,7 +72,7 @@ public class SMLJsonStreamWriter extends SWEJsonStreamWriter
             "setValue", "setArrayValues", "setConstraint",
             "setMode", "setStatus");
 
-        addSpecialNames(arrays, GMLStaxBindings.NS_URI, "name");
+        addSpecialNames(ARRAYS, GMLStaxBindings.NS_URI, "name");
     }
     
     
@@ -80,11 +87,34 @@ public class SMLJsonStreamWriter extends SWEJsonStreamWriter
     
     
     @Override
+    protected void pushContext(String eltName)
+    {
+        super.pushContext(eltName);
+        
+        // mark begin of root ISO object
+        if (eltName != null && isoEltRootCtx == null &&
+           (eltName.startsWith("CI_") || eltName.startsWith("MD_")))
+            isoEltRootCtx = currentContext;
+    }
+    
+    
+    @Override
+    protected void popContext()
+    {
+        // mark end of ISO object
+        if (currentContext == isoEltRootCtx)
+            isoEltRootCtx = null;
+        
+        super.popContext();
+    }
+    
+    
+    @Override
     public void writeAttribute(String localName, String value) throws JsonStreamException
     {
         if ("codeSpace".equals(localName)) // to skip UID codespace
             return;
-        else if (ISO_BASIC_TYPES.contains(currentContext.eltName)) // skip all basic types attributes
+        else if (isoEltRootCtx != null && ISO_BASIC_TYPES.contains(currentContext.eltName)) // skip all basic types attributes
             return;
         else
             super.writeAttribute(localName, value);
@@ -95,7 +125,7 @@ public class SMLJsonStreamWriter extends SWEJsonStreamWriter
     public void writeStartElement(String prefix, String localName, String namespaceURI) throws JsonStreamException
     {
         // keep only ISO basic types value
-        if (ISO_BASIC_TYPES.contains(localName))
+        if (isoEltRootCtx != null && ISO_BASIC_TYPES.contains(localName))
         {
             pushContext(localName);
             currentContext.skipParent = true;
@@ -109,7 +139,7 @@ public class SMLJsonStreamWriter extends SWEJsonStreamWriter
     public void writeEndElement() throws JsonStreamException
     {
         // keep only ISO basic types value
-        if (ISO_BASIC_TYPES.contains(currentContext.eltName))
+        if (isoEltRootCtx != null && ISO_BASIC_TYPES.contains(currentContext.eltName))
         {
             super.writeEndElement();
             currentContext.skipParent = true;

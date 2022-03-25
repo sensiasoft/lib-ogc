@@ -25,46 +25,40 @@ import com.google.gson.stream.JsonReader;
 
 public class SMLJsonStreamReader extends SWEJsonStreamReader
 {
-    protected HashSet<String> isoStringNames;
+    protected static final HashSet<String> ISO_STRING_NAMES = new HashSet<String>();
+    protected JsonContext isoEltRootCtx;
     
-    
-    protected static class JsonSmlContext extends JsonContext
+    static
     {
-        public boolean isIsoObject;
+        initSpecialNames();
     }
     
     
     public SMLJsonStreamReader(InputStream is, Charset charset)
     {
         super(is, charset);
-        currentContext = new JsonSmlContext();
     }
     
     
     public SMLJsonStreamReader(JsonReader reader)
     {
         super(reader);
-        currentContext = new JsonSmlContext();
     }
     
     
-    @Override
-    protected void initSpecialNames()
+    protected static void initSpecialNames()
     {
-        super.initSpecialNames();
-        
         // XML attributes
-        addSpecialNames(xmlAttNames,
+        addSpecialNames(XML_ATT_NAMES,
             "srsName", "srsDimension", "indeterminatePosition",
             "ref", "codeList", "codeListValue", "nilReason");
         
         // XML inline values
-        addSpecialNames(inlineValueNames,
+        addSpecialNames(INLINE_VALUES_NAMES,
             "axis", "setValue", "setStatus", "setMode", "CharacterString", "URL");
         
         // ISO data types
-        isoStringNames = new HashSet<String>();
-        addSpecialNames(isoStringNames,
+        addSpecialNames(ISO_STRING_NAMES,
             "individualName", "organisationName", "positionName",
             "hoursOfService", "contactInstructions",
             "voice", "facsimile",
@@ -98,20 +92,33 @@ public class SMLJsonStreamReader extends SWEJsonStreamReader
     }
     
     
+    @Override
     protected void pushContext(String eltName)
     {
-        JsonContext prevContext = currentContext;
-        currentContext = new JsonSmlContext();
-        currentContext.parent = prevContext;
-        currentContext.eltName = eltName;
-        ((JsonSmlContext)currentContext).isIsoObject = ((JsonSmlContext)prevContext).isIsoObject;
+        super.pushContext(eltName);
+        
+        // mark begin of root ISO object
+        if (eltName != null && isoEltRootCtx == null &&
+           (eltName.startsWith("CI_") || eltName.startsWith("MD_")))
+            isoEltRootCtx = currentContext;
+    }
+    
+    
+    @Override
+    protected void popContext()
+    {
+        // mark end of ISO object
+        if (currentContext == isoEltRootCtx)
+            isoEltRootCtx = null;
+        
+        super.popContext();
     }
     
     
     @Override
     public int next() throws JsonStreamException
     {
-        if (((JsonSmlContext)currentContext).isIsoObject && isoStringNames.contains(currentContext.eltName) && currentContext.consumeText)
+        if (isoEltRootCtx != null && ISO_STRING_NAMES.contains(currentContext.eltName) && currentContext.consumeText)
             return nextTag();
         else
             return super.next();
@@ -121,14 +128,7 @@ public class SMLJsonStreamReader extends SWEJsonStreamReader
     @Override
     public int nextTag() throws JsonStreamException
     {
-        if (currentContext.eltName != null)
-        {
-            String parentName = currentContext.eltName;
-            if (parentName.startsWith("CI_") || parentName.startsWith("MD_"))
-                ((JsonSmlContext)currentContext).isIsoObject = true;
-        }
-        
-        if (((JsonSmlContext)currentContext).isIsoObject && isoStringNames.contains(currentContext.eltName) && currentContext.consumeText)
+        if (isoEltRootCtx != null && ISO_STRING_NAMES.contains(currentContext.eltName) && currentContext.consumeText)
         {
             currentContext.consumeText = false;
             pushContext("CharacterString");
@@ -145,15 +145,10 @@ public class SMLJsonStreamReader extends SWEJsonStreamReader
     @Override
     protected boolean isXmlAttribute(String name)
     {
-        if ("name".equals(name) && currentContext.eltName != null)
-        {
-            String parentName = currentContext.eltName;
-            if (parentName.startsWith("CI_") || parentName.startsWith("MD_"))
+        if (isoEltRootCtx != null && "name".equals(name))
                 return false;
-        }
-
+        
         return super.isXmlAttribute(name);
-            
     }
     
 }

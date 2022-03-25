@@ -150,6 +150,11 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 									<swe:value>Aluminum</swe:value>
 								</swe:Category>
 							</swe:field>
+							<swe:field name="Hardened">
+								<swe:Boolean definition="http://sensorml.com/ont/swe/property/Hardened">
+									<swe:value>true</swe:value>
+								</swe:Boolean>
+							</swe:field>
 						</swe:DataRecord>
 					</swe:field>
 				</swe:DataRecord>
