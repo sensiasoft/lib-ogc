@@ -81,9 +81,9 @@ public class SMLHelper extends SWEHelper
         public enum PortType {INPUT, OUTPUT, PARAM}
         
         public AbstractProcess process;
-        public DataComponent component;
-        public DataComponent portComponent;
         public PortType portType;
+        public DataComponent portComponent;
+        public DataComponent component;
         
         public LinkTarget(AbstractProcess parent, PortType portType, DataComponent portComponent, DataComponent component)
         {
@@ -382,22 +382,27 @@ public class SMLHelper extends SWEHelper
         
         // find port
         DataComponent port = null;
-        switch (portType)
+        try
         {
-            case INPUT:
-                port = process.getInputList().getComponent(portName);
-                break;
-                
-            case OUTPUT:
-                port = process.getOutputList().getComponent(portName);
-                break;
-                
-            case PARAM:
-                port = process.getParameterList().getComponent(portName);
-                break;
+            switch (portType)
+            {
+                case INPUT:
+                    port = process.getInputList().getComponent(portName);
+                    break;
+                    
+                case OUTPUT:
+                    port = process.getOutputList().getComponent(portName);
+                    break;
+                    
+                case PARAM:
+                    port = process.getParameterList().getComponent(portName);
+                    break;
+            }
         }
-        if (port == null)
-            throw new SMLException(String.format("Cannot find {} port with name '%s'", portType, portName));
+        catch (Exception e)
+        {
+            throw new SMLException(String.format("Cannot find %s port with name '%s'", portType, portName));
+        }
         
         // find sub component in port structure
         try
