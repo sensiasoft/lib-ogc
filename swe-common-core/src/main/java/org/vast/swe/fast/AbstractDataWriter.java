@@ -22,6 +22,7 @@ import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
 import org.vast.util.Asserts;
 import net.opengis.swe.v20.BlockComponent;
+import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataEncoding;
 
@@ -37,14 +38,14 @@ import net.opengis.swe.v20.DataEncoding;
 public abstract class AbstractDataWriter extends DataBlockProcessor implements DataStreamWriter
 {
     BlockComponent parentArray;
-    int parentArrayIndex;    
+    int parentArrayIndex;
     DataEncoding dataEncoding;
     
         
     @Override
     public void write(DataBlock data) throws IOException
     {
-        Asserts.checkNotNull(data, "DataBlock");
+        Asserts.checkNotNull(data, DataBlock.class);
         
         try
         {
@@ -104,7 +105,8 @@ public abstract class AbstractDataWriter extends DataBlockProcessor implements D
     @Override
     public void setParentArray(BlockComponent parentArray)
     {
-        this.parentArray = parentArray;
+        this.parentArray = Asserts.checkNotNull(parentArray, DataArray.class);
+        this.dataComponents = parentArray.getElementType();
         parentArrayIndex = 0;
     }
     
@@ -112,7 +114,12 @@ public abstract class AbstractDataWriter extends DataBlockProcessor implements D
     @Override
     public void write(OutputStream outputStream) throws IOException
     {
-        throw new UnsupportedOperationException();
+        Asserts.checkNotNull(outputStream, OutputStream.class);
+        Asserts.checkState(parentArray != null);
+        
+        setOutput(outputStream);
+        for (int i = 0; i < parentArray.getComponentCount(); i++)
+            write(parentArray.getComponent(i).getData());
     }
     
     

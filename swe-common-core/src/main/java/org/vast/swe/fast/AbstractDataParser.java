@@ -23,6 +23,7 @@ import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
 import org.vast.util.Asserts;
 import net.opengis.swe.v20.BlockComponent;
+import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
@@ -47,8 +48,9 @@ public abstract class AbstractDataParser extends DataBlockProcessor implements D
     int parentArrayIndex;
     
     DataEncoding dataEncoding;
-    DataBlock dataBlk;    
-    boolean renewDataBlock;    
+    DataBlock dataBlk;
+    boolean renewDataBlock;
+    boolean hasVarSizeArray = false;
     
     
     protected abstract boolean moreData() throws IOException;
@@ -70,6 +72,11 @@ public abstract class AbstractDataParser extends DataBlockProcessor implements D
         // get datablock object
         if (dataBlk == null || renewDataBlock)
             getNextDataBlock();
+        
+        // assign datablock to component structure
+        // to prepare to update variable array size
+        if (hasVarSizeArray && (!dataComponents.hasData() || dataComponents.getData() != dataBlk))
+            dataComponents.setData(dataBlk);
         
         // go once through the tree of parser atoms
         int index = rootProcessor.process(dataBlk, 0);
@@ -95,6 +102,12 @@ public abstract class AbstractDataParser extends DataBlockProcessor implements D
             dataBlk = dataComponents.createDataBlock();
         
         return dataBlk;
+    }
+    
+    
+    protected void updateArraySize(DataArray varSizeArray, int arraySize)
+    {
+        varSizeArray.updateSize(arraySize);
     }
     
     

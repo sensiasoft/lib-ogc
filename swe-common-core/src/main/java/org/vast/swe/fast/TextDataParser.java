@@ -51,14 +51,15 @@ import org.vast.util.ReaderException;
  */
 public class TextDataParser extends AbstractDataParser
 {
-    Reader reader;
-    String tokenSep = ",";
-    char[] blockSep = "\n".toCharArray();
-    boolean collapseWhiteSpaces = true;
-    StringBuilder tokenBuf = new StringBuilder(32);
-    String[] lastSplit;
-    int tokenIndex = -1;    
-    int blockSepIndex = 0;
+    protected Reader reader;
+    protected String tokenSep = ",";
+    protected char[] blockSep = "\n".toCharArray();
+    protected boolean collapseWhiteSpaces = true;
+    protected StringBuilder tokenBuf = new StringBuilder(32);
+    protected String[] lastSplit;
+    protected int tokenIndex = -1;    
+    protected int blockSepIndex = 0;
+    protected  Map<String, IntegerParser> countReaders = new HashMap<>();
     
     
     protected class BooleanParser extends BaseProcessor
@@ -97,6 +98,8 @@ public class TextDataParser extends AbstractDataParser
     
     private class IntegerParser extends BaseProcessor
     {
+        int val;
+        
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
@@ -104,7 +107,7 @@ public class TextDataParser extends AbstractDataParser
             
             try
             {
-                int val = Integer.parseInt(token);
+                val = Integer.parseInt(token);
                 data.setIntValue(index, val);
                 return ++index;
             }
@@ -213,26 +216,19 @@ public class TextDataParser extends AbstractDataParser
     }
     
     
-    protected class ArraySizeParser extends BaseProcessor
+    protected class ArrayReader extends ArrayProcessor
     {
-        ArrayProcessor arrayProcessor;
+        DataArray varSizeArray;
         
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
-            String token = readToken();
+            // resize array if var size
+            int arraySize = getArraySize();
+            if (varSizeArray != null)
+                updateArraySize(varSizeArray, arraySize);
             
-            try
-            {
-                int val = Integer.parseInt(token);
-                arrayProcessor.arraySize = val;
-                data.setIntValue(index, val);
-                return ++index;
-            }
-            catch (NumberFormatException e)
-            {
-                throw new ReaderException(INVALID_INTEGER_MSG + token);
-            } 
+            return super.process(data, index);
         }
     }
     
@@ -295,10 +291,13 @@ public class TextDataParser extends AbstractDataParser
     @Override
     protected void init()
     {
-        this.tokenSep = ((TextEncoding)dataEncoding).getTokenSeparator();
-        this.blockSep = ((TextEncoding)dataEncoding).getBlockSeparator().toCharArray();
-        //this.decimalSep = ((TextEncoding)dataEncoding).getDecimalSeparator().charAt(0);
-        this.collapseWhiteSpaces = ((TextEncoding)dataEncoding).getCollapseWhiteSpaces();   
+        if (dataEncoding != null)
+        {
+            this.tokenSep = ((TextEncoding)dataEncoding).getTokenSeparator();
+            this.blockSep = ((TextEncoding)dataEncoding).getBlockSeparator().toCharArray();
+            //this.decimalSep = ((TextEncoding)dataEncoding).getDecimalSeparator().charAt(0);
+            this.collapseWhiteSpaces = ((TextEncoding)dataEncoding).getCollapseWhiteSpaces();
+        }
     }
     
     
@@ -336,7 +335,10 @@ public class TextDataParser extends AbstractDataParser
     @Override
     public void visit(Count comp)
     {
-        addToProcessorTree(new IntegerParser());
+        IntegerParser parser = new IntegerParser();
+        if (comp.isSetId())
+            countReaders.put(comp.getId(), parser);
+        addToProcessorTree(parser);
     }
     
     
@@ -372,29 +374,44 @@ public class TextDataParser extends AbstractDataParser
     
     
     @Override
-    public void visit(DataArray array)
-    {
-        if (array.isImplicitSize())
-        {
-            ArrayProcessor arrayProcessor = new ArrayProcessor();
-            ArraySizeParser sizeParser = new ArraySizeParser();
-            sizeParser.arrayProcessor = arrayProcessor;
-            addToProcessorTree(sizeParser);
-            addToProcessorTree(arrayProcessor);
-            array.getElementType().accept(this);        
-            processorStack.pop();
-        }
-        else
-            super.visit(array);
-    }
-    
-    
-    @Override
     public void visit(DataChoice choice)
     {
         addToProcessorTree(new ChoiceTokenParser(choice));
         for (DataComponent item: choice.getItemList())
-            item.accept(this);        
+            item.accept(this);
+        processorStack.pop();
+    }
+
+
+    @Override
+    public void visit(DataArray array)
+    {
+        ArrayReader arrayReader = new ArrayReader();
+        
+        if (array.isImplicitSize())
+        {
+            IntegerParser sizeReader = new IntegerParser();
+            addToProcessorTree(sizeReader);
+            arrayReader.setArraySizeSupplier(() -> sizeReader.val);
+            arrayReader.varSizeArray = array;
+            hasVarSizeArray = true;
+        }
+        else if (array.isVariableSize())
+        {
+            String refId = array.getArraySizeComponent().getId();
+            IntegerParser sizeReader = countReaders.get(refId);
+            arrayReader.setArraySizeSupplier(() -> sizeReader.val);
+            arrayReader.varSizeArray = array;
+            hasVarSizeArray = true;
+        }
+        else
+        {
+            final int arraySize = array.getComponentCount();
+            arrayReader.setArraySizeSupplier(() -> arraySize);
+        }
+        
+        addToProcessorTree(arrayReader);
+        array.getElementType().accept(this);
         processorStack.pop();
     }
 }

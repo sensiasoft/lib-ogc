@@ -22,6 +22,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.vast.swe.SWEDataTypeUtils;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.WriterException;
@@ -51,11 +53,13 @@ import net.opengis.swe.v20.Time;
  */
 public class TextDataWriter extends AbstractDataWriter
 {
-    Writer writer;
-    String tokenSep = ",";
-    String blockSep = "\n";
-    boolean collapseWhiteSpaces = true;
-    boolean firstToken;
+    protected Writer writer;
+    protected String tokenSep = ",";
+    protected String blockSep = "\n";
+    protected boolean collapseWhiteSpaces = true;
+    protected boolean firstBlock = true;
+    protected boolean firstToken;
+    protected Map<String, IntegerWriter> countWriters = new HashMap<>();
 
     
     protected class BooleanWriter extends BaseProcessor
@@ -73,10 +77,12 @@ public class TextDataWriter extends AbstractDataWriter
     
     protected class IntegerWriter extends BaseProcessor
     {
+        int val; // store val if used as array size
+        
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
-            int val = data.getIntValue(index);
+            val = data.getIntValue(index);
             writeSeparator();
             writer.write(Integer.toString(val));
             return ++index;
@@ -91,7 +97,7 @@ public class TextDataWriter extends AbstractDataWriter
         {
             double val = data.getDoubleValue(index);
             writeSeparator();
-            writer.write(SWEDataTypeUtils.getDoubleOrInfAsString(val));            
+            writer.write(SWEDataTypeUtils.getDoubleOrInfAsString(val));
             return ++index;
         }
     }
@@ -207,21 +213,6 @@ public class TextDataWriter extends AbstractDataWriter
     }
     
     
-    protected class ArraySizeWriter extends BaseProcessor
-    {
-        ArrayProcessor arrayProcessor;
-        
-        @Override
-        public int process(DataBlock data, int index) throws IOException
-        {
-            int arraySize = data.getIntValue(index);
-            arrayProcessor.arraySize = arraySize;
-            writer.write(Integer.toString(arraySize));
-            return ++index;
-        }
-    }
-    
-    
     protected void writeSeparator() throws IOException
     {
         if (!firstToken)
@@ -234,10 +225,15 @@ public class TextDataWriter extends AbstractDataWriter
     @Override
     protected void init()
     {
-        this.tokenSep = ((TextEncoding)dataEncoding).getTokenSeparator();
-        this.blockSep = ((TextEncoding)dataEncoding).getBlockSeparator();
-        //this.decimalSep = ((TextEncoding)dataEncoding).getDecimalSeparator().charAt(0);
-        this.collapseWhiteSpaces = ((TextEncoding)dataEncoding).getCollapseWhiteSpaces();
+        if (dataEncoding != null)
+        {
+            this.tokenSep = ((TextEncoding)dataEncoding).getTokenSeparator();
+            this.blockSep = ((TextEncoding)dataEncoding).getBlockSeparator();
+            //this.decimalSep = ((TextEncoding)dataEncoding).getDecimalSeparator().charAt(0);
+            this.collapseWhiteSpaces = ((TextEncoding)dataEncoding).getCollapseWhiteSpaces();
+        }
+        
+        this.firstBlock = true;
     }
     
     
@@ -251,9 +247,13 @@ public class TextDataWriter extends AbstractDataWriter
     @Override
     public void write(DataBlock data) throws IOException
     {
+        if (!firstBlock)
+            writer.write(blockSep);
+            
         firstToken = true;
         super.write(data);
-        writer.write(blockSep);
+        
+        firstBlock = false;
     }
     
 
@@ -283,7 +283,10 @@ public class TextDataWriter extends AbstractDataWriter
     @Override
     public void visit(Count comp)
     {
-        addToProcessorTree(new IntegerWriter());
+        IntegerWriter writer = new IntegerWriter();
+        if (comp.isSetId())
+            countWriters.put(comp.getId(), writer);
+        addToProcessorTree(writer);
     }
     
     
@@ -337,18 +340,29 @@ public class TextDataWriter extends AbstractDataWriter
     @Override
     public void visit(DataArray array)
     {
+        ArrayProcessor arrayWriter = new ArrayProcessor();
+        
         if (array.isImplicitSize())
         {
-            ArrayProcessor arrayProcessor = new ArrayProcessor();
-            ArraySizeWriter sizeWriter = new ArraySizeWriter();
-            sizeWriter.arrayProcessor = arrayProcessor;
-            addToProcessorTree(sizeWriter);
-            addToProcessorTree(arrayProcessor);
-            array.getElementType().accept(this);        
-            processorStack.pop();
+            ArraySizeScanner sizeScanner = new ArraySizeScanner();
+            addToProcessorTree(sizeScanner);
+            arrayWriter.setArraySizeSupplier(sizeScanner);
+        }
+        else if (array.isVariableSize())
+        {
+            String refId = array.getArraySizeComponent().getId();
+            IntegerWriter sizeWriter = countWriters.get(refId);
+            arrayWriter.setArraySizeSupplier(() -> sizeWriter.val);
         }
         else
-            super.visit(array);
+        {
+            final int arraySize = array.getComponentCount();
+            arrayWriter.setArraySizeSupplier(() -> arraySize);
+        }
+        
+        addToProcessorTree(arrayWriter);
+        array.getElementType().accept(this);
+        processorStack.pop();
     }
     
     
@@ -357,7 +371,7 @@ public class TextDataWriter extends AbstractDataWriter
     {
         addToProcessorTree(new ChoiceTokenWriter(choice));
         for (DataComponent field: choice.getItemList())
-            field.accept(this);        
+            field.accept(this);
         processorStack.pop();
     }
 }

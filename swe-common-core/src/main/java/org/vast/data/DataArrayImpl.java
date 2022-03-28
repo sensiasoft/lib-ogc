@@ -258,7 +258,7 @@ public class DataArrayImpl extends AbstractArrayImpl
                 (arrayElt instanceof DataArray && ((DataArray)arrayElt).isVariableSize()))
             {
                 AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
-        		childBlock.atomCount = arrayElt.getComponentCount();
+        		childBlock.atomCount = arrayElt.scalarCount;
         		arrayElt.setData(childBlock);
             }
         }

@@ -24,9 +24,11 @@ import java.util.List;
 import org.junit.Test;
 import org.vast.swe.SWEHelper;
 import com.google.common.collect.Lists;
+import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataRecord;
 
 
 public class TestJsonDataParser
@@ -38,9 +40,9 @@ public class TestJsonDataParser
         var multipleRecords = records.size() > 1;
         
         // write JSON to byte buffer
-        ByteArrayOutputStream os = new ByteArrayOutputStream();        
-        JsonDataWriterGson writer = new JsonDataWriterGson ();
-        writer.setDataComponents(dataStruct);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        JsonDataWriterGson writer = new JsonDataWriterGson();
+        writer.setDataComponents(dataStruct.copy());
         writer.setOutput(os);
         writer.startStream(multipleRecords);
         for (var rec: records)
@@ -48,13 +50,13 @@ public class TestJsonDataParser
         writer.endStream();
         writer.flush();
         byte[] bytes = os.toByteArray();
-        if (!multipleRecords)
+        //if (!multipleRecords)
             System.out.println(new String(bytes));
         
         // read back JSON
         ByteArrayInputStream is = new ByteArrayInputStream(bytes);
         JsonDataParserGson parser = new JsonDataParserGson();
-        parser.setDataComponents(dataStruct);
+        parser.setDataComponents(dataStruct.copy());
         parser.setInput(is);
         parser.setRenewDataBlock(true);
         if (multipleRecords)
@@ -78,8 +80,8 @@ public class TestJsonDataParser
             
             for (int j = 0; j < expected.getAtomCount(); j++)
             {
-                if (!multipleRecords)
-                    System.out.format("expected=%s, actual=%s\n", expected.getStringValue(j), actual.getStringValue(j));
+                //if (!multipleRecords)
+                //    System.out.format("expected=%s, actual=%s\n", expected.getStringValue(j), actual.getStringValue(j));
                 assertEquals(expected.getStringValue(j), actual.getStringValue(j));
             }
         }
@@ -89,16 +91,38 @@ public class TestJsonDataParser
     @Test
     public void testWriteAndReadBackSimpleRecord() throws IOException
     {
+        // create record structure
+        SWEHelper fac = new SWEHelper();
+        DataRecord dataStruct = fac.createRecord()
+            .addSamplingTimeIsoUTC("t0")
+            .addField("q1", fac.createQuantity().build())
+            .addField("t2", fac.createText().build())
+            .addField("t3", fac.createText().build())
+            .addField("c4", fac.createCount().build())
+            .addField("cat5", fac.createCategory().build())
+            .build();
         
-    }
-    
-    
-    @Test
-    public void testWriteAndReadBackNestedRecords() throws IOException
-    {
+        // test with multiple records
+        var now = (double)Instant.now().getEpochSecond();
+        var records = new ArrayList<DataBlock>();
+        int numRecords = 10;
+        for (int r=0; r<numRecords; r++)
+        {
+            var rec = dataStruct.createDataBlock();
+            int dataBlkIdx = 0;
+            double val = (double)r;
+            rec.setDoubleValue(dataBlkIdx++, now+val);
+            rec.setDoubleValue(dataBlkIdx++, val);
+            rec.setStringValue(dataBlkIdx++, "text1." + val);
+            rec.setStringValue(dataBlkIdx++, "text2." + val/100);
+            rec.setIntValue(dataBlkIdx++, ((int)val)+100);
+            rec.setStringValue(dataBlkIdx++, "cat_val=" + val);
+            
+            records.add(rec);
+        }
         
+        writeReadAndCompare(dataStruct, records);
     }
-    
     
     
     @Test
@@ -133,24 +157,73 @@ public class TestJsonDataParser
             rec.setDoubleValue(dataBlkIdx++, val+100);
             rec.setIntValue(dataBlkIdx++, ((int)val)+200);
             rec.setDoubleValue(dataBlkIdx++, val+300);
-        }        
+        }
         writeReadAndCompare(dataStruct, Lists.newArrayList(rec));
         
         // test with multiple records
         var records = new ArrayList<DataBlock>();
-        int numRecords = 50;
+        int numRecords = 10;
         for (int r=0; r<numRecords; r++)
         {
             rec = dataStruct.createDataBlock();
             dataBlkIdx = 0;
             for (int i=0; i<arraySize; i++)
             {
-                double val = (double)i + r*60.;            
+                double val = (double)i + r*60.;
                 rec.setDoubleValue(dataBlkIdx++, now+val);
                 rec.setDoubleValue(dataBlkIdx++, val/1000.);
                 rec.setDoubleValue(dataBlkIdx++, val+100);
                 rec.setIntValue(dataBlkIdx++, ((int)val)+200);
                 rec.setDoubleValue(dataBlkIdx++, val+300);
+            }
+            
+            records.add(rec);
+        }
+        
+        writeReadAndCompare(dataStruct, records);
+    }
+    
+    
+    @Test
+    public void testWriteAndReadBackVarSizeArray() throws IOException
+    {
+        // create record structure
+        SWEHelper fac = new SWEHelper();
+        Count sizeField;
+        DataRecord dataStruct = fac.createRecord()
+            .addSamplingTimeIsoUTC("t0")
+            .addField("size", sizeField = fac.createCount()
+                .id("NUM_POINTS")
+                .build())
+            .addField("array", fac.createArray()
+                .withSizeComponent(sizeField)
+                .withElement("elt", fac.createVector()
+                    .addCoordinate("c1", fac.createQuantity().build())
+                    .addCoordinate("c2", fac.createQuantity().build())
+                    .build())
+                .build())
+            .build();
+
+        // test with multiple records
+        var now = (double)Instant.now().getEpochSecond();
+        var records = new ArrayList<DataBlock>();
+        int numRecords = 5;
+        for (int r=0; r<numRecords; r++)
+        {
+            int dataBlkIdx = 0;
+            
+            int arraySize = r+2;
+            ((DataArray)dataStruct.getComponent("array")).updateSize(arraySize);
+            DataBlock rec = dataStruct.createDataBlock();
+            
+            rec.setDoubleValue(dataBlkIdx++, now+r);
+            rec.setIntValue(dataBlkIdx++, arraySize);
+            
+            for (int i=0; i<arraySize; i++)
+            {
+                double val = (double)i + r*10.;
+                rec.setDoubleValue(dataBlkIdx++, val-100.);
+                rec.setDoubleValue(dataBlkIdx++, val+100);
             }
             
             records.add(rec);

@@ -16,6 +16,8 @@ package org.vast.swe.fast;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -52,9 +54,11 @@ import net.opengis.swe.v20.Vector;
 public class XmlDataWriter extends AbstractDataWriter
 {
     static final String XML_ERROR = "Error writing XML stream for ";
+    
     protected XMLStreamWriter xmlWriter;
     protected String namespace;
     protected String prefix;
+    protected Map<String, IntegerWriter> countWriters = new HashMap<>();
 
     
     protected abstract class ValueWriter extends BaseProcessor
@@ -99,6 +103,8 @@ public class XmlDataWriter extends AbstractDataWriter
     
     protected class IntegerWriter extends ValueWriter
     {
+        int val;
+        
         public IntegerWriter(String eltName)
         {
             this.eltName = eltName;
@@ -107,7 +113,7 @@ public class XmlDataWriter extends AbstractDataWriter
         @Override
         public void writeValue(DataBlock data, int index) throws XMLStreamException
         {
-            int val = data.getIntValue(index);
+            val = data.getIntValue(index);
             xmlWriter.writeCharacters(Integer.toString(val));
         }
     }
@@ -243,29 +249,17 @@ public class XmlDataWriter extends AbstractDataWriter
             try
             {
                 writeStartElement(eltName);
+                int arraySize = getArraySize();
                 xmlWriter.writeAttribute(AbstractArrayImpl.ELT_COUNT_NAME, Integer.toString(arraySize));
-                int newIndex = super.process(data, index);
+                for (int i = 0; i < arraySize; i++)
+                    index = eltProcessor.process(data, index);
                 xmlWriter.writeEndElement();
-                return newIndex;
+                return index;
             }
             catch (XMLStreamException e)
             {
                 throw new WriterException(XML_ERROR + eltName + " array", e);
             }
-        }
-    }
-    
-    
-    protected class ArraySizeScanner extends BaseProcessor
-    {
-        ArrayProcessor arrayProcessor;
-        
-        @Override
-        public int process(DataBlock data, int index) throws IOException
-        {
-            int arraySize = data.getIntValue(index);
-            arrayProcessor.arraySize = arraySize;
-            return ++index;
         }
     }
     
@@ -393,7 +387,10 @@ public class XmlDataWriter extends AbstractDataWriter
     @Override
     public void visit(Count comp)
     {
-        addToProcessorTree(new IntegerWriter(comp.getName()));
+        IntegerWriter writer = new IntegerWriter(comp.getName());
+        if (comp.isSetId())
+            countWriters.put(comp.getId(), writer);
+        addToProcessorTree(writer);
     }
     
     
@@ -460,7 +457,7 @@ public class XmlDataWriter extends AbstractDataWriter
     {
         addToProcessorTree(new RecordWriter(rec.getName()));
         for (DataComponent field: rec.getCoordinateList())
-            field.accept(this);        
+            field.accept(this);
         processorStack.pop();
     }
     
@@ -470,7 +467,7 @@ public class XmlDataWriter extends AbstractDataWriter
     {
         addToProcessorTree(new ChoiceWriter(choice.getName()));
         for (DataComponent field: choice.getItemList())
-            field.accept(this);        
+            field.accept(this);
         processorStack.pop();
     }
     
@@ -479,18 +476,28 @@ public class XmlDataWriter extends AbstractDataWriter
     public void visit(DataArray array)
     {
         ArrayWriter arrayWriter = new ArrayWriter(array.getName());
-        
+
         if (array.isImplicitSize())
         {
-            ArraySizeScanner sizeWriter = new ArraySizeScanner();
-            sizeWriter.arrayProcessor = arrayWriter;
-            addToProcessorTree(sizeWriter);
+            ArraySizeScanner sizeScanner = new ArraySizeScanner();
+            addToProcessorTree(sizeScanner);
+            arrayWriter.setArraySizeSupplier(sizeScanner);
+        }
+        else if (array.isVariableSize())
+        {
+            // look for size writer
+            String refId = array.getArraySizeComponent().getId();
+            IntegerWriter sizeWriter = countWriters.get(refId);
+            arrayWriter.setArraySizeSupplier(() -> sizeWriter.val);
         }
         else
-            arrayWriter.setArraySize(array.getComponentCount());
+        {
+            final int arraySize = array.getComponentCount();
+            arrayWriter.setArraySizeSupplier(() -> arraySize);
+        }
         
-        addToProcessorTree(arrayWriter);        
-        array.getElementType().accept(this);        
+        addToProcessorTree(arrayWriter);
+        array.getElementType().accept(this);
         processorStack.pop();
     }
 }

@@ -121,8 +121,15 @@ public class DataBlockMixed extends AbstractDataBlock
     public void setUnderlyingObject(AbstractDataBlock[] blockArray)
     {
         this.blockArray = blockArray;
-        
-        // init atom count to the whole size
+        updateAtomCount();
+    }
+    
+    
+    /**
+     * Recompute atom count after new child blocks have been added
+     */
+    public void updateAtomCount()
+    {
         this.atomCount = 0;
         for (AbstractDataBlock block: blockArray)
             this.atomCount += block.atomCount;

@@ -130,7 +130,7 @@ public class JsonDataParserGson extends AbstractDataParser
         @Override
         public void readValue(DataBlock data, int index) throws IOException
         {
-            var val = reader.nextInt();
+            val = reader.nextInt();
             data.setIntValue(index, val);
         }
     }
@@ -303,7 +303,7 @@ public class JsonDataParserGson extends AbstractDataParser
     protected class ArrayReader extends ArrayProcessor implements JsonAtomReader
     {
         String eltName;
-        IntegerReader sizeReader;
+        DataArray varSizeArray;
         
         public ArrayReader(String eltName)
         {
@@ -316,6 +316,11 @@ public class JsonDataParserGson extends AbstractDataParser
             // skip if disabled
             if (!enabled)
                 return super.process(data, index);
+            
+            // resize array if var size
+            int arraySize = getArraySize();
+            if (varSizeArray != null)
+                updateArraySize(varSizeArray, arraySize);
             
             reader.beginArray();
             
@@ -384,20 +389,6 @@ public class JsonDataParserGson extends AbstractDataParser
             return eltName;
         }
     }
-
-
-    protected class ArraySizeScanner extends BaseProcessor
-    {
-        ArrayProcessor arrayProcessor;
-
-        @Override
-        public int process(DataBlock data, int index) throws IOException
-        {
-            int arraySize = data.getIntValue(index);
-            arrayProcessor.arraySize = arraySize;
-            return ++index;
-        }
-    }
     
     
     public JsonDataParserGson()
@@ -447,7 +438,7 @@ public class JsonDataParserGson extends AbstractDataParser
         }
         catch (IllegalStateException e)
         {
-            throw new ReaderException(e.getMessage());
+            throw new ReaderException(e);
         }
     }
 
@@ -594,22 +585,26 @@ public class JsonDataParserGson extends AbstractDataParser
     public void visit(DataArray array)
     {
         ArrayReader arrayReader = new ArrayReader(array.getName());
-
+        
         if (array.isImplicitSize())
         {
-            ArraySizeScanner sizeReader = new ArraySizeScanner();
-            sizeReader.arrayProcessor = arrayReader;
-            addToProcessorTree(sizeReader);
+            throw new IllegalStateException("Implicit array size not supported by JSON parser");
+            // we can't know the array size ahead of time!
         }
         else if (array.isVariableSize())
         {
-            // look for size Reader
             String refId = array.getArraySizeComponent().getId();
-            arrayReader.sizeReader = countReaders.get(refId);
+            IntegerReader sizeReader = countReaders.get(refId);
+            arrayReader.setArraySizeSupplier(() -> sizeReader.val);
+            arrayReader.varSizeArray = array;
+            hasVarSizeArray = true;
         }
         else
-            arrayReader.setArraySize(array.getComponentCount());
-
+        {
+            final int arraySize = array.getComponentCount();
+            arrayReader.setArraySizeSupplier(() -> arraySize);
+        }
+        
         addToProcessorTree(arrayReader);
         array.getElementType().accept(this);
         processorStack.pop();

@@ -91,7 +91,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
         public int process(DataBlock data, int index) throws IOException
         {
             for (AtomProcessor p: fieldProcessors)
-                index = p.process(data, index);            
+                index = p.process(data, index);
             return index;
         }
         
@@ -103,22 +103,52 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     }
     
     
+    public interface ArraySizeSupplier
+    {
+        int getArraySize();
+    }
+    
+    
+    protected static class ArraySizeScanner extends BaseProcessor implements ArraySizeSupplier
+    {
+        int arraySize;
+
+        @Override
+        public int process(DataBlock data, int index) throws IOException
+        {
+            arraySize = data.getIntValue(index);
+            return ++index;
+        }
+
+        @Override
+        public int getArraySize()
+        {
+            return arraySize;
+        }
+    }
+    
+    
     public static class ArrayProcessor extends BaseProcessor implements CompositeProcessor
     {
+        ArraySizeSupplier sizeSupplier;
         AtomProcessor eltProcessor;
-        int arraySize;
         
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
-            for (int i = 0; i < arraySize; i++)
-                index = eltProcessor.process(data, index);            
+            for (int i = 0; i < getArraySize(); i++)
+                index = eltProcessor.process(data, index);
             return index;
         }
         
-        public void setArraySize(int arraySize)
+        public int getArraySize()
         {
-            this.arraySize = arraySize;
+            return sizeSupplier.getArraySize();
+        }
+        
+        public void setArraySizeSupplier(ArraySizeSupplier sizeProvider)
+        {
+            this.sizeSupplier = sizeProvider;
         }
         
         @Override
@@ -132,7 +162,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     public abstract static class ChoiceProcessor extends BaseProcessor implements CompositeProcessor
     {
         List<AtomProcessor> itemProcessors = new ArrayList<>();
-                
+        
         public int process(DataBlock data, int index, int selectedIndex) throws IOException
         {
             return itemProcessors.get(selectedIndex).process(data, index);
@@ -176,7 +206,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
         if (enableSubTree)
         {
             for (AtomProcessor parent: processorStack)
-                parent.setEnabled(true);                    
+                parent.setEnabled(true);
         }
     }
     
@@ -227,7 +257,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     @Override
     public void visit(DataRecord record)
     {
-        addToProcessorTree(new RecordProcessor());        
+        addToProcessorTree(new RecordProcessor());
         for (DataComponent field: record.getFieldList())
         {
             boolean saveEnabled = enableSubTree;
@@ -242,9 +272,9 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     @Override
     public void visit(Vector vect)
     {
-        addToProcessorTree(new RecordProcessor());        
+        addToProcessorTree(new RecordProcessor());
         for (DataComponent coord: vect.getCoordinateList())
-            coord.accept(this);        
+            coord.accept(this);
         processorStack.pop();
     }
     
@@ -253,16 +283,17 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     public void visit(DataArray array)
     {
         ArrayProcessor arrayProcessor = new ArrayProcessor();
-        arrayProcessor.setArraySize(array.getComponentCount());
-        addToProcessorTree(arrayProcessor);        
-        array.getElementType().accept(this);        
+        final int arraySize = array.getComponentCount();
+        arrayProcessor.setArraySizeSupplier(() -> arraySize);
+        addToProcessorTree(arrayProcessor);
+        array.getElementType().accept(this);
         processorStack.pop();
     }
     
     
     public void setDataComponents(DataComponent components)
     {
-        this.dataComponents = components;
+        this.dataComponents = components.copy();
         this.processorTreeReady = false;
     }
 

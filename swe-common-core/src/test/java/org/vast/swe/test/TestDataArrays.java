@@ -124,6 +124,8 @@ public class TestDataArrays
                 DataBlockFactory.createBlock(new int[] {arraySize}),
                 new DataBlockDouble(arraySize*3)
         );
+        for (int i = 0; i < 50; i++)
+            newData.setDoubleValue(1+i*3, i);
         rec.setData(newData);
         assertEquals(arraySize, array.getComponentCount());
         utils.writeComponent(System.out, rec, true, true);
@@ -136,6 +138,7 @@ public class TestDataArrays
         );
         rec.setData(newData);
         assertEquals(arraySize, array.getComponentCount());
+        utils.writeComponent(System.out, rec, true, true);
     }
 
 

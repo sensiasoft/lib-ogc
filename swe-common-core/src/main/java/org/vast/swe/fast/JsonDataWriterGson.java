@@ -64,8 +64,8 @@ public class JsonDataWriterGson extends AbstractDataWriter
     static final String DEFAULT_INDENT = "  ";
 
     protected JsonWriter writer;
+    protected Map<String, IntegerWriter> countWriters = new HashMap<>();
     protected boolean wrapWithJsonArray;
-    Map<String, IntegerWriter> countWriters = new HashMap<>();
 
 
     protected interface JsonAtomWriter
@@ -364,7 +364,6 @@ public class JsonDataWriterGson extends AbstractDataWriter
     {
         String eltName;
         boolean onlyScalars = true;
-        IntegerWriter sizeWriter;
         
         public ArrayWriter(String eltName)
         {
@@ -380,17 +379,13 @@ public class JsonDataWriterGson extends AbstractDataWriter
             
             try
             {
-                // retrieve variable array size
-                if (sizeWriter != null)
-                    arraySize = sizeWriter.val;
-
                 writer.beginArray();
                 
                 // no indent if only scalars
                 if (onlyScalars)
                     writeInline(true);
 
-                for (int i = 0; i < arraySize; i++)
+                for (int i = 0; i < getArraySize(); i++)
                     index = eltProcessor.process(data, index);
                 
                 writer.endArray();
@@ -478,20 +473,6 @@ public class JsonDataWriterGson extends AbstractDataWriter
         public String getEltName()
         {
             return eltName;
-        }
-    }
-
-
-    protected class ArraySizeScanner extends BaseProcessor
-    {
-        ArrayProcessor arrayProcessor;
-
-        @Override
-        public int process(DataBlock data, int index) throws IOException
-        {
-            int arraySize = data.getIntValue(index);
-            arrayProcessor.arraySize = arraySize;
-            return ++index;
         }
     }
     
@@ -717,18 +698,22 @@ public class JsonDataWriterGson extends AbstractDataWriter
 
         if (array.isImplicitSize())
         {
-            ArraySizeScanner sizeWriter = new ArraySizeScanner();
-            sizeWriter.arrayProcessor = arrayWriter;
+            ArraySizeScanner sizeScanner = new ArraySizeScanner();
+            addToProcessorTree(sizeScanner);
+            arrayWriter.setArraySizeSupplier(sizeScanner);
         }
         else if (array.isVariableSize())
         {
-            // look for size writer
             String refId = array.getArraySizeComponent().getId();
-            arrayWriter.sizeWriter = countWriters.get(refId);
+            IntegerWriter sizeWriter = countWriters.get(refId);
+            arrayWriter.setArraySizeSupplier(() -> sizeWriter.val);
         }
         else
-            arrayWriter.setArraySize(array.getComponentCount());
-
+        {
+            final int arraySize = array.getComponentCount();
+            arrayWriter.setArraySizeSupplier(() -> arraySize);
+        }
+        
         addToProcessorTree(arrayWriter);
         array.getElementType().accept(this);
         processorStack.pop();
