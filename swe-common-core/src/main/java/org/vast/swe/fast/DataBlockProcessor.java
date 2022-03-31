@@ -19,14 +19,17 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import org.vast.swe.IComponentFilter;
+import org.vast.util.Asserts;
 import net.opengis.swe.v20.CategoryRange;
 import net.opengis.swe.v20.CountRange;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataComponentVisitor;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.QuantityRange;
+import net.opengis.swe.v20.RangeComponent;
 import net.opengis.swe.v20.TimeRange;
 import net.opengis.swe.v20.Vector;
 
@@ -45,10 +48,11 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
 {
     DataComponent dataComponents;
     IComponentFilter filter;
-    ArrayDeque<AtomProcessor> processorStack = new ArrayDeque<>();
     AtomProcessor rootProcessor;
+    ArrayDeque<AtomProcessor> processorStack = new ArrayDeque<>();
     boolean enableSubTree = true;
     boolean processorTreeReady;
+    boolean hasVarSizeArray = false;
     
     
     public interface AtomProcessor
@@ -109,7 +113,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     }
     
     
-    protected static class ArraySizeScanner extends BaseProcessor implements ArraySizeSupplier
+    protected static class ImplicitSizeProcessor extends BaseProcessor implements ArraySizeSupplier
     {
         int arraySize;
 
@@ -117,7 +121,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
         public int process(DataBlock data, int index) throws IOException
         {
             arraySize = data.getIntValue(index);
-            return ++index;
+            return index;
         }
 
         @Override
@@ -132,6 +136,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     {
         ArraySizeSupplier sizeSupplier;
         AtomProcessor eltProcessor;
+        DataArray varSizeArray;
         
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -223,41 +228,58 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     
     
     @Override
-    public void visit(CountRange component)
+    public void visit(CountRange range)
     {
-        component.getComponent(0).accept(this);
-        component.getComponent(1).accept(this);
+        visitRange(range);
     }
     
     
     @Override
-    public void visit(QuantityRange component)
+    public void visit(QuantityRange range)
     {
-        component.getComponent(0).accept(this);
-        component.getComponent(1).accept(this);
+        visitRange(range);
     }
     
     
     @Override
-    public void visit(TimeRange component)
+    public void visit(TimeRange range)
     {
-        component.getComponent(0).accept(this);
-        component.getComponent(1).accept(this);
+        visitRange(range);
     }
     
     
     @Override
-    public void visit(CategoryRange component)
+    public void visit(CategoryRange range)
     {
-        component.getComponent(0).accept(this);
-        component.getComponent(1).accept(this);
+        visitRange(range);
+    }
+    
+    
+    protected void visitRange(RangeComponent range)
+    {
+        AtomProcessor rangeProcessor = getRangeProcessor(range);
+        if (rangeProcessor != null)
+            addToProcessorTree(rangeProcessor);
+        
+        range.getComponent(0).accept(this);
+        range.getComponent(1).accept(this);
+        
+        if (rangeProcessor != null)
+            processorStack.pop();
+    }
+    
+    
+    protected AtomProcessor getRangeProcessor(RangeComponent range)
+    {
+        return null;
     }
     
     
     @Override
     public void visit(DataRecord record)
     {
-        addToProcessorTree(new RecordProcessor());
+        addToProcessorTree(getRecordProcessor(record));
+        
         for (DataComponent field: record.getFieldList())
         {
             boolean saveEnabled = enableSubTree;
@@ -265,30 +287,101 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
             field.accept(this);
             enableSubTree = saveEnabled; // reset flag
         }
+        
         processorStack.pop();
     }
-
-
+    
+    
+    protected RecordProcessor getRecordProcessor(DataRecord record)
+    {
+        return new RecordProcessor();
+    }
+    
+    
     @Override
     public void visit(Vector vect)
     {
-        addToProcessorTree(new RecordProcessor());
+        addToProcessorTree(getVectorProcessor(vect));
+        
         for (DataComponent coord: vect.getCoordinateList())
+        {
+            boolean saveEnabled = enableSubTree;
+            checkEnabled(coord);
             coord.accept(this);
+            enableSubTree = saveEnabled; // reset flag
+        }
+        
         processorStack.pop();
     }
+    
+    
+    protected RecordProcessor getVectorProcessor(Vector vect)
+    {
+        return new RecordProcessor();
+    }
+    
+    
+    @Override
+    public void visit(DataChoice choice)
+    {
+        addToProcessorTree(getChoiceProcessor(choice));
+        for (DataComponent item: choice.getItemList())
+            item.accept(this);
+        processorStack.pop();
+    }
+    
+    
+    protected abstract ChoiceProcessor getChoiceProcessor(DataChoice choice);
     
     
     @Override
     public void visit(DataArray array)
     {
-        ArrayProcessor arrayProcessor = new ArrayProcessor();
-        final int arraySize = array.getComponentCount();
-        arrayProcessor.setArraySizeSupplier(() -> arraySize);
+        ArrayProcessor arrayProcessor = getArrayProcessor(array);
+
+        if (array.isImplicitSize())
+        {
+            ImplicitSizeProcessor sizeProcessor = new ImplicitSizeProcessor();
+            addToProcessorTree(sizeProcessor);
+            arrayProcessor.setArraySizeSupplier(sizeProcessor);
+            arrayProcessor.varSizeArray = array;
+            hasVarSizeArray = true;
+        }
+        else if (array.isVariableSize())
+        {
+            // look for size writer
+            String refId = array.getArraySizeComponent().getId();
+            ArraySizeSupplier sizeSupplier = getArraySizeSupplier(refId);
+            Asserts.checkState(sizeSupplier != null, "Missing array size supplier");
+            arrayProcessor.setArraySizeSupplier(sizeSupplier);
+            arrayProcessor.varSizeArray = array;
+            hasVarSizeArray = true;
+        }
+        else
+        {
+            final int arraySize = array.getComponentCount();
+            arrayProcessor.setArraySizeSupplier(() -> arraySize);
+        }
+        
         addToProcessorTree(arrayProcessor);
         array.getElementType().accept(this);
         processorStack.pop();
     }
+    
+    
+    protected ArrayProcessor getArrayProcessor(DataArray array)
+    {
+        return new ArrayProcessor();
+    }
+    
+    
+    protected ImplicitSizeProcessor getImplicitSizeProcessor(DataArray array)
+    {
+        return new ImplicitSizeProcessor();
+    }
+    
+    
+    protected abstract ArraySizeSupplier getArraySizeSupplier(String refId);
     
     
     public void setDataComponents(DataComponent components)

@@ -216,10 +216,8 @@ public class TextDataParser extends AbstractDataParser
     }
     
     
-    protected class ArrayReader extends ArrayProcessor
+    protected class ArrayParser extends ArrayProcessor
     {
-        DataArray varSizeArray;
-        
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
@@ -229,6 +227,28 @@ public class TextDataParser extends AbstractDataParser
                 updateArraySize(varSizeArray, arraySize);
             
             return super.process(data, index);
+        }
+    }
+    
+    
+    protected class ImplicitSizeParser extends ImplicitSizeProcessor
+    {
+        @Override
+        public int process(DataBlock data, int index) throws IOException
+        {
+            String token = readToken();
+            
+            try
+            {
+                arraySize = Integer.parseInt(token);
+                if (arraySize < 0)
+                    throw new NumberFormatException();
+                return index;
+            }
+            catch (NumberFormatException e)
+            {
+                throw new ReaderException(INVALID_ARRAY_SIZE_MSG + token);
+            }
         }
     }
     
@@ -371,47 +391,33 @@ public class TextDataParser extends AbstractDataParser
     {
         addToProcessorTree(new StringParser());
     }
-    
-    
+
+
     @Override
-    public void visit(DataChoice choice)
+    protected ChoiceProcessor getChoiceProcessor(DataChoice choice)
     {
-        addToProcessorTree(new ChoiceTokenParser(choice));
-        for (DataComponent item: choice.getItemList())
-            item.accept(this);
-        processorStack.pop();
+        return new ChoiceTokenParser(choice);
     }
 
 
     @Override
-    public void visit(DataArray array)
+    protected ArrayProcessor getArrayProcessor(DataArray array)
     {
-        ArrayReader arrayReader = new ArrayReader();
-        
-        if (array.isImplicitSize())
-        {
-            IntegerParser sizeReader = new IntegerParser();
-            addToProcessorTree(sizeReader);
-            arrayReader.setArraySizeSupplier(() -> sizeReader.val);
-            arrayReader.varSizeArray = array;
-            hasVarSizeArray = true;
-        }
-        else if (array.isVariableSize())
-        {
-            String refId = array.getArraySizeComponent().getId();
-            IntegerParser sizeReader = countReaders.get(refId);
-            arrayReader.setArraySizeSupplier(() -> sizeReader.val);
-            arrayReader.varSizeArray = array;
-            hasVarSizeArray = true;
-        }
-        else
-        {
-            final int arraySize = array.getComponentCount();
-            arrayReader.setArraySizeSupplier(() -> arraySize);
-        }
-        
-        addToProcessorTree(arrayReader);
-        array.getElementType().accept(this);
-        processorStack.pop();
+        return new ArrayParser();
+    }
+    
+    
+    @Override
+    protected ImplicitSizeProcessor getImplicitSizeProcessor(DataArray array)
+    {
+        return new ImplicitSizeParser();
+    }
+    
+    
+    @Override
+    protected ArraySizeSupplier getArraySizeSupplier(String refId)
+    {
+        IntegerParser sizeParser = countReaders.get(refId);
+        return () -> sizeParser.val;
     }
 }

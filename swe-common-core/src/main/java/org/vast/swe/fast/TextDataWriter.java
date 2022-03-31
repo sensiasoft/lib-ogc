@@ -120,7 +120,7 @@ public class TextDataWriter extends AbstractDataWriter
         public void writeValue(DataBlock data, int index) throws IOException
         {
             float val = data.getFloatValue(index);
-                        
+            
             if (Float.isNaN(val))
                 writer.write("NaN");
             else if (val == Float.POSITIVE_INFINITY)
@@ -186,7 +186,20 @@ public class TextDataWriter extends AbstractDataWriter
                 val = val.trim();
             writer.write(val);
         }
-    }    
+    }
+    
+    
+    protected class ImplicitSizeWriter extends ImplicitSizeProcessor
+    {
+        @Override
+        public int process(DataBlock data, int index) throws IOException
+        {
+            super.process(data, index);
+            writeSeparator();
+            writer.write(Integer.toString(arraySize));
+            return index;
+        }
+    }
     
     
     protected class ChoiceTokenWriter extends ChoiceProcessor
@@ -335,43 +348,26 @@ public class TextDataWriter extends AbstractDataWriter
     {
         addToProcessorTree(new StringWriter());
     }
-    
-    
+
+
     @Override
-    public void visit(DataArray array)
+    protected ChoiceProcessor getChoiceProcessor(DataChoice choice)
     {
-        ArrayProcessor arrayWriter = new ArrayProcessor();
-        
-        if (array.isImplicitSize())
-        {
-            ArraySizeScanner sizeScanner = new ArraySizeScanner();
-            addToProcessorTree(sizeScanner);
-            arrayWriter.setArraySizeSupplier(sizeScanner);
-        }
-        else if (array.isVariableSize())
-        {
-            String refId = array.getArraySizeComponent().getId();
-            IntegerWriter sizeWriter = countWriters.get(refId);
-            arrayWriter.setArraySizeSupplier(() -> sizeWriter.val);
-        }
-        else
-        {
-            final int arraySize = array.getComponentCount();
-            arrayWriter.setArraySizeSupplier(() -> arraySize);
-        }
-        
-        addToProcessorTree(arrayWriter);
-        array.getElementType().accept(this);
-        processorStack.pop();
+        return new ChoiceTokenWriter(choice);
     }
     
     
     @Override
-    public void visit(DataChoice choice)
+    protected ImplicitSizeProcessor getImplicitSizeProcessor(DataArray array)
     {
-        addToProcessorTree(new ChoiceTokenWriter(choice));
-        for (DataComponent field: choice.getItemList())
-            field.accept(this);
-        processorStack.pop();
+        return new ImplicitSizeWriter();
+    }
+    
+    
+    @Override
+    protected ArraySizeSupplier getArraySizeSupplier(String refId)
+    {
+        IntegerWriter sizeWriter = countWriters.get(refId);
+        return () -> sizeWriter.val;
     }
 }

@@ -266,6 +266,18 @@ public class BinaryDataWriter extends AbstractDataWriter
     }
     
     
+    protected class ImplicitSizeWriter extends ImplicitSizeProcessor
+    {
+        @Override
+        public int process(DataBlock data, int index) throws IOException
+        {
+            super.process(data, index);
+            dataOutput.writeInt(arraySize);
+            return index;
+        }
+    }
+    
+    
     protected class ChoiceTokenWriter extends ChoiceProcessor
     {
         ArrayList<String> choiceTokens;
@@ -433,41 +445,22 @@ public class BinaryDataWriter extends AbstractDataWriter
     
     
     @Override
-    public void visit(DataChoice choice)
+    protected ChoiceProcessor getChoiceProcessor(DataChoice choice)
     {
-        addToProcessorTree(new ChoiceTokenWriter(choice));
-        for (DataComponent field: choice.getItemList())
-            field.accept(this);
-        processorStack.pop();
+        return new ChoiceTokenWriter(choice);
     }
     
     
     @Override
-    public void visit(DataArray array)
+    protected ImplicitSizeProcessor getImplicitSizeProcessor(DataArray array)
     {
-        ArrayProcessor arrayWriter = new ArrayProcessor();
-
-        if (array.isImplicitSize())
-        {
-            ArraySizeScanner sizeScanner = new ArraySizeScanner();
-            addToProcessorTree(sizeScanner);
-            arrayWriter.setArraySizeSupplier(sizeScanner);
-        }
-        else if (array.isVariableSize())
-        {
-            // look for size writer
-            String refId = array.getArraySizeComponent().getId();
-            ArraySizeSupplier sizeSupplier = countWriters.get(refId);
-            arrayWriter.setArraySizeSupplier(sizeSupplier);
-        }
-        else
-        {
-            final int arraySize = array.getComponentCount();
-            arrayWriter.setArraySizeSupplier(() -> arraySize);
-        }
-        
-        addToProcessorTree(arrayWriter);
-        array.getElementType().accept(this);
-        processorStack.pop();
+        return new ImplicitSizeWriter();
+    }
+    
+    
+    @Override
+    protected ArraySizeSupplier getArraySizeSupplier(String refId)
+    {
+        return countWriters.get(refId);
     }
 }

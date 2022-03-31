@@ -41,8 +41,9 @@ public abstract class AbstractDataParser extends DataBlockProcessor implements D
 {
     static final String INVALID_BOOLEAN_MSG = "Invalid boolean value: ";
     static final String INVALID_INTEGER_MSG = "Invalid integer value: ";
-    static final String INVALID_DECIMAL_MSG = "Invalid decimal value: ";    
+    static final String INVALID_DECIMAL_MSG = "Invalid decimal value: ";
     static final String INVALID_CHOICE_MSG = "Invalid choice selector value: ";
+    static final String INVALID_ARRAY_SIZE_MSG = "Invalid array size: ";
     
     BlockComponent parentArray;
     int parentArrayIndex;
@@ -50,7 +51,6 @@ public abstract class AbstractDataParser extends DataBlockProcessor implements D
     DataEncoding dataEncoding;
     DataBlock dataBlk;
     boolean renewDataBlock;
-    boolean hasVarSizeArray = false;
     
     
     protected abstract boolean moreData() throws IOException;

@@ -29,9 +29,7 @@ import org.vast.util.WriterException;
 import com.google.gson.stream.JsonWriter;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
-import net.opengis.swe.v20.CategoryRange;
 import net.opengis.swe.v20.Count;
-import net.opengis.swe.v20.CountRange;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataChoice;
@@ -39,10 +37,9 @@ import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Quantity;
-import net.opengis.swe.v20.QuantityRange;
+import net.opengis.swe.v20.RangeComponent;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.Time;
-import net.opengis.swe.v20.TimeRange;
 import net.opengis.swe.v20.Vector;
 
 
@@ -614,108 +611,47 @@ public class JsonDataWriterGson extends AbstractDataWriter
     {
         addToProcessorTree(new StringWriter(comp.getName()));
     }
-
-
+    
+    
     @Override
-    public void visit(CountRange range)
+    protected AtomProcessor getRangeProcessor(RangeComponent range)
     {
-        addToProcessorTree(new RangeWriter(range.getName()));
-        range.getComponent(0).accept(this);
-        range.getComponent(1).accept(this);
-        processorStack.pop();
+        return new RangeWriter(range.getName());
     }
 
 
     @Override
-    public void visit(QuantityRange range)
+    protected RecordProcessor getRecordProcessor(DataRecord record)
     {
-        addToProcessorTree(new RangeWriter(range.getName()));
-        range.getComponent(0).accept(this);
-        range.getComponent(1).accept(this);
-        processorStack.pop();
+        return new RecordWriter(record.getName(), false);
     }
 
 
     @Override
-    public void visit(TimeRange range)
+    protected RecordProcessor getVectorProcessor(Vector vect)
     {
-        addToProcessorTree(new RangeWriter(range.getName()));
-        range.getComponent(0).accept(this);
-        range.getComponent(1).accept(this);
-        processorStack.pop();
+        return new RecordWriter(vect.getName(), true);
     }
 
 
     @Override
-    public void visit(CategoryRange range)
+    protected ChoiceProcessor getChoiceProcessor(DataChoice choice)
     {
-        addToProcessorTree(new RangeWriter(range.getName()));
-        range.getComponent(0).accept(this);
-        range.getComponent(1).accept(this);
-        processorStack.pop();
+        return new ChoiceWriter(choice);
     }
-
-
+    
+    
     @Override
-    public void visit(DataRecord rec)
+    protected ArrayProcessor getArrayProcessor(DataArray array)
     {
-        addToProcessorTree(new RecordWriter(rec.getName(), false));
-        for (DataComponent field: rec.getFieldList())
-        {
-            boolean saveEnabled = enableSubTree;
-            checkEnabled(field);
-            field.accept(this);
-            enableSubTree = saveEnabled; // reset flag
-        }
-        processorStack.pop();
+        return new ArrayWriter(array.getName());
     }
-
-
+    
+    
     @Override
-    public void visit(Vector rec)
+    protected ArraySizeSupplier getArraySizeSupplier(String refId)
     {
-        addToProcessorTree(new RecordWriter(rec.getName(), true));
-        for (DataComponent field: rec.getCoordinateList())
-            field.accept(this);
-        processorStack.pop();
-    }
-
-
-    @Override
-    public void visit(DataChoice choice)
-    {
-        addToProcessorTree(new ChoiceWriter(choice));
-        for (DataComponent item: choice.getItemList())
-            item.accept(this);
-        processorStack.pop();
-    }
-
-
-    @Override
-    public void visit(DataArray array)
-    {
-        ArrayWriter arrayWriter = new ArrayWriter(array.getName());
-
-        if (array.isImplicitSize())
-        {
-            ArraySizeScanner sizeScanner = new ArraySizeScanner();
-            addToProcessorTree(sizeScanner);
-            arrayWriter.setArraySizeSupplier(sizeScanner);
-        }
-        else if (array.isVariableSize())
-        {
-            String refId = array.getArraySizeComponent().getId();
-            IntegerWriter sizeWriter = countWriters.get(refId);
-            arrayWriter.setArraySizeSupplier(() -> sizeWriter.val);
-        }
-        else
-        {
-            final int arraySize = array.getComponentCount();
-            arrayWriter.setArraySizeSupplier(() -> arraySize);
-        }
-        
-        addToProcessorTree(arrayWriter);
-        array.getElementType().accept(this);
-        processorStack.pop();
+        IntegerWriter sizeWriter = countWriters.get(refId);
+        return () -> sizeWriter.val;
     }
 }
