@@ -51,10 +51,10 @@ public abstract class AbstractDataWriter extends DataBlockProcessor implements D
         {
             if (!processorTreeReady)
             {
+                init();
                 checkEnabled(dataComponents);
                 dataComponents.accept(this);
                 processorTreeReady = true;
-                init();
             }
             
             // go once through the tree of parser atoms

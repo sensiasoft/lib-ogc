@@ -61,9 +61,9 @@ public abstract class AbstractDataParser extends DataBlockProcessor implements D
     {
         if (!processorTreeReady)
         {
+            init();
             dataComponents.accept(this);
             processorTreeReady = true;
-            init();
         }
         
         if (!moreData())
