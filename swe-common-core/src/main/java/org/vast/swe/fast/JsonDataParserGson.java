@@ -265,10 +265,6 @@ public class JsonDataParserGson extends AbstractDataParser
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
-            // skip if disabled
-            if (!enabled)
-                return super.process(data, index);
-            
             reader.beginObject();
             
             for (AtomProcessor p: fieldProcessors)
@@ -309,10 +305,6 @@ public class JsonDataParserGson extends AbstractDataParser
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
-            // skip if disabled
-            if (!enabled)
-                return super.process(data, index);
-            
             // resize array if var size
             int arraySize = getArraySize();
             if (varSizeArray != null)
@@ -355,10 +347,6 @@ public class JsonDataParserGson extends AbstractDataParser
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
-            // skip if disabled
-            if (!enabled)
-                return index+1;
-            
             reader.beginObject();
             
             var itemName = reader.nextName();
@@ -534,6 +522,13 @@ public class JsonDataParserGson extends AbstractDataParser
     protected ArrayProcessor getArrayProcessor(DataArray array)
     {
         return new ArrayReader(array.getName());
+    }
+    
+    
+    @Override
+    protected ImplicitSizeProcessor getImplicitSizeProcessor(DataArray array)
+    {
+        throw new IllegalStateException("Implicit size not supported by JSON parser");
     }
     
     

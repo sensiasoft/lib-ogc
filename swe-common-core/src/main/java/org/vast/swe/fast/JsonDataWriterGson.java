@@ -649,6 +649,13 @@ public class JsonDataWriterGson extends AbstractDataWriter
     
     
     @Override
+    protected ImplicitSizeProcessor getImplicitSizeProcessor(DataArray array)
+    {
+        return new ImplicitSizeProcessor();
+    }
+    
+    
+    @Override
     protected ArraySizeSupplier getArraySizeSupplier(String refId)
     {
         IntegerWriter sizeWriter = countWriters.get(refId);

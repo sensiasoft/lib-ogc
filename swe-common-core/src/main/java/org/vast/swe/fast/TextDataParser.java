@@ -96,7 +96,7 @@ public class TextDataParser extends AbstractDataParser
     }
     
     
-    private class IntegerParser extends BaseProcessor
+    protected class IntegerParser extends BaseProcessor
     {
         int val;
         

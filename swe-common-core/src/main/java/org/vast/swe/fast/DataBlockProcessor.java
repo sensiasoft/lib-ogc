@@ -113,14 +113,16 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     }
     
     
-    protected static class ImplicitSizeProcessor extends BaseProcessor implements ArraySizeSupplier
+    protected class ImplicitSizeProcessor extends BaseProcessor implements ArraySizeSupplier
     {
+        DataArray varSizeArray;
         int arraySize;
 
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
-            arraySize = data.getIntValue(index);
+            dataComponents.setData(data);
+            arraySize = varSizeArray.getComponentCount();
             return index;
         }
 
@@ -341,7 +343,8 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
 
         if (array.isImplicitSize())
         {
-            ImplicitSizeProcessor sizeProcessor = new ImplicitSizeProcessor();
+            ImplicitSizeProcessor sizeProcessor = getImplicitSizeProcessor(array);
+            sizeProcessor.varSizeArray = array;
             addToProcessorTree(sizeProcessor);
             arrayProcessor.setArraySizeSupplier(sizeProcessor);
             arrayProcessor.varSizeArray = array;
@@ -375,10 +378,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     }
     
     
-    protected ImplicitSizeProcessor getImplicitSizeProcessor(DataArray array)
-    {
-        return new ImplicitSizeProcessor();
-    }
+    protected abstract ImplicitSizeProcessor getImplicitSizeProcessor(DataArray array);
     
     
     protected abstract ArraySizeSupplier getArraySizeSupplier(String refId);
