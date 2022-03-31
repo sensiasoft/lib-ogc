@@ -72,9 +72,13 @@ public class XmlDataWriter extends AbstractDataWriter
         {
             try
             {
-                writeStartElement(eltName);
-                writeValue(data, index);
-                xmlWriter.writeEndElement();
+                if (enabled)
+                {
+                    writeStartElement(eltName);
+                    writeValue(data, index);
+                    xmlWriter.writeEndElement();
+                }
+                
                 return ++index;
             }
             catch (XMLStreamException e)
@@ -192,15 +196,20 @@ public class XmlDataWriter extends AbstractDataWriter
         {
             try
             {
-                writeStartElement(eltName);
+                if (enabled)
+                    writeStartElement(eltName);
+                
                 int newIndex = super.process(data, index);
-                xmlWriter.writeEndElement();
+                
+                if (enabled)
+                    xmlWriter.writeEndElement();
+                
                 return newIndex;
             }
             catch (XMLStreamException e)
             {
                 throw new WriterException(XML_ERROR + eltName + " record", e);
-            }            
+            }
         }
     }
     
@@ -221,15 +230,20 @@ public class XmlDataWriter extends AbstractDataWriter
             
             try
             {
-                writeStartElement(eltName);
+                if (enabled)
+                    writeStartElement(eltName);
+                
                 int newIndex = super.process(data, ++index, selectedIndex);
-                xmlWriter.writeEndElement();
+                
+                if (enabled)
+                    xmlWriter.writeEndElement();
+                
                 return newIndex;
             }
             catch (XMLStreamException e)
             {
                 throw new WriterException(XML_ERROR + eltName + " choice", e);
-            }            
+            }
         }
     }
     
@@ -248,12 +262,19 @@ public class XmlDataWriter extends AbstractDataWriter
         {
             try
             {
-                writeStartElement(eltName);
+                if (enabled)
+                    writeStartElement(eltName);
+                
                 int arraySize = getArraySize();
-                xmlWriter.writeAttribute(AbstractArrayImpl.ELT_COUNT_NAME, Integer.toString(arraySize));
+                if (enabled)
+                    xmlWriter.writeAttribute(AbstractArrayImpl.ELT_COUNT_NAME, Integer.toString(arraySize));
+                
                 for (int i = 0; i < arraySize; i++)
                     index = eltProcessor.process(data, index);
-                xmlWriter.writeEndElement();
+                
+                if (enabled)
+                    xmlWriter.writeEndElement();
+                
                 return index;
             }
             catch (XMLStreamException e)
@@ -445,8 +466,10 @@ public class XmlDataWriter extends AbstractDataWriter
         addToProcessorTree(new RecordWriter(rec.getName()));
         for (DataComponent field: rec.getFieldList())
         {
-            field.accept(this);
+            boolean saveEnabled = enableSubTree;
             checkEnabled(field);
+            field.accept(this);
+            enableSubTree = saveEnabled; // reset flag
         }
         processorStack.pop();
     }
@@ -479,7 +502,7 @@ public class XmlDataWriter extends AbstractDataWriter
 
         if (array.isImplicitSize())
         {
-            ArraySizeScanner sizeScanner = new ArraySizeScanner();
+            ImplicitSizeScanner sizeScanner = new ImplicitSizeScanner();
             addToProcessorTree(sizeScanner);
             arrayWriter.setArraySizeSupplier(sizeScanner);
         }

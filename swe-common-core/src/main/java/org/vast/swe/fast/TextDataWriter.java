@@ -57,60 +57,70 @@ public class TextDataWriter extends AbstractDataWriter
     protected String tokenSep = ",";
     protected String blockSep = "\n";
     protected boolean collapseWhiteSpaces = true;
-    protected boolean firstBlock = true;
     protected boolean firstToken;
     protected Map<String, IntegerWriter> countWriters = new HashMap<>();
 
     
-    protected class BooleanWriter extends BaseProcessor
+    protected abstract class ValueWriter extends BaseProcessor
     {
+        public abstract void writeValue(DataBlock data, int index) throws IOException;
+
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
-            boolean val = data.getBooleanValue(index);
-            writeSeparator();
-            writer.write(java.lang.Boolean.toString(val));
+            if (enabled)
+            {
+                writeSeparator();
+                writeValue(data, index);
+            }
+            
             return ++index;
         }
     }
     
     
-    protected class IntegerWriter extends BaseProcessor
+    protected class BooleanWriter extends ValueWriter
+    {
+        @Override
+        public void writeValue(DataBlock data, int index) throws IOException
+        {
+            boolean val = data.getBooleanValue(index);
+            writer.write(java.lang.Boolean.toString(val));
+        }
+    }
+    
+    
+    protected class IntegerWriter extends ValueWriter
     {
         int val; // store val if used as array size
         
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             val = data.getIntValue(index);
-            writeSeparator();
             writer.write(Integer.toString(val));
-            return ++index;
         }
     }
     
     
-    protected class DoubleWriter extends BaseProcessor
+    protected class DoubleWriter extends ValueWriter
     {
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             double val = data.getDoubleValue(index);
-            writeSeparator();
             writer.write(SWEDataTypeUtils.getDoubleOrInfAsString(val));
-            return ++index;
         }
     }
     
     
-    protected class FloatWriter extends BaseProcessor
+    protected class FloatWriter extends ValueWriter
     {
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             float val = data.getFloatValue(index);
-            writeSeparator();
-            
+                        
             if (Float.isNaN(val))
                 writer.write("NaN");
             else if (val == Float.POSITIVE_INFINITY)
@@ -119,26 +129,23 @@ public class TextDataWriter extends AbstractDataWriter
                 writer.write("-INF");
             else
                 writer.write(Float.toString(val));
-            
-            return ++index;
         }
     }
     
     
-    protected class RoundingDecimalWriter extends BaseProcessor
+    protected class RoundingDecimalWriter extends ValueWriter
     {
         int scale;
         
         public RoundingDecimalWriter(int numDecimalPlaces)
         {
             this.scale = numDecimalPlaces;
-        }        
+        }
         
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             double val = data.getDoubleValue(index);
-            writeSeparator();
             
             if (Double.isNaN(val))
                 writer.write("NaN");
@@ -152,38 +159,32 @@ public class TextDataWriter extends AbstractDataWriter
                 bd = bd.setScale(scale, RoundingMode.HALF_UP).stripTrailingZeros();
                 writer.write(bd.toPlainString());
             }
-            
-            return ++index;
         }
     }
     
     
-    protected class IsoDateTimeWriter extends BaseProcessor
+    protected class IsoDateTimeWriter extends ValueWriter
     {
         DateTimeFormat timeFormat = new DateTimeFormat();
         
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             double val = data.getDoubleValue(index);
-            writeSeparator();
             writer.write(timeFormat.formatIso(val, 0));
-            return ++index;
         }
     }
     
     
-    protected class StringWriter extends BaseProcessor
+    protected class StringWriter extends ValueWriter
     {
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             String val = data.getStringValue(index);
             if (collapseWhiteSpaces)
                 val = val.trim();
-            writeSeparator();
             writer.write(val);
-            return ++index;
         }
     }    
     
@@ -206,8 +207,12 @@ public class TextDataWriter extends AbstractDataWriter
             if (selectedIndex < 0 || selectedIndex >= choiceTokens.size())
                 throw new WriterException(AbstractDataParser.INVALID_CHOICE_MSG + selectedIndex);
             
-            writeSeparator();
-            writer.write(choiceTokens.get(selectedIndex));
+            if (enabled)
+            {
+                writeSeparator();
+                writer.write(choiceTokens.get(selectedIndex));
+            }
+            
             return super.process(data, ++index, selectedIndex);
         }
     }
@@ -232,8 +237,6 @@ public class TextDataWriter extends AbstractDataWriter
             //this.decimalSep = ((TextEncoding)dataEncoding).getDecimalSeparator().charAt(0);
             this.collapseWhiteSpaces = ((TextEncoding)dataEncoding).getCollapseWhiteSpaces();
         }
-        
-        this.firstBlock = true;
     }
     
     
@@ -247,13 +250,10 @@ public class TextDataWriter extends AbstractDataWriter
     @Override
     public void write(DataBlock data) throws IOException
     {
-        if (!firstBlock)
-            writer.write(blockSep);
-            
         firstToken = true;
         super.write(data);
-        
-        firstBlock = false;
+        if (!lastArrayElt)
+            writer.write(blockSep);
     }
     
 

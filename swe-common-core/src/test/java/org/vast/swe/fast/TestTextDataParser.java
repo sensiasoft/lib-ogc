@@ -110,8 +110,8 @@ public class TestTextDataParser
             double val = (double)r;
             rec.setDoubleValue(dataBlkIdx++, now+val);
             rec.setDoubleValue(dataBlkIdx++, val);
-            rec.setStringValue(dataBlkIdx++, "text1." + val);
-            rec.setStringValue(dataBlkIdx++, "text2." + val/100);
+            rec.setStringValue(dataBlkIdx++, (r % 2 == 0) ? "" : "text1." + (int)val);
+            rec.setStringValue(dataBlkIdx++, "text2." + (int)val);
             rec.setIntValue(dataBlkIdx++, ((int)val)+100);
             rec.setStringValue(dataBlkIdx++, "cat_val=" + val);
             

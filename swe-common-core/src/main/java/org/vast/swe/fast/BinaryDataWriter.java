@@ -61,28 +61,40 @@ public class BinaryDataWriter extends AbstractDataWriter
     Map<String, ArraySizeSupplier> countWriters = new HashMap<>();
     
     
-    protected class BooleanWriter extends BaseProcessor
+    protected abstract class ValueWriter extends BaseProcessor
     {
+        public abstract void writeValue(DataBlock data, int index) throws IOException;
+
         @Override
         public int process(DataBlock data, int index) throws IOException
+        {
+            if (enabled)
+                writeValue(data, index);
+            return ++index;
+        }
+    }
+    
+    
+    protected class BooleanWriter extends ValueWriter
+    {
+        @Override
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             boolean val = data.getBooleanValue(index);
             dataOutput.writeBoolean(val);
-            return ++index;
         }
     }
     
     
-    protected class ByteWriter extends BaseProcessor implements ArraySizeSupplier
+    protected class ByteWriter extends ValueWriter implements ArraySizeSupplier
     {
         byte val;
         
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             val = data.getByteValue(index);
             dataOutput.writeByte(val);
-            return ++index;
         }
 
         @Override
@@ -93,16 +105,15 @@ public class BinaryDataWriter extends AbstractDataWriter
     }
     
     
-    protected class UByteWriter extends BaseProcessor implements ArraySizeSupplier
+    protected class UByteWriter extends ValueWriter implements ArraySizeSupplier
     {
         byte val;
         
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             byte val = data.getByteValue(index);
             dataOutput.writeUnsignedByte(val);
-            return ++index;
         }
 
         @Override
@@ -113,16 +124,15 @@ public class BinaryDataWriter extends AbstractDataWriter
     }
     
     
-    protected class ShortWriter extends BaseProcessor implements ArraySizeSupplier
+    protected class ShortWriter extends ValueWriter implements ArraySizeSupplier
     {
         short val;
         
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             val = data.getShortValue(index);
             dataOutput.writeShort(val);
-            return ++index;
         }
 
         @Override
@@ -133,16 +143,15 @@ public class BinaryDataWriter extends AbstractDataWriter
     }
     
     
-    protected class UShortWriter extends BaseProcessor implements ArraySizeSupplier
+    protected class UShortWriter extends ValueWriter implements ArraySizeSupplier
     {
         short val;
         
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             val = data.getShortValue(index);
             dataOutput.writeUnsignedShort(val);
-            return ++index;
         }
 
         @Override
@@ -153,16 +162,15 @@ public class BinaryDataWriter extends AbstractDataWriter
     }
     
     
-    protected class IntWriter extends BaseProcessor implements ArraySizeSupplier
+    protected class IntWriter extends ValueWriter implements ArraySizeSupplier
     {
         int val;
         
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             val = data.getIntValue(index);
             dataOutput.writeInt(val);
-            return ++index;
         }
 
         @Override
@@ -173,16 +181,15 @@ public class BinaryDataWriter extends AbstractDataWriter
     }
     
     
-    protected class UIntWriter extends BaseProcessor implements ArraySizeSupplier
+    protected class UIntWriter extends ValueWriter implements ArraySizeSupplier
     {
         int val;
         
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             val = data.getIntValue(index);
             dataOutput.writeUnsignedInt(val);
-            return ++index;
         }
 
         @Override
@@ -193,74 +200,68 @@ public class BinaryDataWriter extends AbstractDataWriter
     }
     
     
-    protected class LongWriter extends BaseProcessor
+    protected class LongWriter extends ValueWriter
     {
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             long val = data.getLongValue(index);
             dataOutput.writeLong(val);
-            return ++index;
         }
     }
     
     
-    protected class ULongWriter extends BaseProcessor
+    protected class ULongWriter extends ValueWriter
     {
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             long val = data.getLongValue(index);
             dataOutput.writeUnsignedLong(val);
-            return ++index;
         }
     }
     
     
-    protected class DoubleWriter extends BaseProcessor
+    protected class DoubleWriter extends ValueWriter
     {
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             double val = data.getDoubleValue(index);
             dataOutput.writeDouble(val);
-            return ++index;
         }
     }
     
     
-    protected class FloatWriter extends BaseProcessor
+    protected class FloatWriter extends ValueWriter
     {
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             float val = data.getFloatValue(index);
             dataOutput.writeFloat(val);
-            return ++index;
         }
     }
     
     
-    protected class StringWriterASCII extends BaseProcessor
+    protected class StringWriterASCII extends ValueWriter
     {
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             String val = data.getStringValue(index);
             dataOutput.writeASCII(val);
-            return ++index;
         }
     }
     
     
-    protected class StringWriterUTF extends BaseProcessor
+    protected class StringWriterUTF extends ValueWriter
     {
         @Override
-        public int process(DataBlock data, int index) throws IOException
+        public void writeValue(DataBlock data, int index) throws IOException
         {
             String val = data.getStringValue(index);
             dataOutput.writeUTF(val);
-            return ++index;
         }
     }
     
@@ -283,7 +284,9 @@ public class BinaryDataWriter extends AbstractDataWriter
             if (selectedIndex < 0 || selectedIndex >= choiceTokens.size())
                 throw new WriterException(AbstractDataParser.INVALID_CHOICE_MSG + selectedIndex);
             
-            dataOutput.writeInt(selectedIndex);
+            if (enabled)
+                dataOutput.writeInt(selectedIndex);
+            
             return super.process(data, ++index, selectedIndex);
         }
     }

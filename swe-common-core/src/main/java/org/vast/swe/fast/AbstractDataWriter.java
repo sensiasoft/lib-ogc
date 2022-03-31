@@ -38,7 +38,7 @@ import net.opengis.swe.v20.DataEncoding;
 public abstract class AbstractDataWriter extends DataBlockProcessor implements DataStreamWriter
 {
     BlockComponent parentArray;
-    int parentArrayIndex;
+    boolean lastArrayElt;
     DataEncoding dataEncoding;
     
         
@@ -107,7 +107,7 @@ public abstract class AbstractDataWriter extends DataBlockProcessor implements D
     {
         this.parentArray = Asserts.checkNotNull(parentArray, DataArray.class);
         this.dataComponents = parentArray.getElementType();
-        parentArrayIndex = 0;
+        lastArrayElt = false;
     }
     
     
@@ -118,8 +118,12 @@ public abstract class AbstractDataWriter extends DataBlockProcessor implements D
         Asserts.checkState(parentArray != null);
         
         setOutput(outputStream);
-        for (int i = 0; i < parentArray.getComponentCount(); i++)
+        int arraySize = parentArray.getComponentCount();
+        for (int i = 0; i < arraySize; i++)
+        {
+            lastArrayElt = i == arraySize-1;
             write(parentArray.getComponent(i).getData());
+        }
     }
     
     

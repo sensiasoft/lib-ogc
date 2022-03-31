@@ -57,7 +57,7 @@ public class TextDataParser extends AbstractDataParser
     protected boolean collapseWhiteSpaces = true;
     protected StringBuilder tokenBuf = new StringBuilder(32);
     protected String[] lastSplit;
-    protected int tokenIndex = -1;    
+    protected int tokenIndex = -1;
     protected int blockSepIndex = 0;
     protected  Map<String, IntegerParser> countReaders = new HashMap<>();
     
@@ -278,7 +278,7 @@ public class TextDataParser extends AbstractDataParser
             // return next token, trimming white spaces if requested
             String nextToken = lastSplit[tokenIndex++];
             if (this.collapseWhiteSpaces)
-                nextToken = nextToken.trim();            
+                nextToken = nextToken.trim();
             return nextToken;
         }
         catch (IOException e)
