@@ -1374,6 +1374,18 @@ public class SWEBuilders
                 .build());
             return (B)this;
         }
+        
+        public B addAllFields(DataRecordBuilder builder)
+        {
+            return addAllFields(builder.build());
+        }
+        
+        public B addAllFields(DataRecord rec)
+        {
+            for (var f: rec.getFieldList())
+                instance.addField(f.getName(), f);
+            return (B)this;
+        }
     }
 
     /* Nested builder for use within another builder */
