@@ -18,12 +18,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import org.vast.swe.SWEDataTypeUtils;
 import org.vast.util.DateTimeFormat;
@@ -195,12 +196,15 @@ public class JsonDataWriter extends AbstractDataWriter
 
     protected class RoundingDecimalWriter extends DoubleWriter
     {
-        int scale;
+        NumberFormat df;
 
         public RoundingDecimalWriter(String eltName, int numDecimalPlaces)
         {
             super(eltName);
-            this.scale = numDecimalPlaces;
+            this.df = DecimalFormat.getNumberInstance(Locale.US);
+            df.setGroupingUsed(false);
+            df.setMinimumFractionDigits(1);
+            df.setMaximumFractionDigits(numDecimalPlaces);
         }
 
         @Override
@@ -216,11 +220,7 @@ public class JsonDataWriter extends AbstractDataWriter
             else if (val == Double.NEGATIVE_INFINITY)
                 writer.write("\"-INF\"");
             else
-            {
-                BigDecimal bd = BigDecimal.valueOf(val);
-                bd = bd.setScale(scale, RoundingMode.HALF_UP).stripTrailingZeros();
-                writer.write(bd.toPlainString());
-            }
+                writer.write(df.format(val));
         }
     }
 
