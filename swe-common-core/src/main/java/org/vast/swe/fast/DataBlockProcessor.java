@@ -207,7 +207,10 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     
     protected void setEnabled(AtomProcessor processor)
     {
-        processor.setEnabled(enableSubTree);
+        if (processor == rootProcessor)
+            processor.setEnabled(true);
+        else
+            processor.setEnabled(enableSubTree);
         
         // if enabled, also enable all parents
         if (enableSubTree)
