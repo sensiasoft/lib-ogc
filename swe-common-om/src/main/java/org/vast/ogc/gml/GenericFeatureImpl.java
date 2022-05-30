@@ -41,6 +41,8 @@ import net.opengis.gml.v32.impl.AbstractFeatureImpl;
 public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFeature
 {
     private static final long serialVersionUID = -5445631329812411360L;
+    public static final String PROP_FEATURE_TYPE = "type";
+    
     protected QName qname;
     protected Map<QName, Object> properties;
 
@@ -72,6 +74,7 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
         return qname;
     }
     
+    
     @Override
     public String getType()
     {
@@ -80,7 +83,7 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
             // look for a 'type' property of type String
             for (var prop: properties.entrySet())
             {
-                if ("type".equals(prop.getKey().getLocalPart()))
+                if (PROP_FEATURE_TYPE.equals(prop.getKey().getLocalPart()))
                 {
                     if (prop.getValue() instanceof String)
                         return (String)prop.getValue();
@@ -134,5 +137,11 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     public Object getProperty(String name)
     {
         return properties.get(new QName(name));
+    }
+    
+    
+    public void setType(String type)
+    {
+        setProperty(PROP_FEATURE_TYPE, type);
     }
 }

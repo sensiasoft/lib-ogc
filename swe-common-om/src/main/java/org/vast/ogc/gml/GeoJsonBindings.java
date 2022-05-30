@@ -33,8 +33,6 @@ import net.opengis.gml.v32.LinearRing;
 import net.opengis.gml.v32.Measure;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Polygon;
-import net.opengis.gml.v32.TimeInstant;
-import net.opengis.gml.v32.TimePeriod;
 import net.opengis.gml.v32.impl.GMLFactory;
 
 
@@ -124,10 +122,13 @@ public class GeoJsonBindings
         if (bean.getDescription() != null)
             writer.name("description").value(bean.getDescription());
         
+        if (bean.getType() != null)
+            writer.name("type").value(bean.getType());
+        
         if (bean.getValidTime() != null)
         {
             writer.name("validTime");
-            writeTimePeriod(writer, bean.getValidTime());
+            writeTimeExtent(writer, bean.getValidTime());
         }
     }
     
@@ -150,7 +151,7 @@ public class GeoJsonBindings
                 writer.name(propName.getLocalPart());
                 writer.value((Number)val);
             }
-            else if (val instanceof String)
+            else if (val instanceof String && !val.equals(bean.getType()))
             {
                 writer.name(propName.getLocalPart());
                 writer.value((String)val);
@@ -181,7 +182,8 @@ public class GeoJsonBindings
                 !GenericTemporalFeatureImpl.PROP_VALID_TIME.equals(propName))
             {
                 writer.name(propName.getLocalPart());
-                writeTimePrimitive(writer, (AbstractTimeGeometricPrimitive)val);
+                var te = GMLUtils.timePrimitiveToTimeExtent((AbstractTimeGeometricPrimitive)val);
+                writeTimeExtent(writer, te);
             }
         }
     }
@@ -329,35 +331,11 @@ public class GeoJsonBindings
     }
     
     
-    public void writeTimePeriod(JsonWriter writer, TimeExtent bean) throws IOException
+    public void writeTimeExtent(JsonWriter writer, TimeExtent bean) throws IOException
     {
         writer.beginArray();
         writeDateTimeValue(writer, bean.begin().atOffset(ZoneOffset.UTC));
         writeDateTimeValue(writer, bean.end().atOffset(ZoneOffset.UTC));
-        writer.endArray();
-    }
-    
-    
-    public void writeTimePrimitive(JsonWriter writer, AbstractTimeGeometricPrimitive bean) throws IOException
-    {
-        if (bean instanceof TimeInstant)
-            writeTimeInstant(writer, (TimeInstant)bean);
-        else if (bean instanceof TimePeriod)
-            writeTimePeriod(writer, (TimePeriod)bean);
-    }
-    
-    
-    public void writeTimeInstant(JsonWriter writer, TimeInstant bean) throws IOException
-    {
-        writeDateTimeValue(writer, bean.getTimePosition().getDateTimeValue());
-    }
-    
-    
-    public void writeTimePeriod(JsonWriter writer, TimePeriod bean) throws IOException
-    {
-        writer.beginArray();
-        writeDateTimeValue(writer, bean.getBeginPosition().getDateTimeValue());
-        writeDateTimeValue(writer, bean.getEndPosition().getDateTimeValue());
         writer.endArray();
     }
     
@@ -428,7 +406,12 @@ public class GeoJsonBindings
             {
                 String propName = reader.nextName();
                 if (!readCommonFeatureProperty(reader, f, propName))
-                    reader.skipValue();
+                {
+                    if (f instanceof GenericFeatureImpl)
+                        readCustomFeatureProperty(reader, (GenericFeatureImpl)f, propName);
+                    else
+                        reader.skipValue();
+                }
             }
             reader.endObject();
         }
@@ -451,13 +434,34 @@ public class GeoJsonBindings
         else if ("description".equals(name))
             f.setDescription(reader.nextString());
         
-        else if (f instanceof GenericTemporalFeatureImpl && "validTime".equals(name))
+        else if ("type".equals(name))
+            ((GenericFeatureImpl)f).setType(reader.nextString());
+        
+        else if ("validTime".equals(name) && f instanceof GenericTemporalFeatureImpl)
             readValidTime(reader, (GenericTemporalFeatureImpl)f);
         
         else
             return false;
         
         return true;
+    }
+    
+    
+    protected void readCustomFeatureProperty(JsonReader reader, GenericFeatureImpl f, String name) throws IOException
+    {
+        switch(reader.peek())
+        {
+            case STRING:
+                f.setProperty(name, reader.nextString());
+                break;
+                
+            case NUMBER:
+                f.setProperty(name, reader.nextDouble());
+                break;
+                
+            default:
+                reader.skipValue();
+        }
     }
     
     

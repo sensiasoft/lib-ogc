@@ -20,6 +20,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import org.vast.ogc.xlink.IXlinkReference;
+import com.google.common.base.Strings;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.AbstractGML;
 import net.opengis.gml.v32.AbstractGeometry;
@@ -231,7 +232,7 @@ public class GMLStaxBindings extends XMLStreamBindings
         {
             QName propName = prop.getKey();
             Object val = prop.getValue();
-            String propNsUri = propName.getNamespaceURI() != null ? propName.getNamespaceURI() : nsUri;
+            String propNsUri = !Strings.isNullOrEmpty(propName.getNamespaceURI()) ? propName.getNamespaceURI() : nsUri;
             writer.writeStartElement(propNsUri, propName.getLocalPart());
             
             if (val instanceof Boolean)
