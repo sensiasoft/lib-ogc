@@ -50,6 +50,7 @@ public class GeoJsonBindings
     public static final String MIME_TYPE ="application/geo+json";
     public static final String ERROR_UNSUPPORTED_TYPE = "Unsupported type: ";
     public static final String ERROR_INVALID_COORDINATES = "Invalid coordinate array";
+    public static final String ERROR_INVALID_TIMERANGE = "Invalid time extent";
     DecimalFormat formatter = new DecimalFormat(GMLFactory.COORDINATE_FORMAT);
     GMLFactory factory;
     
@@ -135,6 +136,8 @@ public class GeoJsonBindings
     
     protected void writeCustomFeatureProperties(JsonWriter writer, IFeature bean) throws IOException
     {
+        var featureType = bean.getType();
+        
         // write all custom properties with supported data type
         for (Entry<QName, Object> prop: bean.getProperties().entrySet())
         {
@@ -151,7 +154,7 @@ public class GeoJsonBindings
                 writer.name(propName.getLocalPart());
                 writer.value((Number)val);
             }
-            else if (val instanceof String && !val.equals(bean.getType()))
+            else if (val instanceof String && !val.equals(featureType))
             {
                 writer.name(propName.getLocalPart());
                 writer.value((String)val);
@@ -159,7 +162,7 @@ public class GeoJsonBindings
             else if (val instanceof IXlinkReference<?>)
             {
                 String href = ((IXlinkReference<?>) val).getHref();
-                if (href != null) 
+                if (href != null && !href.equals(featureType)) 
                 {
                     writer.name(propName.getLocalPart());
                     writer.value(href);
@@ -661,8 +664,17 @@ public class GeoJsonBindings
     public void readValidTime(JsonReader reader, GenericTemporalFeatureImpl bean) throws IOException
     {
         reader.beginArray();
-        var timeExtent = TimeExtent.parse(reader.nextString() + "/" + reader.nextString());
-        bean.setValidTime(timeExtent);
+        
+        try
+        {
+            var timeExtent = TimeExtent.parse(reader.nextString() + "/" + reader.nextString());
+            bean.setValidTime(timeExtent);
+        }
+        catch (Exception e)
+        {
+            throw new JsonParseException(ERROR_INVALID_TIMERANGE);
+        }
+        
         reader.endArray();
     }
 }
