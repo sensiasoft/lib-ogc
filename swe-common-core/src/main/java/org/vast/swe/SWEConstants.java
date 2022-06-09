@@ -57,6 +57,7 @@ public class SWEConstants
     public static final String EPSG_URI_PREFIX = OGC_CRS_URI + "EPSG/0/";
     public static final String REF_FRAME_4326 = EPSG_URI_PREFIX + 4326;
     public static final String REF_FRAME_4979 = EPSG_URI_PREFIX + 4979;
+    public static final String REF_FRAME_CRS84 = OGC_CRS_URI + "OGC/0/CRS84h";
     public static final String REF_FRAME_WGS84_ECEF = EPSG_URI_PREFIX + 4978;
     public static final String REF_FRAME_WGS84_2D = REF_FRAME_4326;
     public static final String REF_FRAME_WGS84_HAE = REF_FRAME_4979;

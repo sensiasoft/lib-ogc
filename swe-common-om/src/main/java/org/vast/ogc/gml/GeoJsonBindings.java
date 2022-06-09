@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 import org.vast.ogc.xlink.IXlinkReference;
+import org.vast.swe.SWEConstants;
+import org.vast.util.Asserts;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.TimeExtent;
 import com.google.gson.JsonParseException;
@@ -53,6 +55,7 @@ public class GeoJsonBindings
     public static final String ERROR_INVALID_TIMERANGE = "Invalid time extent";
     DecimalFormat formatter = new DecimalFormat(GMLFactory.COORDINATE_FORMAT);
     GMLFactory factory;
+    enum CrsType {CRS84, CRS84_FLIP, CUSTOM}
     
     
     public GeoJsonBindings()
@@ -239,24 +242,52 @@ public class GeoJsonBindings
     }
     
     
-    public void writeCommonGeometryProperties(JsonWriter writer, AbstractGeometry bean) throws IOException
+    protected CrsType getCrsType(AbstractGeometry bean)
     {
         if (bean.isSetSrsName())
+        {
+            var crs = bean.getSrsName();
+            if (SWEConstants.REF_FRAME_4326.equals(crs))
+                return CrsType.CRS84_FLIP;
+            else if (SWEConstants.REF_FRAME_4979.equals(crs))
+                return CrsType.CRS84_FLIP;
+            else if (SWEConstants.REF_FRAME_CRS84.equals(crs))
+                return CrsType.CRS84;
+            else
+                return CrsType.CUSTOM;
+        }
+        
+        return CrsType.CRS84;
+    }
+    
+    
+    public CrsType writeCommonGeometryProperties(JsonWriter writer, AbstractGeometry bean) throws IOException
+    {
+        int dims = bean.getSrsDimension();
+        Asserts.checkArgument(dims == 2 || dims == 3, "Invalid SRS dimension");
+        
+        var crsType = getCrsType(bean);
+        
+        if (bean.isSetSrsName() && crsType == CrsType.CUSTOM)
             writer.name("crs").value(bean.getSrsName());
+        
+        return crsType;
     }
     
     
     public void writePoint(JsonWriter writer, Point bean) throws IOException
     {
         writer.beginObject();
-        writer.name("type").value(Point.class.getSimpleName());
-        writeCommonGeometryProperties(writer, bean);
+        writer.name("type").value("Point");
+        
+        var crsType = writeCommonGeometryProperties(writer, bean);
+        int dims = bean.getSrsDimension();
         
         // coordinates
         if (bean.isSetPos())
         {
             writer.name("coordinates");
-            writeCoordinates(writer, bean.getPos(), 0, bean.getSrsDimension());
+            writeCoordinates(writer, bean.getPos(), 0, dims, crsType);
         }
         
         writer.endObject();
@@ -266,16 +297,18 @@ public class GeoJsonBindings
     public void writeLineString(JsonWriter writer, LineString bean) throws IOException
     {
         writer.beginObject();
-        writer.name("type").value(LineString.class.getSimpleName());
-        writeCommonGeometryProperties(writer, bean);
+        writer.name("type").value("LineString");
+        
+        var crsType = writeCommonGeometryProperties(writer, bean);
+        int dims = bean.getSrsDimension();
         
         // coordinates
         if (bean.isSetPosList())
         {
             writer.name("coordinates");
             writer.beginArray();
-            for (int i = 0; i < bean.getPosList().length; i += bean.getSrsDimension())
-                writeCoordinates(writer, bean.getPosList(), i, bean.getSrsDimension());
+            for (int i = 0; i < bean.getPosList().length; i += dims)
+                writeCoordinates(writer, bean.getPosList(), i, dims, crsType);
             writer.endArray();
         }
         
@@ -286,8 +319,10 @@ public class GeoJsonBindings
     public void writePolygon(JsonWriter writer, Polygon bean) throws IOException
     {
         writer.beginObject();
-        writer.name("type").value(Polygon.class.getSimpleName());
-        writeCommonGeometryProperties(writer, bean);
+        writer.name("type").value("Polygon");
+        
+        var crsType = writeCommonGeometryProperties(writer, bean);
+        int dims = bean.getSrsDimension();
         
         // coordinates
         if (bean.isSetExterior())
@@ -299,14 +334,14 @@ public class GeoJsonBindings
                         
             // exterior
             if (bean.isSetExterior())
-                writeLinearRing(writer, bean.getExterior(), bean.getSrsDimension());
+                writeLinearRing(writer, bean.getExterior(), dims, crsType);
             
             // interior holes
             int numHoles = bean.getNumInteriors();
             for (int i = 0; i < numHoles; i++)
             {
                 LinearRing item = bean.getInteriorList().get(i);
-                writeLinearRing(writer, item, bean.getSrsDimension());
+                writeLinearRing(writer, item, dims, crsType);
             }
             
             writer.endArray();
@@ -316,20 +351,33 @@ public class GeoJsonBindings
     }
     
 
-    public void writeLinearRing(JsonWriter writer, LinearRing bean, int dims) throws IOException
+    public void writeLinearRing(JsonWriter writer, LinearRing bean, int dims, CrsType crsType) throws IOException
     {
         writer.beginArray();
         for (int i = 0; i < bean.getPosList().length; i += dims)
-            writeCoordinates(writer, bean.getPosList(), i, dims);
+            writeCoordinates(writer, bean.getPosList(), i, dims, crsType);
         writer.endArray();
     }
     
 
-    public void writeCoordinates(JsonWriter writer, double[] coords, int index, int dims) throws IOException
+    public void writeCoordinates(JsonWriter writer, double[] coords, int index, int dims, CrsType crsType) throws IOException
     {
         writer.beginArray();
-        for (int i = index; i < index + dims; i++)
+        
+        if (crsType == CrsType.CRS84_FLIP)
+        {
+            int i = index;
+            writer.jsonValue(formatter.format(coords[i+1]));
             writer.jsonValue(formatter.format(coords[i]));
+            if (dims > 2)
+                writer.jsonValue(formatter.format(coords[i+2]));
+        }
+        else
+        {
+            for (int i = index; i < index + dims; i++)
+                writer.jsonValue(formatter.format(coords[i]));
+        }
+        
         writer.endArray();
     }
     
@@ -536,24 +584,24 @@ public class GeoJsonBindings
             
             else if ("coordinates".equals(name))
             {
-                if (Point.class.getSimpleName().equals(type))
+                if ("Point".equals(type))
                 {
                     geom = factory.newPoint();
                     readCoordinates(reader, (Point)geom);
                 }
-                else if (LineString.class.getSimpleName().equals(type))
+                else if ("LineString".equals(type))
                 {
                     geom = factory.newLineString();
                     readCoordinates(reader, (LineString)geom);
                 }
-                else if (Polygon.class.getSimpleName().equals(type))
+                else if ("Polygon".equals(type))
                 {
                     geom = factory.newPolygon();
                     readCoordinates(reader, (Polygon)geom);
                 }
                 else
-                    throw new JsonParseException(ERROR_UNSUPPORTED_TYPE + type);                
-            }                
+                    throw new JsonParseException(ERROR_UNSUPPORTED_TYPE + type);
+            }
                 
             else
                 reader.skipValue();
@@ -562,8 +610,7 @@ public class GeoJsonBindings
         if (geom == null)
             throw new IOException("Missing coordinates array");
         
-        if (crs != null)
-            geom.setSrsName(crs);
+        geom.setSrsName(crs != null ? crs : SWEConstants.REF_FRAME_CRS84);
         
         reader.endObject();
         return geom;
