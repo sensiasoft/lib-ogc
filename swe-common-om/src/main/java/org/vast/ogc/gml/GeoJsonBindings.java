@@ -253,6 +253,8 @@ public class GeoJsonBindings
                 return CrsType.CRS84_FLIP;
             else if (SWEConstants.REF_FRAME_CRS84.equals(crs))
                 return CrsType.CRS84;
+            else if (SWEConstants.REF_FRAME_CRS84h.equals(crs))
+                return CrsType.CRS84;
             else
                 return CrsType.CUSTOM;
         }
