@@ -37,9 +37,9 @@ import net.opengis.swe.v20.DataEncoding;
  */
 public abstract class AbstractDataWriter extends DataBlockProcessor implements DataStreamWriter
 {
-    BlockComponent parentArray;
-    boolean lastArrayElt;
-    DataEncoding dataEncoding;
+    protected BlockComponent parentArray;
+    protected boolean lastArrayElt;
+    protected DataEncoding dataEncoding;
     
         
     @Override

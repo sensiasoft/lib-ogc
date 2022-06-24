@@ -46,13 +46,13 @@ import net.opengis.swe.v20.Vector;
  */
 public abstract class DataBlockProcessor implements DataComponentVisitor
 {
-    DataComponent dataComponents;
-    IComponentFilter filter;
-    AtomProcessor rootProcessor;
-    ArrayDeque<AtomProcessor> processorStack = new ArrayDeque<>();
-    boolean enableSubTree = true;
-    boolean processorTreeReady;
-    boolean hasVarSizeArray = false;
+    protected DataComponent dataComponents;
+    protected IComponentFilter filter;
+    protected AtomProcessor rootProcessor;
+    protected ArrayDeque<AtomProcessor> processorStack = new ArrayDeque<>();
+    protected boolean enableSubTree = true;
+    protected boolean processorTreeReady;
+    protected boolean hasVarSizeArray = false;
     
     
     public interface AtomProcessor
@@ -71,7 +71,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     
     public abstract static class BaseProcessor implements AtomProcessor
     {
-        boolean enabled = true;
+        protected boolean enabled = true;
         
         @Override
         public void setEnabled(boolean enabled)
@@ -89,7 +89,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     
     public static class RecordProcessor extends BaseProcessor implements CompositeProcessor
     {
-        List<AtomProcessor> fieldProcessors = new ArrayList<>();
+        protected  List<AtomProcessor> fieldProcessors = new ArrayList<>();
         
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -113,10 +113,10 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     }
     
     
-    protected class ImplicitSizeProcessor extends BaseProcessor implements ArraySizeSupplier
+    public class ImplicitSizeProcessor extends BaseProcessor implements ArraySizeSupplier
     {
-        DataArray varSizeArray;
-        int arraySize;
+        protected DataArray varSizeArray;
+        protected int arraySize;
 
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -136,9 +136,9 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     
     public static class ArrayProcessor extends BaseProcessor implements CompositeProcessor
     {
-        ArraySizeSupplier sizeSupplier;
-        AtomProcessor eltProcessor;
-        DataArray varSizeArray;
+        protected ArraySizeSupplier sizeSupplier;
+        protected AtomProcessor eltProcessor;
+        protected DataArray varSizeArray;
         
         @Override
         public int process(DataBlock data, int index) throws IOException
