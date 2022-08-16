@@ -83,6 +83,7 @@ import org.vast.swe.SWEBuilders.TimeBuilder;
 import org.vast.swe.SWEBuilders.TimeRangeBuilder;
 import org.vast.swe.SWEBuilders.VectorBuilder;
 import org.vast.swe.fast.JsonDataWriter;
+import org.vast.swe.fast.TextDataWriter;
 import org.vast.swe.fast.XmlDataWriter;
 import org.vast.swe.helper.RasterHelper;
 import org.vast.unit.Unit;
@@ -462,7 +463,7 @@ public class SWEHelper
         DataStreamWriter writer = null;
 
         if (encoding instanceof TextEncoding)
-            writer = new AsciiDataWriter();
+            writer = new TextDataWriter();
         else if (encoding instanceof BinaryEncoding)
             writer = new BinaryDataWriter();
         else if (encoding instanceof XMLEncoding)
