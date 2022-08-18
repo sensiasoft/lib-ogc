@@ -30,7 +30,7 @@ import org.vast.ows.sos.GetResultRequest;
 import org.vast.ows.sos.GetResultTemplateRequest;
 import org.vast.ows.sos.GetResultTemplateResponse;
 import org.xml.sax.InputSource;
-import com.vividsolutions.jts.geom.Polygon;
+import org.locationtech.jts.geom.Polygon;
 
 
 public class TestSosGetResultBindingsV20 extends XMLTestCase

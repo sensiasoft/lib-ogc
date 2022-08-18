@@ -14,9 +14,9 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.Envelope;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.CoordinateSequence;
+import org.locationtech.jts.geom.Envelope;
 
 
 /**
@@ -34,7 +34,7 @@ public class JTSCoordinatesDoubleArray implements CoordinateSequence
     
     
     private JTSCoordinatesDoubleArray()
-    {        
+    {
     }
     
     
@@ -162,6 +162,17 @@ public class JTSCoordinatesDoubleArray implements CoordinateSequence
         newSeq.numDims = this.numDims;
         newSeq.posList = this.posList.clone();
         return newSeq;
+    }
+    
+    
+    @Override
+    public CoordinateSequence copy()
+    {
+        var newCoords = new JTSCoordinatesDoubleArray();
+        newCoords.numDims = numDims;
+        newCoords.posList = new double[posList.length];
+        System.arraycopy(this.posList, 0, newCoords.posList, 0, posList.length);
+        return newCoords;
     }
 
 }

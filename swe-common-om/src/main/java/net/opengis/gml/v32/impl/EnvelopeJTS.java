@@ -25,7 +25,7 @@ import net.opengis.gml.v32.Envelope;
  * @author Alex Robin
  * @since Dec 23, 2014
  */
-public class EnvelopeJTS extends com.vividsolutions.jts.geom.Envelope implements Envelope
+public class EnvelopeJTS extends org.locationtech.jts.geom.Envelope implements Envelope
 {
     private static final long serialVersionUID = 9013205842041680887L;
     protected String srsName;

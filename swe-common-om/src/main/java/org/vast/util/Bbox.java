@@ -21,11 +21,11 @@
 
 package org.vast.util;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.operation.buffer.BufferParameters;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.operation.buffer.BufferParameters;
 
 
 /**
@@ -92,7 +92,7 @@ public class Bbox extends SpatialExtent
     }
 	
 	
-	public static Bbox fromJtsEnvelope(com.vividsolutions.jts.geom.Envelope env)
+	public static Bbox fromJtsEnvelope(org.locationtech.jts.geom.Envelope env)
 	{
 	    return new Bbox(
 	        env.getMinX(),
@@ -102,13 +102,13 @@ public class Bbox extends SpatialExtent
 	}
 	
 	
-	public com.vividsolutions.jts.geom.Envelope toJtsEnvelope()
+	public org.locationtech.jts.geom.Envelope toJtsEnvelope()
 	{
-	    return new com.vividsolutions.jts.geom.Envelope(minX, maxX, minY, maxY);
+	    return new org.locationtech.jts.geom.Envelope(minX, maxX, minY, maxY);
 	}
 	
 	
-	public com.vividsolutions.jts.geom.Polygon toJtsPolygon()
+	public org.locationtech.jts.geom.Polygon toJtsPolygon()
     {
 	    Geometry geom = new GeometryFactory().toGeometry(toJtsEnvelope());
 	    
@@ -117,7 +117,7 @@ public class Bbox extends SpatialExtent
         else if (geom instanceof LineString)
             geom = geom.buffer(1e-6, 1, BufferParameters.CAP_FLAT);
         
-	    return (com.vividsolutions.jts.geom.Polygon)geom;
+	    return (org.locationtech.jts.geom.Polygon)geom;
     }
 	
 	

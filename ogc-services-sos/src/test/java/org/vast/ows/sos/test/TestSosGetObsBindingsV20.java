@@ -26,7 +26,7 @@ import org.vast.ows.OWSUtils;
 import org.vast.ows.sos.GetObservationRequest;
 import org.vast.ows.test.OWSTestCase;
 import org.vast.util.Bbox;
-import com.vividsolutions.jts.geom.Polygon;
+import org.locationtech.jts.geom.Polygon;
 
 
 public class TestSosGetObsBindingsV20 extends OWSTestCase

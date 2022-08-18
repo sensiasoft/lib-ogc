@@ -14,7 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.GeometryFactory;
 import net.opengis.gml.v32.LinearRing;
 
 
@@ -26,7 +26,7 @@ import net.opengis.gml.v32.LinearRing;
  * @author Alex Robin
  * @since Dec 23, 2014
  */
-public class LinearRingJTS extends com.vividsolutions.jts.geom.LinearRing implements LinearRing
+public class LinearRingJTS extends org.locationtech.jts.geom.LinearRing implements LinearRing
 {
     private static final long serialVersionUID = 4092205008825991782L;
     

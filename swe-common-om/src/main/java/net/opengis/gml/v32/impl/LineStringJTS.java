@@ -17,7 +17,7 @@ package net.opengis.gml.v32.impl;
 import java.io.Serializable;
 import java.util.List;
 import org.vast.ogc.gml.JTSUtils;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.GeometryFactory;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
@@ -33,7 +33,7 @@ import net.opengis.gml.v32.Reference;
  * @author Alex Robin
  * @since Dec 23, 2014
  */
-public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implements LineString
+public class LineStringJTS extends org.locationtech.jts.geom.LineString implements LineString
 {
     private static final long serialVersionUID = -8843421116255408427L;
     AbstractGeometryImpl geom = new AbstractGeometryImpl();

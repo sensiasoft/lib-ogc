@@ -18,7 +18,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.vast.ogc.gml.JTSUtils;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.GeometryFactory;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
@@ -35,7 +35,7 @@ import net.opengis.gml.v32.Reference;
  * @author Alex Robin
  * @since Dec 23, 2014
  */
-public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements Polygon
+public class PolygonJTS extends org.locationtech.jts.geom.Polygon implements Polygon
 {
     private static final long serialVersionUID = 3200774256059210125L;
     AbstractGeometryImpl geom = new AbstractGeometryImpl();

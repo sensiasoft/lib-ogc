@@ -17,7 +17,7 @@ package net.opengis.gml.v32.impl;
 import java.io.Serializable;
 import java.util.List;
 import org.vast.ogc.gml.JTSUtils;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.GeometryFactory;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
@@ -33,7 +33,7 @@ import net.opengis.gml.v32.Reference;
  * @author Alex Robin
  * @since Dec 23, 2014
  */
-public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
+public class PointJTS extends org.locationtech.jts.geom.Point implements Point
 {
     private static final long serialVersionUID = -5151123418510314756L;
     AbstractGeometryImpl geom = new AbstractGeometryImpl();

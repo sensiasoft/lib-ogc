@@ -3,7 +3,7 @@ description = 'SWE O&M and GML Models'
 
 dependencies {
   api project(':swe-common-core')
-  api 'com.vividsolutions:jts:1.13'
+  api 'org.locationtech.jts:jts-core:1.19.0'
 }
 
 // add info to OSGI manifest

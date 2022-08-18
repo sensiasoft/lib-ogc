@@ -17,7 +17,7 @@ package net.opengis.gml.v32.impl;
 import java.time.OffsetDateTime;
 import org.vast.util.Asserts;
 import org.vast.util.BaseBuilder;
-import com.vividsolutions.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.GeometryFactory;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.CodeList;
