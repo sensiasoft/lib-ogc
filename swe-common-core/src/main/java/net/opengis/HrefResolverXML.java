@@ -39,12 +39,12 @@ public abstract class HrefResolverXML implements HrefResolver
     URI baseURI;
     
     
-    public HrefResolverXML()
+    protected HrefResolverXML()
     {
     }
     
     
-    public HrefResolverXML(String baseURI)
+    protected HrefResolverXML(String baseURI)
     {
         try
         {

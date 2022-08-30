@@ -265,7 +265,7 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
         }
         
         // if everything was of same type, create a big shared primitive block
-        else if (allScalars && sameType)
+        else if (nextBlock != null && allScalars && sameType)
         {
         	newBlock = nextBlock.copy();
         	newBlock.resize(totalSize);

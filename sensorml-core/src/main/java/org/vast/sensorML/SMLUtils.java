@@ -74,11 +74,11 @@ import com.rits.cloning.Cloner;
  * */
 public class SMLUtils extends XMLBindingsUtils
 {
-	public final static String IC;
-	public final static String SENSORML;
-	public final static String V1_0 = "1.0";
-    public final static String V2_0 = "2.0";
-    public final static String V2_1 = "2.1";
+	public static final String IC;
+	public static final String SENSORML;
+	public static final String V1_0 = "1.0";
+    public static final String V2_0 = "2.0";
+    public static final String V2_1 = "2.1";
     
     IProcessFactory processFactory = new ProcessLoader();
     
@@ -158,9 +158,9 @@ public class SMLUtils extends XMLBindingsUtils
      */
     public AbstractProcess readProcess(URL url) throws XMLReaderException
     {
-        try
+        try (var is = url.openStream())
         {
-            return (AbstractProcess)readFromStream(url.openStream(), url.toURI(), ObjectType.Process);
+            return (AbstractProcess)readFromStream(is, url.toURI(), ObjectType.Process);
         }
         catch (IOException e)
         {
@@ -396,7 +396,7 @@ public class SMLUtils extends XMLBindingsUtils
      */
     public AbstractProcess getConfiguredInstance(AbstractProcess process) throws SMLException
     {
-        AbstractProcess baseProcess = null;        
+        AbstractProcess baseProcess = null;
         Asserts.checkArgument(process.isSetTypeOf(), "Process must have a typeOf property");
         
         // retrieve base description by resolving typeOf reference
@@ -584,7 +584,7 @@ public class SMLUtils extends XMLBindingsUtils
             catch (IOException e)
             {
                 throw new SMLException(String.format("Cannot resolve process '%s'", prop.getName()), e);
-            }            
+            }
         }
     }
 }

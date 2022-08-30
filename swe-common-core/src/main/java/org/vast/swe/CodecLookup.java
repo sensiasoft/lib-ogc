@@ -10,6 +10,7 @@
 
 package org.vast.swe;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.ServiceLoader;
 import org.vast.cdm.common.CompressedStreamParser;
@@ -41,11 +42,9 @@ public class CodecLookup
     private CodecLookup()
     {
         // for now we get the first factory we find
-        for (ICodecFactory factory: ServiceLoader.load(ICodecFactory.class))
-        {
-            this.factory = factory;
-            break;
-        }
+        Iterator<ICodecFactory> it = ServiceLoader.load(ICodecFactory.class).iterator();
+        if (it.hasNext())
+            this.factory = it.next();
     }
     
     

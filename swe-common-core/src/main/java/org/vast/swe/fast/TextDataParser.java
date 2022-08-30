@@ -70,6 +70,9 @@ public class TextDataParser extends AbstractDataParser
             String token = readToken();
             boolean val = false;
 
+            if (token == null)
+                throw new ReaderException(INVALID_BOOLEAN_MSG + token);
+            
             if (token.length() == 1)
             {
                 char c = token.charAt(0);
@@ -286,7 +289,7 @@ public class TextDataParser extends AbstractDataParser
                 // convert to string and trim white spaces if requested
                 String recString = tokenBuf.toString();
                 if (this.collapseWhiteSpaces)
-                    recString.trim();
+                    recString = recString.trim();
                 
                 if (recString.isEmpty())
                     return null;

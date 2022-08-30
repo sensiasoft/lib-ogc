@@ -251,7 +251,7 @@ public class AsciiDataParser extends AbstractDataParser
         {
             // always replace decimal separator by '.'
             if (decimalSep != 0)
-                token.replace(decimalSep, '.');
+                token = token.replace(decimalSep, '.');
                    
             switch (dataType)
             {

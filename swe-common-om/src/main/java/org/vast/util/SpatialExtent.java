@@ -53,7 +53,7 @@ public class SpatialExtent
         bbox.minZ = this.minZ;
         bbox.maxX = this.maxX;
         bbox.maxY = this.maxY;
-        bbox.maxZ = this.maxZ;        
+        bbox.maxZ = this.maxZ;
         
         return bbox;
     }
@@ -63,8 +63,8 @@ public class SpatialExtent
     {
         double[] center = new double[3];
         center[0] = (minX + maxX) / 2;
-        center[0] = (minY + maxY) / 2;
-        center[0] = (minZ + maxZ) / 2;
+        center[1] = (minY + maxY) / 2;
+        center[2] = (minZ + maxZ) / 2;
         return center;
     }
     

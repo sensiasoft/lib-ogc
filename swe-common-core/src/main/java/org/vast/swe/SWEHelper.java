@@ -82,6 +82,7 @@ import org.vast.swe.SWEBuilders.TextBuilder;
 import org.vast.swe.SWEBuilders.TimeBuilder;
 import org.vast.swe.SWEBuilders.TimeRangeBuilder;
 import org.vast.swe.SWEBuilders.VectorBuilder;
+import org.vast.swe.fast.JsonDataParserGson;
 import org.vast.swe.fast.JsonDataWriter;
 import org.vast.swe.fast.TextDataWriter;
 import org.vast.swe.fast.XmlDataWriter;
@@ -447,6 +448,10 @@ public class SWEHelper
             parser = new BinaryDataParser();
         else if (encoding instanceof XMLEncoding)
             parser = new XmlDataParser();
+        else if (encoding instanceof JSONEncoding)
+            parser = new JsonDataParserGson();
+        else
+            throw new IllegalArgumentException("Unsupported encoding: " + encoding.getClass().getSimpleName());
 
         parser.setDataEncoding(encoding);
         return parser;
@@ -470,6 +475,8 @@ public class SWEHelper
             writer = new XmlDataWriter();
         else if (encoding instanceof JSONEncoding)
             writer = new JsonDataWriter();
+        else
+            throw new IllegalArgumentException("Unsupported encoding: " + encoding.getClass().getSimpleName());
 
         writer.setDataEncoding(encoding);
         return writer;

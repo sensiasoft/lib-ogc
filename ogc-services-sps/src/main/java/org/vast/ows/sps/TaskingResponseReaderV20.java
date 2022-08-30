@@ -46,7 +46,7 @@ public class TaskingResponseReaderV20 extends SWEResponseReader<TaskingResponse<
     @Override
 	public TaskingResponse<StatusReport> readXMLResponse(DOMHelper dom, Element responseElt) throws OWSException
 	{
-		TaskingResponse<StatusReport> response = null;			
+		TaskingResponse<StatusReport> response = null;
 		String respName = responseElt.getLocalName();
 		String className = getClass().getPackage().getName() + "." + respName;
 		
@@ -57,10 +57,10 @@ public class TaskingResponseReaderV20 extends SWEResponseReader<TaskingResponse<
             response.setVersion("2.0");
             
             // status or feasibility report
-            Element reportElt = dom.getElement(responseElt, "result/*");	            
+            Element reportElt = dom.getElement(responseElt, "result/*");
             if (reportElt != null)
             {
-                StatusReport report = (StatusReport)commonReader.readReport(dom, reportElt);
+                StatusReport report = commonReader.readReport(dom, reportElt);
                 response.setReport(report);
             }
             
@@ -76,7 +76,8 @@ public class TaskingResponseReaderV20 extends SWEResponseReader<TaskingResponse<
         }
 		catch (Exception e)
         {
-            throw new SPSException(READ_ERROR_MSG + response.getMessageType(), e);
+		    throw new SPSException(READ_ERROR_MSG + 
+                (response != null ? response.getMessageType() : ""), e);
         }
 	}	
 }

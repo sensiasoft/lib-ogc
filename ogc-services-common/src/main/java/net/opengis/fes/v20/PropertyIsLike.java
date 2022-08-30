@@ -14,8 +14,6 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.fes.v20;
 
-import java.util.List;
-
 
 /**
  * POJO class for XML type PropertyIsLikeType(@http://www.opengis.net/fes/2.0).

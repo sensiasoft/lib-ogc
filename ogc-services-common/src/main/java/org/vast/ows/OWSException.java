@@ -34,21 +34,21 @@ public class OWSException extends Exception
 {
 	private static final long serialVersionUID = 430944706383046157L;
     
-	public final static String version_nego_failed_code = "VersionNegotiationFailed";
-	public final static String version_nego_failed_text = "Version Negotiation Failed";
-	public final static String invalid_request_code = "InvalidRequest";	
-	public final static String invalid_request_text = "Invalid Request";
-	public final static String invalid_param_code = "InvalidParameterValue";
-	public final static String invalid_param_text = "Invalid Parameter Value: ";
-	public final static String missing_param_code = "MissingParameterValue";
-	public final static String missing_param_text = "Missing Parameter Value: ";
-	public final static String unsupported_op_code = "OperationNotSupported";
-	public final static String unsupported_op_text = "Unsupported Operation: ";
-	public final static String no_code = "NoApplicableCode";
-	public final static String no_code_text = "Internal Error";
+	public static final String version_nego_failed_code = "VersionNegotiationFailed";
+	public static final String version_nego_failed_text = "Version Negotiation Failed";
+	public static final String invalid_request_code = "InvalidRequest";	
+	public static final String invalid_request_text = "Invalid Request";
+	public static final String invalid_param_code = "InvalidParameterValue";
+	public static final String invalid_param_text = "Invalid Parameter Value: ";
+	public static final String missing_param_code = "MissingParameterValue";
+	public static final String missing_param_text = "Missing Parameter Value: ";
+	public static final String unsupported_op_code = "OperationNotSupported";
+	public static final String unsupported_op_text = "Unsupported Operation: ";
+	public static final String no_code = "NoApplicableCode";
+	public static final String no_code_text = "Internal Error";
 	
-	public final static String VERSION_10 = "1.0";
-	public final static String VERSION_11 = "1.1.0";
+	public static final String VERSION_10 = "1.0";
+	public static final String VERSION_11 = "1.1.0";
 	
 	protected String code;
 	protected String locator;
@@ -192,17 +192,17 @@ public class OWSException extends Exception
 			return message;
 		
 		// otherwise build generic message
-		else if (this.code == version_nego_failed_code)
+		else if (version_nego_failed_code.equals(code))
             return version_nego_failed_text;
-		else if (this.code == invalid_request_code)
+		else if (invalid_request_code.equals(code))
 			return invalid_request_text;
-		else if (this.code == missing_param_code)
+		else if (missing_param_code.equals(code))
 			return missing_param_text + locator;
-		else if (this.code == invalid_param_code)
+		else if (invalid_param_code.equals(code))
 			return invalid_param_text + locator + ((badValue == null) ? "" : "=" + badValue);
-		else if (this.code == unsupported_op_code)
+		else if (unsupported_op_code.equals(code))
 			return unsupported_op_text + locator;
-		else if (this.code == no_code)
+		else if (no_code.equals(code))
 			return no_code_text;
 		else
 			return null;

@@ -148,6 +148,6 @@ public class DataIterator implements Iterator<DataComponent>, Iterable<DataCompo
     public Iterator<DataComponent> iterator()
     {
         reset();
-        return this;
+        return new DataIterator(rootComponent);
     }
 }

@@ -54,6 +54,7 @@ public class DOMHelper
 {
     public static final String XML_NS_URI = "http://www.w3.org/2000/xmlns/";
     public static final String XSI_NS_URI = "http://www.w3.org/2001/XMLSchema-instance";
+    public static final String DEFAULT_PREFIX = "_NIL_";
     protected static final String PATH_SEPARATOR = "/";
     private static final Logger log = LoggerFactory.getLogger(DOMHelper.class);
     
@@ -77,7 +78,6 @@ public class DOMHelper
     protected String[] wantedPath;
     protected QName eltQName = new QName();
     protected boolean validation = false;
-    public final static String DEFAULT_PREFIX = "_NIL_";
     
 
     public DOMHelper()
@@ -1287,7 +1287,7 @@ public class DOMHelper
         
         if (nsUri == null)
         {
-            if (eltQName.prefix != DOMHelper.DEFAULT_PREFIX)
+            if (!DOMHelper.DEFAULT_PREFIX.equals(eltQName.prefix))
                 throw new IllegalStateException("No namespace URI defined for user prefix " + eltQName.prefix);
             eltQName.nsUri = null;
             return eltQName;

@@ -166,7 +166,7 @@ public class Base64Decoder extends FilterInputStream
             // compute byte 3
             if (charBuf[3] != '=')
             {
-                byte byte3 = (byte) (b3 << 6 | b4);
+                byte byte3 = (byte) (b3 << 6 | b4 & 0xff);
                 
                 if (length > numDecodedByte)
                 {

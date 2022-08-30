@@ -172,4 +172,11 @@ public class CachedReference<T> implements IXlinkReference<T>
                Objects.equals(role, ref.role) &&
                Objects.equals(arcRole, ref.arcRole);
     }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(href, role, arcRole);
+    }
 }

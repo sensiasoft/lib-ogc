@@ -1728,7 +1728,6 @@ public class SWEBuilders
 
         public B size(int numRows, int numCols, boolean rowMajor)
         {
-            if (rowMajor)
             this.dimSizes = rowMajor ? new int[] {numRows, numCols} : new int[] {numCols, numRows};
             this.eltNames = rowMajor ? new String[] {"row", "elt"} : new String[] {"col", "elt"};
             return (B)this;
