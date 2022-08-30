@@ -77,10 +77,10 @@ public abstract class HrefResolverXML implements HrefResolver
             throw new ResolveException(String.format("Cannot resolve URI '%s'", hrefProp.getHref()), e);
         }
                 
-        try
+        try (InputStream is = new BufferedInputStream(hrefURL.openStream()))
         {
-            InputStream is = new BufferedInputStream(hrefURL.openStream());
             XMLInputFactory fac = XMLInputFactory.newInstance();
+            fac.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
             XMLStreamReader reader = fac.createXMLStreamReader(is);
             reader.nextTag();
             parseContent(reader);

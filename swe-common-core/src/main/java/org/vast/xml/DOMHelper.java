@@ -1327,7 +1327,9 @@ public class DOMHelper
     public void writeToStreamWriter(Element elt, XMLStreamWriter writer) throws XMLStreamException
     {
         DOMSource src = new DOMSource(elt);
-        XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(src);
+        XMLInputFactory fac = XMLInputFactory.newInstance();
+        fac.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+        XMLEventReader reader = fac.createXMLEventReader(src);
         while (reader.hasNext())
         {
             XMLEvent e = (XMLEvent)reader.next();

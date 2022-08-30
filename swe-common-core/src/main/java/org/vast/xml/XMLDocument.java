@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -349,6 +350,8 @@ public class XMLDocument
     {
         // create document builder
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
         factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         
@@ -439,7 +442,10 @@ public class XMLDocument
     protected void serializeDOM_JAXP(Element elt, OutputStream out, boolean pretty) throws TransformerException
     {
         // create transformer
-        Transformer serializer = TransformerFactory.newInstance().newTransformer();
+        TransformerFactory factory = TransformerFactory.newInstance();
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        Transformer serializer = factory.newTransformer();
         serializer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
         
         // set inputs/outputs

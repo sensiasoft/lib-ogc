@@ -89,7 +89,9 @@ public class XMLImplFinder
         if (staxInputFactory != null)
             return staxInputFactory;
         
-        return XMLInputFactory.newInstance();
+        XMLInputFactory fac = XMLInputFactory.newInstance();
+        fac.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+        return fac;
     }
     
     
