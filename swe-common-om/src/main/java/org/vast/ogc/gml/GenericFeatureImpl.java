@@ -23,8 +23,8 @@ package org.vast.ogc.gml;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
-import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.Asserts;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.impl.AbstractFeatureImpl;
@@ -41,7 +41,7 @@ import net.opengis.gml.v32.impl.AbstractFeatureImpl;
 public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFeature
 {
     private static final long serialVersionUID = -5445631329812411360L;
-    public static final String PROP_FEATURE_TYPE = "type";
+    private static final Pattern FEATURE_TYPE_REGEX = Pattern.compile("([^\\s]+[/#:])([^\\s/#:]+)$");
     
     protected QName qname;
     protected Map<QName, Object> properties;
@@ -75,25 +75,17 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     }
     
     
-    @Override
-    public String getType()
+    public void setType(String type)
     {
-        if (properties != null)
-        {
-            // look for a 'type' property of type String
-            for (var prop: properties.entrySet())
-            {
-                if (PROP_FEATURE_TYPE.equals(prop.getKey().getLocalPart()))
-                {
-                    if (prop.getValue() instanceof String)
-                        return (String)prop.getValue();
-                    else if (prop.getValue() instanceof IXlinkReference<?>)
-                        return ((IXlinkReference<?>)prop.getValue()).getHref();
-                }
-            }
-        }
+        var matcher = FEATURE_TYPE_REGEX.matcher(type);
+        if (!matcher.matches())
+            throw new IllegalStateException("Invalid feature type");
         
-        return super.getType();
+        // set as QName
+        // for generic features, type and QName are the same thing
+        var nsUri = matcher.group(1);
+        var localPart = matcher.group(2);
+        this.qname = new QName(nsUri, localPart);
     }
 
     
@@ -137,11 +129,5 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     public Object getProperty(String name)
     {
         return properties.get(new QName(name));
-    }
-    
-    
-    public void setType(String type)
-    {
-        setProperty(PROP_FEATURE_TYPE, type);
     }
 }

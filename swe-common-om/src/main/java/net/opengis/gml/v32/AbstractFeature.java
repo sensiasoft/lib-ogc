@@ -16,6 +16,7 @@ package net.opengis.gml.v32;
 
 import javax.xml.namespace.QName;
 import org.vast.ogc.gml.IFeature;
+import com.google.common.base.Strings;
 import net.opengis.OgcProperty;
 
 
@@ -42,9 +43,16 @@ public interface AbstractFeature extends IFeature, AbstractGML
             return null;
         
         var nsUri = qname.getNamespaceURI();
-        return nsUri != null ?
-            nsUri + "#" + qname.getLocalPart() :
-            qname.getLocalPart();
+        if (!Strings.isNullOrEmpty(nsUri))
+        {
+            var lastChar = nsUri.charAt(nsUri.length()-1);
+            if (lastChar != '#' && lastChar != '/' && lastChar != ':')
+                return nsUri + '#' + qname.getLocalPart();
+            else
+                return nsUri + qname.getLocalPart();
+        }
+        else
+            return qname.getLocalPart();
     }
     
     
