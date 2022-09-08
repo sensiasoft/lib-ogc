@@ -53,6 +53,7 @@ public class GeoJsonBindings
     public static final String ERROR_UNSUPPORTED_TYPE = "Unsupported type: ";
     public static final String ERROR_INVALID_COORDINATES = "Invalid coordinate array";
     public static final String ERROR_INVALID_TIMERANGE = "Invalid time extent";
+    
     DecimalFormat formatter = new DecimalFormat(GMLFactory.COORDINATE_FORMAT);
     GMLFactory factory;
     enum CrsType {CRS84, CRS84_FLIP, CUSTOM}
@@ -119,15 +120,15 @@ public class GeoJsonBindings
     {
         if (bean.getUniqueIdentifier() != null)
             writer.name("uid").value(bean.getUniqueIdentifier());
+        
+        if (bean.getType() != null)
+            writer.name("featureType").value(bean.getType());
      
         if (bean.getName() != null)
             writer.name("name").value(bean.getName());
         
         if (bean.getDescription() != null)
             writer.name("description").value(bean.getDescription());
-        
-        if (bean.getType() != null)
-            writer.name("type").value(bean.getType());
         
         if (bean.getValidTime() != null)
         {
@@ -487,7 +488,7 @@ public class GeoJsonBindings
         else if ("description".equals(name))
             f.setDescription(reader.nextString());
         
-        else if ("type".equals(name))
+        else if ("featureType".equals(name))
             ((GenericFeatureImpl)f).setType(reader.nextString());
         
         else if ("validTime".equals(name) && f instanceof GenericTemporalFeatureImpl)
