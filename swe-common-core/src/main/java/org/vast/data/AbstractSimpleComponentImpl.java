@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import org.vast.swe.SWEDataTypeUtils;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
@@ -25,6 +26,7 @@ import net.opengis.swe.v20.NilValues;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.QuantityRange;
 import net.opengis.swe.v20.Text;
+import net.opengis.swe.v20.ValidationException;
 
 
 public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentImpl implements SimpleComponent
@@ -152,7 +154,7 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
     public OgcProperty<NilValues> getNilValuesProperty()
     {
         if (nilValues == null)
-            nilValues = new OgcPropertyImpl<NilValues>();
+            nilValues = new OgcPropertyImpl<>();
         return nilValues;
     }
     
@@ -174,7 +176,7 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
     public void setNilValues(NilValues nilValues)
     {
         if (this.nilValues == null)
-            this.nilValues = new OgcPropertyImpl<NilValues>();
+            this.nilValues = new OgcPropertyImpl<>();
         this.nilValues.setValue(nilValues);
     }
     
@@ -264,6 +266,14 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
     protected void updateAtomCount(int childOffsetCount)
     {
         // DO NOTHING
+    }
+    
+    
+    protected ValidationException getValidationException(String assertMsg)
+    {
+        String val = new SWEDataTypeUtils().getStringValue(this);
+        return new ValidationException(getName(), "Value '" + val + 
+            "' invalid for field '" + getName() + "': " + assertMsg);
     }
     
     

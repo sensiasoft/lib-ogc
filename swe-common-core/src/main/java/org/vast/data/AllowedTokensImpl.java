@@ -28,7 +28,7 @@ import net.opengis.swe.v20.AllowedTokens;
 public class AllowedTokensImpl extends AbstractSWEImpl implements AllowedTokens
 {
     private static final long serialVersionUID = -1524114903160966177L;
-    protected ArrayList<String> valueList = new ArrayList<String>();
+    protected ArrayList<String> valueList = new ArrayList<>();
     protected String pattern;
     protected Pattern compiledPattern;
     
@@ -60,7 +60,7 @@ public class AllowedTokensImpl extends AbstractSWEImpl implements AllowedTokens
         if (pattern != null)
         {
             if (compiledPattern == null)
-                compiledPattern = Pattern.compile(pattern);                
+                compiledPattern = Pattern.compile(pattern);
             if (compiledPattern.matcher(value).matches())
                 return true;
         }
@@ -71,8 +71,8 @@ public class AllowedTokensImpl extends AbstractSWEImpl implements AllowedTokens
     
     protected String getAssertionMessage()
     {
-        StringBuffer msg = new StringBuffer();
-        msg.append("It should ");
+        StringBuilder msg = new StringBuilder();
+        msg.append("Must ");
                 
         if (!valueList.isEmpty())
         {
@@ -82,7 +82,7 @@ public class AllowedTokensImpl extends AbstractSWEImpl implements AllowedTokens
             for (String allowedValue: valueList)
             {
                 if (i++ > 0)
-                    msg.append(", ");    
+                    msg.append(", ");
                 msg.append(allowedValue);
             }
             

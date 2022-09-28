@@ -29,8 +29,10 @@ import java.text.ParseException;
 import org.vast.util.DateTimeFormat;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataType;
-import net.opengis.swe.v20.ScalarComponent;
+import net.opengis.swe.v20.RangeComponent;
+import net.opengis.swe.v20.SimpleComponent;
 import net.opengis.swe.v20.Time;
+import net.opengis.swe.v20.TimeOrRange;
 
 
 /**
@@ -140,8 +142,21 @@ public class SWEDataTypeUtils
      * @param component
      * @return string representation of component value
      */
-    public final String getStringValue(ScalarComponent component)
-    {   
+    public final String getStringValue(SimpleComponent component)
+    {
+        if (component instanceof RangeComponent)
+        {
+            return "[" + 
+                getStringValue(component, 0) + " " +
+                getStringValue(component, 1) + "]";
+        }
+        else
+            return getStringValue(component, 0);
+    }
+    
+    
+    protected final String getStringValue(SimpleComponent component, int valIdx)
+    {
         if (!component.hasData())
             return null;
         
@@ -151,13 +166,13 @@ public class SWEDataTypeUtils
         
         // case of time component
         String uom = null;
-        if (component instanceof Time)
-            uom = ((Time)component).getUom().getHref();
+        if (component instanceof TimeOrRange)
+            uom = ((TimeOrRange)component).getUom().getHref();
                 
         if (uom != null && uom.equals(Time.ISO_TIME_UNIT))
-            val = getDoubleOrTimeAsString(data.getDoubleValue(), true);
+            val = getDoubleOrTimeAsString(data.getDoubleValue(valIdx), true);
         else if (dataType == DataType.DOUBLE || dataType == DataType.FLOAT)
-            val = getDoubleOrTimeAsString(data.getDoubleValue(), false);
+            val = getDoubleOrTimeAsString(data.getDoubleValue(valIdx), false);
         else
             val = data.getStringValue();
         

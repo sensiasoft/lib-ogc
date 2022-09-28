@@ -174,12 +174,9 @@ public class QuantityImpl extends DataValue implements Quantity
     {
         if (isSetConstraint() && isSetValue())
         {
-            AllowedValuesImpl constraint = (AllowedValuesImpl)getConstraint();            
+            AllowedValuesImpl constraint = (AllowedValuesImpl)getConstraint();
             if (!constraint.isValid(getValue()))
-            {
-                errorList.add(new ValidationException(getName(), "Value '" + dataBlock.getStringValue() +
-                        "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
-            }
+                errorList.add(getValidationException(constraint.getAssertionMessage()));
         }
     }
     
@@ -188,7 +185,7 @@ public class QuantityImpl extends DataValue implements Quantity
     public String toString(String indent)
     {
         StringBuilder text = new StringBuilder();
-        text.append("Quantity");                
+        text.append("Quantity");
         if (dataBlock != null)
             text.append(" = " + dataBlock.getStringValue());
         return text.toString();

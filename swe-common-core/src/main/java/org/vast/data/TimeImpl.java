@@ -59,7 +59,7 @@ public class TimeImpl extends DataValue implements Time
     @Override
     public TimeImpl copy()
     {
-        TimeImpl newObj = new TimeImpl();        
+        TimeImpl newObj = new TimeImpl();
         super.copyTo(newObj);
         
         if (uom != null)
@@ -243,12 +243,9 @@ public class TimeImpl extends DataValue implements Time
     {
         if (isSetConstraint())
         {
-            AllowedTimesImpl constraint = (AllowedTimesImpl)getConstraint();            
+            AllowedTimesImpl constraint = (AllowedTimesImpl)getConstraint();
             if (!constraint.isValid(getValue()))
-            {
-                errorList.add(new ValidationException(getName(), "Value '" + getValue().toString() +
-                    "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
-            }
+                errorList.add(getValidationException(constraint.getAssertionMessage()));
         }
     }
     
@@ -257,7 +254,7 @@ public class TimeImpl extends DataValue implements Time
     public String toString(String indent)
     {
         StringBuilder text = new StringBuilder();
-        text.append("Time");                
+        text.append("Time");
         if (dataBlock != null)
         {
             text.append(" = ");

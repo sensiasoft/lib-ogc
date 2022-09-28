@@ -27,8 +27,8 @@ import net.opengis.swe.v20.AllowedTimes;
 public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
 {
     private static final long serialVersionUID = -6032939377548399837L;
-    protected ArrayList<DateTimeOrDouble> valueList = new ArrayList<DateTimeOrDouble>();
-    protected ArrayList<DateTimeOrDouble[]> intervalList = new ArrayList<DateTimeOrDouble[]>();
+    protected ArrayList<DateTimeOrDouble> valueList = new ArrayList<>();
+    protected ArrayList<DateTimeOrDouble[]> intervalList = new ArrayList<>();
     protected Integer significantFigures;
     
     
@@ -66,8 +66,8 @@ public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
     
     public String getAssertionMessage()
     {
-        StringBuffer msg = new StringBuffer();
-        msg.append("It should ");
+        StringBuilder msg = new StringBuilder();
+        msg.append("Must ");
         
         if (!valueList.isEmpty())
         {
@@ -89,21 +89,19 @@ public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
             if (!valueList.isEmpty())
                 msg.append(" OR ");
                 
-            msg.append("be within one of {");
+            msg.append("be within ");
             int i = 0;
             
             for (DateTimeOrDouble[] allowedRange: intervalList)
             {
                 if (i++ > 0)
-                    msg.append(", ");    
+                    msg.append(", ");
                 msg.append('[');
                 msg.append(allowedRange[0].toString());
-                msg.append('/');
+                msg.append(' ');
                 msg.append(allowedRange[1].toString());
                 msg.append(']');
             }
-            
-            msg.append('}');
         }
               
         return msg.toString();

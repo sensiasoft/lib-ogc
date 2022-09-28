@@ -84,7 +84,7 @@ public class CountImpl extends DataValue implements Count
     public OgcProperty<AllowedValues> getConstraintProperty()
     {
         if (constraint == null)
-            constraint = new OgcPropertyImpl<AllowedValues>();
+            constraint = new OgcPropertyImpl<>();
         return constraint;
     }
     
@@ -106,7 +106,7 @@ public class CountImpl extends DataValue implements Count
     public void setConstraint(AllowedValues constraint)
     {
         if (this.constraint == null)
-            this.constraint = new OgcPropertyImpl<AllowedValues>();
+            this.constraint = new OgcPropertyImpl<>();
         this.constraint.setValue(constraint);
     }
     
@@ -147,12 +147,9 @@ public class CountImpl extends DataValue implements Count
     {
         if (isSetConstraint() && isSetValue())
         {
-            AllowedValuesImpl constraint = (AllowedValuesImpl)getConstraint();            
+            AllowedValuesImpl constraint = (AllowedValuesImpl)getConstraint();
             if (!constraint.isValid(getValue()))
-            {
-                errorList.add(new ValidationException(getName(), "Value '" + dataBlock.getStringValue() +
-                        "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
-            }
+                errorList.add(getValidationException(constraint.getAssertionMessage()));
         }
     }
     

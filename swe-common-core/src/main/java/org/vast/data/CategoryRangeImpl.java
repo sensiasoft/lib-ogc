@@ -118,7 +118,7 @@ public class CategoryRangeImpl extends AbstractRangeComponentImpl implements Cat
     public void setConstraint(AllowedTokens constraint)
     {
         if (this.constraint == null)
-            this.constraint = new OgcPropertyImpl<AllowedTokens>();
+            this.constraint = new OgcPropertyImpl<>();
         this.constraint.setValue(constraint);
     }
     
@@ -180,11 +180,8 @@ public class CategoryRangeImpl extends AbstractRangeComponentImpl implements Cat
             String max = dataBlock.getStringValue(1);
             
             if (!constraint.isValid(min) || !constraint.isValid(max))
-            {
-                errorList.add(new ValidationException(getName(), "Value '[" + min + " " + max + "]" + 
-                    "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
-            }
-        }        
+                errorList.add(getValidationException(constraint.getAssertionMessage()));
+        }
     }
 
 
@@ -192,7 +189,7 @@ public class CategoryRangeImpl extends AbstractRangeComponentImpl implements Cat
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append("CategoryRange: ");                
+        text.append("CategoryRange: ");
         if (dataBlock != null)
         {
             text.append(" = [");

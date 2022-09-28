@@ -88,7 +88,7 @@ public class CountRangeImpl extends AbstractRangeComponentImpl implements CountR
     public OgcProperty<AllowedValues> getConstraintProperty()
     {
         if (constraint == null)
-            constraint = new OgcPropertyImpl<AllowedValues>();
+            constraint = new OgcPropertyImpl<>();
         return constraint;
     }
     
@@ -110,7 +110,7 @@ public class CountRangeImpl extends AbstractRangeComponentImpl implements CountR
     public void setConstraint(AllowedValues constraint)
     {
         if (this.constraint == null)
-            this.constraint = new OgcPropertyImpl<AllowedValues>();
+            this.constraint = new OgcPropertyImpl<>();
         this.constraint.setValue(constraint);
     }
     
@@ -160,11 +160,8 @@ public class CountRangeImpl extends AbstractRangeComponentImpl implements CountR
             int max = dataBlock.getIntValue(1);
             
             if (!constraint.isValid(min) || !constraint.isValid(max))
-            {
-                errorList.add(new ValidationException(getName(), "Value '[" + min + " " + max + "]" +
-                        "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
-            }
-        }        
+                errorList.add(getValidationException(constraint.getAssertionMessage()));
+        }
     }
 
 

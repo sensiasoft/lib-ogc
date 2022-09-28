@@ -187,10 +187,7 @@ public class QuantityRangeImpl extends AbstractRangeComponentImpl implements Qua
             double max = dataBlock.getDoubleValue(1);
             
             if (!constraint.isValid(min) || !constraint.isValid(max))
-            {
-                errorList.add(new ValidationException(getName(), "Value '[" + min + " " + max + "]" +
-                        "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
-            }
+                errorList.add(getValidationException(constraint.getAssertionMessage()));
         }
     }
 
@@ -199,7 +196,7 @@ public class QuantityRangeImpl extends AbstractRangeComponentImpl implements Qua
     public String toString(String indent)
     {
         StringBuilder text = new StringBuilder();
-        text.append("QuantityRange");                
+        text.append("QuantityRange");
         if (dataBlock != null)
         {
             text.append(" = [");

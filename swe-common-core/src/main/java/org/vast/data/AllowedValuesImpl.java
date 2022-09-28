@@ -16,6 +16,7 @@ package org.vast.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.vast.util.NumberUtils;
 import net.opengis.swe.v20.AllowedValues;
 
 
@@ -27,8 +28,8 @@ import net.opengis.swe.v20.AllowedValues;
 public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
 {
     private static final long serialVersionUID = 2438220995583472801L;
-    protected ArrayList<Double> valueList = new ArrayList<Double>();
-    protected ArrayList<double[]> intervalList = new ArrayList<double[]>();
+    protected ArrayList<Double> valueList = new ArrayList<>();
+    protected ArrayList<double[]> intervalList = new ArrayList<>();
     protected Integer significantFigures;
     
     
@@ -53,11 +54,11 @@ public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
     public boolean isValid(double value)
     {
         for (double allowedValue: valueList)
-            if (Double.doubleToLongBits(allowedValue) == Double.doubleToLongBits(value))
+            if (NumberUtils.ulpEquals(value, allowedValue))
                 return true;
         
         for (double[] allowedRange: intervalList)
-            if (value >= allowedRange[0] || value <= allowedRange[1])
+            if (value >= allowedRange[0] && value <= allowedRange[1])
                 return true;
         
         return false;
@@ -66,8 +67,8 @@ public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
     
     public String getAssertionMessage()
     {
-        StringBuffer msg = new StringBuffer();
-        msg.append("It should ");
+        StringBuilder msg = new StringBuilder();
+        msg.append("Must ");
         
         if (!valueList.isEmpty())
         {
@@ -77,8 +78,8 @@ public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
             for (double allowedValue: valueList)
             {
                 if (i++ > 0)
-                    msg.append(", ");    
-                msg.append(Double.toString(allowedValue));                
+                    msg.append(", ");
+                msg.append(Double.toString(allowedValue));
             }
             
             msg.append('}');
@@ -89,21 +90,19 @@ public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
             if (!valueList.isEmpty())
                 msg.append(" OR ");
                 
-            msg.append("be within one of {");
+            msg.append("be within ");
             int i = 0;
             
             for (double[] allowedRange: intervalList)
             {
                 if (i++ > 0)
-                    msg.append(", ");    
+                    msg.append(", ");
                 msg.append('[');
                 msg.append(Double.toString(allowedRange[0]));
                 msg.append(' ');
                 msg.append(Double.toString(allowedRange[1]));
                 msg.append(']');
             }
-            
-            msg.append('}');
         }
               
         return msg.toString();

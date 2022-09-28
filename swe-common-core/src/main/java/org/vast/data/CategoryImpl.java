@@ -114,7 +114,7 @@ public class CategoryImpl extends DataValue implements Category
     public OgcProperty<AllowedTokens> getConstraintProperty()
     {
         if (constraint == null)
-            constraint = new OgcPropertyImpl<AllowedTokens>();
+            constraint = new OgcPropertyImpl<>();
         return constraint;
     }
     
@@ -136,7 +136,7 @@ public class CategoryImpl extends DataValue implements Category
     public void setConstraint(AllowedTokens constraint)
     {
         if (this.constraint == null)
-            this.constraint = new OgcPropertyImpl<AllowedTokens>();
+            this.constraint = new OgcPropertyImpl<>();
         this.constraint.setValue(constraint);
     }
     
@@ -177,12 +177,9 @@ public class CategoryImpl extends DataValue implements Category
     {
         if (isSetConstraint() && isSetValue())
         {
-            AllowedTokensImpl constraint = (AllowedTokensImpl)getConstraint();            
+            AllowedTokensImpl constraint = (AllowedTokensImpl)getConstraint();
             if (!constraint.isValid(getValue()))
-            {
-                errorList.add(new ValidationException(getName(), "Value '" + dataBlock.getStringValue() + 
-                    "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
-            }
+                errorList.add(getValidationException(constraint.getAssertionMessage()));
         }
     }
     
@@ -191,7 +188,7 @@ public class CategoryImpl extends DataValue implements Category
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append("Category");                
+        text.append("Category");
         if (dataBlock != null)
         {
             text.append(" = ");

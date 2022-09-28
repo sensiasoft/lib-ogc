@@ -125,8 +125,8 @@ public class DateTimeOrDouble implements Serializable, Comparable<DateTimeOrDoub
     private void checkCompatibleTimeScale(DateTimeOrDouble other)
     {
         Asserts.checkArgument(
-               (utcDateTime != null && other.utcDateTime == null) ||
-               (utcDateTime == null && other.utcDateTime != null), 
+               (utcDateTime != null && other.utcDateTime != null) ||
+               (utcDateTime == null && other.utcDateTime == null), 
                 "Incompatible time scales");
     }
     

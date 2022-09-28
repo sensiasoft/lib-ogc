@@ -17,7 +17,6 @@ package org.vast.data;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.vast.util.Asserts;
-import org.vast.util.DateTimeFormat;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedTimes;
@@ -235,24 +234,8 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
             DateTimeOrDouble[] val = getValue();
             
             if (!constraint.isValid(val[0]) || !constraint.isValid(val[1]))
-            {
-                String minText, maxText;                
-                if (isIsoTime())
-                {
-                    DateTimeFormat isoFormat = new DateTimeFormat();
-                    minText = isoFormat.formatIso(dataBlock.getDoubleValue(0), 0);
-                    maxText = isoFormat.formatIso(dataBlock.getDoubleValue(1), 0);
-                }
-                else
-                {
-                    minText = dataBlock.getStringValue(0);
-                    maxText = dataBlock.getStringValue(1);
-                }
-                
-                errorList.add(new ValidationException(getName(), "Value '[" + minText + " " + maxText + "]" +
-                        "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
-            }
-        }        
+                errorList.add(getValidationException(constraint.getAssertionMessage()));
+        }
     }
 
 
@@ -260,7 +243,7 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     public String toString(String indent)
     {
         StringBuilder text = new StringBuilder();
-        text.append("TimeRange");                
+        text.append("TimeRange");
         if (dataBlock != null)
         {
             text.append(" = [");

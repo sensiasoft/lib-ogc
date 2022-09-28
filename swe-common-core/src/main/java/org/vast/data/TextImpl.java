@@ -75,7 +75,7 @@ public class TextImpl extends DataValue implements Text
     public OgcProperty<AllowedTokens> getConstraintProperty()
     {
         if (constraint == null)
-            constraint = new OgcPropertyImpl<AllowedTokens>();
+            constraint = new OgcPropertyImpl<>();
         return constraint;
     }
     
@@ -97,7 +97,7 @@ public class TextImpl extends DataValue implements Text
     public void setConstraint(AllowedTokens constraint)
     {
         if (this.constraint == null)
-            this.constraint = new OgcPropertyImpl<AllowedTokens>();
+            this.constraint = new OgcPropertyImpl<>();
         this.constraint.setValue(constraint);
     }
     
@@ -140,11 +140,7 @@ public class TextImpl extends DataValue implements Text
         {
             AllowedTokensImpl constraint = (AllowedTokensImpl)getConstraint();
             if (!constraint.isValid(getValue()))
-            {
-                // add error if not valid
-                errorList.add(new ValidationException(getName(), "Value '" + dataBlock.getStringValue() + 
-                        "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
-            }
+                errorList.add(getValidationException(constraint.getAssertionMessage()));
         }
     }
     
@@ -153,7 +149,7 @@ public class TextImpl extends DataValue implements Text
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append("Text");                
+        text.append("Text");
         if (dataBlock != null)
             text.append(" = " + dataBlock.getStringValue());
         return text.toString();
