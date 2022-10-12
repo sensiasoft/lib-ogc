@@ -121,7 +121,7 @@ public class GeoJsonBindings
         if (bean.getUniqueIdentifier() != null)
             writer.name("uid").value(bean.getUniqueIdentifier());
         
-        if (bean.getType() != null)
+        if (bean.getType() != null && !"Feature".equals(bean.getType()))
             writer.name("featureType").value(bean.getType());
      
         if (bean.getName() != null)
