@@ -139,6 +139,7 @@ public class TimeExtent
         TimeExtent time = new TimeExtent();
         time.begin = null;
         time.end = Asserts.checkNotNull(end, "end");
+        Asserts.checkArgument(end.compareTo(Instant.now()) >= 0, "end must be after current time");
         return time;
     }
     
@@ -152,6 +153,7 @@ public class TimeExtent
         TimeExtent time = new TimeExtent();
         time.begin = Asserts.checkNotNull(begin, "begin");
         time.end = null;
+        Asserts.checkArgument(begin.compareTo(Instant.now()) <= 0, "begin must be before current time");
         return time;
     }
     
@@ -262,9 +264,9 @@ public class TimeExtent
     
     
     protected TimeExtent()
-    {        
-    }    
-
+    {
+    }
+    
 
     /**
      * @return True if begin time is defined, false otherwise

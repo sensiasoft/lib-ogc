@@ -118,8 +118,8 @@ public class TestTimeExtent
     @Test
     public void testSpanBothPeriodsBeginNow()
     {
-        var t1_max = Instant.parse("2020-01-01T01:01:00Z");
-        var t2_max = Instant.parse("2020-07-16T12:38:00Z");
+        var t1_max = Instant.parse("3020-01-01T01:01:00Z");
+        var t2_max = Instant.parse("3020-07-16T12:38:00Z");
         
         var te = TimeExtent.span(
             TimeExtent.beginNow(t1_max),
