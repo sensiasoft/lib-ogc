@@ -398,8 +398,17 @@ public class GeoJsonBindings
     public void writeTimeExtent(JsonWriter writer, TimeExtent bean) throws IOException
     {
         writer.beginArray();
-        writeDateTimeValue(writer, bean.begin().atOffset(ZoneOffset.UTC));
-        writeDateTimeValue(writer, bean.end().atOffset(ZoneOffset.UTC));
+        
+        if (bean.beginsNow())
+            writer.value("now");
+        else
+            writeDateTimeValue(writer, bean.begin().atOffset(ZoneOffset.UTC));
+        
+        if (bean.endsNow())
+            writer.value("now");
+        else
+            writeDateTimeValue(writer, bean.end().atOffset(ZoneOffset.UTC));
+        
         writer.endArray();
     }
     
