@@ -524,7 +524,7 @@ public class GeoJsonBindings
             ((GenericFeatureImpl)f).setType(reader.nextString());
         
         else if ("validTime".equals(name) && f instanceof GenericTemporalFeatureImpl)
-            readValidTime(reader, (GenericTemporalFeatureImpl)f);
+            ((GenericTemporalFeatureImpl)f).setValidTime(readTimeExtent(reader));
         
         else
             return false;
@@ -743,14 +743,14 @@ public class GeoJsonBindings
     }
     
     
-    public void readValidTime(JsonReader reader, GenericTemporalFeatureImpl bean) throws IOException
+    public TimeExtent readTimeExtent(JsonReader reader) throws IOException
     {
         reader.beginArray();
         
+        TimeExtent te;
         try
         {
-            var timeExtent = TimeExtent.parse(reader.nextString() + "/" + reader.nextString());
-            bean.setValidTime(timeExtent);
+            te = TimeExtent.parse(reader.nextString() + "/" + reader.nextString());
         }
         catch (Exception e)
         {
@@ -758,5 +758,9 @@ public class GeoJsonBindings
         }
         
         reader.endArray();
+        return te;
     }
+    
+    
+    
 }
