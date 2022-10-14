@@ -61,7 +61,7 @@ public class GeoJsonBindings
     
     public GeoJsonBindings()
     {
-        this(false);
+        this(true);
     }
     
     
