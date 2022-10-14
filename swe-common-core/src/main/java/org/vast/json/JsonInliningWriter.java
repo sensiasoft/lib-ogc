@@ -37,6 +37,7 @@ public class JsonInliningWriter extends JsonWriter
     public static class InliningFilterWriter extends FilterWriter
     {
         boolean writeInline;
+        int prevChar;
         
         protected InliningFilterWriter(Writer out)
         {
@@ -47,30 +48,32 @@ public class JsonInliningWriter extends JsonWriter
         public void write(int c) throws IOException
         {
             if (writeInline && c == '\n')
-                super.write(' ');
+            {
+                if (prevChar == ',')
+                    super.write(' ');
+            }
             else
                 super.write(c);
+            
+            prevChar = c;
         }
 
         @Override
         public void write(String str) throws IOException
         {
-            if (writeInline)
-            {
-                if (str.length() == 1 && str.equals("\n"))
-                    super.write(" ");
-                else if (str.isBlank())
-                    return;
-                else
-                    super.write(str);
-            }
-            else
+            // skip indents when writing inline
+            if (!writeInline || !str.isBlank())
                 super.write(str);
         }
         
         public void writeInline(boolean writeInline)
         {
             this.writeInline = writeInline;
+        }
+        
+        public boolean isInline()
+        {
+            return writeInline;
         }
     }
     
@@ -91,6 +94,12 @@ public class JsonInliningWriter extends JsonWriter
     public void writeInline(boolean writeInline)
     {
         inliningWriter.writeInline(writeInline);
-    }    
+    }
+    
+    
+    public boolean isInline()
+    {
+        return inliningWriter.writeInline;
+    }
 
 }

@@ -16,6 +16,7 @@ import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.xml.namespace.QName;
+import org.vast.json.JsonInliningWriter;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.swe.SWEConstants;
 import org.vast.util.Asserts;
@@ -357,15 +358,22 @@ public class GeoJsonBindings
     public void writeLinearRing(JsonWriter writer, LinearRing bean, int dims, CrsType crsType) throws IOException
     {
         writer.beginArray();
+        var wasInline = writeInline(writer, true);
+        
         for (int i = 0; i < bean.getPosList().length; i += dims)
             writeCoordinates(writer, bean.getPosList(), i, dims, crsType);
+        
         writer.endArray();
+        
+        if (!wasInline)
+            writeInline(writer, false);
     }
     
 
     public void writeCoordinates(JsonWriter writer, double[] coords, int index, int dims, CrsType crsType) throws IOException
     {
         writer.beginArray();
+        var wasInline = writeInline(writer, true);
         
         if (crsType == CrsType.CRS84_FLIP)
         {
@@ -382,6 +390,8 @@ public class GeoJsonBindings
         }
         
         writer.endArray();
+        if (!wasInline)
+            writeInline(writer, false);
     }
     
     
@@ -398,6 +408,19 @@ public class GeoJsonBindings
     {
         String isoString = dateTime.format(DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
         writer.value(isoString);
+    }
+    
+    
+    protected boolean writeInline(JsonWriter writer, boolean inline)
+    {
+        if (writer instanceof JsonInliningWriter)
+        {
+            var wasInline = ((JsonInliningWriter) writer).isInline();
+            ((JsonInliningWriter) writer).writeInline(inline);
+            return wasInline;
+        }
+        
+        return false;
     }
     
     
