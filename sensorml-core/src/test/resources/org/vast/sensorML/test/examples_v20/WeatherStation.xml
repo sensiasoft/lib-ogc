@@ -35,13 +35,13 @@
                <swe:field name="temperature">
                   <swe:Quantity definition="http://sensorml.com/ont/swe/property/AtmosphericTemperature">
                      <swe:label>Air Temperature</swe:label>
-                     <swe:uom code="cel"/>
+                     <swe:uom code="Cel"/>
                   </swe:Quantity>
                </swe:field>
                <swe:field name="wind_chill">
                   <swe:Quantity definition="http://sensorml.com/ont/swe/property/WindChillFactor">
                      <swe:label>Wind Chill Factor</swe:label>
-                     <swe:uom code="cel"/>
+                     <swe:uom code="Cel"/>
                   </swe:Quantity>
                </swe:field>
                <swe:field name="wind_speed">
@@ -74,7 +74,7 @@
    <sml:components>
       <sml:ComponentList>
          <sml:component name="thermometer" xlink:title="urn:davis:sensors:7817" 
-            xlink:href="http://www.sensorml.com/sensorML-2.0/examples/xml/Davis_7817.xml"/>
+            xlink:href="./Davis_7817.xml"/>
          <sml:component name="anemometer" xlink:title="urn:davis:sensors:barometer_internal" 
             xlink:href="http://www.sensorml.com/sensorML-2.0/examples/xml/Davis_7911.xml"/>
           <sml:component name="windchill" xlink:title="urn:ogc:process:windchill-02" 

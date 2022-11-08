@@ -22,6 +22,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.vast.data.DateTimeOrDouble;
 import org.vast.data.EncodedValuesImpl;
 import org.vast.data.TextEncodingImpl;
+import org.vast.unit.UnitParserUCUM;
 import net.opengis.AbstractXMLStreamBindings;
 import net.opengis.HrefResolverXML;
 import net.opengis.OgcProperty;
@@ -3596,10 +3597,14 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
 
         String val;
 
-        // code
+        // code 
         val = attrMap.get("code");
         if (val != null)
+        {
             bean.setCode(val);
+            if (!UnitParserUCUM.isValidUnit(val))
+                throw new XMLStreamException("Invalid UCUM code '" + val + "'");
+        }
     }
 
 

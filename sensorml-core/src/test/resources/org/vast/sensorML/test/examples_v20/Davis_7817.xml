@@ -57,7 +57,7 @@ xmlns:swe="http://www.opengis.net/swe/2.0"
 							<swe:field name="temperature">
 								<swe:Quantity definition="http://sweet.jpl.nasa.gov/2.3/propTemperature.owl#Temperature">
 									<swe:label>Temperature</swe:label>
-									<swe:uom code="cel"/>
+									<swe:uom code="Cel"/>
 								</swe:Quantity>
 							</swe:field>
 							<swe:field name="resistance">

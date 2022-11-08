@@ -441,7 +441,7 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
         q1.addQuality(acc);
         rec.addField("temp", q1);
         
-        Category c1 = new CategoryImpl();        
+        Category c1 = new CategoryImpl();
         c1.setDefinition("http://mmisw.org/ont/cf/parameter/air_quality");
         c1.setLabel("Air Quality");
         c1.setCodeSpace("http://mmisw.org/ont/cf/parameter/air_quality_code");
@@ -487,7 +487,7 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
         Quantity b1 = new QuantityImpl();
         b1.setDefinition("http://mmisw.org/ont/cf/parameter/radiance");
         uom = new UnitReferenceImpl();
-        uom.setCode("W.sr-1.m2-um");
+        uom.setCode("W.sr-1.m-2.um-1");
         b1.setUom(uom);
         rec1.addField("band1", b1);
         rec1.getFieldList().add("band2", "http://mmisw.org/ont/cf/parameter/blue", null);

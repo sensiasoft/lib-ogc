@@ -123,25 +123,25 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 						<swe:DataRecord>
 							<swe:field name="Weight">
 								<swe:Quantity definition="http://sensorml.com/ont/swe/property/Weight">
-									<swe:uom code="oz"/>
+									<swe:uom code="[oz_av]"/>
 									<swe:value>10.0</swe:value>
 								</swe:Quantity>
 							</swe:field>
 							<swe:field name="Length">
 								<swe:Quantity definition="http://sensorml.com/ont/swe/property/Length">
-									<swe:uom code="in"/>
+									<swe:uom code="[in_i]"/>
 									<swe:value>4.5</swe:value>
 								</swe:Quantity>
 							</swe:field>
 							<swe:field name="Width">
 								<swe:Quantity definition="http://sensorml.com/ont/swe/property/Width">
-									<swe:uom code="in"/>
+									<swe:uom code="[in_i]"/>
 									<swe:value>2.5</swe:value>
 								</swe:Quantity>
 							</swe:field>
 							<swe:field name="Height">
 								<swe:Quantity definition="http://sensorml.com/ont/swe/property/Height">
-									<swe:uom code="in"/>
+									<swe:uom code="[in_i]"/>
 									<swe:value>1.4</swe:value>
 								</swe:Quantity>
 							</swe:field>
@@ -201,7 +201,7 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 					</swe:field>
 					<swe:field name="Sensitivitity">
 						<swe:Quantity definition="http://sensorml.com/ont/swe/property/RadiationSensitivity">
-							<swe:uom code="{tot}/uR"/>
+							<swe:uom code="1/uR"/>
 							<swe:value>1.0</swe:value>
 						</swe:Quantity>
 					</swe:field>
@@ -347,7 +347,7 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 							<swe:field name="radiationEnergy">
 								<swe:Quantity definition="http://sensorml.com/ont/swe/property/RadiationEnergy">
 									<swe:label>Radiation Energy</swe:label>
-									<swe:uom code="KeV"/>
+									<swe:uom code="keV"/>
 								</swe:Quantity>
 							</swe:field>
 							<swe:field name="relativeResponse">
