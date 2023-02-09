@@ -84,17 +84,11 @@ public class DataBlockLong extends AbstractDataBlock
     }
     
     
-    public void setUnderlyingObject(long[] primitiveArray)
-    {
-        this.primitiveArray = primitiveArray;
-        this.atomCount = primitiveArray.length;
-    }
-    
-    
     @Override
     public void setUnderlyingObject(Object obj)
     {
     	this.primitiveArray = (long[])obj;
+        this.atomCount = primitiveArray.length;
     }
 	
 	

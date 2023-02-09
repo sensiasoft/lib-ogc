@@ -86,17 +86,11 @@ public class DataBlockBoolean extends AbstractDataBlock
     }
     
     
-    public void setUnderlyingObject(boolean[] primitiveArray)
-    {
-        this.primitiveArray = primitiveArray;
-        this.atomCount = primitiveArray.length;
-    }
-    
-    
     @Override
     public void setUnderlyingObject(Object obj)
     {
     	this.primitiveArray = (boolean[])obj;
+        this.atomCount = primitiveArray.length;
     }
 	
 	
