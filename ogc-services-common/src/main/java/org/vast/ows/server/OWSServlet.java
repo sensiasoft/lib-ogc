@@ -178,7 +178,7 @@ public abstract class OWSServlet extends HttpServlet
                 
                 sendError(resp, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
             }
-            if (e instanceof OWSException)
+            else if (e instanceof OWSException)
             {
                 // this is a client error so log only in debug
                 if (log.isDebugEnabled())
