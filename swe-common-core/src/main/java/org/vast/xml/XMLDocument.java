@@ -11,7 +11,12 @@
  
  The Original Code is the "SensorML DataProcessing Engine".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is the VAST team at the
+ University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
+
+ Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
     Alexandre Robin <robin@nsstc.uah.edu>
@@ -22,6 +27,9 @@ package org.vast.xml;
 
 import java.util.*;
 import java.util.Map.Entry;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSException;
@@ -59,6 +67,7 @@ import javax.xml.transform.stream.StreamResult;
  * */
 public class XMLDocument
 {
+    static Logger log = LoggerFactory.getLogger(XMLDocument.class);
     protected static DOMImplementation domImpl;
     
     /** document URI */
@@ -226,8 +235,8 @@ public class XMLDocument
 	
 	/**
 	 * Parse DOM from given input stream
-	 * @param inputSource Stream containing XML file we want to parse
-     * @param validation boolean if true force the validation process with the schema
+	 * @param inputStream Stream containing XML file we want to parse
+     * @param validate boolean if true force the validation process with the schema
      * @return The XMLDocument object created
      * @throws DOMHelperException if a problem occur during parsing
 	 */
@@ -236,7 +245,7 @@ public class XMLDocument
 	    try
         {
             // use LS implementation when available
-            DOMImplementation impl = XMLImplFinder.getDOMImplementation();            
+            DOMImplementation impl = XMLImplFinder.getDOMImplementation();
             if (impl instanceof DOMImplementationLS)
                 return parseDOM_LS(inputStream, validate, schemaLocations);
             else
@@ -333,7 +342,7 @@ public class XMLDocument
         //domParser.setFeature("http://apache.org/xml/features/dom/defer-node-expansion", false);
         
         // start parsing
-        Document document = parser.parse(input);        
+        Document document = parser.parse(input);
         if (errors.length() > 0)
             throw new DOMHelperException("Validation errors detected while parsing XML document:\n" + errors.toString());
         inputStream.close();
@@ -350,8 +359,18 @@ public class XMLDocument
     {
         // create document builder
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+
+        // disable external entities since they pose a security risk
+        try {
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        } catch(Exception e) {
+            // just log a warning. If external entity features are not supported,
+            // it probably means they won't be used anyway, and that's our goal here.
+            // this happens with Apache Harmony parser used in Android for instance.
+            log.warn("External entity features not supported.");
+        }
+
         factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         
@@ -408,7 +427,7 @@ public class XMLDocument
         try
         {    
             // use LS implementation when available
-            DOMImplementation impl = XMLImplFinder.getDOMImplementation();            
+            DOMImplementation impl = XMLImplFinder.getDOMImplementation();
             if (impl instanceof DOMImplementationLS)
                 serializeDOM_LS(elt, out, pretty);
             else
@@ -443,8 +462,18 @@ public class XMLDocument
     {
         // create transformer
         TransformerFactory factory = TransformerFactory.newInstance();
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+
+        // disable external DTD and stylesheet since they pose a security risk
+        try {
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+        } catch(Exception e) {
+            // just log a warning. If external entity features are not supported,
+            // it probably means they won't be used anyway, and that's our goal here.
+            // this happens with Xalan transformer in Android for instance.
+            log.warn("External entity features not supported.");
+        }
+
         Transformer serializer = factory.newTransformer();
         serializer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
         
