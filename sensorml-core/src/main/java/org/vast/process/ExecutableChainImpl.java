@@ -244,6 +244,7 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
                 // build ordered process execution list starting from output signals
                 processExecList.clear();
                 addUpstreamProcesses(this, internalOutputConnections);
+                addNoOutputProcesses();
                 
                 // init needed processes
                 for (IProcessExec childProcess: processExecList)
@@ -299,7 +300,21 @@ public class ExecutableChainImpl extends ExecutableProcessImpl implements IProce
                         ensureOrder(upStreamProcess, process);
                 }
             }
-        }       
+        }
+    }
+    
+    
+    private void addNoOutputProcesses()
+    {
+        for (var p: processTable.values())
+        {
+            if (p.getOutputList().isEmpty())
+            {
+                processExecList.add(p);
+                addUpstreamProcesses(p, p.getInputConnections());
+                addUpstreamProcesses(p, p.getParamConnections());
+            }
+        }
     }
     
     
