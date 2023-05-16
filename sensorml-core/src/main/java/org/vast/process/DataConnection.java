@@ -28,6 +28,7 @@ import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.HasUom;
 import net.opengis.swe.v20.Quantity;
@@ -65,6 +66,8 @@ public class DataConnection implements IDataConnection
     protected IProcessExec destinationProcess;
     protected DataComponent sourceComponent;
     protected DataComponent destinationComponent;
+    protected DataChoice destinationChoice;
+    protected int destinationChoiceIdx;
     protected boolean dataAvailable;
     protected List<ComponentConverter> componentConverters;
     protected HashMap<String, Object> properties = null;
@@ -254,6 +257,10 @@ public class DataConnection implements IDataConnection
             else if (destBlock != srcBlock)
                 destinationComponent.setData(srcBlock);
             
+            // update parent choice if needed
+            if (destinationChoice != null)
+                destinationChoice.setSelectedItem(destinationChoiceIdx);
+            
             this.dataAvailable = false;
             return true;
         }
@@ -266,7 +273,7 @@ public class DataConnection implements IDataConnection
     public void setSource(IProcessExec process, DataComponent component)
     {
         this.sourceProcess = process;
-        this.sourceComponent = component;        
+        this.sourceComponent = component;
         setupUnitConverters();
     }
 
@@ -298,6 +305,22 @@ public class DataConnection implements IDataConnection
         this.destinationProcess = process;
         this.destinationComponent = component;
         setupUnitConverters();
+        
+        if (destinationComponent != null)
+        {
+            var comp = destinationComponent;
+            while (comp.getParent() != null)
+            {
+                var parent = comp.getParent();
+                if (parent instanceof DataChoice)
+                {
+                    destinationChoice = (DataChoice)parent;
+                    destinationChoiceIdx = parent.getComponentIndex(comp.getName());
+                    break;
+                }
+                comp = parent;
+            }
+        }
     }
 
 
@@ -332,7 +355,7 @@ public class DataConnection implements IDataConnection
     @Override
     public void clear()
     {
-        dataAvailable = false;        
+        dataAvailable = false;
     }
     
     

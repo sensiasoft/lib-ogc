@@ -82,6 +82,11 @@ public class DataQueue extends DataConnection
             }*/
             
             destinationComponent.setData(srcBlock);
+            
+            // update parent choice if needed
+            if (destinationChoice != null)
+                destinationChoice.setSelectedItem(destinationChoiceIdx);
+            
             return true;
         }
         else
