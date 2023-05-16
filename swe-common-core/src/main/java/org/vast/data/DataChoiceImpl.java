@@ -256,9 +256,10 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
 		{
 			int prevAtomCount = dataBlock.atomCount;
 			
-			// generate selected component data block
+			// get selected component data block
 			DataComponent selectedComponent = itemList.get(index);
-            selectedComponent.assignNewDataBlock();
+			if (!selectedComponent.hasData())
+			    selectedComponent.assignNewDataBlock();
             AbstractDataBlock childData = (AbstractDataBlock)selectedComponent.getData();
             
             // assign it to the choice data block
