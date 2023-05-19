@@ -50,26 +50,31 @@ public class DataBlockList extends AbstractDataBlock
 	}
     
     
-    public DataBlockList()
+	private DataBlockList()
+	{
+	}
+	
+	
+    public DataBlockList(boolean equalItemSize)
     {
-    	this(1, false);
+    	this(1, false, equalItemSize);
     }
     
     
-    public DataBlockList(int listSize)
+    public DataBlockList(int listSize, boolean equalItemSize)
     {
-        this(listSize, true);
+        this(listSize, true, equalItemSize);
     }
     
     
-    public DataBlockList(int listSize, boolean useArrayList)
+    public DataBlockList(int listSize, boolean useArrayList, boolean equalItemSize)
     {
     	if (useArrayList)
     		this.blockList = new ArrayList<>(listSize);
     	else
     		this.blockList = new LinkedList<>();
     	
-    	this.equalBlockSize = true;
+    	this.equalBlockSize = equalItemSize;
     }
     
     
@@ -129,6 +134,7 @@ public class DataBlockList extends AbstractDataBlock
     
     
     @Override
+    @SuppressWarnings("unchecked")
     public void setUnderlyingObject(Object obj)
     {
     	this.blockList = (List<DataBlock>)(Serializable)obj;
@@ -166,6 +172,19 @@ public class DataBlockList extends AbstractDataBlock
                 blockList.add(childBlock.clone());
         }        
 	}
+    
+    
+    @Override
+    public void updateAtomCount()
+    {
+        int newAtomCount = 0;
+        for (DataBlock block: blockList)
+        {
+            block.updateAtomCount();
+            newAtomCount += block.getAtomCount();
+        }
+        this.atomCount = newAtomCount;
+    }
 
     
 	protected final void selectBlock(int index)

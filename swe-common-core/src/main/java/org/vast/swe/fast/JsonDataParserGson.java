@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import org.vast.data.AbstractDataBlock;
+import org.vast.data.DataBlockList;
 import org.vast.data.DataBlockMixed;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.ReaderException;
@@ -312,8 +313,25 @@ public class JsonDataParserGson extends AbstractDataParser
             
             reader.beginArray();
             
-            for (int i = 0; i < arraySize; i++)
-                index = eltProcessor.process(data, index);
+            // case of array with variable size items
+            // e.g. item is itself a variable size array or a choice
+            if (varSizeArray != null && varSizeArray.getData() instanceof DataBlockList)
+            {
+                var arrayData = (DataBlockList)varSizeArray.getData();
+                var globalIdx = index;
+                for (int i = 0; i < arraySize; i++)
+                {
+                    var itemData = arrayData.get(i);
+                    globalIdx += eltProcessor.process(itemData, 0);
+                }
+                index = globalIdx;
+                data.updateAtomCount();
+            }
+            else
+            {
+                for (int i = 0; i < arraySize; i++)
+                    index = eltProcessor.process(data, index);
+            }
             
             reader.endArray();
             

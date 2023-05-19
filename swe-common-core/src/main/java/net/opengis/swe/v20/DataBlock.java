@@ -156,4 +156,7 @@ public interface DataBlock extends Serializable
     
     
     public void setUnderlyingObject(Object obj);
+    
+    
+    public void updateAtomCount();
 }

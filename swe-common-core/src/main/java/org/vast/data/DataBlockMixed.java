@@ -125,14 +125,16 @@ public class DataBlockMixed extends AbstractDataBlock
     }
     
     
-    /**
-     * Recompute atom count after new child blocks have been added
-     */
+    @Override
     public void updateAtomCount()
     {
-        this.atomCount = 0;
-        for (AbstractDataBlock block: blockArray)
-            this.atomCount += block.atomCount;
+        int newAtomCount = 0;
+        for (DataBlock block: blockArray)
+        {
+            block.updateAtomCount();
+            newAtomCount += block.getAtomCount();
+        }
+        this.atomCount = newAtomCount;
     }
     
     

@@ -153,7 +153,7 @@ public class DataList extends AbstractArrayImpl implements DataArray, BlockCompo
         // if we start adding blocks without first creating the datablock
         // let the list grow on demand
         if (this.dataBlock == null)
-            this.dataBlock = new DataBlockList();
+            this.dataBlock = new DataBlockList(false);
 
         ((DataBlockList)this.dataBlock).add(dataBlock);
     }
@@ -163,7 +163,7 @@ public class DataList extends AbstractArrayImpl implements DataArray, BlockCompo
     public AbstractDataBlock createDataBlock()
     {
         int listSize = getComponentCount();
-        DataBlockList newDataBlock = new DataBlockList(listSize);
+        DataBlockList newDataBlock = new DataBlockList(listSize, false);
         DataBlock childBlock = getListComponent().createDataBlock();
         newDataBlock.add(childBlock);
         newDataBlock.resize(listSize);

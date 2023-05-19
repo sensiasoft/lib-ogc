@@ -126,7 +126,7 @@ public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements Encode
             parser.setDataComponents(dataStream.getElementType());
             parser.setInput(new ByteArrayInputStream(text.getBytes()));
             DataBlock dataBlk;
-            data = new DataBlockList();
+            data = new DataBlockList(false);
             while ((dataBlk = parser.parseNextBlock()) != null)
                 data.add(dataBlk);
             this.text = null; // clear after successful decoding

@@ -128,7 +128,9 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
     {
         if (dataBlock != null)
         {
-            dataBlock = dataBlock.renew();
+            // need to clone instead of renewing the datablock here
+            // or else invalid datablocks may be assigned to datachoices
+            dataBlock = dataBlock.clone();
             setData(dataBlock);
         }
         else

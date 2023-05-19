@@ -75,7 +75,17 @@ public abstract class AbstractDataBlock implements DataBlock
 		return atomCount;
 	}
 	
-
+	
+	/**
+     * Recompute atom count after new child blocks have been added
+     */
+    @Override
+	public void updateAtomCount()
+	{
+	    // do nothing by default
+	}
+	
+	
 	@Override
     public String toString()
 	{

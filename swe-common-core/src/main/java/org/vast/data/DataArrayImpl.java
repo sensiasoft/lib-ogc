@@ -337,7 +337,7 @@ public class DataArrayImpl extends AbstractArrayImpl
             // if child is mixed block, create list block
             else if (childBlock instanceof DataBlockMixed)
             {
-                DataBlockList blockList = new DataBlockList();
+                DataBlockList blockList = new DataBlockList(false);
                 blockList.add(childBlock.copy());
                 newBlock = blockList;
                 newSize = arraySize;

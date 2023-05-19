@@ -64,7 +64,7 @@ public abstract class AbstractDataWriter extends DataBlockProcessor implements D
         catch (Exception e)
         {
             flush();
-            //throw new IOException("Error while writing record", e);
+            throw new IOException("Error while writing record", e);
         }
     }
     
