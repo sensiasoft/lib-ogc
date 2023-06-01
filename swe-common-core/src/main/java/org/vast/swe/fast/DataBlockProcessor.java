@@ -330,8 +330,15 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     public void visit(DataChoice choice)
     {
         addToProcessorTree(getChoiceProcessor(choice));
+        
         for (DataComponent item: choice.getItemList())
+        {
+            boolean saveEnabled = enableSubTree;
+            checkEnabled(item);
             item.accept(this);
+            enableSubTree = saveEnabled; // reset flag
+        }
+            
         processorStack.pop();
     }
     
