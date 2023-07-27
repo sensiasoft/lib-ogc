@@ -112,4 +112,7 @@ public interface Factory
     
     
     public ObservableProperty newObservableProperty();
+    
+    
+    public Deployment newDeployment();
 }

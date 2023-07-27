@@ -273,4 +273,11 @@ public class SMLFactory implements Factory
     {
         return new ObservablePropertyImpl();
     }
+
+
+    @Override
+    public Deployment newDeployment()
+    {
+        return new DeploymentImpl();
+    }
 }

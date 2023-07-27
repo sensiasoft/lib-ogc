@@ -442,7 +442,7 @@ public class GeoJsonBindings
         reader.beginObject();
         
         String type = readObjectType(reader);
-        GenericFeature f = createFeatureObject(type);
+        AbstractFeature f = createFeatureObject(type);
         
         while (reader.hasNext())
         {
@@ -456,7 +456,7 @@ public class GeoJsonBindings
     }
     
     
-    protected GenericFeature createFeatureObject(String type)
+    protected AbstractFeature createFeatureObject(String type)
     {
         if (!"Feature".equals(type))
             throw new JsonParseException("The type of a GeoJSON feature must be 'Feature'");

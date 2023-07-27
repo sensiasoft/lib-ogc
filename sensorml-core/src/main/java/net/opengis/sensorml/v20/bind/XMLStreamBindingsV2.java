@@ -44,6 +44,7 @@ import net.opengis.sensorml.v20.ClassifierList;
 import net.opengis.sensorml.v20.ConstraintSetting;
 import net.opengis.sensorml.v20.ContactList;
 import net.opengis.sensorml.v20.DataInterface;
+import net.opengis.sensorml.v20.Deployment;
 import net.opengis.sensorml.v20.DescribedObject;
 import net.opengis.sensorml.v20.DocumentList;
 import net.opengis.sensorml.v20.Event;
@@ -1241,6 +1242,246 @@ public class XMLStreamBindingsV2 extends AbstractXMLStreamBindings
             ns2Bindings.writeReferenceType(writer, bean.getAttachedTo());
             writer.writeEndElement();
         }
+        
+        // localReferenceFrame
+        numItems = bean.getLocalReferenceFrameList().size();
+        for (int i = 0; i < numItems; i++)
+        {
+            SpatialFrame item = bean.getLocalReferenceFrameList().get(i);
+            writer.writeStartElement(NS_URI, "localReferenceFrame");
+            this.writeSpatialFrame(writer, item);
+            writer.writeEndElement();
+        }
+        
+        // localTimeFrame
+        numItems = bean.getLocalTimeFrameList().size();
+        for (int i = 0; i < numItems; i++)
+        {
+            TemporalFrame item = bean.getLocalTimeFrameList().get(i);
+            writer.writeStartElement(NS_URI, "localTimeFrame");
+            this.writeTemporalFrame(writer, item);
+            writer.writeEndElement();
+        }
+        
+        // position
+        numItems = bean.getPositionList().size();
+        for (int i = 0; i < numItems; i++)
+        {
+            OgcProperty<Serializable> item = bean.getPositionList().getProperty(i);
+            writer.writeStartElement(NS_URI, "position");
+            writePropertyAttributes(writer, item);
+            
+            if (item.hasValue() && !item.hasHref())
+            {
+                if (item.getValue() instanceof Text)
+                    ns1Bindings.writeText(writer, (Text)item.getValue(), true);
+                else if (item.getValue() instanceof Point)
+                    ns2Bindings.writePoint(writer, (Point)item.getValue());
+                else if (item.getValue() instanceof Vector)
+                    ns1Bindings.writeVector(writer, (Vector)item.getValue(), true);
+                else if (item.getValue() instanceof DataRecord)
+                    ns1Bindings.writeDataRecord(writer, (DataRecord)item.getValue(), true);
+                else if (item.getValue() instanceof DataArray)
+                    ns1Bindings.writeDataArray(writer, (DataArray)item.getValue(), true);
+                else if (item.getValue() instanceof AbstractProcess)
+                    this.writeAbstractProcess(writer, (AbstractProcess)item.getValue());
+            }
+            
+            writer.writeEndElement();
+        }
+        
+        // timePosition
+        numItems = bean.getTimePositionList().size();
+        for (int i = 0; i < numItems; i++)
+        {
+            OgcProperty<Time> item = bean.getTimePositionList().getProperty(i);
+            writer.writeStartElement(NS_URI, "timePosition");
+            writePropertyAttributes(writer, item);
+            if (item.hasValue() && !item.hasHref())
+                ns1Bindings.writeTime(writer, item.getValue(), true);
+            writer.writeEndElement();
+        }
+    }
+    
+    
+    /**
+     * Read method for PhysicalComponentType complex type
+     */
+    public Deployment readDeploymentType(XMLStreamReader reader) throws XMLStreamException
+    {
+        Deployment bean = factory.newDeployment();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readDeploymentTypeAttributes(attrMap, bean);
+        
+        reader.nextTag();
+        this.readDeploymentTypeElements(reader, bean);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of DeploymentType complex type
+     */
+    public void readDeploymentTypeAttributes(Map<String, String> attrMap, Deployment bean) throws XMLStreamException
+    {
+        this.readDescribedObjectTypeAttributes(attrMap, bean);
+        
+    }
+    
+    
+    /**
+     * Reads elements of DeploymentType complex type
+     */
+    public void readDeploymentTypeElements(XMLStreamReader reader, Deployment bean) throws XMLStreamException
+    {
+        this.readDescribedObjectTypeElements(reader, bean);
+        
+        boolean found;
+        
+        // localReferenceFrame
+        do
+        {
+            found = checkElementName(reader, "localReferenceFrame");
+            if (found)
+            {
+                reader.nextTag();
+                if (reader.getEventType() == XMLStreamConstants.START_ELEMENT)
+                {
+                    bean.addLocalReferenceFrame(this.readSpatialFrame(reader));
+                    reader.nextTag(); // end property tag
+                }
+                
+                reader.nextTag();
+            }
+        }
+        while (found);
+        
+        // localTimeFrame
+        do
+        {
+            found = checkElementName(reader, "localTimeFrame");
+            if (found)
+            {
+                reader.nextTag();
+                if (reader.getEventType() == XMLStreamConstants.START_ELEMENT)
+                {
+                    bean.addLocalTimeFrame(this.readTemporalFrame(reader));
+                    reader.nextTag(); // end property tag
+                }
+                
+                reader.nextTag();
+            }
+        }
+        while (found);
+        
+        // position
+        do
+        {
+            found = checkElementName(reader, "position");
+            if (found)
+            {
+                OgcProperty<Serializable> positionProp = new OgcPropertyImpl<Serializable>();
+                readPropertyAttributes(reader, positionProp);
+                
+                reader.nextTag();
+                if (reader.getEventType() == XMLStreamConstants.START_ELEMENT)
+                {
+                    String localName = reader.getName().getLocalPart();
+                    
+                    if ("Text".equals(localName))
+                    {
+                      Text position = ns1Bindings.readText(reader);
+                      positionProp.setValue(position);
+                    }
+                    else if ("Point".equals(localName))
+                    {
+                      Point position = ns2Bindings.readPoint(reader);
+                      positionProp.setValue(position);
+                    }
+                    else if ("Vector".equals(localName))
+                    {
+                      Vector position = ns1Bindings.readVector(reader);
+                      positionProp.setValue(position);
+                    }
+                    else if ("DataRecord".equals(localName))
+                    {
+                      DataRecord position = ns1Bindings.readDataRecord(reader);
+                      positionProp.setValue(position);
+                    }
+                    else if ("DataArray".equals(localName))
+                    {
+                      DataArray position = ns1Bindings.readDataArray(reader);
+                      positionProp.setValue(position);
+                    }
+                    else if ("AbstractProcess".equals(localName))
+                    {
+                      AbstractProcess position = this.readAbstractProcess(reader);
+                      positionProp.setValue(position);
+                    }
+                    else
+                      throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+                    
+                    reader.nextTag(); // end property tag
+                }
+                
+                bean.getPositionList().add(positionProp);
+                reader.nextTag();
+            }
+        }
+        while (found);
+        
+        // timePosition
+        do
+        {
+            found = checkElementName(reader, "timePosition");
+            if (found)
+            {
+                OgcProperty<Time> timePositionProp = new OgcPropertyImpl<Time>();
+                readPropertyAttributes(reader, timePositionProp);
+                
+                reader.nextTag();
+                if (reader.getEventType() == XMLStreamConstants.START_ELEMENT)
+                {
+                    timePositionProp.setValue(ns1Bindings.readTime(reader));
+                    reader.nextTag(); // end property tag
+                }
+                
+                bean.getTimePositionList().add(timePositionProp);
+                reader.nextTag();
+            }
+        }
+        while (found);
+    }
+    
+    
+    /**
+     * Write method for DeploymentType complex type
+     */
+    public void writeDeploymentType(XMLStreamWriter writer, Deployment bean) throws XMLStreamException
+    {
+        this.writeDeploymentTypeAttributes(writer, bean);
+        this.writeDeploymentTypeElements(writer, bean);
+    }
+    
+    
+    /**
+     * Writes attributes of DeploymentType complex type
+     */
+    public void writeDeploymentTypeAttributes(XMLStreamWriter writer, Deployment bean) throws XMLStreamException
+    {
+        this.writeDescribedObjectTypeAttributes(writer, bean);
+    }
+    
+    
+    /**
+     * Writes elements of DeploymentType complex type
+     */
+    public void writeDeploymentTypeElements(XMLStreamWriter writer, Deployment bean) throws XMLStreamException
+    {
+        this.writeDescribedObjectTypeElements(writer, bean);
+        int numItems;
         
         // localReferenceFrame
         numItems = bean.getLocalReferenceFrameList().size();
@@ -4596,6 +4837,31 @@ public class XMLStreamBindingsV2 extends AbstractXMLStreamBindings
     
     
     /**
+     * Read method for Deployment elements
+     */
+    public Deployment readDeployment(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "Deployment");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readDeploymentType(reader);
+    }
+    
+    
+    /**
+     * Write method for Deployment element
+     */
+    public void writeDeployment(XMLStreamWriter writer, Deployment bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "Deployment");
+        this.writeNamespaces(writer);
+        this.writeDeploymentType(writer, bean);
+        writer.writeEndElement();
+    }
+    
+    
+    /**
      * Dispatcher method for reading elements derived from AbstractPhysicalProcess
      */
     public AbstractPhysicalProcess readAbstractPhysicalProcess(XMLStreamReader reader) throws XMLStreamException
@@ -4740,6 +5006,8 @@ public class XMLStreamBindingsV2 extends AbstractXMLStreamBindings
             return readPhysicalComponent(reader);
         else if ("AggregateProcess".equals(localName))
             return readAggregateProcess(reader);
+        else if ("Deployment".equals(localName))
+            return readDeployment(reader);
         
         throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
     }
@@ -4760,6 +5028,8 @@ public class XMLStreamBindingsV2 extends AbstractXMLStreamBindings
             writePhysicalComponent(writer, (PhysicalComponent)bean);
         else if (bean instanceof AggregateProcess)
             writeAggregateProcess(writer, (AggregateProcess)bean);
+        else if (bean instanceof Deployment)
+            writeDeployment(writer, (Deployment)bean);
     }
     
     
@@ -4795,7 +5065,7 @@ public class XMLStreamBindingsV2 extends AbstractXMLStreamBindings
         else if (bean instanceof SimpleProcess)
             writeSimpleProcess(writer, (SimpleProcess)bean); 
         else if (bean instanceof AggregateProcess)
-            writeAggregateProcess(writer, (AggregateProcess)bean);        
+            writeAggregateProcess(writer, (AggregateProcess)bean);
     }
     
     
