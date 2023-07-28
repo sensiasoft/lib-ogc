@@ -50,4 +50,28 @@ public interface CharacteristicList extends AbstractMetadataList
      * Adds a new characteristic property
      */
     public void addCharacteristic(String name, DataComponent characteristic);
+    
+    
+    /**
+     * Gets the list of conditions
+     */
+    public OgcPropertyList<DataComponent> getConditionList();
+    
+    
+    /**
+     * Returns number of conditions
+     */
+    public int getNumConditions();
+    
+    
+    /**
+     * Gets the condition with the given name
+     */
+    public DataComponent getCondition(String name);
+    
+    
+    /**
+     * Adds a new condition
+     */
+    public void addCondition(String name, DataComponent condition);
 }

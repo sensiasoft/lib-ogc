@@ -28,11 +28,34 @@ import net.opengis.swe.v20.DataComponent;
 public class CapabilityListImpl extends AbstractMetadataListImpl implements CapabilityList
 {
     private static final long serialVersionUID = 1077880441572054254L;
+    protected String relatedProperty;
     protected OgcPropertyList<DataComponent> capabilityList = new DataComponentPropertyList<DataComponent>();
+    protected OgcPropertyList<DataComponent> conditionList = new DataComponentPropertyList<DataComponent>();
     
     
     public CapabilityListImpl()
     {
+    }
+
+
+    @Override
+    public String getRelatedProperty()
+    {
+        return relatedProperty;
+    }
+
+
+    @Override
+    public boolean isSetRelatedProperty()
+    {
+        return relatedProperty != null;
+    }
+
+
+    @Override
+    public void setRelatedProperty(String definition)
+    {
+        this.relatedProperty = definition;
     }
     
     
@@ -77,5 +100,49 @@ public class CapabilityListImpl extends AbstractMetadataListImpl implements Capa
     public void addCapability(String name, DataComponent capability)
     {
         this.capabilityList.add(name, capability);
+    }
+    
+    
+    /**
+     * Gets the list of conditions
+     */
+    @Override
+    public OgcPropertyList<DataComponent> getConditionList()
+    {
+        return conditionList;
+    }
+    
+    
+    /**
+     * Returns number of conditions
+     */
+    @Override
+    public int getNumConditions()
+    {
+        if (conditionList == null)
+            return 0;
+        return conditionList.size();
+    }
+    
+    
+    /**
+     * Gets the condition with the given name
+     */
+    @Override
+    public DataComponent getCondition(String name)
+    {
+        if (conditionList == null)
+            return null;
+        return conditionList.get(name);
+    }
+    
+    
+    /**
+     * Adds a new condition
+     */
+    @Override
+    public void addCondition(String name, DataComponent condition)
+    {
+        this.conditionList.add(name, condition);
     }
 }

@@ -26,6 +26,22 @@ import net.opengis.swe.v20.DataComponent;
 @SuppressWarnings("javadoc")
 public interface CapabilityList extends AbstractMetadataList
 {
+    /**
+     * Gets the property that this group of capabilities relates to
+     */
+    public String getRelatedProperty();
+    
+    
+    /**
+     * Checks if definition is set
+     */
+    public boolean isSetRelatedProperty();
+    
+    
+    /**
+     * Sets the related property
+     */
+    public void setRelatedProperty(String definition);
     
     
     /**
@@ -50,4 +66,28 @@ public interface CapabilityList extends AbstractMetadataList
      * Adds a new capability property
      */
     public void addCapability(String name, DataComponent capability);
+    
+    
+    /**
+     * Gets the list of conditions
+     */
+    public OgcPropertyList<DataComponent> getConditionList();
+    
+    
+    /**
+     * Returns number of conditions
+     */
+    public int getNumConditions();
+    
+    
+    /**
+     * Gets the condition with the given name
+     */
+    public DataComponent getCondition(String name);
+    
+    
+    /**
+     * Adds a new condition
+     */
+    public void addCondition(String name, DataComponent condition);
 }

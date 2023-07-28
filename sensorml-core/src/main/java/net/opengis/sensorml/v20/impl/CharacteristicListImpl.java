@@ -29,6 +29,7 @@ public class CharacteristicListImpl extends AbstractMetadataListImpl implements 
 {
     private static final long serialVersionUID = 900221429219021927L;
     protected OgcPropertyList<DataComponent> characteristicList = new DataComponentPropertyList<DataComponent>();
+    protected OgcPropertyList<DataComponent> conditionList = new DataComponentPropertyList<DataComponent>();
     
     
     public CharacteristicListImpl()
@@ -77,5 +78,49 @@ public class CharacteristicListImpl extends AbstractMetadataListImpl implements 
     public void addCharacteristic(String name, DataComponent characteristic)
     {
         this.characteristicList.add(name, characteristic);
+    }
+    
+    
+    /**
+     * Gets the list of conditions
+     */
+    @Override
+    public OgcPropertyList<DataComponent> getConditionList()
+    {
+        return conditionList;
+    }
+    
+    
+    /**
+     * Returns number of conditions
+     */
+    @Override
+    public int getNumConditions()
+    {
+        if (conditionList == null)
+            return 0;
+        return conditionList.size();
+    }
+    
+    
+    /**
+     * Gets the condition with the given name
+     */
+    @Override
+    public DataComponent getCondition(String name)
+    {
+        if (conditionList == null)
+            return null;
+        return conditionList.get(name);
+    }
+    
+    
+    /**
+     * Adds a new condition
+     */
+    @Override
+    public void addCondition(String name, DataComponent condition)
+    {
+        this.conditionList.add(name, condition);
     }
 }
