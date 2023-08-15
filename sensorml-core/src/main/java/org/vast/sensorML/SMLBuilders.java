@@ -18,6 +18,9 @@ import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.function.Consumer;
 import org.isotc211.v2005.gmd.CIOnlineResource;
+import org.isotc211.v2005.gmd.CIResponsibleParty;
+import org.vast.sensorML.SMLMetadataBuilders.CIOnlineResourceBuilder;
+import org.vast.sensorML.SMLMetadataBuilders.CIResponsiblePartyBuilder;
 import org.vast.sensorML.SMLMetadataBuilders.CapabilityListBuilder;
 import org.vast.sensorML.SMLMetadataBuilders.CharacteristicListBuilder;
 import org.vast.swe.SWEBuilders.SweIdentifiableBuilder;
@@ -27,6 +30,7 @@ import com.google.common.base.Strings;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
+import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.TimeIndeterminateValue;
 import net.opengis.gml.v32.impl.ReferenceImpl;
 import net.opengis.sensorml.v20.AbstractPhysicalProcess;
@@ -35,10 +39,14 @@ import net.opengis.sensorml.v20.AggregateProcess;
 import net.opengis.sensorml.v20.CapabilityList;
 import net.opengis.sensorml.v20.CharacteristicList;
 import net.opengis.sensorml.v20.ClassifierList;
+import net.opengis.sensorml.v20.ContactList;
 import net.opengis.sensorml.v20.DataInterface;
+import net.opengis.sensorml.v20.Deployment;
 import net.opengis.sensorml.v20.DescribedObject;
 import net.opengis.sensorml.v20.DocumentList;
 import net.opengis.sensorml.v20.IdentifierList;
+import net.opengis.sensorml.v20.Mode;
+import net.opengis.sensorml.v20.ModeChoice;
 import net.opengis.sensorml.v20.ObservableProperty;
 import net.opengis.sensorml.v20.PhysicalComponent;
 import net.opengis.sensorml.v20.PhysicalSystem;
@@ -137,12 +145,6 @@ public class SMLBuilders
             instance.setUniqueIdentifier(uid);
             return (B)this;
         }
-        
-        public B addIdentifierList(IdentifierList idList)
-        {
-            instance.addIdentification(idList);
-            return (B)this;
-        }
 
         /**
          * Adds a custom identifier
@@ -155,7 +157,7 @@ public class SMLBuilders
         {
             Asserts.checkNotNull(label, "label");
             Asserts.checkNotNull(def, "definition");
-            Asserts.checkNotNull(value, "value");            
+            Asserts.checkNotNull(value, "value");
 
             Term term = smlFac.newTerm();
             term.setDefinition(def);
@@ -218,12 +220,12 @@ public class SMLBuilders
         public B validTimePeriod(OffsetDateTime begin, OffsetDateTime end)
         {
             var beginPos = gmlFac.newTimePosition();
-            beginPos.setDateTimeValue(begin);            
+            beginPos.setDateTimeValue(begin);
             var endPos = gmlFac.newTimePosition();
-            endPos.setDateTimeValue(end);            
+            endPos.setDateTimeValue(end);
             var p = gmlFac.newTimePeriod();
             p.setBeginPosition(beginPos);
-            p.setEndPosition(endPos);            
+            p.setEndPosition(endPos);
             instance.addValidTimeAsTimePeriod(p);
             return (B)this;
         }
@@ -231,12 +233,12 @@ public class SMLBuilders
         public B validFrom(OffsetDateTime begin)
         {
             var beginPos = gmlFac.newTimePosition();
-            beginPos.setDateTimeValue(begin);            
+            beginPos.setDateTimeValue(begin);
             var endPos = gmlFac.newTimePosition();
-            endPos.setIndeterminatePosition(TimeIndeterminateValue.NOW);            
+            endPos.setIndeterminatePosition(TimeIndeterminateValue.NOW);
             var p = gmlFac.newTimePeriod();
             p.setBeginPosition(beginPos);
-            p.setEndPosition(endPos);            
+            p.setEndPosition(endPos);
             instance.addValidTimeAsTimePeriod(p);
             return (B)this;
         }
@@ -265,6 +267,22 @@ public class SMLBuilders
         
         public B addDocument(String role, String label, String desc, String url)
         {
+            return addDocument(role, new CIOnlineResourceBuilder(SMLHelper.DEFAULT_GMD_FACTORY)
+                .name(label)
+                .description(desc)
+                .url(url));
+        }
+        
+        public B addDocument(String role, CIOnlineResourceBuilder builder)
+        {
+            return addDocument(role, builder.build());
+        }
+        
+        public B addDocument(String role, CIOnlineResource doc)
+        {
+            if (role != null)
+                URI.create(role); // validate URI
+            
             // ensure we have a documentation section
             OgcPropertyList<DocumentList> sectionList = instance.getDocumentationList();
             DocumentList docList;
@@ -276,14 +294,32 @@ public class SMLBuilders
             else
                 docList = sectionList.get(0);
             
-            CIOnlineResource doc = SMLHelper.DEFAULT_GMD_FACTORY.newCIOnlineResource();
-            doc.setName(label);
-            doc.setLinkage(url);
-            
             OgcProperty<CIOnlineResource> prop = new OgcPropertyImpl<>(doc);
             prop.setRole(role);
             docList.getDocumentList().add(prop);
             
+            return (B)this;
+        }
+        
+        public B addContact(CIResponsiblePartyBuilder builder)
+        {
+            return addContact(builder.build());
+        }
+        
+        public B addContact(CIResponsibleParty contact)
+        {
+            // ensure we have a contact section
+            OgcPropertyList<ContactList> sectionList = instance.getContactsList();
+            ContactList contactList;
+            if (sectionList.isEmpty())
+            {
+                contactList = smlFac.newContactList();
+                sectionList.add(contactList);
+            }
+            else
+                contactList = sectionList.get(0);
+            
+            contactList.addContact(contact);
             return (B)this;
         }
     }
@@ -360,6 +396,27 @@ public class SMLBuilders
         {
             instance.addParameter(name, comp);
             return (B)this;
+        }
+        
+        public B addMode(String name, Mode mode)
+        {
+            ModeChoice modes;
+            if (instance.getModesList().isEmpty())
+            {
+                modes = smlFac.newModeChoice();
+                instance.getModesList().add(modes);
+            }
+            else
+                modes = (ModeChoice)instance.getModesList().get(0);
+            
+            mode.setName(name);
+            modes.addMode(mode);
+            return (B)this;
+        }
+        
+        public B addMode(String name, ModeBuilder builder)
+        {
+            return addMode(name, builder.build());
         }
 
         /**
@@ -595,6 +652,80 @@ public class SMLBuilders
         {
             instance.addPositionAsVector(loc);
             return (B)this;
+        }
+    }
+
+
+    /**
+     * <p>
+     * Builder class for Deployment
+     * </p>
+     *
+     * @author Alex Robin
+     * @date Aug 8, 2023
+     */
+    public static class DeploymentBuilder extends BaseDeploymentBuilder<DeploymentBuilder, Deployment>
+    {
+        public DeploymentBuilder(SMLFactory fac)
+        {
+            super(fac);
+            this.instance = fac.newDeployment();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseDeploymentBuilder<
+            B extends BaseDeploymentBuilder<B, T>,
+            T extends Deployment>
+        extends DescribedObjectBuilder<B, T>
+    {
+        protected BaseDeploymentBuilder(SMLFactory fac)
+        {
+            super(fac);
+        }
+        
+        public B definition(String uri)
+        {
+            if (uri != null)
+                URI.create(uri); // validate URI
+            instance.setDefinition(uri);
+            return (B)this;
+        }
+        
+        public B location(AbstractGeometry geom)
+        {
+            instance.setGeometry(geom);
+            return (B)this;
+        }
+    }
+
+
+    /**
+     * <p>
+     * Builder class for Mode
+     * </p>
+     *
+     * @author Alex Robin
+     * @date Aug 8, 2023
+     */
+    public static class ModeBuilder extends BaseModeBuilder<ModeBuilder, Mode>
+    {
+        public ModeBuilder(SMLFactory fac)
+        {
+            super(fac);
+            this.instance = fac.newMode();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseModeBuilder<
+            B extends BaseModeBuilder<B, T>,
+            T extends Mode>
+        extends DescribedObjectBuilder<B, T>
+    {
+        protected BaseModeBuilder(SMLFactory fac)
+        {
+            super(fac);
         }
     }
     

@@ -14,20 +14,21 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.sensorML;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.List;
+import org.isotc211.v2005.gco.impl.CodeListValueImpl;
+import org.isotc211.v2005.gmd.CIAddress;
+import org.isotc211.v2005.gmd.CIContact;
 import org.isotc211.v2005.gmd.CIOnlineResource;
+import org.isotc211.v2005.gmd.CIResponsibleParty;
+import org.isotc211.v2005.gmd.CITelephone;
 import org.vast.swe.SWEBuilders.SimpleComponentBuilder;
 import org.vast.swe.SWEBuilders.SweIdentifiableBuilder;
 import org.vast.util.BaseBuilder;
-import org.vast.util.NestedBuilder;
-import net.opengis.OgcProperty;
-import net.opengis.OgcPropertyImpl;
 import net.opengis.sensorml.v20.AbstractMetadataList;
 import net.opengis.sensorml.v20.CapabilityList;
 import net.opengis.sensorml.v20.CharacteristicList;
-import net.opengis.sensorml.v20.ClassifierList;
-import net.opengis.sensorml.v20.DocumentList;
-import net.opengis.sensorml.v20.IdentifierList;
-import net.opengis.sensorml.v20.Term;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.SimpleComponent;
 
@@ -42,9 +43,6 @@ import net.opengis.swe.v20.SimpleComponent;
  */
 public class SMLMetadataBuilders
 {
-    public final static String SYSTEM_CAPS_ROLE = "http://www.w3.org/ns/ssn/systems/SystemCapability";
-    public final static String CONDITION_ROLE = "http://www.w3.org/ns/ssn/systems/Condition";
-    
     
     /*
      * Base builder for all metadata lists
@@ -111,100 +109,6 @@ public class SMLMetadataBuilders
             return addCondition(name, builder.build());
         }
     }
-    
-    
-    /**
-     * <p>
-     * Builder class for IdentifierList
-     * </p>
-     *
-     * @author Alex Robin
-     * @date Apr 29, 2020
-     */
-    public static class IdentifierListBuilder extends BaseIdentifierListBuilder<IdentifierListBuilder>
-    {
-        public IdentifierListBuilder(SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newIdentifierList();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public abstract static class BaseIdentifierListBuilder<B extends BaseIdentifierListBuilder<B>>
-        extends MetadataListBuilder<B, IdentifierList, Term>
-    {
-        protected BaseIdentifierListBuilder(SMLFactory fac)
-        {
-            super(fac);
-        }
-
-        public B add(Term item)
-        {
-            instance.addIdentifier(item);
-            return (B)this;
-        }
-    }
-
-    /* Nested builder for use within another builder */
-    public static abstract class NestedIdentifierListBuilder<B> extends BaseIdentifierListBuilder<NestedIdentifierListBuilder<B>> implements NestedBuilder<B>
-    {
-        B parent;
-
-        protected NestedIdentifierListBuilder(B parent, SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newIdentifierList();
-            this.parent = parent;
-        }
-    }
-
-
-    /**
-     * <p>
-     * Builder class for ClassifierList
-     * </p>
-     *
-     * @author Alex Robin
-     * @date Apr 29, 2020
-     */
-    public static class ClassifierListBuilder extends BaseClassifierListBuilder<ClassifierListBuilder>
-    {
-        public ClassifierListBuilder(SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newClassifierList();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public abstract static class BaseClassifierListBuilder<B extends BaseClassifierListBuilder<B>>
-        extends MetadataListBuilder<B, ClassifierList, Term>
-    {
-        protected BaseClassifierListBuilder(SMLFactory fac)
-        {
-            super(fac);
-        }
-
-        public B add(Term item)
-        {
-            instance.addClassifier(item);
-            return (B)this;
-        }
-    }
-
-    /* Nested builder for use within another builder */
-    public static abstract class NestedClassifierListBuilder<B> extends BaseClassifierListBuilder<NestedClassifierListBuilder<B>> implements NestedBuilder<B>
-    {
-        B parent;
-
-        protected NestedClassifierListBuilder(B parent, SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newClassifierList();
-            this.parent = parent;
-        }
-    }
 
 
     /**
@@ -236,10 +140,7 @@ public class SMLMetadataBuilders
         @Override
         public B addCondition(String name, SimpleComponent item)
         {
-            OgcProperty<DataComponent> prop = new OgcPropertyImpl<>(item);
-            prop.setName(name);
-            prop.setRole(CONDITION_ROLE);
-            instance.getCharacteristicList().add(prop);
+            instance.addCondition(name, item);
             return (B)this;
         }
 
@@ -248,19 +149,6 @@ public class SMLMetadataBuilders
         {
             instance.addCharacteristic(name, item);
             return (B)this;
-        }
-    }
-
-    /* Nested builder for use within another builder */
-    public static abstract class NestedCharacteristicListBuilder<B> extends BaseCharacteristicListBuilder<NestedCharacteristicListBuilder<B>> implements NestedBuilder<B>
-    {
-        B parent;
-
-        protected NestedCharacteristicListBuilder(B parent, SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newCharacteristicList();
-            this.parent = parent;
         }
     }
 
@@ -294,10 +182,7 @@ public class SMLMetadataBuilders
         @Override
         public B addCondition(String name, SimpleComponent item)
         {
-            OgcProperty<DataComponent> prop = new OgcPropertyImpl<>(item);
-            prop.setName(name);
-            prop.setRole(CONDITION_ROLE);
-            instance.getCapabilityList().add(prop);
+            instance.addCondition(name, item);
             return (B)this;
         }
 
@@ -306,66 +191,6 @@ public class SMLMetadataBuilders
         {
             instance.addCapability(name, item);
             return (B)this;
-        }
-    }
-
-    /* Nested builder for use within another builder */
-    public static abstract class NestedCapabilityListBuilder<B> extends BaseCapabilityListBuilder<NestedCapabilityListBuilder<B>> implements NestedBuilder<B>
-    {
-        B parent;
-
-        protected NestedCapabilityListBuilder(B parent, SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newCapabilityList();
-            this.parent = parent;
-        }
-    }
-
-
-    /**
-     * <p>
-     * Builder class for DocumentList
-     * </p>
-     *
-     * @author Alex Robin
-     * @date Apr 29, 2020
-     */
-    public static class DocumentListBuilder extends BaseDocumentListBuilder<DocumentListBuilder>
-    {
-        public DocumentListBuilder(SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newDocumentList();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public abstract static class BaseDocumentListBuilder<B extends BaseDocumentListBuilder<B>>
-        extends MetadataListBuilder<B, DocumentList, CIOnlineResource>
-    {
-        protected BaseDocumentListBuilder(SMLFactory fac)
-        {
-            super(fac);
-        }
-
-        public B add(CIOnlineResource item)
-        {
-            instance.addDocument(item);
-            return (B)this;
-        }
-    }
-
-    /* Nested builder for use within another builder */
-    public static abstract class NestedDocumentListBuilder<B> extends BaseDocumentListBuilder<NestedDocumentListBuilder<B>> implements NestedBuilder<B>
-    {
-        B parent;
-
-        protected NestedDocumentListBuilder(B parent, SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newDocumentList();
-            this.parent = parent;
         }
     }
 
@@ -409,21 +234,177 @@ public class SMLMetadataBuilders
         
         public B url(String url)
         {
+            try {
+                if (url != null)
+                    URI.create(url).toURL(); // validate URL
+            }
+            catch (MalformedURLException e) {
+                throw new IllegalArgumentException(e);
+            }
             instance.setLinkage(url);
+            return (B)this;
+        }
+        
+        public B mediaType(String type)
+        {
+            instance.setApplicationProfile(type);
             return (B)this;
         }
     }
 
-    /* Nested builder for use within another builder */
-    public static abstract class NestedCIOnlineResourceBuilder<B> extends BaseDocumentListBuilder<NestedCIOnlineResourceBuilder<B>> implements NestedBuilder<B>
-    {
-        B parent;
 
-        protected NestedCIOnlineResourceBuilder(B parent, SMLFactory fac)
+    /**
+     * <p>
+     * Builder class for CIResponsibleParty
+     * </p>
+     *
+     * @author Alex Robin
+     * @date Aug 8, 2023
+     */
+    public static class CIResponsiblePartyBuilder extends BaseCIResponsiblePartyBuilder<CIResponsiblePartyBuilder>
+    {
+        public CIResponsiblePartyBuilder(org.isotc211.v2005.gmd.Factory fac)
         {
             super(fac);
-            this.instance = fac.newDocumentList();
-            this.parent = parent;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseCIResponsiblePartyBuilder<B extends BaseCIResponsiblePartyBuilder<B>>
+        extends BaseBuilder<CIResponsibleParty>
+    {
+        org.isotc211.v2005.gmd.Factory fac;
+        
+        protected BaseCIResponsiblePartyBuilder(org.isotc211.v2005.gmd.Factory fac)
+        {
+            this.fac = fac;
+            this.instance = fac.newCIResponsibleParty();
+        }
+        
+        public B role(String uri)
+        {
+            if (uri != null)
+                URI.create(uri); // validate URI
+            var code = new CodeListValueImpl(uri);
+            instance.setRole(code);
+            return (B)this;
+        }
+        
+        public B organisationName(String name)
+        {
+            instance.setOrganisationName(name);
+            return (B)this;
+        }
+        
+        public B individualName(String name)
+        {
+            instance.setIndividualName(name);
+            return (B)this;
+        }
+        
+        public B positionName(String name)
+        {
+            instance.setPositionName(name);
+            return (B)this;
+        }
+        
+        public B deliveryPoint(String s)
+        {
+            setAsFirstItem(ensureAddress().getDeliveryPointList(), s);
+            return (B)this;
+        }
+        
+        public B city(String s)
+        {
+            ensureAddress().setCity(s);
+            return (B)this;
+        }
+        
+        public B administrativeArea(String s)
+        {
+            ensureAddress().setAdministrativeArea(s);
+            return (B)this;
+        }
+        
+        public B postalCode(String s)
+        {
+            ensureAddress().setPostalCode(s);
+            return (B)this;
+        }
+        
+        public B country(String s)
+        {
+            ensureAddress().setCountry(s);
+            return (B)this;
+        }
+        
+        public B email(String s)
+        {
+            setAsFirstItem(ensureAddress().getElectronicMailAddressList(), s);
+            return (B)this;
+        }
+        
+        public B phone(String s)
+        {
+            setAsFirstItem(ensurePhone().getVoiceList(), s);
+            return (B)this;
+        }
+        
+        public B fax(String s)
+        {
+            setAsFirstItem(ensurePhone().getFacsimileList(), s);
+            return (B)this;
+        }
+        
+        public B website(String url)
+        {
+            var ref = fac.newCIOnlineResource();
+            ref.setLinkage(url);
+            ensureContactInfo().setOnlineResource(ref);
+            return (B)this;
+        }
+        
+        public B hoursOfService(String s)
+        {
+            ensureContactInfo().setHoursOfService(s);
+            return (B)this;
+        }
+        
+        public B contactInstructions(String s)
+        {
+            ensureContactInfo().setContactInstructions(s);
+            return (B)this;
+        }
+        
+        protected CIContact ensureContactInfo()
+        {
+            if (!instance.isSetContactInfo())
+                instance.setContactInfo(fac.newCIContact());
+            return instance.getContactInfo();
+        }
+        
+        protected CITelephone ensurePhone()
+        {
+            var ci = ensureContactInfo();
+            if (!ci.isSetPhone())
+                ci.setPhone(fac.newCITelephone());
+            return ci.getPhone();
+        }
+        
+        protected CIAddress ensureAddress()
+        {
+            var ci = ensureContactInfo();
+            if (!ci.isSetAddress())
+                ci.setAddress(fac.newCIAddress());
+            return ci.getAddress();
+        }
+        
+        protected void setAsFirstItem(List<String> list, String s)
+        {
+            if (list.isEmpty())
+                list.add(s);
+            else
+                list.set(0, s);
         }
     }
 

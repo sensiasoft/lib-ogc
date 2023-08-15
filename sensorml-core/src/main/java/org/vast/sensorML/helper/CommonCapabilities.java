@@ -34,6 +34,8 @@ import net.opengis.swe.v20.Quantity;
 public class CommonCapabilities extends SMLPropertiesHelper
 {    
     public final static String SYSTEM_CAPS_DEF = "http://www.w3.org/ns/ssn/systems/SystemCapability";
+    public final static String OPERATING_RANGE_DEF = "http://www.w3.org/ns/ssn/systems/OperatingRange";
+    public final static String SURVIVAL_RANGE_DEF = "http://www.w3.org/ns/ssn/systems/SurvivalRange";
     
     public static final String MEAS_RANGE_DEF = "http://www.w3.org/ns/ssn/systems/MeasurementRange";
     public static final String MEAS_RANGE_LABEL = "Measurement Range";
@@ -66,6 +68,22 @@ public class CommonCapabilities extends SMLPropertiesHelper
     public CommonCapabilities(SMLHelper sml)
     {
         super(sml);
+    }
+    
+    
+    public CapabilityListBuilder operatingProperties()
+    {
+        return sml.createCapabilityList()
+            .definition(OPERATING_RANGE_DEF)
+            .label("Operating Range");
+    }
+    
+    
+    public CapabilityListBuilder survivableProperties()
+    {
+        return sml.createCapabilityList()
+            .definition(SURVIVAL_RANGE_DEF)
+            .label("Survival Range");
     }
     
     
@@ -192,6 +210,18 @@ public class CommonCapabilities extends SMLPropertiesHelper
             .label(SENSITIVITY_LABEL)
             .uomCode(uom)
             .value(value);
+    }
+    
+    public Quantity mtbf(double val, String uom)
+    {
+        checkUom(uom, SWEHelper.TIME_UNIT);
+        
+        return sml.createQuantity()
+            .definition(SWEHelper.getDBpediaUri("Mean_time_between_failures"))
+            .label("MTBF")
+            .uomCode(uom)
+            .value(val)
+            .build();
     }
     
     public DataArray characteristicCurve(String label, Quantity input, Quantity output)

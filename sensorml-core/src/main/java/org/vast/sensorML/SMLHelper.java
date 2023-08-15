@@ -18,17 +18,18 @@ import java.util.Arrays;
 import org.vast.data.SWEFactory;
 import org.vast.process.IProcessExec;
 import org.vast.sensorML.SMLBuilders.AggregateProcessBuilder;
+import org.vast.sensorML.SMLBuilders.DeploymentBuilder;
+import org.vast.sensorML.SMLBuilders.ModeBuilder;
 import org.vast.sensorML.SMLBuilders.ObsPropBuilder;
 import org.vast.sensorML.SMLBuilders.PhysicalComponentBuilder;
 import org.vast.sensorML.SMLBuilders.PhysicalSystemBuilder;
 import org.vast.sensorML.SMLBuilders.SimpleProcessBuilder;
 import org.vast.sensorML.SMLBuilders.TermBuilder;
 import org.vast.sensorML.SMLHelper.LinkTarget.PortType;
+import org.vast.sensorML.SMLMetadataBuilders.CIOnlineResourceBuilder;
+import org.vast.sensorML.SMLMetadataBuilders.CIResponsiblePartyBuilder;
 import org.vast.sensorML.SMLMetadataBuilders.CapabilityListBuilder;
 import org.vast.sensorML.SMLMetadataBuilders.CharacteristicListBuilder;
-import org.vast.sensorML.SMLMetadataBuilders.ClassifierListBuilder;
-import org.vast.sensorML.SMLMetadataBuilders.DocumentListBuilder;
-import org.vast.sensorML.SMLMetadataBuilders.IdentifierListBuilder;
 import org.vast.sensorML.helper.CommonCapabilities;
 import org.vast.sensorML.helper.CommonCharacteristics;
 import org.vast.sensorML.helper.CommonClassifiers;
@@ -153,6 +154,24 @@ public class SMLHelper extends SWEHelper
     {
         return new PhysicalSystemBuilder(fac);
     }
+
+
+    /**
+     * @return A builder to create a new Deployment
+     */
+    public DeploymentBuilder createDeployment()
+    {
+        return new DeploymentBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new Mode
+     */
+    public ModeBuilder createMode()
+    {
+        return new ModeBuilder(fac);
+    }
     
     
     /**
@@ -204,24 +223,6 @@ public class SMLHelper extends SWEHelper
     
     
     /**
-     * @return A builder to create a new IdentifierList
-     */
-    public IdentifierListBuilder createIdentifierList()
-    {
-        return new IdentifierListBuilder(fac);
-    }
-    
-    
-    /**
-     * @return A builder to create a new ClassifierList
-     */
-    public ClassifierListBuilder createClassifierList()
-    {
-        return new ClassifierListBuilder(fac);
-    }
-    
-    
-    /**
      * @return A builder to create a new CharacteristicList
      */
     public CharacteristicListBuilder createCharacteristicList()
@@ -240,15 +241,6 @@ public class SMLHelper extends SWEHelper
     
     
     /**
-     * @return A builder to create a new DocumentList
-     */
-    public DocumentListBuilder createDocumentList()
-    {
-        return new DocumentListBuilder(fac);
-    }
-    
-    
-    /**
      * @return A builder to create a new Term
      */
     public TermBuilder createTerm()
@@ -263,6 +255,24 @@ public class SMLHelper extends SWEHelper
     public ObsPropBuilder createObservableProperty()
     {
         return new ObsPropBuilder(fac);
+    }
+    
+    
+    /**
+     * @return A builder to create a new Contact
+     */
+    public CIResponsiblePartyBuilder createContact()
+    {
+        return new CIResponsiblePartyBuilder(SMLHelper.DEFAULT_GMD_FACTORY);
+    }
+    
+    
+    /**
+     * @return A builder to create a new Document
+     */
+    public CIOnlineResourceBuilder createDocument()
+    {
+        return new CIOnlineResourceBuilder(SMLHelper.DEFAULT_GMD_FACTORY);
     }
     
     

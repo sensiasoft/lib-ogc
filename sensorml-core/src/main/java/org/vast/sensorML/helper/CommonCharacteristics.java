@@ -16,6 +16,7 @@ package org.vast.sensorML.helper;
 
 import org.vast.sensorML.SMLHelper;
 import org.vast.sensorML.SMLMetadataBuilders.CharacteristicListBuilder;
+import org.vast.swe.SWEBuilders.CategoryBuilder;
 import org.vast.swe.SWEBuilders.QuantityBuilder;
 import org.vast.swe.SWEBuilders.QuantityRangeBuilder;
 import org.vast.swe.SWEHelper;
@@ -42,6 +43,10 @@ public class CommonCharacteristics extends SMLPropertiesHelper
     public static final String WIDTH_LABEL = "Width";
     public static final String HEIGHT_DEF = SWEHelper.getPropertyUri("Height");
     public static final String HEIGHT_LABEL = "Height";
+    public static final String DIAMETER_DEF = SWEHelper.getQudtUri("Diameter");
+    public static final String DIAMETER_LABEL = "Diameter";
+    public static final String MATERIAL_DEF = SWEHelper.getDBpediaUri("Material");
+    public static final String MATERIAL_LABEL = "Material";
     public static final String VOLTAGE_DEF = SWEHelper.getQudtUri("Voltage");
     public static final String VOLTAGE_LABEL = "Operating Voltage";
     public static final String CURRENT_DEF = SWEHelper.getQudtUri("Current");
@@ -130,6 +135,25 @@ public class CommonCharacteristics extends SMLPropertiesHelper
             .definition(HEIGHT_DEF)
             .label(HEIGHT_LABEL)
             .uomCode(uom)
+            .value(val);
+    }
+    
+    public QuantityBuilder diameter(double val, String uom)
+    {
+        checkUom(uom, SWEHelper.DISTANCE_UNIT);
+        
+        return sml.createQuantity()
+            .definition(DIAMETER_DEF)
+            .label(DIAMETER_LABEL)
+            .uomCode(uom)
+            .value(val);
+    }
+    
+    public CategoryBuilder material(String val)
+    {
+        return sml.createCategory()
+            .definition(MATERIAL_DEF)
+            .label(MATERIAL_LABEL)
             .value(val);
     }
     

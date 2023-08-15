@@ -34,6 +34,7 @@ public class VectorHelper extends SWEHelper
 {
     public static final String DEF_COORD = SWEHelper.getPropertyUri("Coordinate");
     public static final String DEF_ROT_MATRIX = SWEHelper.getPropertyUri("RotationMatrix");
+    public static final String DEF_ORIENTATION = SWEHelper.getPropertyUri("Orientation");
     public static final String DEF_ORIENTATION_EULER = SWEHelper.getPropertyUri("EulerAngles");
     public static final String DEF_ORIENTATION_QUAT = SWEHelper.getPropertyUri("RotationQuaternion");
     public static final String DEF_UNIT_VECTOR = SWEHelper.getDBpediaUri("Unit_vector");

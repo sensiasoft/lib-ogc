@@ -48,4 +48,17 @@ public class CommonConditions extends SMLPropertiesHelper
             .value(min, max)
             .build();
     }
+
+    
+    public QuantityRange humidityRange(double min, double max, String uom)
+    {
+        checkUom(uom, SWEHelper.UNITLESS);
+        
+        return sml.createQuantityRange()
+            .definition(SWEHelper.getQudtUri("RelativeHumidity"))
+            .label("Humidity Range")
+            .uomCode(uom)
+            .value(min, max)
+            .build();
+    }
 }

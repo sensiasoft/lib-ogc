@@ -44,6 +44,16 @@ public class CommonIdentifiers
     public static final String MANUFACTURER_DEF = SWEHelper.getPropertyUri("Manufacturer");
     public static final String MANUFACTURER_LABEL = "Manufacturer Name";
     
+    // contact roles
+    public static final String OWNER_DEF = SWEHelper.getPropertyUri("Owner");
+    public static final String OPERATOR_DEF = SWEHelper.getPropertyUri("Operator");
+    
+    // document roles
+    public static final String USER_MANUAL_DEF = SWEHelper.getDBpediaUri("User_guide");
+    public static final String SPECSHEET_DEF = SWEHelper.getDBpediaUri("Datasheet");
+    public static final String WEBPAGE_DEF = SWEHelper.getDBpediaUri("Web_page");
+    
+    
     SMLHelper sml;
     
     
