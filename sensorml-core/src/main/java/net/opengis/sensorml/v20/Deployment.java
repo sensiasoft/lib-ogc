@@ -37,6 +37,24 @@ public interface Deployment extends DescribedObject
     
     
     /**
+     * Gets the definition property
+     */
+    public String getDefinition();
+    
+    
+    /**
+     * Checks if definition is set
+     */
+    public boolean isSetDefinition();
+    
+    
+    /**
+     * Sets the definition property
+     */
+    public void setDefinition(String definition);
+    
+    
+    /**
      * Gets the list of localReferenceFrame properties
      */
     public List<SpatialFrame> getLocalReferenceFrameList();

@@ -38,7 +38,8 @@ import net.opengis.swe.v20.Vector;
 public class DeploymentImpl extends DescribedObjectImpl implements Deployment
 {
     private static final long serialVersionUID = 6200618857495858650L;
-    
+
+    protected String definition;
     protected ArrayList<SpatialFrame> localReferenceFrameList = new ArrayList<SpatialFrame>();
     protected ArrayList<TemporalFrame> localTimeFrameList = new ArrayList<TemporalFrame>();
     protected OgcPropertyList<Serializable> positionList = new OgcPropertyList<Serializable>();
@@ -50,6 +51,36 @@ public class DeploymentImpl extends DescribedObjectImpl implements Deployment
     public QName getQName()
     {
         return Deployment.DEFAULT_QNAME;
+    }
+    
+    
+    /**
+     * Gets the definition property
+     */
+    @Override
+    public String getDefinition()
+    {
+        return definition;
+    }
+    
+    
+    /**
+     * Checks if definition is set
+     */
+    @Override
+    public boolean isSetDefinition()
+    {
+        return (definition != null);
+    }
+    
+    
+    /**
+     * Sets the definition property
+     */
+    @Override
+    public void setDefinition(String definition)
+    {
+        this.definition = definition;
     }
     
     

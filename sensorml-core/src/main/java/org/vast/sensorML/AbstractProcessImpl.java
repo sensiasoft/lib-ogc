@@ -60,6 +60,8 @@ import net.opengis.swe.v20.HasUom;
 public abstract class AbstractProcessImpl extends DescribedObjectImpl implements AbstractProcess, IProcessExec
 {
     private static final long serialVersionUID = -6639992874400892845L;
+    
+    protected String definition;
     protected Reference typeOf;
     protected Settings configuration;
     protected FeatureList featuresOfInterest;
@@ -67,13 +69,42 @@ public abstract class AbstractProcessImpl extends DescribedObjectImpl implements
     protected IOPropertyList outputData = new IOPropertyList();
     protected IOPropertyList paramData = new IOPropertyList();
     protected ArrayList<AbstractModes> modesList = new ArrayList<>();
-    protected String definition;
     
     protected transient IProcessExec executableProcess;
 
 
     public AbstractProcessImpl()
     {
+    }
+
+
+    /**
+     * Gets the definition property
+     */
+    @Override
+    public String getDefinition()
+    {
+        return definition;
+    }
+
+
+    /**
+     * Checks if definition is set
+     */
+    @Override
+    public boolean isSetDefinition()
+    {
+        return (definition != null);
+    }
+
+
+    /**
+     * Sets the definition property
+     */
+    @Override
+    public void setDefinition(String definition)
+    {
+        this.definition = definition;
     }
 
 
@@ -702,35 +733,5 @@ public abstract class AbstractProcessImpl extends DescribedObjectImpl implements
     public void addModes(AbstractModes modes)
     {
         this.modesList.add(modes);
-    }
-
-
-    /**
-     * Gets the definition property
-     */
-    @Override
-    public String getDefinition()
-    {
-        return definition;
-    }
-
-
-    /**
-     * Checks if definition is set
-     */
-    @Override
-    public boolean isSetDefinition()
-    {
-        return (definition != null);
-    }
-
-
-    /**
-     * Sets the definition property
-     */
-    @Override
-    public void setDefinition(String definition)
-    {
-        this.definition = definition;
     }
 }
