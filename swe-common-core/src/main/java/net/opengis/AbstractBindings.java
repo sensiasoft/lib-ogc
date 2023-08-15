@@ -454,4 +454,10 @@ public abstract class AbstractBindings
         
         return text.trim();
     }
+    
+    
+    public boolean canWriteExtension(Object obj)
+    {
+        return false;
+    }
 }

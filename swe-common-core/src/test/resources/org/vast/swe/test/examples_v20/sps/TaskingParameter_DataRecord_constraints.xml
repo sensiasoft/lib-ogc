@@ -5,7 +5,7 @@
 	<swe:field name="f_length">
 		<swe:Quantity optional="false" definition="urn:x-ogc:def:property:OGC::FocalLength">
 			<swe:description>Focal length of camera</swe:description>
-			<swe:uom xlink:href="mm"/>
+			<swe:uom code="mm"/>
 			<swe:constraint>
 				<swe:AllowedValues>
 					<swe:interval>18.0 180.0</swe:interval>

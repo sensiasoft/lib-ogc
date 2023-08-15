@@ -273,12 +273,6 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
         // we do nothing by default
         // sub-classes can override to implement some extensions
     }
-    
-    
-    public boolean canWriteExtension(Object obj)
-    {
-        return false;
-    }
 
 
     public NamespaceRegister getNamespaceContext()

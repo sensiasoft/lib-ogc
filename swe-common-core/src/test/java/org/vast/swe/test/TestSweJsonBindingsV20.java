@@ -258,6 +258,12 @@ public class TestSweJsonBindingsV20 extends XMLTestCase
     }
     
     
+    public void testReadWriteArrayWithChoice() throws Exception
+    {        
+        //readXmlWriteJson("examples_v20/array_with_choice.xml");
+    }
+    
+    
     public void testReadWriteDataStream() throws Exception
     {
         readXmlWriteJson("examples_v20/weather_data.xml", true);

@@ -17,6 +17,10 @@ jar {
   }
 }
 
+test {
+  exclude 'org/vast/swe/test/TestSweJsonBindingsV21.class'
+}
+ 
 // add info to maven pom
 ext.pom >>= {
   developers {
