@@ -607,7 +607,12 @@ public class GeoJsonBindings
     {
         reader.beginObject();
         String type = readObjectType(reader);
-        
+        return readGeometry(reader, type);
+    }   
+    
+    
+    public AbstractGeometry readGeometry(JsonReader reader, String type) throws IOException
+    {
         AbstractGeometry geom = null;
         String crs = null;
         while (reader.hasNext())
