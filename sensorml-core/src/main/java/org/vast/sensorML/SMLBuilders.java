@@ -31,6 +31,7 @@ import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.AbstractGeometry;
+import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.TimeIndeterminateValue;
 import net.opengis.gml.v32.impl.ReferenceImpl;
 import net.opengis.sensorml.v20.AbstractPhysicalProcess;
@@ -189,10 +190,9 @@ public class SMLBuilders
             return (B)this;
         }
         
-        public B addClassifierList(ClassifierList idList)
+        public B addIdentifier(TermBuilder term)
         {
-            instance.addClassification(idList);
-            return (B)this;
+            return addIdentifier(term.build());
         }
         
         /**
@@ -215,6 +215,11 @@ public class SMLBuilders
             
             termList.addClassifier(term);
             return (B)this;
+        }
+        
+        public B addClassifier(TermBuilder term)
+        {
+            return addClassifier(term.build());
         }
         
         public B validTimePeriod(OffsetDateTime begin, OffsetDateTime end)
@@ -630,6 +635,12 @@ public class SMLBuilders
             return (B)this;
         }
 
+        public B location(Point loc)
+        {
+            instance.addPositionAsPoint(loc);
+            return (B)this;
+        }
+
         public B location(Vector loc)
         {
             setPositionAsVector(loc, instance);
@@ -717,7 +728,6 @@ public class SMLBuilders
         }
     }
 
-    @SuppressWarnings("unchecked")
     public abstract static class BaseModeBuilder<
             B extends BaseModeBuilder<B, T>,
             T extends Mode>

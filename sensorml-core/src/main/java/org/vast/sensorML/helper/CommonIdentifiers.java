@@ -14,9 +14,9 @@ Copyright (C) 2020 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.sensorML.helper;
 
+import org.vast.sensorML.SMLBuilders.TermBuilder;
 import org.vast.sensorML.SMLHelper;
 import org.vast.swe.SWEHelper;
-import net.opengis.sensorml.v20.Term;
 
 
 /**
@@ -43,6 +43,10 @@ public class CommonIdentifiers
     public static final String FIRMWARE_VERSION_LABEL = "Firmware Version";
     public static final String MANUFACTURER_DEF = SWEHelper.getPropertyUri("Manufacturer");
     public static final String MANUFACTURER_LABEL = "Manufacturer Name";
+    public static final String AUTHOR_DEF = SWEHelper.getDBpediaUri("Author");
+    public static final String AUTHOR_LABEL = "Author Name";
+    public static final String SITEID_DEF = SWEHelper.getPropertyUri("SiteID");
+    public static final String SITEID_LABEL = "Site ID";
     
     // contact roles
     public static final String OWNER_DEF = SWEHelper.getPropertyUri("Owner");
@@ -52,6 +56,7 @@ public class CommonIdentifiers
     public static final String USER_MANUAL_DEF = SWEHelper.getDBpediaUri("User_guide");
     public static final String SPECSHEET_DEF = SWEHelper.getDBpediaUri("Datasheet");
     public static final String WEBPAGE_DEF = SWEHelper.getDBpediaUri("Web_page");
+    public static final String REPORT_DEF = SWEHelper.getDBpediaUri("Report");
     
     
     SMLHelper sml;
@@ -63,66 +68,76 @@ public class CommonIdentifiers
     }
     
     
-    public Term shortName(String value)
+    public TermBuilder shortName(String value)
     {
         return sml.createTerm()
             .definition(SHORT_NAME_DEF)
             .label(SHORT_NAME_LABEL)
-            .value(value)
-            .build();
+            .value(value);
     }
     
-    public Term longName(String value)
+    public TermBuilder longName(String value)
     {
         return sml.createTerm()
             .definition(LONG_NAME_DEF)
             .label(LONG_NAME_LABEL)
-            .value(value)
-            .build();
+            .value(value);
     }
     
-    public Term serialNumber(String value)
+    public TermBuilder serialNumber(String value)
     {
         return sml.createTerm()
             .definition(SERIAL_NUMBER_DEF)
             .label(SERIAL_NUMBER_LABEL)
-            .value(value)
-            .build();
+            .value(value);
     }
     
-    public Term modelNumber(String value)
+    public TermBuilder modelNumber(String value)
     {
         return sml.createTerm()
             .definition(MODEL_NUMBER_DEF)
             .label(MODEL_NUMBER_LABEL)
-            .value(value)
-            .build();
+            .value(value);
     }
     
-    public Term softwareVersion(String value)
+    public TermBuilder softwareVersion(String value)
     {
         return sml.createTerm()
             .definition(SOFTWARE_VERSION_DEF)
             .label(SOFTWARE_VERSION_LABEL)
-            .value(value)
-            .build();
+            .value(value);
     }
     
-    public Term firmwareVersion(String value)
+    public TermBuilder firmwareVersion(String value)
     {
         return sml.createTerm()
             .definition(FIRMWARE_VERSION_DEF)
             .label(FIRMWARE_VERSION_LABEL)
-            .value(value)
-            .build();
+            .value(value);
     }
     
-    public Term manufacturer(String value)
+    public TermBuilder manufacturer(String value)
     {
         return sml.createTerm()
             .definition(MANUFACTURER_DEF)
             .label(MANUFACTURER_LABEL)
-            .value(value)
-            .build();
+            .value(value);
+    }
+    
+    public TermBuilder author(String value)
+    {
+        return sml.createTerm()
+            .definition(AUTHOR_DEF)
+            .label(AUTHOR_LABEL)
+            .value(value);
+    }
+    
+    public TermBuilder siteId(String value, String codeSpace)
+    {
+        return sml.createTerm()
+            .definition(SITEID_DEF)
+            .codeSpace(codeSpace)
+            .label(SITEID_LABEL)
+            .value(value);
     }
 }

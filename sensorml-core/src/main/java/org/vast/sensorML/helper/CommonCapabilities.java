@@ -32,37 +32,53 @@ import net.opengis.swe.v20.Quantity;
  * @date Jul 16, 2020
  */
 public class CommonCapabilities extends SMLPropertiesHelper
-{    
-    public final static String SYSTEM_CAPS_DEF = "http://www.w3.org/ns/ssn/systems/SystemCapability";
-    public final static String OPERATING_RANGE_DEF = "http://www.w3.org/ns/ssn/systems/OperatingRange";
-    public final static String SURVIVAL_RANGE_DEF = "http://www.w3.org/ns/ssn/systems/SurvivalRange";
+{
+    public final static String SSN_SYSTEMS_URL_PREFIX = "http://www.w3.org/ns/ssn/systems/";
     
-    public static final String MEAS_RANGE_DEF = "http://www.w3.org/ns/ssn/systems/MeasurementRange";
+    public final static String SYSTEM_CAPS_DEF = SSN_SYSTEMS_URL_PREFIX + "SystemCapability";
+    public final static String OPERATING_RANGE_DEF = SSN_SYSTEMS_URL_PREFIX + "OperatingRange";
+    public final static String SURVIVAL_RANGE_DEF = SSN_SYSTEMS_URL_PREFIX + "SurvivalRange";
+    
+    public static final String MEAS_RANGE_DEF = SSN_SYSTEMS_URL_PREFIX + "MeasurementRange";
     public static final String MEAS_RANGE_LABEL = "Measurement Range";
     public static final String DYNAMIC_RANGE_DEF = SWEHelper.getPropertyUri("DynamicRange");
     public static final String DYNAMIC_RANGE_LABEL = "Dynamic Range";
+    public static final String ACTUATION_RANGE_DEF = SSN_SYSTEMS_URL_PREFIX + "ActuationRange";
+    public static final String ACTUATION_RANGE_LABEL = "Actuation Range";
     public static final String SAMPLING_FREQ_DEF = SWEHelper.getPropertyUri("SamplingFrequency");
     public static final String SAMPLING_FREQ_LABEL = "Sampling Frequency";
     public static final String REPORTING_FREQ_DEF = SWEHelper.getPropertyUri("ReportingFrequency");
     public static final String REPORTING_FREQ_LABEL = "Reporting Frequency";
     public static final String INTEGRATION_TIME_DEF = SWEHelper.getPropertyUri("IntegrationTime");
     public static final String INTEGRATION_TIME_LABEL = "Integration Time";
-    public static final String RESPONSE_TIME_DEF = "http://www.w3.org/ns/ssn/systems/ResponseTime";
+    public static final String RESPONSE_TIME_DEF = SSN_SYSTEMS_URL_PREFIX + "ResponseTime";
     public static final String RESPONSE_TIME_LABEL = "Response Time";
-    public static final String SENSITIVITY_DEF = "http://www.w3.org/ns/ssn/systems/Sensitivity";
+    public static final String LATENCY_DEF = SSN_SYSTEMS_URL_PREFIX + "Latency";
+    public static final String LATENCY_LABEL = "Latency";
+    public static final String SENSITIVITY_DEF = SSN_SYSTEMS_URL_PREFIX + "Sensitivity";
     public static final String SENSITIVITY_LABEL = "Sensitivity";
-    public static final String RESOLUTION_DEF = "http://www.w3.org/ns/ssn/systems/Resolution";
+    public static final String RESOLUTION_DEF = SSN_SYSTEMS_URL_PREFIX + "Resolution";
     public static final String RESOLUTION_LABEL = "Resolution";
+    public static final String DETECTION_LIMIT_DEF = SSN_SYSTEMS_URL_PREFIX + "DetectionLimit";
+    public static final String DETECTION_LIMIT_LABEL = "Detection Limit";
+    public static final String DRIFT_DEF = SSN_SYSTEMS_URL_PREFIX + "Drift";
+    public static final String DRIFT_LABEL = "Drift";
+    public static final String ACCURACY_DEF = SSN_SYSTEMS_URL_PREFIX + "Accuracy";
+    public static final String ACCURACY_LABEL = "Accuracy";
     public static final String ABSOLUTE_ACCURACY_DEF = SWEHelper.getPropertyUri("AbsoluteAccuracy");
     public static final String ABSOLUTE_ACCURACY_LABEL = "Absolute Accuracy";
     public static final String RELATIVE_ACCURACY_DEF = SWEHelper.getPropertyUri("RelativeAccuracy");
     public static final String RELATIVE_ACCURACY_LABEL = "Relative Accuracy";
-    public static final String PRECISION_DEF = "http://www.w3.org/ns/ssn/systems/Precision";
+    public static final String PRECISION_DEF = SSN_SYSTEMS_URL_PREFIX + "Precision";
     public static final String PRECISION_LABEL = "Precision";
     public static final String SNR_DEF = SWEHelper.getPropertyUri("SNR");
     public static final String SNR_LABEL = "Signal-to-Noise Ratio";
     public static final String FOV_DEF = SWEHelper.getPropertyUri("FieldOfView");
     public static final String FOV_LABEL = "Field of View";
+    public static final String FOCAL_LENGTH_DEF = SWEHelper.getPropertyUri("FocalLength");
+    public static final String FOCAL_LENGTH_LABEL = "Focal Length";
+    public static final String POINTING_ANGLE_DEF = SWEHelper.getPropertyUri("PointingRange");
+    public static final String POINTING_ANGLE_LABEL = "Pointing Range";
     
     
     public CommonCapabilities(SMLHelper sml)
@@ -99,12 +115,20 @@ public class CommonCapabilities extends SMLPropertiesHelper
             .label("System Capabilities");
     }
     
-    
     public QuantityRangeBuilder measurementRange(double min, double max, String uom)
     {
         return sml.createQuantityRange()
             .definition(MEAS_RANGE_DEF)
             .label(MEAS_RANGE_LABEL)
+            .uomCode(uom)
+            .value(min, max);
+    }
+    
+    public QuantityRangeBuilder actuationRange(double min, double max, String uom)
+    {
+        return sml.createQuantityRange()
+            .definition(ACTUATION_RANGE_DEF)
+            .label(ACTUATION_RANGE_LABEL)
             .uomCode(uom)
             .value(min, max);
     }
@@ -147,6 +171,17 @@ public class CommonCapabilities extends SMLPropertiesHelper
             .value(value);
     }
     
+    public QuantityRangeBuilder integrationTimeRange(double min, double max, String uom)
+    {
+        checkUom(uom, SWEHelper.TIME_UNIT);
+        
+        return sml.createQuantityRange()
+            .definition(INTEGRATION_TIME_DEF)
+            .label(INTEGRATION_TIME_LABEL)
+            .uomCode(uom)
+            .value(min, max);
+    }
+    
     public QuantityBuilder responseTime(double value, String uom)
     {
         checkUom(uom, SWEHelper.TIME_UNIT);
@@ -158,11 +193,31 @@ public class CommonCapabilities extends SMLPropertiesHelper
             .value(value);
     }
     
+    public QuantityBuilder latency(double value, String uom)
+    {
+        checkUom(uom, SWEHelper.TIME_UNIT);
+        
+        return sml.createQuantity()
+            .definition(LATENCY_DEF)
+            .label(LATENCY_LABEL)
+            .uomCode(uom)
+            .value(value);
+    }
+    
     public QuantityBuilder resolution(double value, String uom)
     {
         return sml.createQuantity()
             .definition(RESOLUTION_DEF)
             .label(RESOLUTION_LABEL)
+            .uomCode(uom)
+            .value(value);
+    }
+    
+    public QuantityBuilder detectionLimit(double value, String uom)
+    {
+        return sml.createQuantity()
+            .definition(DETECTION_LIMIT_DEF)
+            .label(DETECTION_LIMIT_LABEL)
             .uomCode(uom)
             .value(value);
     }
@@ -182,6 +237,15 @@ public class CommonCapabilities extends SMLPropertiesHelper
             .definition(RELATIVE_ACCURACY_DEF)
             .label(RELATIVE_ACCURACY_LABEL)
             .uomCode("%")
+            .value(value);
+    }
+    
+    public QuantityBuilder drift(double value, String uom)
+    {
+        return sml.createQuantity()
+            .definition(DRIFT_DEF)
+            .label(DRIFT_LABEL)
+            .uomCode(uom)
             .value(value);
     }
     
@@ -271,8 +335,6 @@ public class CommonCapabilities extends SMLPropertiesHelper
     
     /* geometric properties */
     
-
-    
     public QuantityBuilder fieldOfView(double value, String uom)
     {
         checkUom(uom, SWEHelper.ANGLE_UNIT);
@@ -282,6 +344,51 @@ public class CommonCapabilities extends SMLPropertiesHelper
             .label(FOV_LABEL)
             .uomCode(uom)
             .value(value);
+    }
+    
+    public QuantityRangeBuilder fovRange(double min, double max, String uom)
+    {
+        checkUom(uom, SWEHelper.ANGLE_UNIT);
+        
+        return sml.createQuantityRange()
+            .definition(FOV_DEF)
+            .label(FOV_LABEL)
+            .uomCode(uom)
+            .value(min, max);
+    }
+    
+    public QuantityBuilder focalLength(double value, String uom)
+    {
+        checkUom(uom, SWEHelper.DISTANCE_UNIT);
+        
+        return sml.createQuantity()
+            .definition(FOCAL_LENGTH_DEF)
+            .label(FOCAL_LENGTH_LABEL)
+            .uomCode(uom)
+            .value(value);
+    }
+    
+    public QuantityRangeBuilder focalLengthRange(double min, double max, String uom)
+    {
+        checkUom(uom, SWEHelper.DISTANCE_UNIT);
+        
+        return sml.createQuantityRange()
+            .definition(FOCAL_LENGTH_DEF)
+            .label(FOCAL_LENGTH_LABEL)
+            .uomCode(uom)
+            .value(min, max);
+    }
+    
+    
+    public QuantityRangeBuilder pointingRange(double min, double max, String uom)
+    {
+        checkUom(uom, SWEHelper.ANGLE_UNIT);
+        
+        return sml.createQuantityRange()
+            .definition(POINTING_ANGLE_DEF)
+            .label(POINTING_ANGLE_LABEL)
+            .uomCode(uom)
+            .value(min, max);
     }
     
     
