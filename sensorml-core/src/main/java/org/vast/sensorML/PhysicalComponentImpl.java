@@ -19,9 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
 import org.vast.process.ProcessException;
+import org.vast.util.Asserts;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
+import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Reference;
 import net.opengis.sensorml.v20.AbstractProcess;
@@ -308,6 +310,28 @@ public class PhysicalComponentImpl extends AbstractProcessImpl implements Physic
         if (this.method == null)
             this.method = new OgcPropertyImpl<>();
         this.method.setValue(method);
+    }
+
+
+    @Override
+    public AbstractGeometry getGeometry()
+    {
+        if (!positionList.isEmpty())
+        {
+            var pos = positionList.get(0);
+            if (pos instanceof AbstractGeometry)
+                return (AbstractGeometry)pos;
+        }
+        
+        return super.getGeometry();
+    }
+
+
+    @Override
+    public void setGeometry(AbstractGeometry geom)
+    {
+        Asserts.checkArgument(geom instanceof Point, "geom must be a Point");
+        addPositionAsPoint((Point)geom);
     }
 
 

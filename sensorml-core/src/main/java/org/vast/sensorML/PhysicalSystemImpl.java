@@ -18,7 +18,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
+import org.vast.util.Asserts;
 import net.opengis.OgcPropertyList;
+import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Reference;
 import net.opengis.sensorml.v20.AbstractProcess;
@@ -259,5 +261,27 @@ public class PhysicalSystemImpl extends AggregateProcessImpl implements Physical
     public void addTimePosition(Time timePosition)
     {
         this.timePositionList.add(timePosition);
+    }
+
+
+    @Override
+    public AbstractGeometry getGeometry()
+    {
+        if (!positionList.isEmpty())
+        {
+            var pos = positionList.get(0);
+            if (pos instanceof AbstractGeometry)
+                return (AbstractGeometry)pos;
+        }
+        
+        return super.getGeometry();
+    }
+
+
+    @Override
+    public void setGeometry(AbstractGeometry geom)
+    {
+        Asserts.checkArgument(geom instanceof Point, "geom must be a Point");
+        addPositionAsPoint((Point)geom);
     }
 }
