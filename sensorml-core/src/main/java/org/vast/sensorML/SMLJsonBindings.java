@@ -305,7 +305,7 @@ public class SMLJsonBindings
             bean.setLang(reader.nextString());
         }
         
-        else if ("name".equals(name))
+        else if ("label".equals(name))
         {
             bean.setName(reader.nextString());
         }
@@ -1624,7 +1624,7 @@ public class SMLJsonBindings
             writer.name("lang").value(bean.getLang());
         
         if (bean.getName() != null)
-            writer.name("name").value(bean.getName());
+            writer.name("label").value(bean.getName());
         
         if (bean.getDescription() != null)
             writer.name("description").value(bean.getDescription());
