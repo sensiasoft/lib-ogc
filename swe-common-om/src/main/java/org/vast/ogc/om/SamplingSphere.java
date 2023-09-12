@@ -15,7 +15,6 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.ogc.om;
 
 import javax.xml.namespace.QName;
-import org.vast.swe.SWEConstants;
 import com.google.common.collect.ImmutableMap;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.impl.MeasureImpl;
@@ -24,7 +23,7 @@ import net.opengis.gml.v32.impl.MeasureImpl;
 public class SamplingSphere extends SamplingFeature<Point>
 {
     private static final long serialVersionUID = 7558030611682120450L;
-    public static final String TYPE = SWEConstants.SML_ONTOLOGY_ROOT + "swe/foi/SF_SamplingSphere";
+    public static final String TYPE = "http://www.opengis.net/def/samplingFeatureType/CS-API/SF_SamplingSphere";
     public static final QName PROP_RADIUS = new QName(SAMS_NS_URI, "radius", SAMS_NS_PREFIX);
     
     protected double radius;
