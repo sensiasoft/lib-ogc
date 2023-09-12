@@ -22,7 +22,9 @@ import org.vast.swe.SWEConstants;
 import org.vast.util.Asserts;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.TimeExtent;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
@@ -535,7 +537,7 @@ public class GeoJsonBindings
     
     protected void readCustomFeatureProperty(JsonReader reader, GenericFeatureImpl f, String name) throws IOException
     {
-        switch(reader.peek())
+        switch (reader.peek())
         {
             case STRING:
                 f.setProperty(name, reader.nextString());
@@ -545,8 +547,27 @@ public class GeoJsonBindings
                 f.setProperty(name, reader.nextDouble());
                 break;
                 
+            case BEGIN_OBJECT:
+                readCustomObjectProperty(reader, f, name);
+                break;
+                
             default:
                 reader.skipValue();
+        }
+    }
+    
+    
+    protected void readCustomObjectProperty(JsonReader reader, GenericFeatureImpl f, String name)
+    {
+        var obj = (JsonObject)JsonParser.parseReader(reader);
+        
+        // measure case
+        if (obj.has("uom") && obj.has("value")) 
+        {
+            var uom = obj.get("uom").getAsString();
+            var val = obj.get("value").getAsDouble();
+            var m = factory.newMeasure(val, uom);
+            f.setProperty(name, m);
         }
     }
     
