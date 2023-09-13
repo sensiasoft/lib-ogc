@@ -477,20 +477,20 @@ public class SWEJsonBindings extends AbstractBindings
         }
 
         // elementType
-        if ("elementType".equals(name))
+        else if ("elementType".equals(name))
         {
             OgcProperty<DataComponent> elementTypeProp = bean.getElementTypeProperty();
             elementTypeProp.setValue(readDataComponentWithName(reader));
         }
 
         // encoding
-        if ("encoding".equals(name))
+        else if ("encoding".equals(name))
         {
             bean.setEncoding(readEncoding(reader));
         }
 
         // values
-        if ("values".equals(name))
+        else if ("values".equals(name))
         {
             EncodedValues values = readEncodedValuesProperty(reader, bean, bean.getEncoding());
             bean.setValues(values);
@@ -530,7 +530,7 @@ public class SWEJsonBindings extends AbstractBindings
             bean.setReferenceFrame(reader.nextString());
 
         // localframe
-        if ("localFrame".equals(name))
+        else if ("localFrame".equals(name))
             bean.setLocalFrame(reader.nextString());
         
         else
@@ -570,20 +570,20 @@ public class SWEJsonBindings extends AbstractBindings
         }
 
         // elementType
-        if ("elementType".equals(name))
+        else if ("elementType".equals(name))
         {
             OgcProperty<DataComponent> elementTypeProp = bean.getElementTypeProperty();
             elementTypeProp.setValue(readDataComponentWithName(reader));
         }
 
         // encoding
-        if ("encoding".equals(name))
+        else if ("encoding".equals(name))
         {
             bean.setEncoding(readEncoding(reader));
         }
 
         // values
-        if ("values".equals(name))
+        else if ("values".equals(name))
         {
             EncodedValues values = readEncodedValuesProperty(reader, bean, bean.getEncoding());
             bean.setValues(values);
@@ -658,7 +658,7 @@ public class SWEJsonBindings extends AbstractBindings
         }
 
         // value
-        if ("value".equals(name))
+        else if ("value".equals(name))
             bean.setValue(trimStringValue(reader.nextString()));
         
         else
