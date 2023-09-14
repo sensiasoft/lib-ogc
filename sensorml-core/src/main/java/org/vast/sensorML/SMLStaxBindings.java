@@ -60,7 +60,7 @@ public class SMLStaxBindings extends XMLStreamBindingsV2 implements ISMLStaxBind
 
     public SMLStaxBindings()
     {        
-        super(new SMLFactory(), new SWEFactory(), new GMLFactory(), new GMDFactory(), new GCOFactory());
+        super(new SMLFactory(), new SWEFactory(), new GMLFactory(true), new GMDFactory(), new GCOFactory());
 
         nsContext.registerNamespace("xlink", net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
         nsContext.registerNamespace("sml", net.opengis.sensorml.v20.bind.XMLStreamBindingsV2.NS_URI);
