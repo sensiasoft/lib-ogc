@@ -335,7 +335,7 @@ public class CommonCapabilities extends SMLPropertiesHelper
     
     /* geometric properties */
     
-    public QuantityBuilder fieldOfView(double value, String uom)
+    public QuantityBuilder fov(double value, String uom)
     {
         checkUom(uom, SWEHelper.ANGLE_UNIT);
         

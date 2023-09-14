@@ -41,16 +41,20 @@ public class CommonIdentifiers
     public static final String SOFTWARE_VERSION_LABEL = "Software Version";
     public static final String FIRMWARE_VERSION_DEF = SWEHelper.getPropertyUri("FirmwareVersion");
     public static final String FIRMWARE_VERSION_LABEL = "Firmware Version";
-    public static final String MANUFACTURER_DEF = SWEHelper.getPropertyUri("Manufacturer");
-    public static final String MANUFACTURER_LABEL = "Manufacturer Name";
-    public static final String AUTHOR_DEF = SWEHelper.getDBpediaUri("Author");
-    public static final String AUTHOR_LABEL = "Author Name";
     public static final String SITEID_DEF = SWEHelper.getPropertyUri("SiteID");
     public static final String SITEID_LABEL = "Site ID";
+    public static final String CALLSIGN_DEF = SWEHelper.getDBpediaUri("Call_sign");
+    public static final String CALLSIGN_LABEL = "Callsign";
     
     // contact roles
+    public static final String MANUFACTURER_DEF = SWEHelper.getPropertyUri("Manufacturer");
+    public static final String MANUFACTURER_LABEL = "Manufacturer Name";
     public static final String OWNER_DEF = SWEHelper.getPropertyUri("Owner");
+    public static final String OWNER_LABEL = "Owner";
+    public static final String AUTHOR_DEF = SWEHelper.getDBpediaUri("Author");
+    public static final String AUTHOR_LABEL = "Author Name";
     public static final String OPERATOR_DEF = SWEHelper.getPropertyUri("Operator");
+    public static final String OPERATOR_LABEL = "Operator";
     
     // document roles
     public static final String USER_MANUAL_DEF = SWEHelper.getDBpediaUri("User_guide");
@@ -132,12 +136,28 @@ public class CommonIdentifiers
             .value(value);
     }
     
+    public TermBuilder operator(String value)
+    {
+        return sml.createTerm()
+            .definition(OPERATOR_DEF)
+            .label(OPERATOR_LABEL)
+            .value(value);
+    }
+    
     public TermBuilder siteId(String value, String codeSpace)
     {
         return sml.createTerm()
             .definition(SITEID_DEF)
             .codeSpace(codeSpace)
             .label(SITEID_LABEL)
+            .value(value);
+    }
+    
+    public TermBuilder callsign(String value)
+    {
+        return sml.createTerm()
+            .definition(CALLSIGN_DEF)
+            .label(CALLSIGN_LABEL)
             .value(value);
     }
 }

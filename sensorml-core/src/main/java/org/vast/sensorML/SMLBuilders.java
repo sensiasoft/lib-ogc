@@ -24,6 +24,7 @@ import org.vast.sensorML.SMLMetadataBuilders.CIResponsiblePartyBuilder;
 import org.vast.sensorML.SMLMetadataBuilders.CapabilityListBuilder;
 import org.vast.sensorML.SMLMetadataBuilders.CharacteristicListBuilder;
 import org.vast.swe.SWEBuilders.SweIdentifiableBuilder;
+import org.vast.swe.SWEConstants;
 import org.vast.util.Asserts;
 import org.vast.util.BaseBuilder;
 import com.google.common.base.Strings;
@@ -513,6 +514,12 @@ public class SMLBuilders
             instance.addComponent(name, p);
             return (B)this;
         }
+
+        public B addComponent(String name, AbstractProcessBuilder<?,?> builder)
+        {
+            instance.addComponent(name, builder.build());
+            return (B)this;
+        }
     }
 
 
@@ -653,9 +660,38 @@ public class SMLBuilders
             return (B)this;
         }
 
-        public B addComponent(String name, AbstractProcess component)
+        /**
+         * Sets the system location using CRS CRS84h
+         * @param lat
+         * @param lon
+         * @param alt
+         * @return This builder for chaining
+         */
+        public B location(double lat, double lon, double alt)
         {
-            instance.addComponent(name, component);
+            var point = gmlFac.newPoint();
+            point.setPos(new double[] {lon, lat, alt});
+            point.setSrsName(SWEConstants.REF_FRAME_CRS84h);
+            point.setSrsDimension(3);
+            
+            instance.addPositionAsPoint(point);
+            return (B)this;
+        }
+
+        /**
+         * Sets the system location using CRS CRS84
+         * @param lat
+         * @param lon
+         * @return This builder for chaining
+         */
+        public B location(double lat, double lon)
+        {
+            var point = gmlFac.newPoint();
+            point.setPos(new double[] {lon, lat});
+            point.setSrsName(SWEConstants.REF_FRAME_CRS84);
+            point.setSrsDimension(2);
+            
+            instance.addPositionAsPoint(point);
             return (B)this;
         }
 
