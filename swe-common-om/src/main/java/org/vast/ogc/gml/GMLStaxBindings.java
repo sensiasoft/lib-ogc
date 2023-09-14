@@ -184,6 +184,11 @@ public class GMLStaxBindings extends XMLStreamBindings
     
     protected void writeCommonFeatureProperties(XMLStreamWriter writer, IFeature bean) throws XMLStreamException
     {
+        if (bean.getId() != null)
+        {
+            writer.writeAttribute(nsContext.getPrefix(NS_URI), NS_URI, "id", getStringValue(bean.getId()));
+        }
+        
         if (bean.getDescription() != null)
         {
             writer.writeStartElement(NS_URI, "description");
