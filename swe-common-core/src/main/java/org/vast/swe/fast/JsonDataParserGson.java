@@ -221,7 +221,12 @@ public class JsonDataParserGson extends AbstractDataParser
         @Override
         public void readValue(DataBlock data, int index) throws IOException
         {
-            var str = reader.peek() == JsonToken.NULL ? null : reader.nextString();
+            String str = null;
+            if (reader.peek() == JsonToken.NULL) {
+                reader.nextNull();
+            } else {
+                str = reader.nextString();
+            }
             data.setStringValue(index, str);
         }
     }
