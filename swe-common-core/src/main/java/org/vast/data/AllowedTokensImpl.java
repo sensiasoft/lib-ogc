@@ -30,7 +30,7 @@ public class AllowedTokensImpl extends AbstractSWEImpl implements AllowedTokens
     private static final long serialVersionUID = -1524114903160966177L;
     protected ArrayList<String> valueList = new ArrayList<>();
     protected String pattern;
-    protected Pattern compiledPattern;
+    protected transient Pattern compiledPattern;
     
     
     public AllowedTokensImpl()
