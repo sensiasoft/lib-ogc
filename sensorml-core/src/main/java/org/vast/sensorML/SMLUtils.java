@@ -28,6 +28,7 @@ import java.net.URL;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import net.opengis.HrefResolver;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.Reference;
@@ -283,7 +284,7 @@ public class SMLUtils extends XMLBindingsUtils
                 smlProcess = new SimpleProcessImpl();
             
             // assign exec implementation
-            smlProcess.setExecutableImpl(processExec);            
+            smlProcess.setExecutableImpl(processExec);
             return smlProcess;
         }
         catch (ProcessException e)
@@ -326,6 +327,7 @@ public class SMLUtils extends XMLBindingsUtils
     public AbstractProcessImpl getExecutableInstance(AbstractProcessImpl process, boolean useThreads) throws SMLException
     {
         Cloner cloner = new Cloner();
+        cloner.setDontCloneInstanceOf(HrefResolver.class);
         AbstractProcessImpl newInstance = cloner.deepClone(process);
         makeProcessExecutable(newInstance, useThreads);
         return newInstance;
