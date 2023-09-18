@@ -1396,7 +1396,7 @@ public class SWEJsonBindings extends AbstractBindings
             {
                 var val = reader.nextString();
                 try {
-                    bean.setByteOrder(ByteOrder.valueOf(val));
+                    bean.setByteOrder(ByteOrder.fromString(val));
                 } catch (IllegalArgumentException e){
                     throw new JsonParseException("Invalid byte order value: " + val + " @ " + reader.getPath());
                 }
@@ -1405,7 +1405,7 @@ public class SWEJsonBindings extends AbstractBindings
             {
                 var val = reader.nextString();
                 try {
-                    bean.setByteEncoding(ByteEncoding.valueOf(val));
+                    bean.setByteEncoding(ByteEncoding.fromString(val));
                 } catch (IllegalArgumentException e){
                     throw new JsonParseException("Invalid byte encoding: " + val + " @ " + reader.getPath());
                 }
@@ -1419,6 +1419,7 @@ public class SWEJsonBindings extends AbstractBindings
                 reader.beginArray();
                 while (reader.hasNext())
                 {
+                    reader.beginObject();
                     var type = readObjectType(reader);
                     if ("Component".equals(type))
                         bean.addMemberAsComponent(readBinaryComponent(reader));
