@@ -480,7 +480,9 @@ public class SWEJsonBindings extends AbstractBindings
         else if ("elementType".equals(name))
         {
             OgcProperty<DataComponent> elementTypeProp = bean.getElementTypeProperty();
-            elementTypeProp.setValue(readDataComponentWithName(reader));
+            var comp = readDataComponentWithName(reader);
+            elementTypeProp.setName(comp.getName());
+            elementTypeProp.setValue(comp);
         }
 
         // encoding
