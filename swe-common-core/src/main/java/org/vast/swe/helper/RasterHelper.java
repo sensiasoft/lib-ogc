@@ -40,6 +40,7 @@ public class RasterHelper extends VectorHelper
     public static final String DEF_IMAGE = SWEHelper.getPropertyUri("RasterImage");
     public static final String DEF_RASTER_WIDTH = SWEHelper.getPropertyUri("GridWidth");
     public static final String DEF_RASTER_HEIGHT = SWEHelper.getPropertyUri("GridHeight");
+    public static final String DEF_RASTER_DEPTH = SWEHelper.getPropertyUri("GridDepth");
 
     public static final String DEF_RED_CHANNEL = SWEHelper.getPropertyUri("RedChannel");
     public static final String DEF_GREEN_CHANNEL = SWEHelper.getPropertyUri("GreenChannel");
