@@ -24,6 +24,7 @@ import org.vast.sensorML.SMLBuilders.ObsPropBuilder;
 import org.vast.sensorML.SMLBuilders.PhysicalComponentBuilder;
 import org.vast.sensorML.SMLBuilders.PhysicalSystemBuilder;
 import org.vast.sensorML.SMLBuilders.SimpleProcessBuilder;
+import org.vast.sensorML.SMLBuilders.SpatialFrameBuilder;
 import org.vast.sensorML.SMLBuilders.TermBuilder;
 import org.vast.sensorML.SMLHelper.LinkTarget.PortType;
 import org.vast.sensorML.SMLMetadataBuilders.CIOnlineResourceBuilder;
@@ -273,6 +274,15 @@ public class SMLHelper extends SWEHelper
     public CIOnlineResourceBuilder createDocument()
     {
         return new CIOnlineResourceBuilder(SMLHelper.DEFAULT_GMD_FACTORY);
+    }
+    
+    
+    /**
+     * @return A builder to create a new SpatialFrame
+     */
+    public SpatialFrameBuilder createSpatialFrame()
+    {
+        return new SpatialFrameBuilder(SMLHelper.DEFAULT_SML_FACTORY);
     }
     
     

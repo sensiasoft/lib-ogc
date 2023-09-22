@@ -119,11 +119,12 @@ public class SWEHelper
     public static final Unit VOLTAGE_UNIT = new Unit().setKilogram(1.0).setMeter(2.0).setSecond(-3).setAmpere(-1);
     public static final Unit CURRENT_UNIT = new Unit().setAmpere(1);
     public static final Unit POWER_UNIT = new Unit().setKilogram(1.0).setMeter(2.0).setSecond(-3);
+    public static final Unit ENERGY_UNIT = new Unit().setKilogram(1.0).setMeter(2.0).setSecond(-2);
     public static final Unit UNITLESS = new Unit();
     final static String INVALID_UOM = "Invalid unit '{}'. Unit must be compatible with '{}'";
     
     protected SWEFactory fac = DEFAULT_SWE_FACTORY;
-    UnitParserUCUM uomParser = new UnitParserUCUM();
+    protected UnitParserUCUM uomParser = new UnitParserUCUM();
     
     
     /**

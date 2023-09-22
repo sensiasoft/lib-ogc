@@ -19,6 +19,7 @@ import org.vast.sensorML.SMLMetadataBuilders.CharacteristicListBuilder;
 import org.vast.swe.SWEBuilders.CategoryBuilder;
 import org.vast.swe.SWEBuilders.QuantityBuilder;
 import org.vast.swe.SWEBuilders.QuantityRangeBuilder;
+import org.vast.unit.Unit;
 import org.vast.swe.SWEHelper;
 
 
@@ -60,6 +61,10 @@ public class CommonCharacteristics extends SMLPropertiesHelper
     public static final String BATT_LIFETIME_LABEL = "Battery Lifetime";
     public static final String SYSTEM_LIFETIME_DEF = "http://www.w3.org/ns/ssn/systems/SystemLifetime";
     public static final String SYSTEM_LIFETIME_LABEL = "System Lifetime";
+    
+    public static final Unit BAT_CAP_ENERGY_UNIT = SWEHelper.ENERGY_UNIT;
+    public static final Unit BAT_CAP_AH_UNIT = new Unit().setAmpere(1).setSecond(1);
+    
     
     
     public CommonCharacteristics(SMLHelper sml)
@@ -221,13 +226,31 @@ public class CommonCharacteristics extends SMLPropertiesHelper
 
     public QuantityBuilder batteryCapacity(double val, String uom)
     {
-        checkUom(uom, "W.h");
+        return batteryCapacity(val, uom, true);
+    }
+    
+    
+    public QuantityBuilder batteryCapacity(double val, String uom, boolean useEnergy)
+    {
+        checkUom(uom, (useEnergy ? BAT_CAP_ENERGY_UNIT : BAT_CAP_AH_UNIT));
         
         return sml.createQuantity()
             .definition(BATT_CAPACITY_DEF)
             .label(BATT_CAPACITY_LABEL)
             .uomCode(uom)
             .value(val);
+    }
+
+
+    public QuantityRangeBuilder batteryCapacityRange(double min, double max, String uom, boolean useEnergy)
+    {
+        checkUom(uom, (useEnergy ? BAT_CAP_ENERGY_UNIT : BAT_CAP_AH_UNIT));
+        
+        return sml.createQuantityRange()
+            .definition(BATT_CAPACITY_DEF)
+            .label(BATT_CAPACITY_LABEL)
+            .uomCode(uom)
+            .value(min, max);
     }
     
     public QuantityBuilder batteryLifetime(double val, String uom)

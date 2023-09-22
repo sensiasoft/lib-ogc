@@ -521,32 +521,17 @@ public class SMLBuilders
             return (B)this;
         }
     }
-
-
-    /**
-     * <p>
-     * Builder class for PhysicalComponent
-     * </p>
-     *
-     * @author Alex Robin
-     * @date Apr 18, 2020
-     */
-    public static class PhysicalComponentBuilder extends BasePhysicalComponentBuilder<PhysicalComponentBuilder>
-    {
-        public PhysicalComponentBuilder(SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newPhysicalComponent();
-        }
-    }
-
+    
+    
     @SuppressWarnings("unchecked")
-    public abstract static class BasePhysicalComponentBuilder<B extends BasePhysicalComponentBuilder<B>> extends BaseSimpleProcessBuilder<B, PhysicalComponent>
+    public abstract static class BasePhysicalProcessBuilder<
+            B extends AbstractProcessBuilder<B, T>,
+            T extends AbstractPhysicalProcess>
+        extends AbstractProcessBuilder<B, T>
     {
-        protected BasePhysicalComponentBuilder(SMLFactory fac)
+        protected BasePhysicalProcessBuilder(SMLFactory fac)
         {
             super(fac);
-            this.instance = fac.newPhysicalComponent();
         }
 
         public B attachedTo(String platformUri)
@@ -560,86 +545,10 @@ public class SMLBuilders
             instance.addLocalReferenceFrame(refFrame);
             return (B)this;
         }
-
-        public B location(Vector loc)
-        {
-            setPositionAsVector(loc, instance);
-            return (B)this;
-        }
         
-        public B position(DataRecord pos)
+        public B addLocalReferenceFrame(SpatialFrameBuilder builder)
         {
-            setPositionAsRecord(pos, instance);
-            return (B)this;
-        }
-    }
-    
-    
-    protected static void setPositionAsVector(Vector loc, AbstractPhysicalProcess comp)
-    {
-        // automatically assign reference frame if already defined
-        if (!comp.getLocalReferenceFrameList().isEmpty())
-        {
-            SpatialFrame localFrame = comp.getLocalReferenceFrameList().get(0);
-            loc.setLocalFrame("#" + localFrame.getId());
-        }
-        
-        comp.addPositionAsVector(loc);
-    }
-    
-    
-    protected static void setPositionAsRecord(DataRecord pos, AbstractPhysicalProcess comp)
-    {
-        Asserts.checkArgument(pos.getNumFields() == 2, "Position record must have 2 fields");
-        
-        // automatically assign reference frame if already defined
-        if (!comp.getLocalReferenceFrameList().isEmpty())
-        {
-            SpatialFrame localFrame = comp.getLocalReferenceFrameList().get(0);
-            ((Vector)pos.getComponent(0)).setLocalFrame("#" + localFrame.getId());
-            ((Vector)pos.getComponent(1)).setLocalFrame("#" + localFrame.getId());
-        }
-        
-        comp.addPositionAsDataRecord(pos);
-    }
-
-
-    /**
-     * <p>
-     * Builder class for PhysicalSystem
-     * </p>
-     *
-     * @author Alex Robin
-     * @date Apr 18, 2020
-     */
-    public static class PhysicalSystemBuilder extends BasePhysicalSystemBuilder<PhysicalSystemBuilder>
-    {
-        public PhysicalSystemBuilder(SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newPhysicalSystem();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public abstract static class BasePhysicalSystemBuilder<B extends BasePhysicalSystemBuilder<B>> extends BaseAggregateProcessBuilder<B, PhysicalSystem>
-    {
-        protected BasePhysicalSystemBuilder(SMLFactory fac)
-        {
-            super(fac);
-            this.instance = fac.newPhysicalSystem();
-        }
-
-        public B attachedTo(String platformUri)
-        {
-            instance.setAttachedTo(new ReferenceImpl(platformUri));
-            return (B)this;
-        }
-        
-        public B addLocalReferenceFrame(SpatialFrame refFrame)
-        {
-            instance.addLocalReferenceFrame(refFrame);
-            return (B)this;
+            return addLocalReferenceFrame(builder.build());
         }
 
         public B location(Point loc)
@@ -694,10 +603,100 @@ public class SMLBuilders
             instance.addPositionAsPoint(point);
             return (B)this;
         }
+    }
 
-        public B addComponentLocation(String id, Vector loc)
+
+    /**
+     * <p>
+     * Builder class for PhysicalComponent
+     * </p>
+     *
+     * @author Alex Robin
+     * @date Apr 18, 2020
+     */
+    public static class PhysicalComponentBuilder extends BasePhysicalComponentBuilder<PhysicalComponentBuilder>
+    {
+        public PhysicalComponentBuilder(SMLFactory fac)
         {
-            instance.addPositionAsVector(loc);
+            super(fac);
+            this.instance = fac.newPhysicalComponent();
+        }
+    }
+
+    public abstract static class BasePhysicalComponentBuilder<B extends BasePhysicalComponentBuilder<B>> extends BasePhysicalProcessBuilder<B, PhysicalComponent>
+    {
+        protected BasePhysicalComponentBuilder(SMLFactory fac)
+        {
+            super(fac);
+            this.instance = fac.newPhysicalComponent();
+        }
+    }
+    
+    
+    protected static void setPositionAsVector(Vector loc, AbstractPhysicalProcess comp)
+    {
+        // automatically assign reference frame if already defined
+        if (!comp.getLocalReferenceFrameList().isEmpty())
+        {
+            SpatialFrame localFrame = comp.getLocalReferenceFrameList().get(0);
+            loc.setLocalFrame("#" + localFrame.getId());
+        }
+        
+        comp.addPositionAsVector(loc);
+    }
+    
+    
+    protected static void setPositionAsRecord(DataRecord pos, AbstractPhysicalProcess comp)
+    {
+        Asserts.checkArgument(pos.getNumFields() == 2, "Position record must have 2 fields");
+        
+        // automatically assign reference frame if already defined
+        if (!comp.getLocalReferenceFrameList().isEmpty())
+        {
+            SpatialFrame localFrame = comp.getLocalReferenceFrameList().get(0);
+            ((Vector)pos.getComponent(0)).setLocalFrame("#" + localFrame.getId());
+            ((Vector)pos.getComponent(1)).setLocalFrame("#" + localFrame.getId());
+        }
+        
+        comp.addPositionAsDataRecord(pos);
+    }
+
+
+    /**
+     * <p>
+     * Builder class for PhysicalSystem
+     * </p>
+     *
+     * @author Alex Robin
+     * @date Apr 18, 2020
+     */
+    public static class PhysicalSystemBuilder extends BasePhysicalSystemBuilder<PhysicalSystemBuilder>
+    {
+        public PhysicalSystemBuilder(SMLFactory fac)
+        {
+            super(fac);
+            this.instance = fac.newPhysicalSystem();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BasePhysicalSystemBuilder<B extends BasePhysicalSystemBuilder<B>> extends BasePhysicalProcessBuilder<B, PhysicalSystem>
+    {
+        protected BasePhysicalSystemBuilder(SMLFactory fac)
+        {
+            super(fac);
+            this.instance = fac.newPhysicalSystem();
+        }
+
+        public B addComponent(String name, AbstractProcess p)
+        {
+            instance.addComponent(name, p);
+            return (B)this;
+        }
+
+        public B addComponent(String name, AbstractProcessBuilder<?,?> builder)
+        {
+            instance.addComponent(name, builder.build());
             return (B)this;
         }
     }
@@ -902,4 +901,100 @@ public class SMLBuilders
             return (B)this;
         }
     }
+    
+    
+    /**
+     * <p>
+     * Builder class for SpatialFrame object
+     * </p>
+     *
+     * @author Alex Robin
+     * @date Sep 18, 2023
+     */
+    public static class SpatialFrameBuilder extends BaseSpatialFrameBuilder<SpatialFrameBuilder>
+    {
+        public SpatialFrameBuilder(SMLFactory fac)
+        {
+            super(fac);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseSpatialFrameBuilder<B extends BaseSpatialFrameBuilder<B>> extends BaseBuilder<SpatialFrame>
+    {
+        SMLFactory fac;
+        
+        protected BaseSpatialFrameBuilder(SMLFactory fac)
+        {
+            this.fac = fac;
+            this.instance = fac.newSpatialFrame();
+        }
+
+        public B copyFrom(SpatialFrame base)
+        {
+            instance.setId(base.getId());
+            instance.setLabel(base.getLabel());
+            instance.setDescription(base.getDescription());
+            instance.setOrigin(base.getOrigin());
+            for (var axis: base.getAxisList().getProperties())
+                instance.addAxis(axis.getName(), axis.getValue());
+            return (B)this;
+        }
+
+        /**
+         * Sets the frame ID
+         * @param id
+         * @return This builder for chaining
+         */
+        public B id(String id)
+        {
+            instance.setId(id);
+            return (B)this;
+        }
+
+        /**
+         * Sets the frame label
+         * @param label
+         * @return This builder for chaining
+         */
+        public B label(String label)
+        {
+            instance.setLabel(label);
+            return (B)this;
+        }
+
+        /**
+         * Sets the frame description
+         * @param desc
+         * @return This builder for chaining
+         */
+        public B description(String desc)
+        {
+            instance.setDescription(desc);
+            return (B)this;
+        }
+
+        /**
+         * Sets description of the frame origin 
+         * @param desc
+         * @return This builder for chaining
+         */
+        public B origin(String desc)
+        {
+            instance.setOrigin(desc);
+            return (B)this;
+        }
+
+        /**
+         * Adds a frame axis
+         * @param name Axis name
+         * @param desc Axis description
+         * @return This builder for chaining
+         */
+        public B addAxis(String name, String desc)
+        {
+            instance.addAxis(name, desc);
+            return (B)this;
+        }
+    }   
 }
