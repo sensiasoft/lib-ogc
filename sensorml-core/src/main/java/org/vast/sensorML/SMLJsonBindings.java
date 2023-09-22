@@ -1097,10 +1097,15 @@ public class SMLJsonBindings
             bean.setAttachedTo(ref);
         }
         
-        else if ("localReferenceFrame".equals(name))
+        else if ("localReferenceFrames".equals(name))
         {
-            var refFrame = readSpatialFrame(reader);
-            bean.addLocalReferenceFrame(refFrame);
+            reader.beginArray();
+            while (reader.hasNext())
+            {
+                var refFrame = readSpatialFrame(reader);
+                bean.addLocalReferenceFrame(refFrame);
+            }
+            reader.endArray();
         }
         
         else if ("position".equals(name))
@@ -2209,7 +2214,7 @@ public class SMLJsonBindings
     protected void writePhysicalProcessProperties(JsonWriter writer, AbstractPhysicalProcess bean) throws IOException
     {
         writeAttachedTo(writer, bean);
-        writeLocalFrame(writer, bean.getLocalReferenceFrameList());
+        writeLocalFrames(writer, bean.getLocalReferenceFrameList());
         writePosition(writer, bean.getPositionList());
     }
     
@@ -2224,26 +2229,34 @@ public class SMLJsonBindings
     }
     
     
-    protected void writeLocalFrame(JsonWriter writer, List<SpatialFrame> bean) throws IOException
+    protected void writeLocalFrames(JsonWriter writer, List<SpatialFrame> bean) throws IOException
     {
         if (bean.isEmpty())
             return;
         
-        var selfFrame = bean.get(0);
-        writer.name("localReferenceFrame").beginObject();
+        writer.name("localReferenceFrames").beginArray();
         
-        sweBindings.writeAbstractSWEIdentifiableProperties(writer, selfFrame);
-        writer.name("origin").value(selfFrame.getOrigin());
-        writer.name("axes").beginArray();
-        for (var axis: selfFrame.getAxisList().getProperties())
+        for (var selfFrame: bean)
         {
             writer.beginObject();
-            writer.name("name").value(axis.getName());
-            writer.name("description").value(axis.getValue());
+            
+            sweBindings.writeAbstractSWEIdentifiableProperties(writer, selfFrame);
+            writer.name("origin").value(selfFrame.getOrigin());
+            
+            writer.name("axes").beginArray();
+            for (var axis: selfFrame.getAxisList().getProperties())
+            {
+                writer.beginObject();
+                writer.name("name").value(axis.getName());
+                writer.name("description").value(axis.getValue());
+                writer.endObject();
+            }
+            writer.endArray();
+            
             writer.endObject();
         }
+        
         writer.endArray();
-        writer.endObject();
     }
     
     
