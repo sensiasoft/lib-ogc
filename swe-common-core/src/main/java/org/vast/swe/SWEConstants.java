@@ -110,14 +110,15 @@ public class SWEConstants
     // SWE procedure/system definition URIs
     public static final String SOSA_URI_PREFIX = "http://www.w3.org/ns/sosa/";
     public static final String SSN_URI_PREFIX = "http://www.w3.org/ns/ssn/";
+    public static final String OMS_URI_PREFIX = "http://www.w3.org/ns/x-oms/";
     public static final String DEF_PROCEDURE = SOSA_URI_PREFIX + "Procedure";
     public static final String DEF_SYSTEM = SSN_URI_PREFIX + "System";
-    public static final String DEF_HOST = SOSA_URI_PREFIX + "Host";
     public static final String DEF_PLATFORM = SOSA_URI_PREFIX + "Platform";
-    public static final String DEF_OBSERVER = SOSA_URI_PREFIX + "Observer";
     public static final String DEF_SENSOR = SOSA_URI_PREFIX + "Sensor";
     public static final String DEF_ACTUATOR = SOSA_URI_PREFIX + "Actuator";
     public static final String DEF_SAMPLER = SOSA_URI_PREFIX + "Sampler";
+    public static final String DEF_OBSERVER = OMS_URI_PREFIX + "Observer";
+    public static final String DEF_HOST = OMS_URI_PREFIX + "Host";
 
     public static final String SWE_SYS_URI_PREFIX = SML_ONTOLOGY_ROOT + "swe/system/";
     public static final String DEF_SENSOR_NETWORK = SWE_SYS_URI_PREFIX + "SensorNetwork";
