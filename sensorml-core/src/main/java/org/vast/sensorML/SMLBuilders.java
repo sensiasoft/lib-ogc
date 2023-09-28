@@ -521,6 +521,16 @@ public class SMLBuilders
             instance.addComponent(name, builder.build());
             return (B)this;
         }
+
+        public B addComponent(String name, String href, String title)
+        {
+            var link = new OgcPropertyImpl<AbstractProcess>();
+            link.setName(name);
+            link.setHref(href);
+            link.setTitle(title);
+            instance.getComponentList().add(link);
+            return (B)this;
+        }
     }
     
     
@@ -695,6 +705,16 @@ public class SMLBuilders
         public B addComponent(String name, AbstractProcessBuilder<?,?> builder)
         {
             instance.addComponent(name, builder.build());
+            return (B)this;
+        }
+
+        public B addComponent(String name, String href, String title)
+        {
+            var link = new OgcPropertyImpl<AbstractProcess>();
+            link.setName(name);
+            link.setHref(href);
+            link.setTitle(title);
+            instance.getComponentList().add(link);
             return (B)this;
         }
     }
