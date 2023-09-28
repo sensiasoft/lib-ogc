@@ -15,15 +15,17 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.ogc.om;
 
 import javax.xml.namespace.QName;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.LineString;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Polygon;
 import org.vast.ogc.gml.ExtensibleFeatureImpl;
 import org.vast.ogc.gml.FeatureRef;
-import org.vast.ogc.gml.IFeature;
 import org.vast.ogc.xlink.CachedReference;
+import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.swe.SWEConstants;
+import org.vast.util.Asserts;
 import com.google.common.collect.ImmutableMap;
 
 
@@ -42,9 +44,9 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
     public static final QName PROP_HOSTED_PROCEDURE = new QName(SAMS_NS_URI, "hostedProcedure", SAMS_NS_PREFIX);
     public static final QName PROP_SHAPE = new QName(SAMS_NS_URI, "shape", SAMS_NS_PREFIX);
     
-    protected CachedReference<Void> type;
-    protected FeatureRef<?> sampledFeature;
-    protected ProcedureRef hostedProcedure;
+    protected IXlinkReference<Void> type;
+    protected IXlinkReference<?> sampledFeature;
+    protected IXlinkReference<?> hostedProcedure;
     
     
     public SamplingFeature()
@@ -80,17 +82,24 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
     }
     
     
-    public void setSampledFeatureUID(String featureUID)
+    public void setSampledFeature(IXlinkReference<?> ref)
     {
-        properties = null; // reset cached properties map
-        this.sampledFeature =
-            new FeatureRef<IFeature>(featureUID != null ? featureUID : SWEConstants.NIL_UNKNOWN);
+        this.sampledFeature = Asserts.checkNotNull(ref, IXlinkReference.class);
     }
     
     
-    public String getSampledFeatureUID()
+    public void setSampledFeature(String title, String href)
     {
-        return sampledFeature != null ? sampledFeature.getHref() : null;
+        properties = null; // reset cached properties map
+        sampledFeature = new OgcPropertyImpl<>();
+        sampledFeature.setHref(Asserts.checkNotNullOrBlank(href, "href"));
+        sampledFeature.setTitle(title);
+    }
+    
+    
+    public IXlinkReference<?> getSampledFeature()
+    {
+        return sampledFeature;
     }
     
     
@@ -126,7 +135,8 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
         builder.put(PROP_TYPE, type);
         
         // sampled feature is a mandatory property
-        builder.put(PROP_SAMPLED_FEATURE, sampledFeature != null ? sampledFeature : new FeatureRef<>());
+        if (sampledFeature != null)
+            builder.put(PROP_SAMPLED_FEATURE, sampledFeature != null ? sampledFeature : new FeatureRef<>(SWEConstants.NIL_UNKNOWN));
         
         if (hostedProcedure != null)
             builder.put(PROP_HOSTED_PROCEDURE, hostedProcedure);
@@ -166,7 +176,7 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
         sf.setBoundedByAsEnvelope(getBoundedBy());
         if (sf.isSetGeometry())
             sf.setGeometry(getGeometry());
-        sf.setSampledFeatureUID(getSampledFeatureUID());
+        sf.setSampledFeature(getSampledFeature());
         sf.setHostedProcedureUID(getHostedProcedureUID());
         
         return sf;

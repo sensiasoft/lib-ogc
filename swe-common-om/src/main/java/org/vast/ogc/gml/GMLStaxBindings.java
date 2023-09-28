@@ -254,11 +254,14 @@ public class GMLStaxBindings extends XMLStreamBindings
             }
             else if (val instanceof IXlinkReference<?>)
             {
-                String href = ((IXlinkReference<?>) val).getHref();
-                if (href != null) 
-                    writer.writeAttribute(XLINK_NS_URI, "href", href);
+                var link = (IXlinkReference<?>)val;
+                if (link.getHref() != null) 
+                    writer.writeAttribute(XLINK_NS_URI, "href", link.getHref());
                 else
                     writer.writeAttribute(XSI_NS_URI, "nil", "true");
+                
+                if (link.getTitle() != null) 
+                    writer.writeAttribute(XLINK_NS_URI, "title", link.getTitle());
             }
             else if (val instanceof Measure)
             {

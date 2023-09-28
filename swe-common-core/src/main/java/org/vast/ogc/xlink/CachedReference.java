@@ -46,6 +46,7 @@ public class CachedReference<T> implements IXlinkReference<T>
     protected String href;
     protected String role;
     protected String arcRole;
+    protected String title;
     protected T value;
     protected transient IReferenceResolver<? extends T> resolver;
 
@@ -113,6 +114,20 @@ public class CachedReference<T> implements IXlinkReference<T>
     public void setArcRole(String arcRole)
     {
         this.arcRole = arcRole;
+    }
+
+
+    @Override
+    public String getTitle()
+    {
+        return title;
+    }
+
+
+    @Override
+    public void setTitle(String title)
+    {
+        this.title = title;
     }
 
 

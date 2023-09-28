@@ -39,6 +39,7 @@ import net.opengis.gml.v32.Measure;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Polygon;
 import net.opengis.gml.v32.impl.GMLFactory;
+import net.opengis.gml.v32.impl.ReferenceImpl;
 
 
 /**
@@ -113,8 +114,15 @@ public class GeoJsonBindings
         // geometry
         if (bean.getGeometry() != null)
         {
-            writer.name("geometry");
-            writeGeometry(writer, bean.getGeometry());
+            var crsType = getCrsType(bean.getGeometry());
+            
+            if (crsType != CrsType.CUSTOM)
+            {
+                writer.name("geometry");
+                writeGeometry(writer, bean.getGeometry());
+            }
+            else
+                writer.name("geometry").jsonValue("null");
         }
     }
     
@@ -168,11 +176,15 @@ public class GeoJsonBindings
             }
             else if (val instanceof IXlinkReference<?>)
             {
-                String href = ((IXlinkReference<?>) val).getHref();
-                if (href != null && !href.equals(featureType)) 
+                var link = (IXlinkReference<?>)val;
+                if (link.getHref() != null && !link.getHref().equals(featureType)) 
                 {
-                    writer.name(propName.getLocalPart());
-                    writer.value(href);
+                    writer.name(propName.getLocalPart() + "@link");
+                    writer.beginObject();
+                    writer.name("href").value(link.getHref());
+                    if (link.getTitle() != null)
+                        writer.name("title").value(link.getTitle());
+                    writer.endObject();
                 }
             }
             else if (val instanceof Measure)
@@ -561,13 +573,29 @@ public class GeoJsonBindings
     {
         var obj = (JsonObject)JsonParser.parseReader(reader);
         
-        // measure case
-        if (obj.has("uom") && obj.has("value")) 
         {
-            var uom = obj.get("uom").getAsString();
-            var val = obj.get("value").getAsDouble();
-            var m = factory.newMeasure(val, uom);
-            f.setProperty(name, m);
+            var obj = (JsonObject)JsonParser.parseReader(reader);
+            
+            // link case
+            if (obj.has("href")) 
+            {
+                var href = obj.get("href").getAsString();
+                var ref = new ReferenceImpl(href);
+                name = name.replace("@link", ""); // remove property name @link suffix
+                f.setProperty(name, ref);
+                
+                if (obj.has("title"))
+                    ref.setTitle(obj.get("title").getAsString());
+            }
+            
+            // measure case
+            if (obj.has("uom") && obj.has("value")) 
+            {
+                var uom = obj.get("uom").getAsString();
+                var val = obj.get("value").getAsDouble();
+                var m = factory.newMeasure(val, uom);
+                f.setProperty(name, m);
+            }
         }
     }
     

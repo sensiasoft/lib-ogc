@@ -47,5 +47,9 @@ public interface IXlinkReference<TargetType>
     
     public void setArcRole(String arcRole);
     
+    public String getTitle();
+
+    public void setTitle(String title);
+    
     public TargetType getTarget();
 }
