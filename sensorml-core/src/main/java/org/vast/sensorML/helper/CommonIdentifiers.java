@@ -61,6 +61,9 @@ public class CommonIdentifiers
     public static final String SPECSHEET_DEF = SWEHelper.getDBpediaUri("Datasheet");
     public static final String WEBPAGE_DEF = SWEHelper.getDBpediaUri("Web_page");
     public static final String REPORT_DEF = SWEHelper.getDBpediaUri("Report");
+    public static final String PHOTO_DEF = SWEHelper.getDBpediaUri("Photograph");
+    public static final String SCHEMATIC_DEF = SWEHelper.getDBpediaUri("Schematic");
+    public static final String MODEL3D_DEF = SWEHelper.getDBpediaUri("3D_model");
     
     
     SMLHelper sml;
