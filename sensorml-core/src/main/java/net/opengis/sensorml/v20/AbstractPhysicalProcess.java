@@ -16,6 +16,7 @@ package net.opengis.sensorml.v20;
 
 import java.io.Serializable;
 import java.util.List;
+import org.vast.ogc.geopose.Pose;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Reference;
@@ -124,6 +125,12 @@ public interface AbstractPhysicalProcess extends AbstractProcess
      * Adds a new positionAsDataRecord property
      */
     public void addPositionAsDataRecord(DataRecord position);
+    
+    
+    /**
+     * Adds a new positionAsAbstractProcess property
+     */
+    public void addPositionAsPose(Pose pose);
     
     
     /**

@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.namespace.QName;
+import org.vast.ogc.geopose.Pose;
 import org.vast.process.ProcessException;
 import org.vast.util.Asserts;
 import net.opengis.OgcProperty;
@@ -194,6 +195,15 @@ public class PhysicalComponentImpl extends AbstractProcessImpl implements Physic
     public void addPositionAsPoint(Point position)
     {
         this.positionList.add(position);
+    }
+    
+    
+    /**
+     * Adds a new positionAsAbstractProcess property
+     */
+    public void addPositionAsPose(Pose pose)
+    {
+        this.positionList.add(pose);
     }
     
     

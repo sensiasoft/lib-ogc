@@ -19,6 +19,7 @@ import java.time.OffsetDateTime;
 import java.util.function.Consumer;
 import org.isotc211.v2005.gmd.CIOnlineResource;
 import org.isotc211.v2005.gmd.CIResponsibleParty;
+import org.vast.ogc.geopose.Pose;
 import org.vast.sensorML.SMLMetadataBuilders.CIOnlineResourceBuilder;
 import org.vast.sensorML.SMLMetadataBuilders.CIResponsiblePartyBuilder;
 import org.vast.sensorML.SMLMetadataBuilders.CapabilityListBuilder;
@@ -563,9 +564,9 @@ public class SMLBuilders
             return (B)this;
         }
         
-        public B position(DataRecord pos)
+        public B position(Pose pose)
         {
-            setPositionAsRecord(pos, instance);
+            setPositionAsPose(pose, instance);
             return (B)this;
         }
 
@@ -646,19 +647,16 @@ public class SMLBuilders
     }
     
     
-    protected static void setPositionAsRecord(DataRecord pos, AbstractPhysicalProcess comp)
+    protected static void setPositionAsPose(Pose pose, AbstractPhysicalProcess comp)
     {
-        Asserts.checkArgument(pos.getNumFields() == 2, "Position record must have 2 fields");
-        
         // automatically assign reference frame if already defined
         if (!comp.getLocalReferenceFrameList().isEmpty())
         {
             SpatialFrame localFrame = comp.getLocalReferenceFrameList().get(0);
-            ((Vector)pos.getComponent(0)).setLocalFrame("#" + localFrame.getId());
-            ((Vector)pos.getComponent(1)).setLocalFrame("#" + localFrame.getId());
+            pose.setLocalFrame("#" + localFrame.getId());
         }
         
-        comp.addPositionAsDataRecord(pos);
+        comp.addPositionAsPose(pose);
     }
 
 
