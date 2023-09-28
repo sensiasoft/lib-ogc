@@ -16,6 +16,8 @@ package org.vast.sensorML;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.vast.ogc.geopose.Pose;
+import org.vast.ogc.geopose.PoseImpl;
 import org.vast.sensorML.SMLBuilders.PhysicalSystemBuilder;
 import org.vast.sensorML.helper.CommonIdentifiers;
 import org.vast.swe.SWEConstants;
@@ -130,30 +132,40 @@ public class TestSMLHelper
         var sys = sml.createPhysicalSystem()
             .name("Predator UAV")
             .addLocalReferenceFrame(uavFrame)
-            .position(vec.createRecord()
+            /*.position(vec.createRecord()
                 .addField("location", vec.createLocationVectorLLA()
                     .definition(SWEConstants.DEF_PLATFORM_LOC)
                     .values(new double[] {-86.5861, 34.7304, 3045}))
                 .addField("attitude", vec.createEulerOrientationNED("deg")
                     .definition(SWEConstants.DEF_PLATFORM_ORIENT)
                     .values(new double[] {25.3, -1.3, -4.6}))
+                .build())*/
+            .position(Pose.create()
+                .llaPos(34.7304, -86.5861, 3045)
+                .ltpReferenceFrame(SWEConstants.REF_FRAME_NED)
+                .eulerAngles(25.3, -1.3, -4.6)
                 .build())
             .addComponent("gimbal", sml.createPhysicalComponent()
                 .name("Camera Gimbal")
                 .addLocalReferenceFrame(gimbalFrame)
-                .position(vec.createRecord()
+                /*.position(vec.createRecord()
                     .addField("location", vec.createLocationVectorXYZ("m")
                         .refFrame("#PLATFORM_FRAME")
                         .values(new double[] {0, 2.3, -0.7}))
                     .addField("orientation", vec.createEulerOrientationYPR("deg")
                         .refFrame("#PLATFORM_FRAME")
                         .values(new double[] {0, 0, 0}))
+                    .build())*/
+                .position(Pose.create()
+                    .referenceFrame("#PLATFORM_FRAME")
+                    .xyzPos(0, 2.3, -0.7)
+                    .eulerAngles(0, 0, 0)
                     .build())
                 .build())
             .addComponent("camera_sensor", sml.createPhysicalComponent()
                 .name("Camera Sensor")
                 .addLocalReferenceFrame(cameraFrame)
-                .position(vec.createRecord()
+                /*.position(vec.createRecord()
                     .addField("location", vec.createLocationVectorXYZ("m")
                         .definition(SWEConstants.DEF_SENSOR_LOC)
                         .refFrame("#GIMBAL_FRAME")
@@ -162,6 +174,11 @@ public class TestSMLHelper
                         .definition(SWEConstants.DEF_SENSOR_ORIENT)
                         .refFrame("#GIMBAL_FRAME")
                         .values(new double[] {-82.3, -25.6, 0.0}))
+                    .build())*/
+                .position(Pose.create()
+                    .referenceFrame("#GIMBAL_FRAME")
+                    .xyzPos(0, 0, 0.05)
+                    .eulerAngles(-82.3, -25.6, 0.0)
                     .build())
                 .build())
             .build();

@@ -58,7 +58,6 @@ import net.opengis.sensorml.v20.SimpleProcess;
 import net.opengis.sensorml.v20.SpatialFrame;
 import net.opengis.sensorml.v20.Term;
 import net.opengis.swe.v20.DataComponent;
-import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.Vector;
 
 
