@@ -40,7 +40,8 @@ public abstract class ParametricSamplingFeature<T extends AbstractGeometry> exte
 {
     private static final long serialVersionUID = 7083438336435379158L;
     public static final String SML_NS_PREFIX = "sml";
-    public static final String SML_NS_URI = "http://www.opengis.net/sensorML/2.2";
+    public static final String SML_NS_URI = "http://www.opengis.net/sensorML/2.0";
+    public static final String TYPE_URI_PREFIX = "http://www.opengis.net/def/samplingFeatureType/OGC-SML/2.0/";
     
     public static final QName PROP_POSE = new QName(SML_NS_URI, "pose", SML_NS_PREFIX);
     

@@ -15,16 +15,15 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.sensorML.sampling;
 
 import javax.xml.namespace.QName;
-import org.vast.ogc.om.SamplingFeature;
 import com.google.common.collect.ImmutableMap;
 import net.opengis.gml.v32.Point;
-import net.opengis.gml.v32.impl.MeasureImpl;
 
 
 public class ViewingFrustum extends ParametricSamplingFeature<Point>
 {
     private static final long serialVersionUID = -8288967473198534666L;
-    public static final String TYPE = "http://www.opengis.net/def/samplingFeatureType/CS-API/ViewingFrustum";
+    public static final String TYPE = TYPE_URI_PREFIX + "ViewingFrustum";
+    
     public static final QName PROP_FOV = new QName(SML_NS_URI, "fov", SML_NS_PREFIX);
     public static final QName PROP_ASPECT_RATIO = new QName(SML_NS_URI, "aspectRatio", SML_NS_PREFIX);
     public static final QName PROP_LENGTH = new QName(SML_NS_URI, "length", SML_NS_PREFIX);

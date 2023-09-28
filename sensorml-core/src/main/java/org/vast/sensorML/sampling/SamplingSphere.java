@@ -23,7 +23,8 @@ import net.opengis.gml.v32.impl.MeasureImpl;
 public class SamplingSphere extends ParametricSamplingFeature<Point>
 {
     private static final long serialVersionUID = 7558030611682120450L;
-    public static final String TYPE = "http://www.opengis.net/def/samplingFeatureType/CS-API/SamplingSphere";
+    public static final String TYPE = TYPE_URI_PREFIX + "SamplingSphere";
+    
     public static final QName PROP_RADIUS = new QName(SAMS_NS_URI, "radius", SAMS_NS_PREFIX);
     
     protected double radius;

@@ -20,7 +20,7 @@ import net.opengis.gml.v32.Point;
 public class SamplingPointXYZ extends ParametricSamplingFeature<Point>
 {
     private static final long serialVersionUID = -5862775778344287573L;
-    public static final String TYPE = "http://www.opengis.net/def/samplingFeatureType/CS-API/SamplingPointXYZ";
+    public static final String TYPE = TYPE_URI_PREFIX + "SamplingPointXYZ";
     
     
     public SamplingPointXYZ()

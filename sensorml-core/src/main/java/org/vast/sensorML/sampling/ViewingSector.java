@@ -15,7 +15,6 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.sensorML.sampling;
 
 import javax.xml.namespace.QName;
-import org.vast.ogc.om.SamplingFeature;
 import com.google.common.collect.ImmutableMap;
 import net.opengis.gml.v32.Point;
 
@@ -35,7 +34,8 @@ import net.opengis.gml.v32.Point;
 public class ViewingSector extends ParametricSamplingFeature<Point>
 {
     private static final long serialVersionUID = 4835503882088787437L;
-    public static final String TYPE = "http://www.opengis.net/def/samplingFeatureType/CS-API/ViewingSector";
+    public static final String TYPE = TYPE_URI_PREFIX + "ViewingSector";
+    
     public static final QName PROP_RADIUS = new QName(SAMS_NS_URI, "radius", SAMS_NS_PREFIX);
     public static final QName PROP_INNER_RADIUS = new QName(SAMS_NS_URI, "innerRadius", SAMS_NS_PREFIX);
     public static final QName PROP_MIN_ELEV = new QName(SAMS_NS_URI, "minElev", SAMS_NS_PREFIX);
