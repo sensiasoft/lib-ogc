@@ -101,12 +101,6 @@ public class PoseImpl implements Pose
     }
     
     
-    public static PoseBuilder builder()
-    {
-        return new PoseBuilder();
-    }
-    
-    
     public static class PoseBuilder extends BaseBuilder<Pose>
     {
         PoseBuilder()
@@ -143,7 +137,7 @@ public class PoseImpl implements Pose
         }
         
         
-        public PoseBuilder lla(double lat, double lon, double h)
+        public PoseBuilder llaPos(double lat, double lon, double h)
         {
             this.instance.setReferenceFrame(SWEConstants.REF_FRAME_4979);
             this.instance.setPosition(new double[] {lat, lon , h});
@@ -151,7 +145,7 @@ public class PoseImpl implements Pose
         }
         
         
-        public PoseBuilder cartesian(double x, double y, double z)
+        public PoseBuilder xyzPos(double x, double y, double z)
         {
             this.instance.setPosition(new double[] {x, y, z});
             return this;

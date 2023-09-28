@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.ogc.geopose;
 
 import java.io.Serializable;
+import org.vast.ogc.geopose.PoseImpl.PoseBuilder;
 
 
 /**
@@ -106,5 +107,13 @@ public interface Pose extends Serializable
      */
     public void setOrientation(double[] coords);
     
+    
+    /**
+     * @return a builder to build a new Pose object using the default implementation
+     */
+    public static PoseBuilder create()
+    {
+        return new PoseBuilder();
+    }
     
 }
