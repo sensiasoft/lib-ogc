@@ -12,7 +12,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ogc.om;
+package org.vast.sensorML.sampling;
 
 import javax.xml.namespace.QName;
 import com.google.common.collect.ImmutableMap;
@@ -20,10 +20,10 @@ import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.impl.MeasureImpl;
 
 
-public class SamplingSphere extends SamplingFeature<Point>
+public class SamplingSphere extends ParametricSamplingFeature<Point>
 {
     private static final long serialVersionUID = 7558030611682120450L;
-    public static final String TYPE = "http://www.opengis.net/def/samplingFeatureType/CS-API/SF_SamplingSphere";
+    public static final String TYPE = "http://www.opengis.net/def/samplingFeatureType/CS-API/SamplingSphere";
     public static final QName PROP_RADIUS = new QName(SAMS_NS_URI, "radius", SAMS_NS_PREFIX);
     
     protected double radius;

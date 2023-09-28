@@ -12,18 +12,18 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ogc.om;
+package org.vast.sensorML.sampling;
 
-import net.opengis.gml.v32.Polygon;
+import net.opengis.gml.v32.Point;
 
 
-public class SamplingSurface extends SamplingFeature<Polygon>
+public class SamplingPointXYZ extends ParametricSamplingFeature<Point>
 {
-    private static final long serialVersionUID = -6246743491466530101L;
-    public static final String TYPE = "http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface";
+    private static final long serialVersionUID = -5862775778344287573L;
+    public static final String TYPE = "http://www.opengis.net/def/samplingFeatureType/CS-API/SamplingPointXYZ";
     
     
-    public SamplingSurface()
+    public SamplingPointXYZ()
     {
         super(TYPE);
     }
