@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 import org.vast.json.JsonInliningWriter;
+import org.vast.ogc.geopose.GeoPoseJsonBindings;
+import org.vast.ogc.geopose.Pose;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.swe.SWEConstants;
 import org.vast.util.Asserts;
@@ -60,6 +62,7 @@ public class GeoJsonBindings
     
     DecimalFormat formatter = new DecimalFormat(GMLFactory.COORDINATE_FORMAT);
     GMLFactory factory;
+    GeoPoseJsonBindings geoPoseBindings;
     enum CrsType {CRS84, CRS84_FLIP, CUSTOM}
     
     
@@ -207,7 +210,20 @@ public class GeoJsonBindings
                 var te = GMLUtils.timePrimitiveToTimeExtent((AbstractTimeGeometricPrimitive)val);
                 writeTimeExtent(writer, te);
             }
+            else if (val instanceof Pose)
+            {
+                writer.name(propName.getLocalPart());
+                getGeoPoseBindings().writePose(writer, (Pose)val);
+            }
         }
+    }
+    
+    
+    protected GeoPoseJsonBindings getGeoPoseBindings()
+    {
+        if (this.geoPoseBindings == null)
+            this.geoPoseBindings = new GeoPoseJsonBindings();
+        return geoPoseBindings;
     }
     
     
@@ -569,10 +585,15 @@ public class GeoJsonBindings
     }
     
     
-    protected void readCustomObjectProperty(JsonReader reader, GenericFeatureImpl f, String name)
+    protected void readCustomObjectProperty(JsonReader reader, GenericFeatureImpl f, String name) throws IOException
     {
-        var obj = (JsonObject)JsonParser.parseReader(reader);
+        if ("pose".equals(name))
+        {
+            var pose = getGeoPoseBindings().readPose(reader);
+            f.setProperty(name, pose);
+        }
         
+        else
         {
             var obj = (JsonObject)JsonParser.parseReader(reader);
             
