@@ -127,6 +127,8 @@ public class GeoJsonBindings
             else
                 writer.name("geometry").jsonValue("null");
         }
+        else
+            writer.name("geometry").jsonValue("null");
     }
     
     
@@ -675,6 +677,13 @@ public class GeoJsonBindings
     
     public AbstractGeometry readGeometry(JsonReader reader) throws IOException
     {
+        // geometry can be 'null'
+        if (reader.peek() == JsonToken.NULL)
+        {
+            reader.nextNull();
+            return null;
+        }
+        
         reader.beginObject();
         String type = readObjectType(reader);
         return readGeometry(reader, type);
