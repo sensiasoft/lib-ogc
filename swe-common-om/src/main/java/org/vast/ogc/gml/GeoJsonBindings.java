@@ -182,14 +182,10 @@ public class GeoJsonBindings
             else if (val instanceof IXlinkReference<?>)
             {
                 var link = (IXlinkReference<?>)val;
-                if (link.getHref() != null && !link.getHref().equals(featureType)) 
+                if (link.getHref() != null && !link.getHref().equals(featureType))
                 {
                     writer.name(propName.getLocalPart() + "@link");
-                    writer.beginObject();
-                    writer.name("href").value(link.getHref());
-                    if (link.getTitle() != null)
-                        writer.name("title").value(link.getTitle());
-                    writer.endObject();
+                    writeLink(writer, (IXlinkReference<?>)val);
                 }
             }
             else if (val instanceof Measure)
@@ -247,6 +243,21 @@ public class GeoJsonBindings
     protected String encodeFeatureID(IFeature bean) throws IOException
     {
         return bean.getId();
+    }
+    
+    
+    public void writeLink(JsonWriter writer, IXlinkReference<?> link) throws IOException
+    {
+        if (link.getHref() != null) 
+        {
+            writer.beginObject();
+            writer.name("href").value(link.getHref());
+            if (link.getTitle() != null)
+                writer.name("title").value(link.getTitle());
+            if (link.getRole() != null)
+                writer.name("uid").value(link.getRole());
+            writer.endObject();
+        }
     }
     
     
