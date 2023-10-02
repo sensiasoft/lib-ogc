@@ -1300,27 +1300,69 @@ public class SWEJsonBindings extends AbstractBindings
     
     public EncodedValues readEncodedValuesProperty(JsonReader reader, AbstractSWEIdentifiable blockComponent, DataEncoding encoding) throws IOException
     {
-        /*EncodedValues bean = factory.newEncodedValuesProperty();
-
-        JsonReader reader = collectProperties(reader);
-        readPropertyProperties(attrMap, bean);
-
-        String text = reader.getElementText();
-        if (text != null && text.trim().length() > 0)
+//        EncodedValues bean = factory.newEncodedValuesProperty();
+//
+//        JsonReader reader = collectProperties(reader);
+//        readPropertyProperties(attrMap, bean);
+//
+//        String text = reader.getElementText();
+//        if (text != null && text.trim().length() > 0)
+//        {
+//            if (blockComponent instanceof DataArray)
+//                bean.setAsText((DataArray)blockComponent, encoding, text);
+//            else if (blockComponent instanceof DataStream)
+//                bean.setAsText((DataStream)blockComponent, encoding, text);
+//            else if (blockComponent == null)
+//                bean.setAsText((DataArray)null, encoding, text);
+//        }
+//        else if (!bean.hasHref())
+//            return null;
+//
+//        return bean;
+        EncodedValues bean = factory.newEncodedValuesProperty();
+        
+        if (reader.peek() == JsonToken.BEGIN_ARRAY)
         {
-            if (blockComponent instanceof DataArray)
-                bean.setAsText((DataArray)blockComponent, encoding, text);
-            else if (blockComponent instanceof DataStream)
-                bean.setAsText((DataStream)blockComponent, encoding, text);
-            else if (blockComponent == null)
-                bean.setAsText((DataArray)null, encoding, text);
-        }
-        else if (!bean.hasHref())
-            return null;
+            reader.beginArray();
 
-        return bean;*/
+            if (blockComponent instanceof DataArray)
+            {
+                var dataArray = (DataArray)blockComponent;
+                var parser = new JsonArrayDataParserGson(reader);
+                parser.setDataComponents(dataArray.getElementType());
+                parser.setRenewDataBlock(true);
+
+                var dataList = new DataBlockList(true);
+                while (reader.hasNext())
+        {
+                    var rec = parser.parseNextBlock();
+                    dataList.add(rec);
+                }
+                dataArray.setData(dataList);
+            }
+            else if (blockComponent instanceof DataStream)
+            {
+                var dataStream = (DataStream)blockComponent;
+                var parser = new JsonArrayDataParserGson(reader);
+                parser.setDataComponents(dataStream.getElementType());
+                parser.setRenewDataBlock(true);
+                
+                var dataList = new DataBlockList(true);
+                while (reader.hasNext())
+                {
+                    var rec = parser.parseNextBlock();
+                    dataList.add(rec);
+                }
+                
+                bean.setData(dataList);
+        }
+
+            reader.endArray();
+        }
+        else
         reader.skipValue();
-        return null;
+        
+        return bean;
     }
     
     
@@ -2201,21 +2243,36 @@ public class SWEJsonBindings extends AbstractBindings
     
     public void writeEncodedValuesProperty(JsonWriter writer, AbstractSWEIdentifiable blockComponent, DataEncoding encoding, EncodedValues bean) throws IOException
     {
-        /*writePropertyProperties(writer, bean);
-
-        if (!bean.hasHref())
+        if (bean.hasHref())
         {
-            String text = null;
+            writeLink(writer, bean);
+        }
+        else
+        {
+            writer.beginArray();
+            
             if (blockComponent instanceof DataArray)
-                text = bean.getAsText((DataArray)blockComponent, encoding);
+            {
+                var dataArray = (DataArray)blockComponent;
+                var dataWriter = new JsonArrayDataWriterGson(writer);
+                dataWriter.setDataComponents(dataArray.getElementType());
+                
+                int arraySize = dataArray.getComponentCount();
+                for (int i = 0; i < arraySize; i++)
+                    dataWriter.write(dataArray.getComponent(i).getData());
+            }
             else if (blockComponent instanceof DataStream)
-                text = bean.getAsText((DataStream)blockComponent, encoding);
-
-            if (text != null)
-                writer.writeCharacters(text);
-        }*/
-        writer.beginArray();
-        writer.endArray();
+            {
+                var dataStream = (DataStream)blockComponent;
+                var dataWriter = new JsonArrayDataWriterGson(writer);
+                dataWriter.setDataComponents(dataStream.getElementType());
+                var it = bean.getData().blockIterator();
+                while(it.hasNext())
+                    dataWriter.write(it.next());
+            }
+            
+            writer.endArray();
+        }
     }
 
 

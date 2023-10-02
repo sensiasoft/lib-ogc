@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.swe.v20;
 
+import org.vast.data.DataBlockList;
 import net.opengis.OgcProperty;
 
 
@@ -24,7 +25,13 @@ import net.opengis.OgcProperty;
  */
 public interface EncodedValues extends OgcProperty<byte[]>
 {
-   
+    
+    public void setData(DataBlockList data);
+    
+    
+    public DataBlockList getData();
+    
+    
     public void setAsText(DataArray array, DataEncoding encoding, String text);
     
     
@@ -35,4 +42,5 @@ public interface EncodedValues extends OgcProperty<byte[]>
     
     
     public String getAsText(DataStream dataStream, DataEncoding encoding);
+    
 }

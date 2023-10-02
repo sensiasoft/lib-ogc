@@ -170,5 +170,17 @@ public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements Encode
         // convert byte array to string
         return os.toString();
     }
+    
+    
+    public void setData(DataBlockList data)
+    {
+        this.data = data;
+    }
+    
+    
+    public DataBlockList getData()
+    {
+        return data;
+    }
 
 }
