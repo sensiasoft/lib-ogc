@@ -12,6 +12,7 @@ package org.vast.ogc.geopose;
 import java.io.IOException;
 import org.vast.swe.SWEConstants;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 
@@ -35,7 +36,15 @@ public class GeoPoseJsonBindings
     
     public void writePose(JsonWriter writer, Pose pose) throws IOException
     {
+        writePose(writer, pose, null);
+    }
+    
+    public void writePose(JsonWriter writer, Pose pose, String typeString) throws IOException
+    {
         writer.beginObject();
+        
+        if (typeString != null)
+            writer.name("type").value(typeString);
         
         if (pose.getReferenceFrame() != null)
             writer.name("referenceFrame").value(pose.getReferenceFrame());
@@ -101,7 +110,9 @@ public class GeoPoseJsonBindings
     public Pose readPose(JsonReader reader) throws IOException
     {
         var pose = new PoseImpl();
-        reader.beginObject();
+        
+        if (reader.peek() == JsonToken.BEGIN_OBJECT)
+            reader.beginObject();
         
         while (reader.hasNext())
         {

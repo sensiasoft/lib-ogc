@@ -33,10 +33,8 @@
                     <swe:uom code="uR/min"/>
                 </swe:Quantity> 
             </sml:output>
-            <!-- provides a separate output for retrieving current parameter values (i.e. settings) -->
-            <sml:output name="settings" xlink:href="#CURRENT_SETTINGS"/>
         </sml:OutputList>
-    </sml:outputs>    
+    </sml:outputs>
     <!-- ==================================== -->
     <!--             Parameters               -->
     <!-- ==================================== -->
@@ -75,7 +73,7 @@
     <!--                 Modes                -->
     <!-- ==================================== -->
     <sml:modes>
-        <sml:ModeChoice id="THREAT_LEVEL_MODE">
+        <sml:ModeChoice>
             <sml:mode>
                 <sml:Mode gml:id="lowThreat">
                     <gml:description> Setting when nothing has been detected </gml:description>

@@ -56,7 +56,7 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
    <!--       Temporal Validity of this description       -->
    <!-- ================================================= -->
    <sml:validTime>
-      <gml:TimePeriod gml:id="VALIDITY_PERIOD">
+      <gml:TimePeriod gml:id="T1">
          <gml:beginPosition>2002-03-01T00:00:00Z</gml:beginPosition>
          <gml:endPosition indeterminatePosition="now"/>
       </gml:TimePeriod>
@@ -103,10 +103,6 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
          </sml:contact>
       </sml:ContactList>
    </sml:contacts>
-   <!-- Point to out-of-band station history -->
-   <!-- History can contain ConfigurationSettings element with a validity period in configuration events,
-   positioning event when location/position was changed, etc. -->
-   <sml:history xlink:href="SensorHistory.xml"/>
    <!-- ================================================= -->
    <!--                System Configuration               -->
    <!-- ================================================= -->

@@ -86,7 +86,7 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 	<!--            Constraints              -->
 	<!-- =======================================  -->
 	<sml:validTime>
-		<gml:TimePeriod gml:id="documentValidTime">
+		<gml:TimePeriod gml:id="T1">
 			<gml:beginPosition>2002-08-01T00:00:00Z</gml:beginPosition>
 			<gml:endPosition indeterminatePosition="now"/>
 		</gml:TimePeriod>
@@ -101,6 +101,7 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 	</sml:securityConstraints>
     -->
 	
+	<!-- removed for JUnit test
 	<sml:legalConstraints>
 		<gmd:MD_LegalConstraints>
 			<gmd:useLimitation>
@@ -110,11 +111,12 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 			</gmd:useLimitation>
 		</gmd:MD_LegalConstraints>
 	</sml:legalConstraints>
+    -->
 	
 	<!-- ======================================= -->
 	<!--            Characteristics              -->
 	<!-- =======================================  -->
-	<sml:characteristics name="generalProperties">
+	<sml:characteristics>
 		<sml:CharacteristicList>
 			<sml:characteristic name="physicalProperties">
 				<swe:DataRecord definition="http://sensorml.com/ont/swe/property/PhysicalProperties">
@@ -188,7 +190,7 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 	<!-- ============================ -->
 	<!--            Capabilities              -->
 	<!-- ============================ -->
-	<sml:capabilities name="specifications">
+	<sml:capabilities>
 		<sml:CapabilityList>
 			<sml:capability name="measurementProperties">
 				<swe:DataRecord definition="http://sensorml.com/ont/swe/property/MeasurementProperties">
@@ -227,7 +229,7 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 	<!-- ============================ -->
 	<sml:contacts>
 		<sml:ContactList>
-			<sml:contact xlink:arcrole="http://sensorml.com/def/role/Manufacturer">
+			<sml:contact xlink:role="http://sensorml.com/def/role/Manufacturer">
 				<gmd:CI_ResponsibleParty>
 					<gmd:organisationName>
 						<gco:CharacterString>Health Physics Instruments</gco:CharacterString>
@@ -272,7 +274,7 @@ xsi:schemaLocation="http://www.opengis.net/sensorML/2.0 http://schemas.opengis.n
 	<!-- ============================ -->
 	<sml:documentation>
 		<sml:DocumentList>
-			<sml:document xlink:arcrole="http://sensorml.com/ont/swe/property/OperationsManual">
+			<sml:document xlink:role="http://sensorml.com/ont/swe/property/OperationsManual">
 				<gmd:CI_OnlineResource>
 					<gmd:linkage>
 						<gmd:URL>http://www.sensorml.com/resources/Farwest-2070man.pdf</gmd:URL>

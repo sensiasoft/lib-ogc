@@ -18,7 +18,6 @@
 
    <sml:keywords>
       <sml:KeywordList>
-         <sml:codeSpace xlink:href="http://gcmd.gsfc.nasa.gov" />
          <sml:keyword>air temperature</sml:keyword>
          <sml:keyword>thermistors</sml:keyword>
       </sml:KeywordList>
@@ -79,7 +78,7 @@
 
    <!-- PUT IN VALIDTIME, CONSTRAINTS ?? -->
 
-   <sml:characteristics name="physical">
+   <sml:characteristics>
       <sml:CharacteristicList>
          <swe:label>Physical Properties</swe:label>
          <sml:characteristic name="weight">
@@ -106,23 +105,23 @@
       </sml:CharacteristicList>
    </sml:characteristics>
 
-   <sml:capabilities name="measurement">
+   <sml:capabilities>
       <sml:CapabilityList>
-         <sml:capability name="resolution" xlink:arcrole="urn:ogc:def:property:resolution">
+         <sml:capability name="resolution">
             <swe:Quantity definition="urn:ogc:def:property:temperature">
                <swe:label>Temperature Resolution</swe:label>
                <swe:uom code="Cel" />
                <swe:value>0.1</swe:value>
             </swe:Quantity>
          </sml:capability>
-         <sml:capability name="dynamicRange" xlink:arcrole="urn:ogc:def:property:dynamicRange">
+         <sml:capability name="dynamicRange">
             <swe:QuantityRange definition="urn:ogc:def:property:temperature">
                <swe:label>Temperature Range</swe:label>
                <swe:uom code="Cel" />
                <swe:value>-45.0 60.0</swe:value>
             </swe:QuantityRange>
          </sml:capability>
-         <sml:capability name="accuracy" xlink:arcrole="urn:ogc:def:property:accuracy">
+         <sml:capability name="accuracy">
             <swe:QuantityRange definition="urn:ogc:def:property:absoluteAccuracy">
                <swe:label>Absolute Accuracy</swe:label>
                <swe:uom code="%" />
@@ -134,7 +133,7 @@
    
    <sml:contacts>
       <sml:ContactList>
-         <sml:contact>
+         <sml:contact xlink:role="http://sensorml.com/ont/swe/property/Manufacturer">
             <gmd:CI_ResponsibleParty>
                <gmd:organisationName>
                   <gco:CharacterString>Davis Instruments Corporation</gco:CharacterString>
@@ -172,18 +171,16 @@
                      </gmd:address>
                   </gmd:CI_Contact>
                </gmd:contactInfo>
-               <gmd:role>
-                  <gmd:CI_RoleCode codeList="http://sensorml.com/def/roles" codeListValue="Manufacturer" />
-               </gmd:role>
+               <gmd:role gco:nilReason="inapplicable"/>
             </gmd:CI_ResponsibleParty>
          </sml:contact>
-         <sml:contact xlink:arcrole="expert" xlink:href="http://www.bobsSensors.com/contact/BobSomeone.xml" />
+         <sml:contact xlink:role="http://www.opengis.com/def/roles/expert" xlink:href="http://www.bobsSensors.com/contact/BobSomeone.xml" />
       </sml:ContactList>
    </sml:contacts>
    
    <sml:documentation>
       <sml:DocumentList>
-         <sml:document xlink:arcrole="http://www.opengis.com/def/roles/specificationSheet">
+         <sml:document xlink:role="http://www.opengis.com/def/roles/specificationSheet">
             <gmd:CI_OnlineResource>
                <gmd:linkage>
                   <gmd:URL>http://www.davisnet.com/product_documents/weather/spec_sheets/7817_spec_Rev_E.pdf</gmd:URL>
@@ -193,7 +190,7 @@
                </gmd:description>
             </gmd:CI_OnlineResource>
          </sml:document>
-         <sml:document xlink:arcrole="http://www.opengis.com/def/roles/productImage">
+         <sml:document xlink:role="http://www.opengis.com/def/roles/productImage">
             <gmd:CI_OnlineResource>
                <gmd:linkage>
                   <gmd:URL>http://www.davisnet.com/productpics/big/7817.jpg</gmd:URL>
@@ -235,7 +232,7 @@
    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
    <sml:parameters>
       <sml:ParameterList>
-         <sml:parameter name="steadyState" xlink:arcrole="urn:ogc:def:property:calibration">
+         <sml:parameter name="steadyState">
             <swe:DataArray updatable="false">
                <swe:elementCount>
                   <swe:Count>
@@ -270,7 +267,7 @@
                </swe:values>
             </swe:DataArray>
          </sml:parameter>
-         <sml:parameter name="accuracy" xlink:arcrole="urn:ogc:def:property:OGC:measurementAccuracy">
+         <sml:parameter name="accuracy">
             <swe:DataArray definition="urn:ogc:def:property:OGC:errorTable">
                <swe:elementCount>
                   <swe:Count>
@@ -297,7 +294,7 @@
                <swe:values>-40.0,0.0 -10.0,0.1 15.0,0.3 27.0,0.5 44.0,1.0 60.0,2.1</swe:values>
             </swe:DataArray>
          </sml:parameter>
-         <sml:parameter name="latency" xlink:arcrole="urn:ogc:def:property:OGC:latencyTime">
+         <sml:parameter name="latency">
             <!-- <swe:ConditionalValue>
                <swe:condition name="medium">
                   <swe:Category definition="urn:ogc:def:property:OGC:medium">

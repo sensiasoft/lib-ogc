@@ -4,17 +4,17 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.function.BiConsumer;
-import org.isotc211.v2005.gco.impl.CodeListValueImpl;
 import org.isotc211.v2005.gmd.CIContact;
 import org.isotc211.v2005.gmd.CIOnlineResource;
 import org.isotc211.v2005.gmd.CIResponsibleParty;
 import org.isotc211.v2005.gmd.MDLegalConstraints;
 import org.isotc211.v2005.gmd.impl.CIOnlineResourceImpl;
 import org.vast.data.SWEFactory;
+import org.vast.ogc.geopose.GeoPoseJsonBindings;
+import org.vast.ogc.geopose.Pose;
 import org.vast.ogc.gml.GMLUtils;
 import org.vast.ogc.gml.GeoJsonBindings;
 import org.vast.swe.SWEJsonBindings;
-import org.vast.swe.helper.GeoPosHelper;
 import org.vast.util.TimeExtent;
 import com.google.common.base.Strings;
 import com.google.gson.JsonParseException;
@@ -37,6 +37,8 @@ import net.opengis.sensorml.v20.AggregateProcess;
 import net.opengis.sensorml.v20.CapabilityList;
 import net.opengis.sensorml.v20.CharacteristicList;
 import net.opengis.sensorml.v20.ClassifierList;
+import net.opengis.sensorml.v20.ConfigSetting;
+import net.opengis.sensorml.v20.ConstraintSetting;
 import net.opengis.sensorml.v20.ContactList;
 import net.opengis.sensorml.v20.Deployment;
 import net.opengis.sensorml.v20.DescribedObject;
@@ -62,8 +64,6 @@ import net.opengis.swe.v20.AllowedTimes;
 import net.opengis.swe.v20.AllowedTokens;
 import net.opengis.swe.v20.AllowedValues;
 import net.opengis.swe.v20.DataComponent;
-import net.opengis.swe.v20.DataConstraint;
-import net.opengis.swe.v20.DataRecord;
 
 
 @SuppressWarnings("javadoc")
@@ -76,21 +76,30 @@ public class SMLJsonBindings
     protected org.isotc211.v2005.gmd.Factory isoFactory;
     protected SWEJsonBindings sweBindings;
     protected GeoJsonBindings geojsonBindings;
+    protected GeoPoseJsonBindings geoposeBindings;
+    protected String propName;
 
 
     public SMLJsonBindings()
     {
-        this(new SMLFactory(), new SWEFactory(), new GMLFactory(true));
+        this(true);
     }
     
     
-    public SMLJsonBindings(Factory factory, net.opengis.swe.v20.Factory sweFactory, net.opengis.gml.v32.Factory gmlFactory)
+    public SMLJsonBindings(boolean enforceTypeFirst)
+    {
+        this(new SMLFactory(), new SWEFactory(), new GMLFactory(true), enforceTypeFirst);
+    }
+    
+    
+    public SMLJsonBindings(Factory factory, net.opengis.swe.v20.Factory sweFactory, net.opengis.gml.v32.Factory gmlFactory, boolean enforceTypeFirst)
     {
         this.factory = factory;
         this.gmlFactory = gmlFactory;
         this.isoFactory = new org.isotc211.v2005.gmd.impl.GMDFactory();
-        this.sweBindings = new SWEJsonBindings(sweFactory);
+        this.sweBindings = new SWEJsonBindings(sweFactory, enforceTypeFirst);
         this.geojsonBindings = new GeoJsonBindings(true);
+        this.geoposeBindings = new GeoPoseJsonBindings();
     }
     
     
@@ -100,11 +109,8 @@ public class SMLJsonBindings
     
     public DescribedObject readDescribedObject(JsonReader reader) throws IOException
     {
-        // start reading object if not already started
-        if (reader.peek() == JsonToken.BEGIN_OBJECT)
-            reader.beginObject();
-        
-        var type = readObjectType(reader);
+        reader = beginObjectWithType(reader);
+        var type = reader.nextString();
         
         if ("SimpleProcess".equals(type))
             return readSimpleProcess(reader);
@@ -125,11 +131,8 @@ public class SMLJsonBindings
     
     public AbstractProcess readAbstractProcess(JsonReader reader) throws IOException
     {
-        // start reading object if not already started
-        if (reader.peek() == JsonToken.BEGIN_OBJECT)
-            reader.beginObject();
-        
-        var type = readObjectType(reader);
+        reader = beginObjectWithType(reader);
+        var type = reader.nextString();
         
         return readAbstractProcess(reader, type);
     }
@@ -290,7 +293,12 @@ public class SMLJsonBindings
     
     public boolean readDescribedObjectProperties(JsonReader reader, DescribedObject bean, String name) throws IOException
     {
-        if ("id".equals(name))
+        if ("name".equals(name))
+        {
+            this.propName = reader.nextString();
+        }
+        
+        else if ("id".equals(name))
         {
             bean.setId(reader.nextString());
         }
@@ -350,11 +358,13 @@ public class SMLJsonBindings
         
         else if ("securityConstraints".equals(name))
         {
+            // TODO read security constraints
             reader.skipValue();
         }
         
         else if ("legalConstraints".equals(name))
         {
+         // TODO read legal constraints
             reader.skipValue();
         }
         
@@ -451,11 +461,7 @@ public class SMLJsonBindings
         reader.beginArray();
         while (reader.hasNext())
         {
-            var c = readContact(reader);
-            var prop = new OgcPropertyImpl<CIResponsibleParty>();
-            prop.setValue(c);
-            if (c.getRole() != null)
-                prop.setRole(c.getRole().getValue());
+            var prop = readContact(reader);
             list.getContactList().add(prop);
         }
         reader.endArray();
@@ -464,9 +470,11 @@ public class SMLJsonBindings
     }
     
     
-    protected CIResponsibleParty readContact(JsonReader reader) throws IOException
+    protected OgcProperty<CIResponsibleParty> readContact(JsonReader reader) throws IOException
     {
+        var prop = new OgcPropertyImpl<CIResponsibleParty>();
         var bean = isoFactory.newCIResponsibleParty();
+        boolean isInline = false;
         
         reader.beginObject();
         while (reader.hasNext())
@@ -475,30 +483,41 @@ public class SMLJsonBindings
             if ("role".equals(name))
             {
                 var roleUri = reader.nextString();
-                bean.setRole(new CodeListValueImpl(roleUri));
+                prop.setRole(roleUri);
             }
             else if ("individualName".equals(name))
             {
                 bean.setIndividualName(reader.nextString());
+                isInline = true;
             }
             else if ("organisationName".equals(name))
             {
                 bean.setOrganisationName(reader.nextString());
+                isInline = true;
             }
             else if ("positionName".equals(name))
             {
                 bean.setPositionName(reader.nextString());
+                isInline = true;
             }
             else if ("contactInfo".equals(name))
             {
                 bean.setContactInfo(readContactInfo(reader));
+                isInline = true;
+            }
+            else if ("link".equals(name))
+            {
+                readLink(reader, prop);
             }
             else
                 reader.skipValue();
         }
         reader.endObject();
         
-        return bean;
+        if (isInline)
+            prop.setValue(bean);
+        
+        return prop;
     }
     
     
@@ -601,11 +620,7 @@ public class SMLJsonBindings
         reader.beginArray();
         while (reader.hasNext())
         {
-            var doc = readDocument(reader);
-            var prop = new OgcPropertyImpl<CIOnlineResource>();
-            prop.setValue(doc);
-            if (doc.getFunction() != null)
-                prop.setRole(doc.getFunction().getValue());
+            var prop = readDocument(reader);
             list.getDocumentList().add(prop);
         }
         reader.endArray();
@@ -614,8 +629,9 @@ public class SMLJsonBindings
     }
     
     
-    protected CIOnlineResource readDocument(JsonReader reader) throws IOException
+    protected OgcProperty<CIOnlineResource> readDocument(JsonReader reader) throws IOException
     {
+        var prop = new OgcPropertyImpl<CIOnlineResource>();
         var bean = isoFactory.newCIOnlineResource();
         
         reader.beginObject();
@@ -625,7 +641,7 @@ public class SMLJsonBindings
             if ("role".equals(name))
             {
                 var roleUri = reader.nextString();
-                bean.setFunction(new CodeListValueImpl(roleUri));
+                prop.setRole(roleUri);
             }
             else if ("name".equals(name))
             {
@@ -655,7 +671,8 @@ public class SMLJsonBindings
         }
         reader.endObject();
         
-        return bean;
+        prop.setValue(bean);
+        return prop;
     }
     
     
@@ -751,7 +768,7 @@ public class SMLJsonBindings
         reader.beginArray();
         while (reader.hasNext())
         {
-            var comp = sweBindings.readDataComponentWithName(reader);
+            var comp = sweBindings.readDataComponent(reader);
             try {
                 addFunc.accept(comp.getName(), comp);
             }
@@ -791,6 +808,7 @@ public class SMLJsonBindings
             var ref = gmlFactory.newReference();
             ref.setHref(link.getHref());
             ref.setTitle(link.getTitle());
+            ref.setName(link.getName()); // UID
             bean.setTypeOf(ref);
         }
         
@@ -1018,19 +1036,7 @@ public class SMLJsonBindings
                 reader.beginArray();
                 while (reader.hasNext())
                 {
-                    var setting = factory.newConstraintSetting();
-                    reader.beginObject();
-                    while (reader.hasNext())
-                    {
-                        name = reader.nextName();
-                        if ("ref".equals(name))
-                            setting.setRef(reader.nextString());
-                        else if ("value".equals(name))
-                            setting.setValue(readAnyConstraint(reader));
-                        else
-                            reader.skipValue();
-                    }
-                    reader.endObject();
+                    var setting = readConstraintSetting(reader);
                     list.add(setting);
                 }
                 reader.endArray();
@@ -1052,7 +1058,7 @@ public class SMLJsonBindings
                         else if ("value".equals(name))
                         {
                             var status = reader.nextString();
-                            var statusCode = Status.fromString(status.toUpperCase());
+                            var statusCode = Status.fromString(status);
                             setting.setValue(statusCode);
                         }
                         else
@@ -1070,19 +1076,65 @@ public class SMLJsonBindings
     }
     
     
-    protected DataConstraint readAnyConstraint(JsonReader reader) throws IOException
+    protected ConstraintSetting readConstraintSetting(JsonReader reader) throws IOException
     {
-        reader.beginObject();
-        var type = readObjectType(reader);
+        var setting = factory.newConstraintSetting();
+        
+        reader = beginObjectWithType(reader);
+        var type = reader.nextString();
         
         if ("AllowedTokens".equals(type))
-            return sweBindings.readAllowedTokens(reader);
+        {
+            var bean = sweBindings.getFactory().newAllowedTokens();
+            while (reader.hasNext())
+            {
+                String name = reader.nextName();
+                if (!sweBindings.readAllowedTokensProperties(reader, bean, name))
+                    readCommonSettingProperties(reader, setting, name);
+            }
+            setting.setValue(bean);
+        }
         else if ("AllowedValues".equals(type))
-            return sweBindings.readAllowedValues(reader);
+        {
+            var bean = sweBindings.getFactory().newAllowedValues();
+            while (reader.hasNext())
+            {
+                String name = reader.nextName();
+                if (!sweBindings.readAllowedValuesProperties(reader, bean, name))
+                    readCommonSettingProperties(reader, setting, name);
+            }
+            setting.setValue(bean);
+        }
         else if ("AllowedTimes".equals(type))
-            return sweBindings.readAllowedTimes(reader, true);
+        {
+            var bean = sweBindings.getFactory().newAllowedTimes();
+            while (reader.hasNext())
+            {
+                String name = reader.nextName();
+                if (!sweBindings.readAllowedTimesProperties(reader, bean, true, name))
+                    readCommonSettingProperties(reader, setting, name);
+            }
+            setting.setValue(bean);
+        }
         else
             throw new JsonParseException("Unknown object type: " + type + " @ " + reader.getPath());
+        
+        reader.endObject();
+        return setting;
+    }
+    
+    
+    protected boolean readCommonSettingProperties(JsonReader reader, ConfigSetting<?> setting, String name) throws IOException
+    {
+        if ("ref".equals(name))
+            setting.setRef(reader.nextString());
+        else
+        {
+            reader.skipValue();
+            return false;
+        }
+        
+        return true;
     }
     
     
@@ -1176,13 +1228,13 @@ public class SMLJsonBindings
     
     protected void readPosition(JsonReader reader, AbstractPhysicalProcess bean) throws IOException
     {
-        reader.beginObject();
-        var type = readObjectType(reader);
+        reader = beginObjectWithType(reader);
+        var type = reader.nextString();
         
         if ("Pose".equals(type))
         {
-            var pose = readPose(reader);
-            bean.addPositionAsDataRecord(pose);
+            var pose = geoposeBindings.readPose(reader);
+            bean.addPositionAsPose(pose);
         }
         else if ("Point".equals(type))
         {
@@ -1194,76 +1246,18 @@ public class SMLJsonBindings
     }
     
     
-    protected DataRecord readPose(JsonReader reader) throws IOException
-    {
-        var swe = new GeoPosHelper();
-        var rec = swe.createRecord()
-            .definition("Pose");
-        
-        String localFrame = null;
-        String refFrame = null;
-        String tangetRefFrame = null;
-        
-        reader.beginObject();
-        while (reader.hasNext())
-        {
-            var name = reader.nextName();
-            if ("localFrame".equals(name))
-            {
-                localFrame = reader.nextString();
-            }
-            else if ("referenceFrame".equals(name))
-            {
-                refFrame = reader.nextString();
-            }
-            else if ("tangentReferenceFrame".equals(name))
-            {
-                tangetRefFrame = reader.nextString();
-            }
-            else if ("location".equals(name))
-            {
-                reader.beginObject();
-                while (reader.hasNext())
-                {
-                    var name2 = reader.nextName();
-                    reader.skipValue();
-                }
-                reader.endObject();
-            }
-            else if ("angles".equals(name))
-            {
-                reader.beginObject();
-                while (reader.hasNext())
-                {
-                    var name2 = reader.nextName();
-                    reader.skipValue();
-                }
-                reader.endObject();
-            }
-            else if ("quaternion".equals(name))
-            {
-                reader.beginObject();
-                while (reader.hasNext())
-                {
-                    var name2 = reader.nextName();
-                    reader.skipValue();
-                }
-                reader.endObject();
-            }
-            else
-                reader.skipValue();
-        }
-        reader.endObject();
-        
-        return rec.build();
-    }
-    
-    
     public boolean readSimpleProcessProperties(JsonReader reader, SimpleProcess bean, String name) throws IOException
     {
         if ("method".equals(name))
         {
-            reader.skipValue();
+            // only by-ref method supported in JSON for now
+            if (reader.peek() == JsonToken.STRING)
+            {
+                var href = reader.nextString();
+                bean.getMethodProperty().setHref(href);
+            }
+            else
+                reader.skipValue();
         }
         
         else
@@ -1304,39 +1298,26 @@ public class SMLJsonBindings
     }
     
     
-    protected OgcPropertyImpl<AbstractProcess> readComponent(JsonReader reader, boolean nameRequired) throws IOException
+    protected OgcProperty<AbstractProcess> readComponent(JsonReader reader, boolean nameRequired) throws IOException
     {
-        var prop = new OgcPropertyImpl<AbstractProcess>();
-        boolean isLink = false;
+        OgcProperty<AbstractProcess> prop = null;
+        reader = beginObjectWithType(reader);
+        var type = reader.nextString();
         
-        reader.beginObject();
-        while (reader.hasNext())
+        if ("Link".equals(type))
         {
-            var name = reader.nextName();
-            if ("name".equals(name))
-            {
-                prop.setName(reader.nextString());
-            }
-            else if (!isLink && "type".equals(name))
-            {
-                var type = reader.nextString();
-                var comp = readAbstractProcess(reader, type);
-                prop.setValue(comp);
-                break;
-            }
-            else
-            {
-                isLink = true;
-                if (!readLinkProperties(reader, prop, name))
-                    reader.skipValue();
-            }
+            @SuppressWarnings({ "rawtypes", "unchecked" })
+            var link = (OgcProperty<AbstractProcess>)(OgcProperty)readLink(reader);
+            prop = link;
         }
-        
-        if (reader.peek() == JsonToken.END_OBJECT)
-            reader.endObject();
-        
-        if (nameRequired && prop.getName() == null)
-            throw new JsonParseException("JSON object must contain a 'name' property before the other members @ " + reader.getPath());
+        else
+        {
+            prop = new OgcPropertyImpl<AbstractProcess>();
+            var comp = readAbstractProcess(reader, type);
+            prop.setValue(comp);
+            prop.setName(propName);
+            propName = null; // reset
+        }
         
         return prop;
     }
@@ -1383,9 +1364,16 @@ public class SMLJsonBindings
     
     public boolean readPhysicalComponentProperties(JsonReader reader, PhysicalComponent bean, String name) throws IOException
     {
-        if ("???".equals(name))
+        if ("method".equals(name))
         {
-            
+            // only by-ref method supported in JSON for now
+            if (reader.peek() == JsonToken.STRING)
+            {
+                var href = reader.nextString();
+                bean.getMethodProperty().setHref(href);
+            }
+            else
+                reader.skipValue();
         }
         
         else
@@ -1399,7 +1387,8 @@ public class SMLJsonBindings
     {
         if ("configuration".equals(name))
         {
-            
+            var config = readSettings(reader);
+            bean.setConfiguration(config);
         }
         
         else
@@ -1444,7 +1433,13 @@ public class SMLJsonBindings
     {
         @SuppressWarnings("unchecked")
         var bean = (OgcProperty<T>)new OgcPropertyImpl<>();
-        
+        readLink(reader, bean);
+        return bean;
+    }
+    
+    
+    protected void readLink(JsonReader reader, OgcProperty<?> bean) throws IOException
+    {
         if (reader.peek() == JsonToken.BEGIN_OBJECT)
             reader.beginObject();
         
@@ -1456,8 +1451,6 @@ public class SMLJsonBindings
                 reader.skipValue();
         }
         reader.endObject();
-        
-        return bean;
     }
     
     
@@ -1466,6 +1459,10 @@ public class SMLJsonBindings
         if ("href".equals(name))
         {
             bean.setHref(reader.nextString());
+        }
+        else if ("name".equals(name))
+        {
+            bean.setName(reader.nextString());
         }
         else if ("title".equals(name))
         {
@@ -1490,15 +1487,21 @@ public class SMLJsonBindings
     }
     
     
-    protected String readObjectType(JsonReader reader) throws IOException
+    protected JsonReader beginObjectWithType(JsonReader reader) throws IOException
     {
-        return sweBindings.readObjectType(reader);
+        return sweBindings.beginObjectWithType(reader);
     }
     
     
     protected void checkObjectType(JsonReader reader, String expectedType) throws IOException
     {
         sweBindings.checkObjectType(reader, expectedType);
+    }
+    
+    
+    protected void writeTypeAndName(JsonWriter writer, String type, String name) throws IOException
+    {
+        sweBindings.writeTypeAndName(writer, type, name);
     }
     
     
@@ -1517,21 +1520,36 @@ public class SMLJsonBindings
     {
         writer.beginObject();
         
-        if (name != null)
-            writer.name("name").value(name);
-        
         if (bean instanceof PhysicalSystem)
+        {
+            writeTypeAndName(writer, "PhysicalSystem", name);
             writePhysicalSystemProperties(writer, (PhysicalSystem)bean);
+        }
         else if (bean instanceof PhysicalComponent)
+        {
+            writeTypeAndName(writer, "PhysicalComponent", name);
             writePhysicalComponentProperties(writer, (PhysicalComponent)bean);
+        }
         else if (bean instanceof SimpleProcess)
+        {
+            writeTypeAndName(writer, "SimpleProcess", name);
             writeSimpleProcessProperties(writer, (SimpleProcess)bean);
+        }
         else if (bean instanceof AggregateProcess)
+        {
+            writeTypeAndName(writer, "AggregateProcess", name);
             writeAggregateProcessProperties(writer, (AggregateProcess)bean);
+        }
         else if (bean instanceof Mode)
+        {
+            writeTypeAndName(writer, "Mode", name);
             writeModeProperties(writer, (Mode)bean);
+        }
         else if (bean instanceof Deployment)
+        {
+            writeTypeAndName(writer, "Deployment", name);
             writeDeploymentProperties(writer, (Deployment)bean);
+        }
         
         writer.endObject();
     }
@@ -1539,15 +1557,17 @@ public class SMLJsonBindings
     
     public void writeSimpleProcessProperties(JsonWriter writer, SimpleProcess bean) throws IOException
     {
-        writer.name("type").value("SimpleProcess");
         writeDescribedObjectProperties(writer, bean);
         writeProcessProperties(writer, bean);
+        
+        // on by-ref method supported in JSON for now
+        if (bean.getMethodProperty().hasHref())
+            writer.name("method").value(bean.getMethodProperty().getHref());
     }
     
     
     public void writeAggregateProcessProperties(JsonWriter writer, AggregateProcess bean) throws IOException
     {
-        writer.name("type").value("AggregateProcess");
         writeDescribedObjectProperties(writer, bean);
         writeProcessProperties(writer, bean);
         writeComponents(writer, bean.getComponentList());
@@ -1557,7 +1577,6 @@ public class SMLJsonBindings
     
     public void writePhysicalSystemProperties(JsonWriter writer, PhysicalSystem bean) throws IOException
     {
-        writer.name("type").value("PhysicalSystem");
         writeDescribedObjectProperties(writer, bean);
         writePhysicalProcessProperties(writer, bean);
         writeProcessProperties(writer, bean);
@@ -1568,16 +1587,18 @@ public class SMLJsonBindings
     
     public void writePhysicalComponentProperties(JsonWriter writer, PhysicalComponent bean) throws IOException
     {
-        writer.name("type").value("PhysicalComponent");
         writeDescribedObjectProperties(writer, bean);
         writePhysicalProcessProperties(writer, bean);
         writeProcessProperties(writer, bean);
+        
+        // on by-ref method supported in JSON for now
+        if (bean.getMethodProperty().hasHref())
+            writer.name("method").value(bean.getMethodProperty().getHref());
     }
     
     
     public void writeModeProperties(JsonWriter writer, Mode bean) throws IOException
     {
-        writer.name("type").value("Mode");
         writeDescribedObjectProperties(writer, bean);
         
         if (bean.getConfiguration() != null)
@@ -1590,7 +1611,6 @@ public class SMLJsonBindings
     
     public void writeDeploymentProperties(JsonWriter writer, Deployment bean) throws IOException
     {
-        writer.name("type").value("Deployment");
         writeDescribedObjectProperties(writer, bean);
         
         if (bean.getGeometry() != null)
@@ -1607,7 +1627,7 @@ public class SMLJsonBindings
                 if (item.hasValue())
                     writeDescribedObject(writer, item.getValue(), item.getName());
                 else if (item.hasHref())
-                    writeLink(writer, item, "uid", null);
+                    writeLink(writer, item, "uid", null, true);
             }
             writer.endArray();
         }
@@ -1827,78 +1847,86 @@ public class SMLJsonBindings
         writer.name("contacts").beginArray();
         for (var list: bean)
         {
-            for (var item: list.getContactList().getProperties())
-                writeContact(writer, item.getValue(), item.getRole());
+            for (var prop: list.getContactList().getProperties())
+                writeContact(writer, prop);
         }
         writer.endArray();
     }
     
     
-    protected void writeContact(JsonWriter writer, CIResponsibleParty bean, String role) throws IOException
+    protected void writeContact(JsonWriter writer, OgcProperty<CIResponsibleParty> prop) throws IOException
     {
         writer.beginObject();
         
-        if (role != null)
-            writer.name("role").value(role);
-        else if (bean.getRole() != null)
-            writer.name("role").value(bean.getRole().getValue());
+        if (prop.getRole() != null)
+            writer.name("role").value(prop.getRole());
         
-        if (bean.isSetIndividualName())
-            writer.name("individualName").value(bean.getIndividualName());
-        
-        if (bean.isSetOrganisationName())
-            writer.name("organisationName").value(bean.getOrganisationName());
-        
-        if (bean.isSetContactInfo())
+        if (prop.hasHref())
         {
-            writer.name("contactInfo").beginObject();
+            writer.name("link");
+            writeLink(writer, prop, null, null, false);
+        }
+        else if (prop.hasValue())
+        {
+            var bean = prop.getValue();
             
-            var ci = bean.getContactInfo();
+            if (bean.isSetIndividualName())
+                writer.name("individualName").value(bean.getIndividualName());
             
-            if (ci.isSetOnlineResource())
-                writer.name("website").value(ci.getOnlineResource().getLinkage());
+            if (bean.isSetOrganisationName())
+                writer.name("organisationName").value(bean.getOrganisationName());
             
-            if (ci.isSetPhone())
+            if (bean.isSetContactInfo())
             {
-                writer.name("phone").beginObject();
-                var ph = ci.getPhone();
+                writer.name("contactInfo").beginObject();
                 
-                if (ph.getNumVoices() > 0)
-                    writer.name("voice").value(ph.getVoiceList().get(0));
+                var ci = bean.getContactInfo();
                 
-                if (ph.getNumFacsimiles() > 0)
-                    writer.name("facsimile").value(ph.getFacsimileList().get(0));
+                if (ci.isSetOnlineResource())
+                    writer.name("website").value(ci.getOnlineResource().getLinkage());
+                
+                if (ci.isSetPhone())
+                {
+                    writer.name("phone").beginObject();
+                    var ph = ci.getPhone();
+                    
+                    if (ph.getNumVoices() > 0)
+                        writer.name("voice").value(ph.getVoiceList().get(0));
+                    
+                    if (ph.getNumFacsimiles() > 0)
+                        writer.name("facsimile").value(ph.getFacsimileList().get(0));
+                    
+                    writer.endObject();
+                }
+                
+                if (ci.isSetAddress())
+                {
+                    writer.name("address").beginObject();
+                    var ad = ci.getAddress();
+                    
+                    if (ad.getNumDeliveryPoints() > 0)
+                        writer.name("deliveryPoint").value(ad.getDeliveryPointList().get(0));
+                    
+                    if (ad.isSetCity())
+                        writer.name("city").value(ad.getCity());
+                    
+                    if (ad.isSetPostalCode())
+                        writer.name("postalCode").value(ad.getPostalCode());
+                    
+                    if (ad.isSetAdministrativeArea())
+                        writer.name("administrativeArea").value(ad.getAdministrativeArea());
+                    
+                    if (ad.isSetCountry())
+                        writer.name("country").value(ad.getCountry());
+                    
+                    if (ad.getNumElectronicMailAddress() > 0)
+                        writer.name("electronicMailAddress").value(ad.getElectronicMailAddressList().get(0));
+                    
+                    writer.endObject();
+                }
                 
                 writer.endObject();
             }
-            
-            if (ci.isSetAddress())
-            {
-                writer.name("address").beginObject();
-                var ad = ci.getAddress();
-                
-                if (ad.getNumDeliveryPoints() > 0)
-                    writer.name("deliveryPoint").value(ad.getDeliveryPointList().get(0));
-                
-                if (ad.isSetCity())
-                    writer.name("city").value(ad.getCity());
-                
-                if (ad.isSetPostalCode())
-                    writer.name("postalCode").value(ad.getPostalCode());
-                
-                if (ad.isSetAdministrativeArea())
-                    writer.name("administrativeArea").value(ad.getAdministrativeArea());
-                
-                if (ad.isSetCountry())
-                    writer.name("country").value(ad.getCountry());
-                
-                if (ad.getNumElectronicMailAddress() > 0)
-                    writer.name("electronicMailAddress").value(ad.getElectronicMailAddressList().get(0));
-                
-                writer.endObject();
-            }
-            
-            writer.endObject();
         }
         
         writer.endObject();
@@ -1956,9 +1984,12 @@ public class SMLJsonBindings
     }
     
     
-    protected void writeLink(JsonWriter writer, OgcProperty<?> bean, String rolePropName, String mediaType) throws IOException
+    protected void writeLink(JsonWriter writer, OgcProperty<?> bean, String rolePropName, String mediaType, boolean includeType) throws IOException
     {
         writer.beginObject();
+        
+        if (includeType)
+            writer.name("type").value("Link");
         
         if (bean.getName() != null)
             writer.name("name").value(bean.getName());
@@ -1990,7 +2021,7 @@ public class SMLJsonBindings
         if (bean.isSetTypeOf())
         {
             writer.name("typeOf");
-            writeLink(writer, bean.getTypeOf(), "uid", SML_JSON_MEDIA_TYPE);
+            writeLink(writer, bean.getTypeOf(), "uid", SML_JSON_MEDIA_TYPE, false);
         }
     }
     
@@ -2066,15 +2097,25 @@ public class SMLJsonBindings
             for (var setting: bean.getSetConstraintList())
             {
                 writer.beginObject();
-                writer.name("ref").value(setting.getRef());
-                writer.name("value");
                 var c = setting.getValue();
                 if (c instanceof AllowedValues)
-                    sweBindings.writeAllowedValues(writer, (AllowedValues)setting.getValue(), false);
+                {
+                    writer.name("type").value("AllowedValues");
+                    writer.name("ref").value(setting.getRef());
+                    sweBindings.writeAllowedValuesProperties(writer, (AllowedValues)setting.getValue(), false);
+                }
                 else if (c instanceof AllowedTokens)
-                    sweBindings.writeAllowedTokens(writer, (AllowedTokens)setting.getValue());
+                {
+                    writer.name("type").value("AllowedTokens");
+                    writer.name("ref").value(setting.getRef());
+                    sweBindings.writeAllowedTokensProperties(writer, (AllowedTokens)setting.getValue());
+                }
                 else if (c instanceof AllowedTimes)
-                    sweBindings.writeAllowedTimes(writer, (AllowedTimes)setting.getValue());
+                {
+                    writer.name("type").value("AllowedTimes");
+                    writer.name("ref").value(setting.getRef());
+                    sweBindings.writeAllowedTimesProperties(writer, (AllowedTimes)setting.getValue());
+                }
                 writer.endObject();
             }
             writer.endArray();
@@ -2107,7 +2148,7 @@ public class SMLJsonBindings
         for (var item: bean.getFeatureList().getProperties())
         {
             if (item.hasHref())
-                writeLink(writer, item, null, null);
+                writeLink(writer, item, null, null, false);
         }
         writer.endArray();
     }
@@ -2224,7 +2265,7 @@ public class SMLJsonBindings
         if (bean.isSetAttachedTo())
         {
             writer.name("attachedTo");
-            writeLink(writer, bean.getAttachedTo(), "uid", SML_JSON_MEDIA_TYPE);
+            writeLink(writer, bean.getAttachedTo(), "uid", SML_JSON_MEDIA_TYPE, false);
         }
     }
     
@@ -2272,9 +2313,9 @@ public class SMLJsonBindings
         {
             geojsonBindings.writePoint(writer, (Point)selfPos);
         }
-        else if (selfPos instanceof DataRecord)
+        else if (selfPos instanceof Pose)
         {
-            // TODO write out as pose
+            geoposeBindings.writePose(writer, (Pose)selfPos, "Pose");
         }
     }
     
@@ -2290,7 +2331,7 @@ public class SMLJsonBindings
             if (item.hasValue())
                 writeDescribedObject(writer, item.getValue(), item.getName());
             else if (item.hasHref())
-                writeLink(writer, item, "uid", null);
+                writeLink(writer, item, "uid", null, true);
         }
         writer.endArray();
     }
