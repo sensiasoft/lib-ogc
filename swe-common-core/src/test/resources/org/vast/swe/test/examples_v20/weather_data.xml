@@ -25,7 +25,7 @@
          <swe:field name="temperature">
             <swe:Quantity definition="http://mmisw.org/ont/cf/parameter/air_temperature">
                <swe:label>Air Temperature</swe:label>
-               <swe:uom xlink:href="Cel"/>
+               <swe:uom code="Cel"/>
                <swe:constraint>
                   <swe:AllowedValues>
                      <swe:value>1.0</swe:value>

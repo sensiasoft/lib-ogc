@@ -16,10 +16,6 @@ jar {
     attributes('Bundle-Vendor': 'Sensia Software LLC')
   }
 }
-
-test {
-  exclude 'org/vast/swe/test/TestSweJsonBindingsV21.class'
-}
  
 // add info to maven pom
 ext.pom >>= {

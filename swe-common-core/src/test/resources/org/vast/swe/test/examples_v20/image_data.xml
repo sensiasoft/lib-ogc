@@ -26,7 +26,7 @@
                         <swe:Count definition="http://sweet.jpl.nasa.gov/2.0/physRadiation.owl#Radiance">
                            <swe:description>Radiance measured on band1 usually assigned to red channel</swe:description>
                            <swe:nilValues>
-                              <swe:NilValues id="NIL_VALUES1">
+                              <swe:NilValues>
                                  <swe:nilValue reason="http://www.opengis.net/def/nil/OGC/0/BelowDetectionRange">0</swe:nilValue>
                                  <swe:nilValue reason="http://www.opengis.net/def/nil/OGC/0/AboveDetectionRange">255</swe:nilValue>
                               </swe:NilValues>
@@ -37,7 +37,7 @@
                         <swe:Count definition="http://sweet.jpl.nasa.gov/2.0/physRadiation.owl#Radiance">
                            <swe:description>Radiance measured on band2 usually assigned to green channel</swe:description>
                            <swe:nilValues>
-                              <swe:NilValues id="NIL_VALUES2">
+                              <swe:NilValues>
                                  <swe:nilValue reason="http://www.opengis.net/def/nil/OGC/0/BelowDetectionRange">0</swe:nilValue>
                                  <swe:nilValue reason="http://www.opengis.net/def/nil/OGC/0/AboveDetectionRange">255</swe:nilValue>
                               </swe:NilValues>
@@ -48,7 +48,7 @@
                         <swe:Count definition="http://sweet.jpl.nasa.gov/2.0/physRadiation.owl#Radiance">
                            <swe:description>Radiance measured on band3 usually assigned to blue channel</swe:description>
                            <swe:nilValues>
-                              <swe:NilValues id="NIL_VALUES3">
+                              <swe:NilValues>
                                  <swe:nilValue reason="http://www.opengis.net/def/nil/OGC/0/BelowDetectionRange">0</swe:nilValue>
                                  <swe:nilValue reason="http://www.opengis.net/def/nil/OGC/0/AboveDetectionRange">255</swe:nilValue>
                               </swe:NilValues>

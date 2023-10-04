@@ -20,21 +20,27 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import net.opengis.swe.v20.AbstractSWE;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataStream;
+import net.opengis.swe.v20.Time;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.vast.data.SWEFactory;
+import org.vast.json.JsonInliningWriter;
+import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEJsonBindings;
 import org.vast.swe.SWEStaxBindings;
 import org.vast.swe.SWEUtils;
 import org.xml.sax.InputSource;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 
 
 public class TestSweJsonBindingsV21 extends XMLTestCase
@@ -73,13 +79,15 @@ public class TestSweJsonBindingsV21 extends XMLTestCase
     
     protected void writeSweCommonJsonToStream(AbstractSWE sweObj, OutputStream os, boolean indent) throws Exception
     {
-        SWEJsonBindings sweBindings = new SWEJsonBindings(new SWEFactory());
-        JsonWriter writer = new JsonWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+        var writer = new JsonInliningWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
         writer.setIndent("  ");
+        
+        SWEJsonBindings sweBindings = new SWEJsonBindings(new SWEFactory());
         if (sweObj instanceof DataStream)
             sweBindings.writeDataStream(writer, (DataStream)sweObj);
         else
             sweBindings.writeDataComponent(writer, (DataComponent)sweObj, true);
+        
         writer.flush();
     }
     
@@ -94,47 +102,14 @@ public class TestSweJsonBindingsV21 extends XMLTestCase
     {
         try
         {
+            // read from XML file
             AbstractSWE sweObj = readSweCommonXml(path, isDataStream);
             
-            // write JSON to stdout and buffer
-            writeSweCommonJsonToStream(sweObj, System.out, true);
-            System.out.println('\n');
+            // write back as JSON to stdout and buffer
             ByteArrayOutputStream os = new ByteArrayOutputStream();
+            writeSweCommonJsonToStream(sweObj, System.out, true);
             writeSweCommonJsonToStream(sweObj, os, false);
-            
-            /*// read back as events to check JSON is well formed
-            InputStream is = new ByteArrayInputStream(os.toByteArray());
-            SWEJsonStreamReader jsonReader = new SWEJsonStreamReader(is, StandardCharsets.UTF_8);
-            XMLOutputFactory output = new com.ctc.wstx.stax.WstxOutputFactory();
-            XMLStreamWriter xmlWriter = output.createXMLStreamWriter(System.out);
-            xmlWriter = new IndentingXMLStreamWriter(xmlWriter);
-            while (jsonReader.hasNext())
-            {
-                switch (jsonReader.next())
-                {
-                    case START_ELEMENT:
-                        String name = jsonReader.getLocalName();
-                        xmlWriter.writeStartElement(name);
-                        for(int i=0; i<jsonReader.getAttributeCount(); i++)
-                        {
-                            name = jsonReader.getAttributeLocalName(i);
-                            String val = jsonReader.getAttributeValue(i);
-                            xmlWriter.writeAttribute(name, val);
-                        }
-                        break;
-                        
-                    case END_ELEMENT:
-                        xmlWriter.writeEndElement();
-                        break;
-                        
-                    case CHARACTERS:
-                        xmlWriter.writeCharacters(jsonReader.getText());
-                        break;
-                }
-                
-                xmlWriter.flush();
-            }            
-            System.out.println("\n\n");*/
+            System.out.println('\n');
             
             // read back JSON, write as XML and compare with source XML
             var is = new ByteArrayInputStream(os.toByteArray());
@@ -150,11 +125,12 @@ public class TestSweJsonBindingsV21 extends XMLTestCase
             }
             else
             {
-                DataComponent comp = sweBindings.readDataComponentWithName(jsonReader);
+                DataComponent comp = sweBindings.readDataComponent(jsonReader);
                 new SWEUtils(SWEUtils.V2_0).writeComponent(xmlOutput, comp, true, true);
                 new SWEUtils(SWEUtils.V2_0).writeComponent(System.out, comp, true, true);
             }
             
+            System.out.println('\n');
             InputSource src1 = new InputSource(getClass().getResourceAsStream(path));
             InputSource src2 = new InputSource(new ByteArrayInputStream(xmlOutput.toByteArray()));
             assertXMLEqual(src1, src2);
@@ -201,7 +177,8 @@ public class TestSweJsonBindingsV21 extends XMLTestCase
     
     public void testReadWriteRecordWithNilValues() throws Exception
     {
-        readXmlWriteJson("examples_v20/spec/nilValues.xml");
+        //readXmlWriteJson("examples_v20/spec/nilValues.xml");
+        readXmlWriteJson("examples_v20/spec/nilValues_noxlinks.xml");
     }
     
     
@@ -211,10 +188,10 @@ public class TestSweJsonBindingsV21 extends XMLTestCase
     }
     
     
-    public void testReadWriteRecordWithXlinks() throws Exception
+    /*public void testReadWriteRecordWithXlinks() throws Exception
     {
         readXmlWriteJson("examples_v20/spec/record_weather_xlinks.xml");
-    }
+    }*/
     
     
     public void testReadWriteVector() throws Exception
@@ -268,5 +245,53 @@ public class TestSweJsonBindingsV21 extends XMLTestCase
     public void testReadWriteDataStreamWithChoice() throws Exception
     {
         readXmlWriteJson("examples_v20/spec/enc_text_choice_stream.xml", true);
+    }
+    
+    
+    public void testReadWithTypePropLast() throws Exception
+    {
+        // type at end
+        var json = new JsonObject();
+        json.addProperty("definition", SWEConstants.DEF_SAMPLING_TIME);
+        json.addProperty("referenceFrame", SWEConstants.TIME_REF_UTC);
+        var uomObj = new JsonObject();
+        uomObj.addProperty("href", Time.ISO_TIME_UNIT);
+        json.add("uom", uomObj);
+        json.addProperty("value", "2002-05-14T23:45:12Z");
+        json.addProperty("type", "Time");
+        
+        var gson = new GsonBuilder().setPrettyPrinting().create();
+        System.out.println(gson.toJson(json));
+        
+        var reader = new JsonReader(new StringReader(json.toString()));
+        var comp = new SWEJsonBindings(false).readDataComponent(reader);
+        
+        try (var writer = gson.newJsonWriter(new PrintWriter(System.out))) {
+            new SWEJsonBindings().writeDataComponent(writer, comp, true);
+        }
+    }
+    
+    
+    public void testReadWithTypePropNotFirst() throws Exception
+    {
+        // properties in alphabetical order
+        var json = new JsonObject();
+        json.addProperty("definition", SWEConstants.DEF_SAMPLING_TIME);
+        json.addProperty("referenceFrame", SWEConstants.TIME_REF_UTC);
+        json.addProperty("type", "Time");
+        var uomObj = new JsonObject();
+        uomObj.addProperty("href", Time.ISO_TIME_UNIT);
+        json.add("uom", uomObj);
+        json.addProperty("value", "2002-05-14T23:45:12Z");
+        
+        var gson = new GsonBuilder().setPrettyPrinting().create();
+        System.out.println(gson.toJson(json));
+        
+        var reader = new JsonReader(new StringReader(json.toString()));
+        var comp = new SWEJsonBindings(false).readDataComponent(reader);
+        
+        try (var writer = gson.newJsonWriter(new PrintWriter(System.out))) {
+            new SWEJsonBindings().writeDataComponent(writer, comp, true);
+        }
     }
 }

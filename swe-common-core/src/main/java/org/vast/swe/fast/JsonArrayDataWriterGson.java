@@ -203,7 +203,7 @@ public class JsonArrayDataWriterGson extends JsonDataWriterGson
             {
                 beginRecordIfRoot(this);
                 
-                writer.name(choiceTokens.get(selectedIndex));
+                writer.value(choiceTokens.get(selectedIndex));
                 index = super.process(data, index, selectedIndex);
                 
                 endRecordIfRoot(this);

@@ -15,6 +15,8 @@ Copyright (C) 2012-2019 Sensia Software LLC. All Rights Reserved.
 package org.vast.swe;
 
 import java.io.IOException;
+import java.time.OffsetDateTime;
+import org.vast.data.DataBlockList;
 import org.vast.data.DataComponentProperty;
 import org.vast.data.DateTimeOrDouble;
 import org.vast.data.EncodedValuesImpl;
@@ -23,7 +25,11 @@ import org.vast.data.SWEFactory;
 import org.vast.data.TextEncodingImpl;
 import org.vast.data.XMLEncodingImpl;
 import org.vast.json.JsonInliningWriter;
+import org.vast.json.JsonReaderWithBuffer;
+import org.vast.swe.fast.JsonArrayDataParserGson;
+import org.vast.swe.fast.JsonArrayDataWriterGson;
 import org.vast.unit.UnitParserUCUM;
+import org.vast.util.DateTimeFormat;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -78,18 +84,37 @@ import net.opengis.swe.v20.JSONEncoding;
 @SuppressWarnings("javadoc")
 public class SWEJsonBindings extends AbstractBindings
 {
+    public final static String NAN = "NaN";
+    public final static String PLUS_INFINITY = "+Infinity";
+    public final static String MINUS_INFINITY = "-Infinity";
+    
     protected Factory factory;
-
+    protected boolean enforceTypeFirst;
+    
 
     public SWEJsonBindings()
     {
-        factory = new SWEFactory();
+        this(true);
+    }
+    
+    
+    public SWEJsonBindings(boolean enforceTypeFirst)
+    {
+        this.factory = new SWEFactory();
+        this.enforceTypeFirst = enforceTypeFirst;
     }
     
     
     public SWEJsonBindings(Factory factory)
     {
+        this(factory, true);
+    }
+    
+    
+    public SWEJsonBindings(Factory factory, boolean enforceTypeFirst)
+    {
         this.factory = factory;
+        this.enforceTypeFirst = enforceTypeFirst;
     }
     
     
@@ -100,56 +125,35 @@ public class SWEJsonBindings extends AbstractBindings
     
     public DataComponent readDataComponent(JsonReader reader) throws IOException
     {
-        return readDataComponent(reader, false);
-    }
-    
-    
-    public DataComponent readDataComponentWithName(JsonReader reader) throws IOException
-    {
-        return readDataComponent(reader, true);
-    }
-    
-    
-    public DataComponent readDataComponent(JsonReader reader, boolean nameRequired) throws IOException
-    {
-        String type = null;
-        String name = null;
-        DataComponent comp = null;
+        reader = beginObjectWithType(reader);
+        var type = reader.nextString();
         
-        reader.beginObject();
-        while (reader.hasNext())
-        {
-            String propName = reader.nextName();
-            
-            if ("type".equals(propName))
-            {
-                type = reader.nextString();
-            }
-            else if ("name".equals(propName))
-            {
-                name = reader.nextString();
-            }
-            else
-            {
-                if (type == null)
-                    throw new JsonParseException("JSON object must contain a 'type' property before the other members @ " + reader.getPath());
-                
-                if (nameRequired && name == null)
-                    throw new JsonParseException("JSON object must contain a 'name' property before the other members @ " + reader.getPath());
-            }
-            
-            if (type != null && (!nameRequired || name != null))
-                break;
-        }
-        
-        comp = readDataComponentByType(reader, type);
+        var comp = readDataComponentByType(reader, type);
         if (comp == null)
             throw new JsonParseException("Invalid component type: " + type + " @ " + reader.getPath());
         
-        if (name != null)
-            comp.setName(name);
-        
         return comp;
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public <T extends DataComponent> void readDataComponentOrLink(JsonReader reader, OgcProperty<T> prop) throws IOException
+    {
+        reader = beginObjectWithType(reader);
+        var type = reader.nextString();
+        
+        if ("Link".equals(type))
+        {
+            readLink(reader, prop);
+        }
+        else
+        {
+            var comp = readDataComponentByType(reader, type);
+            if (comp == null)
+                throw new JsonParseException("Invalid component type: " + type + " @ " + reader.getPath());
+            
+            prop.setValue((T)comp);
+        }
     }
     
     
@@ -267,7 +271,7 @@ public class SWEJsonBindings extends AbstractBindings
             while (reader.hasNext())
             {
                 OgcProperty<SimpleComponent> qualityProp = new OgcPropertyImpl<SimpleComponent>();
-                qualityProp.setValue((SimpleComponent)readDataComponentWithName(reader));
+                readDataComponentOrLink(reader, qualityProp);
                 bean.getQualityList().add(qualityProp);
             }
             
@@ -317,7 +321,7 @@ public class SWEJsonBindings extends AbstractBindings
             while (reader.hasNext())
             {
                 var fieldProp = new DataComponentProperty<DataComponent>();
-                var comp = readDataComponentWithName(reader);
+                var comp = readDataComponent(reader);
                 fieldProp.setName(comp.getName());
                 fieldProp.setValue(comp);
                 
@@ -377,7 +381,7 @@ public class SWEJsonBindings extends AbstractBindings
             while (reader.hasNext())
             {
                 var coordProp = new DataComponentProperty<ScalarComponent>();
-                var comp = readDataComponentWithName(reader);
+                var comp = readDataComponent(reader);
                 if (!(comp instanceof Count || comp instanceof Quantity || comp instanceof Time))
                     throw new IOException("Invalid vector coordinate type: " + comp.getClass().getSimpleName());
                 coordProp.setName(comp.getName());
@@ -431,7 +435,7 @@ public class SWEJsonBindings extends AbstractBindings
             while (reader.hasNext())
             {
                 var itemProp = new DataComponentProperty<DataComponent>();
-                var comp = readDataComponentWithName(reader);
+                var comp = readDataComponent(reader);
                 itemProp.setName(comp.getName());
                 itemProp.setValue(comp);
                 bean.getItemList().add(itemProp);
@@ -480,7 +484,7 @@ public class SWEJsonBindings extends AbstractBindings
         else if ("elementType".equals(name))
         {
             OgcProperty<DataComponent> elementTypeProp = bean.getElementTypeProperty();
-            var comp = readDataComponentWithName(reader);
+            var comp = readDataComponent(reader);
             elementTypeProp.setName(comp.getName());
             elementTypeProp.setValue(comp);
         }
@@ -567,15 +571,16 @@ public class SWEJsonBindings extends AbstractBindings
         // elementCount
         if ("elementCount".equals(name))
         {
-            OgcProperty<Count> elementCountProp = bean.getElementCountProperty();
-            elementCountProp.setValue(readCount(reader));
+            bean.setElementCount(readCount(reader));
         }
 
         // elementType
         else if ("elementType".equals(name))
         {
             OgcProperty<DataComponent> elementTypeProp = bean.getElementTypeProperty();
-            elementTypeProp.setValue(readDataComponentWithName(reader));
+            var comp = readDataComponent(reader);
+            elementTypeProp.setName(comp.getName());
+            elementTypeProp.setValue(comp);
         }
 
         // encoding
@@ -896,7 +901,10 @@ public class SWEJsonBindings extends AbstractBindings
     {
         // value
         if ("value".equals(name))
-            bean.setValue(reader.nextDouble());
+        {
+            var val = readNumberOrSpecial(reader);
+            bean.setValue(val);
+        }
         
         else
             return readQuantityBaseProperties(reader, bean, name);
@@ -931,8 +939,10 @@ public class SWEJsonBindings extends AbstractBindings
         if ("value".equals(name))
         {
             reader.beginArray();
-            double min = reader.nextDouble();
-            double max = reader.nextDouble();
+            reader.setLenient(true);
+            double min = readNumberOrSpecial(reader);
+            double max = readNumberOrSpecial(reader);
+            reader.setLenient(false);
             bean.setValue(new double[] {min, max});
             reader.endArray();
         }
@@ -989,14 +999,6 @@ public class SWEJsonBindings extends AbstractBindings
             return readAbstractSimpleComponentProperties(reader, bean, name);
         
         return true;
-    }
-    
-    
-    protected DateTimeOrDouble readTimeVal(JsonReader reader, boolean isIso) throws IOException
-    {
-        return isIso ?
-            new DateTimeOrDouble(getDateTimeFromString(reader.nextString())) :
-            new DateTimeOrDouble(reader.nextDouble());
     }
     
     
@@ -1163,12 +1165,17 @@ public class SWEJsonBindings extends AbstractBindings
     
     public boolean readAllowedValuesProperties(JsonReader reader, AllowedValues bean, String name) throws IOException
     {
+        reader.setLenient(true);
+        
         // values
         if ("values".equals(name))
         {
             reader.beginArray();
             while (reader.hasNext())
-                bean.addValue(reader.nextDouble());
+            {
+                var val = readNumberOrSpecial(reader);
+                bean.addValue(val);
+            }
             reader.endArray();
         }
         
@@ -1179,8 +1186,8 @@ public class SWEJsonBindings extends AbstractBindings
             while (reader.hasNext())
             {
                 reader.beginArray();
-                var min = reader.nextDouble();
-                var max = reader.nextDouble();
+                var min = readNumberOrSpecial(reader);
+                var max = readNumberOrSpecial(reader);
                 bean.addInterval(new double[] {min, max});
                 reader.endArray();
             }
@@ -1298,43 +1305,61 @@ public class SWEJsonBindings extends AbstractBindings
     }
     
     
+    protected void readLink(JsonReader reader, OgcProperty<?> prop) throws IOException
+    {
+        if (reader.peek() == JsonToken.BEGIN_OBJECT)
+            reader.beginObject();
+        
+        while (reader.hasNext())
+        {
+            var name = reader.nextName();
+            
+            if (!readLinkProperties(reader, prop, name))
+                reader.skipValue();
+        }
+        reader.endObject();
+    }
+    
+    
+    protected boolean readLinkProperties(JsonReader reader, OgcProperty<?> bean, String name) throws IOException
+    {
+        if ("href".equals(name))
+        {
+            bean.setHref(reader.nextString());
+        }
+        else if ("name".equals(name))
+        {
+            bean.setName(reader.nextString());
+        }
+        else if ("title".equals(name))
+        {
+            bean.setTitle(reader.nextString());
+        }
+        else
+            return false;
+        
+        return true;
+    }
+    
+    
     public EncodedValues readEncodedValuesProperty(JsonReader reader, AbstractSWEIdentifiable blockComponent, DataEncoding encoding) throws IOException
     {
-//        EncodedValues bean = factory.newEncodedValuesProperty();
-//
-//        JsonReader reader = collectProperties(reader);
-//        readPropertyProperties(attrMap, bean);
-//
-//        String text = reader.getElementText();
-//        if (text != null && text.trim().length() > 0)
-//        {
-//            if (blockComponent instanceof DataArray)
-//                bean.setAsText((DataArray)blockComponent, encoding, text);
-//            else if (blockComponent instanceof DataStream)
-//                bean.setAsText((DataStream)blockComponent, encoding, text);
-//            else if (blockComponent == null)
-//                bean.setAsText((DataArray)null, encoding, text);
-//        }
-//        else if (!bean.hasHref())
-//            return null;
-//
-//        return bean;
         EncodedValues bean = factory.newEncodedValuesProperty();
         
         if (reader.peek() == JsonToken.BEGIN_ARRAY)
         {
             reader.beginArray();
-
+            
             if (blockComponent instanceof DataArray)
             {
                 var dataArray = (DataArray)blockComponent;
                 var parser = new JsonArrayDataParserGson(reader);
                 parser.setDataComponents(dataArray.getElementType());
                 parser.setRenewDataBlock(true);
-
+                
                 var dataList = new DataBlockList(true);
                 while (reader.hasNext())
-        {
+                {
                     var rec = parser.parseNextBlock();
                     dataList.add(rec);
                 }
@@ -1355,12 +1380,14 @@ public class SWEJsonBindings extends AbstractBindings
                 }
                 
                 bean.setData(dataList);
-        }
-
+            }
+            
             reader.endArray();
         }
         else
-        reader.skipValue();
+        {
+            readLink(reader, bean);
+        }
         
         return bean;
     }
@@ -1368,8 +1395,9 @@ public class SWEJsonBindings extends AbstractBindings
     
     public DataEncoding readEncoding(JsonReader reader) throws IOException
     {
-        reader.beginObject();
-        String type = readObjectType(reader);
+        reader = beginObjectWithType(reader);
+        var type = reader.nextString();
+        
         return readEncodingByType(reader, type);
     }
     
@@ -1461,8 +1489,9 @@ public class SWEJsonBindings extends AbstractBindings
                 reader.beginArray();
                 while (reader.hasNext())
                 {
-                    reader.beginObject();
-                    var type = readObjectType(reader);
+                    reader = beginObjectWithType(reader);
+                    var type = reader.nextString();
+                    
                     if ("Component".equals(type))
                         bean.addMemberAsComponent(readBinaryComponent(reader));
                     else if ("Block".equals(type))
@@ -1541,19 +1570,105 @@ public class SWEJsonBindings extends AbstractBindings
     }
     
     
-    public String readObjectType(JsonReader reader) throws IOException
+    public JsonReader beginObjectWithType(JsonReader reader) throws IOException
     {
-        if (!"type".equals(reader.nextName()))
-            throw new JsonParseException("JSON object must contain a 'type' property as its first member @ " + reader.getPath());
-        return reader.nextString();
+        if (reader.peek() == JsonToken.BEGIN_OBJECT)
+            reader.beginObject();
+        
+        boolean foundType = false;
+        while (reader.hasNext())
+        {
+            String propName = reader.nextName();
+            
+            if ("type".equals(propName))
+            {
+                foundType = true;
+            }
+            else
+            {
+                if (!enforceTypeFirst)
+                {
+                    if (!(reader instanceof JsonReaderWithBuffer))
+                        reader = new JsonReaderWithBuffer(reader);
+                    ((JsonReaderWithBuffer)reader).buffer(propName);
+                }
+                else
+                {
+                    throw new JsonParseException("Missing 'type' property as first member of JSON object @ " + reader.getPath());
+                }
+            }
+            
+            if (foundType)
+            {
+                if (reader instanceof JsonReaderWithBuffer)
+                    ((JsonReaderWithBuffer)reader).startReplay();
+                return reader;
+            }
+        }
+        
+        throw new JsonParseException("Missing 'type' property in JSON object @ " + reader.getPath());
     }
     
     
     public void checkObjectType(JsonReader reader, String expectedType) throws IOException
     {
-        var type = readObjectType(reader);
+        reader = beginObjectWithType(reader);
+        var type = reader.nextString();
         if (!expectedType.equals(type))
             throw new JsonParseException(expectedType + " object expected but was " + type + " @ " + reader.getPath());
+    }
+    
+    
+    protected DateTimeOrDouble readTimeVal(JsonReader reader, boolean isIso) throws IOException
+    {
+        if (reader.peek() == JsonToken.NUMBER)
+        {
+            return new DateTimeOrDouble(reader.nextDouble());
+        }
+        else
+        {
+            var timeStr = reader.nextString().trim();
+            
+            if (isIso)
+            {
+                if (PLUS_INFINITY.equals(timeStr))
+                    return new DateTimeOrDouble(OffsetDateTime.MAX);
+                else if (MINUS_INFINITY.equals(timeStr))
+                    return new DateTimeOrDouble(OffsetDateTime.MIN);
+                else
+                    return new DateTimeOrDouble(OffsetDateTime.parse(timeStr, DateTimeFormat.ISO_DATE_OR_TIME_FORMAT));
+            }
+            else
+            {
+                if (PLUS_INFINITY.equals(timeStr))
+                    return new DateTimeOrDouble(Double.POSITIVE_INFINITY);
+                else if (MINUS_INFINITY.equals(timeStr))
+                    return new DateTimeOrDouble(Double.NEGATIVE_INFINITY);
+                else if (NAN.equals(timeStr))
+                    return new DateTimeOrDouble(Double.NaN);
+                else
+                    throw new JsonParseException("Invalid datetime value: " + timeStr);
+            }
+        }
+    }
+    
+    
+    protected double readNumberOrSpecial(JsonReader reader) throws IOException
+    {
+        if (reader.peek() == JsonToken.STRING)
+        {
+            var str = reader.nextString();
+            if (PLUS_INFINITY.equals(str))
+                return Double.POSITIVE_INFINITY;
+            else if (MINUS_INFINITY.equals(str))
+                return Double.NEGATIVE_INFINITY;
+            else if (NAN.equals(str))
+                return Double.NaN;
+            else
+                throw new JsonParseException("Invalid special number string: " + str);
+        }
+        else
+            return reader.nextDouble();
     }
 
 
@@ -1647,7 +1762,7 @@ public class SWEJsonBindings extends AbstractBindings
                 if (item.hasValue() && !item.hasHref())
                     writeDataComponent(writer, item.getValue(), true);
                 else if (item.hasHref())
-                    writeLink(writer, item);
+                    writeLink(writer, item, true);
             }
             
             writer.endArray();
@@ -1661,7 +1776,7 @@ public class SWEJsonBindings extends AbstractBindings
             if (nilValuesProp.hasValue() && !nilValuesProp.hasHref())
                 writeNilValues(writer, bean.getNilValues());
             else if (nilValuesProp.hasHref())
-                writeLink(writer, nilValuesProp);
+                writeLink(writer, nilValuesProp, true);
         }
     }
     
@@ -1680,7 +1795,7 @@ public class SWEJsonBindings extends AbstractBindings
                 if (item.hasValue() && !item.hasHref())
                     writeDataComponent(writer, item.getValue(), writeInlineValues, item.getName());
                 else if (item.hasHref())
-                    writeLink(writer, item);
+                    writeLink(writer, item, true);
             }
             
             writer.endArray();
@@ -1710,7 +1825,7 @@ public class SWEJsonBindings extends AbstractBindings
                 if (item.hasValue() && !item.hasHref())
                     writeDataComponent(writer, item.getValue(), writeInlineValues, item.getName());
                 else if (item.hasHref())
-                    writeLink(writer, item);
+                    writeLink(writer, item, true);
             }
             
             writer.endArray();
@@ -1739,7 +1854,7 @@ public class SWEJsonBindings extends AbstractBindings
                 if (item.hasValue() && !item.hasHref())
                     writeDataComponent(writer, item.getValue(), writeInlineValues, item.getName());
                 else if (item.hasHref())
-                    writeLink(writer, item);
+                    writeLink(writer, item, true);
             }
             
             writer.endArray();
@@ -1757,7 +1872,7 @@ public class SWEJsonBindings extends AbstractBindings
         if (elementCountProp.hasValue() && !elementCountProp.hasHref())
             writeDataComponent(writer, bean.getElementCount(), true);
         else if (elementCountProp.hasHref())
-            writeLink(writer, elementCountProp);
+            writeLink(writer, elementCountProp, true);
 
         // elementType
         writer.name("elementType");
@@ -1765,7 +1880,7 @@ public class SWEJsonBindings extends AbstractBindings
         if (elementTypeProp.hasValue() && !elementTypeProp.hasHref())
             writeDataComponent(writer, bean.getElementType(), false, elementTypeProp.getName());
         else if (elementTypeProp.hasHref())
-            writeLink(writer, elementTypeProp);
+            writeLink(writer, elementTypeProp, true);
         
         if (writeInlineValues && bean.hasData())
         {
@@ -1814,7 +1929,10 @@ public class SWEJsonBindings extends AbstractBindings
     
     public void writeDataStream(JsonWriter writer, DataStream bean) throws IOException
     {
+        writer.beginObject();
+        writer.name("type").value("DataStream");
         writeDataStreamProperties(writer, bean);
+        writer.endObject();
     }
     
     
@@ -1835,7 +1953,7 @@ public class SWEJsonBindings extends AbstractBindings
         if (elementTypeProp.hasValue() && !elementTypeProp.hasHref())
             writeDataComponent(writer, bean.getElementType(), false, elementTypeProp.getName());
         else if (elementTypeProp.hasHref())
-            writeLink(writer, elementTypeProp);
+            writeLink(writer, elementTypeProp, true);
 
         // encoding
         writer.name("encoding");
@@ -2002,7 +2120,10 @@ public class SWEJsonBindings extends AbstractBindings
 
         // value
         if (bean.isSetValue() && writeInlineValues)
-            writer.name("value").value(bean.getValue());
+        {
+            writer.name("value");
+            writeNumberOrSpecialValue(writer, bean.getValue());
+        }
     }
     
     
@@ -2016,8 +2137,8 @@ public class SWEJsonBindings extends AbstractBindings
             writer.name("value").beginArray();
             writeInline(writer, true);
             double[] val = bean.getValue();
-            writer.value(val[0]);
-            writer.value(val[1]);
+            writeNumberOrSpecialValue(writer, val[0]);
+            writeNumberOrSpecialValue(writer, val[1]);
             writer.endArray();
             writeInline(writer, false);
         }
@@ -2063,15 +2184,6 @@ public class SWEJsonBindings extends AbstractBindings
             writer.name("value");
             writeTimeVal(writer, bean.getValue());
         }
-    }
-    
-    
-    protected void writeTimeVal(JsonWriter writer, DateTimeOrDouble val) throws IOException
-    {
-        if (val.isDateTime())
-            writer.value(getStringValue(val.getDateTime()));
-        else
-            writer.value(val.getDecimalTime());
     }
     
     
@@ -2145,7 +2257,7 @@ public class SWEJsonBindings extends AbstractBindings
             writer.name("values").beginArray();
             writeInline(writer, true);
             for (double val: bean.getValueList())
-                writer.value(val);
+                writeNumberOrSpecialValue(writer, val);
             writer.endArray();
             writeInline(writer, false);
         }
@@ -2158,8 +2270,8 @@ public class SWEJsonBindings extends AbstractBindings
             {
                 writer.beginArray();
                 writeInline(writer, true);
-                writer.value(range[0]);
-                writer.value(range[1]);
+                writeNumberOrSpecialValue(writer, range[0]);
+                writeNumberOrSpecialValue(writer, range[1]);
                 writer.endArray();
                 writeInline(writer, false);
             }
@@ -2245,7 +2357,7 @@ public class SWEJsonBindings extends AbstractBindings
     {
         if (bean.hasHref())
         {
-            writeLink(writer, bean);
+            writeLink(writer, bean, true);
         }
         else
         {
@@ -2289,86 +2401,91 @@ public class SWEJsonBindings extends AbstractBindings
     {
         writer.beginObject();
         
-        if (name != null)
-            writer.name("name").value(name);
-        
         if (bean instanceof DataRecord)
         {
-            writer.name("type").value("DataRecord");
+            writeTypeAndName(writer, "DataRecord", bean.getName());
             writeDataRecordProperties(writer, (DataRecord)bean, writeInlineValues);
         }
         else if (bean instanceof Vector)
         {
-            writer.name("type").value("Vector");
+            writeTypeAndName(writer, "Vector", bean.getName());
             writeVectorProperties(writer, (Vector)bean, writeInlineValues);
         }
         else if (bean instanceof Matrix)
         {
-            writer.name("type").value("Matrix");
+            writeTypeAndName(writer, "Matrix", bean.getName());
             writeMatrixProperties(writer, (Matrix)bean, writeInlineValues);
         }
         else if (bean instanceof DataArray)
         {
-            writer.name("type").value("DataArray");
+            writeTypeAndName(writer, "DataArray", bean.getName());
             writeDataArrayProperties(writer, (DataArray)bean, writeInlineValues);
         }
         else if (bean instanceof DataChoice)
         {
-            writer.name("type").value("DataChoice");
+            writeTypeAndName(writer, "DataChoice", bean.getName());
             writeDataChoiceProperties(writer, (DataChoice)bean, writeInlineValues);
         }
         else if (bean instanceof Count)
         {
-            writer.name("type").value("Count");
+            writeTypeAndName(writer, "Count", bean.getName());
             writeCountProperties(writer, (Count)bean, writeInlineValues);
+        }
+        else if (bean instanceof CountRange)
+        {
+            writeTypeAndName(writer, "CountRange", bean.getName());
+            writeCountRangeProperties(writer, (CountRange)bean, writeInlineValues);
+        }
+        else if (bean instanceof Category)
+        {
+            writeTypeAndName(writer, "Category", bean.getName());
+            writeCategoryProperties(writer, (Category)bean, writeInlineValues);
         }
         else if (bean instanceof CategoryRange)
         {
-            writer.name("type").value("CategoryRange");
+            writeTypeAndName(writer, "CategoryRange", bean.getName());
             writeCategoryRangeProperties(writer, (CategoryRange)bean, writeInlineValues);
+        }
+        else if (bean instanceof Quantity)
+        {
+            writeTypeAndName(writer, "Quantity", bean.getName());
+            writeQuantityProperties(writer, (Quantity)bean, writeInlineValues);
         }
         else if (bean instanceof QuantityRange)
         {
-            writer.name("type").value("QuantityRange");
+            writeTypeAndName(writer, "QuantityRange", bean.getName());
             writeQuantityRangeProperties(writer, (QuantityRange)bean, writeInlineValues);
         }
         else if (bean instanceof Time)
         {
-            writer.name("type").value("Time");
+            writeTypeAndName(writer, "Time", bean.getName());
             writeTimeProperties(writer, (Time)bean, writeInlineValues);
         }
         else if (bean instanceof TimeRange)
         {
-            writer.name("type").value("TimeRange");
+            writeTypeAndName(writer, "TimeRange", bean.getName());
             writeTimeRangeProperties(writer, (TimeRange)bean, writeInlineValues);
         }
         else if (bean instanceof Boolean)
         {
-            writer.name("type").value("Boolean");
+            writeTypeAndName(writer, "Boolean", bean.getName());
             writeBooleanProperties(writer, (Boolean)bean, writeInlineValues);
         }
         else if (bean instanceof Text)
         {
-            writer.name("type").value("Text");
+            writeTypeAndName(writer, "Text", bean.getName());
             writeTextProperties(writer, (Text)bean, writeInlineValues);
-        }
-        else if (bean instanceof Category)
-        {
-            writer.name("type").value("Category");
-            writeCategoryProperties(writer, (Category)bean, writeInlineValues);
-        }
-        else if (bean instanceof Quantity)
-        {
-            writer.name("type").value("Quantity");
-            writeQuantityProperties(writer, (Quantity)bean, writeInlineValues);
-        }
-        else if (bean instanceof CountRange)
-        {
-            writer.name("type").value("CountRange");
-            writeCountRangeProperties(writer, (CountRange)bean, writeInlineValues);
         }
         
         writer.endObject();
+    }
+    
+    
+    public void writeTypeAndName(JsonWriter writer, String type, String name) throws IOException
+    {
+        writer.name("type").value(type);
+        if (name != null)
+            writer.name("name").value(name);
     }
 
 
@@ -2492,10 +2609,43 @@ public class SWEJsonBindings extends AbstractBindings
     }
     
     
-    protected void writeLink(JsonWriter writer, OgcProperty<?> prop) throws IOException
+    protected void writeTimeVal(JsonWriter writer, DateTimeOrDouble val) throws IOException
+    {
+        if (val.isDateTime())
+        {
+            var dateTime = val.getDateTime();
+            if (OffsetDateTime.MAX.equals(dateTime))
+                writer.value(PLUS_INFINITY);
+            else if (OffsetDateTime.MIN.equals(dateTime))
+                writer.value(MINUS_INFINITY);
+            else            
+             writer.value(dateTime.format(DateTimeFormat.ISO_DATE_OR_TIME_FORMAT));
+        }
+        else
+            writeNumberOrSpecialValue(writer, val.getDecimalTime());
+    }
+    
+    
+    protected void writeNumberOrSpecialValue(JsonWriter writer, double val) throws IOException
+    {
+        if (Double.isNaN(val))
+            writer.value(NAN);
+        else if (val == Double.POSITIVE_INFINITY)
+            writer.value(PLUS_INFINITY);
+        else if (val == Double.NEGATIVE_INFINITY)
+            writer.value(MINUS_INFINITY);
+        else
+            writer.value(val);
+    }
+    
+    
+    protected void writeLink(JsonWriter writer, OgcProperty<?> prop, boolean includeType) throws IOException
     {
         writer.beginObject();
         String val;
+        
+        if (includeType)
+            writer.name("type").value("Link");
         
         val = prop.getName();
         if (val != null)
