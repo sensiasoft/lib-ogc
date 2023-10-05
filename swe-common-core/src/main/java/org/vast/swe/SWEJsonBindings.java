@@ -2403,77 +2403,77 @@ public class SWEJsonBindings extends AbstractBindings
         
         if (bean instanceof DataRecord)
         {
-            writeTypeAndName(writer, "DataRecord", bean.getName());
+            writeTypeAndName(writer, "DataRecord", name);
             writeDataRecordProperties(writer, (DataRecord)bean, writeInlineValues);
         }
         else if (bean instanceof Vector)
         {
-            writeTypeAndName(writer, "Vector", bean.getName());
+            writeTypeAndName(writer, "Vector", name);
             writeVectorProperties(writer, (Vector)bean, writeInlineValues);
         }
         else if (bean instanceof Matrix)
         {
-            writeTypeAndName(writer, "Matrix", bean.getName());
+            writeTypeAndName(writer, "Matrix", name);
             writeMatrixProperties(writer, (Matrix)bean, writeInlineValues);
         }
         else if (bean instanceof DataArray)
         {
-            writeTypeAndName(writer, "DataArray", bean.getName());
+            writeTypeAndName(writer, "DataArray", name);
             writeDataArrayProperties(writer, (DataArray)bean, writeInlineValues);
         }
         else if (bean instanceof DataChoice)
         {
-            writeTypeAndName(writer, "DataChoice", bean.getName());
+            writeTypeAndName(writer, "DataChoice", name);
             writeDataChoiceProperties(writer, (DataChoice)bean, writeInlineValues);
         }
         else if (bean instanceof Count)
         {
-            writeTypeAndName(writer, "Count", bean.getName());
+            writeTypeAndName(writer, "Count", name);
             writeCountProperties(writer, (Count)bean, writeInlineValues);
         }
         else if (bean instanceof CountRange)
         {
-            writeTypeAndName(writer, "CountRange", bean.getName());
+            writeTypeAndName(writer, "CountRange", name);
             writeCountRangeProperties(writer, (CountRange)bean, writeInlineValues);
         }
         else if (bean instanceof Category)
         {
-            writeTypeAndName(writer, "Category", bean.getName());
+            writeTypeAndName(writer, "Category", name);
             writeCategoryProperties(writer, (Category)bean, writeInlineValues);
         }
         else if (bean instanceof CategoryRange)
         {
-            writeTypeAndName(writer, "CategoryRange", bean.getName());
+            writeTypeAndName(writer, "CategoryRange", name);
             writeCategoryRangeProperties(writer, (CategoryRange)bean, writeInlineValues);
         }
         else if (bean instanceof Quantity)
         {
-            writeTypeAndName(writer, "Quantity", bean.getName());
+            writeTypeAndName(writer, "Quantity", name);
             writeQuantityProperties(writer, (Quantity)bean, writeInlineValues);
         }
         else if (bean instanceof QuantityRange)
         {
-            writeTypeAndName(writer, "QuantityRange", bean.getName());
+            writeTypeAndName(writer, "QuantityRange", name);
             writeQuantityRangeProperties(writer, (QuantityRange)bean, writeInlineValues);
         }
         else if (bean instanceof Time)
         {
-            writeTypeAndName(writer, "Time", bean.getName());
+            writeTypeAndName(writer, "Time", name);
             writeTimeProperties(writer, (Time)bean, writeInlineValues);
         }
         else if (bean instanceof TimeRange)
         {
-            writeTypeAndName(writer, "TimeRange", bean.getName());
+            writeTypeAndName(writer, "TimeRange", name);
             writeTimeRangeProperties(writer, (TimeRange)bean, writeInlineValues);
         }
         else if (bean instanceof Boolean)
         {
-            writeTypeAndName(writer, "Boolean", bean.getName());
+            writeTypeAndName(writer, "Boolean", name);
             writeBooleanProperties(writer, (Boolean)bean, writeInlineValues);
         }
         else if (bean instanceof Text)
         {
-            writeTypeAndName(writer, "Text", bean.getName());
+            writeTypeAndName(writer, "Text", name);
             writeTextProperties(writer, (Text)bean, writeInlineValues);
         }
         
