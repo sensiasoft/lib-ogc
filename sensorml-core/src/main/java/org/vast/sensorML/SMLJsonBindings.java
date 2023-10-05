@@ -98,7 +98,7 @@ public class SMLJsonBindings
         this.gmlFactory = gmlFactory;
         this.isoFactory = new org.isotc211.v2005.gmd.impl.GMDFactory();
         this.sweBindings = new SWEJsonBindings(sweFactory, enforceTypeFirst);
-        this.geojsonBindings = new GeoJsonBindings(true);
+        this.geojsonBindings = new GeoJsonBindings(true, enforceTypeFirst);
         this.geoposeBindings = new GeoPoseJsonBindings();
     }
     

@@ -1575,14 +1575,15 @@ public class SWEJsonBindings extends AbstractBindings
         if (reader.peek() == JsonToken.BEGIN_OBJECT)
             reader.beginObject();
         
-        boolean foundType = false;
         while (reader.hasNext())
         {
             String propName = reader.nextName();
             
             if ("type".equals(propName))
             {
-                foundType = true;
+                if (reader instanceof JsonReaderWithBuffer)
+                    ((JsonReaderWithBuffer)reader).startReplay();
+                return reader;
             }
             else
             {
@@ -1594,15 +1595,8 @@ public class SWEJsonBindings extends AbstractBindings
                 }
                 else
                 {
-                    throw new JsonParseException("Missing 'type' property as first member of JSON object @ " + reader.getPath());
+                    throw new JsonParseException("Required 'type' property as first member of JSON object @ " + reader.getPath());
                 }
-            }
-            
-            if (foundType)
-            {
-                if (reader instanceof JsonReaderWithBuffer)
-                    ((JsonReaderWithBuffer)reader).startReplay();
-                return reader;
             }
         }
         

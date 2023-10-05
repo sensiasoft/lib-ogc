@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 import org.vast.json.JsonInliningWriter;
+import org.vast.json.JsonReaderWithBuffer;
 import org.vast.ogc.geopose.GeoPoseJsonBindings;
 import org.vast.ogc.geopose.Pose;
 import org.vast.ogc.xlink.IXlinkReference;
@@ -63,6 +64,7 @@ public class GeoJsonBindings
     DecimalFormat formatter = new DecimalFormat(GMLFactory.COORDINATE_FORMAT);
     GMLFactory factory;
     GeoPoseJsonBindings geoPoseBindings;
+    boolean enforceTypeFirst;
     enum CrsType {CRS84, CRS84_FLIP, CUSTOM}
     
     
@@ -73,6 +75,12 @@ public class GeoJsonBindings
     
     
     public GeoJsonBindings(boolean useJTS)
+    {
+        this(new GMLFactory(useJTS));
+    }
+    
+    
+    public GeoJsonBindings(boolean useJTS, boolean enforceTypeFirst)
     {
         this(new GMLFactory(useJTS));
     }
@@ -510,10 +518,32 @@ public class GeoJsonBindings
     
     protected String readObjectType(JsonReader reader) throws IOException
     {
-        if (!reader.hasNext() || !"type".equals(reader.nextName()))
-            throw new JsonParseException("'type' must be the first property of a GeoJSON object");
+        while (reader.hasNext())
+        {
+            String propName = reader.nextName();
+            
+            if ("type".equals(propName))
+            {
+                if (reader instanceof JsonReaderWithBuffer)
+                    ((JsonReaderWithBuffer)reader).startReplay();
+                return reader.nextString();
+            }
+            else
+            {
+                if (!enforceTypeFirst)
+                {
+                    if (!(reader instanceof JsonReaderWithBuffer))
+                        reader = new JsonReaderWithBuffer(reader);
+                    ((JsonReaderWithBuffer)reader).buffer(propName);
+                }
+                else
+                {
+                    throw new JsonParseException("Required 'type' property as first member of JSON object @ " + reader.getPath());
+                }
+            }
+        }
         
-        return reader.nextString();
+        throw new JsonParseException("Missing 'type' property in JSON object @ " + reader.getPath());
     }
     
     
