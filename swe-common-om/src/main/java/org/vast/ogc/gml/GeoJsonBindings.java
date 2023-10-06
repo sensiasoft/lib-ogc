@@ -41,6 +41,7 @@ import net.opengis.gml.v32.LinearRing;
 import net.opengis.gml.v32.Measure;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Polygon;
+import net.opengis.gml.v32.Reference;
 import net.opengis.gml.v32.impl.GMLFactory;
 import net.opengis.gml.v32.impl.ReferenceImpl;
 
@@ -57,6 +58,10 @@ import net.opengis.gml.v32.impl.ReferenceImpl;
 public class GeoJsonBindings
 {
     public static final String MIME_TYPE ="application/geo+json";
+    public final static String NAN = "NaN";
+    public final static String PLUS_INFINITY = "+Infinity";
+    public final static String MINUS_INFINITY = "-Infinity";
+    
     public static final String ERROR_UNSUPPORTED_TYPE = "Unsupported type: ";
     public static final String ERROR_INVALID_COORDINATES = "Invalid coordinate array";
     public static final String ERROR_INVALID_TIMERANGE = "Invalid time extent";
@@ -263,7 +268,17 @@ public class GeoJsonBindings
             if (link.getTitle() != null)
                 writer.name("title").value(link.getTitle());
             if (link.getRole() != null)
-                writer.name("uid").value(link.getRole());
+                writer.name("rt").value(link.getRole());
+            
+            if (link instanceof Reference)
+            {
+                if (((Reference) link).getName() != null)
+                    writer.name("uid").value(((Reference) link).getName());
+                
+                if (((Reference) link).getRemoteSchema() != null)
+                    writer.name("type").value(((Reference) link).getRemoteSchema());
+            }
+            
             writer.endObject();
         }
     }
@@ -466,8 +481,19 @@ public class GeoJsonBindings
     
     protected void writeDateTimeValue(JsonWriter writer, OffsetDateTime dateTime) throws IOException
     {
-        String isoString = dateTime.format(DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
-        writer.value(isoString);
+        if (dateTime == OffsetDateTime.MIN)
+        {
+            writer.value("-Infinity");
+        }
+        else if (dateTime == OffsetDateTime.MAX)
+        {
+            writer.value("+Infinity");
+        }
+        else
+        {
+            String isoString = dateTime.format(DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
+            writer.value(isoString);
+        }
     }
     
     
@@ -656,6 +682,15 @@ public class GeoJsonBindings
                 
                 if (obj.has("title"))
                     ref.setTitle(obj.get("title").getAsString());
+                
+                if (obj.has("uid"))
+                    ref.setName(obj.get("uid").getAsString());
+                
+                if (obj.has("type"))
+                    ref.setRemoteSchema(obj.get("type").getAsString());
+                    
+                if (obj.has("rt"))
+                    ref.setRole(obj.get("rt").getAsString());
             }
             
             // measure case
@@ -882,7 +917,9 @@ public class GeoJsonBindings
         TimeExtent te;
         try
         {
-            te = TimeExtent.parse(reader.nextString() + "/" + reader.nextString());
+            var begin = readTimeBound(reader, true);
+            var end = readTimeBound(reader, false);
+            te = TimeExtent.parse(begin + "/" + end);
         }
         catch (Exception e)
         {
@@ -894,5 +931,26 @@ public class GeoJsonBindings
     }
     
     
-    
+    protected String readTimeBound(JsonReader reader, boolean isBegin) throws IOException
+    {
+        if (reader.peek() == JsonToken.NULL)
+        {
+            reader.nextNull();
+            return TimeExtent.SPECIAL_VALUE_UNBOUNDED; 
+        }
+        else
+        {
+            var val = reader.nextString();
+            if ("-Infinity".equals(val) && isBegin)
+            {
+                return TimeExtent.SPECIAL_VALUE_UNBOUNDED;
+            }
+            else if ("+Infinity".equals(val) && !isBegin)
+            {
+                return TimeExtent.SPECIAL_VALUE_UNBOUNDED;
+            }
+            else
+                return val;
+        }
+    }
 }

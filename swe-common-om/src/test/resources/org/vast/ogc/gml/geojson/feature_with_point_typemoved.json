@@ -1,0 +1,14 @@
+{
+  "id": "123",
+  "geometry": {
+    "coordinates": [41.8781, -87.6298],
+    "type": "Point"
+  },
+  "type": "Feature",
+  "properties": {
+    "uid": "urn:x-ogc:systems:001",
+    "name": "Outdoor Thermometer 001",
+    "description": "Digital thermometer located on first floor window 1",
+    "featureType": "http://www.w3.org/ns/sosa/Sensor"
+  }
+}
