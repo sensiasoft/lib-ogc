@@ -50,18 +50,18 @@
       "label": "Operating Characteristics",
       "characteristics": [
         {
-          "type": "QuantityRange",
           "name": "voltage",
           "definition": "http://qudt.org/vocab/quantitykind/Voltage",
           "label": "Operating Voltage Range",
+          "type": "QuantityRange",
           "uom": {
             "code": "V"
           },
           "value": [110.0,250.0]
         },
         {
-          "type": "QuantityRange",
           "name": "temperature",
+          "type": "QuantityRange",
           "definition": "http://qudt.org/vocab/quantitykind/Temperature",
           "label": "Temperature Range",
           "uom": {
@@ -91,7 +91,7 @@
     }
   ],
   "position": {
-    "type": "Point",
-    "coordinates": [-86.7228, 34.8038, 0]
+    "coordinates": [-86.7228, 34.8038, 0],
+    "type": "Point"
   }
 }

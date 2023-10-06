@@ -490,11 +490,10 @@ public class GeoJsonBindings
     
     public IFeature readFeature(JsonReader reader) throws IOException
     {
-        reader.beginObject();
+        reader = beginObjectWithType(reader);
+        String type = reader.nextString();
         
-        String type = readObjectType(reader);
         AbstractFeature f = createFeatureObject(type);
-        
         while (reader.hasNext())
         {
             String name = reader.nextName();
@@ -516,24 +515,31 @@ public class GeoJsonBindings
     }
     
     
-    protected String readObjectType(JsonReader reader) throws IOException
+    protected JsonReader beginObjectWithType(JsonReader reader) throws IOException
     {
+        if (reader.peek() == JsonToken.BEGIN_OBJECT)
+            reader.beginObject();
+        
+        boolean bufferedReaderCreated = false;
         while (reader.hasNext())
         {
             String propName = reader.nextName();
             
             if ("type".equals(propName))
             {
-                if (reader instanceof JsonReaderWithBuffer)
+                if (bufferedReaderCreated)
                     ((JsonReaderWithBuffer)reader).startReplay();
-                return reader.nextString();
+                return reader;
             }
             else
             {
                 if (!enforceTypeFirst)
                 {
-                    if (!(reader instanceof JsonReaderWithBuffer))
+                    if (!bufferedReaderCreated)
+                    {
                         reader = new JsonReaderWithBuffer(reader);
+                        bufferedReaderCreated = true;
+                    }
                     ((JsonReaderWithBuffer)reader).buffer(propName);
                 }
                 else
@@ -725,8 +731,9 @@ public class GeoJsonBindings
             return null;
         }
         
-        reader.beginObject();
-        String type = readObjectType(reader);
+        reader = beginObjectWithType(reader);
+        String type = reader.nextString();
+        
         return readGeometry(reader, type);
     }   
     

@@ -1575,13 +1575,14 @@ public class SWEJsonBindings extends AbstractBindings
         if (reader.peek() == JsonToken.BEGIN_OBJECT)
             reader.beginObject();
         
+        boolean bufferedReaderCreated = false;
         while (reader.hasNext())
         {
             String propName = reader.nextName();
             
             if ("type".equals(propName))
             {
-                if (reader instanceof JsonReaderWithBuffer)
+                if (bufferedReaderCreated)
                     ((JsonReaderWithBuffer)reader).startReplay();
                 return reader;
             }
@@ -1589,8 +1590,11 @@ public class SWEJsonBindings extends AbstractBindings
             {
                 if (!enforceTypeFirst)
                 {
-                    if (!(reader instanceof JsonReaderWithBuffer))
+                    if (!bufferedReaderCreated)
+                    {
                         reader = new JsonReaderWithBuffer(reader);
+                        bufferedReaderCreated = true;
+                    }
                     ((JsonReaderWithBuffer)reader).buffer(propName);
                 }
                 else
