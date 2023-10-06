@@ -11,7 +11,7 @@ package org.vast.ogc.gml;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -220,6 +220,16 @@ public class GeoJsonBindings
                 writer.name(propName.getLocalPart());
                 var te = GMLUtils.timePrimitiveToTimeExtent((AbstractTimeGeometricPrimitive)val);
                 writeTimeExtent(writer, te);
+            }
+            else if (val instanceof Instant)
+            {
+                writer.name(propName.getLocalPart());
+                writeDateTimeValue(writer, (Instant)val);
+            }
+            else if (val instanceof TimeExtent)
+            {
+                writer.name(propName.getLocalPart());
+                writeTimeExtent(writer, (TimeExtent)val);
             }
             else if (val instanceof Pose)
             {
@@ -468,30 +478,24 @@ public class GeoJsonBindings
         if (bean.beginsNow())
             writer.value("now");
         else
-            writeDateTimeValue(writer, bean.begin().atOffset(ZoneOffset.UTC));
+            writeDateTimeValue(writer, bean.begin());
         
         if (bean.endsNow())
             writer.value("now");
         else
-            writeDateTimeValue(writer, bean.end().atOffset(ZoneOffset.UTC));
+            writeDateTimeValue(writer, bean.end());
         
         writer.endArray();
     }
     
     
-    protected void writeDateTimeValue(JsonWriter writer, OffsetDateTime dateTime) throws IOException
+    protected void writeDateTimeValue(JsonWriter writer, Instant dateTime) throws IOException
     {
-        if (dateTime == OffsetDateTime.MIN)
-        {
-            writer.value("-Infinity");
-        }
-        else if (dateTime == OffsetDateTime.MAX)
-        {
-            writer.value("+Infinity");
-        }
+        if (dateTime == Instant.MIN || dateTime == Instant.MAX)
+            writer.value("..");
         else
         {
-            String isoString = dateTime.format(DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
+            String isoString = dateTime.atOffset(ZoneOffset.UTC).format(DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
             writer.value(isoString);
         }
     }
@@ -648,6 +652,13 @@ public class GeoJsonBindings
                 
             case NUMBER:
                 f.setProperty(name, reader.nextDouble());
+                break;
+                
+            case BEGIN_ARRAY:
+                if (name.toLowerCase().contains("time"))
+                    f.setProperty(name, readTimeExtent(reader));
+                else
+                    reader.skipValue();
                 break;
                 
             case BEGIN_OBJECT:
@@ -941,14 +952,8 @@ public class GeoJsonBindings
         else
         {
             var val = reader.nextString();
-            if ("-Infinity".equals(val) && isBegin)
-            {
+            if (TimeExtent.SPECIAL_VALUE_UNBOUNDED.equals(val))
                 return TimeExtent.SPECIAL_VALUE_UNBOUNDED;
-            }
-            else if ("+Infinity".equals(val) && !isBegin)
-            {
-                return TimeExtent.SPECIAL_VALUE_UNBOUNDED;
-            }
             else
                 return val;
         }

@@ -1,0 +1,15 @@
+{
+  "type": "Feature",
+  "id": "iv3f2kcq27gfi",
+  "geometry": null,
+  "properties": {
+    "uid": "urn:x-ogc:deployments:D001",
+    "name": "Saildrone - 2017 Arctic Mission",
+    "featureType": "http://www.w3.org/ns/ssn/Deployment",
+    "description": "In July 2017, three saildrones were launched from Dutch Harbor, Alaska, in partnership with NOAA Research...",
+    "validTime": ["2017-07-17T00:00:00Z", ".."],
+    "phenomenonTime": ["2017-07-17T00:00:00Z", "2017-07-17T00:01:00Z"],
+    "resultTime": "2017-07-18T00:00:00Z",
+    "unboundedTime2": ["..", ".."]
+  }
+}

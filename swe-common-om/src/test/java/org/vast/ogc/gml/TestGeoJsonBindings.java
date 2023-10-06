@@ -78,6 +78,7 @@ public class TestGeoJsonBindings
     public void testReadWriteFeatureWithGeom() throws Exception
     {
         readWriteCompareJson("geojson/feature_with_point.json");
+        readWriteCompareJson("geojson/feature_with_polygon.json");
     }
     
     
@@ -97,8 +98,9 @@ public class TestGeoJsonBindings
     
     
     @Test
-    public void testReadWriteTimeExtent() throws Exception
+    public void testReadWriteFeatureWithTimeExtent() throws Exception
     {
-        
+        readWriteCompareJson("geojson/feature_with_validtime.json");
+        readWriteCompareJson("geojson/feature_with_time_props.json");
     }
 }
