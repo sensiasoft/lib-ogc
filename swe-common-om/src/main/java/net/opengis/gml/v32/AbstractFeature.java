@@ -14,9 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32;
 
-import javax.xml.namespace.QName;
 import org.vast.ogc.gml.IFeature;
-import com.google.common.base.Strings;
 import net.opengis.OgcProperty;
 
 
@@ -28,33 +26,6 @@ import net.opengis.OgcProperty;
 @SuppressWarnings("javadoc")
 public interface AbstractFeature extends IFeature, AbstractGML
 {
-    
-    /**
-     * @return Qualified name of feature type
-     */
-    public QName getQName();
-    
-    
-    @Override
-    public default String getType()
-    {
-        var qname = getQName();
-        if (qname == null)
-            return null;
-        
-        var nsUri = qname.getNamespaceURI();
-        if (!Strings.isNullOrEmpty(nsUri))
-        {
-            var lastChar = nsUri.charAt(nsUri.length()-1);
-            if (lastChar != '#' && lastChar != '/' && lastChar != ':')
-                return nsUri + '#' + qname.getLocalPart();
-            else
-                return nsUri + qname.getLocalPart();
-        }
-        else
-            return qname.getLocalPart();
-    }
-    
     
     /**
      * Gets the boundedBy property
@@ -72,12 +43,6 @@ public interface AbstractFeature extends IFeature, AbstractGML
      * Sets the boundedByAsEnvelope property
      */
     public void setBoundedByAsEnvelope(Envelope boundedBy);
-    
-    
-    /**
-     * Gets the geometry property
-     */
-    public AbstractGeometry getGeometry();
     
     
     /**

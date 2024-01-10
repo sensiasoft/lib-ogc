@@ -347,9 +347,10 @@ public class GMLStaxBindings extends XMLStreamBindings
     
     public static QName getFeatureQName(IFeature f)
     {
-        if (f instanceof AbstractFeature)
+        /*if (f instanceof AbstractFeature)
             return ((AbstractFeature) f).getQName();
         else
-            return new QName(NS_URI, "Feature");
+            return new QName(NS_URI, "Feature");*/
+        return f.getQName();
     }
 }

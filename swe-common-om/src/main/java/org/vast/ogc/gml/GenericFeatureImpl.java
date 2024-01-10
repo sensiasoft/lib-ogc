@@ -23,7 +23,6 @@ package org.vast.ogc.gml;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
 import org.vast.util.Asserts;
 import net.opengis.gml.v32.AbstractGeometry;
@@ -41,51 +40,50 @@ import net.opengis.gml.v32.impl.AbstractFeatureImpl;
 public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFeature
 {
     private static final long serialVersionUID = -5445631329812411360L;
-    private static final Pattern FEATURE_TYPE_REGEX = Pattern.compile("([^\\s]+[/#:])([^\\s/#:]+)$");
     
-    protected QName qname;
+    protected String type;
     protected Map<QName, Object> properties;
 
 
-    // constructor to be called by subclasses when overriding getQName directly
+    // constructor to be called by subclasses when overriding getType directly
     protected GenericFeatureImpl()
     {
         this.properties = new LinkedHashMap<>();
     }
     
     
+    public GenericFeatureImpl(String type)
+    {
+        this.type = type;
+        this.properties = new LinkedHashMap<>();
+    }
+    
+    
     public GenericFeatureImpl(QName qname)
     {
-        this.qname = Asserts.checkNotNull(qname, QName.class);
+        Asserts.checkNotNull(qname, QName.class);
+        this.type = GMLUtils.qNameToUri(qname);
         this.properties = new LinkedHashMap<>();
     }
     
     
     protected GenericFeatureImpl(QName qname, Map<QName, Object> properties)
     {
-        this.qname = Asserts.checkNotNull(qname, QName.class);
+        Asserts.checkNotNull(qname, QName.class);
+        this.type = GMLUtils.qNameToUri(qname);
         this.properties = Asserts.checkNotNull(properties, Map.class);
     }
-
-
-    @Override
-    public QName getQName()
+    
+    
+    public String getType()
     {
-        return qname;
+        return type;
     }
     
     
     public void setType(String type)
     {
-        var matcher = FEATURE_TYPE_REGEX.matcher(type);
-        if (!matcher.matches())
-            throw new IllegalStateException("Invalid feature type");
-        
-        // set as QName
-        // for generic features, type and QName are the same thing
-        var nsUri = matcher.group(1);
-        var localPart = matcher.group(2);
-        this.qname = new QName(nsUri, localPart);
+        this.type = type;
     }
 
     
@@ -93,6 +91,13 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     public Map<QName, Object> getProperties()
     {
         return Collections.unmodifiableMap(properties);
+    }
+    
+    
+    @Override
+    public Object getProperty(QName qname)
+    {
+        return properties.get(qname);
     }
   
     
@@ -111,9 +116,9 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     
     
     @Override
-    public Object getProperty(QName qname)
+    public Object getProperty(String name)
     {
-        return properties.get(qname);
+        return properties.get(new QName(name));
     }
     
     
@@ -122,12 +127,5 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     {
         if (prop != null)
             properties.put(new QName(name), prop);
-    }
-    
-    
-    @Override
-    public Object getProperty(String name)
-    {
-        return properties.get(new QName(name));
     }
 }

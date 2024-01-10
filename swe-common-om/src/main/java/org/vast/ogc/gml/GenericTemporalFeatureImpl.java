@@ -25,6 +25,12 @@ public class GenericTemporalFeatureImpl extends GenericFeatureImpl
     public static final QName PROP_VALID_TIME = new QName(GMLStaxBindings.NS_URI, "validTime", GMLStaxBindings.NS_PREFIX_GML);
     
 
+    public GenericTemporalFeatureImpl(String type)
+    {
+        super(type);
+    }
+    
+    
     public GenericTemporalFeatureImpl(QName qname)
     {
         super(qname);

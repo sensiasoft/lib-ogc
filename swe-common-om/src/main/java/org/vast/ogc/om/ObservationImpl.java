@@ -55,7 +55,8 @@ import org.vast.util.TimeExtent;
 public class ObservationImpl extends GenericFeatureImpl implements IObservation
 {
     private static final long serialVersionUID = 1525908516530863277L;
-    protected String type;
+    public static final QName QNAME = new QName(OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0"), "OM_Observation");
+    
     protected ArrayList<IXlinkReference<IObservation>> relatedObservations;
     protected TimeExtent phenomenonTime;
     protected TimeExtent validTime;
@@ -70,20 +71,14 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
 
     public ObservationImpl()
     {
-        super(new QName(OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0"), "OM_Observation"));
+        super();
     }
 
 
     @Override
-    public String getType()
+    public QName getQName()
     {
-        return type;
-    }
-
-
-    public void setType(String type)
-    {
-        this.type = type;
+        return QNAME;
     }
 
 

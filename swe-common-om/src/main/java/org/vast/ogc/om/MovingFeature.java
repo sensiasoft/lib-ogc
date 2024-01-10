@@ -32,4 +32,11 @@ public class MovingFeature extends GenericFeatureImpl
     {
         return QNAME;
     }
+    
+    
+    @Override
+    public String getType()
+    {
+        return QNAME.getNamespaceURI() + "/" + QNAME.getLocalPart();
+    }
 }

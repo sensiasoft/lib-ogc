@@ -150,8 +150,13 @@ public class GeoJsonBindings
         if (bean.getUniqueIdentifier() != null)
             writer.name("uid").value(bean.getUniqueIdentifier());
         
-        if (bean.getType() != null && !"Feature".equals(bean.getType()))
-            writer.name("featureType").value(bean.getType());
+        // use type property as feature type if there is one (e.g. sampling spatial)
+        // otherwise use value returned by getType() (by default the QName as URI)
+        var fType = getTypeProp(bean);
+        if (fType == null)
+            fType = bean.getType();
+        if (fType != null)
+            writer.name("featureType").value(fType);
      
         if (bean.getName() != null)
             writer.name("name").value(bean.getName());
@@ -167,6 +172,25 @@ public class GeoJsonBindings
     }
     
     
+    protected String getTypeProp(IFeature bean)
+    {
+        for (Entry<QName, Object> prop: bean.getProperties().entrySet())
+        {
+            var name = prop.getKey().getLocalPart();
+            var val = prop.getValue();
+            if ("type".equals(name))
+            {
+                if (val instanceof String)
+                    return (String)val;
+                else if (val instanceof IXlinkReference)
+                    return ((IXlinkReference<?>) val).getHref();
+            }
+        }
+        
+        return null;
+    }
+    
+    
     protected void writeCustomFeatureProperties(JsonWriter writer, IFeature bean) throws IOException
     {
         var featureType = bean.getType();
@@ -176,6 +200,10 @@ public class GeoJsonBindings
         {
             QName propName = prop.getKey();
             Object val = prop.getValue();
+            
+            // skip type property as it is serialized as feature type
+            if ("type".equals(propName.getLocalPart()))
+                continue;
             
             if (val instanceof Boolean)
             {
@@ -195,7 +223,7 @@ public class GeoJsonBindings
             else if (val instanceof IXlinkReference<?>)
             {
                 var link = (IXlinkReference<?>)val;
-                if (link.getHref() != null && !link.getHref().equals(featureType))
+                if (link.getHref() != null)
                 {
                     writer.name(propName.getLocalPart() + "@link");
                     writeLink(writer, (IXlinkReference<?>)val);
@@ -541,7 +569,7 @@ public class GeoJsonBindings
         if (!"Feature".equals(type))
             throw new JsonParseException("The type of a GeoJSON feature must be 'Feature'");
         
-        return new GenericTemporalFeatureImpl(new QName(type));
+        return new GenericTemporalFeatureImpl((String)null);
     }
     
     

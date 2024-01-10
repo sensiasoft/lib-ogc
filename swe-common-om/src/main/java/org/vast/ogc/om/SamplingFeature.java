@@ -22,6 +22,7 @@ import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Polygon;
 import org.vast.ogc.gml.ExtensibleFeatureImpl;
 import org.vast.ogc.gml.FeatureRef;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ogc.xlink.CachedReference;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.swe.SWEConstants;
@@ -39,6 +40,7 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
     public static final String SF_NS_URI = "http://www.opengis.net/sampling/2.0";
     
     public static final QName QNAME = new QName(SAMS_NS_URI, "SF_SpatialSamplingFeature", SAMS_NS_PREFIX);
+    public static final String FTYPE = GMLUtils.qNameToUri(QNAME);
     public static final QName PROP_TYPE = new QName(SF_NS_URI, "type", SF_NS_PREFIX);
     public static final QName PROP_SAMPLED_FEATURE = new QName(SF_NS_URI, "sampledFeature", SF_NS_PREFIX);
     public static final QName PROP_HOSTED_PROCEDURE = new QName(SAMS_NS_URI, "hostedProcedure", SAMS_NS_PREFIX);
@@ -57,7 +59,7 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
     public SamplingFeature(String type)
     {
         this();
-        setType(type);
+        setSfType(type);
     }
     
     
@@ -69,13 +71,19 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
     
     public String getType()
     {
+        return FTYPE;
+    }
+    
+    
+    public String getSfType()
+    {
         if (type == null)
             return null;
         return type.getHref();
     }
 
 
-    public void setType(String type)
+    public void setSfType(String type)
     {
         properties = null; // reset cached properties map
         this.type = new CachedReference<Void>(type);
@@ -148,7 +156,7 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends Extensib
     
     public SamplingFeature<? extends AbstractGeometry> getAsSpecializedType()
     {
-        String type = getType();
+        String type = getSfType();
         SamplingFeature<? extends AbstractGeometry> sf = null;
         
         if (SamplingPoint.TYPE.equals(type))

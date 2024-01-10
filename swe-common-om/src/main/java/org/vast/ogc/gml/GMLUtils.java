@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -50,6 +51,7 @@ import org.vast.xml.XMLImplFinder;
 import org.vast.xml.XMLReaderException;
 import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
+import com.google.common.base.Strings;
 
 
 /**
@@ -532,8 +534,42 @@ public class GMLUtils extends XMLBindingsUtils
         
         return bbox;
     }
-
-
+    
+    
+    public static QName uriToQName(String uri)
+    {
+        var sep = uri.lastIndexOf('#');
+        if (sep < 0)
+            sep = uri.lastIndexOf('/');
+        if (sep < 0)
+            sep = uri.lastIndexOf(':');
+        
+        if (sep < 0)
+            return new QName(uri);
+        
+        var nsUri = uri.substring(0, sep);
+        var localPart = uri.substring(sep+1);
+        return new QName(nsUri, localPart);
+    }
+    
+    
+    public static String qNameToUri(QName qname)
+    {
+        var nsUri = qname.getNamespaceURI();
+        if (!Strings.isNullOrEmpty(nsUri))
+        {
+            var lastChar = nsUri.charAt(nsUri.length()-1);
+            if (lastChar != '#' && lastChar != '/' && lastChar != ':')
+                return nsUri + '#' + qname.getLocalPart();
+            else
+                return nsUri + qname.getLocalPart();
+        }
+        else
+            return qname.getLocalPart();
+        
+    }
+    
+    
     public GMLFactory getGmlFactory()
     {
         return gmlFactory;

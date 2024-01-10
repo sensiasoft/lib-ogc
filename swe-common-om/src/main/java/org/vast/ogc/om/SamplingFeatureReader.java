@@ -64,7 +64,7 @@ public class SamplingFeatureReader extends GMLStaxBindings implements IFeatureSt
         {
             OgcProperty<Serializable> prop = new OgcPropertyImpl<>();
             readPropertyAttributes(reader, prop);
-            newFeature.setType(prop.getHref());
+            newFeature.setSfType(prop.getHref());
             reader.nextTag();
             reader.nextTag();
         }

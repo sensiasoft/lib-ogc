@@ -16,6 +16,7 @@ import org.vast.util.IResource;
 import org.vast.util.TimeExtent;
 import net.opengis.gml.v32.AbstractGeometry;
 
+
 /**
  * <p>
  * Simple interface for feature objects
@@ -26,7 +27,9 @@ import net.opengis.gml.v32.AbstractGeometry;
  */
 public interface IFeature extends IResource
 {
-
+    static final QName DEFAULT_QNAME = new QName(GMLStaxBindings.NS_URI, "Feature");
+    
+    
     /**
      * @return the local/internal ID of the feature (often automatically
      * assigned by the feature repository)
@@ -47,6 +50,16 @@ public interface IFeature extends IResource
     public default String getType()
     {
         return null;
+    }
+    
+    
+    /**
+     * @return the Qualified name of the feature type
+     */
+    public default QName getQName()
+    {
+        var type = getType();
+        return type != null ? GMLUtils.uriToQName(type) : IFeature.DEFAULT_QNAME;
     }
     
     
@@ -97,5 +110,4 @@ public interface IFeature extends IResource
     {
         return Collections.emptyMap();
     }
-    
 }
