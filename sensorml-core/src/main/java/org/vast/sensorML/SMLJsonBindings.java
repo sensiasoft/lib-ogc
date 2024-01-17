@@ -804,11 +804,8 @@ public class SMLJsonBindings
         
         else if ("typeOf".equals(name))
         {
-            var link = readLink(reader);
             var ref = gmlFactory.newReference();
-            ref.setHref(link.getHref());
-            ref.setTitle(link.getTitle());
-            ref.setName(link.getName()); // UID
+            readLink(reader, ref);
             bean.setTypeOf(ref);
         }
         
@@ -1142,10 +1139,8 @@ public class SMLJsonBindings
     {
         if ("attachedTo".equals(name))
         {
-            var link = readLink(reader);
             var ref = gmlFactory.newReference();
-            ref.setHref(link.getHref());
-            ref.setTitle(link.getTitle());
+            readLink(reader, ref);
             bean.setAttachedTo(ref);
         }
         
