@@ -1998,6 +1998,12 @@ public class SMLJsonBindings
         if (bean.getRole() != null && rolePropName != null)
             writer.name(rolePropName).value(bean.getRole());
         
+        if (bean instanceof Reference) {
+            var ref = ((Reference)bean);
+            if (ref.isSetRemoteSchema())
+                mediaType = ref.getRemoteSchema();
+        }
+
         if (mediaType != null)
             writer.name("type").value(mediaType);
         
