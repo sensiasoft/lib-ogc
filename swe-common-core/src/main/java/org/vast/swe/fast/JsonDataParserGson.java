@@ -174,7 +174,7 @@ public class JsonDataParserGson extends AbstractDataParser
                     break;
                     
                 default:
-                    throw new IllegalStateException(DOUBLE_VALUE_ERROR + " but was " + token + " at " + reader.getPath());
+                    throw new ReaderException(DOUBLE_VALUE_ERROR + " but was " + token + " at " + reader.getPath());
             }
                         
             data.setDoubleValue(index, val);
@@ -382,7 +382,7 @@ public class JsonDataParserGson extends AbstractDataParser
             var itemName = reader.nextName();
             var selectedIndex = itemIndexes.get(itemName);
             if (selectedIndex == null)
-                throw new IllegalStateException(INVALID_CHOICE_MSG + itemName + " at " + reader.getPath());
+                throw new ReaderException(INVALID_CHOICE_MSG + itemName + " at " + reader.getPath());
             
             // set selected choice index and corresponding datablock
             data.setIntValue(index++, selectedIndex);
@@ -423,6 +423,10 @@ public class JsonDataParserGson extends AbstractDataParser
         {
             var geomPath = reader.getPath();
             
+            // get geom datablock
+            var geomData = geom.getData();
+            int numDims = geom.getNumDims();
+            
             reader.beginObject();
             
             while (reader.hasNext())
@@ -441,11 +445,11 @@ public class JsonDataParserGson extends AbstractDataParser
                         // set selected choice index and corresponding datablock
                         data.setIntValue(index++, selectedIndex);
                         var selectedData = geom.getComponent(selectedIndex).createDataBlock();
-                        ((DataBlockMixed)data).setBlock(1, (AbstractDataBlock)selectedData);
+                        ((DataBlockMixed)geomData).setBlock(1, (AbstractDataBlock)selectedData);
                     }
                     catch (IllegalArgumentException e)
                     {
-                        throw new IllegalStateException("Unsupported geometry type: " + type + " at " + reader.getPath());
+                        throw new ReaderException("Unsupported geometry type: " + type + " at " + reader.getPath());
                     }
                 }
                 else if ("coordinates".equals(name))
@@ -481,16 +485,16 @@ public class JsonDataParserGson extends AbstractDataParser
                             {
                                 if (depth == 0) // point
                                 {
-                                    var pointCoords = ((DataBlockMixed)data).getUnderlyingObject()[1];
+                                    var pointCoords = ((DataBlockMixed)geomData).getUnderlyingObject()[1];
                                     ((DataBlockDouble)pointCoords).setUnderlyingObject(coordsList.toArray());
                                     index += coordsList.size();
                                 }
                                 
                                 else if (depth == 1) // linestring
                                 {
-                                    data.setIntValue(1, numPoints);
+                                    geomData.setIntValue(1, numPoints);
                                     
-                                    var lineData = ((DataBlockMixed)data).getUnderlyingObject()[1];
+                                    var lineData = ((DataBlockMixed)geomData).getUnderlyingObject()[1];
                                     var lineCoords = ((DataBlockMixed)lineData).getUnderlyingObject()[1];
                                     ((DataBlockDouble)lineCoords).setUnderlyingObject(coordsList.toArray());
                                     
@@ -500,9 +504,9 @@ public class JsonDataParserGson extends AbstractDataParser
                                 
                                 else if (depth == 2) // polygon
                                 {
-                                    data.setIntValue(1, numRings);
+                                    geomData.setIntValue(1, numRings);
                                     
-                                    var polyData = ((DataBlockMixed)data).getUnderlyingObject()[1];
+                                    var polyData = ((DataBlockMixed)geomData).getUnderlyingObject()[1];
                                     var ringListData = ((DataBlockMixed)polyData).getUnderlyingObject()[1];
                                     
                                     var ringCoords = new DataBlockDouble(0);
@@ -518,17 +522,25 @@ public class JsonDataParserGson extends AbstractDataParser
                             
                             lvl--;
                         }
-                        else if (next == JsonToken.NUMBER)
+                        else
                         {
                             depth = lvl;
                             if (coordsList == null)
                                 coordsList = new TDoubleArrayList();
+                            
+                            int dims = 0;
                             while (reader.hasNext())
+                            {
+                                if (reader.peek() != JsonToken.NUMBER)
+                                    throw new ReaderException("Invalid coordinate value at " + reader.getPath());
                                 coordsList.add(reader.nextDouble());
+                                dims++;
+                            }
+                            
+                            if (dims != numDims)
+                                throw new ReaderException("Read " + dims + " coordinates but expected " + numDims + " at " + reader.getPath());
                             numPoints++;
                         }
-                        else
-                            throw new IllegalStateException("Invalid geometry data: " + next + " at " + reader.getPath());
                     }
                     while (lvl >= 0);
                 }
@@ -539,10 +551,10 @@ public class JsonDataParserGson extends AbstractDataParser
             reader.endObject();
             
             if (geomType == null)
-                throw new IllegalStateException("Missing geometry type at " + geomPath);
+                throw new ReaderException("Missing geometry type at " + geomPath);
             
             if (!hasCoords)
-                throw new IllegalStateException("Missing geometry coordinates at " + geomPath);
+                throw new ReaderException("Missing geometry coordinates at " + geomPath);
             
             data.updateAtomCount();
             return index;
@@ -675,6 +687,8 @@ public class JsonDataParserGson extends AbstractDataParser
     public void visit(GeometryData geom)
     {
         addToProcessorTree(new GeometryReader(geom));
+        hasVarSizeArray = true;
+        processorStack.pop();
     }
     
     

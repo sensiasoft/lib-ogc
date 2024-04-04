@@ -719,6 +719,7 @@ public class JsonDataWriterGson extends AbstractDataWriter
     public void visit(GeometryData geom)
     {
         addToProcessorTree(new GeometryWriter(geom));
+        processorStack.pop();
     }
     
     

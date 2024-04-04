@@ -33,5 +33,8 @@ public interface GeometryData extends DataComponent, HasRefFrames, HasConstraint
     public void setDataType(DataType dataType);
     
     
-    public void setNumPoints(int numPoints);
+    public int getNumDims();
+    
+    
+    public void setNumDims(int numDims);
 }

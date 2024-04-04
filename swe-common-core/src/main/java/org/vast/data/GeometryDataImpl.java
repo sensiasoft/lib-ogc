@@ -96,8 +96,16 @@ public class GeometryDataImpl extends DataChoiceImpl implements GeometryData
     {
         GeometryDataImpl newObj = new GeometryDataImpl();
         super.copyTo(newObj);
+        
         newObj.selected = selected;
+        newObj.referenceFrame = referenceFrame;
         newObj.numDims = numDims;
+        
+        if (constraint != null)
+            newObj.constraint = constraint.copy();
+        else
+            newObj.constraint = null;
+        
         return newObj;
     }
     
@@ -169,6 +177,16 @@ public class GeometryDataImpl extends DataChoiceImpl implements GeometryData
     public void setReferenceFrame(String referenceFrame)
     {
         this.referenceFrame = referenceFrame;
+        
+        // compute num dims
+        if (SWEConstants.REF_FRAME_CRS84.equals(referenceFrame))
+            setNumDims(2);
+        else if (SWEConstants.REF_FRAME_CRS84h.equals(referenceFrame))
+            setNumDims(3);
+        else if (SWEConstants.REF_FRAME_4326.equals(referenceFrame))
+            setNumDims(2);
+        else if (SWEConstants.REF_FRAME_4979.equals(referenceFrame))
+            setNumDims(3);
     }
 
 
@@ -203,6 +221,21 @@ public class GeometryDataImpl extends DataChoiceImpl implements GeometryData
     {
         super.setData(dataBlock);
         
+        // try to infer num dims from data
+        // not a good idea since it can be inconsistent with CRS
+        /*numDims = computeNumDims(dataBlock);
+        ((DataArrayImpl)coordArray1).updateSizeComponent(numDims);
+        ((DataArrayImpl)coordArray2).updateSizeComponent(numDims);
+        ((DataArrayImpl)coordArray3).updateSizeComponent(numDims);*/
+        
+    }
+    
+    
+    public static int computeNumDims(DataBlock dataBlock)
+    {
+        int selected = dataBlock.getIntValue(0);
+        int numDims = 0;
+        
         if (selected == 0) // point
         {
             numDims = dataBlock.getAtomCount() - 1;
@@ -226,10 +259,7 @@ public class GeometryDataImpl extends DataChoiceImpl implements GeometryData
             }
         }
         
-        ((DataArrayImpl)coordArray1).updateSizeComponent(numDims);
-        ((DataArrayImpl)coordArray2).updateSizeComponent(numDims);
-        ((DataArrayImpl)coordArray3).updateSizeComponent(numDims);
-        
+        return numDims;
     }
 
 
