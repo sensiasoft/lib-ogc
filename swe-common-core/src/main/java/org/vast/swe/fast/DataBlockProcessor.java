@@ -356,6 +356,12 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
         {
             ImplicitSizeProcessor sizeProcessor = getImplicitSizeProcessor(array);
             sizeProcessor.varSizeArray = array;
+            
+            // need a record processor at root in case array is root
+            // otherwise we skip the implicit size processor
+            if (processorStack.isEmpty())
+                addToProcessorTree(new RecordProcessor());
+            
             addToProcessorTree(sizeProcessor);
             arrayProcessor.setArraySizeSupplier(sizeProcessor);
             arrayProcessor.varSizeArray = array;

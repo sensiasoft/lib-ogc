@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import org.vast.data.CountImpl;
 import org.vast.data.DateTimeOrDouble;
 import org.vast.data.SWEFactory;
 import org.vast.util.Asserts;
@@ -1659,6 +1660,15 @@ public class SWEBuilders
         public B withElement(String name, DataComponentBuilder<?,?> eltBuilder)
         {
             return withElement(name, eltBuilder.build());
+        }
+
+        @Override
+        public DataArray build()
+        {
+            DataArray a = super.build();
+            if (a.getElementCount() == null)
+                a.setElementCount(new CountImpl());
+            return a;
         }
     }
 
