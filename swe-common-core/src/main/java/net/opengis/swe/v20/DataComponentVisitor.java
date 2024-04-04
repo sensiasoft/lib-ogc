@@ -44,4 +44,6 @@ public interface DataComponentVisitor
     public void visit(DataChoice choice);
     
     public void visit(DataArray array);
+    
+    public void visit(GeometryData geom);
 }

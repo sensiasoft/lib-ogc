@@ -40,6 +40,7 @@ import org.vast.swe.SWEUtils;
 import org.xml.sax.InputSource;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 
@@ -71,6 +72,25 @@ public class TestSweJsonBindingsV21 extends XMLTestCase
             sweObj = sweHelper.readDataStream(reader);
         else
             sweObj = sweHelper.readDataComponent(reader);
+        is.close();
+        
+        return sweObj;
+    }
+    
+    
+    protected AbstractSWE readSweCommonJson(String path, boolean isDataStream) throws Exception
+    {
+        SWEJsonBindings sweHelper = new SWEJsonBindings();
+        
+        // read from file
+        InputStream is = getClass().getResourceAsStream(path);
+        var jsonReader = new JsonReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        
+        AbstractSWE sweObj;
+        if (isDataStream)
+            sweObj = sweHelper.readDataStream(jsonReader);
+        else
+            sweObj = sweHelper.readDataComponent(jsonReader);
         is.close();
         
         return sweObj;
@@ -134,6 +154,30 @@ public class TestSweJsonBindingsV21 extends XMLTestCase
             InputSource src1 = new InputSource(getClass().getResourceAsStream(path));
             InputSource src2 = new InputSource(new ByteArrayInputStream(xmlOutput.toByteArray()));
             assertXMLEqual(src1, src2);
+        }
+        catch (Throwable e)
+        {
+            throw new Exception("Failed test " + path, e);
+        }
+    }
+    
+    
+    protected void readWriteJson(String path, boolean isDataStream) throws Exception
+    {
+        try
+        {
+            // read JSON
+            var sweObj = readSweCommonJson(path, isDataStream);
+            
+            // write as JSON to stdout and buffer
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            writeSweCommonJsonToStream(sweObj, System.out, true);
+            writeSweCommonJsonToStream(sweObj, os, false);
+            System.out.println('\n');
+            
+            var json1 = JsonParser.parseReader(new InputStreamReader(getClass().getResourceAsStream(path)));
+            var json2 = JsonParser.parseReader(new InputStreamReader(new ByteArrayInputStream(os.toByteArray())));
+            assertEquals(json1, json2);
         }
         catch (Throwable e)
         {
@@ -293,5 +337,15 @@ public class TestSweJsonBindingsV21 extends XMLTestCase
         try (var writer = gson.newJsonWriter(new PrintWriter(System.out))) {
             new SWEJsonBindings().writeDataComponent(writer, comp, true);
         }
+    }
+    
+    
+    public void testReadWriteGeoms() throws Exception
+    {
+        readWriteJson("examples_v20/spec/json/geometry_novalue.json", false);
+        readWriteJson("examples_v20/spec/json/geometry_point.json", false);
+        readWriteJson("examples_v20/spec/json/geometry_line.json", false);
+        readWriteJson("examples_v20/spec/json/geometry_poly.json", false);
+        readWriteJson("examples_v20/spec/json/geometry_poly_holes.json", false);
     }
 }

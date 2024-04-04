@@ -72,6 +72,13 @@ public class SWEFactory implements Factory
     
     
     @Override
+    public GeometryData newGeometry()
+    {
+        return new GeometryDataImpl();
+    }
+    
+    
+    @Override
     public DataStream newDataStream()
     {
         return new DataStreamImpl();
@@ -237,6 +244,13 @@ public class SWEFactory implements Factory
     public AllowedTimes newAllowedTimes()
     {
         return new AllowedTimesImpl();
+    }
+    
+    
+    @Override
+    public AllowedGeoms newAllowedGeoms()
+    {
+        return new AllowedGeomsImpl();
     }
     
     

@@ -31,6 +31,9 @@ public interface Factory
     public Matrix newMatrix();
     
     
+    public GeometryData newGeometry();
+    
+    
     public DataStream newDataStream();
     
     
@@ -86,6 +89,9 @@ public interface Factory
     
     
     public AllowedTimes newAllowedTimes();
+    
+    
+    public AllowedGeoms newAllowedGeoms();
     
     
     public XMLEncoding newXMLEncoding();

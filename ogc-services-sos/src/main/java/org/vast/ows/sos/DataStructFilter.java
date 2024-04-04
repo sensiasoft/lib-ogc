@@ -21,6 +21,7 @@ import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.GeometryData;
 import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.SimpleComponent;
 import net.opengis.swe.v20.Vector;
@@ -75,6 +76,13 @@ public class DataStructFilter extends BaseTreeVisitor
     public void visit(DataArray array)
     {
         // do nothing, that is we always keep entire array
+    }
+
+
+    @Override
+    public void visit(GeometryData geom)
+    {
+        // do nothing, that is we always keep entire geometry
     }
     
     

@@ -29,6 +29,7 @@ import org.vast.util.NestedBuilder;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
+import net.opengis.swe.v20.AllowedGeoms;
 import net.opengis.swe.v20.AllowedTokens;
 import net.opengis.swe.v20.AllowedValues;
 import net.opengis.swe.v20.Boolean;
@@ -43,6 +44,8 @@ import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.GeometryData;
+import net.opengis.swe.v20.GeometryData.GeomType;
 import net.opengis.swe.v20.Matrix;
 import net.opengis.swe.v20.NilValues;
 import net.opengis.swe.v20.Quantity;
@@ -1795,6 +1798,115 @@ public class SWEBuilders
         B parent;
 
         protected NestedMatrixBuilder(B parent, SWEFactory fac)
+        {
+            super(fac);
+            this.parent = parent;
+        }
+    }
+
+
+    /**
+     * <p>
+     * Builder class for Geometry components
+     * </p>
+     *
+     * @author Alex Robin
+     * @date Jan 13, 2024
+     */
+    public static class GeomBuilder extends BaseGeomBuilder<GeomBuilder>
+    {
+        DataType dataType = null;
+        
+        protected GeomBuilder(SWEFactory fac)
+        {
+            super(fac);
+        }
+    }
+    
+    
+    @SuppressWarnings("unchecked")
+    public abstract static class BaseGeomBuilder<B extends BaseGeomBuilder<B>> extends DataComponentBuilder<B, GeometryData>
+    {
+        DataType dataType = null;
+        
+        protected BaseGeomBuilder(SWEFactory fac)
+        {
+            super(fac);
+            this.instance = fac.newGeometry();
+        }
+        
+        public B copyFrom(Vector base)
+        {
+            super.copyFrom(base);
+            throw new UnsupportedOperationException("Not implemented yet");
+            //return (B)this;
+        }
+
+        public B refFrame(String uri)
+        {
+            if (uri != null)
+                URI.create(uri); // validate URI
+            instance.setReferenceFrame(uri);
+            return (B)this;
+        }
+
+        public B dataType(DataType dataType)
+        {
+            this.dataType = dataType;
+            return (B)this;
+        }
+
+        protected AllowedGeoms ensureConstraint()
+        {
+            var constraint = instance.getConstraint();
+            if (constraint == null)
+            {
+                constraint = fac.newAllowedGeoms();
+                instance.setConstraint(constraint);
+            }
+
+            return constraint;
+        }
+
+        public B addAllowedGeoms(GeomType... geoms)
+        {
+            var constraint = ensureConstraint();
+            for (var val: geoms)
+                constraint.addGeomType(val);
+            return (B)this;
+        }
+        
+        public B values(double[] values)
+        {
+            var vectorSize = instance.getComponentCount();
+            Asserts.checkArgument(values.length == vectorSize,
+                "Incorrect number of values. Vector is of size " + vectorSize);
+            
+            if (!instance.hasData())
+                instance.assignNewDataBlock();
+            
+            for (int i = 0; i < vectorSize; i++)
+                instance.getData().setDoubleValue(i, values[i]);
+            
+            return (B)this;
+        }
+
+        @Override
+        public GeometryData build()
+        {
+            GeometryData v = super.build();
+            if (dataType != null)
+                v.setDataType(dataType);
+            return v;
+        }
+    }
+
+    /* Nested builder for use within another builder */
+    public static abstract class NestedGeometryBuilder<B> extends BaseGeomBuilder<NestedGeometryBuilder<B>> implements NestedBuilder<B>
+    {
+        B parent;
+
+        protected NestedGeometryBuilder(B parent, SWEFactory fac)
         {
             super(fac);
             this.parent = parent;

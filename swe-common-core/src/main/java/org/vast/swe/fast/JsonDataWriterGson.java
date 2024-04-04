@@ -37,6 +37,8 @@ import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.GeometryData;
+import net.opengis.swe.v20.GeometryData.GeomType;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.RangeComponent;
 import net.opengis.swe.v20.Text;
@@ -474,6 +476,106 @@ public class JsonDataWriterGson extends AbstractDataWriter
     }
     
     
+    protected class GeometryWriter extends ChoiceProcessor implements JsonAtomWriter
+    {
+        String eltName;
+        int numDims;
+        
+        public GeometryWriter(GeometryData geom)
+        {
+            this.eltName = geom.getName();
+            this.numDims = geom.getNumDims();
+        }
+
+        @Override
+        public int process(DataBlock data, int index) throws IOException
+        {
+            int geomType = data.getIntValue(index++);
+            
+            // skip if disabled
+            if (!enabled)
+                return super.process(data, index, geomType);
+            
+            try
+            {
+                writer.beginObject();
+                
+                if (geomType == GeomType.Point.ordinal())
+                {
+                    writer.name("type").value("Point");
+                    writer.name("coordinates").beginArray();
+                    writeInline(true);
+                    
+                    for (int i = 0; i < numDims; i++)
+                        writer.value(data.getDoubleValue(index++));
+                    
+                    writer.endArray();
+                    writeInline(false);
+                }
+                else if (geomType == GeomType.LineString.ordinal())
+                {
+                    writer.name("type").value("LineString");
+                    writer.name("coordinates").beginArray();
+                    
+                    int numPoints = data.getIntValue(index++);
+                    for (int p = 0; p < numPoints; p++)
+                    {
+                        writer.beginArray();
+                        writeInline(true);
+                        for (int i = 0; i < numDims; i++)
+                            writer.value(data.getDoubleValue(index++));
+                        writer.endArray();
+                        writeInline(false);
+                    }
+                    
+                    writer.endArray();
+                }
+                else if (geomType == GeomType.Polygon.ordinal())
+                {
+                    writer.name("type").value("Polygon");
+                    writer.name("coordinates").beginArray();
+                    
+                    int numRings = data.getIntValue(index++);
+                    for (int r = 0; r < numRings; r++)
+                    {
+                        writer.beginArray();
+                        
+                        int numPoints = data.getIntValue(index++);
+                        for (int p = 0; p < numPoints; p++)
+                        {
+                            writer.beginArray();
+                            writeInline(true);
+                            for (int i = 0; i < numDims; i++)
+                                writer.value(data.getDoubleValue(index++));
+                            writer.endArray();
+                            writeInline(false);
+                        }
+                        
+                        writer.endArray();
+                    }
+                    
+                    writer.endArray();
+                }
+                else
+                    throw new WriterException("Unsupported Geom type");
+                
+                writer.endObject();
+                return index;
+            }
+            catch (IOException e)
+            {
+                throw new WriterException(JSON_ERROR + " geometry " + eltName, e);
+            }
+        }
+
+        @Override
+        public String getEltName()
+        {
+            return eltName;
+        }
+    }
+    
+    
     public JsonDataWriterGson()
     {        
     }
@@ -610,6 +712,13 @@ public class JsonDataWriterGson extends AbstractDataWriter
     public void visit(Text comp)
     {
         addToProcessorTree(new StringWriter(comp.getName()));
+    }
+    
+    
+    @Override
+    public void visit(GeometryData geom)
+    {
+        addToProcessorTree(new GeometryWriter(geom));
     }
     
     

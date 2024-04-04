@@ -28,6 +28,7 @@ import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataComponentVisitor;
 import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.GeometryData;
 import net.opengis.swe.v20.QuantityRange;
 import net.opengis.swe.v20.RangeComponent;
 import net.opengis.swe.v20.TimeRange;
@@ -392,6 +393,13 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     
     
     protected abstract ArraySizeSupplier getArraySizeSupplier(String refId);
+    
+    
+    @Override
+    public void visit(GeometryData geom)
+    {
+        throw new UnsupportedOperationException();
+    }
     
     
     public void setDataComponents(DataComponent components)

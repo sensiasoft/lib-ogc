@@ -20,13 +20,18 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import org.vast.data.AbstractDataBlock;
+import org.vast.data.DataBlockDouble;
+import org.vast.data.DataBlockInt;
 import org.vast.data.DataBlockList;
 import org.vast.data.DataBlockMixed;
+import org.vast.util.Asserts;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.ReaderException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.MalformedJsonException;
+import gnu.trove.list.TDoubleList;
+import gnu.trove.list.array.TDoubleArrayList;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.Count;
@@ -35,6 +40,8 @@ import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.GeometryData;
+import net.opengis.swe.v20.GeometryData.GeomType;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.RangeComponent;
 import net.opengis.swe.v20.Text;
@@ -396,6 +403,157 @@ public class JsonDataParserGson extends AbstractDataParser
             return eltName;
         }
     }
+
+
+    protected class GeometryReader extends ChoiceProcessor implements JsonAtomReader
+    {
+        String eltName;
+        GeometryData geom;
+        GeomType geomType;
+        boolean hasCoords;
+
+        public GeometryReader(GeometryData geom)
+        {
+            this.geom = Asserts.checkNotNull(geom, GeometryData.class);
+            this.eltName = geom.getName();
+        }
+
+        @Override
+        public int process(DataBlock data, int index) throws IOException
+        {
+            var geomPath = reader.getPath();
+            
+            reader.beginObject();
+            
+            while (reader.hasNext())
+            {
+                String name = reader.nextName();
+                
+                if ("type".equals(name))
+                {
+                    var type = reader.nextString();
+                    
+                    try
+                    {
+                        geomType = GeomType.valueOf(type);
+                        var selectedIndex = geomType.ordinal();
+                        
+                        // set selected choice index and corresponding datablock
+                        data.setIntValue(index++, selectedIndex);
+                        var selectedData = geom.getComponent(selectedIndex).createDataBlock();
+                        ((DataBlockMixed)data).setBlock(1, (AbstractDataBlock)selectedData);
+                    }
+                    catch (IllegalArgumentException e)
+                    {
+                        throw new IllegalStateException("Unsupported geometry type: " + type + " at " + reader.getPath());
+                    }
+                }
+                else if ("coordinates".equals(name))
+                {
+                    hasCoords = true;
+                    int depth = 0;
+                    int lvl = -1;
+                    int numPoints = 0;
+                    int numRings = 1;
+                    TDoubleList coordsList = null;
+                    
+                    do
+                    {
+                        var next = reader.peek();
+                        
+                        if (next == JsonToken.BEGIN_ARRAY)
+                        {
+                            reader.beginArray();
+                            lvl++;
+                        }
+                        else if (next == JsonToken.END_ARRAY)
+                        {
+                            reader.endArray();
+                            
+                            if (lvl == depth-2)
+                            {
+                                index ++;
+                                numRings++;
+                            }
+                            
+                            // add coordinates to datablock
+                            if (depth == 0 || lvl == depth-1)
+                            {
+                                if (depth == 0) // point
+                                {
+                                    var pointCoords = ((DataBlockMixed)data).getUnderlyingObject()[1];
+                                    ((DataBlockDouble)pointCoords).setUnderlyingObject(coordsList.toArray());
+                                    index += coordsList.size();
+                                }
+                                
+                                else if (depth == 1) // linestring
+                                {
+                                    data.setIntValue(1, numPoints);
+                                    
+                                    var lineData = ((DataBlockMixed)data).getUnderlyingObject()[1];
+                                    var lineCoords = ((DataBlockMixed)lineData).getUnderlyingObject()[1];
+                                    ((DataBlockDouble)lineCoords).setUnderlyingObject(coordsList.toArray());
+                                    
+                                    index += coordsList.size() + 1;
+                                    numPoints = 0;
+                                }
+                                
+                                else if (depth == 2) // polygon
+                                {
+                                    data.setIntValue(1, numRings);
+                                    
+                                    var polyData = ((DataBlockMixed)data).getUnderlyingObject()[1];
+                                    var ringListData = ((DataBlockMixed)polyData).getUnderlyingObject()[1];
+                                    
+                                    var ringCoords = new DataBlockDouble(0);
+                                    ringCoords.setUnderlyingObject(coordsList.toArray());
+                                    var ringData = new DataBlockMixed(new DataBlockInt(1), ringCoords);
+                                    ringData.setIntValue(0, numPoints);
+                                    ((DataBlockList)ringListData).add(ringData);
+                                    
+                                    index += coordsList.size() + 1;
+                                    numPoints = 0;
+                                }
+                            }
+                            
+                            lvl--;
+                        }
+                        else if (next == JsonToken.NUMBER)
+                        {
+                            depth = lvl;
+                            if (coordsList == null)
+                                coordsList = new TDoubleArrayList();
+                            while (reader.hasNext())
+                                coordsList.add(reader.nextDouble());
+                            numPoints++;
+                        }
+                        else
+                            throw new IllegalStateException("Invalid geometry data: " + next + " at " + reader.getPath());
+                    }
+                    while (lvl >= 0);
+                }
+                else
+                    reader.skipValue();
+            }
+
+            reader.endObject();
+            
+            if (geomType == null)
+                throw new IllegalStateException("Missing geometry type at " + geomPath);
+            
+            if (!hasCoords)
+                throw new IllegalStateException("Missing geometry coordinates at " + geomPath);
+            
+            data.updateAtomCount();
+            return index;
+        }
+
+        @Override
+        public String getEltName()
+        {
+            return eltName;
+        }
+    }
     
     
     public JsonDataParserGson()
@@ -510,6 +668,13 @@ public class JsonDataParserGson extends AbstractDataParser
     public void visit(Text comp)
     {
         addToProcessorTree(new StringReader(comp.getName()));
+    }
+
+
+    @Override
+    public void visit(GeometryData geom)
+    {
+        addToProcessorTree(new GeometryReader(geom));
     }
     
     

@@ -75,6 +75,7 @@ import org.vast.swe.SWEBuilders.CountRangeBuilder;
 import org.vast.swe.SWEBuilders.DataArrayBuilder;
 import org.vast.swe.SWEBuilders.DataChoiceBuilder;
 import org.vast.swe.SWEBuilders.DataRecordBuilder;
+import org.vast.swe.SWEBuilders.GeomBuilder;
 import org.vast.swe.SWEBuilders.MatrixBuilder;
 import org.vast.swe.SWEBuilders.QuantityBuilder;
 import org.vast.swe.SWEBuilders.QuantityRangeBuilder;
@@ -398,6 +399,15 @@ public class SWEHelper
     public MatrixBuilder createMatrix()
     {
         return new MatrixBuilder(fac);
+    }
+
+
+    /**
+     * @return A builder to create a new Geometry component
+     */
+    public GeomBuilder createGeometry()
+    {
+        return new GeomBuilder(fac);
     }
 
 

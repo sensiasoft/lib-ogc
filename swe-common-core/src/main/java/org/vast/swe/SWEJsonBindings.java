@@ -28,6 +28,8 @@ import org.vast.json.JsonInliningWriter;
 import org.vast.json.JsonReaderWithBuffer;
 import org.vast.swe.fast.JsonArrayDataParserGson;
 import org.vast.swe.fast.JsonArrayDataWriterGson;
+import org.vast.swe.fast.JsonDataParserGson;
+import org.vast.swe.fast.JsonDataWriterGson;
 import org.vast.unit.UnitParserUCUM;
 import org.vast.util.DateTimeFormat;
 import com.google.gson.JsonParseException;
@@ -41,6 +43,7 @@ import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.AbstractSWE;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
+import net.opengis.swe.v20.AllowedGeoms;
 import net.opengis.swe.v20.SimpleComponent;
 import net.opengis.swe.v20.AllowedTimes;
 import net.opengis.swe.v20.AllowedTokens;
@@ -62,6 +65,7 @@ import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.EncodedValues;
+import net.opengis.swe.v20.GeometryData.GeomType;
 import net.opengis.swe.v20.Matrix;
 import net.opengis.swe.v20.NilValue;
 import net.opengis.swe.v20.NilValues;
@@ -78,6 +82,7 @@ import net.opengis.swe.v20.UnitReference;
 import net.opengis.swe.v20.Vector;
 import net.opengis.swe.v20.XMLEncoding;
 import net.opengis.swe.v20.Factory;
+import net.opengis.swe.v20.GeometryData;
 import net.opengis.swe.v20.JSONEncoding;
 
 
@@ -189,6 +194,8 @@ public class SWEJsonBindings extends AbstractBindings
             return readQuantity(reader);
         else if ("CountRange".equals(type))
             return readCountRange(reader);
+        else if ("Geometry".equals(type))
+            return readGeometry(reader);
         else
             return null;
     }
@@ -541,6 +548,55 @@ public class SWEJsonBindings extends AbstractBindings
         
         else
             return readDataArrayProperties(reader, bean, name);
+        
+        return true;
+    }
+    
+    
+    public GeometryData readGeometry(JsonReader reader) throws IOException
+    {
+        GeometryData bean = factory.newGeometry();
+
+        // start reading object unless already started
+        if (reader.peek() == JsonToken.BEGIN_OBJECT)
+            reader.beginObject();
+        
+        while (reader.hasNext())
+        {
+            String name = reader.nextName();
+            if (!readGeometryProperties(reader, bean, name))
+                reader.skipValue();
+        }
+        reader.endObject();
+
+        return bean;
+    }
+    
+    
+    public boolean readGeometryProperties(JsonReader reader, GeometryData bean, String name) throws IOException
+    {
+        // referenceframe
+        if ("srs".equals(name))
+            bean.setReferenceFrame(reader.nextString());
+        
+        // constraint
+        else if ("constraint".equals(name))
+        {
+            OgcProperty<AllowedGeoms> constraintProp = bean.getConstraintProperty();
+            constraintProp.setValue(readAllowedGeoms(reader));
+        }
+        
+        // value
+        else if ("value".equals(name))
+        {
+            var dataParser = new JsonDataParserGson(reader);
+            dataParser.setDataComponents(bean);
+            var data = dataParser.parseNextBlock();
+            bean.setData(data);
+        }
+        
+        else
+            return readAbstractDataComponentProperties(reader, bean, name);
         
         return true;
     }
@@ -1265,6 +1321,42 @@ public class SWEJsonBindings extends AbstractBindings
     }
     
     
+    public AllowedGeoms readAllowedGeoms(JsonReader reader) throws IOException
+    {
+        AllowedGeoms bean = factory.newAllowedGeoms();
+
+        if (reader.peek() == JsonToken.BEGIN_OBJECT)
+            reader.beginObject();
+        
+        while (reader.hasNext())
+        {
+            String name = reader.nextName();
+            if (!readAllowedGeomsProperties(reader, bean, name))
+                reader.skipValue();
+        }
+        reader.endObject();
+
+        return bean;
+    }
+    
+    
+    public boolean readAllowedGeomsProperties(JsonReader reader, AllowedGeoms bean, String name) throws IOException
+    {
+        if ("geomTypes".equals(name))
+        {
+            reader.beginArray();
+            while (reader.hasNext())
+                bean.addGeomType(GeomType.valueOf(reader.nextString()));
+            reader.endArray();
+        }
+        
+        else
+            return readAbstractSWEProperties(reader, bean, name);
+        
+        return true;
+    }
+    
+    
     public UnitReference readUnitReference(JsonReader reader) throws IOException
     {
         UnitReference bean = factory.newUnitReference();
@@ -1905,12 +1997,6 @@ public class SWEJsonBindings extends AbstractBindings
     }
     
     
-    public void writeMatrix(JsonWriter writer, Matrix bean, boolean writeInlineValues) throws IOException
-    {
-        writeMatrixProperties(writer, bean, writeInlineValues);
-    }
-    
-    
     public void writeMatrixProperties(JsonWriter writer, Matrix bean, boolean writeInlineValues) throws IOException
     {
         writeDataArrayProperties(writer, bean, writeInlineValues);
@@ -1922,6 +2008,36 @@ public class SWEJsonBindings extends AbstractBindings
         // localFrame
         if (bean.isSetLocalFrame())
             writer.name("localFrame").value(bean.getLocalFrame());
+    }
+    
+    
+    public void writeGeomProperties(JsonWriter writer, GeometryData bean, boolean writeInlineValues) throws IOException
+    {
+        writeAbstractDataComponentProperties(writer, bean);
+
+        // referenceFrame
+        if (bean.isSetReferenceFrame())
+            writer.name("srs").value(bean.getReferenceFrame());
+        
+        // constraint
+        if (bean.isSetConstraint())
+        {
+            OgcProperty<AllowedGeoms> constraintProp = bean.getConstraintProperty();
+            if (constraintProp.hasValue())
+            {
+                writer.name("constraint");
+                writeAllowedGeoms(writer, constraintProp.getValue());
+            }
+        }
+        
+        // value
+        if (bean.hasData() && writeInlineValues)
+        {
+            writer.name("value");
+            var dataWriter = new JsonDataWriterGson(writer);
+            dataWriter.setDataComponents(bean);
+            dataWriter.write(bean.getData());
+        }
     }
     
     
@@ -2323,6 +2439,29 @@ public class SWEJsonBindings extends AbstractBindings
     }
     
     
+    public void writeAllowedGeoms(JsonWriter writer, AllowedGeoms bean) throws IOException
+    {
+        writer.beginObject();
+        writeAllowedGeomsProperties(writer, bean);
+        writer.endObject();
+    }
+    
+    
+    public void writeAllowedGeomsProperties(JsonWriter writer, AllowedGeoms bean) throws IOException
+    {
+        writeAbstractSWEProperties(writer, bean);
+        
+        // geom list
+        if (bean.getNumGeomTypes() > 0)
+        {
+            writer.name("geomTypes").beginArray();
+            for (GeomType val: bean.getGeomList())
+                writer.value(val.toString());
+            writer.endArray();
+        }
+    }
+    
+    
     public void writeUnitReference(JsonWriter writer, UnitReference bean) throws IOException
     {
         writer.beginObject();
@@ -2418,6 +2557,11 @@ public class SWEJsonBindings extends AbstractBindings
         {
             writeTypeAndName(writer, "DataArray", name);
             writeDataArrayProperties(writer, (DataArray)bean, writeInlineValues);
+        }
+        else if (bean instanceof GeometryData)
+        {
+            writeTypeAndName(writer, "Geometry", name);
+            writeGeomProperties(writer, (GeometryData)bean, writeInlineValues);
         }
         else if (bean instanceof DataChoice)
         {

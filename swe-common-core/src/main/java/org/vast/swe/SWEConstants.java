@@ -128,7 +128,7 @@ public class SWEConstants
 
     // Special units
     public static final String QUDT_UOM_PREFIX = "http://qudt.org/vocab/unit/";
-    public static final String SWE_UOM_URI_PREFIX = SML_ONTOLOGY_ROOT + "/swe/uom/";
+    public static final String SWE_UOM_URI_PREFIX = SML_ONTOLOGY_ROOT + "swe/uom/";
     public static final String UOM_ANY = SWE_UOM_URI_PREFIX + "Any";
     public static final String UOM_UNITLESS = QUDT_UOM_PREFIX + "UNITLESS";
     public static final String UOM_UNITLESS_CODE = "1";

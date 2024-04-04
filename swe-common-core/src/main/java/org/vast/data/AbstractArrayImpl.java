@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import org.vast.util.Asserts;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.DataComponent;
@@ -183,7 +184,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
      */
     protected void setVariableSizeComponent(Count sizeComponent)
     {
-        assert(sizeComponent.isSetId());
+        Asserts.checkArgument(sizeComponent.isSetId(), "Size component must have an ID");
         this.elementCount.setHref("#" + sizeComponent.getId());
     }
     
