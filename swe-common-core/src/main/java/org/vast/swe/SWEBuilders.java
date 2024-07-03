@@ -1860,12 +1860,6 @@ public class SWEBuilders
             return (B)this;
         }
 
-        public B dataType(DataType dataType)
-        {
-            this.dataType = dataType;
-            return (B)this;
-        }
-
         protected AllowedGeoms ensureConstraint()
         {
             var constraint = instance.getConstraint();
@@ -1905,8 +1899,6 @@ public class SWEBuilders
         public GeometryData build()
         {
             GeometryData v = super.build();
-            if (dataType != null)
-                v.setDataType(dataType);
             return v;
         }
     }

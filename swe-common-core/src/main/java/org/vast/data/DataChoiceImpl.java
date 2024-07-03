@@ -188,8 +188,9 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     	{
     	    // generate selected component data block
     	    AbstractDataComponentImpl component = ((AbstractDataComponentImpl)itemList.get(selected));
-            component.assignNewDataBlock();
-            AbstractDataBlock childData = (AbstractDataBlock)component.getData();
+            //component.assignNewDataBlock();
+            //AbstractDataBlock childData = (AbstractDataBlock)component.getData();
+    	    AbstractDataBlock childData = component.createDataBlock();
             
             // assign it to the new block array
             newBlock.blockArray[0].setIntValue(selected);

@@ -24,17 +24,28 @@ public interface GeometryData extends DataComponent, HasRefFrames, HasConstraint
     }
     
     
+    /**
+     * @return The currently selected geometry type
+     */
     public GeomType getGeomType();
     
     
+    /**
+     * Select the geometry type before generating a datablock for this component
+     * @param geomType
+     */
     public void setGeomType(GeomType geomType);
     
     
-    public void setDataType(DataType dataType);
-    
-    
+    /**
+     * @return The number of dimensions in the geometry (2D, 3D, etc.)
+     */
     public int getNumDims();
     
     
+    /**
+     * Set the number of dimensions for the geometry
+     * @param numDims
+     */
     public void setNumDims(int numDims);
 }

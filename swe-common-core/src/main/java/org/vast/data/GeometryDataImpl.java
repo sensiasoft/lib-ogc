@@ -23,7 +23,6 @@ import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponentVisitor;
-import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.GeometryData;
 
 
@@ -206,13 +205,6 @@ public class GeometryDataImpl extends DataChoiceImpl implements GeometryData
         ((DataArrayImpl)coordArray1).setFixedSize(numDims);
         ((DataArrayImpl)coordArray2).setFixedSize(numDims);
         ((DataArrayImpl)coordArray3).setFixedSize(numDims);
-    }
-    
-    
-    @Override
-    public void setDataType(DataType dataType)
-    {
-        
     }
     
     
