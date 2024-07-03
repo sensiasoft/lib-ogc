@@ -360,10 +360,10 @@ public class SMLBuilders
             return (B)this;
         }
         
-        public B typeOf(String uid, String href)
+        public B typeOf(String href, String title)
         {
             ReferenceImpl ref = new ReferenceImpl(href);
-            ref.setTitle(uid);
+            ref.setTitle(title);
             instance.setTypeOf(ref);
             return (B)this;
         }
