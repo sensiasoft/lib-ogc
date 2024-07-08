@@ -22,8 +22,8 @@ import org.vast.util.BaseBuilder;
 public class PoseImpl implements Pose
 {
     private static final long serialVersionUID = 2054521303340034670L;
-    protected String refFrame;
-    protected String ltpRefFrame;
+    protected String refFrame = SWEConstants.REF_FRAME_CRS84h;
+    protected String ltpRefFrame = SWEConstants.REF_FRAME_ENU;
     protected String localFrame;
     protected double[] position;
     protected double[] orientation;
@@ -137,9 +137,17 @@ public class PoseImpl implements Pose
         }
         
         
+        public PoseBuilder latLonPos(double lat, double lon)
+        {
+            this.instance.setReferenceFrame(SWEConstants.REF_FRAME_CRS84);
+            this.instance.setPosition(new double[] {lat, lon, 0});
+            return this;
+        }
+        
+        
         public PoseBuilder llaPos(double lat, double lon, double h)
         {
-            this.instance.setReferenceFrame(SWEConstants.REF_FRAME_4979);
+            this.instance.setReferenceFrame(SWEConstants.REF_FRAME_CRS84h);
             this.instance.setPosition(new double[] {lat, lon , h});
             return this;
         }

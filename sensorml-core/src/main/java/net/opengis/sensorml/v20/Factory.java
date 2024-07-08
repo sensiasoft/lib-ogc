@@ -115,4 +115,7 @@ public interface Factory
     
     
     public Deployment newDeployment();
+    
+    
+    public DeployedSystem newDeployedSystem();
 }

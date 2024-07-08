@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import net.opengis.sensorml.v20.AbstractProcess;
+import net.opengis.sensorml.v20.DescribedObject;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.vast.json.JsonInliningWriter;
@@ -33,7 +34,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 
-public class TestSMLJsonBindingsV21 extends XMLTestCase
+public class TestSMLJsonBindingsV30 extends XMLTestCase
 {
 
     @Override
@@ -46,7 +47,7 @@ public class TestSMLJsonBindingsV21 extends XMLTestCase
     }
     
     
-    protected void writeJsonToStream(AbstractProcess process, OutputStream os, boolean indent) throws Exception
+    protected void writeJsonToStream(DescribedObject process, OutputStream os, boolean indent) throws Exception
     {
         var writer = new JsonInliningWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
         writer.setIndent("  ");
@@ -105,7 +106,7 @@ public class TestSMLJsonBindingsV21 extends XMLTestCase
             InputStream is = getClass().getResourceAsStream(path);
             var reader = new JsonReader(new InputStreamReader(is));
             SMLJsonBindings smlBindings = new SMLJsonBindings(enforceTypeFirst);
-            var smlObj = smlBindings.readAbstractProcess(reader);
+            var smlObj = smlBindings.readDescribedObject(reader);
             
             // write back as JSON to stdout and buffer
             ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -202,6 +203,23 @@ public class TestSMLJsonBindingsV21 extends XMLTestCase
     {
         readWriteCompareJson("json/sensor_instance_with_geopose_quat.json", true);
         readWriteCompareJson("json/sensor_instance_with_geopose_ypr.json", true);
+        
+        
+    }
+    
+    
+    public void testReadWriteSystemWithRelativePose() throws Exception
+    {
+        readWriteCompareJson("json/sensor_instance_with_relpose_quat.json", true);
+        readWriteCompareJson("json/sensor_instance_with_relpose_ypr.json", true);
+        
+        
+    }
+    
+    
+    public void testReadWriteDeployment() throws Exception
+    {
+        readWriteCompareJson("json/deployment_with_geometry.json", true);
         
         
     }

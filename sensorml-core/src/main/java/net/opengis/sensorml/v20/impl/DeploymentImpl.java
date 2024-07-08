@@ -14,20 +14,12 @@ Copyright (C) 2023 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.sensorml.v20.impl;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.namespace.QName;
 import net.opengis.OgcPropertyList;
-import net.opengis.gml.v32.Point;
-import net.opengis.sensorml.v20.AbstractProcess;
+import net.opengis.sensorml.v20.DeployedSystem;
 import net.opengis.sensorml.v20.Deployment;
 import net.opengis.sensorml.v20.SpatialFrame;
 import net.opengis.sensorml.v20.TemporalFrame;
-import net.opengis.swe.v20.DataRecord;
-import net.opengis.swe.v20.Text;
-import net.opengis.swe.v20.Time;
-import net.opengis.swe.v20.Vector;
 
 
 /**
@@ -40,11 +32,10 @@ public class DeploymentImpl extends DescribedObjectImpl implements Deployment
     private static final long serialVersionUID = 6200618857495858650L;
 
     protected String definition;
-    protected ArrayList<SpatialFrame> localReferenceFrameList = new ArrayList<SpatialFrame>();
-    protected ArrayList<TemporalFrame> localTimeFrameList = new ArrayList<TemporalFrame>();
-    protected OgcPropertyList<Serializable> positionList = new OgcPropertyList<Serializable>();
-    protected OgcPropertyList<Time> timePositionList = new OgcPropertyList<Time>();
-    protected OgcPropertyList<AbstractProcess> components = new OgcPropertyList<>(5);
+    protected SpatialFrame localReferenceFrame;
+    protected TemporalFrame localTimeFrame;
+    protected DeployedSystem platform;
+    protected OgcPropertyList<DeployedSystem> deployedSystems = new OgcPropertyList<DeployedSystem>();
     
     
     @Override
@@ -85,199 +76,131 @@ public class DeploymentImpl extends DescribedObjectImpl implements Deployment
     
     
     /**
-     * Gets the list of localReferenceFrame properties
+     * Gets the localReferenceFrame property
      */
     @Override
-    public List<SpatialFrame> getLocalReferenceFrameList()
+    public SpatialFrame getLocalReferenceFrame()
     {
-        return localReferenceFrameList;
+        return localReferenceFrame;
     }
     
     
     /**
-     * Returns number of localReferenceFrame properties
+     * Checks if localReferenceFrame is set
      */
     @Override
-    public int getNumLocalReferenceFrames()
+    public boolean isSetLocalReferenceFrame()
     {
-        if (localReferenceFrameList == null)
-            return 0;
-        return localReferenceFrameList.size();
+        return (localReferenceFrame != null);
     }
     
     
     /**
-     * Adds a new localReferenceFrame property
+     * Sets the localReferenceFrame property
      */
     @Override
-    public void addLocalReferenceFrame(SpatialFrame localReferenceFrame)
+    public void setLocalReferenceFrame(SpatialFrame localReferenceFrame)
     {
-        this.localReferenceFrameList.add(localReferenceFrame);
+        this.localReferenceFrame = localReferenceFrame;
     }
     
     
     /**
-     * Gets the list of localTimeFrame properties
+     * Gets the localTimeFrame property
      */
     @Override
-    public List<TemporalFrame> getLocalTimeFrameList()
+    public TemporalFrame getLocalTimeFrame()
     {
-        return localTimeFrameList;
+        return localTimeFrame;
     }
     
     
     /**
-     * Returns number of localTimeFrame properties
+     * Checks if localTimeFrame is set
      */
     @Override
-    public int getNumLocalTimeFrames()
+    public boolean isSetLocalTimeFrame()
     {
-        if (localTimeFrameList == null)
-            return 0;
-        return localTimeFrameList.size();
+        return (localReferenceFrame != null);
     }
     
     
     /**
-     * Adds a new localTimeFrame property
+     * Sets the localTimeFrame property
      */
     @Override
-    public void addLocalTimeFrame(TemporalFrame localTimeFrame)
+    public void setLocalTimeFrame(TemporalFrame localTimeFrame)
     {
-        this.localTimeFrameList.add(localTimeFrame);
+        this.localTimeFrame = localTimeFrame;
     }
     
     
     /**
-     * Gets the list of position properties
+     * Gets the platform property
      */
     @Override
-    public OgcPropertyList<Serializable> getPositionList()
+    public DeployedSystem getPlatform()
     {
-        return positionList;
+        return platform;
     }
     
     
     /**
-     * Returns number of position properties
+     * Checks if platform is set
      */
     @Override
-    public int getNumPositions()
+    public boolean isSetPlatform()
     {
-        if (positionList == null)
-            return 0;
-        return positionList.size();
+        return (platform != null);
     }
     
     
     /**
-     * Adds a new positionAsText property
+     * Sets the platform property
      */
     @Override
-    public void addPositionAsText(Text position)
+    public void setPlatform(DeployedSystem platform)
     {
-        this.positionList.add(position);
+        this.platform = platform;
     }
     
     
     /**
-     * Adds a new positionAsPoint property
+     * Gets the list of deployed systems
      */
     @Override
-    public void addPositionAsPoint(Point position)
+    public OgcPropertyList<DeployedSystem> getDeployedSystemList()
     {
-        this.positionList.add(position);
+        return deployedSystems;
     }
     
     
     /**
-     * Adds a new positionAsVector property
+     * Returns number of deployed systems
      */
     @Override
-    public void addPositionAsVector(Vector position)
+    public int getNumDeployedSystems()
     {
-        this.positionList.add(position);
+        return deployedSystems.size();
     }
     
     
     /**
-     * Adds a new positionAsDataRecord property
+     * Gets the deployed system with the given name
      */
     @Override
-    public void addPositionAsDataRecord(DataRecord position)
+    public DeployedSystem getDeployedSystem(String name)
     {
-        this.positionList.add(position);
+        return deployedSystems.get(name);
     }
     
     
     /**
-     * Gets the list of timePosition properties
+     * Adds a new deployed system
      */
     @Override
-    public OgcPropertyList<Time> getTimePositionList()
+    public void addDeployedSystem(String name, DeployedSystem sys)
     {
-        return timePositionList;
-    }
-    
-    
-    /**
-     * Returns number of timePosition properties
-     */
-    @Override
-    public int getNumTimePositions()
-    {
-        if (timePositionList == null)
-            return 0;
-        return timePositionList.size();
-    }
-    
-    
-    /**
-     * Adds a new timePosition property
-     */
-    @Override
-    public void addTimePosition(Time timePosition)
-    {
-        this.timePositionList.add(timePosition);
-    }
-    
-    
-    /**
-     * Gets the list of components
-     */
-    @Override
-    public OgcPropertyList<AbstractProcess> getComponentList()
-    {
-        return components;
-    }
-    
-    
-    /**
-     * Returns number of components
-     */
-    @Override
-    public int getNumComponents()
-    {
-        return components.size();
-    }
-    
-    
-    /**
-     * Gets the component with the given name
-     */
-    @Override
-    public AbstractProcess getComponent(String name)
-    {
-        return components.get(name);
-    }
-    
-    
-    /**
-     * Adds a new component
-     */
-    @Override
-    public void addComponent(String name, AbstractProcess component)
-    {
-        components.add(name, component);
+        deployedSystems.add(name, sys);
     }
 }

@@ -11,6 +11,7 @@ package org.vast.ogc.geopose;
 
 import java.io.IOException;
 import org.vast.swe.SWEConstants;
+import org.vast.util.Asserts;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
@@ -34,10 +35,21 @@ public class GeoPoseJsonBindings
     // Writing methods //
     /////////////////////
     
+    public void writeGeoPose(JsonWriter writer, Pose pose) throws IOException
+    {
+        Asserts.checkArgument(isGeoPose(pose), "Not a geopose");
+        writePose(writer, pose);
+    }
+    
+    
     public void writePose(JsonWriter writer, Pose pose) throws IOException
     {
-        writePose(writer, pose, null);
+        if (isGeoPose(pose))
+            writePose(writer, pose, "GeoPose");
+        else
+            writePose(writer, pose, "RelativePose");
     }
+    
     
     public void writePose(JsonWriter writer, Pose pose, String typeString) throws IOException
     {
@@ -46,11 +58,17 @@ public class GeoPoseJsonBindings
         if (typeString != null)
             writer.name("type").value(typeString);
         
-        if (pose.getReferenceFrame() != null)
-            writer.name("referenceFrame").value(pose.getReferenceFrame());
-        
-        if (pose.getLTPReferenceFrame() != null)
-            writer.name("ltpReferenceFrame").value(pose.getLTPReferenceFrame());
+        if (isGeoPose(pose))
+        {
+            var ltp = pose.getLTPReferenceFrame();
+            if (ltp != null && !ltp.equals(SWEConstants.REF_FRAME_ENU))
+                writer.name("ltpReferenceFrame").value(pose.getLTPReferenceFrame());
+        }
+        else
+        {
+            if (pose.getReferenceFrame() != null)
+                writer.name("referenceFrame").value(pose.getReferenceFrame());
+        }
         
         if (pose.getLocalFrame() != null)
             writer.name("localFrame").value(pose.getReferenceFrame());
@@ -60,12 +78,14 @@ public class GeoPoseJsonBindings
             var coords = pose.getPosition();
             writer.name("position").beginObject();
             
-            if (SWEConstants.REF_FRAME_4326.equals(pose.getReferenceFrame()))
+            if (SWEConstants.REF_FRAME_CRS84.equals(pose.getReferenceFrame()) ||
+                SWEConstants.REF_FRAME_4326.equals(pose.getReferenceFrame()))
             {
                 writer.name("lat").value(coords[0]);
                 writer.name("lon").value(coords[1]);
             }
-            else if (SWEConstants.REF_FRAME_4979.equals(pose.getReferenceFrame()))
+            else if (SWEConstants.REF_FRAME_CRS84h.equals(pose.getReferenceFrame()) ||
+                     SWEConstants.REF_FRAME_4979.equals(pose.getReferenceFrame()))
             {
                 writer.name("lat").value(coords[0]);
                 writer.name("lon").value(coords[1]);
@@ -110,6 +130,7 @@ public class GeoPoseJsonBindings
     public Pose readPose(JsonReader reader) throws IOException
     {
         var pose = new PoseImpl();
+        boolean isGeo = false;
         
         if (reader.peek() == JsonToken.BEGIN_OBJECT)
             reader.beginObject();
@@ -136,7 +157,10 @@ public class GeoPoseJsonBindings
                 {
                     name = reader.nextName();
                     if ("lat".equals(name))
+                    {
                         coords[0] = reader.nextDouble();
+                        isGeo = true;
+                    }
                     else if ("lon".equals(name))
                         coords[1] = reader.nextDouble();
                     else if ("h".equals(name))
@@ -206,6 +230,27 @@ public class GeoPoseJsonBindings
         }
         
         reader.endObject();
+        
+        // set default CRS
+        if (isGeo && pose.getReferenceFrame() == null)
+        {
+            int numDims = pose.getPosition().length;
+            if (numDims == 2)
+                pose.setReferenceFrame(SWEConstants.REF_FRAME_CRS84);
+            else
+                pose.setReferenceFrame(SWEConstants.REF_FRAME_CRS84h);
+        }
+        
         return pose;
+    }
+    
+    
+    public boolean isGeoPose(Pose pose)
+    {
+        var crs = pose.getReferenceFrame();
+        var isCompatibleCrs = SWEConstants.REF_FRAME_CRS84.equals(crs) || SWEConstants.REF_FRAME_CRS84h.equals(crs);
+        
+        //var ltp = pose.getLTPReferenceFrame();
+        return isCompatibleCrs;// && SWEConstants.REF_FRAME_ENU.equals(ltp);
     }
 }

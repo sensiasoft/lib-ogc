@@ -199,7 +199,7 @@ public class PhysicalComponentImpl extends AbstractProcessImpl implements Physic
     
     
     /**
-     * Adds a new positionAsAbstractProcess property
+     * Adds a new positionAsPose property
      */
     public void addPositionAsPose(Pose pose)
     {

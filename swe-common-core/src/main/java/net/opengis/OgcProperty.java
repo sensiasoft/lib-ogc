@@ -41,6 +41,12 @@ public interface OgcProperty<ValueType> extends IXlinkReference<ValueType>, Seri
 
 
     public void setNilReason(String nilReason);
+    
+    
+    public String getMediaType();
+
+
+    public void setMediaType(String mediaType);
 
 
     public ValueType getValue();

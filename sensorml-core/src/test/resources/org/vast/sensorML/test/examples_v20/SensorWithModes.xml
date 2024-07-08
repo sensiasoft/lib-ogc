@@ -80,7 +80,7 @@
                     <gml:name>Low Threat Mode</gml:name>
                     <sml:configuration>
                         <sml:Settings>
-                            <sml:setValue ref="parameters/settings/samplingRate">1e-1</sml:setValue>
+                            <sml:setValue ref="parameters/settings/samplingRate">0.1</sml:setValue>
                             <sml:setValue ref="parameters/settings/gain">1.0</sml:setValue>
                         </sml:Settings>
                     </sml:configuration>

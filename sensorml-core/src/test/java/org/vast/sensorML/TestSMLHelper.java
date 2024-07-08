@@ -63,7 +63,7 @@ public class TestSMLHelper
         String TYPEOF_UID = "urn:heath:gamma2070";
         
         PhysicalSystem sys = createSystemBuilder()
-            .typeOf(TYPEOF_UID, TYPEOF_URL)
+            .typeOf(TYPEOF_URL, TYPEOF_UID)
             .build();
         
         printAsXml(sys);

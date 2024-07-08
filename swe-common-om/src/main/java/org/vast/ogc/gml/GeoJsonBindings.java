@@ -32,6 +32,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import gnu.trove.list.array.TDoubleArrayList;
+import net.opengis.OgcProperty;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
@@ -308,13 +309,13 @@ public class GeoJsonBindings
             if (link.getRole() != null)
                 writer.name("rt").value(link.getRole());
             
-            if (link instanceof Reference)
+            if (link instanceof OgcProperty)
             {
-                if (((Reference) link).getName() != null)
+                if (((OgcProperty<?>) link).getName() != null)
                     writer.name("uid").value(((Reference) link).getName());
                 
-                if (((Reference) link).getRemoteSchema() != null)
-                    writer.name("type").value(((Reference) link).getRemoteSchema());
+                if (((OgcProperty<?>) link).getMediaType() != null)
+                    writer.name("type").value(((Reference) link).getMediaType());
             }
             
             writer.endObject();
@@ -726,7 +727,7 @@ public class GeoJsonBindings
                     ref.setName(obj.get("uid").getAsString());
                 
                 if (obj.has("type"))
-                    ref.setRemoteSchema(obj.get("type").getAsString());
+                    ref.setMediaType(obj.get("type").getAsString());
                     
                 if (obj.has("rt"))
                     ref.setRole(obj.get("rt").getAsString());

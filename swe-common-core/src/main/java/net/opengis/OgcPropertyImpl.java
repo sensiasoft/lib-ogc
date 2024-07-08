@@ -23,6 +23,8 @@ import org.vast.util.ResolveException;
 public class OgcPropertyImpl<ValueType extends Serializable> implements OgcProperty<ValueType>
 {
     private static final long serialVersionUID = -4533173517189205779L;
+    private static final String MEDIA_TYPE_PREFIX = "media:";
+    
     protected ValueType value;
     protected String name;
     protected String title;
@@ -145,7 +147,10 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
     @Override
     public String getArcRole()
     {
-        return arcRole;
+        // in case arcrole property is used to store media type
+        if (arcRole != null && !arcRole.startsWith(MEDIA_TYPE_PREFIX))
+            return arcRole;
+        return null;
     }
     
     
@@ -167,6 +172,24 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
     public void setNilReason(String nilReason)
     {
         this.nilReason = nilReason;
+    }
+
+
+    @Override
+    public String getMediaType()
+    {
+        // if arcrole property contains media type
+        if (arcRole != null && arcRole.startsWith(MEDIA_TYPE_PREFIX))
+            return arcRole.substring(MEDIA_TYPE_PREFIX.length());
+        return null;
+    }
+
+
+    @Override
+    public void setMediaType(String mediaType)
+    {
+        // use arcrole property to store media type
+        this.arcRole = MEDIA_TYPE_PREFIX + mediaType;
     }
 
 

@@ -15,6 +15,7 @@ import org.vast.ogc.geopose.Pose;
 import org.vast.ogc.gml.GMLUtils;
 import org.vast.ogc.gml.GeoJsonBindings;
 import org.vast.swe.SWEJsonBindings;
+import org.vast.util.NumberUtils;
 import org.vast.util.TimeExtent;
 import com.google.common.base.Strings;
 import com.google.gson.JsonParseException;
@@ -25,8 +26,8 @@ import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.AbstractFeature;
+import net.opengis.gml.v32.AbstractGML;
 import net.opengis.gml.v32.Point;
-import net.opengis.gml.v32.Reference;
 import net.opengis.gml.v32.TimePeriod;
 import net.opengis.gml.v32.impl.GMLFactory;
 import net.opengis.sensorml.v20.AbstractMetadataList;
@@ -40,6 +41,7 @@ import net.opengis.sensorml.v20.ClassifierList;
 import net.opengis.sensorml.v20.ConfigSetting;
 import net.opengis.sensorml.v20.ConstraintSetting;
 import net.opengis.sensorml.v20.ContactList;
+import net.opengis.sensorml.v20.DeployedSystem;
 import net.opengis.sensorml.v20.Deployment;
 import net.opengis.sensorml.v20.DescribedObject;
 import net.opengis.sensorml.v20.DocumentList;
@@ -291,7 +293,7 @@ public class SMLJsonBindings
     }
     
     
-    public boolean readDescribedObjectProperties(JsonReader reader, DescribedObject bean, String name) throws IOException
+    public boolean readGmlProperties(JsonReader reader, AbstractGML bean, String name) throws IOException
     {
         if ("name".equals(name))
         {
@@ -308,11 +310,6 @@ public class SMLJsonBindings
             bean.setUniqueIdentifier(reader.nextString());
         }
         
-        else if ("lang".equals(name))
-        {
-            bean.setLang(reader.nextString());
-        }
-        
         else if ("label".equals(name))
         {
             bean.setName(reader.nextString());
@@ -321,6 +318,20 @@ public class SMLJsonBindings
         else if ("description".equals(name))
         {
             bean.setDescription(reader.nextString());
+        }
+        
+        else
+            return false;
+        
+        return true;
+    }
+    
+    
+    public boolean readDescribedObjectProperties(JsonReader reader, DescribedObject bean, String name) throws IOException
+    {
+        if ("lang".equals(name))
+        {
+            bean.setLang(reader.nextString());
         }
         
         else if ("keywords".equals(name))
@@ -389,7 +400,7 @@ public class SMLJsonBindings
         }
         
         else
-            return false;
+            return readGmlProperties(reader, bean, name);
         
         return true;
     }
@@ -804,11 +815,8 @@ public class SMLJsonBindings
         
         else if ("typeOf".equals(name))
         {
-            var link = readLink(reader);
             var ref = gmlFactory.newReference();
-            ref.setHref(link.getHref());
-            ref.setTitle(link.getTitle());
-            ref.setName(link.getName()); // UID
+            readLink(reader, ref);
             bean.setTypeOf(ref);
         }
         
@@ -1231,7 +1239,7 @@ public class SMLJsonBindings
         reader = beginObjectWithType(reader);
         var type = reader.nextString();
         
-        if ("Pose".equals(type))
+        if ("GeoPose".equals(type) || "RelativePose".equals(type))
         {
             var pose = geoposeBindings.readPose(reader);
             bean.addPositionAsPose(pose);
@@ -1240,6 +1248,26 @@ public class SMLJsonBindings
         {
             var p = (Point)geojsonBindings.readGeometry(reader, type);
             bean.addPositionAsPoint(p);
+        }
+        else
+            throw new JsonParseException("Unsupported position type " + type + " @ " + reader.getPath());
+    }
+    
+    
+    protected void readPosition(JsonReader reader, DeployedSystem bean) throws IOException
+    {
+        reader = beginObjectWithType(reader);
+        var type = reader.nextString();
+        
+        if ("GeoPose".equals(type) || "RelativePose".equals(type))
+        {
+            var pose = geoposeBindings.readPose(reader);
+            bean.setPositionAsPose(pose);
+        }
+        else if ("Point".equals(type))
+        {
+            var p = (Point)geojsonBindings.readGeometry(reader, type);
+            bean.setPositionAsPoint(p);
         }
         else
             throw new JsonParseException("Unsupported position type " + type + " @ " + reader.getPath());
@@ -1411,19 +1439,77 @@ public class SMLJsonBindings
             bean.setGeometry(geom);
         }
         
-        else if ("members".equals(name))
+        else if ("platform".equals(name))
+        {
+            var prop = readDeployedSystem(reader);
+            bean.setPlatform(prop.getValue());
+        }
+        
+        else if ("deployedSystems".equals(name))
         {
             reader.beginArray();
             while (reader.hasNext())
             {
-                var prop = readComponent(reader, false);
-                bean.getComponentList().add(prop);
+                var prop = readDeployedSystem(reader);
+                bean.getDeployedSystemList().add(prop);
             }
             reader.endArray();
         }
         
         else
             return readDescribedObjectProperties(reader, bean, name);
+        
+        return true;
+    }
+    
+    
+    public OgcProperty<DeployedSystem> readDeployedSystem(JsonReader reader) throws IOException
+    {
+        var bean = factory.newDeployedSystem();
+        
+        // start reading object and check type if not already started
+        if (reader.peek() == JsonToken.BEGIN_OBJECT)
+            reader.beginObject();
+        
+        while (reader.hasNext())
+        {
+            String name = reader.nextName();
+            if (!readDeployedSystemProperties(reader, bean, name))
+                reader.skipValue();
+        }
+        reader.endObject();
+        
+        var prop = new OgcPropertyImpl<DeployedSystem>();
+        prop.setValue(bean);
+        prop.setName(propName);
+        propName = null; // reset
+        
+        return prop;
+    }
+    
+    
+    public boolean readDeployedSystemProperties(JsonReader reader, DeployedSystem bean, String name) throws IOException
+    {
+        if ("system".equals(name))
+        {
+            var ref = gmlFactory.newReference();
+            readLink(reader, ref);
+            bean.setSystemRef(ref);
+        }
+        
+        else if ("position".equals(name))
+        {
+            readPosition(reader, bean);
+        }
+        
+        else if ("configuration".equals(name))
+        {
+            var config = readSettings(reader);
+            bean.setConfiguration(config);
+        }
+        
+        else
+            return readGmlProperties(reader, bean, name);
         
         return true;
     }
@@ -1460,25 +1546,18 @@ public class SMLJsonBindings
         {
             bean.setHref(reader.nextString());
         }
-        else if ("name".equals(name))
-        {
-            bean.setName(reader.nextString());
-        }
         else if ("title".equals(name))
         {
             bean.setTitle(reader.nextString());
         }
         else if ("type".equals(name))
         {
-            // store media type as remote schema if external reference
-            var type = reader.nextString();
-            if (bean instanceof Reference)
-                ((Reference)bean).setRemoteSchema(type);
+            bean.setMediaType(reader.nextString());
         }
         else if ("uid".equals(name))
         {
-            // store uid on role property
-            bean.setRole(reader.nextString());
+            // store uid on name property
+            bean.setName(reader.nextString());
         }
         else
             return false;
@@ -1619,22 +1698,49 @@ public class SMLJsonBindings
             geojsonBindings.writeGeometry(writer, bean.getGeometry());
         }
         
-        if (bean.getNumComponents() > 0)
+        if (bean.isSetPlatform())
         {
-            writer.name("members").beginArray();
-            for (var item: bean.getComponentList().getProperties())
+            writer.name("platform").beginObject();
+            writeDeployedSystemProperties(writer, bean.getPlatform());
+            writer.endObject();
+        }
+        
+        if (bean.getNumDeployedSystems() > 0)
+        {
+            writer.name("deployedSystems").beginArray();
+            for (var item: bean.getDeployedSystemList().getProperties())
             {
-                if (item.hasValue())
-                    writeDescribedObject(writer, item.getValue(), item.getName());
-                else if (item.hasHref())
-                    writeLink(writer, item, "uid", null, true);
+                writer.beginObject();
+                writer.name("name").value(item.getName());
+                writeDeployedSystemProperties(writer, item.getValue());
+                writer.endObject();
             }
             writer.endArray();
         }
     }
     
     
-    protected void writeDescribedObjectProperties(JsonWriter writer, DescribedObject bean) throws IOException
+    public void writeDeployedSystemProperties(JsonWriter writer, DeployedSystem bean) throws IOException
+    {
+        writeGmlProperties(writer, bean);
+        
+        writer.name("system");
+        writeLink(writer, bean.getSystemRef(), propName, SML_JSON_MEDIA_TYPE, false);
+        
+        if (bean.isSetPosition())
+        {
+            writePosition(writer, bean.getPosition());
+        }
+        
+        if (bean.isSetConfiguration())
+        {
+            writer.name("configuration");
+            writeSettings(writer, bean.getConfiguration());
+        }
+    }
+    
+    
+    protected void writeGmlProperties(JsonWriter writer, AbstractGML bean) throws IOException
     {
         if (!Strings.isNullOrEmpty(bean.getId()))
             writer.name("id").value(bean.getId());
@@ -1645,14 +1751,23 @@ public class SMLJsonBindings
         if (bean instanceof AbstractProcess && ((AbstractProcess)bean).isSetDefinition())
             writer.name("definition").value(((AbstractProcess)bean).getDefinition());
         
-        if (bean.isSetLang())
-            writer.name("lang").value(bean.getLang());
+        if (bean instanceof Deployment && ((Deployment)bean).isSetDefinition())
+            writer.name("definition").value(((Deployment)bean).getDefinition());
         
         if (bean.getName() != null)
             writer.name("label").value(bean.getName());
         
         if (bean.getDescription() != null)
             writer.name("description").value(bean.getDescription());
+    }
+    
+    
+    protected void writeDescribedObjectProperties(JsonWriter writer, DescribedObject bean) throws IOException
+    {
+        if (bean.isSetLang())
+            writer.name("lang").value(bean.getLang());
+     
+        writeGmlProperties(writer, bean);
         
         if (bean instanceof AbstractProcess)
             writeTypeOf(writer, (AbstractProcess)bean);
@@ -1984,7 +2099,7 @@ public class SMLJsonBindings
     }
     
     
-    protected void writeLink(JsonWriter writer, OgcProperty<?> bean, String rolePropName, String mediaType, boolean includeType) throws IOException
+    protected void writeLink(JsonWriter writer, OgcProperty<?> bean, String rolePropName, String defaultMediaType, boolean includeType) throws IOException
     {
         writer.beginObject();
         
@@ -1992,7 +2107,7 @@ public class SMLJsonBindings
             writer.name("type").value("Link");
         
         if (bean.getName() != null)
-            writer.name("name").value(bean.getName());
+            writer.name("uid").value(bean.getName());
         
         if (bean.hasHref())
             writer.name("href").value(bean.getHref());
@@ -2003,6 +2118,9 @@ public class SMLJsonBindings
         if (bean.getRole() != null && rolePropName != null)
             writer.name(rolePropName).value(bean.getRole());
         
+        var mediaType = bean.getMediaType();
+        if (mediaType == null)
+            mediaType = defaultMediaType;
         if (mediaType != null)
             writer.name("type").value(mediaType);
         
@@ -2058,7 +2176,18 @@ public class SMLJsonBindings
             {
                 writer.beginObject();
                 writer.name("ref").value(setting.getRef());
-                writer.name("value").value(setting.getValue());
+                
+                // write value either as string or number
+                writer.name("value");
+                var strVal = setting.getValue();
+                var isNum = NumberUtils.isNumericExp(strVal);
+                if (isNum)
+                {
+                    var numVal = Double.parseDouble(strVal);
+                    writer.value(numVal);
+                }
+                else
+                    writer.value(strVal);
                 writer.endObject();
             }
             writer.endArray();
@@ -2306,16 +2435,22 @@ public class SMLJsonBindings
         if (bean.isEmpty())
             return;
         
-        writer.name("position");
         var selfPos = bean.get(0);
+        writePosition(writer, selfPos);
+    }
+    
+    
+    protected void writePosition(JsonWriter writer, Serializable bean) throws IOException
+    {
+        writer.name("position");
         
-        if (selfPos instanceof Point)
+        if (bean instanceof Point)
         {
-            geojsonBindings.writePoint(writer, (Point)selfPos);
+            geojsonBindings.writePoint(writer, (Point)bean);
         }
-        else if (selfPos instanceof Pose)
+        else if (bean instanceof Pose)
         {
-            geoposeBindings.writePose(writer, (Pose)selfPos, "Pose");
+            geoposeBindings.writePose(writer, (Pose)bean);
         }
     }
     

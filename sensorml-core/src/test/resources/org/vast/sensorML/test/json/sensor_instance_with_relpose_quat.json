@@ -2,13 +2,14 @@
   "type": "PhysicalSystem",
   "definition": "http://www.w3.org/ns/sosa/Sensor",
   "uniqueId": "urn:x-ogc:sensors:001",
-  "label": "Sensor with GeoPose",
+  "label": "Sensor with relative pose",
   "position": {
-    "type": "GeoPose",
+    "type": "RelativePose",
+    "referenceFrame": "urn:x-ogc:platforms:001#PLATFORM_FRAME",
     "position": {
-      "lat": 47.7,
-      "lon": -122.3,
-      "h": 11.5
+      "x": 47.7,
+      "y": -122.3,
+      "z": 11.5
     },
     "quaternion": {
       "x": 0.22876396167290736,

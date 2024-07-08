@@ -14,15 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.sensorml.v20;
 
-import java.io.Serializable;
-import java.util.List;
 import javax.xml.namespace.QName;
 import net.opengis.OgcPropertyList;
-import net.opengis.gml.v32.Point;
-import net.opengis.swe.v20.DataRecord;
-import net.opengis.swe.v20.Text;
-import net.opengis.swe.v20.Time;
-import net.opengis.swe.v20.Vector;
 
 
 /**
@@ -55,116 +48,80 @@ public interface Deployment extends DescribedObject
     
     
     /**
-     * Gets the list of localReferenceFrame properties
+     * Gets the localReferenceFrame property
      */
-    public List<SpatialFrame> getLocalReferenceFrameList();
+    public SpatialFrame getLocalReferenceFrame();
     
     
     /**
-     * Returns number of localReferenceFrame properties
+     * Checks if localReferenceFrame is set
      */
-    public int getNumLocalReferenceFrames();
+    public boolean isSetLocalReferenceFrame();
     
     
     /**
-     * Adds a new localReferenceFrame property
+     * Sets the localReferenceFrame property
      */
-    public void addLocalReferenceFrame(SpatialFrame localReferenceFrame);
+    public void setLocalReferenceFrame(SpatialFrame localReferenceFrame);
     
     
     /**
-     * Gets the list of localTimeFrame properties
+     * Gets the localTimeFrame property
      */
-    public List<TemporalFrame> getLocalTimeFrameList();
+    public TemporalFrame getLocalTimeFrame();
     
     
     /**
-     * Returns number of localTimeFrame properties
+     * Checks if localTimeFrame is set
      */
-    public int getNumLocalTimeFrames();
+    public boolean isSetLocalTimeFrame();
     
     
     /**
-     * Adds a new localTimeFrame property
+     * Sets the localTimeFrame property
      */
-    public void addLocalTimeFrame(TemporalFrame localTimeFrame);
+    public void setLocalTimeFrame(TemporalFrame localTimeFrame);
     
     
     /**
-     * Gets the list of position properties
+     * Gets the reference to the platform
      */
-    public OgcPropertyList<Serializable> getPositionList();
+    public DeployedSystem getPlatform();
     
     
     /**
-     * Returns number of position properties
+     * Checks if platform is set
      */
-    public int getNumPositions();
+    public boolean isSetPlatform();
     
     
     /**
-     * Adds a new positionAsText property
+     * Sets the platform
      */
-    public void addPositionAsText(Text position);
+    public void setPlatform(DeployedSystem platform);
     
     
     /**
-     * Adds a new positionAsPoint property
+     * Gets the list of deployed systems
      */
-    public void addPositionAsPoint(Point position);
+    public OgcPropertyList<DeployedSystem> getDeployedSystemList();
     
     
     /**
-     * Adds a new positionAsVector property
+     * Returns number of deployed systems
      */
-    public void addPositionAsVector(Vector position);
+    public int getNumDeployedSystems();
     
     
     /**
-     * Adds a new positionAsDataRecord property
+     * Gets the deployed system with the given name
      */
-    public void addPositionAsDataRecord(DataRecord position);
+    public DeployedSystem getDeployedSystem(String name);
     
     
     /**
-     * Gets the list of timePosition properties
+     * Adds a new deployed system
      */
-    public OgcPropertyList<Time> getTimePositionList();
-    
-    
-    /**
-     * Returns number of timePosition properties
-     */
-    public int getNumTimePositions();
-    
-    
-    /**
-     * Adds a new timePosition property
-     */
-    public void addTimePosition(Time timePosition);
-    
-    
-    /**
-     * Gets the list of components
-     */
-    public OgcPropertyList<AbstractProcess> getComponentList();
-    
-    
-    /**
-     * Returns number of components
-     */
-    public int getNumComponents();
-    
-    
-    /**
-     * Gets the component with the given name
-     */
-    public AbstractProcess getComponent(String name);
-    
-    
-    /**
-     * Adds a new component
-     */
-    public void addComponent(String name, AbstractProcess component);
+    public void addDeployedSystem(String name, DeployedSystem sys);
     
 }

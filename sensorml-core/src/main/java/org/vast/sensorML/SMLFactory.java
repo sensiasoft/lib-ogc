@@ -280,4 +280,11 @@ public class SMLFactory implements Factory
     {
         return new DeploymentImpl();
     }
+
+
+    @Override
+    public DeployedSystem newDeployedSystem()
+    {
+        return new DeployedSystemImpl();
+    }
 }
