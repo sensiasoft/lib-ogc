@@ -1616,7 +1616,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
      */
     public void readReferenceTypeAttributes(Map<String, String> attrMap, Reference bean) throws XMLStreamException
     {
-        readPropertyAttributes(attrMap, bean);
+        readXlinkAttributes(attrMap, bean);
         
         String val;
         
@@ -1646,7 +1646,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
      */
     public void writeReferenceTypeAttributes(XMLStreamWriter writer, Reference bean) throws XMLStreamException
     {
-        writePropertyAttributes(writer, bean);
+        writeXlinkAttributes(writer, bean);
         
         // owns
         if (bean.isSetOwns())

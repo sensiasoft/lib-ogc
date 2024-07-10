@@ -41,18 +41,14 @@ import org.vast.util.ResolveException;
  * @since Sep 28, 2012
  *
  */
-public class CachedReference<T> implements IXlinkReference<T>
+public class CachedReference<T> extends SimpleLink<T> implements IXlinkReference<T>
 {
-    protected String href;
-    protected String role;
-    protected String arcRole;
-    protected String title;
     protected T value;
     protected transient IReferenceResolver<? extends T> resolver;
 
 
     public CachedReference()
-    {        
+    {
     }
     
     
@@ -74,62 +70,6 @@ public class CachedReference<T> implements IXlinkReference<T>
         setResolver(resolver);
     }
     
-    
-    @Override
-    public String getHref()
-    {
-        return href;
-    }
-
-
-    @Override
-    public void setHref(String href)
-    {
-        this.href = href;
-    }
-
-
-    @Override
-    public String getRole()
-    {
-        return role;
-    }
-
-
-    @Override
-    public void setRole(String role)
-    {
-        this.role = role;
-    }
-
-
-    @Override
-    public String getArcRole()
-    {
-        return arcRole;
-    }
-
-
-    @Override
-    public void setArcRole(String arcRole)
-    {
-        this.arcRole = arcRole;
-    }
-
-
-    @Override
-    public String getTitle()
-    {
-        return title;
-    }
-
-
-    @Override
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-
 
     @Override
     public T getTarget()
@@ -163,7 +103,7 @@ public class CachedReference<T> implements IXlinkReference<T>
         
         // also try to fetch using role URI as unique ID of the object
         if (value == null && role != null)
-            value = fetchTarget(role);       
+            value = fetchTarget(role);
     }
     
     

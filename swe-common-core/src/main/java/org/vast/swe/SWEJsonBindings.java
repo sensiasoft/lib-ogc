@@ -1662,7 +1662,19 @@ public class SWEJsonBindings extends AbstractBindings
     }
     
     
+    public JsonReader beginObjectWithTypeOrLink(JsonReader reader) throws IOException
+    {
+        return beginObjectWithType(reader, true);
+    }
+    
+    
     public JsonReader beginObjectWithType(JsonReader reader) throws IOException
+    {
+        return beginObjectWithType(reader, false);
+    }
+    
+    
+    protected JsonReader beginObjectWithType(JsonReader reader, boolean linkAllowed) throws IOException
     {
         if (reader.peek() == JsonToken.BEGIN_OBJECT)
             reader.beginObject();
@@ -1678,9 +1690,15 @@ public class SWEJsonBindings extends AbstractBindings
                     ((JsonReaderWithBuffer)reader).startReplay();
                 return reader;
             }
+            else if (linkAllowed && "href".equals(propName))
+            {
+                if (bufferedReaderCreated)
+                    ((JsonReaderWithBuffer)reader).startReplay();
+                return reader;
+            }
             else
             {
-                if (!enforceTypeFirst)
+                if (linkAllowed || !enforceTypeFirst)
                 {
                     if (!bufferedReaderCreated)
                     {

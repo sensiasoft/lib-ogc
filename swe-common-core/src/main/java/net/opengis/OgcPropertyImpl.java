@@ -16,22 +16,17 @@ package net.opengis;
 
 import java.io.IOException;
 import java.io.Serializable;
+import org.vast.ogc.xlink.SimpleLink;
 import org.vast.util.Asserts;
-import org.vast.util.ResolveException;
 
 
-public class OgcPropertyImpl<ValueType extends Serializable> implements OgcProperty<ValueType>
+public class OgcPropertyImpl<T extends Serializable> extends SimpleLink<T> implements OgcProperty<T>
 {
     private static final long serialVersionUID = -4533173517189205779L;
-    private static final String MEDIA_TYPE_PREFIX = "media:";
     
-    protected ValueType value;
     protected String name;
-    protected String title;
-    protected String href;
-    protected String role;
-    protected String arcRole;
     protected String nilReason;
+    protected T value;
     protected transient HrefResolver hrefResolver;
     
     
@@ -40,13 +35,13 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
     }
     
     
-    public OgcPropertyImpl(ValueType value)
+    public OgcPropertyImpl(T value)
     {
         this.value = value;
     }
     
     
-    public OgcPropertyImpl(String name, ValueType value)
+    public OgcPropertyImpl(String name, T value)
     {
         this(value);
         this.name = name;
@@ -54,15 +49,15 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
     
     
     @Override
-    public OgcPropertyImpl<ValueType> copy()
+    public OgcPropertyImpl<T> copy()
     {
-        OgcPropertyImpl<ValueType> newProp = new OgcPropertyImpl<>();
+        OgcPropertyImpl<T> newProp = new OgcPropertyImpl<>();
         copyTo(newProp);
         return newProp;
     }
     
     
-    public void copyTo(OgcPropertyImpl<ValueType> other)
+    public void copyTo(OgcPropertyImpl<T> other)
     {        
         other.name = this.name;
         other.href = this.href;
@@ -72,7 +67,7 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
         other.hrefResolver = this.hrefResolver;
         
         if (this.value != null && this.value instanceof HasCopy)
-            other.setValue((ValueType)((HasCopy)this.value).copy());
+            other.setValue((T)((HasCopy)this.value).copy());
         else
             other.value = this.value;
     }
@@ -90,74 +85,12 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
     {
         this.name = name;
     }
-
-
-    @Override
-    public String getTitle()
-    {
-        return title;
-    }
-
-
-    @Override
-    public void setTitle(String title)
-    {
-        this.title = title;        
-    }
-
-
-    @Override
-    public String getHref()
-    {
-        return href;
-    }
-
-
-    @Override
-    public void setHref(String href)
-    {
-        //if (value != null)
-        //    throw new IllegalStateException("Attempting to set xlink:href on property that already has a value");
-        
-        this.href = href;
-    }
     
     
     @Override
     public boolean hasHref()
     {
         return href != null;
-    }
-
-
-    @Override
-    public String getRole()
-    {
-        return role;
-    }
-
-
-    @Override
-    public void setRole(String role)
-    {
-        this.role = role;
-    }
-    
-    
-    @Override
-    public String getArcRole()
-    {
-        // in case arcrole property is used to store media type
-        if (arcRole != null && !arcRole.startsWith(MEDIA_TYPE_PREFIX))
-            return arcRole;
-        return null;
-    }
-    
-    
-    @Override
-    public void setArcRole(String role)
-    {
-        this.arcRole = role;
     }
     
     
@@ -173,40 +106,6 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
     {
         this.nilReason = nilReason;
     }
-
-
-    @Override
-    public String getMediaType()
-    {
-        // if arcrole property contains media type
-        if (arcRole != null && arcRole.startsWith(MEDIA_TYPE_PREFIX))
-            return arcRole.substring(MEDIA_TYPE_PREFIX.length());
-        return null;
-    }
-
-
-    @Override
-    public void setMediaType(String mediaType)
-    {
-        // use arcrole property to store media type
-        this.arcRole = MEDIA_TYPE_PREFIX + mediaType;
-    }
-
-
-    @Override
-    public ValueType getValue()
-    {
-        try
-        {
-            if (hasHref() && !hasValue() && hrefResolver != null)
-                resolveHref();
-            return value;
-        }
-        catch (IOException e)
-        {
-            throw new ResolveException("Cannot load property value from href", e);
-        }
-    }
     
     
     @Override
@@ -214,23 +113,28 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
     {
         return value != null;
     }
+
+
+    @Override
+    public T getValue()
+    {
+        return value;
+    }
     
     
     @Override
-    public void setValue(ValueType value)
+    public void setValue(T value)
     {
         this.value = value;
     }
     
     
-    @Override
     public void setHrefResolver(HrefResolver hrefResolver)
     {
         this.hrefResolver = hrefResolver;
     }
 
 
-    @Override
     public boolean resolveHref() throws IOException
     {
         if (hasValue())
@@ -245,10 +149,33 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
         
         return ret;
     }
+
+
+    @Override
+    public String getArcRole()
+    {
+        return null;
+    }
+
+
+    @Override
+    public String getTargetUID()
+    {
+        // use arcrole property to store UID since it's not used in this context
+        return arcRole;
+    }
+
+
+    @Override
+    public void setTargetUID(String targetUID)
+    {
+        // use arcrole property to store UID since it's not used in this context
+        setArcRole(targetUID);
+    }
     
     
     @Override
-    public ValueType getTarget()
+    public T getTarget()
     {
         return getValue();
     }

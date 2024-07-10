@@ -24,6 +24,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import org.vast.ogc.xlink.IXlinkReference;
 
 
 /**
@@ -190,6 +191,12 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     protected void readPropertyAttributes(Map<String, String> attrMap, OgcProperty<?> prop) throws XMLStreamException
     {
         prop.setName(attrMap.get("name"));
+        readXlinkAttributes(attrMap, prop);
+    }
+    
+    
+    protected void readXlinkAttributes(Map<String, String> attrMap, IXlinkReference<?> prop) throws XMLStreamException
+    {
         prop.setTitle(attrMap.get("title"));
         prop.setHref(attrMap.get("href"));
         prop.setRole(attrMap.get("role"));
@@ -206,11 +213,19 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     protected void writePropertyAttributes(XMLStreamWriter writer, OgcProperty<?> prop) throws XMLStreamException
     {
         String val;
-        String xlinkPrefix = nsContext.getPrefix(XLINK_NS_URI);
         
         val = prop.getName();
         if (val != null)
             writer.writeAttribute("name", val);
+        
+        writeXlinkAttributes(writer, prop);
+    }
+    
+    
+    protected void writeXlinkAttributes(XMLStreamWriter writer, IXlinkReference<?> prop) throws XMLStreamException
+    {
+        String val;
+        String xlinkPrefix = nsContext.getPrefix(XLINK_NS_URI);
         
         val = prop.getTitle();
         if (val != null)

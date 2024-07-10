@@ -23,9 +23,15 @@
 
 package org.vast.ogc.xlink;
 
+import java.io.IOException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
+import net.opengis.OgcProperty;
 
 
 public class XlinkUtils
@@ -58,5 +64,111 @@ public class XlinkUtils
         
         if (refObj.getArcRole() != null && !refObj.getArcRole().isEmpty())
             dom.setAttributeValue(propertyElt, "xlink:arcrole", refObj.getArcRole());
+    }
+    
+    
+    /**
+     * Write link to JSON using 
+     * @param writer
+     * @param link
+     * @throws IOException
+     */
+    public static void writeLink(JsonWriter writer, IXlinkReference<?> link) throws IOException
+    {
+        if (link.getHref() != null)
+        {
+            writer.beginObject();
+
+            if (link instanceof OgcProperty)
+            {
+                var name = ((OgcProperty<?>)link).getName();
+                if (name != null)
+                    writer.name("name").value(name);
+            }
+
+            if (link.getHref() != null)
+                writer.name("href").value(link.getHref());
+            
+            if (link.getArcRole() != null)
+                writer.name("rel").value(link.getArcRole());
+            
+            if (link.getTitle() != null)
+                writer.name("title").value(link.getTitle());
+            
+            if (link.getTargetUID() != null)
+                writer.name("uid").value(link.getTargetUID());
+            
+            if (link.getMediaType() != null)
+                writer.name("type").value(link.getMediaType());
+            
+            if (link.getRole() != null)
+                writer.name("rt").value(link.getRole());
+            
+            if (link.getTargetInterface() != null)
+                writer.name("if").value(link.getTargetInterface());
+            
+            writer.endObject();
+        }
+    }
+    
+    
+    public static <R extends IXlinkReference<?>> R readLink(JsonReader reader, R link) throws IOException
+    {
+        if (reader.peek() == JsonToken.BEGIN_OBJECT)
+            reader.beginObject();
+        
+        while (reader.hasNext())
+        {
+            String name = reader.nextName();
+            
+            if ("name".equals(name) && link instanceof OgcProperty)
+                ((OgcProperty<?>)link).setName(reader.nextString());
+            else if ("href".equals(name))
+                link.setHref(reader.nextString());
+            else if ("rel".equals(name))
+                link.setArcRole(reader.nextString());
+            else if ("title".equals(name))
+                link.setTitle(reader.nextString());
+            else if ("uid".equals(name))
+                link.setTargetUID(reader.nextString());
+            else if ("type".equals(name))
+                link.setMediaType(reader.nextString());
+            else if ("rt".equals(name))
+                link.setRole(reader.nextString());
+            else if ("if".equals(name))
+                link.setTargetInterface(reader.nextString());
+            else
+                reader.skipValue();
+        }
+        reader.endObject();
+        
+        return link;
+    }
+    
+    
+    public static <R extends IXlinkReference<?>> R readLink(JsonObject obj, R link)
+    {
+        if (obj.has("href"))
+            link.setHref(obj.get("href").getAsString());
+        
+        if (obj.has("rel"))
+            link.setArcRole(obj.get("rel").getAsString());
+        
+        if (obj.has("title"))
+            link.setTitle(obj.get("title").getAsString());
+        
+        if (obj.has("uid"))
+            link.setTargetUID(obj.get("uid").getAsString());
+        
+        if (obj.has("type"))
+            link.setMediaType(obj.get("type").getAsString());
+            
+        if (obj.has("rt"))
+            link.setRole(obj.get("rt").getAsString());
+        
+        if (obj.has("if"))
+            link.setTargetInterface(obj.get("if").getAsString());
+        
+        return link;
     }
 }

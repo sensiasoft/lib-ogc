@@ -20,7 +20,9 @@ import org.vast.json.JsonInliningWriter;
 import org.vast.json.JsonReaderWithBuffer;
 import org.vast.ogc.geopose.GeoPoseJsonBindings;
 import org.vast.ogc.geopose.Pose;
+import org.vast.ogc.xlink.ExternalLink;
 import org.vast.ogc.xlink.IXlinkReference;
+import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.swe.SWEConstants;
 import org.vast.util.Asserts;
 import org.vast.util.DateTimeFormat;
@@ -32,7 +34,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import gnu.trove.list.array.TDoubleArrayList;
-import net.opengis.OgcProperty;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
@@ -42,9 +43,7 @@ import net.opengis.gml.v32.LinearRing;
 import net.opengis.gml.v32.Measure;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Polygon;
-import net.opengis.gml.v32.Reference;
 import net.opengis.gml.v32.impl.GMLFactory;
-import net.opengis.gml.v32.impl.ReferenceImpl;
 
 
 /**
@@ -227,7 +226,7 @@ public class GeoJsonBindings
                 if (link.getHref() != null)
                 {
                     writer.name(propName.getLocalPart() + "@link");
-                    writeLink(writer, (IXlinkReference<?>)val);
+                    XlinkUtils.writeLink(writer, (IXlinkReference<?>)val);
                 }
             }
             else if (val instanceof Measure)
@@ -300,26 +299,7 @@ public class GeoJsonBindings
     
     public void writeLink(JsonWriter writer, IXlinkReference<?> link) throws IOException
     {
-        if (link.getHref() != null) 
-        {
-            writer.beginObject();
-            writer.name("href").value(link.getHref());
-            if (link.getTitle() != null)
-                writer.name("title").value(link.getTitle());
-            if (link.getRole() != null)
-                writer.name("rt").value(link.getRole());
-            
-            if (link instanceof OgcProperty)
-            {
-                if (((OgcProperty<?>) link).getName() != null)
-                    writer.name("uid").value(((Reference) link).getName());
-                
-                if (((OgcProperty<?>) link).getMediaType() != null)
-                    writer.name("type").value(((Reference) link).getMediaType());
-            }
-            
-            writer.endObject();
-        }
+        XlinkUtils.writeLink(writer, link);
     }
     
     
@@ -715,22 +695,9 @@ public class GeoJsonBindings
             // link case
             if (obj.has("href")) 
             {
-                var href = obj.get("href").getAsString();
-                var ref = new ReferenceImpl(href);
+                var ref = XlinkUtils.readLink(obj, new ExternalLink());
                 name = name.replace("@link", ""); // remove property name @link suffix
                 f.setProperty(name, ref);
-                
-                if (obj.has("title"))
-                    ref.setTitle(obj.get("title").getAsString());
-                
-                if (obj.has("uid"))
-                    ref.setName(obj.get("uid").getAsString());
-                
-                if (obj.has("type"))
-                    ref.setMediaType(obj.get("type").getAsString());
-                    
-                if (obj.has("rt"))
-                    ref.setRole(obj.get("rt").getAsString());
             }
             
             // measure case

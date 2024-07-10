@@ -158,8 +158,8 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
         checkName(name);
         OgcPropertyImpl<ValueType> prop = new OgcPropertyImpl<>();
         prop.name = name;
-        prop.href = href;
-        prop.role = role;
+        prop.setHref(href);
+        prop.setRole(role);
         items.add(prop);
         nameMap.put(name, prop);
         return prop;

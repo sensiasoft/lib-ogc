@@ -238,4 +238,14 @@ public class JsonReaderWithBuffer extends JsonReader
             delegate.skipValue();
     }
 
+
+    @Override
+    public String getPath()
+    {
+        if (tempReader != null)
+            return tempReader.getPath();
+        else
+            return delegate.getPath();
+    }
+
 }

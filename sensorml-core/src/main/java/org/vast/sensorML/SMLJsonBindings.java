@@ -14,6 +14,7 @@ import org.vast.ogc.geopose.GeoPoseJsonBindings;
 import org.vast.ogc.geopose.Pose;
 import org.vast.ogc.gml.GMLUtils;
 import org.vast.ogc.gml.GeoJsonBindings;
+import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.swe.SWEJsonBindings;
 import org.vast.util.NumberUtils;
 import org.vast.util.TimeExtent;
@@ -71,8 +72,6 @@ import net.opengis.swe.v20.DataComponent;
 @SuppressWarnings("javadoc")
 public class SMLJsonBindings
 {
-    static final String SML_JSON_MEDIA_TYPE = "application/sml+json";
-    
     protected Factory factory;
     protected net.opengis.gml.v32.Factory gmlFactory;
     protected org.isotc211.v2005.gmd.Factory isoFactory;
@@ -518,7 +517,7 @@ public class SMLJsonBindings
             }
             else if ("link".equals(name))
             {
-                readLink(reader, prop);
+                XlinkUtils.readLink(reader, prop);
             }
             else
                 reader.skipValue();
@@ -664,18 +663,9 @@ public class SMLJsonBindings
             }
             else if ("link".equals(name))
             {
-                var link = gmlFactory.newReference();
-                reader.beginObject();
-                while (reader.hasNext())
-                {
-                    name = reader.nextName();
-                    if (!readLinkProperties(reader, link, name))
-                        reader.skipValue();
-                }
-                reader.endObject();
-                
+                var link = XlinkUtils.readLink(reader, gmlFactory.newReference());
                 bean.setLinkage(link.getHref());
-                bean.setApplicationProfile(link.getRemoteSchema());
+                bean.setApplicationProfile(link.getMediaType());
             }
             else
                 reader.skipValue();
@@ -815,8 +805,8 @@ public class SMLJsonBindings
         
         else if ("typeOf".equals(name))
         {
-            var ref = gmlFactory.newReference();
-            readLink(reader, ref);
+            var ref = XlinkUtils.readLink(reader, gmlFactory.newReference());
+            // TODO ref.setHrefResolver(null);
             bean.setTypeOf(ref);
         }
         
@@ -849,7 +839,7 @@ public class SMLJsonBindings
             reader.beginArray();
             while (reader.hasNext())
             {
-                OgcProperty<AbstractFeature> link = readLink(reader);
+                var link = XlinkUtils.readLink(reader, new OgcPropertyImpl<AbstractFeature>());
                 list.getFeatureList().add(link);
             }
             reader.endArray();
@@ -1150,10 +1140,7 @@ public class SMLJsonBindings
     {
         if ("attachedTo".equals(name))
         {
-            var link = readLink(reader);
-            var ref = gmlFactory.newReference();
-            ref.setHref(link.getHref());
-            ref.setTitle(link.getTitle());
+            var ref = XlinkUtils.readLink(reader, gmlFactory.newReference());
             bean.setAttachedTo(ref);
         }
         
@@ -1328,19 +1315,17 @@ public class SMLJsonBindings
     
     protected OgcProperty<AbstractProcess> readComponent(JsonReader reader, boolean nameRequired) throws IOException
     {
-        OgcProperty<AbstractProcess> prop = null;
-        reader = beginObjectWithType(reader);
-        var type = reader.nextString();
+        reader = beginObjectWithTypeOrLink(reader);
+        var prop = new OgcPropertyImpl<AbstractProcess>();
         
-        if ("Link".equals(type))
+        if (reader.getPath().endsWith("href"))
         {
-            @SuppressWarnings({ "rawtypes", "unchecked" })
-            var link = (OgcProperty<AbstractProcess>)(OgcProperty)readLink(reader);
-            prop = link;
+            prop.setHref(reader.nextString());
+            XlinkUtils.readLink(reader, prop);
         }
         else
         {
-            prop = new OgcPropertyImpl<AbstractProcess>();
+            var type = reader.nextString();
             var comp = readAbstractProcess(reader, type);
             prop.setValue(comp);
             prop.setName(propName);
@@ -1492,8 +1477,7 @@ public class SMLJsonBindings
     {
         if ("system".equals(name))
         {
-            var ref = gmlFactory.newReference();
-            readLink(reader, ref);
+            var ref = XlinkUtils.readLink(reader, gmlFactory.newReference());
             bean.setSystemRef(ref);
         }
         
@@ -1515,54 +1499,9 @@ public class SMLJsonBindings
     }
     
     
-    protected <T> OgcProperty<T> readLink(JsonReader reader) throws IOException
+    protected JsonReader beginObjectWithTypeOrLink(JsonReader reader) throws IOException
     {
-        @SuppressWarnings("unchecked")
-        var bean = (OgcProperty<T>)new OgcPropertyImpl<>();
-        readLink(reader, bean);
-        return bean;
-    }
-    
-    
-    protected void readLink(JsonReader reader, OgcProperty<?> bean) throws IOException
-    {
-        if (reader.peek() == JsonToken.BEGIN_OBJECT)
-            reader.beginObject();
-        
-        while (reader.hasNext())
-        {
-            var name = reader.nextName();
-            
-            if (!readLinkProperties(reader, bean, name))
-                reader.skipValue();
-        }
-        reader.endObject();
-    }
-    
-    
-    protected boolean readLinkProperties(JsonReader reader, OgcProperty<?> bean, String name) throws IOException
-    {
-        if ("href".equals(name))
-        {
-            bean.setHref(reader.nextString());
-        }
-        else if ("title".equals(name))
-        {
-            bean.setTitle(reader.nextString());
-        }
-        else if ("type".equals(name))
-        {
-            bean.setMediaType(reader.nextString());
-        }
-        else if ("uid".equals(name))
-        {
-            // store uid on name property
-            bean.setName(reader.nextString());
-        }
-        else
-            return false;
-        
-        return true;
+        return sweBindings.beginObjectWithTypeOrLink(reader);
     }
     
     
@@ -1582,7 +1521,6 @@ public class SMLJsonBindings
     {
         sweBindings.writeTypeAndName(writer, type, name);
     }
-    
     
     
     /********************
@@ -1725,7 +1663,7 @@ public class SMLJsonBindings
         writeGmlProperties(writer, bean);
         
         writer.name("system");
-        writeLink(writer, bean.getSystemRef(), propName, SML_JSON_MEDIA_TYPE, false);
+        XlinkUtils.writeLink(writer, bean.getSystemRef());
         
         if (bean.isSetPosition())
         {
@@ -1979,7 +1917,7 @@ public class SMLJsonBindings
         if (prop.hasHref())
         {
             writer.name("link");
-            writeLink(writer, prop, null, null, false);
+            XlinkUtils.writeLink(writer, prop);
         }
         else if (prop.hasValue())
         {
@@ -2099,35 +2037,6 @@ public class SMLJsonBindings
     }
     
     
-    protected void writeLink(JsonWriter writer, OgcProperty<?> bean, String rolePropName, String defaultMediaType, boolean includeType) throws IOException
-    {
-        writer.beginObject();
-        
-        if (includeType)
-            writer.name("type").value("Link");
-        
-        if (bean.getName() != null)
-            writer.name("uid").value(bean.getName());
-        
-        if (bean.hasHref())
-            writer.name("href").value(bean.getHref());
-        
-        if (bean.getTitle() != null)
-            writer.name("title").value(bean.getTitle());
-        
-        if (bean.getRole() != null && rolePropName != null)
-            writer.name(rolePropName).value(bean.getRole());
-        
-        var mediaType = bean.getMediaType();
-        if (mediaType == null)
-            mediaType = defaultMediaType;
-        if (mediaType != null)
-            writer.name("type").value(mediaType);
-        
-        writer.endObject();
-    }
-    
-    
     protected void writeEvents(JsonWriter writer, DescribedObject bean) throws IOException
     {
         
@@ -2139,7 +2048,7 @@ public class SMLJsonBindings
         if (bean.isSetTypeOf())
         {
             writer.name("typeOf");
-            writeLink(writer, bean.getTypeOf(), "uid", SML_JSON_MEDIA_TYPE, false);
+            XlinkUtils.writeLink(writer, bean.getTypeOf());
         }
     }
     
@@ -2277,7 +2186,7 @@ public class SMLJsonBindings
         for (var item: bean.getFeatureList().getProperties())
         {
             if (item.hasHref())
-                writeLink(writer, item, null, null, false);
+                XlinkUtils.writeLink(writer, item);
         }
         writer.endArray();
     }
@@ -2394,7 +2303,7 @@ public class SMLJsonBindings
         if (bean.isSetAttachedTo())
         {
             writer.name("attachedTo");
-            writeLink(writer, bean.getAttachedTo(), "uid", SML_JSON_MEDIA_TYPE, false);
+            XlinkUtils.writeLink(writer, bean.getAttachedTo());
         }
     }
     
@@ -2466,7 +2375,7 @@ public class SMLJsonBindings
             if (item.hasValue())
                 writeDescribedObject(writer, item.getValue(), item.getName());
             else if (item.hasHref())
-                writeLink(writer, item, "uid", null, true);
+                XlinkUtils.writeLink(writer, item);
         }
         writer.endArray();
     }

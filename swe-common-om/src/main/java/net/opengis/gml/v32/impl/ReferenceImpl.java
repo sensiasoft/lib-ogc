@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package net.opengis.gml.v32.impl;
 
 import java.io.Serializable;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.gml.v32.Reference;
 
 
@@ -23,9 +24,10 @@ import net.opengis.gml.v32.Reference;
  *
  * This is a complex type.
  */
-public class ReferenceImpl extends net.opengis.OgcPropertyImpl<Serializable> implements Reference
+public class ReferenceImpl extends OgcPropertyImpl<Serializable> implements Reference
 {
     private static final long serialVersionUID = 8584947819891402530L;
+    
     protected Boolean owns;
     protected String remoteSchema;
     
@@ -39,8 +41,8 @@ public class ReferenceImpl extends net.opengis.OgcPropertyImpl<Serializable> imp
     {
         this.href = href;
     }
-    
-    
+
+
     /**
      * Gets the owns property
      */
@@ -108,5 +110,19 @@ public class ReferenceImpl extends net.opengis.OgcPropertyImpl<Serializable> imp
     public void setRemoteSchema(String remoteSchema)
     {
         this.remoteSchema = remoteSchema;
+    }
+    
+    
+    @Override
+    public String getMediaType()
+    {
+        return getRemoteSchema();
+    }
+
+
+    @Override
+    public void setMediaType(String mediaType)
+    {
+        setRemoteSchema(mediaType);
     }
 }

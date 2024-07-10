@@ -19,10 +19,10 @@ import java.io.Serializable;
 import org.vast.ogc.xlink.IXlinkReference;
 
 
-public interface OgcProperty<ValueType> extends IXlinkReference<ValueType>, Serializable
+public interface OgcProperty<T> extends IXlinkReference<T>, Serializable
 {
 
-    public OgcProperty<ValueType> copy();
+    public OgcProperty<T> copy();
     
     
     public String getName();
@@ -31,31 +31,19 @@ public interface OgcProperty<ValueType> extends IXlinkReference<ValueType>, Seri
     public void setName(String name);
     
     
-    public String getTitle();
-
-
-    public void setTitle(String title);
-    
-    
     public String getNilReason();
 
 
     public void setNilReason(String nilReason);
-    
-    
-    public String getMediaType();
 
 
-    public void setMediaType(String mediaType);
-
-
-    public ValueType getValue();
+    public T getValue();
     
     
     public boolean hasValue();
 
 
-    public void setValue(ValueType value);
+    public void setValue(T value);
     
     
     public boolean hasHref();

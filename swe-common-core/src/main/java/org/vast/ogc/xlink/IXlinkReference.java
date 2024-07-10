@@ -26,14 +26,15 @@ package org.vast.ogc.xlink;
 
 /**
  * <p>
- * Interface for an xlink reference
- * @param <TargetType> Type of the link target object
+ * Interface for an xlink reference. It is used to implement all types of links
+ * (e.g. web linking in JSON)
+ * @param <T> Type of the link target object
  * </p>
  *
  * @author Alex Robin
  * @since Sep 28, 2012
  * */
-public interface IXlinkReference<TargetType>
+public interface IXlinkReference<T>
 {
     public String getHref();
     
@@ -51,5 +52,17 @@ public interface IXlinkReference<TargetType>
 
     public void setTitle(String title);
     
-    public TargetType getTarget();
+    public String getMediaType();
+
+    public void setMediaType(String mediaType);
+    
+    public String getTargetUID();
+
+    public void setTargetUID(String uid);
+    
+    public String getTargetInterface();
+
+    public void setTargetInterface(String type);
+    
+    public T getTarget();
 }
