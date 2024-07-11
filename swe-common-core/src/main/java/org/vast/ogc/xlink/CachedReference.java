@@ -43,7 +43,7 @@ import org.vast.util.ResolveException;
  */
 public class CachedReference<T> extends SimpleLink<T> implements IXlinkReference<T>
 {
-    protected T value;
+    protected transient T value;
     protected transient IReferenceResolver<? extends T> resolver;
 
 
@@ -68,6 +68,29 @@ public class CachedReference<T> extends SimpleLink<T> implements IXlinkReference
     {
         setHref(href);
         setResolver(resolver);
+    }
+
+
+    @Override
+    public String getArcRole()
+    {
+        return null;
+    }
+
+
+    @Override
+    public String getTargetUID()
+    {
+        // use arcrole property to store UID
+        return arcRole;
+    }
+
+
+    @Override
+    public void setTargetUID(String targetUID)
+    {
+        // use arcrole property to store UID
+        this.arcRole = targetUID;
     }
     
 
@@ -101,9 +124,9 @@ public class CachedReference<T> extends SimpleLink<T> implements IXlinkReference
         
         value = fetchTarget(href);
         
-        // also try to fetch using role URI as unique ID of the object
-        if (value == null && role != null)
-            value = fetchTarget(role);
+        // also try to fetch using unique ID of the object
+        if (value == null && getTargetUID() != null)
+            value = fetchTarget(getTargetUID());
     }
     
     

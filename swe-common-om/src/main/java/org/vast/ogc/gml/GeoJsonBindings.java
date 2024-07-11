@@ -226,7 +226,7 @@ public class GeoJsonBindings
                 if (link.getHref() != null)
                 {
                     writer.name(propName.getLocalPart() + "@link");
-                    XlinkUtils.writeLink(writer, (IXlinkReference<?>)val);
+                    writeLink(writer, (IXlinkReference<?>)val);
                 }
             }
             else if (val instanceof Measure)
