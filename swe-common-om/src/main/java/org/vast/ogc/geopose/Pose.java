@@ -16,6 +16,7 @@ package org.vast.ogc.geopose;
 
 import java.io.Serializable;
 import org.vast.ogc.geopose.PoseImpl.PoseBuilder;
+import net.opengis.gml.v32.Point;
 
 
 /**
@@ -106,6 +107,13 @@ public interface Pose extends Serializable
      * @see #getOrientation() for the order and units of the coordinates
      */
     public void setOrientation(double[] coords);
+    
+    
+    /**
+     * Convert pose to a geographic location when possible
+     * @return A point object with coordinates expressed in a geographic coordinate system
+     */
+    public Point toLocation();
     
     
     /**

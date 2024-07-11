@@ -331,6 +331,8 @@ public class PhysicalComponentImpl extends AbstractProcessImpl implements Physic
             var pos = positionList.get(0);
             if (pos instanceof AbstractGeometry)
                 return (AbstractGeometry)pos;
+            else if (pos instanceof Pose)
+                return ((Pose)pos).toLocation();
         }
         
         return super.getGeometry();

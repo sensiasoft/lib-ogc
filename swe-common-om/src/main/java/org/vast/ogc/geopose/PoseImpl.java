@@ -17,6 +17,8 @@ package org.vast.ogc.geopose;
 import org.vast.swe.SWEConstants;
 import org.vast.util.Asserts;
 import org.vast.util.BaseBuilder;
+import net.opengis.gml.v32.Point;
+import net.opengis.gml.v32.impl.GMLFactory;
 
 
 public class PoseImpl implements Pose
@@ -91,6 +93,20 @@ public class PoseImpl implements Pose
     {
         return orientation;
     }
+    
+    
+    public Point toLocation()
+    {
+        if (SWEConstants.REF_FRAME_CRS84h.equals(refFrame) ||
+            SWEConstants.REF_FRAME_CRS84.equals(refFrame))
+        {
+            var p = new GMLFactory(true).newPoint(position);
+            p.setSrsName(refFrame);
+            return p;
+        }
+        else
+            return null;
+    }
 
 
     @Override
@@ -103,7 +119,7 @@ public class PoseImpl implements Pose
     
     public static class PoseBuilder extends BaseBuilder<Pose>
     {
-        PoseBuilder()
+        public PoseBuilder()
         {
             this.instance = new PoseImpl();
         }
