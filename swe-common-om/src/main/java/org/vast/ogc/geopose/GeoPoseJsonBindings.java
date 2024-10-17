@@ -37,7 +37,7 @@ public class GeoPoseJsonBindings
     
     public void writeGeoPose(JsonWriter writer, Pose pose) throws IOException
     {
-        Asserts.checkArgument(isGeoPose(pose), "Not a geopose");
+        Asserts.checkArgument(isGeoPose(pose), "Not a GeoPose");
         writePose(writer, pose);
     }
     
@@ -51,7 +51,7 @@ public class GeoPoseJsonBindings
     }
     
     
-    public void writePose(JsonWriter writer, Pose pose, String typeString) throws IOException
+    protected void writePose(JsonWriter writer, Pose pose, String typeString) throws IOException
     {
         writer.beginObject();
         
@@ -78,14 +78,23 @@ public class GeoPoseJsonBindings
             var coords = pose.getPosition();
             writer.name("position").beginObject();
             
-            if (SWEConstants.REF_FRAME_CRS84.equals(pose.getReferenceFrame()) ||
-                SWEConstants.REF_FRAME_4326.equals(pose.getReferenceFrame()))
+            if (SWEConstants.REF_FRAME_CRS84.equals(pose.getReferenceFrame()))
+            {
+                writer.name("lat").value(coords[1]);
+                writer.name("lon").value(coords[0]);
+            }
+            else if (SWEConstants.REF_FRAME_4326.equals(pose.getReferenceFrame()))
             {
                 writer.name("lat").value(coords[0]);
                 writer.name("lon").value(coords[1]);
             }
-            else if (SWEConstants.REF_FRAME_CRS84h.equals(pose.getReferenceFrame()) ||
-                     SWEConstants.REF_FRAME_4979.equals(pose.getReferenceFrame()))
+            else if (SWEConstants.REF_FRAME_CRS84h.equals(pose.getReferenceFrame()))
+            {
+                writer.name("lat").value(coords[1]);
+                writer.name("lon").value(coords[0]);
+                writer.name("h").value(coords[2]);
+            }
+            else if (SWEConstants.REF_FRAME_4979.equals(pose.getReferenceFrame()))
             {
                 writer.name("lat").value(coords[0]);
                 writer.name("lon").value(coords[1]);
@@ -158,11 +167,11 @@ public class GeoPoseJsonBindings
                     name = reader.nextName();
                     if ("lat".equals(name))
                     {
-                        coords[0] = reader.nextDouble();
+                        coords[1] = reader.nextDouble();
                         isGeo = true;
                     }
                     else if ("lon".equals(name))
-                        coords[1] = reader.nextDouble();
+                        coords[0] = reader.nextDouble();
                     else if ("h".equals(name))
                         coords[2] = reader.nextDouble();
                     else if ("x".equals(name))
@@ -232,7 +241,7 @@ public class GeoPoseJsonBindings
         reader.endObject();
         
         // set default CRS
-        if (isGeo && pose.getReferenceFrame() == null)
+        if (isGeo)
         {
             int numDims = pose.getPosition().length;
             if (numDims == 2)
@@ -248,7 +257,10 @@ public class GeoPoseJsonBindings
     public boolean isGeoPose(Pose pose)
     {
         var crs = pose.getReferenceFrame();
-        var isCompatibleCrs = SWEConstants.REF_FRAME_CRS84.equals(crs) || SWEConstants.REF_FRAME_CRS84h.equals(crs);
+        var isCompatibleCrs = SWEConstants.REF_FRAME_CRS84.equals(crs) || 
+                              SWEConstants.REF_FRAME_CRS84h.equals(crs) ||
+                              SWEConstants.REF_FRAME_4326.equals(crs) ||
+                              SWEConstants.REF_FRAME_4979.equals(crs);
         
         //var ltp = pose.getLTPReferenceFrame();
         return isCompatibleCrs;// && SWEConstants.REF_FRAME_ENU.equals(ltp);

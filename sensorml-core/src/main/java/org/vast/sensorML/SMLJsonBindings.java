@@ -12,6 +12,7 @@ import org.isotc211.v2005.gmd.impl.CIOnlineResourceImpl;
 import org.vast.data.SWEFactory;
 import org.vast.ogc.geopose.GeoPoseJsonBindings;
 import org.vast.ogc.geopose.Pose;
+import org.vast.ogc.geopose.PoseImpl;
 import org.vast.ogc.gml.GMLUtils;
 import org.vast.ogc.gml.GeoJsonBindings;
 import org.vast.ogc.xlink.XlinkUtils;
@@ -67,6 +68,8 @@ import net.opengis.swe.v20.AllowedTimes;
 import net.opengis.swe.v20.AllowedTokens;
 import net.opengis.swe.v20.AllowedValues;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.Vector;
 
 
 @SuppressWarnings("javadoc")
@@ -2361,6 +2364,68 @@ public class SMLJsonBindings
         {
             geoposeBindings.writePose(writer, (Pose)bean);
         }
+        
+        // for backward compatibility
+        else if (bean instanceof Vector)
+        {
+            // Vector deprecated, use Point format for position
+            writeVectorAsPoint(writer, (Vector)bean);
+        }
+        else if (bean instanceof DataRecord)
+        {
+            // DataRecord including location and orientation deprecated, use Pose format
+            writeRecordAsPose(writer, (DataRecord)bean);
+        }
+    }
+    
+
+    protected void writeVectorAsPoint(JsonWriter writer, Vector bean) throws IOException
+    {
+        int dims = bean.getNumCoordinates();
+        double[] coords = new double[dims];
+
+        for(int i = 0; i < dims; i++)
+            coords[i] = bean.getCoordinateList().get(i).getData().getDoubleValue();
+        
+        var point = gmlFactory.newPoint();
+        point.setSrsName(bean.getReferenceFrame());
+        point.setSrsDimension(dims);
+        point.setPos(coords);
+
+        geojsonBindings.writePoint(writer, point);
+    }
+    
+
+    protected void writeRecordAsPose(JsonWriter writer, DataRecord rec) throws IOException
+    {
+        Vector location = (Vector)rec.getComponent("location");
+        Vector orientation = rec.getComponentIndex("orientation") < 0 ?
+            null : (Vector)rec.getComponent("orientation");
+        
+        var pose = new PoseImpl();
+        
+        // set position
+        int dims = location.getNumCoordinates();
+        double[] coords = new double[dims];
+        for(int i = 0; i < dims; i++)
+            coords[i] = location.getCoordinateList().get(i).getData().getDoubleValue();
+        pose.setPosition(coords);
+        pose.setReferenceFrame(location.getReferenceFrame());
+        
+        // set orientation
+        if (orientation != null)
+        {
+            dims = orientation.getNumCoordinates();
+            coords = new double[dims];
+            for(int i = 0; i < dims; i++)
+                coords[i] = orientation.getCoordinateList().get(i).getData().getDoubleValue();
+            pose.setOrientation(coords);
+            
+            if (!location.getReferenceFrame().equals(orientation.getReferenceFrame()))
+                pose.setLTPReferenceFrame(orientation.getReferenceFrame());
+        }
+        
+        geoposeBindings.writePose(writer, pose);
     }
     
     
