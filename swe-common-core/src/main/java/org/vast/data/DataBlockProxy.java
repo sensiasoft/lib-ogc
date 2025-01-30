@@ -22,6 +22,7 @@ import org.vast.cdm.common.CDMException;
 import org.vast.swe.SWEHelper;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.Time;
 
 
 /**
@@ -80,6 +81,10 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
         {
             wrap((DataBlock)args[0]);
             return null;
+        }
+        else if ("toString".equals(methodName))
+        {
+            return toString();
         }
         
         if (recordSchema.getData() == null)
@@ -198,10 +203,15 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
     
     protected void setFromInstant(DataBlock data, Instant ts)
     {
-        var seconds = ts.getEpochSecond();
-        var nanos = ts.getNano();
-        var t = (double)seconds + nanos/1e9;
-        data.setDoubleValue(t);
+        if (ts != null)
+        {
+            var seconds = ts.getEpochSecond();
+            var nanos = ts.getNano();
+            var t = (double)seconds + nanos/1e9;
+            data.setDoubleValue(t);
+        }
+        else
+            data.setDoubleValue(Double.NaN);
     }
 
 
@@ -209,5 +219,34 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
     public void wrap(DataBlock db)
     {
         recordSchema.setData(db);
+    }
+    
+    
+    @Override
+    public String toString()
+    {
+        var it = new ScalarIterator(recordSchema);
+        var sb = new StringBuilder();
+        while (it.hasNext())
+        {            
+            var c = it.next();
+            var dblk = c.getData();
+            
+            sb.append(c.getName()).append(": ");
+            
+            if (c instanceof Time)
+            {
+                if (!Double.isNaN(dblk.getDoubleValue()))
+                    sb.append(Instant.ofEpochMilli((long)(dblk.getDoubleValue()*1000)));
+                else
+                    sb.append("");
+            }
+            else
+                sb.append(dblk.getStringValue());
+            
+            sb.append('\n');
+        }
+        
+        return sb.toString();
     }
 }
