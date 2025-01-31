@@ -182,9 +182,12 @@ public class TextDataWriter extends AbstractDataWriter
         public void writeValue(DataBlock data, int index) throws IOException
         {
             String val = data.getStringValue(index);
-            if (collapseWhiteSpaces)
-                val = val.trim();
-            writer.write(val);
+            if (val != null)
+            {
+                if (collapseWhiteSpaces)
+                    val = val.trim();
+                writer.write(val);
+            }
         }
     }
     
