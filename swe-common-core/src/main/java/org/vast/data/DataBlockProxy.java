@@ -86,6 +86,11 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
         {
             return toString();
         }
+        else if (method.isDefault())
+        {
+            try { return InvocationHandler.invokeDefault(proxy, method, args); }
+            catch (Throwable e) { throw new RuntimeException(e); }
+        }
         
         if (recordSchema.getData() == null)
             throw new IllegalStateException("No datablock has been assigned");
