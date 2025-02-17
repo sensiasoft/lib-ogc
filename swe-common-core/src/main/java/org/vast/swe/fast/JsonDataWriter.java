@@ -343,6 +343,12 @@ public class JsonDataWriter extends AbstractDataWriter
         {
             this.eltName = eltName;
         }
+        
+        public RecordWriter(String eltName, boolean singleLine)
+        {
+            this.eltName = eltName;
+            this.onlyScalars = singleLine;
+        }
 
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -704,14 +710,14 @@ public class JsonDataWriter extends AbstractDataWriter
     @Override
     protected RecordProcessor getRecordProcessor(DataRecord record)
     {
-        return new RecordWriter(record.getName());
+        return new RecordWriter(record.getName(), false);
     }
 
 
     @Override
     protected RecordProcessor getVectorProcessor(Vector vect)
     {
-        return new RecordWriter(vect.getName());
+        return new RecordWriter(vect.getName(), true);
     }
 
 
