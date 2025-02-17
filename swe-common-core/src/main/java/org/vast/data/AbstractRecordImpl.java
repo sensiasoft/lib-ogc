@@ -319,6 +319,28 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
     
     
     /**
+     * Call this when some child component data is re-assigned
+     * (e.g. variable size array data)
+     */
+    public void updateDataBlock()
+    {
+        int groupSize = fieldList.size();
+        
+        if (!(this.dataBlock instanceof DataBlockMixed))
+            throw new IllegalStateException("Can only update a DataBlockMixed");
+        var dataBlk = (DataBlockMixed)this.dataBlock;
+        dataBlk.atomCount = 0;
+        
+        for (int i=0; i<groupSize; i++)
+        {
+            AbstractDataComponentImpl childComponent = (AbstractDataComponentImpl)fieldList.get(i);
+            dataBlk.blockArray[i] = childComponent.dataBlock;
+            dataBlk.atomCount += childComponent.dataBlock.atomCount;
+        }
+    }
+    
+    
+    /**
      * Specific to DataRecord and used by ProcessChain
      * Allows to combine child blocks into one mixed block
      * when blocks are coming from different independent sources

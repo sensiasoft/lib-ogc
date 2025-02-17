@@ -14,15 +14,21 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.Collection;
 import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataStreamWriter;
 import org.vast.swe.SWEHelper;
+import org.vast.util.Asserts;
+import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
-import net.opengis.swe.v20.Time;
 
 
 /**
@@ -53,6 +59,7 @@ import net.opengis.swe.v20.Time;
 public class DataBlockProxy implements IDataAccessor, InvocationHandler
 {   
     final DataComponent recordSchema;
+    DataBlockList arrayData;
     
     
     private DataBlockProxy(DataComponent recordSchema)
@@ -121,8 +128,24 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
                 return data.getStringValue();
             else if (retType == Instant.class)
                 return convertToInstant(data);
+            else if (IDataAccessor.class.isAssignableFrom(retType))
+            {
+                assertDataArray(method, comp);
+                
+                @SuppressWarnings("unchecked")
+                var accessorClass = (Class<IDataAccessor>)retType;
+                return createCollection(accessorClass, (DataArray)comp);
+            }
             else
                 throw new IllegalStateException("Unsupported datatype: " + retType);
+        }
+        
+        else if (isSetNumMethod(method))
+        {
+            assertDataArray(method, comp);
+            var arraySize = (int)args[0];
+            ((DataArray)comp).updateSize(arraySize);
+            return null;
         }
         
         else if (isSetMethod(method))
@@ -152,6 +175,37 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
             else
                 throw new IllegalStateException("Unsupported datatype: " + argType);
             return null;
+        }
+        
+        else if (isAddMethod(method))
+        {
+            var retType = method.getReturnType();
+            Asserts.checkState(IDataAccessor.class.isAssignableFrom(retType),
+                "Return type of method " + method.getName() + " must be a IDataAccessor");
+            
+            var array = assertDataArray(method, comp);
+            if (arrayData == null)
+            {
+                arrayData = new DataBlockList(true);
+                array.setData(arrayData);
+                var parent = ((AbstractRecordImpl<?>)array.getParent());
+                parent.updateDataBlock();
+            }
+            
+            // create new element data block
+            var newDblk = array.getElementType().createDataBlock();
+            arrayData.add(newDblk);
+            ((DataArrayImpl)array).updateSizeComponent(array.getComponentCount()+1);
+            var parent = ((AbstractDataComponentImpl)array.getParent());
+            parent.updateAtomCount(newDblk.getAtomCount());
+            
+            // create accessor for new element
+            @SuppressWarnings("unchecked")
+            var accessorClass = (Class<IDataAccessor>)retType;
+            var accessor = createElementProxy(accessorClass, array.getElementType());
+            accessor.wrap(newDblk);
+            
+            return accessor;
         }
         
         else
@@ -197,11 +251,28 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
     }
     
     
+    protected boolean isAddMethod(Method m)
+    {
+        return m.getName().startsWith("add") &&
+               m.getReturnType() != void.class &&
+               m.getParameters().length == 0;
+    }
+    
+    
+    protected boolean isSetNumMethod(Method m)
+    {
+        return m.getName().startsWith("setNum") &&
+               m.getReturnType() == void.class &&
+               m.getParameters().length == 1;
+    }
+    
+    
     protected Instant convertToInstant(DataBlock data)
     {
         var epochTimeAsDouble = data.getDoubleValue();
         var seconds = Math.floor(epochTimeAsDouble);
-        var nanos = (int)((epochTimeAsDouble - epochTimeAsDouble) * 1e9);
+        var millis = ((long)(epochTimeAsDouble*1000)) - (seconds*1000);
+        var nanos = (int)millis * 1000000;
         return Instant.ofEpochSecond((long)seconds, nanos);
     }
     
@@ -218,40 +289,76 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
         else
             data.setDoubleValue(Double.NaN);
     }
+    
+    
+    protected IDataAccessor createElementProxy(Class<IDataAccessor> clazz, DataComponent arrayElt)
+    {
+        try
+        {
+            return DataBlockProxy.generate(arrayElt, clazz);
+        }
+        catch (Exception e)
+        {
+            throw new IllegalStateException("Error creating array element proxy class", e);
+        }
+    }
+    
+    
+    protected Collection<IDataAccessor> createCollection(Class<IDataAccessor> clazz, DataArray array)
+    {
+        var proxy = createElementProxy(clazz, array.getElementType());
+        
+        /*return new AbstractCollection<T>() {
+
+            @Override
+            public Iterator<T> iterator()
+            {
+                // TODO Auto-generated method stub
+                return null;
+            }
+
+            @Override
+            public int size()
+            {
+                // TODO Auto-generated method stub
+                return 0;
+            }
+        };*/
+        return null;
+    }
+    
+    
+    protected DataArray assertDataArray(Method m, DataComponent comp)
+    {
+        Asserts.checkState(comp instanceof DataArray, "Component referenced by " + m.getName() + " method must be a DataArray");
+        return (DataArray)comp;
+    }
 
 
     @Override
     public void wrap(DataBlock db)
     {
         recordSchema.setData(db);
+        arrayData = null;
     }
     
     
     @Override
     public String toString()
     {
-        var it = new ScalarIterator(recordSchema);
-        var sb = new StringBuilder();
-        while (it.hasNext())
-        {            
-            var c = it.next();
-            var dblk = c.getData();
-            
-            sb.append(c.getName()).append(": ");
-            
-            if (c instanceof Time)
-            {
-                if (!Double.isNaN(dblk.getDoubleValue()))
-                    sb.append(Instant.ofEpochMilli((long)(dblk.getDoubleValue()*1000)));
-                else
-                    sb.append("");
-            }
-            else
-                sb.append(dblk.getStringValue());
-            
-            sb.append('\n');
+        try
+        {
+            var baos = new ByteArrayOutputStream();
+            DataStreamWriter sweWriter = SWEHelper.createDataWriter(new JSONEncodingImpl());
+            sweWriter.setDataComponents(recordSchema);
+            sweWriter.setOutput(baos);
+            sweWriter.write(recordSchema.getData());
+            sweWriter.flush();
+            return baos.toString(StandardCharsets.UTF_8);
         }
-        
-        return sb.toString();
+        catch (IOException e)
+        {
+            throw new IllegalStateException("Error writing to String", e);
+        }
     }
 }
