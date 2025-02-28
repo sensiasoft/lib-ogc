@@ -197,7 +197,7 @@ public class JsonDataParserGson extends AbstractDataParser
             var str = reader.nextString();
             double val = 0.0;
             
-            if ("NaN".equals(str))
+            if (str == null || "NaN".equals(str))
                 val = Double.NaN;
             else if ("+INF".equals(str) || "INF".equals(str))
                 val = Double.POSITIVE_INFINITY;

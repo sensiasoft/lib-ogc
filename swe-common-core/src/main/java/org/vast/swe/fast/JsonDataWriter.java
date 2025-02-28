@@ -238,12 +238,17 @@ public class JsonDataWriter extends AbstractDataWriter
         public void writeValue(DataBlock data, int index) throws IOException
         {
             double val = data.getDoubleValue(index);
-            writer.write('"');
-            if (Double.isNaN(val) || Double.isInfinite(val))
-                writer.write(SWEDataTypeUtils.getDoubleOrInfAsString(val));
+            if (Double.isNaN(val))
+                writer.write("null");
             else
-                writer.write(timeFormat.formatIso(val, 0));
-            writer.write('"');
+            {
+                writer.write('"');
+                if (Double.isInfinite(val))
+                    writer.write(SWEDataTypeUtils.getDoubleOrInfAsString(val));
+                else
+                    writer.write(timeFormat.formatIso(val, 0));
+                writer.write('"');
+            }
         }
     }
 

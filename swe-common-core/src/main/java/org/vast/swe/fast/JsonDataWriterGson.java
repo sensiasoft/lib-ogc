@@ -232,7 +232,7 @@ public class JsonDataWriterGson extends AbstractDataWriter
         {
             double val = data.getDoubleValue(index);
             if (Double.isNaN(val))
-                writer.value("NaN");
+                writer.nullValue();
             else if (val == Double.POSITIVE_INFINITY)
                 writer.value("+INF");
             else if (val == Double.NEGATIVE_INFINITY)
