@@ -27,6 +27,7 @@ import java.util.Map;
 import org.vast.json.JsonInliningWriter;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.WriterException;
+import com.google.gson.Strictness;
 import com.google.gson.stream.JsonWriter;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
@@ -598,7 +599,8 @@ public class JsonDataWriterGson extends AbstractDataWriter
     {
         this.writer = new JsonInliningWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
         writer.setIndent(DEFAULT_INDENT);
-        writer.setLenient(true);
+        writer.setStrictness(Strictness.LENIENT);
+        writer.setSerializeNulls(true);
     }
     
     
