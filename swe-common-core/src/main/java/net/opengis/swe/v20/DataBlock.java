@@ -15,6 +15,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package net.opengis.swe.v20;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.OffsetDateTime;
 
 /**
  * <p>
@@ -66,30 +68,72 @@ public interface DataBlock extends Serializable
 	
 	
 	public String getStringValue(int index);
+    
+    
+    public Instant getTimeStamp(int index);
+    
+    
+    public OffsetDateTime getDateTime(int index);
 
 
-	public boolean getBooleanValue();
+	public default boolean getBooleanValue()
+	{
+	    return getBooleanValue(0);
+	}
 	
 	
-	public byte getByteValue();
+	public default byte getByteValue()
+    {
+        return getByteValue(0);
+    }
 
 
-	public short getShortValue();
+	public default short getShortValue()
+    {
+        return getShortValue(0);
+    }
 
 
-	public int getIntValue();
+	public default int getIntValue()
+    {
+        return getIntValue(0);
+    }
 
 
-	public long getLongValue();
+	public default long getLongValue()
+    {
+        return getLongValue(0);
+    }
 
 
-	public float getFloatValue();
+	public default float getFloatValue()
+    {
+        return getFloatValue(0);
+    }
 
 
-	public double getDoubleValue();
+	public default double getDoubleValue()
+    {
+        return getDoubleValue(0);
+    }
 	
 	
-	public String getStringValue();
+	public default String getStringValue()
+    {
+        return getStringValue(0);
+    }
+	
+	
+	public default Instant getTimeStamp()
+    {
+        return getTimeStamp(0);
+    }
+    
+    
+    public default OffsetDateTime getDateTime()
+    {
+        return getDateTime(0);
+    }
 
 
 	public void setBooleanValue(int index, boolean value);
@@ -114,30 +158,72 @@ public interface DataBlock extends Serializable
 	
 	
 	public void setStringValue(int index, String value);
+    
+    
+    public void setTimeStamp(int index, Instant value);
+    
+    
+    public void setDateTime(int index, OffsetDateTime value);
 
 
-	public void setBooleanValue(boolean value);
+	public default void setBooleanValue(boolean value)
+	{
+	    setBooleanValue(0, value);
+	}
 	
 	
-	public void setByteValue(byte value);
+	public default void setByteValue(byte value)
+    {
+	    setByteValue(0, value);
+    }
 
 
-	public void setShortValue(short value);
+	public default void setShortValue(short value)
+    {
+	    setShortValue(0, value);
+    }
 
 
-	public void setIntValue(int value);
+	public default void setIntValue(int value)
+    {
+	    setIntValue(0, value);
+    }
 
 
-	public void setLongValue(long value);
+	public default void setLongValue(long value)
+    {
+	    setLongValue(0, value);
+    }
 
 
-	public void setFloatValue(float value);
+	public default void setFloatValue(float value)
+    {
+	    setFloatValue(0, value);
+    }
 
 
-	public void setDoubleValue(double value);
+	public default void setDoubleValue(double value)
+    {
+	    setDoubleValue(0, value);
+    }
 	
 	
-	public void setStringValue(String value);
+	public default void setStringValue(String value)
+    {
+	    setStringValue(0, value);
+    }
+    
+    
+    public default void setTimeStamp(Instant value)
+    {
+        setTimeStamp(0, value);
+    }
+    
+    
+    public default void setDateTime(OffsetDateTime value)
+    {
+        setDateTime(0, value);
+    }
 	
 	
 	public void resize(int size);

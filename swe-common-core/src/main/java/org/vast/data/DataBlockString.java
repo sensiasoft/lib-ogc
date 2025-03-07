@@ -14,6 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import net.opengis.swe.v20.DataType;
 
 
@@ -118,49 +120,98 @@ public class DataBlockString extends AbstractDataBlock
 	@Override
     public boolean getBooleanValue(int index)
 	{
-		return Boolean.parseBoolean(primitiveArray[startIndex + index]);
+		var str = primitiveArray[startIndex + index];
+        
+        try {
+            return Boolean.parseBoolean(str);
+        }
+        catch (Exception e) {
+            throw conversionError(str, DataType.BOOLEAN);
+        }
 	}
 
 
 	@Override
     public byte getByteValue(int index)
 	{
-		return Byte.parseByte(primitiveArray[startIndex + index]);
+		var str = primitiveArray[startIndex + index];
+        
+        try {
+            return Byte.parseByte(str);
+        }
+        catch (Exception e) {
+            throw conversionError(str, DataType.BYTE);
+        }
 	}
 
 
 	@Override
     public short getShortValue(int index)
 	{
-		return Short.parseShort(primitiveArray[startIndex + index]);
+		var str = primitiveArray[startIndex + index];
+        
+        try {
+            return Short.parseShort(str);
+        }
+        catch (Exception e) {
+            throw conversionError(str, DataType.SHORT);
+        }
 	}
 
 
 	@Override
     public int getIntValue(int index)
 	{
-		return Integer.parseInt(primitiveArray[startIndex + index]);
+		var str = primitiveArray[startIndex + index];
+        
+        try {
+            return Integer.parseInt(str);
+        }
+        catch (Exception e) {
+            throw conversionError(str, DataType.INT);
+        }
 	}
 
 
 	@Override
     public long getLongValue(int index)
 	{
-		return Long.parseLong(primitiveArray[startIndex + index]);
+		var str = primitiveArray[startIndex + index];
+        
+        try {
+            return Long.parseLong(str);
+        }
+        catch (Exception e) {
+            throw conversionError(str, DataType.LONG);
+        }
 	}
 
 
 	@Override
     public float getFloatValue(int index)
 	{
-		return Float.parseFloat(primitiveArray[startIndex + index]);
+		var str = primitiveArray[startIndex + index];
+        
+        try {
+            return Float.parseFloat(str);
+        }
+        catch (Exception e) {
+            throw conversionError(str, DataType.FLOAT);
+        }
 	}
 
 
 	@Override
     public double getDoubleValue(int index)
 	{
-		return Double.parseDouble(primitiveArray[startIndex + index]);
+		var str = primitiveArray[startIndex + index];
+        
+        try {
+            return Double.parseDouble(str);
+        }
+        catch (Exception e) {
+            throw conversionError(str, DataType.DOUBLE);
+        }
 	}
 
 
@@ -171,126 +222,32 @@ public class DataBlockString extends AbstractDataBlock
 	}
 
 
-	@Override
-    public boolean getBooleanValue()
-	{
-		return Boolean.parseBoolean(primitiveArray[startIndex]);
-	}
-
-
-	@Override
-    public byte getByteValue()
-	{
-	    byte val;
+    @Override
+    public Instant getTimeStamp(int index)
+    {
+        var str = primitiveArray[startIndex + index];
         
-        try
-        {
-            val = Byte.parseByte(primitiveArray[startIndex]);
+        try {
+            return Instant.parse(str);
         }
-        catch (NumberFormatException e)
-        {
-            val = -1;
+        catch (Exception e) {
+            throw conversionError(str, DataType.INSTANT);
         }
+    }
+
+
+    @Override
+    public OffsetDateTime getDateTime(int index)
+    {
+        var str = primitiveArray[startIndex + index];
         
-        return val;
-	}
-
-
-	@Override
-    public short getShortValue()
-	{
-	    short val;
-        
-        try
-        {
-            val = Short.parseShort(primitiveArray[startIndex]);
+        try {
+            return OffsetDateTime.parse(primitiveArray[startIndex + index]);
         }
-        catch (NumberFormatException e)
-        {
-            val = -1;
+        catch (Exception e) {
+            throw conversionError(str, DataType.DATETIME);
         }
-        
-        return val;
-	}
-
-
-	@Override
-    public int getIntValue()
-	{
-	    int val;
-        
-        try
-        {
-            val = Integer.parseInt(primitiveArray[startIndex]);
-        }
-        catch (NumberFormatException e)
-        {
-            val = -1;
-        }
-        
-        return val;
-	}
-
-
-	@Override
-    public long getLongValue()
-	{
-	    long val;
-        
-        try
-        {
-            val = Long.parseLong(primitiveArray[startIndex]);
-        }
-        catch (NumberFormatException e)
-        {
-            val = -1;
-        }
-        
-        return val;
-	}
-
-
-	@Override
-    public float getFloatValue()
-	{
-	    float val;
-        
-        try
-        {
-            val = Float.parseFloat(primitiveArray[startIndex]);
-        }
-        catch (NumberFormatException e)
-        {
-            val = Float.NaN;
-        }
-        
-        return val;
-	}
-
-
-	@Override
-    public double getDoubleValue()
-	{
-        double val;
-        
-        try
-        {
-            val = Double.parseDouble(primitiveArray[startIndex]);
-        }
-        catch (NumberFormatException e)
-        {
-            val = Double.NaN;
-        }
-        
-        return val;
-	}
-
-
-	@Override
-    public String getStringValue()
-	{
-		return primitiveArray[startIndex];
-	}
+    }
 
 
 	@Override
@@ -349,58 +306,22 @@ public class DataBlockString extends AbstractDataBlock
 	}
 
 
-	@Override
-    public void setBooleanValue(boolean value)
-	{
-		primitiveArray[startIndex] = Boolean.toString(value);;
-	}
+    @Override
+    public void setTimeStamp(int index, Instant value)
+    {
+        primitiveArray[startIndex + index] = value.toString();
+    }
 
 
-	@Override
-    public void setByteValue(byte value)
-	{
-		primitiveArray[startIndex] = Byte.toString(value);;
-	}
-
-
-	@Override
-    public void setShortValue(short value)
-	{
-		primitiveArray[startIndex] = Short.toString(value);
-	}
-
-
-	@Override
-    public void setIntValue(int value)
-	{
-		primitiveArray[startIndex] = Integer.toString(value);
-	}
-
-
-	@Override
-    public void setLongValue(long value)
-	{
-		primitiveArray[startIndex] = Long.toString(value);
-	}
-
-
-	@Override
-    public void setFloatValue(float value)
-	{
-		primitiveArray[startIndex] = Float.toString(value);
-	}
-
-
-	@Override
-    public void setDoubleValue(double value)
-	{
-		primitiveArray[startIndex] = Double.toString(value);
-	}
-
-
-	@Override
-    public void setStringValue(String value)
-	{
-		primitiveArray[startIndex] = value;
-	}
+    @Override
+    public void setDateTime(int index, OffsetDateTime value)
+    {
+        primitiveArray[startIndex + index] = value.toString();
+    }
+    
+    
+    protected UnsupportedOperationException conversionError(String value, DataType destType)
+    {
+        return new UnsupportedOperationException("Cannot convert " + value + " to " + destType);
+    }
 }

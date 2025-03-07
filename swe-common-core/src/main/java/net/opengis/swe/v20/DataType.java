@@ -30,6 +30,9 @@ public enum DataType
 	DOUBLE,
 	ASCII_STRING,
 	UTF_STRING,
+	
+	INSTANT,
+	DATETIME,
 
 	OTHER,
 	DISCARD,

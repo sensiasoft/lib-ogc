@@ -116,6 +116,12 @@ public abstract class DataValue extends AbstractSimpleComponentImpl implements S
             case UTF_STRING:
             case ASCII_STRING:
             	return new DataBlockString(1);
+            	
+            case INSTANT:
+                return new DataBlockInstant(1);
+                
+            case DATETIME:
+                return new DataBlockDateTime(1);
                 
             default:
             	throw new IllegalStateException("Unsupported data type " + dataType);

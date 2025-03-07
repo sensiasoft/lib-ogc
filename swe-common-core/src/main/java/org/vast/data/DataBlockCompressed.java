@@ -14,6 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataType;
 
@@ -213,66 +215,18 @@ public class DataBlockCompressed extends AbstractDataBlock
 
 
     @Override
-    public final boolean getBooleanValue()
+    public Instant getTimeStamp(int index)
     {
         ensureUncompressed();
-        return uncompressedData.getBooleanValue();
+        return uncompressedData.getTimeStamp(index);
     }
 
 
     @Override
-    public final byte getByteValue()
+    public OffsetDateTime getDateTime(int index)
     {
         ensureUncompressed();
-        return uncompressedData.getByteValue();
-    }
-
-
-    @Override
-    public final short getShortValue()
-    {
-        ensureUncompressed();
-        return uncompressedData.getShortValue();
-    }
-
-
-    @Override
-    public final int getIntValue()
-    {
-        ensureUncompressed();
-        return uncompressedData.getIntValue();
-    }
-
-
-    @Override
-    public final long getLongValue()
-    {
-        ensureUncompressed();
-        return uncompressedData.getLongValue();
-    }
-
-
-    @Override
-    public final float getFloatValue()
-    {
-        ensureUncompressed();
-        return uncompressedData.getFloatValue();
-    }
-
-
-    @Override
-    public final double getDoubleValue()
-    {
-        ensureUncompressed();
-        return uncompressedData.getDoubleValue();
-    }
-
-
-    @Override
-    public final String getStringValue()
-    {
-        ensureUncompressed();
-        return uncompressedData.getStringValue();
+        return uncompressedData.getDateTime(index);
     }
 
 
@@ -341,60 +295,18 @@ public class DataBlockCompressed extends AbstractDataBlock
 	}
 
 
-	@Override
-    public void setBooleanValue(boolean value)
-	{
-	    throwUnsupportedException();
-	}
+    @Override
+    public void setTimeStamp(int index, Instant value)
+    {
+        throwUnsupportedException();
+    }
 
 
-	@Override
-    public void setByteValue(byte value)
-	{
-	    throwUnsupportedException();
-	}
-
-
-	@Override
-    public void setShortValue(short value)
-	{
-	    throwUnsupportedException();
-	}
-
-
-	@Override
-    public void setIntValue(int value)
-	{
-	    throwUnsupportedException();
-	}
-
-
-	@Override
-    public void setLongValue(long value)
-	{
-	    throwUnsupportedException();
-	}
-
-
-	@Override
-    public void setFloatValue(float value)
-	{
-	    throwUnsupportedException();
-	}
-
-
-	@Override
-    public void setDoubleValue(double value)
-	{
-	    throwUnsupportedException();
-	}
-
-
-	@Override
-    public void setStringValue(String value)
-	{
-	    throwUnsupportedException();
-	}
+    @Override
+    public void setDateTime(int index, OffsetDateTime value)
+    {
+        throwUnsupportedException();
+    }
 	
 	
 	private void throwUnsupportedException()

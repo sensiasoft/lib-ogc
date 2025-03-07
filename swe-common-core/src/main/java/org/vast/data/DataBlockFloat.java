@@ -14,6 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import net.opengis.swe.v20.DataType;
 
 
@@ -171,60 +173,18 @@ public class DataBlockFloat extends AbstractDataBlock
 	}
 
 
-	@Override
-    public boolean getBooleanValue()
-	{
-		return getBooleanValue(0);
-	}
+    @Override
+    public Instant getTimeStamp(int index)
+    {
+        throw conversionError(getDataType(), DataType.INSTANT);
+    }
 
 
-	@Override
-    public byte getByteValue()
-	{
-		return (byte)primitiveArray[startIndex];
-	}
-
-
-	@Override
-    public short getShortValue()
-	{
-		return (short)primitiveArray[startIndex];
-	}
-
-
-	@Override
-    public int getIntValue()
-	{
-		return (int)primitiveArray[startIndex];
-	}
-
-
-	@Override
-    public long getLongValue()
-	{
-		return (long)primitiveArray[startIndex];
-	}
-
-
-	@Override
-    public float getFloatValue()
-	{
-		return primitiveArray[startIndex];
-	}
-
-
-	@Override
-    public double getDoubleValue()
-	{
-	    return primitiveArray[startIndex];
-	}
-
-
-	@Override
-    public String getStringValue()
-	{
-		return Float.toString(primitiveArray[startIndex]);
-	}
+    @Override
+    public OffsetDateTime getDateTime(int index)
+    {
+        throw conversionError(getDataType(), DataType.DATETIME);
+    }
 
 
 	@Override
@@ -283,58 +243,16 @@ public class DataBlockFloat extends AbstractDataBlock
 	}
 
 
-	@Override
-    public void setBooleanValue(boolean value)
-	{
-		primitiveArray[startIndex] = value ? DataBlockBoolean.TRUE_VAL : DataBlockBoolean.FALSE_VAL;
-	}
+    @Override
+    public void setTimeStamp(int index, Instant value)
+    {
+        throw conversionError(DataType.INSTANT, getDataType());
+    }
 
 
-	@Override
-    public void setByteValue(byte value)
-	{
-		primitiveArray[startIndex] = value;
-	}
-
-
-	@Override
-    public void setShortValue(short value)
-	{
-		primitiveArray[startIndex] = value;
-	}
-
-
-	@Override
-    public void setIntValue(int value)
-	{
-		primitiveArray[startIndex] = value;
-	}
-
-
-	@Override
-    public void setLongValue(long value)
-	{
-		primitiveArray[startIndex] = value;
-	}
-
-
-	@Override
-    public void setFloatValue(float value)
-	{
-		primitiveArray[startIndex] = value;
-	}
-
-
-	@Override
-    public void setDoubleValue(double value)
-	{
-		primitiveArray[startIndex] = (float)value;
-	}
-
-
-	@Override
-    public void setStringValue(String value)
-	{
-		primitiveArray[startIndex] = Float.parseFloat(value);
-	}
+    @Override
+    public void setDateTime(int index, OffsetDateTime value)
+    {
+        throw conversionError(DataType.DATETIME, getDataType());
+    }
 }

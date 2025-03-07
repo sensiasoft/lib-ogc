@@ -14,6 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataType;
 
@@ -310,68 +312,20 @@ public class DataBlockMixed extends AbstractDataBlock
 	}
 
 
-	@Override
-    public boolean getBooleanValue()
-	{
-		selectBlock(0);
-		return blockArray[blockIndex].getBooleanValue(localIndex);
-	}
+    @Override
+    public Instant getTimeStamp(int index)
+    {
+        selectBlock(index);
+        return blockArray[blockIndex].getTimeStamp(localIndex);
+    }
 
 
-	@Override
-    public byte getByteValue()
-	{
-		selectBlock(0);
-		return blockArray[blockIndex].getByteValue(localIndex);
-	}
-
-
-	@Override
-    public short getShortValue()
-	{
-		selectBlock(0);
-		return blockArray[blockIndex].getShortValue(localIndex);
-	}
-
-
-	@Override
-    public int getIntValue()
-	{
-		selectBlock(0);
-		return blockArray[blockIndex].getIntValue(localIndex);
-	}
-
-
-	@Override
-    public long getLongValue()
-	{
-		selectBlock(0);
-		return blockArray[blockIndex].getLongValue(localIndex);
-	}
-
-
-	@Override
-    public float getFloatValue()
-	{
-		selectBlock(0);
-		return blockArray[blockIndex].getFloatValue(localIndex);
-	}
-
-
-	@Override
-    public double getDoubleValue()
-	{
-		selectBlock(0);
-		return blockArray[blockIndex].getDoubleValue(localIndex);
-	}
-
-
-	@Override
-    public String getStringValue()
-	{
-		selectBlock(0);
-		return blockArray[blockIndex].getStringValue(localIndex);
-	}
+    @Override
+    public OffsetDateTime getDateTime(int index)
+    {
+        selectBlock(index);
+        return blockArray[blockIndex].getDateTime(localIndex);
+    }
 	
 
 	public void setBlock(int blockIndex, AbstractDataBlock dataBlock)
@@ -451,66 +405,18 @@ public class DataBlockMixed extends AbstractDataBlock
 	}
 
 
-	@Override
-    public void setBooleanValue(boolean value)
-	{
-		selectBlock(0);
-		blockArray[blockIndex].setBooleanValue(localIndex, value);
-	}
+    @Override
+    public void setTimeStamp(int index, Instant value)
+    {
+        selectBlock(index);
+        blockArray[blockIndex].setTimeStamp(localIndex, value);
+    }
 
 
-	@Override
-    public void setByteValue(byte value)
-	{
-		selectBlock(0);
-		blockArray[blockIndex].setByteValue(localIndex, value);
-	}
-
-
-	@Override
-    public void setShortValue(short value)
-	{
-		selectBlock(0);
-		blockArray[blockIndex].setShortValue(localIndex, value);
-	}
-
-
-	@Override
-    public void setIntValue(int value)
-	{
-		selectBlock(0);
-		blockArray[blockIndex].setIntValue(localIndex, value);
-	}
-
-
-	@Override
-    public void setLongValue(long value)
-	{
-		selectBlock(0);
-		blockArray[blockIndex].setLongValue(localIndex, value);
-	}
-
-
-	@Override
-    public void setFloatValue(float value)
-	{
-		selectBlock(0);
-		blockArray[blockIndex].setFloatValue(localIndex, value);
-	}
-
-
-	@Override
-    public void setDoubleValue(double value)
-	{
-		selectBlock(0);
-		blockArray[blockIndex].setDoubleValue(localIndex, value);
-	}
-
-
-	@Override
-    public void setStringValue(String value)
-	{
-		selectBlock(0);
-		blockArray[blockIndex].setStringValue(localIndex, value);
-	}
+    @Override
+    public void setDateTime(int index, OffsetDateTime value)
+    {
+        selectBlock(index);
+        blockArray[blockIndex].setDateTime(localIndex, value);
+    }
 }

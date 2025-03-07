@@ -14,6 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import net.opengis.swe.v20.DataType;
 
 
@@ -172,60 +174,18 @@ public class DataBlockBoolean extends AbstractDataBlock
 	}
 
 
-	@Override
-    public boolean getBooleanValue()
-	{
-		return primitiveArray[startIndex];
-	}
+    @Override
+    public Instant getTimeStamp(int index)
+    {
+        throw conversionError(getDataType(), DataType.INSTANT);
+    }
 
 
-	@Override
-    public byte getByteValue()
-	{
-		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
-	}
-
-
-	@Override
-    public short getShortValue()
-	{
-		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
-	}
-
-
-	@Override
-    public int getIntValue()
-	{
-		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
-	}
-
-
-	@Override
-    public long getLongValue()
-	{
-		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
-	}
-
-
-	@Override
-    public float getFloatValue()
-	{
-		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
-	}
-
-
-	@Override
-    public double getDoubleValue()
-	{
-		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
-	}
-
-
-	@Override
-    public String getStringValue()
-	{
-		return Boolean.toString(primitiveArray[startIndex]);
-	}
+    @Override
+    public OffsetDateTime getDateTime(int index)
+    {
+        throw conversionError(getDataType(), DataType.DATETIME);
+    }
 
 
 	@Override
@@ -284,58 +244,16 @@ public class DataBlockBoolean extends AbstractDataBlock
 	}
 
 
-	@Override
-    public void setBooleanValue(boolean value)
-	{
-		primitiveArray[startIndex] = value;
-	}
+    @Override
+    public void setTimeStamp(int index, Instant value)
+    {
+        throw conversionError(DataType.INSTANT, getDataType());
+    }
 
 
-	@Override
-    public void setByteValue(byte value)
-	{
-		primitiveArray[startIndex] = (value == 0) ? false : true;
-	}
-
-
-	@Override
-    public void setShortValue(short value)
-	{
-		primitiveArray[startIndex] = (value == 0) ? false : true;
-	}
-
-
-	@Override
-    public void setIntValue(int value)
-	{
-		primitiveArray[startIndex] = (value == 0) ? false : true;
-	}
-
-
-	@Override
-    public void setLongValue(long value)
-	{
-		primitiveArray[startIndex] = (value == 0) ? false : true;
-	}
-
-
-	@Override
-    public void setFloatValue(float value)
-	{
-		primitiveArray[startIndex] = (Float.isNaN(value) || Math.abs(value) < Math.ulp(0.0)) ? false : true;
-	}
-
-
-	@Override
-    public void setDoubleValue(double value)
-	{
-		primitiveArray[startIndex] = (Double.isNaN(value) || Math.abs(value) < Math.ulp(0.0)) ? false : true;
-	}
-
-
-	@Override
-    public void setStringValue(String value)
-	{
-		primitiveArray[startIndex] = Boolean.parseBoolean(value);
-	}
+    @Override
+    public void setDateTime(int index, OffsetDateTime value)
+    {
+        throw conversionError(DataType.DATETIME, getDataType());
+    }
 }

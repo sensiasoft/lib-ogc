@@ -15,6 +15,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.data;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -37,10 +39,10 @@ public class DataBlockList extends AbstractDataBlock
     private static final long serialVersionUID = -413032909256132305L;
     protected List<DataBlock> blockList; // either ArrayList or LinkedList so it's serializable
 	protected int blockAtomCount = -1;
-	protected int blockIndex;
-	protected int localIndex;
 	protected boolean equalBlockSize;
-	ThreadLocal<CachedIndex> cachedIndex = new ThreadLocal<>();
+	transient protected int blockIndex;
+	transient protected int localIndex;
+	transient ThreadLocal<CachedIndex> cachedIndex = new ThreadLocal<>();
 	
 	static class CachedIndex
 	{
@@ -369,70 +371,22 @@ public class DataBlockList extends AbstractDataBlock
 		selectBlock(index);
 		return blockList.get(blockIndex).getStringValue(localIndex);
 	}
+    
+
+    @Override
+    public Instant getTimeStamp(int index)
+    {
+        selectBlock(index);
+        return blockList.get(blockIndex).getTimeStamp(localIndex);
+    }
 
 
-	@Override
-    public boolean getBooleanValue()
-	{
-		selectBlock(0);
-		return blockList.get(blockIndex).getBooleanValue(localIndex);
-	}
-
-
-	@Override
-    public byte getByteValue()
-	{
-		selectBlock(0);
-		return blockList.get(blockIndex).getByteValue(localIndex);
-	}
-
-
-	@Override
-    public short getShortValue()
-	{
-		selectBlock(0);
-		return blockList.get(blockIndex).getShortValue(localIndex);
-	}
-
-
-	@Override
-    public int getIntValue()
-	{
-		selectBlock(0);
-		return blockList.get(blockIndex).getIntValue(localIndex);
-	}
-
-
-	@Override
-    public long getLongValue()
-	{
-		selectBlock(0);
-		return blockList.get(blockIndex).getLongValue(localIndex);
-	}
-
-
-	@Override
-    public float getFloatValue()
-	{
-		selectBlock(0);
-		return blockList.get(blockIndex).getFloatValue(localIndex);
-	}
-
-
-	@Override
-    public double getDoubleValue()
-	{
-		selectBlock(0);
-		return blockList.get(blockIndex).getDoubleValue(localIndex);
-	}
-
-
-	@Override
-    public String getStringValue()
-	{
-		selectBlock(0);
-		return blockList.get(blockIndex).getStringValue(localIndex);
-	}
+    @Override
+    public OffsetDateTime getDateTime(int index)
+    {
+        selectBlock(index);
+        return blockList.get(blockIndex).getDateTime(localIndex);
+    }
 
 
 	@Override
@@ -499,66 +453,18 @@ public class DataBlockList extends AbstractDataBlock
 	}
 
 
-	@Override
-    public void setBooleanValue(boolean value)
-	{
-		selectBlock(0);
-		blockList.get(blockIndex).setBooleanValue(localIndex, value);
-	}
+    @Override
+    public void setTimeStamp(int index, Instant value)
+    {
+        selectBlock(index);
+        blockList.get(blockIndex).setTimeStamp(localIndex, value);
+    }
 
 
-	@Override
-    public void setByteValue(byte value)
-	{
-		selectBlock(0);
-		blockList.get(blockIndex).setByteValue(localIndex, value);
-	}
-
-
-	@Override
-    public void setShortValue(short value)
-	{
-		selectBlock(0);
-		blockList.get(blockIndex).setShortValue(localIndex, value);
-	}
-
-
-	@Override
-    public void setIntValue(int value)
-	{
-		selectBlock(0);
-		blockList.get(blockIndex).setIntValue(localIndex, value);
-	}
-
-
-	@Override
-    public void setLongValue(long value)
-	{
-		selectBlock(0);
-		blockList.get(blockIndex).setLongValue(localIndex, value);
-	}
-
-
-	@Override
-    public void setFloatValue(float value)
-	{
-		selectBlock(0);
-		blockList.get(blockIndex).setFloatValue(localIndex, value);
-	}
-
-
-	@Override
-    public void setDoubleValue(double value)
-	{
-		selectBlock(0);
-		blockList.get(blockIndex).setDoubleValue(localIndex, value);
-	}
-
-
-	@Override
-    public void setStringValue(String value)
-	{
-		selectBlock(0);
-		blockList.get(blockIndex).setStringValue(localIndex, value);
-	}
+    @Override
+    public void setDateTime(int index, OffsetDateTime value)
+    {
+        selectBlock(index);
+        blockList.get(blockIndex).setDateTime(localIndex, value);
+    }
 }

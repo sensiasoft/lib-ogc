@@ -14,6 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import net.opengis.swe.v20.DataType;
 
 
@@ -202,65 +204,22 @@ public class DataBlockTuple extends AbstractDataBlock
 	@Override
     public String getStringValue(int index)
 	{
-		
 		return blockArray[startIndex + index].getStringValue();
 	}
 
 
-	@Override
-    public boolean getBooleanValue()
-	{
-		return blockArray[startIndex].getBooleanValue();
-	}
+    @Override
+    public Instant getTimeStamp(int index)
+    {
+        return blockArray[startIndex + index].getTimeStamp();
+    }
 
 
-	@Override
-    public byte getByteValue()
-	{
-		return blockArray[startIndex].getByteValue();
-	}
-
-
-	@Override
-    public short getShortValue()
-	{
-		return blockArray[startIndex].getShortValue();
-	}
-
-
-	@Override
-    public int getIntValue()
-	{
-		return blockArray[startIndex].getIntValue();
-	}
-
-
-	@Override
-    public long getLongValue()
-	{
-		return blockArray[startIndex].getLongValue();
-	}
-
-
-	@Override
-    public float getFloatValue()
-	{
-		return blockArray[startIndex].getFloatValue();
-	}
-
-
-	@Override
-    public double getDoubleValue()
-	{
-		return blockArray[startIndex].getDoubleValue();
-	}
-
-
-	@Override
-    public String getStringValue()
-	{
-		return blockArray[startIndex].getStringValue();
-	}
+    @Override
+    public OffsetDateTime getDateTime(int index)
+    {
+        return blockArray[startIndex + index].getDateTime();
+    }
 
 
 	@Override
@@ -325,58 +284,16 @@ public class DataBlockTuple extends AbstractDataBlock
 	}
 
 
-	@Override
-    public void setBooleanValue(boolean value)
-	{
-		blockArray[startIndex].setBooleanValue(value);
-	}
+    @Override
+    public void setTimeStamp(int index, Instant value)
+    {
+        blockArray[startIndex + index].setTimeStamp(value);
+    }
 
 
-	@Override
-    public void setByteValue(byte value)
-	{
-		blockArray[startIndex].setByteValue(value);
-	}
-
-
-	@Override
-    public void setShortValue(short value)
-	{
-		blockArray[startIndex].setShortValue(value);
-	}
-
-
-	@Override
-    public void setIntValue(int value)
-	{
-		blockArray[startIndex].setIntValue(value);
-	}
-
-
-	@Override
-    public void setLongValue(long value)
-	{
-		blockArray[startIndex].setLongValue(value);
-	}
-
-
-	@Override
-    public void setFloatValue(float value)
-	{
-		blockArray[startIndex].setFloatValue(value);
-	}
-
-
-	@Override
-    public void setDoubleValue(double value)
-	{
-		blockArray[startIndex].setDoubleValue(value);
-	}
-
-
-	@Override
-    public void setStringValue(String value)
-	{
-		blockArray[startIndex].setStringValue(value);
-	}
+    @Override
+    public void setDateTime(int index, OffsetDateTime value)
+    {
+        blockArray[startIndex + index].setDateTime(value);
+    }
 }

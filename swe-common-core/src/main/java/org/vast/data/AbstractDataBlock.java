@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.data;
 
 import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataType;
 
 
 public abstract class AbstractDataBlock implements DataBlock
@@ -90,5 +91,11 @@ public abstract class AbstractDataBlock implements DataBlock
     public String toString()
 	{
 		return new String(getDataType() + "[" + getAtomCount() + "]");
+	}
+	
+	
+	protected UnsupportedOperationException conversionError(DataType srcType, DataType destType)
+	{
+	    return new UnsupportedOperationException("Cannot convert " + srcType + " to " + destType);
 	}
 }
