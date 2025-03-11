@@ -297,7 +297,8 @@ public class DataBlockInstant extends AbstractDataBlock
             return null;
         
         var seconds = Math.floor(epochTimeAsDouble);
-        var nanos = epochTimeAsDouble*1e9 - seconds*1e9;
-        return Instant.ofEpochSecond((long)seconds, (long)nanos);
+        var millis = ((long)(epochTimeAsDouble*1000)) - (seconds*1000);
+        var nanos = (int)millis * 1000000;
+        return Instant.ofEpochSecond((long)seconds, nanos);
     }
 }
