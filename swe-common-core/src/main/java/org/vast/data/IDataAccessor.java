@@ -38,4 +38,7 @@ public interface IDataAccessor
     
     
     public void wrap(DataBlock db);
+    
+    
+    public DataBlock getDataBlock();
 }

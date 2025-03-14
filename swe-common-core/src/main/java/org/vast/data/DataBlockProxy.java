@@ -8,7 +8,7 @@ Software distributed under the License is distributed on an "AS IS" basis,
 WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 for the specific language governing rights and limitations under the License.
  
-Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
+Copyright (C) 2025 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -21,11 +21,15 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.Collection;
+import java.util.Map;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.swe.SWEHelper;
+import org.vast.swe.ScalarIndexer;
 import org.vast.util.Asserts;
+import com.google.common.collect.ImmutableMap;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
@@ -59,12 +63,34 @@ import net.opengis.swe.v20.DataComponent;
 public class DataBlockProxy implements IDataAccessor, InvocationHandler
 {   
     final DataComponent recordSchema;
+    final Method wrapMethod;
+    final Method getDblkMethod;
+    final Method toStringMethod;
+    final Map<Method, ScalarIndexer> indexerMap;
     DataBlockList arrayData;
     
     
-    private DataBlockProxy(DataComponent recordSchema)
+    private DataBlockProxy(DataComponent recordSchema, Class<?> targetInterface)
     {
-         this.recordSchema = recordSchema.copy();
+        this.recordSchema = recordSchema.copy();
+         
+        try
+        {
+            this.wrapMethod = IDataAccessor.class.getMethod("wrap", DataBlock.class);
+            this.getDblkMethod = IDataAccessor.class.getMethod("getDataBlock");
+            this.toStringMethod = Object.class.getMethod("toString");
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new IllegalStateException(e);
+        }
+        
+        // list get/set methods
+        
+         
+        // build indexer map
+        indexerMap = ImmutableMap.<Method, ScalarIndexer>builderWithExpectedSize(recordSchema.getComponentCount())
+            .build();
     }
     
     
@@ -74,7 +100,7 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
         return (T) Proxy.newProxyInstance(
             targetInterface.getClassLoader(),
             new Class[] { targetInterface }, 
-            new DataBlockProxy(recordSchema)
+            new DataBlockProxy(recordSchema, targetInterface)
         );
     }
     
@@ -82,14 +108,18 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
     @Override
     public Object invoke(Object proxy, Method method, Object[] args)
     {
-        var methodName = method.getName();
-        
-        if ("wrap".equals(methodName))
+        // handle hard wired methods
+        // ok to use reference equality here
+        if (method.getName() == wrapMethod.getName())
         {
             wrap((DataBlock)args[0]);
             return null;
         }
-        else if ("toString".equals(methodName))
+        else if (method.getName() == getDblkMethod.getName())
+        {
+            return getDataBlock();
+        }
+        else if (method.getName() == toStringMethod.getName())
         {
             return toString();
         }
@@ -127,7 +157,9 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
             else if (retType == String.class)
                 return data.getStringValue();
             else if (retType == Instant.class)
-                return convertToInstant(data);
+                return data.getTimeStamp();
+            else if (retType == OffsetDateTime.class)
+                return data.getDateTime();
             else if (IDataAccessor.class.isAssignableFrom(retType))
             {
                 assertDataArray(method, comp);
@@ -171,7 +203,9 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
             else if (argType == String.class)
                 data.setStringValue((String)val);
             else if (argType == Instant.class)
-                setFromInstant(data, (Instant)val);
+                data.setTimeStamp((Instant)val);
+            else if (argType == OffsetDateTime.class)
+                data.setDateTime((OffsetDateTime)val);
             else
                 throw new IllegalStateException("Unsupported datatype: " + argType);
             return null;
@@ -267,30 +301,6 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
     }
     
     
-    protected Instant convertToInstant(DataBlock data)
-    {
-        var epochTimeAsDouble = data.getDoubleValue();
-        var seconds = Math.floor(epochTimeAsDouble);
-        var millis = ((long)(epochTimeAsDouble*1000)) - (seconds*1000);
-        var nanos = (int)millis * 1000000;
-        return Instant.ofEpochSecond((long)seconds, nanos);
-    }
-    
-    
-    protected void setFromInstant(DataBlock data, Instant ts)
-    {
-        if (ts != null)
-        {
-            var seconds = ts.getEpochSecond();
-            var nanos = ts.getNano();
-            var t = (double)seconds + nanos/1e9;
-            data.setDoubleValue(t);
-        }
-        else
-            data.setDoubleValue(Double.NaN);
-    }
-    
-    
     protected IDataAccessor createElementProxy(Class<IDataAccessor> clazz, DataComponent arrayElt)
     {
         try
@@ -340,6 +350,13 @@ public class DataBlockProxy implements IDataAccessor, InvocationHandler
     {
         recordSchema.setData(db);
         arrayData = null;
+    }
+
+
+    @Override
+    public DataBlock getDataBlock()
+    {
+        return recordSchema.getData();
     }
     
     
