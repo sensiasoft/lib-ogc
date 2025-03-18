@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swe:DataRecord xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/swe/2.0 http://schemas.opengis.net/sweCommon/2.0/swe.xsd">
+  <swe:field name="array_size">
+    <swe:Count id="ARRAY_SIZE" definition="http://www.opengis.net/def/property/OGC/0/NumberOfPoints">
+      <swe:label>Number of Points</swe:label>
+    </swe:Count>
+  </swe:field>
+  <swe:field name="array">
+    <swe:DataArray definition="http://sweet.jpl.nasa.gov/2.0/info.owl#Trajectory" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/swe/2.0 http://schemas.opengis.net/sweCommon/2.0/swe.xsd">
+    	<swe:description>Trajectory</swe:description>
+    	<swe:elementCount xlink:href="#ARRAY_SIZE"/>
+    	<swe:elementType name="point">
+    		<swe:Vector definition="http://sweet.jpl.nasa.gov/2.0/space.owl#Location" referenceFrame="http://www.opengis.net/def/crs/EPSG/0/4326">
+    			<swe:label>Location Point</swe:label>
+    			<swe:coordinate name="lat">
+    				<swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/spaceCoordinates.owl#Latitude" axisID="Lat">
+    					<swe:label>Latitude</swe:label>
+    					<swe:uom xlink:href="deg"/>
+    				</swe:Quantity>
+    			</swe:coordinate>
+    			<swe:coordinate name="lon">
+    				<swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/spaceCoordinates.owl#Longitude" axisID="Long">
+    					<swe:label>Longitude</swe:label>
+    					<swe:uom code="deg"/>
+    				</swe:Quantity>
+    			</swe:coordinate>
+    		</swe:Vector>
+    	</swe:elementType>
+    </swe:DataArray>
+  </swe:field>
+</swe:DataRecord>
+

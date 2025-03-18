@@ -23,6 +23,7 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamWriter;
 import org.vast.util.NumberUtils;
 import com.google.common.base.Strings;
+import com.google.gson.Strictness;
 import com.google.gson.stream.JsonWriter;
 
 
@@ -58,7 +59,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
     public JsonStreamWriter(OutputStream os, Charset charset)
     {
         this.writer = new JsonWriter(new OutputStreamWriter(os, charset));
-        this.writer.setLenient(true);
+        this.writer.setStrictness(Strictness.LENIENT);
         this.writer.setSerializeNulls(true);
         this.writer.setIndent(INDENT1);
     }

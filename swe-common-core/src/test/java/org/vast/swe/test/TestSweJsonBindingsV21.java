@@ -254,6 +254,12 @@ public class TestSweJsonBindingsV21 extends XMLTestCase
     }
     
     
+    public void testReadWriteVarSizeArrayNoData() throws Exception
+    {        
+        readXmlWriteJson("examples_v20/spec/var_size_array_1D.xml");
+    }
+    
+    
     public void testReadWriteArrayWithTextData() throws Exception
     {        
         readXmlWriteJson("examples_v20/spec/array_weather.xml");

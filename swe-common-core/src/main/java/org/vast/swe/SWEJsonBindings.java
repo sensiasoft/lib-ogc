@@ -33,6 +33,7 @@ import org.vast.swe.fast.JsonDataWriterGson;
 import org.vast.unit.UnitParserUCUM;
 import org.vast.util.DateTimeFormat;
 import com.google.gson.JsonParseException;
+import com.google.gson.Strictness;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
@@ -144,15 +145,17 @@ public class SWEJsonBindings extends AbstractBindings
     @SuppressWarnings("unchecked")
     public <T extends DataComponent> void readDataComponentOrLink(JsonReader reader, OgcProperty<T> prop) throws IOException
     {
-        reader = beginObjectWithType(reader);
-        var type = reader.nextString();
+        reader = beginObjectWithTypeOrLink(reader);
         
-        if ("Link".equals(type))
+        if (isLink(reader))
         {
+            var href = reader.nextString();
+            prop.setHref(href);
             readLink(reader, prop);
         }
         else
         {
+            var type = reader.nextString();
             var comp = readDataComponentByType(reader, type);
             if (comp == null)
                 throw new JsonParseException("Invalid component type: " + type + " @ " + reader.getPath());
@@ -484,7 +487,19 @@ public class SWEJsonBindings extends AbstractBindings
         if ("elementCount".equals(name))
         {
             OgcProperty<Count> elementCountProp = bean.getElementCountProperty();
-            elementCountProp.setValue(readCount(reader));
+            reader = beginObjectWithTypeOrLink(reader);
+            if (isLink(reader))
+            {
+                elementCountProp.setHref(reader.nextString());
+                readLink(reader, elementCountProp);
+            }
+            else
+            {
+                var type = reader.nextString(); // ignore type and always parse Count
+                if (!"Count".equals(type))
+                    throw new IOException("Expected Count component");
+                elementCountProp.setValue(readCount(reader));
+            }
         }
 
         // elementType
@@ -994,13 +1009,16 @@ public class SWEJsonBindings extends AbstractBindings
         // value
         if ("value".equals(name))
         {
+            var strictness = reader.getStrictness();
+            reader.setStrictness(Strictness.LENIENT);
+            
             reader.beginArray();
-            reader.setLenient(true);
             double min = readNumberOrSpecial(reader);
             double max = readNumberOrSpecial(reader);
-            reader.setLenient(false);
             bean.setValue(new double[] {min, max});
             reader.endArray();
+            
+            reader.setStrictness(strictness);
         }
         
         else
@@ -1221,7 +1239,8 @@ public class SWEJsonBindings extends AbstractBindings
     
     public boolean readAllowedValuesProperties(JsonReader reader, AllowedValues bean, String name) throws IOException
     {
-        reader.setLenient(true);
+        var strictness = reader.getStrictness();
+        reader.setStrictness(Strictness.LENIENT);
         
         // values
         if ("values".equals(name))
@@ -1257,8 +1276,12 @@ public class SWEJsonBindings extends AbstractBindings
         }
         
         else
+        {
+            reader.setStrictness(strictness);
             return readAbstractSWEProperties(reader, bean, name);
+        }
         
+        reader.setStrictness(strictness);
         return true;
     }
     
@@ -1715,6 +1738,12 @@ public class SWEJsonBindings extends AbstractBindings
         }
         
         throw new JsonParseException("Missing 'type' property in JSON object @ " + reader.getPath());
+    }
+    
+    
+    public boolean isLink(JsonReader reader)
+    {
+        return reader.getPath().endsWith("href");
     }
     
     
@@ -2804,8 +2833,8 @@ public class SWEJsonBindings extends AbstractBindings
         writer.beginObject();
         String val;
         
-        if (includeType)
-            writer.name("type").value("Link");
+        //if (includeType)
+        //    writer.name("type").value("Link");
         
         val = prop.getName();
         if (val != null)
