@@ -19,7 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.junit.Test;
 import org.vast.data.DataBlockString;
-import org.vast.swe.fast.JsonDataWriter.StringWriter;
+import org.vast.swe.fast.JsonDataWriterGson.StringWriter;
 
 
 public class TestJsonDataWriter
@@ -29,7 +29,7 @@ public class TestJsonDataWriter
     {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         
-        JsonDataWriter writer = new JsonDataWriter();
+        var writer = new JsonDataWriterGson();
         writer.setOutput(os);
         StringWriter sw = writer.new StringWriter(null);        
         DataBlockString data = new DataBlockString(1);

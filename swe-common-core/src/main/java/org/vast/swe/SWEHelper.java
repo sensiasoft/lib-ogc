@@ -84,7 +84,7 @@ import org.vast.swe.SWEBuilders.TimeBuilder;
 import org.vast.swe.SWEBuilders.TimeRangeBuilder;
 import org.vast.swe.SWEBuilders.VectorBuilder;
 import org.vast.swe.fast.JsonDataParserGson;
-import org.vast.swe.fast.JsonDataWriter;
+import org.vast.swe.fast.JsonDataWriterGson;
 import org.vast.swe.fast.TextDataWriter;
 import org.vast.swe.fast.XmlDataWriter;
 import org.vast.swe.helper.RasterHelper;
@@ -486,7 +486,7 @@ public class SWEHelper
         else if (encoding instanceof XMLEncoding)
             writer = new XmlDataWriter();
         else if (encoding instanceof JSONEncoding)
-            writer = new JsonDataWriter();
+            writer = new JsonDataWriterGson();
         else
             throw new IllegalArgumentException("Unsupported encoding: " + encoding.getClass().getSimpleName());
 
