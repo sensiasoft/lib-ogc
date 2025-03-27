@@ -15,6 +15,7 @@ Developer are Copyright (C) 2016 the Initial Developer. All Rights Reserved.
 
 package org.vast.swe.helper;
 
+import org.vast.swe.SWEBuilders.QuantityBuilder;
 import org.vast.swe.SWEBuilders.VectorBuilder;
 import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEHelper;
@@ -49,6 +50,65 @@ public class GeoPosHelper extends VectorHelper
     public static final String DEF_ELEVATION_ANGLE = SWEHelper.getPropertyUri("ElevationAngle");
 
 
+
+    
+    
+    /**
+     * @return The latitude field
+     */
+    public QuantityBuilder createLatitudeWGS84()
+    {
+        return createQuantity()
+            .definition(DEF_LATITUDE_GEODETIC)
+            .refFrame(SWEConstants.REF_FRAME_4326)
+            .label("Geodetic Latitude")
+            .axisId("Lat")
+            .uomCode("deg");
+    }
+    
+    
+    /**
+     * @return The longitude field
+     */
+    public QuantityBuilder createLongitudeWGS84()
+    {
+        return createQuantity()
+            .definition(DEF_LONGITUDE)
+            .refFrame(SWEConstants.REF_FRAME_4326)
+            .label("Longitude")
+            .axisId("Lon")
+            .uomCode("deg");
+    }
+    
+    
+    /**
+     * @return The GNSS altitude field (defaults to meters)
+     */
+    public QuantityBuilder createAltitudeWGS84()
+    {
+        return createQuantity()
+            .definition(DEF_ALTITUDE_ELLIPSOID)
+            .refFrame(SWEConstants.REF_FRAME_WGS84_HAE)
+            .label("Ellipsoidal Height")
+            .description("Altitude above WGS84 ellipsoid")
+            .uom("m");
+    }
+    
+    
+    /**
+     * @return The MSL altitude field (defaults to meters)
+     */
+    public QuantityBuilder createAltitudeMSL()
+    {
+        return createQuantity()
+            .definition(DEF_ALTITUDE_MSL)
+            .refFrame(SWEConstants.VERTICAL_CRS_MSL_HEIGHT)
+            .label("MSL Altitude")
+            .description("Altitude above mean sea level (approximate datum)")
+            .uom("m");
+    }
+    
+    
     /**
      * Creates a 3D location vector with latitude/longitude/altitude axes and WGS84 datum (EPSG 4979)
      * @return A builder to set other options and build the final vector
