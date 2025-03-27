@@ -86,6 +86,7 @@ import org.vast.swe.SWEBuilders.VectorBuilder;
 import org.vast.swe.fast.JsonDataParserGson;
 import org.vast.swe.fast.JsonDataWriterGson;
 import org.vast.swe.fast.TextDataWriter;
+import org.vast.swe.fast.XmlDataParser;
 import org.vast.swe.fast.XmlDataWriter;
 import org.vast.swe.helper.RasterHelper;
 import org.vast.unit.Unit;
