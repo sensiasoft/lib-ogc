@@ -48,15 +48,13 @@ public class GeoPosHelper extends VectorHelper
     public static final String DEF_ROLL_ANGLE = SWEHelper.getPropertyUri("RollAngle");
     public static final String DEF_AZIMUTH_ANGLE = SWEHelper.getPropertyUri("AzimuthAngle");
     public static final String DEF_ELEVATION_ANGLE = SWEHelper.getPropertyUri("ElevationAngle");
-
-
-
     
     
     /**
-     * @return The latitude field
+     * Creates a geodetic latitude field (WGS84 datum, degrees)
+     * @return A builder to set other options and build the final quantity
      */
-    public QuantityBuilder createLatitudeWGS84()
+    public QuantityBuilder createLatitude()
     {
         return createQuantity()
             .definition(DEF_LATITUDE_GEODETIC)
@@ -68,9 +66,10 @@ public class GeoPosHelper extends VectorHelper
     
     
     /**
-     * @return The longitude field
+     * Creates a longitude field (WGS84 datum, degrees)
+     * @return A builder to set other options and build the final quantity
      */
-    public QuantityBuilder createLongitudeWGS84()
+    public QuantityBuilder createLongitude()
     {
         return createQuantity()
             .definition(DEF_LONGITUDE)
@@ -82,7 +81,8 @@ public class GeoPosHelper extends VectorHelper
     
     
     /**
-     * @return The GNSS altitude field (defaults to meters)
+     * Creates an ellipsoidal height field, also called altitude above ellipsoid (WGS84 datum, meters)
+     * @return A builder to set other options and build the final quantity
      */
     public QuantityBuilder createAltitudeWGS84()
     {
@@ -96,14 +96,15 @@ public class GeoPosHelper extends VectorHelper
     
     
     /**
-     * @return The MSL altitude field (defaults to meters)
+     * Creates an MSL altitude field (approximate MSL datum, meters)
+     * @return A builder to set other options and build the final quantity
      */
     public QuantityBuilder createAltitudeMSL()
     {
         return createQuantity()
             .definition(DEF_ALTITUDE_MSL)
             .refFrame(SWEConstants.VERTICAL_CRS_MSL_HEIGHT)
-            .label("MSL Altitude")
+            .label("MSL Height")
             .description("Altitude above mean sea level (approximate datum)")
             .uom("m");
     }
@@ -118,24 +119,13 @@ public class GeoPosHelper extends VectorHelper
         return createVector()
             .definition(DEF_LOCATION)
             .refFrame(SWEConstants.REF_FRAME_WGS84_HAE)
-            .addCoordinate("lat", createQuantity()
-                .definition(DEF_LATITUDE_GEODETIC)
-                .label("Geodetic Latitude")
-                .axisId("Lat")
-                .uomCode("deg")
-                .build())
-            .addCoordinate("lon", createQuantity()
-                .definition(DEF_LONGITUDE)
-                .label("Longitude")
-                .axisId("Lon")
-                .uomCode("deg")
-                .build())
-            .addCoordinate("alt", createQuantity()
-                .definition(DEF_ALTITUDE_ELLIPSOID)
-                .label("Ellipsoidal Height")
-                .axisId("h")
-                .uomCode("m")
-                .build());
+            .addCoordinate("lat", createLatitude()
+                .refFrame(null))
+            .addCoordinate("lon", createLongitude()
+                .refFrame(null))
+            .addCoordinate("alt", createAltitudeWGS84()
+                .refFrame(null)
+                .axisId("h"));
     }
     
     
@@ -162,24 +152,13 @@ public class GeoPosHelper extends VectorHelper
         return createVector()
             .definition(DEF_LOCATION)
             .refFrame(SWEConstants.REF_FRAME_WGS84_MSL)
-            .addCoordinate("lat", createQuantity()
-                .definition(DEF_LATITUDE_GEODETIC)
-                .label("Geodetic Latitude")
-                .axisId("Lat")
-                .uomCode("deg")
-                .build())
-            .addCoordinate("lon", createQuantity()
-                .definition(DEF_LONGITUDE)
-                .label("Longitude")
-                .axisId("Lon")
-                .uomCode("deg")
-                .build())
-            .addCoordinate("alt", createQuantity()
-                .definition(DEF_ALTITUDE_MSL)
-                .label("MSL Height")
-                .axisId("h")
-                .uomCode("m")
-                .build());
+            .addCoordinate("lat", createLatitude()
+                .refFrame(null))
+            .addCoordinate("lon", createLongitude()
+                .refFrame(null))
+            .addCoordinate("alt", createAltitudeMSL()
+                .refFrame(null)
+                .axisId("h"));
     }
     
     
@@ -206,18 +185,10 @@ public class GeoPosHelper extends VectorHelper
         return createVector()
             .definition(DEF_LOCATION)
             .refFrame(SWEConstants.REF_FRAME_4326)
-            .addCoordinate("lat", createQuantity()
-                .definition(DEF_LATITUDE_GEODETIC)
-                .label("Geodetic Latitude")
-                .axisId("Lat")
-                .uomCode("deg")
-                .build())
-            .addCoordinate("lon", createQuantity()
-                .definition(DEF_LONGITUDE)
-                .label("Longitude")
-                .axisId("Lon")
-                .uomCode("deg")
-                .build());
+            .addCoordinate("lat", createLatitude()
+                .refFrame(null))
+            .addCoordinate("lon", createLongitude()
+                .refFrame(null));
     }
     
     
